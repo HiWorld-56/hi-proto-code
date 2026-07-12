@@ -1,4 +1,0 @@
-# hi-proto-code:CI 生成的多语言产物仓。Rust 侧为 workspace,crate 在 rust/(package = "hi-proto")。
-[workspace]
-resolver = "2"
-members = ["rust"]
