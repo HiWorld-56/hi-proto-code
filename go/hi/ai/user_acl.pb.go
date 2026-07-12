@@ -7,7 +7,7 @@
 package ai
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -429,8 +429,8 @@ const file_hi_ai_user_acl_proto_rawDesc = "" +
 	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\x125\n" +
 	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\x12>\n" +
 	"\bListType\x12\x16.google.protobuf.Empty\x1a\x1a.hi.ai.UserACLListTypeResp\x125\n" +
-	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.EmptyB{\n" +
-	"\tcom.hi.aiB\fUserAclProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.EmptyBw\n" +
+	"\tcom.hi.aiB\fUserAclProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_user_acl_proto_rawDescOnce sync.Once

@@ -7,7 +7,7 @@
 package club
 
 import (
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,8 +27,8 @@ const file_hi_club_agent_market_proto_rawDesc = "" +
 	"\n" +
 	"\x1ahi/club/agent_market.proto\x12\ahi.club\x1a\x19hi/did/agent_market.proto2W\n" +
 	"\vAgentMarket\x12H\n" +
-	"\vListByClass\x12\x1b.hi.did.AgentListByClassReq\x1a\x1c.hi.did.AgentListByClassRespB\x8b\x01\n" +
-	"\vcom.hi.clubB\x10AgentMarketProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\vListByClass\x12\x1b.hi.did.AgentListByClassReq\x1a\x1c.hi.did.AgentListByClassRespB\x87\x01\n" +
+	"\vcom.hi.clubB\x10AgentMarketProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_agent_market_proto_goTypes = []any{
 	(*did.AgentListByClassReq)(nil),  // 0: hi.did.AgentListByClassReq

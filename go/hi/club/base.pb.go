@@ -7,7 +7,7 @@
 package club
 
 import (
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -124,8 +124,8 @@ const file_hi_club_base_proto_rawDesc = "" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\x12D\n" +
 	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\x12N\n" +
 	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\x12:\n" +
-	"\tGetConfig\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigRespB\x84\x01\n" +
-	"\vcom.hi.clubB\tBaseProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\tGetConfig\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigRespB\x80\x01\n" +
+	"\vcom.hi.clubB\tBaseProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_base_proto_rawDescOnce sync.Once

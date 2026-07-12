@@ -185,9 +185,9 @@ const file_hi_did_gateway_proto_rawDesc = "" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2\x8a\x01\n" +
 	"\rGatewayConfig\x12=\n" +
 	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\x12:\n" +
-	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.EmptyB\x81\x01\n" +
+	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.EmptyB}\n" +
 	"\n" +
-	"com.hi.didB\fGatewayProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\fGatewayProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var (
 	file_hi_did_gateway_proto_rawDescOnce sync.Once

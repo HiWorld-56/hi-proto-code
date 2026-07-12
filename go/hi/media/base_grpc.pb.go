@@ -8,7 +8,7 @@ package media
 
 import (
 	context "context"
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

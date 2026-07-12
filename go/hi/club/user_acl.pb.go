@@ -7,7 +7,7 @@
 package club
 
 import (
-	ai "github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
+	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -32,8 +32,8 @@ const file_hi_club_user_acl_proto_rawDesc = "" +
 	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\x125\n" +
 	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\x12>\n" +
 	"\bListType\x12\x16.google.protobuf.Empty\x1a\x1a.hi.ai.UserACLListTypeResp\x125\n" +
-	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.EmptyB\x87\x01\n" +
-	"\vcom.hi.clubB\fUserAclProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.EmptyB\x83\x01\n" +
+	"\vcom.hi.clubB\fUserAclProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_user_acl_proto_goTypes = []any{
 	(*ai.UserACLAddReq)(nil),       // 0: hi.ai.UserACLAddReq

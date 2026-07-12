@@ -8,7 +8,7 @@ package ai
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -1984,8 +1984,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x06Search\x12\x10.hi.ai.SearchReq\x1a\x11.hi.ai.SearchResp\x12-\n" +
 	"\x06Python\x12\x10.hi.ai.PythonReq\x1a\x11.hi.ai.PythonResp\x12;\n" +
 	"\rPythonProject\x12\x17.hi.ai.PythonProjectReq\x1a\x11.hi.ai.PythonResp\x12N\n" +
-	"\x14CleanupPythonProject\x12\x1e.hi.ai.CleanupPythonProjectReq\x1a\x16.google.protobuf.EmptyBz\n" +
-	"\tcom.hi.aiB\vPluginProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\x14CleanupPythonProject\x12\x1e.hi.ai.CleanupPythonProjectReq\x1a\x16.google.protobuf.EmptyBv\n" +
+	"\tcom.hi.aiB\vPluginProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_plugin_proto_rawDescOnce sync.Once

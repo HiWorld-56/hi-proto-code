@@ -7,8 +7,8 @@
 package ai
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -30,8 +30,8 @@ const file_hi_ai_auth_proto_rawDesc = "" +
 	"\x04Auth\x126\n" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\x128\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\x124\n" +
-	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusRespBx\n" +
-	"\tcom.hi.aiB\tAuthProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusRespBt\n" +
+	"\tcom.hi.aiB\tAuthProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var file_hi_ai_auth_proto_goTypes = []any{
 	(*did.RefreshTokenReq)(nil),  // 0: hi.did.RefreshTokenReq

@@ -8,7 +8,7 @@ package media
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -301,8 +301,8 @@ const file_hi_media_user_proto_rawDesc = "" +
 	"\x04User\x125\n" +
 	"\x04List\x12\x15.hi.media.ListUserReq\x1a\x16.hi.media.ListUserResp\x125\n" +
 	"\x04Edit\x12\x15.hi.media.EditUserReq\x1a\x16.google.protobuf.Empty\x129\n" +
-	"\x06Delete\x12\x17.hi.media.DeleteUserReq\x1a\x16.google.protobuf.EmptyB\x8a\x01\n" +
-	"\fcom.hi.mediaB\tUserProtoP\x01Z.github.com/HiWorld-56/hi-proto/gen/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
+	"\x06Delete\x12\x17.hi.media.DeleteUserReq\x1a\x16.google.protobuf.EmptyB\x86\x01\n" +
+	"\fcom.hi.mediaB\tUserProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
 	file_hi_media_user_proto_rawDescOnce sync.Once
