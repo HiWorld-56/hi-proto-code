@@ -7,7 +7,7 @@
 package ai
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -1648,9 +1648,9 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\x12@\n" +
 	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\x12N\n" +
 	"\x11ListFavoriteAgent\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\x12`\n" +
-	"\x17FavoriteAgentListByDIDs\x12!.hi.ai.ListFavoriteAgentByDIDsReq\x1a\".hi.ai.ListFavoriteAgentByDIDsRespBz\n" +
+	"\x17FavoriteAgentListByDIDs\x12!.hi.ai.ListFavoriteAgentByDIDsReq\x1a\".hi.ai.ListFavoriteAgentByDIDsRespBy\n" +
 	"\tcom.hi.aiB\n" +
-	"AgentProtoP\x01Z,git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"AgentProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_agent_proto_rawDescOnce sync.Once

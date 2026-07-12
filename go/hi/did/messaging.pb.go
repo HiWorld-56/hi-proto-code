@@ -7,7 +7,7 @@
 package did
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -181,9 +181,9 @@ const file_hi_did_messaging_proto_rawDesc = "" +
 	"\x04from\x18\x03 \x01(\v2\n" +
 	".hi.EntityR\x04from\x12*\n" +
 	"\x05extra\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\x05extra\x12\x17\n" +
-	"\aex_type\x18\x05 \x01(\tR\x06exTypeB\x84\x01\n" +
+	"\aex_type\x18\x05 \x01(\tR\x06exTypeB\x83\x01\n" +
 	"\n" +
-	"com.hi.didB\x0eMessagingProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\x0eMessagingProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var (
 	file_hi_did_messaging_proto_rawDescOnce sync.Once

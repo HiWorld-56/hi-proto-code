@@ -121,8 +121,8 @@ const file_hi_ai_endpoint_proto_rawDesc = "" +
 	"\bendpoint\x18\x01 \x01(\tR\bendpoint2}\n" +
 	"\x0ePluginEndpoint\x124\n" +
 	"\x03Set\x12\x15.hi.ai.EndpointSetReq\x1a\x16.google.protobuf.Empty\x125\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.EndpointGetRespB}\n" +
-	"\tcom.hi.aiB\rEndpointProtoP\x01Z,git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.EndpointGetRespB|\n" +
+	"\tcom.hi.aiB\rEndpointProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_endpoint_proto_rawDescOnce sync.Once

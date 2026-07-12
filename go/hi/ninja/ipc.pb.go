@@ -7,10 +7,10 @@
 package ninja
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
-	ai "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai"
-	club "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club"
-	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	ai "github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
+	club "github.com/HiWorld-56/hi-proto/gen/go/hi/club"
+	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -974,8 +974,8 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\x0fEMOTION_UNKNOWN\x10\x00\x12\x11\n" +
 	"\rEMOTION_ANGER\x10\x01\x12\x11\n" +
 	"\rEMOTION_LAUGH\x10\x02\x12\x15\n" +
-	"\x11EMOTION_FRUSTRATE\x10\x03B\x8a\x01\n" +
-	"\fcom.hi.ninjaB\bIpcProtoP\x01Z/git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
+	"\x11EMOTION_FRUSTRATE\x10\x03B\x89\x01\n" +
+	"\fcom.hi.ninjaB\bIpcProtoP\x01Z.github.com/HiWorld-56/hi-proto/gen/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
 
 var (
 	file_hi_ninja_ipc_proto_rawDescOnce sync.Once

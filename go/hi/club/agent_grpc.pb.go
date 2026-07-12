@@ -8,8 +8,8 @@ package club
 
 import (
 	context "context"
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
-	ai "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	ai "github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

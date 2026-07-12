@@ -7,7 +7,7 @@
 package club
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -1429,9 +1429,9 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\rCheckLastUUID\x12\x15.hi.club.ListLastUUID\x1a\x15.hi.club.ListLastUUID\x126\n" +
 	"\aSetRole\x12\x13.hi.club.SetRoleReq\x1a\x16.google.protobuf.Empty\x124\n" +
 	"\aGetRole\x12\x13.hi.club.GetRoleReq\x1a\x14.hi.club.GetRoleResp\x125\n" +
-	"\x04Mute\x12\x15.hi.club.MuteGroupReq\x1a\x16.google.protobuf.EmptyB\x86\x01\n" +
+	"\x04Mute\x12\x15.hi.club.MuteGroupReq\x1a\x16.google.protobuf.EmptyB\x85\x01\n" +
 	"\vcom.hi.clubB\n" +
-	"GroupProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"GroupProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_group_proto_rawDescOnce sync.Once

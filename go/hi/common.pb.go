@@ -633,8 +633,8 @@ const file_hi_common_proto_rawDesc = "" +
 	"\n" +
 	"Pagination\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limitBh\n" +
-	"\x06com.hiB\vCommonProtoP\x01Z)git.hi.lan/HiWorld-56/hi-proto-code/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
+	"\x05limit\x18\x02 \x01(\x05R\x05limitBg\n" +
+	"\x06com.hiB\vCommonProtoP\x01Z(github.com/HiWorld-56/hi-proto/gen/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (
 	file_hi_common_proto_rawDescOnce sync.Once

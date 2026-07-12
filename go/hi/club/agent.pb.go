@@ -7,8 +7,8 @@
 package club
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
-	ai "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	ai "github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -561,9 +561,9 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"BindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\x12E\n" +
 	"\x12ListAllOnlineAgent\x12\x0e.hi.Pagination\x1a\x1f.hi.club.ListAllOnlineAgentResp\x128\n" +
 	"\x0fListOnlineAgent\x12\a.hi.DID\x1a\x1c.hi.club.ListOnlineAgentResp\x12I\n" +
-	"\x0eGetAgentMaster\x12\x1a.hi.club.GetAgentMasterReq\x1a\x1b.hi.club.GetAgentMasterRespB\x86\x01\n" +
+	"\x0eGetAgentMaster\x12\x1a.hi.club.GetAgentMasterReq\x1a\x1b.hi.club.GetAgentMasterRespB\x85\x01\n" +
 	"\vcom.hi.clubB\n" +
-	"AgentProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"AgentProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_agent_proto_rawDescOnce sync.Once

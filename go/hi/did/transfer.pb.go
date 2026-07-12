@@ -7,7 +7,7 @@
 package did
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -435,9 +435,9 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\bprogress\x18\x02 \x01(\rR\bprogress2u\n" +
 	"\bTransfer\x122\n" +
 	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\x125\n" +
-	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusRespB\x83\x01\n" +
+	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusRespB\x82\x01\n" +
 	"\n" +
-	"com.hi.didB\rTransferProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\rTransferProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var (
 	file_hi_did_transfer_proto_rawDescOnce sync.Once

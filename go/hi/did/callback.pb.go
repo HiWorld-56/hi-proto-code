@@ -7,7 +7,7 @@
 package did
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -30,9 +30,9 @@ const file_hi_did_callback_proto_rawDesc = "" +
 	"\rLoginCallback\x12/\n" +
 	"\x05Login\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty2<\n" +
 	"\vPayCallback\x12-\n" +
-	"\x03Pay\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB\x83\x01\n" +
+	"\x03Pay\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB\x82\x01\n" +
 	"\n" +
-	"com.hi.didB\rCallbackProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\rCallbackProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var file_hi_did_callback_proto_goTypes = []any{
 	(*hi.SignedData)(nil), // 0: hi.SignedData

@@ -7,8 +7,8 @@
 package club
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
-	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -914,9 +914,9 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"\bAddTrade\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\x12F\n" +
 	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\x12:\n" +
 	"\tListTrade\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeResp\x12C\n" +
-	"\fListAllTrade\x12\x18.hi.club.ListAllTradeReq\x1a\x19.hi.club.ListAllTradeRespB\x86\x01\n" +
+	"\fListAllTrade\x12\x18.hi.club.ListAllTradeReq\x1a\x19.hi.club.ListAllTradeRespB\x85\x01\n" +
 	"\vcom.hi.clubB\n" +
-	"TradeProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"TradeProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_trade_proto_rawDescOnce sync.Once

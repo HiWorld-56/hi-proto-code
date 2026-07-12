@@ -7,7 +7,7 @@
 package did
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -404,9 +404,9 @@ const file_hi_did_auth_proto_rawDesc = "" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\x124\n" +
 	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\x120\n" +
 	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\x120\n" +
-	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB\x7f\n" +
+	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB~\n" +
 	"\n" +
-	"com.hi.didB\tAuthProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\tAuthProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var (
 	file_hi_did_auth_proto_rawDescOnce sync.Once

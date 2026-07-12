@@ -7,7 +7,7 @@
 package club
 
 import (
-	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -662,8 +662,8 @@ const file_hi_club_q3_proto_rawDesc = "" +
 	"\x06Create\x12\x19.hi.club.Q3GroupCreateReq\x1a\x1a.hi.club.Q3GroupCreateResp\x129\n" +
 	"\x05Event\x12\x18.hi.club.Q3GroupEventReq\x1a\x16.google.protobuf.Empty\x12<\n" +
 	"\x05Ready\x12\x18.hi.club.Q3GroupReadyReq\x1a\x19.hi.club.Q3GroupReadyResp\x128\n" +
-	"\aHosting\x12\x15.hi.club.Q3HostingReq\x1a\x16.google.protobuf.EmptyB\x83\x01\n" +
-	"\vcom.hi.clubB\aQ3ProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\aHosting\x12\x15.hi.club.Q3HostingReq\x1a\x16.google.protobuf.EmptyB\x82\x01\n" +
+	"\vcom.hi.clubB\aQ3ProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_q3_proto_rawDescOnce sync.Once

@@ -27,9 +27,9 @@ const file_hi_did_health_proto_rawDesc = "" +
 	"\n" +
 	"\x13hi/did/health.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto2A\n" +
 	"\x06Health\x127\n" +
-	"\x05Check\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.EmptyB\x81\x01\n" +
+	"\x05Check\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.EmptyB\x80\x01\n" +
 	"\n" +
-	"com.hi.didB\vHealthProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\vHealthProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var file_hi_did_health_proto_goTypes = []any{
 	(*emptypb.Empty)(nil), // 0: google.protobuf.Empty

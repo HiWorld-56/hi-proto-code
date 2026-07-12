@@ -7,7 +7,7 @@
 package club
 
 import (
-	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
+	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,9 +27,9 @@ const file_hi_club_price_proto_rawDesc = "" +
 	"\n" +
 	"\x13hi/club/price.proto\x12\ahi.club\x1a\x12hi/did/price.proto2>\n" +
 	"\x05Price\x125\n" +
-	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceRespB\x86\x01\n" +
+	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceRespB\x85\x01\n" +
 	"\vcom.hi.clubB\n" +
-	"PriceProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"PriceProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_price_proto_goTypes = []any{
 	(*did.GetPriceReq)(nil),  // 0: hi.did.GetPriceReq

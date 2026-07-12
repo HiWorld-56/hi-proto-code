@@ -7,7 +7,7 @@
 package club
 
 import (
-	ai "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai"
+	ai "github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -41,8 +41,8 @@ const file_hi_club_plugin_proto_rawDesc = "" +
 	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\x120\n" +
 	"\aGetDraw\x12\x11.hi.ai.GetDrawReq\x1a\x12.hi.ai.GetDrawResp\x12D\n" +
 	"\x0fPythonParamsSet\x12\x19.hi.ai.PythonParamsSetReq\x1a\x16.google.protobuf.Empty\x12H\n" +
-	"\x0fGetPythonParams\x12\x19.hi.ai.GetPythonParamsReq\x1a\x1a.hi.ai.GetPythonParamsRespB\x87\x01\n" +
-	"\vcom.hi.clubB\vPluginProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\x0fGetPythonParams\x12\x19.hi.ai.GetPythonParamsReq\x1a\x1a.hi.ai.GetPythonParamsRespB\x86\x01\n" +
+	"\vcom.hi.clubB\vPluginProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_plugin_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),            // 0: google.protobuf.Empty
