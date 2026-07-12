@@ -46,6 +46,13 @@ class TransferClient extends $grpc.Client {
     return $createUnaryCall(_$txStatus, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.VerifyTransactionResp> verifyTransaction(
+    $0.VerifyTransactionReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$verifyTransaction, request, options: options);
+  }
+
   // method descriptors
 
   static final _$history = $grpc.ClientMethod<$0.HistoryReq, $0.HistoryResp>(
@@ -56,6 +63,11 @@ class TransferClient extends $grpc.Client {
       '/hi.did.Transfer/TxStatus',
       ($0.TxStatusReq value) => value.writeToBuffer(),
       $0.TxStatusResp.fromBuffer);
+  static final _$verifyTransaction =
+      $grpc.ClientMethod<$0.VerifyTransactionReq, $0.VerifyTransactionResp>(
+          '/hi.did.Transfer/VerifyTransaction',
+          ($0.VerifyTransactionReq value) => value.writeToBuffer(),
+          $0.VerifyTransactionResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.Transfer')
@@ -77,6 +89,15 @@ abstract class TransferServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.TxStatusReq.fromBuffer(value),
         ($0.TxStatusResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.VerifyTransactionReq, $0.VerifyTransactionResp>(
+            'VerifyTransaction',
+            verifyTransaction_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.VerifyTransactionReq.fromBuffer(value),
+            ($0.VerifyTransactionResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.HistoryResp> history_Pre(
@@ -94,4 +115,13 @@ abstract class TransferServiceBase extends $grpc.Service {
 
   $async.Future<$0.TxStatusResp> txStatus(
       $grpc.ServiceCall call, $0.TxStatusReq request);
+
+  $async.Future<$0.VerifyTransactionResp> verifyTransaction_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.VerifyTransactionReq> $request) async {
+    return verifyTransaction($call, await $request);
+  }
+
+  $async.Future<$0.VerifyTransactionResp> verifyTransaction(
+      $grpc.ServiceCall call, $0.VerifyTransactionReq request);
 }

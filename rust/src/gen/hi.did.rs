@@ -378,6 +378,45 @@ pub struct TxStatusResp {
     #[prost(uint32, tag = "2")]
     pub progress: u32,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VerifyTransactionReq {
+    /// 预期币种（定位链/合约）
+    #[prost(string, tag = "1")]
+    pub coin: ::prost::alloc::string::String,
+    /// 链上交易 hash
+    #[prost(string, tag = "2")]
+    pub hash: ::prost::alloc::string::String,
+    /// 预期金额（最小单位整数串，与 tx_detail 口径一致）
+    #[prost(string, tag = "3")]
+    pub amount: ::prost::alloc::string::String,
+    /// 预期付款方地址
+    #[prost(string, tag = "4")]
+    pub from: ::prost::alloc::string::String,
+    /// 预期收款方地址
+    #[prost(string, tag = "5")]
+    pub to: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VerifyTransactionResp {
+    /// pending / confirming / success / failed / notfound
+    #[prost(string, tag = "1")]
+    pub state: ::prost::alloc::string::String,
+    /// 业务校验是否通过（仅 state=success 有意义）
+    #[prost(bool, tag = "2")]
+    pub passed: bool,
+    /// 未过原因：AMOUNT_ERR / FROM_ERR / TO_ERR / CONTRACTADDRESS_ERR
+    #[prost(string, tag = "3")]
+    pub reason: ::prost::alloc::string::String,
+    /// 链上确认数
+    #[prost(int64, tag = "4")]
+    pub confirmed_blocks: i64,
+    /// 交易时间（ms）；调用方据此自行做时限校验（业务层解耦）
+    #[prost(int64, tag = "5")]
+    pub timestamp: i64,
+    /// 该 hash 在缓存窗口内被查询次数（业务侧据此防伪）
+    #[prost(uint32, tag = "6")]
+    pub query_count: u32,
+}
 /// Generated client implementations.
 pub mod transfer_client {
     #![allow(
@@ -503,6 +542,30 @@ pub mod transfer_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/TxStatus");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "TxStatus"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn verify_transaction(
+            &mut self,
+            request: impl tonic::IntoRequest<super::VerifyTransactionReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::VerifyTransactionResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Transfer/VerifyTransaction",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Transfer", "VerifyTransaction"));
             self.inner.unary(req, path, codec).await
         }
     }

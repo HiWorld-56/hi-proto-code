@@ -330,6 +330,166 @@ func (x *TxStatusResp) GetProgress() uint32 {
 	return 0
 }
 
+type VerifyTransactionReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`     // 预期币种（定位链/合约）
+	Hash          string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`     // 链上交易 hash
+	Amount        string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"` // 预期金额（最小单位整数串，与 tx_detail 口径一致）
+	From          string                 `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`     // 预期付款方地址
+	To            string                 `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"`         // 预期收款方地址
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyTransactionReq) Reset() {
+	*x = VerifyTransactionReq{}
+	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyTransactionReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyTransactionReq) ProtoMessage() {}
+
+func (x *VerifyTransactionReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyTransactionReq.ProtoReflect.Descriptor instead.
+func (*VerifyTransactionReq) Descriptor() ([]byte, []int) {
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *VerifyTransactionReq) GetCoin() string {
+	if x != nil {
+		return x.Coin
+	}
+	return ""
+}
+
+func (x *VerifyTransactionReq) GetHash() string {
+	if x != nil {
+		return x.Hash
+	}
+	return ""
+}
+
+func (x *VerifyTransactionReq) GetAmount() string {
+	if x != nil {
+		return x.Amount
+	}
+	return ""
+}
+
+func (x *VerifyTransactionReq) GetFrom() string {
+	if x != nil {
+		return x.From
+	}
+	return ""
+}
+
+func (x *VerifyTransactionReq) GetTo() string {
+	if x != nil {
+		return x.To
+	}
+	return ""
+}
+
+type VerifyTransactionResp struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	State           string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`                                             // pending / confirming / success / failed / notfound
+	Passed          bool                   `protobuf:"varint,2,opt,name=passed,proto3" json:"passed,omitempty"`                                          // 业务校验是否通过（仅 state=success 有意义）
+	Reason          string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`                                           // 未过原因：AMOUNT_ERR / FROM_ERR / TO_ERR / CONTRACTADDRESS_ERR
+	ConfirmedBlocks int64                  `protobuf:"varint,4,opt,name=confirmed_blocks,json=confirmedBlocks,proto3" json:"confirmed_blocks,omitempty"` // 链上确认数
+	Timestamp       int64                  `protobuf:"varint,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                                    // 交易时间（ms）；调用方据此自行做时限校验（业务层解耦）
+	QueryCount      uint32                 `protobuf:"varint,6,opt,name=query_count,json=queryCount,proto3" json:"query_count,omitempty"`                // 该 hash 在缓存窗口内被查询次数（业务侧据此防伪）
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *VerifyTransactionResp) Reset() {
+	*x = VerifyTransactionResp{}
+	mi := &file_hi_did_transfer_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyTransactionResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyTransactionResp) ProtoMessage() {}
+
+func (x *VerifyTransactionResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_transfer_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyTransactionResp.ProtoReflect.Descriptor instead.
+func (*VerifyTransactionResp) Descriptor() ([]byte, []int) {
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *VerifyTransactionResp) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *VerifyTransactionResp) GetPassed() bool {
+	if x != nil {
+		return x.Passed
+	}
+	return false
+}
+
+func (x *VerifyTransactionResp) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+func (x *VerifyTransactionResp) GetConfirmedBlocks() int64 {
+	if x != nil {
+		return x.ConfirmedBlocks
+	}
+	return 0
+}
+
+func (x *VerifyTransactionResp) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *VerifyTransactionResp) GetQueryCount() uint32 {
+	if x != nil {
+		return x.QueryCount
+	}
+	return 0
+}
+
 type HistoryResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Trans         *Transaction           `protobuf:"bytes,1,opt,name=trans,proto3" json:"trans,omitempty"`
@@ -342,7 +502,7 @@ type HistoryResp_Unit struct {
 
 func (x *HistoryResp_Unit) Reset() {
 	*x = HistoryResp_Unit{}
-	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	mi := &file_hi_did_transfer_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -354,7 +514,7 @@ func (x *HistoryResp_Unit) String() string {
 func (*HistoryResp_Unit) ProtoMessage() {}
 
 func (x *HistoryResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	mi := &file_hi_did_transfer_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -432,10 +592,25 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x04hash\x18\x02 \x01(\tR\x04hash\"@\n" +
 	"\fTxStatusResp\x12\x14\n" +
 	"\x05state\x18\x01 \x01(\tR\x05state\x12\x1a\n" +
-	"\bprogress\x18\x02 \x01(\rR\bprogress2u\n" +
+	"\bprogress\x18\x02 \x01(\rR\bprogress\"z\n" +
+	"\x14VerifyTransactionReq\x12\x12\n" +
+	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x12\n" +
+	"\x04hash\x18\x02 \x01(\tR\x04hash\x12\x16\n" +
+	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x12\n" +
+	"\x04from\x18\x04 \x01(\tR\x04from\x12\x0e\n" +
+	"\x02to\x18\x05 \x01(\tR\x02to\"\xc7\x01\n" +
+	"\x15VerifyTransactionResp\x12\x14\n" +
+	"\x05state\x18\x01 \x01(\tR\x05state\x12\x16\n" +
+	"\x06passed\x18\x02 \x01(\bR\x06passed\x12\x16\n" +
+	"\x06reason\x18\x03 \x01(\tR\x06reason\x12)\n" +
+	"\x10confirmed_blocks\x18\x04 \x01(\x03R\x0fconfirmedBlocks\x12\x1c\n" +
+	"\ttimestamp\x18\x05 \x01(\x03R\ttimestamp\x12\x1f\n" +
+	"\vquery_count\x18\x06 \x01(\rR\n" +
+	"queryCount2\xc7\x01\n" +
 	"\bTransfer\x122\n" +
 	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\x125\n" +
-	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusRespB\x82\x01\n" +
+	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusResp\x12P\n" +
+	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionRespB\x82\x01\n" +
 	"\n" +
 	"com.hi.didB\rTransferProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -451,29 +626,33 @@ func file_hi_did_transfer_proto_rawDescGZIP() []byte {
 	return file_hi_did_transfer_proto_rawDescData
 }
 
-var file_hi_did_transfer_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_hi_did_transfer_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_hi_did_transfer_proto_goTypes = []any{
-	(*Transaction)(nil),      // 0: hi.did.Transaction
-	(*HistoryReq)(nil),       // 1: hi.did.HistoryReq
-	(*HistoryResp)(nil),      // 2: hi.did.HistoryResp
-	(*TxStatusReq)(nil),      // 3: hi.did.TxStatusReq
-	(*TxStatusResp)(nil),     // 4: hi.did.TxStatusResp
-	(*HistoryResp_Unit)(nil), // 5: hi.did.HistoryResp.Unit
-	(*Coin)(nil),             // 6: hi.did.Coin
-	(*hi.Entity)(nil),        // 7: hi.Entity
+	(*Transaction)(nil),           // 0: hi.did.Transaction
+	(*HistoryReq)(nil),            // 1: hi.did.HistoryReq
+	(*HistoryResp)(nil),           // 2: hi.did.HistoryResp
+	(*TxStatusReq)(nil),           // 3: hi.did.TxStatusReq
+	(*TxStatusResp)(nil),          // 4: hi.did.TxStatusResp
+	(*VerifyTransactionReq)(nil),  // 5: hi.did.VerifyTransactionReq
+	(*VerifyTransactionResp)(nil), // 6: hi.did.VerifyTransactionResp
+	(*HistoryResp_Unit)(nil),      // 7: hi.did.HistoryResp.Unit
+	(*Coin)(nil),                  // 8: hi.did.Coin
+	(*hi.Entity)(nil),             // 9: hi.Entity
 }
 var file_hi_did_transfer_proto_depIdxs = []int32{
-	6, // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
-	7, // 1: hi.did.Transaction.from:type_name -> hi.Entity
-	7, // 2: hi.did.Transaction.to:type_name -> hi.Entity
-	5, // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
+	8, // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
+	9, // 1: hi.did.Transaction.from:type_name -> hi.Entity
+	9, // 2: hi.did.Transaction.to:type_name -> hi.Entity
+	7, // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
 	0, // 4: hi.did.HistoryResp.Unit.trans:type_name -> hi.did.Transaction
 	1, // 5: hi.did.Transfer.History:input_type -> hi.did.HistoryReq
 	3, // 6: hi.did.Transfer.TxStatus:input_type -> hi.did.TxStatusReq
-	2, // 7: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
-	4, // 8: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
-	7, // [7:9] is the sub-list for method output_type
-	5, // [5:7] is the sub-list for method input_type
+	5, // 7: hi.did.Transfer.VerifyTransaction:input_type -> hi.did.VerifyTransactionReq
+	2, // 8: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
+	4, // 9: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
+	6, // 10: hi.did.Transfer.VerifyTransaction:output_type -> hi.did.VerifyTransactionResp
+	8, // [8:11] is the sub-list for method output_type
+	5, // [5:8] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name
 	5, // [5:5] is the sub-list for extension extendee
 	0, // [0:5] is the sub-list for field type_name
@@ -491,7 +670,7 @@ func file_hi_did_transfer_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_transfer_proto_rawDesc), len(file_hi_did_transfer_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -120,3 +120,41 @@ const TxStatusResp$json = {
 final $typed_data.Uint8List txStatusRespDescriptor = $convert.base64Decode(
     'CgxUeFN0YXR1c1Jlc3ASFAoFc3RhdGUYASABKAlSBXN0YXRlEhoKCHByb2dyZXNzGAIgASgNUg'
     'hwcm9ncmVzcw==');
+
+@$core.Deprecated('Use verifyTransactionReqDescriptor instead')
+const VerifyTransactionReq$json = {
+  '1': 'VerifyTransactionReq',
+  '2': [
+    {'1': 'coin', '3': 1, '4': 1, '5': 9, '10': 'coin'},
+    {'1': 'hash', '3': 2, '4': 1, '5': 9, '10': 'hash'},
+    {'1': 'amount', '3': 3, '4': 1, '5': 9, '10': 'amount'},
+    {'1': 'from', '3': 4, '4': 1, '5': 9, '10': 'from'},
+    {'1': 'to', '3': 5, '4': 1, '5': 9, '10': 'to'},
+  ],
+};
+
+/// Descriptor for `VerifyTransactionReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List verifyTransactionReqDescriptor = $convert.base64Decode(
+    'ChRWZXJpZnlUcmFuc2FjdGlvblJlcRISCgRjb2luGAEgASgJUgRjb2luEhIKBGhhc2gYAiABKA'
+    'lSBGhhc2gSFgoGYW1vdW50GAMgASgJUgZhbW91bnQSEgoEZnJvbRgEIAEoCVIEZnJvbRIOCgJ0'
+    'bxgFIAEoCVICdG8=');
+
+@$core.Deprecated('Use verifyTransactionRespDescriptor instead')
+const VerifyTransactionResp$json = {
+  '1': 'VerifyTransactionResp',
+  '2': [
+    {'1': 'state', '3': 1, '4': 1, '5': 9, '10': 'state'},
+    {'1': 'passed', '3': 2, '4': 1, '5': 8, '10': 'passed'},
+    {'1': 'reason', '3': 3, '4': 1, '5': 9, '10': 'reason'},
+    {'1': 'confirmed_blocks', '3': 4, '4': 1, '5': 3, '10': 'confirmedBlocks'},
+    {'1': 'timestamp', '3': 5, '4': 1, '5': 3, '10': 'timestamp'},
+    {'1': 'query_count', '3': 6, '4': 1, '5': 13, '10': 'queryCount'},
+  ],
+};
+
+/// Descriptor for `VerifyTransactionResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List verifyTransactionRespDescriptor = $convert.base64Decode(
+    'ChVWZXJpZnlUcmFuc2FjdGlvblJlc3ASFAoFc3RhdGUYASABKAlSBXN0YXRlEhYKBnBhc3NlZB'
+    'gCIAEoCFIGcGFzc2VkEhYKBnJlYXNvbhgDIAEoCVIGcmVhc29uEikKEGNvbmZpcm1lZF9ibG9j'
+    'a3MYBCABKANSD2NvbmZpcm1lZEJsb2NrcxIcCgl0aW1lc3RhbXAYBSABKANSCXRpbWVzdGFtcB'
+    'IfCgtxdWVyeV9jb3VudBgGIAEoDVIKcXVlcnlDb3VudA==');

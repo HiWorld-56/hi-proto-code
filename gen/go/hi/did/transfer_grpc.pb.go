@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Transfer_History_FullMethodName  = "/hi.did.Transfer/History"
-	Transfer_TxStatus_FullMethodName = "/hi.did.Transfer/TxStatus"
+	Transfer_History_FullMethodName           = "/hi.did.Transfer/History"
+	Transfer_TxStatus_FullMethodName          = "/hi.did.Transfer/TxStatus"
+	Transfer_VerifyTransaction_FullMethodName = "/hi.did.Transfer/VerifyTransaction"
 )
 
 // TransferClient is the client API for Transfer service.
@@ -29,6 +30,7 @@ const (
 type TransferClient interface {
 	History(ctx context.Context, in *HistoryReq, opts ...grpc.CallOption) (*HistoryResp, error)
 	TxStatus(ctx context.Context, in *TxStatusReq, opts ...grpc.CallOption) (*TxStatusResp, error)
+	VerifyTransaction(ctx context.Context, in *VerifyTransactionReq, opts ...grpc.CallOption) (*VerifyTransactionResp, error)
 }
 
 type transferClient struct {
@@ -59,12 +61,23 @@ func (c *transferClient) TxStatus(ctx context.Context, in *TxStatusReq, opts ...
 	return out, nil
 }
 
+func (c *transferClient) VerifyTransaction(ctx context.Context, in *VerifyTransactionReq, opts ...grpc.CallOption) (*VerifyTransactionResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyTransactionResp)
+	err := c.cc.Invoke(ctx, Transfer_VerifyTransaction_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransferServer is the server API for Transfer service.
 // All implementations should embed UnimplementedTransferServer
 // for forward compatibility.
 type TransferServer interface {
 	History(context.Context, *HistoryReq) (*HistoryResp, error)
 	TxStatus(context.Context, *TxStatusReq) (*TxStatusResp, error)
+	VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error)
 }
 
 // UnimplementedTransferServer should be embedded to have
@@ -79,6 +92,9 @@ func (UnimplementedTransferServer) History(context.Context, *HistoryReq) (*Histo
 }
 func (UnimplementedTransferServer) TxStatus(context.Context, *TxStatusReq) (*TxStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method TxStatus not implemented")
+}
+func (UnimplementedTransferServer) VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method VerifyTransaction not implemented")
 }
 func (UnimplementedTransferServer) testEmbeddedByValue() {}
 
@@ -136,6 +152,24 @@ func _Transfer_TxStatus_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transfer_VerifyTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyTransactionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransferServer).VerifyTransaction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transfer_VerifyTransaction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransferServer).VerifyTransaction(ctx, req.(*VerifyTransactionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transfer_ServiceDesc is the grpc.ServiceDesc for Transfer service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -150,6 +184,10 @@ var Transfer_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TxStatus",
 			Handler:    _Transfer_TxStatus_Handler,
+		},
+		{
+			MethodName: "VerifyTransaction",
+			Handler:    _Transfer_VerifyTransaction_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

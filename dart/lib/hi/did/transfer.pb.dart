@@ -517,6 +517,223 @@ class TxStatusResp extends $pb.GeneratedMessage {
   void clearProgress() => $_clearField(2);
 }
 
+class VerifyTransactionReq extends $pb.GeneratedMessage {
+  factory VerifyTransactionReq({
+    $core.String? coin,
+    $core.String? hash,
+    $core.String? amount,
+    $core.String? from,
+    $core.String? to,
+  }) {
+    final result = create();
+    if (coin != null) result.coin = coin;
+    if (hash != null) result.hash = hash;
+    if (amount != null) result.amount = amount;
+    if (from != null) result.from = from;
+    if (to != null) result.to = to;
+    return result;
+  }
+
+  VerifyTransactionReq._();
+
+  factory VerifyTransactionReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VerifyTransactionReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VerifyTransactionReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'coin')
+    ..aOS(2, _omitFieldNames ? '' : 'hash')
+    ..aOS(3, _omitFieldNames ? '' : 'amount')
+    ..aOS(4, _omitFieldNames ? '' : 'from')
+    ..aOS(5, _omitFieldNames ? '' : 'to')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyTransactionReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyTransactionReq copyWith(void Function(VerifyTransactionReq) updates) =>
+      super.copyWith((message) => updates(message as VerifyTransactionReq))
+          as VerifyTransactionReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VerifyTransactionReq create() => VerifyTransactionReq._();
+  @$core.override
+  VerifyTransactionReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VerifyTransactionReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VerifyTransactionReq>(create);
+  static VerifyTransactionReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get coin => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set coin($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCoin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCoin() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get hash => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set hash($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHash() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHash() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get amount => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set amount($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAmount() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAmount() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get from => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set from($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFrom() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFrom() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get to => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set to($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTo() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTo() => $_clearField(5);
+}
+
+class VerifyTransactionResp extends $pb.GeneratedMessage {
+  factory VerifyTransactionResp({
+    $core.String? state,
+    $core.bool? passed,
+    $core.String? reason,
+    $fixnum.Int64? confirmedBlocks,
+    $fixnum.Int64? timestamp,
+    $core.int? queryCount,
+  }) {
+    final result = create();
+    if (state != null) result.state = state;
+    if (passed != null) result.passed = passed;
+    if (reason != null) result.reason = reason;
+    if (confirmedBlocks != null) result.confirmedBlocks = confirmedBlocks;
+    if (timestamp != null) result.timestamp = timestamp;
+    if (queryCount != null) result.queryCount = queryCount;
+    return result;
+  }
+
+  VerifyTransactionResp._();
+
+  factory VerifyTransactionResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VerifyTransactionResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VerifyTransactionResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'state')
+    ..aOB(2, _omitFieldNames ? '' : 'passed')
+    ..aOS(3, _omitFieldNames ? '' : 'reason')
+    ..aInt64(4, _omitFieldNames ? '' : 'confirmedBlocks')
+    ..aInt64(5, _omitFieldNames ? '' : 'timestamp')
+    ..aI(6, _omitFieldNames ? '' : 'queryCount', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyTransactionResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyTransactionResp copyWith(
+          void Function(VerifyTransactionResp) updates) =>
+      super.copyWith((message) => updates(message as VerifyTransactionResp))
+          as VerifyTransactionResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VerifyTransactionResp create() => VerifyTransactionResp._();
+  @$core.override
+  VerifyTransactionResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VerifyTransactionResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VerifyTransactionResp>(create);
+  static VerifyTransactionResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get state => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set state($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasState() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearState() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get passed => $_getBF(1);
+  @$pb.TagNumber(2)
+  set passed($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPassed() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPassed() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get reason => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set reason($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReason() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReason() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get confirmedBlocks => $_getI64(3);
+  @$pb.TagNumber(4)
+  set confirmedBlocks($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasConfirmedBlocks() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearConfirmedBlocks() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get timestamp => $_getI64(4);
+  @$pb.TagNumber(5)
+  set timestamp($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTimestamp() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTimestamp() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get queryCount => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set queryCount($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasQueryCount() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearQueryCount() => $_clearField(6);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =
