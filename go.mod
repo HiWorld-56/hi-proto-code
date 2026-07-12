@@ -1,4 +1,4 @@
-module git.hi.lan/HiWorld-56/hi-proto-code/go
+module github.com/HiWorld-56/hi-proto
 
 go 1.25.0
 
@@ -16,5 +16,3 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20260414002931-afd174a4e478 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260414002931-afd174a4e478 // indirect
 )
-
-replace github.com/HiWorld-56/hi-proto/gen/go => ./
