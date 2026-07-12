@@ -7,7 +7,7 @@
 package club
 
 import (
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,8 +27,8 @@ const file_hi_club_assets_proto_rawDesc = "" +
 	"\n" +
 	"\x14hi/club/assets.proto\x12\ahi.club\x1a\x13hi/did/wallet.proto2N\n" +
 	"\x06Assets\x12D\n" +
-	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsRespB\x86\x01\n" +
-	"\vcom.hi.clubB\vAssetsProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsRespB\x87\x01\n" +
+	"\vcom.hi.clubB\vAssetsProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_assets_proto_goTypes = []any{
 	(*did.GetUserAssetsReq)(nil),  // 0: hi.did.GetUserAssetsReq

@@ -183,10 +183,10 @@ const file_hi_did_price_proto_rawDesc = "" +
 	"\x05price\x18\x01 \x01(\tR\x05price\x12 \n" +
 	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinR\x04coin2>\n" +
 	"\x05Price\x125\n" +
-	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceRespB\x7f\n" +
+	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceRespB\x80\x01\n" +
 	"\n" +
 	"com.hi.didB\n" +
-	"PriceProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"PriceProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var (
 	file_hi_did_price_proto_rawDescOnce sync.Once

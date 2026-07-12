@@ -7,7 +7,7 @@
 package club
 
 import (
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -31,8 +31,8 @@ const file_hi_club_api_key_proto_rawDesc = "" +
 	"\x06Create\x12\x17.hi.did.CreateApiKeyReq\x1a\x18.hi.did.CreateApiKeyResp\x125\n" +
 	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\x125\n" +
 	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\x129\n" +
-	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.EmptyB\x86\x01\n" +
-	"\vcom.hi.clubB\vApiKeyProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.EmptyB\x87\x01\n" +
+	"\vcom.hi.clubB\vApiKeyProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_api_key_proto_goTypes = []any{
 	(*did.CreateApiKeyReq)(nil),  // 0: hi.did.CreateApiKeyReq

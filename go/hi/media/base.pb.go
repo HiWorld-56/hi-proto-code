@@ -7,7 +7,7 @@
 package media
 
 import (
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -28,8 +28,8 @@ const file_hi_media_base_proto_rawDesc = "" +
 	"\n" +
 	"\x13hi/media/base.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto2V\n" +
 	"\x04Base\x12N\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersRespB\x8a\x01\n" +
-	"\fcom.hi.mediaB\tBaseProtoP\x01Z.github.com/HiWorld-56/hi-proto/gen/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
+	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersRespB\x8b\x01\n" +
+	"\fcom.hi.mediaB\tBaseProtoP\x01Z/git.hi.lan/HiWorld-56/hi-proto-code/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var file_hi_media_base_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),               // 0: google.protobuf.Empty

@@ -7,7 +7,7 @@
 package club
 
 import (
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -28,8 +28,8 @@ const file_hi_club_gateway_proto_rawDesc = "" +
 	"\n" +
 	"\x15hi/club/gateway.proto\x12\ahi.club\x1a\x14hi/did/gateway.proto\x1a\x1bgoogle/protobuf/empty.proto2N\n" +
 	"\rGatewayConfig\x12=\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListRespB\x87\x01\n" +
-	"\vcom.hi.clubB\fGatewayProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListRespB\x88\x01\n" +
+	"\vcom.hi.clubB\fGatewayProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_gateway_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),             // 0: google.protobuf.Empty

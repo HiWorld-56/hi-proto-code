@@ -185,8 +185,8 @@ const file_hi_ai_setting_proto_rawDesc = "" +
 	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info2v\n" +
 	"\aSetting\x125\n" +
 	"\x04Edit\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\x124\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetRespB{\n" +
-	"\tcom.hi.aiB\fSettingProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetRespB|\n" +
+	"\tcom.hi.aiB\fSettingProtoP\x01Z,git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_setting_proto_rawDescOnce sync.Once

@@ -7,7 +7,7 @@
 package did
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -693,9 +693,9 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\vDeleteUesrs\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty2t\n" +
 	"\x03SSE\x120\n" +
 	"\vOrderEvents\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp0\x01\x12;\n" +
-	"\x06Notify\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.EmptyB\x82\x01\n" +
+	"\x06Notify\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.EmptyB\x83\x01\n" +
 	"\n" +
-	"com.hi.didB\rMerchantProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\rMerchantProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var (
 	file_hi_did_merchant_proto_rawDescOnce sync.Once

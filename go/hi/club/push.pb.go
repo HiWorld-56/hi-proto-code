@@ -7,7 +7,7 @@
 package club
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -132,8 +132,8 @@ const file_hi_club_push_proto_rawDesc = "" +
 	"\vPushManager\x12<\n" +
 	"\bRegister\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\x12@\n" +
 	"\n" +
-	"Unregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.EmptyB\x84\x01\n" +
-	"\vcom.hi.clubB\tPushProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"Unregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.EmptyB\x85\x01\n" +
+	"\vcom.hi.clubB\tPushProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_push_proto_rawDescOnce sync.Once

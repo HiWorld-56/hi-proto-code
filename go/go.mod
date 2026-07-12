@@ -1,6 +1,6 @@
 module git.hi.lan/HiWorld-56/hi-proto-code/go
 
-go 1.25.0
+go 1.23
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20260415201107-50325440f8f2.1
@@ -18,4 +18,3 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260414002931-afd174a4e478 // indirect
 )
 
-replace github.com/HiWorld-56/hi-proto/gen/go => ./

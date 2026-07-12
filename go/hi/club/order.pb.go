@@ -7,7 +7,7 @@
 package club
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -392,9 +392,9 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\x06orders\x18\x02 \x03(\v2\x1c.hi.club.UpdatePulledPcOrderR\x06orders2\x92\x01\n" +
 	"\x05Order\x12I\n" +
 	"\x14GetNotPulledPcOrders\x12\x0e.hi.SignedData\x1a!.hi.club.GetNotPulledPcOrdersResp\x12>\n" +
-	"\x14UpdatePulledPcOrders\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB\x85\x01\n" +
+	"\x14UpdatePulledPcOrders\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB\x86\x01\n" +
 	"\vcom.hi.clubB\n" +
-	"OrderProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"OrderProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_order_proto_rawDescOnce sync.Once

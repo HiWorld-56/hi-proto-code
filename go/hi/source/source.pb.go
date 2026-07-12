@@ -533,8 +533,8 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x06Upload\x12\x14.hi.source.UploadReq\x1a\x15.hi.source.UploadResp\x12;\n" +
 	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\x12C\n" +
 	"\fUploadStream\x12\x1a.hi.source.UploadStreamReq\x1a\x15.hi.source.UploadResp(\x01\x12O\n" +
-	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp0\x01B\x92\x01\n" +
-	"\rcom.hi.sourceB\vSourceProtoP\x01Z/github.com/HiWorld-56/hi-proto/gen/go/hi/source\xa2\x02\x03HSX\xaa\x02\tHi.Source\xca\x02\tHi\\Source\xe2\x02\x15Hi\\Source\\GPBMetadata\xea\x02\n" +
+	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp0\x01B\x93\x01\n" +
+	"\rcom.hi.sourceB\vSourceProtoP\x01Z0git.hi.lan/HiWorld-56/hi-proto-code/go/hi/source\xa2\x02\x03HSX\xaa\x02\tHi.Source\xca\x02\tHi\\Source\xe2\x02\x15Hi\\Source\\GPBMetadata\xea\x02\n" +
 	"Hi::Sourceb\x06proto3"
 
 var (

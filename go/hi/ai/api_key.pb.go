@@ -7,7 +7,7 @@
 package ai
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -431,8 +431,8 @@ const file_hi_ai_api_key_proto_rawDesc = "" +
 	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\x123\n" +
 	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\x12-\n" +
 	"\x04List\x12\x0e.hi.Pagination\x1a\x15.hi.ai.ListApiKeyResp\x128\n" +
-	"\x06Delete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.EmptyBz\n" +
-	"\tcom.hi.aiB\vApiKeyProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\x06Delete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.EmptyB{\n" +
+	"\tcom.hi.aiB\vApiKeyProtoP\x01Z,git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_api_key_proto_rawDescOnce sync.Once

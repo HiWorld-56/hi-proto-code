@@ -14,8 +14,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/HiWorld-56/hi-proto/gen/go/hi"
-	"github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
+	"git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	"git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"

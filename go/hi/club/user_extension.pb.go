@@ -7,7 +7,7 @@
 package club
 
 import (
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -130,8 +130,8 @@ const file_hi_club_user_extension_proto_rawDesc = "" +
 	"\x05infos\x18\x01 \x03(\v2\x1a.hi.club.UserExtensionInfoR\x05infos2\xa4\x01\n" +
 	"\rUserExtension\x12@\n" +
 	"\x03Get\x12\x1b.hi.did.UserExtensionGetReq\x1a\x1c.hi.did.UserExtensionGetResp\x12Q\n" +
-	"\x11ListByMerchantDid\x12\x1c.hi.did.ListByMerchantDidReq\x1a\x1e.hi.club.ListByMerchantDidRespB\x8d\x01\n" +
-	"\vcom.hi.clubB\x12UserExtensionProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\x11ListByMerchantDid\x12\x1c.hi.did.ListByMerchantDidReq\x1a\x1e.hi.club.ListByMerchantDidRespB\x8e\x01\n" +
+	"\vcom.hi.clubB\x12UserExtensionProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_user_extension_proto_rawDescOnce sync.Once

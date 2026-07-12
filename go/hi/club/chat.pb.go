@@ -7,7 +7,7 @@
 package club
 
 import (
-	ai "github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
+	ai "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -732,8 +732,8 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"TextToText\x12\x16.hi.club.TextToTextReq\x1a\x0f.hi.ai.ChatResp\x12;\n" +
 	"\vTextToText2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\x129\n" +
 	"\fSpeechToText\x12\x18.hi.club.SpeechToTextReq\x1a\x0f.hi.ai.ChatResp\x12=\n" +
-	"\rSpeechToText2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatRespB\x84\x01\n" +
-	"\vcom.hi.clubB\tChatProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\rSpeechToText2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatRespB\x85\x01\n" +
+	"\vcom.hi.clubB\tChatProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_chat_proto_rawDescOnce sync.Once

@@ -7,7 +7,7 @@
 package ai
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -1204,8 +1204,8 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\n" +
 	"EditDegest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\x12<\n" +
 	"\vSetMemModel\x12\x15.hi.ai.SetMemModelReq\x1a\x16.google.protobuf.Empty\x12<\n" +
-	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelRespB|\n" +
-	"\tcom.hi.aiB\rTrainingProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelRespB}\n" +
+	"\tcom.hi.aiB\rTrainingProtoP\x01Z,git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_training_proto_rawDescOnce sync.Once

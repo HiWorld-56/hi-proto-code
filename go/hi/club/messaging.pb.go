@@ -7,8 +7,8 @@
 package club
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -893,8 +893,8 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05topic\x18\x01 \x01(\tR\x05topic\x12)\n" +
 	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayload2C\n" +
 	"\tPublisher\x126\n" +
-	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.EmptyB\x89\x01\n" +
-	"\vcom.hi.clubB\x0eMessagingProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.EmptyB\x8a\x01\n" +
+	"\vcom.hi.clubB\x0eMessagingProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_messaging_proto_rawDescOnce sync.Once

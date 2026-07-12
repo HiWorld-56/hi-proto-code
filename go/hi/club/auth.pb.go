@@ -7,8 +7,8 @@
 package club
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -107,8 +107,8 @@ const file_hi_club_auth_proto_rawDesc = "" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\x128\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\x124\n" +
 	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\x12,\n" +
-	"\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginRespB\x84\x01\n" +
-	"\vcom.hi.clubB\tAuthProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginRespB\x85\x01\n" +
+	"\vcom.hi.clubB\tAuthProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
 	file_hi_club_auth_proto_rawDescOnce sync.Once

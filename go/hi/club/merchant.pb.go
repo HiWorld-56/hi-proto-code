@@ -7,8 +7,8 @@
 package club
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -30,8 +30,8 @@ const file_hi_club_merchant_proto_rawDesc = "" +
 	"\x16hi/club/merchant.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto2y\n" +
 	"\bMerchant\x128\n" +
 	"\x04List\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantListResp\x123\n" +
-	"\aListAll\x12\x0e.hi.Pagination\x1a\x18.hi.did.MerchantListRespB\x88\x01\n" +
-	"\vcom.hi.clubB\rMerchantProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\aListAll\x12\x0e.hi.Pagination\x1a\x18.hi.did.MerchantListRespB\x89\x01\n" +
+	"\vcom.hi.clubB\rMerchantProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_merchant_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),        // 0: google.protobuf.Empty

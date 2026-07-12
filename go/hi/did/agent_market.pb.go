@@ -7,7 +7,7 @@
 package did
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -562,9 +562,9 @@ const file_hi_did_agent_market_proto_rawDesc = "" +
 	"\x06Create\x12\x11.hi.did.AgentInfo\x1a\x16.google.protobuf.Empty\x121\n" +
 	"\x04Edit\x12\x11.hi.did.AgentInfo\x1a\x16.google.protobuf.Empty\x128\n" +
 	"\x06Delete\x12\x16.hi.did.AgentDeleteReq\x1a\x16.google.protobuf.Empty\x12B\n" +
-	"\vUpdateOrder\x12\x1b.hi.did.AgentUpdateOrderReq\x1a\x16.google.protobuf.EmptyB\x85\x01\n" +
+	"\vUpdateOrder\x12\x1b.hi.did.AgentUpdateOrderReq\x1a\x16.google.protobuf.EmptyB\x86\x01\n" +
 	"\n" +
-	"com.hi.didB\x10AgentMarketProtoP\x01Z,github.com/HiWorld-56/hi-proto/gen/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
+	"com.hi.didB\x10AgentMarketProtoP\x01Z-git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var (
 	file_hi_did_agent_market_proto_rawDescOnce sync.Once

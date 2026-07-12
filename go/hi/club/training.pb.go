@@ -7,7 +7,7 @@
 package club
 
 import (
-	ai "github.com/HiWorld-56/hi-proto/gen/go/hi/ai"
+	ai "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -43,8 +43,8 @@ const file_hi_club_training_proto_rawDesc = "" +
 	"\n" +
 	"EditDegest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\x12<\n" +
 	"\vSetMemModel\x12\x15.hi.ai.SetMemModelReq\x1a\x16.google.protobuf.Empty\x12<\n" +
-	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelRespB\x88\x01\n" +
-	"\vcom.hi.clubB\rTrainingProtoP\x01Z-github.com/HiWorld-56/hi-proto/gen/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
+	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelRespB\x89\x01\n" +
+	"\vcom.hi.clubB\rTrainingProtoP\x01Z.git.hi.lan/HiWorld-56/hi-proto-code/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_training_proto_goTypes = []any{
 	(*ai.TrainingAgentReq)(nil),         // 0: hi.ai.TrainingAgentReq

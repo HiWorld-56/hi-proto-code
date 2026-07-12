@@ -7,7 +7,7 @@
 package ai
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -1943,8 +1943,8 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"TextToText\x12\x14.hi.ai.TextToTextReq\x1a\x0f.hi.ai.ChatResp\x129\n" +
 	"\vTextToText2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\x127\n" +
 	"\fSpeechToText\x12\x16.hi.ai.SpeechToTextReq\x1a\x0f.hi.ai.ChatResp\x12;\n" +
-	"\rSpeechToText2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatRespBx\n" +
-	"\tcom.hi.aiB\tChatProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\rSpeechToText2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatRespBy\n" +
+	"\tcom.hi.aiB\tChatProtoP\x01Z,git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_chat_proto_rawDescOnce sync.Once

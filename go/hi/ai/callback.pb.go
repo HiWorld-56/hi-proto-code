@@ -7,7 +7,7 @@
 package ai
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -130,8 +130,8 @@ const file_hi_ai_callback_proto_rawDesc = "" +
 	".hi.EntityR\x04user\x12\x17\n" +
 	"\aapi_key\x18\x02 \x01(\tR\x06apiKey2R\n" +
 	"\fUserCallback\x12B\n" +
-	"\rGetUserApiKey\x12\x17.hi.ai.GetUserApiKeyReq\x1a\x18.hi.ai.GetUserApiKeyRespB|\n" +
-	"\tcom.hi.aiB\rCallbackProtoP\x01Z+github.com/HiWorld-56/hi-proto/gen/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
+	"\rGetUserApiKey\x12\x17.hi.ai.GetUserApiKeyReq\x1a\x18.hi.ai.GetUserApiKeyRespB}\n" +
+	"\tcom.hi.aiB\rCallbackProtoP\x01Z,git.hi.lan/HiWorld-56/hi-proto-code/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
 	file_hi_ai_callback_proto_rawDescOnce sync.Once

@@ -7,8 +7,8 @@
 package media
 
 import (
-	hi "github.com/HiWorld-56/hi-proto/gen/go/hi"
-	did "github.com/HiWorld-56/hi-proto/gen/go/hi/did"
+	hi "git.hi.lan/HiWorld-56/hi-proto-code/go/hi"
+	did "git.hi.lan/HiWorld-56/hi-proto-code/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -34,8 +34,8 @@ const file_hi_media_invite_code_proto_rawDesc = "" +
 	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\x122\n" +
 	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\x12=\n" +
 	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\x124\n" +
-	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthTokenB\x90\x01\n" +
-	"\fcom.hi.mediaB\x0fInviteCodeProtoP\x01Z.github.com/HiWorld-56/hi-proto/gen/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
+	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthTokenB\x91\x01\n" +
+	"\fcom.hi.mediaB\x0fInviteCodeProtoP\x01Z/git.hi.lan/HiWorld-56/hi-proto-code/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var file_hi_media_invite_code_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),            // 0: google.protobuf.Empty
