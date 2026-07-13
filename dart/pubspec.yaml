@@ -4,6 +4,6 @@ version: 0.1.0
 environment:
   sdk: ">=3.0.0 <4.0.0"
 dependencies:
-  protobuf: ^4.1.0
-  grpc: ^4.0.1
+  protobuf: ^6.0.0
+  grpc: ^5.1.0
   fixnum: ^1.1.0
