@@ -8,8 +8,10 @@ package source
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -496,7 +498,7 @@ var File_hi_source_source_proto protoreflect.FileDescriptor
 
 const file_hi_source_source_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/source/source.proto\x12\thi.source\x1a\x1bbuf/validate/validate.proto\"r\n" +
+	"\x16hi/source/source.proto\x12\thi.source\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\"r\n" +
 	"\tUploadReq\x12 \n" +
 	"\x04type\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04type\x12 \n" +
 	"\x04name\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12!\n" +
@@ -533,7 +535,9 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x06Upload\x12\x14.hi.source.UploadReq\x1a\x15.hi.source.UploadResp\x12;\n" +
 	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\x12C\n" +
 	"\fUploadStream\x12\x1a.hi.source.UploadStreamReq\x1a\x15.hi.source.UploadResp(\x01\x12O\n" +
-	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp0\x01B\x8e\x01\n" +
+	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp0\x012F\n" +
+	"\x04Base\x12>\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionRespB\x8e\x01\n" +
 	"\rcom.hi.sourceB\vSourceProtoP\x01Z+github.com/HiWorld-56/hi-proto/go/hi/source\xa2\x02\x03HSX\xaa\x02\tHi.Source\xca\x02\tHi\\Source\xe2\x02\x15Hi\\Source\\GPBMetadata\xea\x02\n" +
 	"Hi::Sourceb\x06proto3"
 
@@ -551,14 +555,16 @@ func file_hi_source_source_proto_rawDescGZIP() []byte {
 
 var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_hi_source_source_proto_goTypes = []any{
-	(*UploadReq)(nil),          // 0: hi.source.UploadReq
-	(*UploadResp)(nil),         // 1: hi.source.UploadResp
-	(*DownloadReq)(nil),        // 2: hi.source.DownloadReq
-	(*DownloadResp)(nil),       // 3: hi.source.DownloadResp
-	(*UploadStreamReq)(nil),    // 4: hi.source.UploadStreamReq
-	(*UploadMeta)(nil),         // 5: hi.source.UploadMeta
-	(*DownloadStreamResp)(nil), // 6: hi.source.DownloadStreamResp
-	(*DownloadStreamReq)(nil),  // 7: hi.source.DownloadStreamReq
+	(*UploadReq)(nil),            // 0: hi.source.UploadReq
+	(*UploadResp)(nil),           // 1: hi.source.UploadResp
+	(*DownloadReq)(nil),          // 2: hi.source.DownloadReq
+	(*DownloadResp)(nil),         // 3: hi.source.DownloadResp
+	(*UploadStreamReq)(nil),      // 4: hi.source.UploadStreamReq
+	(*UploadMeta)(nil),           // 5: hi.source.UploadMeta
+	(*DownloadStreamResp)(nil),   // 6: hi.source.DownloadStreamResp
+	(*DownloadStreamReq)(nil),    // 7: hi.source.DownloadStreamReq
+	(*emptypb.Empty)(nil),        // 8: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil), // 9: hi.ServerVersionResp
 }
 var file_hi_source_source_proto_depIdxs = []int32{
 	5, // 0: hi.source.UploadStreamReq.meta:type_name -> hi.source.UploadMeta
@@ -566,12 +572,14 @@ var file_hi_source_source_proto_depIdxs = []int32{
 	2, // 2: hi.source.File.Download:input_type -> hi.source.DownloadReq
 	4, // 3: hi.source.File.UploadStream:input_type -> hi.source.UploadStreamReq
 	7, // 4: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
-	1, // 5: hi.source.File.Upload:output_type -> hi.source.UploadResp
-	3, // 6: hi.source.File.Download:output_type -> hi.source.DownloadResp
-	1, // 7: hi.source.File.UploadStream:output_type -> hi.source.UploadResp
-	6, // 8: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
+	8, // 5: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
+	1, // 6: hi.source.File.Upload:output_type -> hi.source.UploadResp
+	3, // 7: hi.source.File.Download:output_type -> hi.source.DownloadResp
+	1, // 8: hi.source.File.UploadStream:output_type -> hi.source.UploadResp
+	6, // 9: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
+	9, // 10: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	6, // [6:11] is the sub-list for method output_type
+	1, // [1:6] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -595,7 +603,7 @@ func file_hi_source_source_proto_init() {
 			NumEnums:      0,
 			NumMessages:   8,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_source_source_proto_goTypes,
 		DependencyIndexes: file_hi_source_source_proto_depIdxs,

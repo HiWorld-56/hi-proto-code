@@ -15,7 +15,9 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
+import '../common.pb.dart' as $2;
 import 'source.pb.dart' as $0;
 
 export 'source.pb.dart';
@@ -147,4 +149,55 @@ abstract class FileServiceBase extends $grpc.Service {
 
   $async.Stream<$0.DownloadStreamResp> downloadStream(
       $grpc.ServiceCall call, $0.DownloadStreamReq request);
+}
+
+@$pb.GrpcServiceName('hi.source.Base')
+class BaseClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  BaseClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$2.ServerVersionResp> serverVersion(
+    $1.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$serverVersion, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$serverVersion =
+      $grpc.ClientMethod<$1.Empty, $2.ServerVersionResp>(
+          '/hi.source.Base/ServerVersion',
+          ($1.Empty value) => value.writeToBuffer(),
+          $2.ServerVersionResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.source.Base')
+abstract class BaseServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.source.Base';
+
+  BaseServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.Empty, $2.ServerVersionResp>(
+        'ServerVersion',
+        serverVersion_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
+        ($2.ServerVersionResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$2.ServerVersionResp> serverVersion_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+    return serverVersion($call, await $request);
+  }
+
+  $async.Future<$2.ServerVersionResp> serverVersion(
+      $grpc.ServiceCall call, $1.Empty request);
 }
