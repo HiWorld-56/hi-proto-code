@@ -79,3 +79,13 @@ pub struct Pagination {
     #[prost(int32, tag = "2")]
     pub limit: i32,
 }
+/// 服务自身版本/环境(所有 Base 服务共用;各服务实现返回自己的 bin 版本与探测到的环境)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ServerVersionResp {
+    /// bin 版本(git tag 注入)
+    #[prost(string, tag = "1")]
+    pub version: ::prost::alloc::string::String,
+    /// 运行环境:dev/prod(echo 探测得出)
+    #[prost(string, tag = "2")]
+    pub env: ::prost::alloc::string::String,
+}

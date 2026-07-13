@@ -311,11 +311,12 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\achanges\x18\x04 \x03(\tR\achanges\x12!\n" +
 	"\frelease_time\x18\x05 \x01(\x03R\vreleaseTime\"-\n" +
 	"\x17ListSuperAdminUsersResp\x12\x12\n" +
-	"\x04list\x18\x01 \x03(\tR\x04list2\xd8\x01\n" +
+	"\x04list\x18\x01 \x03(\tR\x04list2\x98\x02\n" +
 	"\x04Base\x12:\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\x12D\n" +
 	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\x12N\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp24\n" +
+	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\x12>\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp24\n" +
 	"\x06Assist\x12*\n" +
 	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DIDBz\n" +
 	"\n" +
@@ -342,20 +343,23 @@ var file_hi_did_base_proto_goTypes = []any{
 	(*ListSuperAdminUsersResp)(nil), // 4: hi.did.ListSuperAdminUsersResp
 	(*emptypb.Empty)(nil),           // 5: google.protobuf.Empty
 	(*hi.SignedData)(nil),           // 6: hi.SignedData
-	(*hi.DID)(nil),                  // 7: hi.DID
+	(*hi.ServerVersionResp)(nil),    // 7: hi.ServerVersionResp
+	(*hi.DID)(nil),                  // 8: hi.DID
 }
 var file_hi_did_base_proto_depIdxs = []int32{
 	0, // 0: hi.did.ListCoinsResp.list:type_name -> hi.did.Coin
 	5, // 1: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
 	2, // 2: hi.did.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
 	5, // 3: hi.did.Base.ListSuperAdminUsers:input_type -> google.protobuf.Empty
-	6, // 4: hi.did.Assist.VerifySignature:input_type -> hi.SignedData
-	1, // 5: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	3, // 6: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	4, // 7: hi.did.Base.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
-	7, // 8: hi.did.Assist.VerifySignature:output_type -> hi.DID
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
+	5, // 4: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
+	6, // 5: hi.did.Assist.VerifySignature:input_type -> hi.SignedData
+	1, // 6: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	3, // 7: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
+	4, // 8: hi.did.Base.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
+	7, // 9: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	8, // 10: hi.did.Assist.VerifySignature:output_type -> hi.DID
+	6, // [6:11] is the sub-list for method output_type
+	1, // [1:6] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name

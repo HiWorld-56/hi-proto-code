@@ -163,3 +163,17 @@ const Pagination$json = {
 /// Descriptor for `Pagination`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List paginationDescriptor = $convert.base64Decode(
     'CgpQYWdpbmF0aW9uEhIKBHBhZ2UYASABKAVSBHBhZ2USFAoFbGltaXQYAiABKAVSBWxpbWl0');
+
+@$core.Deprecated('Use serverVersionRespDescriptor instead')
+const ServerVersionResp$json = {
+  '1': 'ServerVersionResp',
+  '2': [
+    {'1': 'version', '3': 1, '4': 1, '5': 9, '10': 'version'},
+    {'1': 'env', '3': 2, '4': 1, '5': 9, '10': 'env'},
+  ],
+};
+
+/// Descriptor for `ServerVersionResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List serverVersionRespDescriptor = $convert.base64Decode(
+    'ChFTZXJ2ZXJWZXJzaW9uUmVzcBIYCgd2ZXJzaW9uGAEgASgJUgd2ZXJzaW9uEhAKA2VudhgCIA'
+    'EoCVIDZW52');

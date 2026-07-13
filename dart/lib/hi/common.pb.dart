@@ -734,6 +734,73 @@ class Pagination extends $pb.GeneratedMessage {
   void clearLimit() => $_clearField(2);
 }
 
+/// 服务自身版本/环境(所有 Base 服务共用;各服务实现返回自己的 bin 版本与探测到的环境)。
+class ServerVersionResp extends $pb.GeneratedMessage {
+  factory ServerVersionResp({
+    $core.String? version,
+    $core.String? env,
+  }) {
+    final result = create();
+    if (version != null) result.version = version;
+    if (env != null) result.env = env;
+    return result;
+  }
+
+  ServerVersionResp._();
+
+  factory ServerVersionResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ServerVersionResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ServerVersionResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'version')
+    ..aOS(2, _omitFieldNames ? '' : 'env')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServerVersionResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServerVersionResp copyWith(void Function(ServerVersionResp) updates) =>
+      super.copyWith((message) => updates(message as ServerVersionResp))
+          as ServerVersionResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ServerVersionResp create() => ServerVersionResp._();
+  @$core.override
+  ServerVersionResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ServerVersionResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ServerVersionResp>(create);
+  static ServerVersionResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get version => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set version($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVersion() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVersion() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get env => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set env($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEnv() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEnv() => $_clearField(2);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

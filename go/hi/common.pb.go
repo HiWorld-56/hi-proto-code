@@ -593,6 +593,59 @@ func (x *Pagination) GetLimit() int32 {
 	return 0
 }
 
+// 服务自身版本/环境(所有 Base 服务共用;各服务实现返回自己的 bin 版本与探测到的环境)。
+type ServerVersionResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Version       string                 `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"` // bin 版本(git tag 注入)
+	Env           string                 `protobuf:"bytes,2,opt,name=env,proto3" json:"env,omitempty"`         // 运行环境:dev/prod(echo 探测得出)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ServerVersionResp) Reset() {
+	*x = ServerVersionResp{}
+	mi := &file_hi_common_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServerVersionResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServerVersionResp) ProtoMessage() {}
+
+func (x *ServerVersionResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_common_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServerVersionResp.ProtoReflect.Descriptor instead.
+func (*ServerVersionResp) Descriptor() ([]byte, []int) {
+	return file_hi_common_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ServerVersionResp) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+func (x *ServerVersionResp) GetEnv() string {
+	if x != nil {
+		return x.Env
+	}
+	return ""
+}
+
 var File_hi_common_proto protoreflect.FileDescriptor
 
 const file_hi_common_proto_rawDesc = "" +
@@ -633,7 +686,10 @@ const file_hi_common_proto_rawDesc = "" +
 	"\n" +
 	"Pagination\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limitBc\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\"?\n" +
+	"\x11ServerVersionResp\x12\x18\n" +
+	"\aversion\x18\x01 \x01(\tR\aversion\x12\x10\n" +
+	"\x03env\x18\x02 \x01(\tR\x03envBc\n" +
 	"\x06com.hiB\vCommonProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (
@@ -648,19 +704,20 @@ func file_hi_common_proto_rawDescGZIP() []byte {
 	return file_hi_common_proto_rawDescData
 }
 
-var file_hi_common_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_common_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_hi_common_proto_goTypes = []any{
-	(*SignedData)(nil),      // 0: hi.SignedData
-	(*DID)(nil),             // 1: hi.DID
-	(*Entity)(nil),          // 2: hi.Entity
-	(*MqttCredentials)(nil), // 3: hi.MqttCredentials
-	(*AuthToken)(nil),       // 4: hi.AuthToken
-	(*Nonce)(nil),           // 5: hi.Nonce
-	(*RequestId)(nil),       // 6: hi.RequestId
-	(*State)(nil),           // 7: hi.State
-	(*Number)(nil),          // 8: hi.Number
-	(*ClientInfo)(nil),      // 9: hi.ClientInfo
-	(*Pagination)(nil),      // 10: hi.Pagination
+	(*SignedData)(nil),        // 0: hi.SignedData
+	(*DID)(nil),               // 1: hi.DID
+	(*Entity)(nil),            // 2: hi.Entity
+	(*MqttCredentials)(nil),   // 3: hi.MqttCredentials
+	(*AuthToken)(nil),         // 4: hi.AuthToken
+	(*Nonce)(nil),             // 5: hi.Nonce
+	(*RequestId)(nil),         // 6: hi.RequestId
+	(*State)(nil),             // 7: hi.State
+	(*Number)(nil),            // 8: hi.Number
+	(*ClientInfo)(nil),        // 9: hi.ClientInfo
+	(*Pagination)(nil),        // 10: hi.Pagination
+	(*ServerVersionResp)(nil), // 11: hi.ServerVersionResp
 }
 var file_hi_common_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -681,7 +738,7 @@ func file_hi_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_common_proto_rawDesc), len(file_hi_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
