@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
+import 'group.pb.dart' as $4;
 import 'messaging.pb.dart' as $3;
 import 'user.pbenum.dart';
 
@@ -678,7 +679,7 @@ class DeleteFriendReq extends $pb.GeneratedMessage {
 
 class ListGroupResp extends $pb.GeneratedMessage {
   factory ListGroupResp({
-    $core.Iterable<$2.Entity>? list,
+    $core.Iterable<$4.GroupBase>? list,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
@@ -698,8 +699,8 @@ class ListGroupResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListGroupResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<$2.Entity>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: $2.Entity.create)
+    ..pPM<$4.GroupBase>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $4.GroupBase.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -722,7 +723,7 @@ class ListGroupResp extends $pb.GeneratedMessage {
   static ListGroupResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$2.Entity> get list => $_getList(0);
+  $pb.PbList<$4.GroupBase> get list => $_getList(0);
 }
 
 class GetUserReq extends $pb.GeneratedMessage {

@@ -135,27 +135,6 @@ const CreateSingleReq$json = {
 final $typed_data.Uint8List createSingleReqDescriptor =
     $convert.base64Decode('Cg9DcmVhdGVTaW5nbGVSZXESEAoDZGlkGAEgASgJUgNkaWQ=');
 
-@$core.Deprecated('Use updateGroupReqDescriptor instead')
-const UpdateGroupReq$json = {
-  '1': 'UpdateGroupReq',
-  '2': [
-    {
-      '1': 'base',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.GroupBase',
-      '10': 'base'
-    },
-    {'1': 'clear_background', '3': 2, '4': 1, '5': 8, '10': 'clearBackground'},
-  ],
-};
-
-/// Descriptor for `UpdateGroupReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateGroupReqDescriptor = $convert.base64Decode(
-    'Cg5VcGRhdGVHcm91cFJlcRImCgRiYXNlGAEgASgLMhIuaGkuY2x1Yi5Hcm91cEJhc2VSBGJhc2'
-    'USKQoQY2xlYXJfYmFja2dyb3VuZBgCIAEoCFIPY2xlYXJCYWNrZ3JvdW5k');
-
 @$core.Deprecated('Use listGroupMessageReqDescriptor instead')
 const ListGroupMessageReq$json = {
   '1': 'ListGroupMessageReq',

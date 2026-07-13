@@ -46,7 +46,7 @@ type GroupClient interface {
 	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
-	Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Update(ctx context.Context, in *GroupBase, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMember(ctx context.Context, in *ListGroupMemberReq, opts ...grpc.CallOption) (*GroupInfo, error)
 	ListQ3GroupMember(ctx context.Context, in *ListQ3GroupMemberReq, opts ...grpc.CallOption) (*Q3GroupInfo, error)
 	GetMemberTotal(ctx context.Context, in *GetGroupMemberTotalReq, opts ...grpc.CallOption) (*GetGroupMemberTotalResp, error)
@@ -100,7 +100,7 @@ func (c *groupClient) CreateSingle(ctx context.Context, in *CreateSingleReq, opt
 	return out, nil
 }
 
-func (c *groupClient) Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *groupClient) Update(ctx context.Context, in *GroupBase, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Group_Update_FullMethodName, in, out, cOpts...)
@@ -247,7 +247,7 @@ type GroupServer interface {
 	Get(context.Context, *GetGroupReq) (*GroupBase, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
-	Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error)
+	Update(context.Context, *GroupBase) (*emptypb.Empty, error)
 	ListMember(context.Context, *ListGroupMemberReq) (*GroupInfo, error)
 	ListQ3GroupMember(context.Context, *ListQ3GroupMemberReq) (*Q3GroupInfo, error)
 	GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error)
@@ -279,7 +279,7 @@ func (UnimplementedGroupServer) Create(context.Context, *CreateGroupReq) (*Group
 func (UnimplementedGroupServer) CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateSingle not implemented")
 }
-func (UnimplementedGroupServer) Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error) {
+func (UnimplementedGroupServer) Update(context.Context, *GroupBase) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedGroupServer) ListMember(context.Context, *ListGroupMemberReq) (*GroupInfo, error) {
@@ -396,7 +396,7 @@ func _Group_CreateSingle_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _Group_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateGroupReq)
+	in := new(GroupBase)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -408,7 +408,7 @@ func _Group_Update_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Group_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).Update(ctx, req.(*UpdateGroupReq))
+		return srv.(GroupServer).Update(ctx, req.(*GroupBase))
 	}
 	return interceptor(ctx, in, info, handler)
 }

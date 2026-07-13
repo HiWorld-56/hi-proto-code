@@ -55,7 +55,7 @@ class GroupClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$1.Empty> update(
-    $0.UpdateGroupReq request, {
+    $0.GroupBase request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$update, request, options: options);
@@ -167,9 +167,9 @@ class GroupClient extends $grpc.Client {
           '/hi.club.Group/CreateSingle',
           ($0.CreateSingleReq value) => value.writeToBuffer(),
           $0.GroupBase.fromBuffer);
-  static final _$update = $grpc.ClientMethod<$0.UpdateGroupReq, $1.Empty>(
+  static final _$update = $grpc.ClientMethod<$0.GroupBase, $1.Empty>(
       '/hi.club.Group/Update',
-      ($0.UpdateGroupReq value) => value.writeToBuffer(),
+      ($0.GroupBase value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
   static final _$listMember =
       $grpc.ClientMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
@@ -256,12 +256,12 @@ abstract class GroupServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CreateSingleReq.fromBuffer(value),
         ($0.GroupBase value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UpdateGroupReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.GroupBase, $1.Empty>(
         'Update',
         update_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.UpdateGroupReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.GroupBase.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
         'ListMember',
@@ -386,13 +386,12 @@ abstract class GroupServiceBase extends $grpc.Service {
   $async.Future<$0.GroupBase> createSingle(
       $grpc.ServiceCall call, $0.CreateSingleReq request);
 
-  $async.Future<$1.Empty> update_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.UpdateGroupReq> $request) async {
+  $async.Future<$1.Empty> update_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GroupBase> $request) async {
     return update($call, await $request);
   }
 
-  $async.Future<$1.Empty> update(
-      $grpc.ServiceCall call, $0.UpdateGroupReq request);
+  $async.Future<$1.Empty> update($grpc.ServiceCall call, $0.GroupBase request);
 
   $async.Future<$0.GroupInfo> listMember_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListGroupMemberReq> $request) async {

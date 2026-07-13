@@ -204,13 +204,21 @@ final $typed_data.Uint8List deleteFriendReqDescriptor =
 const ListGroupResp$json = {
   '1': 'ListGroupResp',
   '2': [
-    {'1': 'list', '3': 1, '4': 3, '5': 11, '6': '.hi.Entity', '10': 'list'},
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.GroupBase',
+      '10': 'list'
+    },
   ],
 };
 
 /// Descriptor for `ListGroupResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGroupRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0R3JvdXBSZXNwEh4KBGxpc3QYASADKAsyCi5oaS5FbnRpdHlSBGxpc3Q=');
+    'Cg1MaXN0R3JvdXBSZXNwEiYKBGxpc3QYASADKAsyEi5oaS5jbHViLkdyb3VwQmFzZVIEbGlzdA'
+    '==');
 
 @$core.Deprecated('Use getUserReqDescriptor instead')
 const GetUserReq$json = {
