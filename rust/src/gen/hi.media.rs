@@ -572,6 +572,30 @@ pub mod base_client {
                 .insert(GrpcMethod::new("hi.media.Base", "ListSuperAdminUsers"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn server_version(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ServerVersionResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Base/ServerVersion",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Base", "ServerVersion"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated client implementations.

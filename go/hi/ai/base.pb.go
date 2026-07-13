@@ -7,6 +7,7 @@
 package ai
 
 import (
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -26,20 +27,24 @@ var File_hi_ai_base_proto protoreflect.FileDescriptor
 
 const file_hi_ai_base_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/ai/base.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto2V\n" +
+	"\x10hi/ai/base.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto2\x96\x01\n" +
 	"\x04Base\x12N\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersRespBt\n" +
+	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\x12>\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionRespBt\n" +
 	"\tcom.hi.aiB\tBaseProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var file_hi_ai_base_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),               // 0: google.protobuf.Empty
 	(*did.ListSuperAdminUsersResp)(nil), // 1: hi.did.ListSuperAdminUsersResp
+	(*hi.ServerVersionResp)(nil),        // 2: hi.ServerVersionResp
 }
 var file_hi_ai_base_proto_depIdxs = []int32{
 	0, // 0: hi.ai.Base.ListSuperAdminUsers:input_type -> google.protobuf.Empty
-	1, // 1: hi.ai.Base.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 1: hi.ai.Base.ServerVersion:input_type -> google.protobuf.Empty
+	1, // 2: hi.ai.Base.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
+	2, // 3: hi.ai.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

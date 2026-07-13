@@ -17,6 +17,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
+import '../common.pb.dart' as $2;
 import '../did/base.pb.dart' as $1;
 
 export 'base.pb.dart';
@@ -40,6 +41,13 @@ class BaseClient extends $grpc.Client {
     return $createUnaryCall(_$listSuperAdminUsers, request, options: options);
   }
 
+  $grpc.ResponseFuture<$2.ServerVersionResp> serverVersion(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$serverVersion, request, options: options);
+  }
+
   // method descriptors
 
   static final _$listSuperAdminUsers =
@@ -47,6 +55,11 @@ class BaseClient extends $grpc.Client {
           '/hi.media.Base/ListSuperAdminUsers',
           ($0.Empty value) => value.writeToBuffer(),
           $1.ListSuperAdminUsersResp.fromBuffer);
+  static final _$serverVersion =
+      $grpc.ClientMethod<$0.Empty, $2.ServerVersionResp>(
+          '/hi.media.Base/ServerVersion',
+          ($0.Empty value) => value.writeToBuffer(),
+          $2.ServerVersionResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.media.Base')
@@ -61,6 +74,13 @@ abstract class BaseServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.ListSuperAdminUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $2.ServerVersionResp>(
+        'ServerVersion',
+        serverVersion_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($2.ServerVersionResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers_Pre(
@@ -69,5 +89,13 @@ abstract class BaseServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$2.ServerVersionResp> serverVersion_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return serverVersion($call, await $request);
+  }
+
+  $async.Future<$2.ServerVersionResp> serverVersion(
       $grpc.ServiceCall call, $0.Empty request);
 }

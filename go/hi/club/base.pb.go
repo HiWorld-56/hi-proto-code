@@ -7,6 +7,7 @@
 package club
 
 import (
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -115,16 +116,17 @@ var File_hi_club_base_proto protoreflect.FileDescriptor
 
 const file_hi_club_base_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\"\"\n" +
+	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\"\"\n" +
 	"\fGetConfigReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"%\n" +
 	"\rGetConfigResp\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\tR\x05value2\x94\x02\n" +
+	"\x05value\x18\x01 \x01(\tR\x05value2\xd4\x02\n" +
 	"\x04Base\x12:\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\x12D\n" +
 	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\x12N\n" +
 	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\x12:\n" +
-	"\tGetConfig\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigRespB\x80\x01\n" +
+	"\tGetConfig\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigResp\x12>\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionRespB\x80\x01\n" +
 	"\vcom.hi.clubB\tBaseProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -148,18 +150,21 @@ var file_hi_club_base_proto_goTypes = []any{
 	(*did.ListCoinsResp)(nil),           // 4: hi.did.ListCoinsResp
 	(*did.LatestVersionResp)(nil),       // 5: hi.did.LatestVersionResp
 	(*did.ListSuperAdminUsersResp)(nil), // 6: hi.did.ListSuperAdminUsersResp
+	(*hi.ServerVersionResp)(nil),        // 7: hi.ServerVersionResp
 }
 var file_hi_club_base_proto_depIdxs = []int32{
 	2, // 0: hi.club.Base.ListCoins:input_type -> google.protobuf.Empty
 	3, // 1: hi.club.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
 	2, // 2: hi.club.Base.ListSuperAdminUsers:input_type -> google.protobuf.Empty
 	0, // 3: hi.club.Base.GetConfig:input_type -> hi.club.GetConfigReq
-	4, // 4: hi.club.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	5, // 5: hi.club.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	6, // 6: hi.club.Base.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
-	1, // 7: hi.club.Base.GetConfig:output_type -> hi.club.GetConfigResp
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	2, // 4: hi.club.Base.ServerVersion:input_type -> google.protobuf.Empty
+	4, // 5: hi.club.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	5, // 6: hi.club.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
+	6, // 7: hi.club.Base.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
+	1, // 8: hi.club.Base.GetConfig:output_type -> hi.club.GetConfigResp
+	7, // 9: hi.club.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

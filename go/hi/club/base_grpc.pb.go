@@ -8,6 +8,7 @@ package club
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -25,6 +26,7 @@ const (
 	Base_LatestVersion_FullMethodName       = "/hi.club.Base/LatestVersion"
 	Base_ListSuperAdminUsers_FullMethodName = "/hi.club.Base/ListSuperAdminUsers"
 	Base_GetConfig_FullMethodName           = "/hi.club.Base/GetConfig"
+	Base_ServerVersion_FullMethodName       = "/hi.club.Base/ServerVersion"
 )
 
 // BaseClient is the client API for Base service.
@@ -35,6 +37,7 @@ type BaseClient interface {
 	LatestVersion(ctx context.Context, in *did.LatestVersionReq, opts ...grpc.CallOption) (*did.LatestVersionResp, error)
 	ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error)
 	GetConfig(ctx context.Context, in *GetConfigReq, opts ...grpc.CallOption) (*GetConfigResp, error)
+	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 }
 
 type baseClient struct {
@@ -85,6 +88,16 @@ func (c *baseClient) GetConfig(ctx context.Context, in *GetConfigReq, opts ...gr
 	return out, nil
 }
 
+func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.ServerVersionResp)
+	err := c.cc.Invoke(ctx, Base_ServerVersion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServer is the server API for Base service.
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
@@ -93,6 +106,7 @@ type BaseServer interface {
 	LatestVersion(context.Context, *did.LatestVersionReq) (*did.LatestVersionResp, error)
 	ListSuperAdminUsers(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error)
 	GetConfig(context.Context, *GetConfigReq) (*GetConfigResp, error)
+	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 }
 
 // UnimplementedBaseServer should be embedded to have
@@ -113,6 +127,9 @@ func (UnimplementedBaseServer) ListSuperAdminUsers(context.Context, *emptypb.Emp
 }
 func (UnimplementedBaseServer) GetConfig(context.Context, *GetConfigReq) (*GetConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetConfig not implemented")
+}
+func (UnimplementedBaseServer) ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ServerVersion not implemented")
 }
 func (UnimplementedBaseServer) testEmbeddedByValue() {}
 
@@ -206,6 +223,24 @@ func _Base_GetConfig_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_ServerVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).ServerVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_ServerVersion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).ServerVersion(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Base_ServiceDesc is the grpc.ServiceDesc for Base service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +263,10 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetConfig",
 			Handler:    _Base_GetConfig_Handler,
+		},
+		{
+			MethodName: "ServerVersion",
+			Handler:    _Base_ServerVersion_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
