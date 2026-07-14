@@ -91,6 +91,13 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$listServitor, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.ListRelationResp> listRelation(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listRelation, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.AddFriendResp> addFriend(
     $1.AddFriendReq request, {
     $grpc.CallOptions? options,
@@ -180,6 +187,11 @@ class UserClient extends $grpc.Client {
           '/hi.club.User/ListServitor',
           ($0.Empty value) => value.writeToBuffer(),
           $1.RelationListResp.fromBuffer);
+  static final _$listRelation =
+      $grpc.ClientMethod<$0.Empty, $1.ListRelationResp>(
+          '/hi.club.User/ListRelation',
+          ($0.Empty value) => value.writeToBuffer(),
+          $1.ListRelationResp.fromBuffer);
   static final _$addFriend =
       $grpc.ClientMethod<$1.AddFriendReq, $1.AddFriendResp>(
           '/hi.club.User/AddFriend',
@@ -278,6 +290,13 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.RelationListResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListRelationResp>(
+        'ListRelation',
+        listRelation_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListRelationResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.AddFriendReq, $1.AddFriendResp>(
         'AddFriend',
         addFriend_Pre,
@@ -392,6 +411,14 @@ abstract class UserServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.RelationListResp> listServitor(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$1.ListRelationResp> listRelation_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return listRelation($call, await $request);
+  }
+
+  $async.Future<$1.ListRelationResp> listRelation(
       $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.AddFriendResp> addFriend_Pre(

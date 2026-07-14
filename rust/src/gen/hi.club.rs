@@ -4051,6 +4051,15 @@ pub struct RelationListResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<RelationInfo>,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRelationResp {
+    /// 好友(friend 关系)
+    #[prost(message, repeated, tag = "1")]
+    pub friend: ::prost::alloc::vec::Vec<RelationInfo>,
+    /// 仆从(master 关系,人或 bot)
+    #[prost(message, repeated, tag = "2")]
+    pub servitor: ::prost::alloc::vec::Vec<RelationInfo>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AddFriendReq {
     #[prost(string, tag = "1")]
@@ -4412,6 +4421,29 @@ pub mod user_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListServitor"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_relation(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListRelationResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.User/ListRelation",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListRelation"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn add_friend(

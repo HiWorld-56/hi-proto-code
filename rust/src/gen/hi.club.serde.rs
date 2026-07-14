@@ -5263,6 +5263,114 @@ impl<'de> serde::Deserialize<'de> for ListQ3GroupMemberReq {
         deserializer.deserialize_struct("hi.club.ListQ3GroupMemberReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ListRelationResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.friend.is_empty() {
+            len += 1;
+        }
+        if !self.servitor.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListRelationResp", len)?;
+        if !self.friend.is_empty() {
+            struct_ser.serialize_field("friend", &self.friend)?;
+        }
+        if !self.servitor.is_empty() {
+            struct_ser.serialize_field("servitor", &self.servitor)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListRelationResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "friend",
+            "servitor",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Friend,
+            Servitor,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "friend" => Ok(GeneratedField::Friend),
+                            "servitor" => Ok(GeneratedField::Servitor),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListRelationResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ListRelationResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListRelationResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut friend__ = None;
+                let mut servitor__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Friend => {
+                            if friend__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("friend"));
+                            }
+                            friend__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Servitor => {
+                            if servitor__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("servitor"));
+                            }
+                            servitor__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ListRelationResp {
+                    friend: friend__.unwrap_or_default(),
+                    servitor: servitor__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ListRelationResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ListSystemMessageReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

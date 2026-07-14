@@ -503,6 +503,62 @@ class RelationListResp extends $pb.GeneratedMessage {
   $pb.PbList<RelationInfo> get list => $_getList(0);
 }
 
+class ListRelationResp extends $pb.GeneratedMessage {
+  factory ListRelationResp({
+    $core.Iterable<RelationInfo>? friend,
+    $core.Iterable<RelationInfo>? servitor,
+  }) {
+    final result = create();
+    if (friend != null) result.friend.addAll(friend);
+    if (servitor != null) result.servitor.addAll(servitor);
+    return result;
+  }
+
+  ListRelationResp._();
+
+  factory ListRelationResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListRelationResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListRelationResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<RelationInfo>(1, _omitFieldNames ? '' : 'friend',
+        subBuilder: RelationInfo.create)
+    ..pPM<RelationInfo>(2, _omitFieldNames ? '' : 'servitor',
+        subBuilder: RelationInfo.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRelationResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRelationResp copyWith(void Function(ListRelationResp) updates) =>
+      super.copyWith((message) => updates(message as ListRelationResp))
+          as ListRelationResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListRelationResp create() => ListRelationResp._();
+  @$core.override
+  ListRelationResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListRelationResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListRelationResp>(create);
+  static ListRelationResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<RelationInfo> get friend => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<RelationInfo> get servitor => $_getList(1);
+}
+
 class AddFriendReq extends $pb.GeneratedMessage {
   factory AddFriendReq({
     $core.String? did,

@@ -155,6 +155,35 @@ final $typed_data.Uint8List relationListRespDescriptor = $convert.base64Decode(
     'ChBSZWxhdGlvbkxpc3RSZXNwEikKBGxpc3QYASADKAsyFS5oaS5jbHViLlJlbGF0aW9uSW5mb1'
     'IEbGlzdA==');
 
+@$core.Deprecated('Use listRelationRespDescriptor instead')
+const ListRelationResp$json = {
+  '1': 'ListRelationResp',
+  '2': [
+    {
+      '1': 'friend',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.RelationInfo',
+      '10': 'friend'
+    },
+    {
+      '1': 'servitor',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.RelationInfo',
+      '10': 'servitor'
+    },
+  ],
+};
+
+/// Descriptor for `ListRelationResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listRelationRespDescriptor = $convert.base64Decode(
+    'ChBMaXN0UmVsYXRpb25SZXNwEi0KBmZyaWVuZBgBIAMoCzIVLmhpLmNsdWIuUmVsYXRpb25Jbm'
+    'ZvUgZmcmllbmQSMQoIc2Vydml0b3IYAiADKAsyFS5oaS5jbHViLlJlbGF0aW9uSW5mb1IIc2Vy'
+    'dml0b3I=');
+
 @$core.Deprecated('Use addFriendReqDescriptor instead')
 const AddFriendReq$json = {
   '1': 'AddFriendReq',
