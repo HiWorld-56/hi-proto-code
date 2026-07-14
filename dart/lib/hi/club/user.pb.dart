@@ -373,8 +373,8 @@ class HandleSystemMessageReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(2);
 }
 
-class FriendInfo extends $pb.GeneratedMessage {
-  factory FriendInfo({
+class RelationInfo extends $pb.GeneratedMessage {
+  factory RelationInfo({
     $2.Entity? base,
     $core.String? remark,
     $core.String? moment,
@@ -386,17 +386,17 @@ class FriendInfo extends $pb.GeneratedMessage {
     return result;
   }
 
-  FriendInfo._();
+  RelationInfo._();
 
-  factory FriendInfo.fromBuffer($core.List<$core.int> data,
+  factory RelationInfo.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FriendInfo.fromJson($core.String json,
+  factory RelationInfo.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FriendInfo',
+      _omitMessageNames ? '' : 'RelationInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
@@ -406,22 +406,23 @@ class FriendInfo extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FriendInfo clone() => deepCopy();
+  RelationInfo clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FriendInfo copyWith(void Function(FriendInfo) updates) =>
-      super.copyWith((message) => updates(message as FriendInfo)) as FriendInfo;
+  RelationInfo copyWith(void Function(RelationInfo) updates) =>
+      super.copyWith((message) => updates(message as RelationInfo))
+          as RelationInfo;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FriendInfo create() => FriendInfo._();
+  static RelationInfo create() => RelationInfo._();
   @$core.override
-  FriendInfo createEmptyInstance() => create();
+  RelationInfo createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FriendInfo getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FriendInfo>(create);
-  static FriendInfo? _defaultInstance;
+  static RelationInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RelationInfo>(create);
+  static RelationInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
   $2.Entity get base => $_getN(0);
@@ -453,53 +454,53 @@ class FriendInfo extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(3);
 }
 
-class ListFriendsResp extends $pb.GeneratedMessage {
-  factory ListFriendsResp({
-    $core.Iterable<FriendInfo>? list,
+class RelationListResp extends $pb.GeneratedMessage {
+  factory RelationListResp({
+    $core.Iterable<RelationInfo>? list,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
     return result;
   }
 
-  ListFriendsResp._();
+  RelationListResp._();
 
-  factory ListFriendsResp.fromBuffer($core.List<$core.int> data,
+  factory RelationListResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListFriendsResp.fromJson($core.String json,
+  factory RelationListResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListFriendsResp',
+      _omitMessageNames ? '' : 'RelationListResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<FriendInfo>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: FriendInfo.create)
+    ..pPM<RelationInfo>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: RelationInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFriendsResp clone() => deepCopy();
+  RelationListResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFriendsResp copyWith(void Function(ListFriendsResp) updates) =>
-      super.copyWith((message) => updates(message as ListFriendsResp))
-          as ListFriendsResp;
+  RelationListResp copyWith(void Function(RelationListResp) updates) =>
+      super.copyWith((message) => updates(message as RelationListResp))
+          as RelationListResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListFriendsResp create() => ListFriendsResp._();
+  static RelationListResp create() => RelationListResp._();
   @$core.override
-  ListFriendsResp createEmptyInstance() => create();
+  RelationListResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListFriendsResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListFriendsResp>(create);
-  static ListFriendsResp? _defaultInstance;
+  static RelationListResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RelationListResp>(create);
+  static RelationListResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<FriendInfo> get list => $_getList(0);
+  $pb.PbList<RelationInfo> get list => $_getList(0);
 }
 
 class AddFriendReq extends $pb.GeneratedMessage {

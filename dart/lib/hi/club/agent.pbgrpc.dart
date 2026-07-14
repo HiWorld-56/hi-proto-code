@@ -18,8 +18,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
 import '../ai/agent.pb.dart' as $1;
-import '../common.pb.dart' as $2;
-import 'agent.pb.dart' as $3;
+import '../common.pb.dart' as $3;
+import 'agent.pb.dart' as $2;
 
 export 'agent.pb.dart';
 
@@ -82,13 +82,6 @@ class AgentClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$editAgent, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$3.ListAgentResp> listAgent(
-    $2.Pagination request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listAgent, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.ListAgentByDidsResp> listAgentByDids(
@@ -156,42 +149,42 @@ class AgentClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$0.Empty> bindMaster(
-    $3.BindMasterReq request, {
+    $2.BindMasterReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$bindMaster, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> unbindMaster(
-    $3.UnbindMasterReq request, {
+    $2.UnbindMasterReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$unbindMaster, request, options: options);
   }
 
-  $grpc.ResponseFuture<$3.BindStatusResp> bindStatus(
-    $3.BindStatusReq request, {
+  $grpc.ResponseFuture<$2.BindStatusResp> bindStatus(
+    $2.BindStatusReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$bindStatus, request, options: options);
   }
 
-  $grpc.ResponseFuture<$3.ListAllOnlineAgentResp> listAllOnlineAgent(
-    $2.Pagination request, {
+  $grpc.ResponseFuture<$2.ListAllOnlineAgentResp> listAllOnlineAgent(
+    $3.Pagination request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listAllOnlineAgent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$3.ListOnlineAgentResp> listOnlineAgent(
-    $2.DID request, {
+  $grpc.ResponseFuture<$2.ListOnlineAgentResp> listOnlineAgent(
+    $3.DID request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listOnlineAgent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$3.GetAgentMasterResp> getAgentMaster(
-    $3.GetAgentMasterReq request, {
+  $grpc.ResponseFuture<$2.GetAgentMasterResp> getAgentMaster(
+    $2.GetAgentMasterReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getAgentMaster, request, options: options);
@@ -229,11 +222,6 @@ class AgentClient extends $grpc.Client {
       '/hi.club.Agent/EditAgent',
       ($1.EditAgentReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$listAgent =
-      $grpc.ClientMethod<$2.Pagination, $3.ListAgentResp>(
-          '/hi.club.Agent/ListAgent',
-          ($2.Pagination value) => value.writeToBuffer(),
-          $3.ListAgentResp.fromBuffer);
   static final _$listAgentByDids =
       $grpc.ClientMethod<$1.ListAgentByDidsReq, $1.ListAgentByDidsResp>(
           '/hi.club.Agent/ListAgentByDids',
@@ -277,35 +265,35 @@ class AgentClient extends $grpc.Client {
       '/hi.club.Agent/FavoriteAgentListByDIDs',
       ($1.ListFavoriteAgentByDIDsReq value) => value.writeToBuffer(),
       $1.ListFavoriteAgentByDIDsResp.fromBuffer);
-  static final _$bindMaster = $grpc.ClientMethod<$3.BindMasterReq, $0.Empty>(
+  static final _$bindMaster = $grpc.ClientMethod<$2.BindMasterReq, $0.Empty>(
       '/hi.club.Agent/BindMaster',
-      ($3.BindMasterReq value) => value.writeToBuffer(),
+      ($2.BindMasterReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$unbindMaster =
-      $grpc.ClientMethod<$3.UnbindMasterReq, $0.Empty>(
+      $grpc.ClientMethod<$2.UnbindMasterReq, $0.Empty>(
           '/hi.club.Agent/UnbindMaster',
-          ($3.UnbindMasterReq value) => value.writeToBuffer(),
+          ($2.UnbindMasterReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
   static final _$bindStatus =
-      $grpc.ClientMethod<$3.BindStatusReq, $3.BindStatusResp>(
+      $grpc.ClientMethod<$2.BindStatusReq, $2.BindStatusResp>(
           '/hi.club.Agent/BindStatus',
-          ($3.BindStatusReq value) => value.writeToBuffer(),
-          $3.BindStatusResp.fromBuffer);
+          ($2.BindStatusReq value) => value.writeToBuffer(),
+          $2.BindStatusResp.fromBuffer);
   static final _$listAllOnlineAgent =
-      $grpc.ClientMethod<$2.Pagination, $3.ListAllOnlineAgentResp>(
+      $grpc.ClientMethod<$3.Pagination, $2.ListAllOnlineAgentResp>(
           '/hi.club.Agent/ListAllOnlineAgent',
-          ($2.Pagination value) => value.writeToBuffer(),
-          $3.ListAllOnlineAgentResp.fromBuffer);
+          ($3.Pagination value) => value.writeToBuffer(),
+          $2.ListAllOnlineAgentResp.fromBuffer);
   static final _$listOnlineAgent =
-      $grpc.ClientMethod<$2.DID, $3.ListOnlineAgentResp>(
+      $grpc.ClientMethod<$3.DID, $2.ListOnlineAgentResp>(
           '/hi.club.Agent/ListOnlineAgent',
-          ($2.DID value) => value.writeToBuffer(),
-          $3.ListOnlineAgentResp.fromBuffer);
+          ($3.DID value) => value.writeToBuffer(),
+          $2.ListOnlineAgentResp.fromBuffer);
   static final _$getAgentMaster =
-      $grpc.ClientMethod<$3.GetAgentMasterReq, $3.GetAgentMasterResp>(
+      $grpc.ClientMethod<$2.GetAgentMasterReq, $2.GetAgentMasterResp>(
           '/hi.club.Agent/GetAgentMaster',
-          ($3.GetAgentMasterReq value) => value.writeToBuffer(),
-          $3.GetAgentMasterResp.fromBuffer);
+          ($2.GetAgentMasterReq value) => value.writeToBuffer(),
+          $2.GetAgentMasterResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Agent')
@@ -362,13 +350,6 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.EditAgentReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Pagination, $3.ListAgentResp>(
-        'ListAgent',
-        listAgent_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
-        ($3.ListAgentResp value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$1.ListAgentByDidsReq, $1.ListAgentByDidsResp>(
             'ListAgentByDids',
@@ -439,48 +420,48 @@ abstract class AgentServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.ListFavoriteAgentByDIDsReq.fromBuffer(value),
         ($1.ListFavoriteAgentByDIDsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.BindMasterReq, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$2.BindMasterReq, $0.Empty>(
         'BindMaster',
         bindMaster_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.BindMasterReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.BindMasterReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.UnbindMasterReq, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$2.UnbindMasterReq, $0.Empty>(
         'UnbindMaster',
         unbindMaster_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.UnbindMasterReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.UnbindMasterReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.BindStatusReq, $3.BindStatusResp>(
+    $addMethod($grpc.ServiceMethod<$2.BindStatusReq, $2.BindStatusResp>(
         'BindStatus',
         bindStatus_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.BindStatusReq.fromBuffer(value),
-        ($3.BindStatusResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Pagination, $3.ListAllOnlineAgentResp>(
+        ($core.List<$core.int> value) => $2.BindStatusReq.fromBuffer(value),
+        ($2.BindStatusResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$3.Pagination, $2.ListAllOnlineAgentResp>(
         'ListAllOnlineAgent',
         listAllOnlineAgent_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
-        ($3.ListAllOnlineAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.DID, $3.ListOnlineAgentResp>(
+        ($core.List<$core.int> value) => $3.Pagination.fromBuffer(value),
+        ($2.ListAllOnlineAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$3.DID, $2.ListOnlineAgentResp>(
         'ListOnlineAgent',
         listOnlineAgent_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.DID.fromBuffer(value),
-        ($3.ListOnlineAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.GetAgentMasterReq, $3.GetAgentMasterResp>(
+        ($core.List<$core.int> value) => $3.DID.fromBuffer(value),
+        ($2.ListOnlineAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.GetAgentMasterReq, $2.GetAgentMasterResp>(
         'GetAgentMaster',
         getAgentMaster_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.GetAgentMasterReq.fromBuffer(value),
-        ($3.GetAgentMasterResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $2.GetAgentMasterReq.fromBuffer(value),
+        ($2.GetAgentMasterResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.ListLLMResp> listLLM_Pre(
@@ -538,14 +519,6 @@ abstract class AgentServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> editAgent(
       $grpc.ServiceCall call, $1.EditAgentReq request);
-
-  $async.Future<$3.ListAgentResp> listAgent_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
-    return listAgent($call, await $request);
-  }
-
-  $async.Future<$3.ListAgentResp> listAgent(
-      $grpc.ServiceCall call, $2.Pagination request);
 
   $async.Future<$1.ListAgentByDidsResp> listAgentByDids_Pre(
       $grpc.ServiceCall $call,
@@ -624,51 +597,51 @@ abstract class AgentServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.ListFavoriteAgentByDIDsReq request);
 
   $async.Future<$0.Empty> bindMaster_Pre(
-      $grpc.ServiceCall $call, $async.Future<$3.BindMasterReq> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$2.BindMasterReq> $request) async {
     return bindMaster($call, await $request);
   }
 
   $async.Future<$0.Empty> bindMaster(
-      $grpc.ServiceCall call, $3.BindMasterReq request);
+      $grpc.ServiceCall call, $2.BindMasterReq request);
 
   $async.Future<$0.Empty> unbindMaster_Pre($grpc.ServiceCall $call,
-      $async.Future<$3.UnbindMasterReq> $request) async {
+      $async.Future<$2.UnbindMasterReq> $request) async {
     return unbindMaster($call, await $request);
   }
 
   $async.Future<$0.Empty> unbindMaster(
-      $grpc.ServiceCall call, $3.UnbindMasterReq request);
+      $grpc.ServiceCall call, $2.UnbindMasterReq request);
 
-  $async.Future<$3.BindStatusResp> bindStatus_Pre(
-      $grpc.ServiceCall $call, $async.Future<$3.BindStatusReq> $request) async {
+  $async.Future<$2.BindStatusResp> bindStatus_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.BindStatusReq> $request) async {
     return bindStatus($call, await $request);
   }
 
-  $async.Future<$3.BindStatusResp> bindStatus(
-      $grpc.ServiceCall call, $3.BindStatusReq request);
+  $async.Future<$2.BindStatusResp> bindStatus(
+      $grpc.ServiceCall call, $2.BindStatusReq request);
 
-  $async.Future<$3.ListAllOnlineAgentResp> listAllOnlineAgent_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
+  $async.Future<$2.ListAllOnlineAgentResp> listAllOnlineAgent_Pre(
+      $grpc.ServiceCall $call, $async.Future<$3.Pagination> $request) async {
     return listAllOnlineAgent($call, await $request);
   }
 
-  $async.Future<$3.ListAllOnlineAgentResp> listAllOnlineAgent(
-      $grpc.ServiceCall call, $2.Pagination request);
+  $async.Future<$2.ListAllOnlineAgentResp> listAllOnlineAgent(
+      $grpc.ServiceCall call, $3.Pagination request);
 
-  $async.Future<$3.ListOnlineAgentResp> listOnlineAgent_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.DID> $request) async {
+  $async.Future<$2.ListOnlineAgentResp> listOnlineAgent_Pre(
+      $grpc.ServiceCall $call, $async.Future<$3.DID> $request) async {
     return listOnlineAgent($call, await $request);
   }
 
-  $async.Future<$3.ListOnlineAgentResp> listOnlineAgent(
-      $grpc.ServiceCall call, $2.DID request);
+  $async.Future<$2.ListOnlineAgentResp> listOnlineAgent(
+      $grpc.ServiceCall call, $3.DID request);
 
-  $async.Future<$3.GetAgentMasterResp> getAgentMaster_Pre(
+  $async.Future<$2.GetAgentMasterResp> getAgentMaster_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$3.GetAgentMasterReq> $request) async {
+      $async.Future<$2.GetAgentMasterReq> $request) async {
     return getAgentMaster($call, await $request);
   }
 
-  $async.Future<$3.GetAgentMasterResp> getAgentMaster(
-      $grpc.ServiceCall call, $3.GetAgentMasterReq request);
+  $async.Future<$2.GetAgentMasterResp> getAgentMaster(
+      $grpc.ServiceCall call, $2.GetAgentMasterReq request);
 }

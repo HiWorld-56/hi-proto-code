@@ -120,9 +120,9 @@ final $typed_data.Uint8List handleSystemMessageReqDescriptor =
         'ChZIYW5kbGVTeXN0ZW1NZXNzYWdlUmVxEhIKBHV1aWQYASABKAlSBHV1aWQSFgoGc3RhdHVzGA'
         'IgASgJUgZzdGF0dXM=');
 
-@$core.Deprecated('Use friendInfoDescriptor instead')
-const FriendInfo$json = {
-  '1': 'FriendInfo',
+@$core.Deprecated('Use relationInfoDescriptor instead')
+const RelationInfo$json = {
+  '1': 'RelationInfo',
   '2': [
     {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
     {'1': 'remark', '3': 2, '4': 1, '5': 9, '10': 'remark'},
@@ -130,30 +130,30 @@ const FriendInfo$json = {
   ],
 };
 
-/// Descriptor for `FriendInfo`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List friendInfoDescriptor = $convert.base64Decode(
-    'CgpGcmllbmRJbmZvEh4KBGJhc2UYASABKAsyCi5oaS5FbnRpdHlSBGJhc2USFgoGcmVtYXJrGA'
-    'IgASgJUgZyZW1hcmsSFgoGbW9tZW50GAMgASgJUgZtb21lbnQ=');
+/// Descriptor for `RelationInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List relationInfoDescriptor = $convert.base64Decode(
+    'CgxSZWxhdGlvbkluZm8SHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIWCgZyZW1hcm'
+    'sYAiABKAlSBnJlbWFyaxIWCgZtb21lbnQYAyABKAlSBm1vbWVudA==');
 
-@$core.Deprecated('Use listFriendsRespDescriptor instead')
-const ListFriendsResp$json = {
-  '1': 'ListFriendsResp',
+@$core.Deprecated('Use relationListRespDescriptor instead')
+const RelationListResp$json = {
+  '1': 'RelationListResp',
   '2': [
     {
       '1': 'list',
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.hi.club.FriendInfo',
+      '6': '.hi.club.RelationInfo',
       '10': 'list'
     },
   ],
 };
 
-/// Descriptor for `ListFriendsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listFriendsRespDescriptor = $convert.base64Decode(
-    'Cg9MaXN0RnJpZW5kc1Jlc3ASJwoEbGlzdBgBIAMoCzITLmhpLmNsdWIuRnJpZW5kSW5mb1IEbG'
-    'lzdA==');
+/// Descriptor for `RelationListResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List relationListRespDescriptor = $convert.base64Decode(
+    'ChBSZWxhdGlvbkxpc3RSZXNwEikKBGxpc3QYASADKAsyFS5oaS5jbHViLlJlbGF0aW9uSW5mb1'
+    'IEbGlzdA==');
 
 @$core.Deprecated('Use addFriendReqDescriptor instead')
 const AddFriendReq$json = {

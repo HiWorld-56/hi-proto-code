@@ -1662,21 +1662,6 @@ pub struct ListOnlineAgentResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<super::ai::AgentInfo>,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AgentInfo {
-    #[prost(message, optional, tag = "1")]
-    pub info: ::core::option::Option<super::ai::AgentInfo>,
-    /// 备注名
-    #[prost(string, tag = "2")]
-    pub remark: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAgentResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<AgentInfo>,
-}
 /// Generated client implementations.
 pub mod agent_client {
     #![allow(
@@ -1917,24 +1902,6 @@ pub mod agent_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/EditAgent");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "EditAgent"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_agent(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Pagination>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/ListAgent");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "ListAgent"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_agent_by_dids(
@@ -4069,7 +4036,7 @@ pub struct HandleSystemMessageReq {
     pub status: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct FriendInfo {
+pub struct RelationInfo {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
     /// 备注名
@@ -4080,9 +4047,9 @@ pub struct FriendInfo {
     pub moment: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListFriendsResp {
+pub struct RelationListResp {
     #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<FriendInfo>,
+    pub list: ::prost::alloc::vec::Vec<RelationInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AddFriendReq {
@@ -4403,11 +4370,11 @@ pub mod user_client {
                 .insert(GrpcMethod::new("hi.club.User", "HandleSystemMessage"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_friends(
+        pub async fn list_friend(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
-            tonic::Response<super::ListFriendsResp>,
+            tonic::Response<super::RelationListResp>,
             tonic::Status,
         > {
             self.inner
@@ -4419,9 +4386,32 @@ pub mod user_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListFriends");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListFriend");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListFriends"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListFriend"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_servitor(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::RelationListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.User/ListServitor",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListServitor"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn add_friend(

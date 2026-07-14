@@ -15,7 +15,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../ai/agent.pb.dart' as $1;
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -207,7 +207,7 @@ class BindStatusReq extends $pb.GeneratedMessage {
 
 class BindStatusResp extends $pb.GeneratedMessage {
   factory BindStatusResp({
-    $2.Entity? master,
+    $3.Entity? master,
   }) {
     final result = create();
     if (master != null) result.master = master;
@@ -227,8 +227,8 @@ class BindStatusResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BindStatusResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'master',
+        subBuilder: $3.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -251,15 +251,15 @@ class BindStatusResp extends $pb.GeneratedMessage {
   static BindStatusResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get master => $_getN(0);
+  $3.Entity get master => $_getN(0);
   @$pb.TagNumber(1)
-  set master($2.Entity value) => $_setField(1, value);
+  set master($3.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMaster() => $_has(0);
   @$pb.TagNumber(1)
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureMaster() => $_ensure(0);
+  $3.Entity ensureMaster() => $_ensure(0);
 }
 
 class ListAllOnlineAgentResp extends $pb.GeneratedMessage {
@@ -380,7 +380,7 @@ class GetAgentMasterReq extends $pb.GeneratedMessage {
 
 class GetAgentMasterResp extends $pb.GeneratedMessage {
   factory GetAgentMasterResp({
-    $2.Entity? master,
+    $3.Entity? master,
   }) {
     final result = create();
     if (master != null) result.master = master;
@@ -400,8 +400,8 @@ class GetAgentMasterResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetAgentMasterResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'master',
+        subBuilder: $3.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -424,15 +424,15 @@ class GetAgentMasterResp extends $pb.GeneratedMessage {
   static GetAgentMasterResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get master => $_getN(0);
+  $3.Entity get master => $_getN(0);
   @$pb.TagNumber(1)
-  set master($2.Entity value) => $_setField(1, value);
+  set master($3.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMaster() => $_has(0);
   @$pb.TagNumber(1)
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureMaster() => $_ensure(0);
+  $3.Entity ensureMaster() => $_ensure(0);
 }
 
 class ListOnlineAgentResp extends $pb.GeneratedMessage {
@@ -482,135 +482,6 @@ class ListOnlineAgentResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<$1.AgentInfo> get list => $_getList(0);
-}
-
-class AgentInfo extends $pb.GeneratedMessage {
-  factory AgentInfo({
-    $1.AgentInfo? info,
-    $core.String? remark,
-  }) {
-    final result = create();
-    if (info != null) result.info = info;
-    if (remark != null) result.remark = remark;
-    return result;
-  }
-
-  AgentInfo._();
-
-  factory AgentInfo.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AgentInfo.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AgentInfo',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOM<$1.AgentInfo>(1, _omitFieldNames ? '' : 'info',
-        subBuilder: $1.AgentInfo.create)
-    ..aOS(2, _omitFieldNames ? '' : 'remark')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentInfo clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentInfo copyWith(void Function(AgentInfo) updates) =>
-      super.copyWith((message) => updates(message as AgentInfo)) as AgentInfo;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AgentInfo create() => AgentInfo._();
-  @$core.override
-  AgentInfo createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static AgentInfo getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AgentInfo>(create);
-  static AgentInfo? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $1.AgentInfo get info => $_getN(0);
-  @$pb.TagNumber(1)
-  set info($1.AgentInfo value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasInfo() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearInfo() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $1.AgentInfo ensureInfo() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $core.String get remark => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set remark($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasRemark() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearRemark() => $_clearField(2);
-}
-
-class ListAgentResp extends $pb.GeneratedMessage {
-  factory ListAgentResp({
-    $core.int? total,
-    $core.Iterable<AgentInfo>? infos,
-  }) {
-    final result = create();
-    if (total != null) result.total = total;
-    if (infos != null) result.infos.addAll(infos);
-    return result;
-  }
-
-  ListAgentResp._();
-
-  factory ListAgentResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListAgentResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: AgentInfo.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentResp copyWith(void Function(ListAgentResp) updates) =>
-      super.copyWith((message) => updates(message as ListAgentResp))
-          as ListAgentResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListAgentResp create() => ListAgentResp._();
-  @$core.override
-  ListAgentResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListAgentResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentResp>(create);
-  static ListAgentResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get total => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set total($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTotal() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTotal() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<AgentInfo> get infos => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =

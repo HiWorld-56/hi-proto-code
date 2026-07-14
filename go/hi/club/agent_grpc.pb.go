@@ -29,7 +29,6 @@ const (
 	Agent_AgentConfig_FullMethodName             = "/hi.club.Agent/AgentConfig"
 	Agent_CreateAgent_FullMethodName             = "/hi.club.Agent/CreateAgent"
 	Agent_EditAgent_FullMethodName               = "/hi.club.Agent/EditAgent"
-	Agent_ListAgent_FullMethodName               = "/hi.club.Agent/ListAgent"
 	Agent_ListAgentByDids_FullMethodName         = "/hi.club.Agent/ListAgentByDids"
 	Agent_DeleteAgent_FullMethodName             = "/hi.club.Agent/DeleteAgent"
 	Agent_FindAgent_FullMethodName               = "/hi.club.Agent/FindAgent"
@@ -58,7 +57,6 @@ type AgentClient interface {
 	AgentConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.AgentConfigResp, error)
 	CreateAgent(ctx context.Context, in *ai.CreateAgentReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
 	EditAgent(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListAgent(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error)
 	ListAgentByDids(ctx context.Context, in *ai.ListAgentByDidsReq, opts ...grpc.CallOption) (*ai.ListAgentByDidsResp, error)
 	DeleteAgent(ctx context.Context, in *ai.DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FindAgent(ctx context.Context, in *ai.FindAgentReq, opts ...grpc.CallOption) (*ai.FindAgentResp, error)
@@ -148,16 +146,6 @@ func (c *agentClient) EditAgent(ctx context.Context, in *ai.EditAgentReq, opts .
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Agent_EditAgent_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) ListAgent(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListAgent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -325,7 +313,6 @@ type AgentServer interface {
 	AgentConfig(context.Context, *emptypb.Empty) (*ai.AgentConfigResp, error)
 	CreateAgent(context.Context, *ai.CreateAgentReq) (*ai.CreateAgentResp, error)
 	EditAgent(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error)
-	ListAgent(context.Context, *hi.Pagination) (*ListAgentResp, error)
 	ListAgentByDids(context.Context, *ai.ListAgentByDidsReq) (*ai.ListAgentByDidsResp, error)
 	DeleteAgent(context.Context, *ai.DeleteAgentReq) (*emptypb.Empty, error)
 	FindAgent(context.Context, *ai.FindAgentReq) (*ai.FindAgentResp, error)
@@ -370,9 +357,6 @@ func (UnimplementedAgentServer) CreateAgent(context.Context, *ai.CreateAgentReq)
 }
 func (UnimplementedAgentServer) EditAgent(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditAgent not implemented")
-}
-func (UnimplementedAgentServer) ListAgent(context.Context, *hi.Pagination) (*ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAgent not implemented")
 }
 func (UnimplementedAgentServer) ListAgentByDids(context.Context, *ai.ListAgentByDidsReq) (*ai.ListAgentByDidsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAgentByDids not implemented")
@@ -561,24 +545,6 @@ func _Agent_EditAgent_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).EditAgent(ctx, req.(*ai.EditAgentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.Pagination)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListAgent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListAgent_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListAgent(ctx, req.(*hi.Pagination))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -887,10 +853,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditAgent",
 			Handler:    _Agent_EditAgent_Handler,
-		},
-		{
-			MethodName: "ListAgent",
-			Handler:    _Agent_ListAgent_Handler,
 		},
 		{
 			MethodName: "ListAgentByDids",

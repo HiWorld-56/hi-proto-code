@@ -27,7 +27,8 @@ const (
 	User_DeleteSystemMessage_FullMethodName    = "/hi.club.User/DeleteSystemMessage"
 	User_DeleteAllSystemMessage_FullMethodName = "/hi.club.User/DeleteAllSystemMessage"
 	User_HandleSystemMessage_FullMethodName    = "/hi.club.User/HandleSystemMessage"
-	User_ListFriends_FullMethodName            = "/hi.club.User/ListFriends"
+	User_ListFriend_FullMethodName             = "/hi.club.User/ListFriend"
+	User_ListServitor_FullMethodName           = "/hi.club.User/ListServitor"
 	User_AddFriend_FullMethodName              = "/hi.club.User/AddFriend"
 	User_DeleteFriend_FullMethodName           = "/hi.club.User/DeleteFriend"
 	User_ListGroup_FullMethodName              = "/hi.club.User/ListGroup"
@@ -47,7 +48,8 @@ type UserClient interface {
 	DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	HandleSystemMessage(ctx context.Context, in *HandleSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListFriends(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListFriendsResp, error)
+	ListFriend(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RelationListResp, error)
+	ListServitor(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RelationListResp, error)
 	AddFriend(ctx context.Context, in *AddFriendReq, opts ...grpc.CallOption) (*AddFriendResp, error)
 	DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListGroup(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupResp, error)
@@ -125,10 +127,20 @@ func (c *userClient) HandleSystemMessage(ctx context.Context, in *HandleSystemMe
 	return out, nil
 }
 
-func (c *userClient) ListFriends(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListFriendsResp, error) {
+func (c *userClient) ListFriend(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RelationListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListFriendsResp)
-	err := c.cc.Invoke(ctx, User_ListFriends_FullMethodName, in, out, cOpts...)
+	out := new(RelationListResp)
+	err := c.cc.Invoke(ctx, User_ListFriend_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListServitor(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RelationListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RelationListResp)
+	err := c.cc.Invoke(ctx, User_ListServitor_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -215,7 +227,8 @@ type UserServer interface {
 	DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error)
-	ListFriends(context.Context, *emptypb.Empty) (*ListFriendsResp, error)
+	ListFriend(context.Context, *emptypb.Empty) (*RelationListResp, error)
+	ListServitor(context.Context, *emptypb.Empty) (*RelationListResp, error)
 	AddFriend(context.Context, *AddFriendReq) (*AddFriendResp, error)
 	DeleteFriend(context.Context, *DeleteFriendReq) (*emptypb.Empty, error)
 	ListGroup(context.Context, *emptypb.Empty) (*ListGroupResp, error)
@@ -250,8 +263,11 @@ func (UnimplementedUserServer) DeleteAllSystemMessage(context.Context, *emptypb.
 func (UnimplementedUserServer) HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method HandleSystemMessage not implemented")
 }
-func (UnimplementedUserServer) ListFriends(context.Context, *emptypb.Empty) (*ListFriendsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListFriends not implemented")
+func (UnimplementedUserServer) ListFriend(context.Context, *emptypb.Empty) (*RelationListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFriend not implemented")
+}
+func (UnimplementedUserServer) ListServitor(context.Context, *emptypb.Empty) (*RelationListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListServitor not implemented")
 }
 func (UnimplementedUserServer) AddFriend(context.Context, *AddFriendReq) (*AddFriendResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddFriend not implemented")
@@ -402,20 +418,38 @@ func _User_HandleSystemMessage_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_ListFriends_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_ListFriend_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).ListFriends(ctx, in)
+		return srv.(UserServer).ListFriend(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_ListFriends_FullMethodName,
+		FullMethod: User_ListFriend_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListFriends(ctx, req.(*emptypb.Empty))
+		return srv.(UserServer).ListFriend(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListServitor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListServitor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListServitor_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListServitor(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -578,8 +612,12 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_HandleSystemMessage_Handler,
 		},
 		{
-			MethodName: "ListFriends",
-			Handler:    _User_ListFriends_Handler,
+			MethodName: "ListFriend",
+			Handler:    _User_ListFriend_Handler,
+		},
+		{
+			MethodName: "ListServitor",
+			Handler:    _User_ListServitor_Handler,
 		},
 		{
 			MethodName: "AddFriend",
