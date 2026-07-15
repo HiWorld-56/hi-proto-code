@@ -27,7 +27,7 @@ var File_hi_club_training_proto protoreflect.FileDescriptor
 
 const file_hi_club_training_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto\x1a\x10hi/options.proto2\x89\b\n" +
+	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto\x1a\x10hi/options.proto2\xb1\a\n" +
 	"\bTraining\x12F\n" +
 	"\rTrainingAgent\x12\x17.hi.ai.TrainingAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12K\n" +
 	"\x0eTrainingStatus\x12\x18.hi.ai.TrainingStatusReq\x1a\x19.hi.ai.TrainingStatusResp\"\x04\x88\xb5\x18\x02\x12F\n" +
@@ -36,8 +36,7 @@ const file_hi_club_training_proto_rawDesc = "" +
 	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12I\n" +
 	"\x0eListAgentFiles\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\"\x04\x88\xb5\x18\x02\x12J\n" +
 	"\x0fDeleteAgentFile\x12\x19.hi.ai.DeleteAgentFileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12L\n" +
-	"\x10DeleteAgentFiles\x12\x1a.hi.ai.DeleteAgentFilesReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12V\n" +
-	"\x15DeleteAgentFilesByDid\x12\x1f.hi.ai.DeleteAgentFilesByDidReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12E\n" +
+	"\x10DeleteAgentFiles\x12\x1a.hi.ai.DeleteAgentFilesReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12E\n" +
 	"\fGetAgentFile\x12\x16.hi.ai.GetAgentFileReq\x1a\x17.hi.ai.GetAgentFileResp\"\x04\x88\xb5\x18\x02\x12F\n" +
 	"\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12H\n" +
 	"\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\"\x04\x88\xb5\x18\x02\x12@\n" +
@@ -48,26 +47,25 @@ const file_hi_club_training_proto_rawDesc = "" +
 	"\vcom.hi.clubB\rTrainingProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_training_proto_goTypes = []any{
-	(*ai.TrainingAgentReq)(nil),         // 0: hi.ai.TrainingAgentReq
-	(*ai.TrainingStatusReq)(nil),        // 1: hi.ai.TrainingStatusReq
-	(*ai.TrainingClearReq)(nil),         // 2: hi.ai.TrainingClearReq
-	(*ai.UploadFileReq)(nil),            // 3: hi.ai.UploadFileReq
-	(*ai.ListAgentFileReq)(nil),         // 4: hi.ai.ListAgentFileReq
-	(*ai.DeleteAgentFileReq)(nil),       // 5: hi.ai.DeleteAgentFileReq
-	(*ai.DeleteAgentFilesReq)(nil),      // 6: hi.ai.DeleteAgentFilesReq
-	(*ai.DeleteAgentFilesByDidReq)(nil), // 7: hi.ai.DeleteAgentFilesByDidReq
-	(*ai.GetAgentFileReq)(nil),          // 8: hi.ai.GetAgentFileReq
-	(*ai.UpdateContentReq)(nil),         // 9: hi.ai.UpdateContentReq
-	(*ai.CreateContentReq)(nil),         // 10: hi.ai.CreateContentReq
-	(*ai.EditDigestReq)(nil),            // 11: hi.ai.EditDigestReq
-	(*ai.SetMemModelReq)(nil),           // 12: hi.ai.SetMemModelReq
-	(*ai.GetMemModelReq)(nil),           // 13: hi.ai.GetMemModelReq
-	(*emptypb.Empty)(nil),               // 14: google.protobuf.Empty
-	(*ai.TrainingStatusResp)(nil),       // 15: hi.ai.TrainingStatusResp
-	(*ai.ListAgentFileResp)(nil),        // 16: hi.ai.ListAgentFileResp
-	(*ai.GetAgentFileResp)(nil),         // 17: hi.ai.GetAgentFileResp
-	(*ai.CreateContentResp)(nil),        // 18: hi.ai.CreateContentResp
-	(*ai.GetMemModelResp)(nil),          // 19: hi.ai.GetMemModelResp
+	(*ai.TrainingAgentReq)(nil),    // 0: hi.ai.TrainingAgentReq
+	(*ai.TrainingStatusReq)(nil),   // 1: hi.ai.TrainingStatusReq
+	(*ai.TrainingClearReq)(nil),    // 2: hi.ai.TrainingClearReq
+	(*ai.UploadFileReq)(nil),       // 3: hi.ai.UploadFileReq
+	(*ai.ListAgentFileReq)(nil),    // 4: hi.ai.ListAgentFileReq
+	(*ai.DeleteAgentFileReq)(nil),  // 5: hi.ai.DeleteAgentFileReq
+	(*ai.DeleteAgentFilesReq)(nil), // 6: hi.ai.DeleteAgentFilesReq
+	(*ai.GetAgentFileReq)(nil),     // 7: hi.ai.GetAgentFileReq
+	(*ai.UpdateContentReq)(nil),    // 8: hi.ai.UpdateContentReq
+	(*ai.CreateContentReq)(nil),    // 9: hi.ai.CreateContentReq
+	(*ai.EditDigestReq)(nil),       // 10: hi.ai.EditDigestReq
+	(*ai.SetMemModelReq)(nil),      // 11: hi.ai.SetMemModelReq
+	(*ai.GetMemModelReq)(nil),      // 12: hi.ai.GetMemModelReq
+	(*emptypb.Empty)(nil),          // 13: google.protobuf.Empty
+	(*ai.TrainingStatusResp)(nil),  // 14: hi.ai.TrainingStatusResp
+	(*ai.ListAgentFileResp)(nil),   // 15: hi.ai.ListAgentFileResp
+	(*ai.GetAgentFileResp)(nil),    // 16: hi.ai.GetAgentFileResp
+	(*ai.CreateContentResp)(nil),   // 17: hi.ai.CreateContentResp
+	(*ai.GetMemModelResp)(nil),     // 18: hi.ai.GetMemModelResp
 }
 var file_hi_club_training_proto_depIdxs = []int32{
 	0,  // 0: hi.club.Training.TrainingAgent:input_type -> hi.ai.TrainingAgentReq
@@ -77,29 +75,27 @@ var file_hi_club_training_proto_depIdxs = []int32{
 	4,  // 4: hi.club.Training.ListAgentFiles:input_type -> hi.ai.ListAgentFileReq
 	5,  // 5: hi.club.Training.DeleteAgentFile:input_type -> hi.ai.DeleteAgentFileReq
 	6,  // 6: hi.club.Training.DeleteAgentFiles:input_type -> hi.ai.DeleteAgentFilesReq
-	7,  // 7: hi.club.Training.DeleteAgentFilesByDid:input_type -> hi.ai.DeleteAgentFilesByDidReq
-	8,  // 8: hi.club.Training.GetAgentFile:input_type -> hi.ai.GetAgentFileReq
-	9,  // 9: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
-	10, // 10: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
-	11, // 11: hi.club.Training.EditDigest:input_type -> hi.ai.EditDigestReq
-	12, // 12: hi.club.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
-	13, // 13: hi.club.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
-	14, // 14: hi.club.Training.TrainingAgent:output_type -> google.protobuf.Empty
-	15, // 15: hi.club.Training.TrainingStatus:output_type -> hi.ai.TrainingStatusResp
-	14, // 16: hi.club.Training.TrainingClear:output_type -> google.protobuf.Empty
-	14, // 17: hi.club.Training.UploadFile:output_type -> google.protobuf.Empty
-	16, // 18: hi.club.Training.ListAgentFiles:output_type -> hi.ai.ListAgentFileResp
-	14, // 19: hi.club.Training.DeleteAgentFile:output_type -> google.protobuf.Empty
-	14, // 20: hi.club.Training.DeleteAgentFiles:output_type -> google.protobuf.Empty
-	14, // 21: hi.club.Training.DeleteAgentFilesByDid:output_type -> google.protobuf.Empty
-	17, // 22: hi.club.Training.GetAgentFile:output_type -> hi.ai.GetAgentFileResp
-	14, // 23: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
-	18, // 24: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
-	14, // 25: hi.club.Training.EditDigest:output_type -> google.protobuf.Empty
-	14, // 26: hi.club.Training.SetMemModel:output_type -> google.protobuf.Empty
-	19, // 27: hi.club.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp
-	14, // [14:28] is the sub-list for method output_type
-	0,  // [0:14] is the sub-list for method input_type
+	7,  // 7: hi.club.Training.GetAgentFile:input_type -> hi.ai.GetAgentFileReq
+	8,  // 8: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
+	9,  // 9: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
+	10, // 10: hi.club.Training.EditDigest:input_type -> hi.ai.EditDigestReq
+	11, // 11: hi.club.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
+	12, // 12: hi.club.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
+	13, // 13: hi.club.Training.TrainingAgent:output_type -> google.protobuf.Empty
+	14, // 14: hi.club.Training.TrainingStatus:output_type -> hi.ai.TrainingStatusResp
+	13, // 15: hi.club.Training.TrainingClear:output_type -> google.protobuf.Empty
+	13, // 16: hi.club.Training.UploadFile:output_type -> google.protobuf.Empty
+	15, // 17: hi.club.Training.ListAgentFiles:output_type -> hi.ai.ListAgentFileResp
+	13, // 18: hi.club.Training.DeleteAgentFile:output_type -> google.protobuf.Empty
+	13, // 19: hi.club.Training.DeleteAgentFiles:output_type -> google.protobuf.Empty
+	16, // 20: hi.club.Training.GetAgentFile:output_type -> hi.ai.GetAgentFileResp
+	13, // 21: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
+	17, // 22: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
+	13, // 23: hi.club.Training.EditDigest:output_type -> google.protobuf.Empty
+	13, // 24: hi.club.Training.SetMemModel:output_type -> google.protobuf.Empty
+	18, // 25: hi.club.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp
+	13, // [13:26] is the sub-list for method output_type
+	0,  // [0:13] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

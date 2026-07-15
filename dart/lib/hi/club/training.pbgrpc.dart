@@ -83,13 +83,6 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$deleteAgentFiles, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> deleteAgentFilesByDid(
-    $0.DeleteAgentFilesByDidReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$deleteAgentFilesByDid, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.GetAgentFileResp> getAgentFile(
     $0.GetAgentFileReq request, {
     $grpc.CallOptions? options,
@@ -167,11 +160,6 @@ class TrainingClient extends $grpc.Client {
       $grpc.ClientMethod<$0.DeleteAgentFilesReq, $1.Empty>(
           '/hi.club.Training/DeleteAgentFiles',
           ($0.DeleteAgentFilesReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
-  static final _$deleteAgentFilesByDid =
-      $grpc.ClientMethod<$0.DeleteAgentFilesByDidReq, $1.Empty>(
-          '/hi.club.Training/DeleteAgentFilesByDid',
-          ($0.DeleteAgentFilesByDidReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
   static final _$getAgentFile =
       $grpc.ClientMethod<$0.GetAgentFileReq, $0.GetAgentFileResp>(
@@ -258,14 +246,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) =>
             $0.DeleteAgentFilesReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteAgentFilesByDidReq, $1.Empty>(
-        'DeleteAgentFilesByDid',
-        deleteAgentFilesByDid_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.DeleteAgentFilesByDidReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetAgentFileReq, $0.GetAgentFileResp>(
         'GetAgentFile',
@@ -368,14 +348,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> deleteAgentFiles(
       $grpc.ServiceCall call, $0.DeleteAgentFilesReq request);
-
-  $async.Future<$1.Empty> deleteAgentFilesByDid_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeleteAgentFilesByDidReq> $request) async {
-    return deleteAgentFilesByDid($call, await $request);
-  }
-
-  $async.Future<$1.Empty> deleteAgentFilesByDid(
-      $grpc.ServiceCall call, $0.DeleteAgentFilesByDidReq request);
 
   $async.Future<$0.GetAgentFileResp> getAgentFile_Pre($grpc.ServiceCall $call,
       $async.Future<$0.GetAgentFileReq> $request) async {

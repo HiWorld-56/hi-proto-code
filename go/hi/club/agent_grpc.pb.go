@@ -21,26 +21,25 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_ListLlmModels_FullMethodName    = "/hi.club.Agent/ListLlmModels"
-	Agent_ListEmbeddings_FullMethodName   = "/hi.club.Agent/ListEmbeddings"
-	Agent_ListSttModels_FullMethodName    = "/hi.club.Agent/ListSttModels"
-	Agent_ListTtsModels_FullMethodName    = "/hi.club.Agent/ListTtsModels"
-	Agent_AgentConfig_FullMethodName      = "/hi.club.Agent/AgentConfig"
-	Agent_CreateAgent_FullMethodName      = "/hi.club.Agent/CreateAgent"
-	Agent_EditAgent_FullMethodName        = "/hi.club.Agent/EditAgent"
-	Agent_List_FullMethodName             = "/hi.club.Agent/List"
-	Agent_ListFavorites_FullMethodName    = "/hi.club.Agent/ListFavorites"
-	Agent_DeleteAgent_FullMethodName      = "/hi.club.Agent/DeleteAgent"
-	Agent_FindAgent_FullMethodName        = "/hi.club.Agent/FindAgent"
-	Agent_FindAgentCount_FullMethodName   = "/hi.club.Agent/FindAgentCount"
-	Agent_Transfer_FullMethodName         = "/hi.club.Agent/Transfer"
-	Agent_UpdatesToDefault_FullMethodName = "/hi.club.Agent/UpdatesToDefault"
-	Agent_FavoriteAgent_FullMethodName    = "/hi.club.Agent/FavoriteAgent"
-	Agent_BindMaster_FullMethodName       = "/hi.club.Agent/BindMaster"
-	Agent_UnbindMaster_FullMethodName     = "/hi.club.Agent/UnbindMaster"
-	Agent_BindStatus_FullMethodName       = "/hi.club.Agent/BindStatus"
-	Agent_ListOnline_FullMethodName       = "/hi.club.Agent/ListOnline"
-	Agent_GetAgentMaster_FullMethodName   = "/hi.club.Agent/GetAgentMaster"
+	Agent_ListLlmModels_FullMethodName  = "/hi.club.Agent/ListLlmModels"
+	Agent_ListEmbeddings_FullMethodName = "/hi.club.Agent/ListEmbeddings"
+	Agent_ListSttModels_FullMethodName  = "/hi.club.Agent/ListSttModels"
+	Agent_ListTtsModels_FullMethodName  = "/hi.club.Agent/ListTtsModels"
+	Agent_AgentConfig_FullMethodName    = "/hi.club.Agent/AgentConfig"
+	Agent_CreateAgent_FullMethodName    = "/hi.club.Agent/CreateAgent"
+	Agent_EditAgent_FullMethodName      = "/hi.club.Agent/EditAgent"
+	Agent_List_FullMethodName           = "/hi.club.Agent/List"
+	Agent_ListFavorites_FullMethodName  = "/hi.club.Agent/ListFavorites"
+	Agent_DeleteAgent_FullMethodName    = "/hi.club.Agent/DeleteAgent"
+	Agent_FindAgent_FullMethodName      = "/hi.club.Agent/FindAgent"
+	Agent_FindAgentCount_FullMethodName = "/hi.club.Agent/FindAgentCount"
+	Agent_Transfer_FullMethodName       = "/hi.club.Agent/Transfer"
+	Agent_FavoriteAgent_FullMethodName  = "/hi.club.Agent/FavoriteAgent"
+	Agent_BindMaster_FullMethodName     = "/hi.club.Agent/BindMaster"
+	Agent_UnbindMaster_FullMethodName   = "/hi.club.Agent/UnbindMaster"
+	Agent_BindStatus_FullMethodName     = "/hi.club.Agent/BindStatus"
+	Agent_ListOnline_FullMethodName     = "/hi.club.Agent/ListOnline"
+	Agent_GetAgentMaster_FullMethodName = "/hi.club.Agent/GetAgentMaster"
 )
 
 // AgentClient is the client API for Agent service.
@@ -60,7 +59,6 @@ type AgentClient interface {
 	FindAgent(ctx context.Context, in *ai.FindAgentReq, opts ...grpc.CallOption) (*ai.FindAgentResp, error)
 	FindAgentCount(ctx context.Context, in *ai.FindAgentCountReq, opts ...grpc.CallOption) (*ai.FindAgentCountResp, error)
 	Transfer(ctx context.Context, in *ai.TransferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdatesToDefault(ctx context.Context, in *ai.UpdatesToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FavoriteAgent(ctx context.Context, in *ai.FavoriteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	BindMaster(ctx context.Context, in *BindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnbindMaster(ctx context.Context, in *UnbindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -207,16 +205,6 @@ func (c *agentClient) Transfer(ctx context.Context, in *ai.TransferReq, opts ...
 	return out, nil
 }
 
-func (c *agentClient) UpdatesToDefault(ctx context.Context, in *ai.UpdatesToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_UpdatesToDefault_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *agentClient) FavoriteAgent(ctx context.Context, in *ai.FavoriteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -294,7 +282,6 @@ type AgentServer interface {
 	FindAgent(context.Context, *ai.FindAgentReq) (*ai.FindAgentResp, error)
 	FindAgentCount(context.Context, *ai.FindAgentCountReq) (*ai.FindAgentCountResp, error)
 	Transfer(context.Context, *ai.TransferReq) (*emptypb.Empty, error)
-	UpdatesToDefault(context.Context, *ai.UpdatesToDefaultReq) (*emptypb.Empty, error)
 	FavoriteAgent(context.Context, *ai.FavoriteAgentReq) (*emptypb.Empty, error)
 	BindMaster(context.Context, *BindMasterReq) (*emptypb.Empty, error)
 	UnbindMaster(context.Context, *UnbindMasterReq) (*emptypb.Empty, error)
@@ -348,9 +335,6 @@ func (UnimplementedAgentServer) FindAgentCount(context.Context, *ai.FindAgentCou
 }
 func (UnimplementedAgentServer) Transfer(context.Context, *ai.TransferReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Transfer not implemented")
-}
-func (UnimplementedAgentServer) UpdatesToDefault(context.Context, *ai.UpdatesToDefaultReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdatesToDefault not implemented")
 }
 func (UnimplementedAgentServer) FavoriteAgent(context.Context, *ai.FavoriteAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method FavoriteAgent not implemented")
@@ -624,24 +608,6 @@ func _Agent_Transfer_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_UpdatesToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.UpdatesToDefaultReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).UpdatesToDefault(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_UpdatesToDefault_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).UpdatesToDefault(ctx, req.(*ai.UpdatesToDefaultReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_FavoriteAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.FavoriteAgentReq)
 	if err := dec(in); err != nil {
@@ -808,10 +774,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Transfer",
 			Handler:    _Agent_Transfer_Handler,
-		},
-		{
-			MethodName: "UpdatesToDefault",
-			Handler:    _Agent_UpdatesToDefault_Handler,
 		},
 		{
 			MethodName: "FavoriteAgent",

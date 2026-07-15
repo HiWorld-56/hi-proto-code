@@ -366,33 +366,6 @@ func local_request_Agent_Transfer_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func request_Agent_UpdatesToDefault_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ai.UpdatesToDefaultReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.UpdatesToDefault(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Agent_UpdatesToDefault_0(ctx context.Context, marshaler runtime.Marshaler, server AgentServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ai.UpdatesToDefaultReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.UpdatesToDefault(ctx, &protoReq)
-	return msg, metadata, err
-}
-
 func request_Agent_FavoriteAgent_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ai.FavoriteAgentReq
@@ -821,26 +794,6 @@ func RegisterAgentHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		}
 		forward_Agent_Transfer_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Agent_UpdatesToDefault_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Agent/UpdatesToDefault", runtime.WithHTTPPathPattern("/api/v1/agent/updates_to_default"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Agent_UpdatesToDefault_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Agent_UpdatesToDefault_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Agent_FavoriteAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1222,23 +1175,6 @@ func RegisterAgentHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		}
 		forward_Agent_Transfer_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Agent_UpdatesToDefault_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Agent/UpdatesToDefault", runtime.WithHTTPPathPattern("/api/v1/agent/updates_to_default"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Agent_UpdatesToDefault_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Agent_UpdatesToDefault_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Agent_FavoriteAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1345,47 +1281,45 @@ func RegisterAgentHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Agent_ListLlmModels_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_llm"}, ""))
-	pattern_Agent_ListEmbeddings_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_embedding"}, ""))
-	pattern_Agent_ListSttModels_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_stt"}, ""))
-	pattern_Agent_ListTtsModels_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_tts"}, ""))
-	pattern_Agent_AgentConfig_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "agent_config"}, ""))
-	pattern_Agent_CreateAgent_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "create_agent"}, ""))
-	pattern_Agent_EditAgent_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "edit_agent"}, ""))
-	pattern_Agent_List_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list"}, ""))
-	pattern_Agent_ListFavorites_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_favorite"}, ""))
-	pattern_Agent_DeleteAgent_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "delete_agent"}, ""))
-	pattern_Agent_FindAgent_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "find_agent"}, ""))
-	pattern_Agent_FindAgentCount_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "find_agent_count"}, ""))
-	pattern_Agent_Transfer_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "transfer"}, ""))
-	pattern_Agent_UpdatesToDefault_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "updates_to_default"}, ""))
-	pattern_Agent_FavoriteAgent_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "favorite_agent"}, ""))
-	pattern_Agent_BindMaster_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindMaster"}, ""))
-	pattern_Agent_UnbindMaster_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "UnbindMaster"}, ""))
-	pattern_Agent_BindStatus_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindStatus"}, ""))
-	pattern_Agent_ListOnline_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "ListOnline"}, ""))
-	pattern_Agent_GetAgentMaster_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "GetAgentMaster"}, ""))
+	pattern_Agent_ListLlmModels_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_llm"}, ""))
+	pattern_Agent_ListEmbeddings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_embedding"}, ""))
+	pattern_Agent_ListSttModels_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_stt"}, ""))
+	pattern_Agent_ListTtsModels_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_tts"}, ""))
+	pattern_Agent_AgentConfig_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "agent_config"}, ""))
+	pattern_Agent_CreateAgent_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "create_agent"}, ""))
+	pattern_Agent_EditAgent_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "edit_agent"}, ""))
+	pattern_Agent_List_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list"}, ""))
+	pattern_Agent_ListFavorites_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list_favorite"}, ""))
+	pattern_Agent_DeleteAgent_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "delete_agent"}, ""))
+	pattern_Agent_FindAgent_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "find_agent"}, ""))
+	pattern_Agent_FindAgentCount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "find_agent_count"}, ""))
+	pattern_Agent_Transfer_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "transfer"}, ""))
+	pattern_Agent_FavoriteAgent_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "favorite_agent"}, ""))
+	pattern_Agent_BindMaster_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindMaster"}, ""))
+	pattern_Agent_UnbindMaster_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "UnbindMaster"}, ""))
+	pattern_Agent_BindStatus_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindStatus"}, ""))
+	pattern_Agent_ListOnline_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "ListOnline"}, ""))
+	pattern_Agent_GetAgentMaster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "GetAgentMaster"}, ""))
 )
 
 var (
-	forward_Agent_ListLlmModels_0    = runtime.ForwardResponseMessage
-	forward_Agent_ListEmbeddings_0   = runtime.ForwardResponseMessage
-	forward_Agent_ListSttModels_0    = runtime.ForwardResponseMessage
-	forward_Agent_ListTtsModels_0    = runtime.ForwardResponseMessage
-	forward_Agent_AgentConfig_0      = runtime.ForwardResponseMessage
-	forward_Agent_CreateAgent_0      = runtime.ForwardResponseMessage
-	forward_Agent_EditAgent_0        = runtime.ForwardResponseMessage
-	forward_Agent_List_0             = runtime.ForwardResponseMessage
-	forward_Agent_ListFavorites_0    = runtime.ForwardResponseMessage
-	forward_Agent_DeleteAgent_0      = runtime.ForwardResponseMessage
-	forward_Agent_FindAgent_0        = runtime.ForwardResponseMessage
-	forward_Agent_FindAgentCount_0   = runtime.ForwardResponseMessage
-	forward_Agent_Transfer_0         = runtime.ForwardResponseMessage
-	forward_Agent_UpdatesToDefault_0 = runtime.ForwardResponseMessage
-	forward_Agent_FavoriteAgent_0    = runtime.ForwardResponseMessage
-	forward_Agent_BindMaster_0       = runtime.ForwardResponseMessage
-	forward_Agent_UnbindMaster_0     = runtime.ForwardResponseMessage
-	forward_Agent_BindStatus_0       = runtime.ForwardResponseMessage
-	forward_Agent_ListOnline_0       = runtime.ForwardResponseMessage
-	forward_Agent_GetAgentMaster_0   = runtime.ForwardResponseMessage
+	forward_Agent_ListLlmModels_0  = runtime.ForwardResponseMessage
+	forward_Agent_ListEmbeddings_0 = runtime.ForwardResponseMessage
+	forward_Agent_ListSttModels_0  = runtime.ForwardResponseMessage
+	forward_Agent_ListTtsModels_0  = runtime.ForwardResponseMessage
+	forward_Agent_AgentConfig_0    = runtime.ForwardResponseMessage
+	forward_Agent_CreateAgent_0    = runtime.ForwardResponseMessage
+	forward_Agent_EditAgent_0      = runtime.ForwardResponseMessage
+	forward_Agent_List_0           = runtime.ForwardResponseMessage
+	forward_Agent_ListFavorites_0  = runtime.ForwardResponseMessage
+	forward_Agent_DeleteAgent_0    = runtime.ForwardResponseMessage
+	forward_Agent_FindAgent_0      = runtime.ForwardResponseMessage
+	forward_Agent_FindAgentCount_0 = runtime.ForwardResponseMessage
+	forward_Agent_Transfer_0       = runtime.ForwardResponseMessage
+	forward_Agent_FavoriteAgent_0  = runtime.ForwardResponseMessage
+	forward_Agent_BindMaster_0     = runtime.ForwardResponseMessage
+	forward_Agent_UnbindMaster_0   = runtime.ForwardResponseMessage
+	forward_Agent_BindStatus_0     = runtime.ForwardResponseMessage
+	forward_Agent_ListOnline_0     = runtime.ForwardResponseMessage
+	forward_Agent_GetAgentMaster_0 = runtime.ForwardResponseMessage
 )

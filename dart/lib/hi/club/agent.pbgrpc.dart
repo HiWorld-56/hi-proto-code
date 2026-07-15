@@ -125,13 +125,6 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$transfer, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> updatesToDefault(
-    $1.UpdatesToDefaultReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$updatesToDefault, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.Empty> favoriteAgent(
     $1.FavoriteAgentReq request, {
     $grpc.CallOptions? options,
@@ -233,11 +226,6 @@ class AgentClient extends $grpc.Client {
       '/hi.club.Agent/Transfer',
       ($1.TransferReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$updatesToDefault =
-      $grpc.ClientMethod<$1.UpdatesToDefaultReq, $0.Empty>(
-          '/hi.club.Agent/UpdatesToDefault',
-          ($1.UpdatesToDefaultReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
   static final _$favoriteAgent =
       $grpc.ClientMethod<$1.FavoriteAgentReq, $0.Empty>(
           '/hi.club.Agent/FavoriteAgent',
@@ -364,14 +352,6 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.TransferReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.UpdatesToDefaultReq, $0.Empty>(
-        'UpdatesToDefault',
-        updatesToDefault_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.UpdatesToDefaultReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.FavoriteAgentReq, $0.Empty>(
         'FavoriteAgent',
@@ -521,14 +501,6 @@ abstract class AgentServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> transfer(
       $grpc.ServiceCall call, $1.TransferReq request);
-
-  $async.Future<$0.Empty> updatesToDefault_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.UpdatesToDefaultReq> $request) async {
-    return updatesToDefault($call, await $request);
-  }
-
-  $async.Future<$0.Empty> updatesToDefault(
-      $grpc.ServiceCall call, $1.UpdatesToDefaultReq request);
 
   $async.Future<$0.Empty> favoriteAgent_Pre($grpc.ServiceCall $call,
       $async.Future<$1.FavoriteAgentReq> $request) async {

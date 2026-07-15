@@ -2044,27 +2044,6 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "Transfer"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn updates_to_default(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::UpdatesToDefaultReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Agent/UpdatesToDefault",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Agent", "UpdatesToDefault"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn favorite_agent(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::FavoriteAgentReq>,
@@ -4791,27 +4770,6 @@ pub mod training_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Training", "DeleteAgentFiles"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn delete_agent_files_by_did(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::DeleteAgentFilesByDidReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Training/DeleteAgentFilesByDid",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Training", "DeleteAgentFilesByDid"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn get_agent_file(
