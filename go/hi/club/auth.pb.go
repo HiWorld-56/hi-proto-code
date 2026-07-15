@@ -107,7 +107,7 @@ const file_hi_club_auth_proto_rawDesc = "" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x01\x12>\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x04\x88\xb5\x18\x01\x12:\n" +
 	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x04\x88\xb5\x18\x01\x122\n" +
-	"\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginResp\"\x04\x88\xb5\x18\x01B\x80\x01\n" +
+	"\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginResp\"\x04\x88\xb5\x18\x06B\x80\x01\n" +
 	"\vcom.hi.clubB\tAuthProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

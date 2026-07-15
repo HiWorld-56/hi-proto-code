@@ -318,7 +318,7 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x01\x12D\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x012:\n" +
 	"\x06Assist\x120\n" +
-	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x04\x88\xb5\x18\x01Bz\n" +
+	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x04\x88\xb5\x18\x06Bz\n" +
 	"\n" +
 	"com.hi.didB\tBaseProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

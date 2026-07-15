@@ -94,7 +94,7 @@ const file_hi_did_payment_proto_rawDesc = "" +
 	"\x04hash\x18\x03 \x01(\tR\x04hash2q\n" +
 	"\x03Pay\x122\n" +
 	"\vGenerateReq\x12\x0e.hi.ClientInfo\x1a\r.hi.RequestId\"\x04\x88\xb5\x18\x01\x126\n" +
-	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01B}\n" +
+	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x06B}\n" +
 	"\n" +
 	"com.hi.didB\fPaymentProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

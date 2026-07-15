@@ -1232,7 +1232,7 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\x14GetUserByAddressResp\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did2\xd5\x04\n" +
 	"\x06Wallet\x12?\n" +
-	"\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01\x12E\n" +
+	"\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x06\x12E\n" +
 	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12>\n" +
 	"\tGetWallet\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x04\x88\xb5\x18\x02\x12J\n" +
 	"\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x04\x88\xb5\x18\x02\x12D\n" +

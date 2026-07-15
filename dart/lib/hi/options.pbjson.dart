@@ -25,6 +25,7 @@ const Auth$json = {
     {'1': 'AUTH_EXTEND_TOKEN', '2': 3},
     {'1': 'AUTH_API_KEY', '2': 4},
     {'1': 'AUTH_SUPERADMIN', '2': 5},
+    {'1': 'AUTH_WEB3', '2': 6},
   ],
 };
 
@@ -32,4 +33,4 @@ const Auth$json = {
 final $typed_data.Uint8List authDescriptor = $convert.base64Decode(
     'CgRBdXRoEhQKEEFVVEhfVU5TUEVDSUZJRUQQABINCglBVVRIX05PTkUQARIOCgpBVVRIX1RPS0'
     'VOEAISFQoRQVVUSF9FWFRFTkRfVE9LRU4QAxIQCgxBVVRIX0FQSV9LRVkQBBITCg9BVVRIX1NV'
-    'UEVSQURNSU4QBQ==');
+    'UEVSQURNSU4QBRINCglBVVRIX1dFQjMQBg==');

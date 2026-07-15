@@ -35,6 +35,20 @@ class Auth extends $pb.ProtobufEnum {
   static const Auth AUTH_SUPERADMIN =
       Auth._(5, _omitEnumNames ? '' : 'AUTH_SUPERADMIN');
 
+  /// ⚠️ AUTH_WEB3:传输层不鉴权,**鉴权在载荷里** —— 入参是 hi.SignedData,由 handler
+  /// 自行验签(见 didapi.VerifySignature / VerifyOffline)确认调用者身份。
+  ///
+  /// 用于两类:
+  ///   1. 登录握手(还没有 token,身份只能靠签名证明)
+  ///   2. **回调**:三方业务实现契约、由 hidid/hiai 反向调用通知标准信息。
+  ///      调用方是 hidid,它手里没有对方的用户 token,传输层无从鉴权;
+  ///      但数据是 web3 签名的,伪造不了。
+  ///
+  /// 不要"加固"成 AUTH_TOKEN —— 那会直接打断 hidid 的回调与登录握手。
+  /// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
+  /// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
+  static const Auth AUTH_WEB3 = Auth._(6, _omitEnumNames ? '' : 'AUTH_WEB3');
+
   static const $core.List<Auth> values = <Auth>[
     AUTH_UNSPECIFIED,
     AUTH_NONE,
@@ -42,10 +56,11 @@ class Auth extends $pb.ProtobufEnum {
     AUTH_EXTEND_TOKEN,
     AUTH_API_KEY,
     AUTH_SUPERADMIN,
+    AUTH_WEB3,
   ];
 
   static final $core.List<Auth?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 5);
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
   static Auth? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

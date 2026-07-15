@@ -11,6 +11,7 @@ impl serde::Serialize for Auth {
             Self::ExtendToken => "AUTH_EXTEND_TOKEN",
             Self::ApiKey => "AUTH_API_KEY",
             Self::Superadmin => "AUTH_SUPERADMIN",
+            Self::Web3 => "AUTH_WEB3",
         };
         serializer.serialize_str(variant)
     }
@@ -28,6 +29,7 @@ impl<'de> serde::Deserialize<'de> for Auth {
             "AUTH_EXTEND_TOKEN",
             "AUTH_API_KEY",
             "AUTH_SUPERADMIN",
+            "AUTH_WEB3",
         ];
 
         struct GeneratedVisitor;
@@ -74,6 +76,7 @@ impl<'de> serde::Deserialize<'de> for Auth {
                     "AUTH_EXTEND_TOKEN" => Ok(Auth::ExtendToken),
                     "AUTH_API_KEY" => Ok(Auth::ApiKey),
                     "AUTH_SUPERADMIN" => Ok(Auth::Superadmin),
+                    "AUTH_WEB3" => Ok(Auth::Web3),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

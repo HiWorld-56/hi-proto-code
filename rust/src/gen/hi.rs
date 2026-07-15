@@ -104,7 +104,7 @@ pub struct ServerVersionResp {
 pub enum Auth {
     /// 未标注 —— 拦截器拒绝(fail-closed);仅作为漏标的哨兵,不要主动使用
     Unspecified = 0,
-    /// 免鉴权:公开接口(健康检查、版本、登录握手、给三方查在线机器人等)
+    /// 免鉴权:真·公开接口(健康检查、版本、给三方查在线机器人等)
     None = 1,
     /// 用户 token(JWT):普通登录用户
     Token = 2,
@@ -114,6 +114,20 @@ pub enum Auth {
     ApiKey = 4,
     /// 超管:在 AUTH_TOKEN 基础上再校验 caller did ∈ 超管名单
     Superadmin = 5,
+    /// ⚠️ AUTH_WEB3:传输层不鉴权,**鉴权在载荷里** —— 入参是 hi.SignedData,由 handler
+    /// 自行验签(见 didapi.VerifySignature / VerifyOffline)确认调用者身份。
+    ///
+    /// 用于两类:
+    ///
+    /// 1. 登录握手(还没有 token,身份只能靠签名证明)
+    /// 1. **回调**:三方业务实现契约、由 hidid/hiai 反向调用通知标准信息。
+    ///    调用方是 hidid,它手里没有对方的用户 token,传输层无从鉴权;
+    ///    但数据是 web3 签名的,伪造不了。
+    ///
+    /// 不要"加固"成 AUTH_TOKEN —— 那会直接打断 hidid 的回调与登录握手。
+    /// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
+    /// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
+    Web3 = 6,
 }
 impl Auth {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -128,6 +142,7 @@ impl Auth {
             Self::ExtendToken => "AUTH_EXTEND_TOKEN",
             Self::ApiKey => "AUTH_API_KEY",
             Self::Superadmin => "AUTH_SUPERADMIN",
+            Self::Web3 => "AUTH_WEB3",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -139,6 +154,7 @@ impl Auth {
             "AUTH_EXTEND_TOKEN" => Some(Self::ExtendToken),
             "AUTH_API_KEY" => Some(Self::ApiKey),
             "AUTH_SUPERADMIN" => Some(Self::Superadmin),
+            "AUTH_WEB3" => Some(Self::Web3),
             _ => None,
         }
     }

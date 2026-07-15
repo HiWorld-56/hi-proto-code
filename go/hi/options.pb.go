@@ -35,11 +35,24 @@ type Auth int32
 
 const (
 	Auth_AUTH_UNSPECIFIED  Auth = 0 // 未标注 —— 拦截器拒绝(fail-closed);仅作为漏标的哨兵,不要主动使用
-	Auth_AUTH_NONE         Auth = 1 // 免鉴权:公开接口(健康检查、版本、登录握手、给三方查在线机器人等)
+	Auth_AUTH_NONE         Auth = 1 // 免鉴权:真·公开接口(健康检查、版本、给三方查在线机器人等)
 	Auth_AUTH_TOKEN        Auth = 2 // 用户 token(JWT):普通登录用户
 	Auth_AUTH_EXTEND_TOKEN Auth = 3 // 商户 ExtendToken:hisrv 商户身份,ctx 内含 merchant_did / extend_table
 	Auth_AUTH_API_KEY      Auth = 4 // apiKey:三方程序化调用
 	Auth_AUTH_SUPERADMIN   Auth = 5 // 超管:在 AUTH_TOKEN 基础上再校验 caller did ∈ 超管名单
+	// ⚠️ AUTH_WEB3:传输层不鉴权,**鉴权在载荷里** —— 入参是 hi.SignedData,由 handler
+	// 自行验签(见 didapi.VerifySignature / VerifyOffline)确认调用者身份。
+	//
+	// 用于两类:
+	//  1. 登录握手(还没有 token,身份只能靠签名证明)
+	//  2. **回调**:三方业务实现契约、由 hidid/hiai 反向调用通知标准信息。
+	//     调用方是 hidid,它手里没有对方的用户 token,传输层无从鉴权;
+	//     但数据是 web3 签名的,伪造不了。
+	//
+	// 不要"加固"成 AUTH_TOKEN —— 那会直接打断 hidid 的回调与登录握手。
+	// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
+	// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
+	Auth_AUTH_WEB3 Auth = 6
 )
 
 // Enum value maps for Auth.
@@ -51,6 +64,7 @@ var (
 		3: "AUTH_EXTEND_TOKEN",
 		4: "AUTH_API_KEY",
 		5: "AUTH_SUPERADMIN",
+		6: "AUTH_WEB3",
 	}
 	Auth_value = map[string]int32{
 		"AUTH_UNSPECIFIED":  0,
@@ -59,6 +73,7 @@ var (
 		"AUTH_EXTEND_TOKEN": 3,
 		"AUTH_API_KEY":      4,
 		"AUTH_SUPERADMIN":   5,
+		"AUTH_WEB3":         6,
 	}
 )
 
@@ -112,7 +127,7 @@ var File_hi_options_proto protoreflect.FileDescriptor
 
 const file_hi_options_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*y\n" +
+	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*\x88\x01\n" +
 	"\x04Auth\x12\x14\n" +
 	"\x10AUTH_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tAUTH_NONE\x10\x01\x12\x0e\n" +
@@ -120,7 +135,8 @@ const file_hi_options_proto_rawDesc = "" +
 	"AUTH_TOKEN\x10\x02\x12\x15\n" +
 	"\x11AUTH_EXTEND_TOKEN\x10\x03\x12\x10\n" +
 	"\fAUTH_API_KEY\x10\x04\x12\x13\n" +
-	"\x0fAUTH_SUPERADMIN\x10\x05:>\n" +
+	"\x0fAUTH_SUPERADMIN\x10\x05\x12\r\n" +
+	"\tAUTH_WEB3\x10\x06:>\n" +
 	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x01(\x0e2\b.hi.AuthR\x04authBd\n" +
 	"\x06com.hiB\fOptionsProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 

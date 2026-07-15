@@ -399,12 +399,12 @@ const file_hi_did_auth_proto_rawDesc = "" +
 	"\x03did\x18\x01 \x01(\v2\a.hi.DIDR\x03did2\x9d\x03\n" +
 	"\x04Auth\x12<\n" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x01\x121\n" +
-	"\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x04\x88\xb5\x18\x01\x128\n" +
-	"\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x04\x88\xb5\x18\x01\x12>\n" +
+	"\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x04\x88\xb5\x18\x06\x128\n" +
+	"\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x04\x88\xb5\x18\x06\x12>\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x04\x88\xb5\x18\x01\x12:\n" +
 	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x04\x88\xb5\x18\x01\x126\n" +
-	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01\x126\n" +
-	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01Bz\n" +
+	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x06\x126\n" +
+	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x06Bz\n" +
 	"\n" +
 	"com.hi.didB\tAuthProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
