@@ -130,7 +130,7 @@ const file_hi_ai_callback_proto_rawDesc = "" +
 	".hi.EntityR\x04user\x12\x17\n" +
 	"\aapi_key\x18\x02 \x01(\tR\x06apiKey2X\n" +
 	"\fUserCallback\x12H\n" +
-	"\rGetUserApiKey\x12\x17.hi.ai.GetUserApiKeyReq\x1a\x18.hi.ai.GetUserApiKeyResp\"\x04\x88\xb5\x18\x02Bx\n" +
+	"\rGetUserApiKey\x12\x17.hi.ai.GetUserApiKeyReq\x1a\x18.hi.ai.GetUserApiKeyResp\"\x04\x88\xb5\x18\x01Bx\n" +
 	"\tcom.hi.aiB\rCallbackProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (

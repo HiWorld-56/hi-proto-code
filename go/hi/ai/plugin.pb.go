@@ -1981,10 +1981,10 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x0fGetPythonParams\x12\x19.hi.ai.GetPythonParamsReq\x1a\x1a.hi.ai.GetPythonParamsResp\"\x04\x88\xb5\x18\x04\x12<\n" +
 	"\tGetPlugin\x12\x13.hi.ai.GetPluginReq\x1a\x14.hi.ai.GetPluginResp\"\x04\x88\xb5\x18\x042\x8d\x02\n" +
 	"\bAiPlugin\x123\n" +
-	"\x06Search\x12\x10.hi.ai.SearchReq\x1a\x11.hi.ai.SearchResp\"\x04\x88\xb5\x18\x02\x123\n" +
-	"\x06Python\x12\x10.hi.ai.PythonReq\x1a\x11.hi.ai.PythonResp\"\x04\x88\xb5\x18\x02\x12A\n" +
-	"\rPythonProject\x12\x17.hi.ai.PythonProjectReq\x1a\x11.hi.ai.PythonResp\"\x04\x88\xb5\x18\x02\x12T\n" +
-	"\x14CleanupPythonProject\x12\x1e.hi.ai.CleanupPythonProjectReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02Bv\n" +
+	"\x06Search\x12\x10.hi.ai.SearchReq\x1a\x11.hi.ai.SearchResp\"\x04\x88\xb5\x18\x01\x123\n" +
+	"\x06Python\x12\x10.hi.ai.PythonReq\x1a\x11.hi.ai.PythonResp\"\x04\x88\xb5\x18\x01\x12A\n" +
+	"\rPythonProject\x12\x17.hi.ai.PythonProjectReq\x1a\x11.hi.ai.PythonResp\"\x04\x88\xb5\x18\x01\x12T\n" +
+	"\x14CleanupPythonProject\x12\x1e.hi.ai.CleanupPythonProjectReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01Bv\n" +
 	"\tcom.hi.aiB\vPluginProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
