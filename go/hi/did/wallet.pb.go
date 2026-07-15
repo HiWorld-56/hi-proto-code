@@ -1238,7 +1238,7 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x04\x88\xb5\x18\x02\x12D\n" +
 	"\vTotalAssets\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\"\x04\x88\xb5\x18\x01\x12P\n" +
 	"\x0fListUsersAssets\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\"\x04\x88\xb5\x18\x01\x12J\n" +
-	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x04\x88\xb5\x18\x01\x12S\n" +
+	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x04\x88\xb5\x18\x03\x12S\n" +
 	"\x10GetUserByAddress\x12\x1b.hi.did.GetUserByAddressReq\x1a\x1c.hi.did.GetUserByAddressResp\"\x04\x88\xb5\x18\x02B|\n" +
 	"\n" +
 	"com.hi.didB\vWalletProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"

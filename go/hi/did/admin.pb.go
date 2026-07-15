@@ -1046,7 +1046,7 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\vUpdateOrder\x12\x1a.hi.did.DAppUpdateOrderReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12=\n" +
 	"\x06Delete\x12\x15.hi.did.DAppDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x022\xd3\x01\n" +
 	"\x0eMerchantManage\x12K\n" +
-	"\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x04\x88\xb5\x18\x01\x12/\n" +
+	"\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x04\x88\xb5\x18\x03\x12/\n" +
 	"\x06Delete\x12\a.hi.DID\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12C\n" +
 	"\x04Edit\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B{\n" +
 	"\n" +

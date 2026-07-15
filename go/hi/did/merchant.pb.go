@@ -685,10 +685,10 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\bMerchant\x12<\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x02\x12;\n" +
 	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12/\n" +
-	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x01\x12;\n" +
+	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x03\x12;\n" +
 	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.GetUserProfileResp\"\x04\x88\xb5\x18\x03\x12I\n" +
 	"\x0eSetUserProfile\x12\x19.hi.did.SetUserProfileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x125\n" +
-	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x01\x12G\n" +
+	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x03\x12G\n" +
 	"\tSaveUsers\x12\x1c.hi.did.MerchantUsersSaveReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12K\n" +
 	"\vDeleteUsers\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x032\x80\x01\n" +
 	"\x03SSE\x126\n" +
