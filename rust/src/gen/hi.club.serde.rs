@@ -5263,7 +5263,7 @@ impl<'de> serde::Deserialize<'de> for ListQ3GroupMemberReq {
         deserializer.deserialize_struct("hi.club.ListQ3GroupMemberReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListRelationResp {
+impl serde::Serialize for ListRelationsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5277,7 +5277,7 @@ impl serde::Serialize for ListRelationResp {
         if !self.servitor.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListRelationResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListRelationsResp", len)?;
         if !self.friend.is_empty() {
             struct_ser.serialize_field("friend", &self.friend)?;
         }
@@ -5287,7 +5287,7 @@ impl serde::Serialize for ListRelationResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListRelationResp {
+impl<'de> serde::Deserialize<'de> for ListRelationsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5334,13 +5334,13 @@ impl<'de> serde::Deserialize<'de> for ListRelationResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListRelationResp;
+            type Value = ListRelationsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListRelationResp")
+                formatter.write_str("struct hi.club.ListRelationsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListRelationResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListRelationsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5362,13 +5362,13 @@ impl<'de> serde::Deserialize<'de> for ListRelationResp {
                         }
                     }
                 }
-                Ok(ListRelationResp {
+                Ok(ListRelationsResp {
                     friend: friend__.unwrap_or_default(),
                     servitor: servitor__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListRelationResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListRelationsResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListSystemMessageReq {

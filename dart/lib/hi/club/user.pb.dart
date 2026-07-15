@@ -454,6 +454,7 @@ class RelationInfo extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(3);
 }
 
+/// ListFriends / ListServitors 共用(同形:一串 RelationInfo)。共用类型故不带方法名。
 class RelationListResp extends $pb.GeneratedMessage {
   factory RelationListResp({
     $core.Iterable<RelationInfo>? list,
@@ -503,8 +504,8 @@ class RelationListResp extends $pb.GeneratedMessage {
   $pb.PbList<RelationInfo> get list => $_getList(0);
 }
 
-class ListRelationResp extends $pb.GeneratedMessage {
-  factory ListRelationResp({
+class ListRelationsResp extends $pb.GeneratedMessage {
+  factory ListRelationsResp({
     $core.Iterable<RelationInfo>? friend,
     $core.Iterable<RelationInfo>? servitor,
   }) {
@@ -514,17 +515,17 @@ class ListRelationResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListRelationResp._();
+  ListRelationsResp._();
 
-  factory ListRelationResp.fromBuffer($core.List<$core.int> data,
+  factory ListRelationsResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListRelationResp.fromJson($core.String json,
+  factory ListRelationsResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListRelationResp',
+      _omitMessageNames ? '' : 'ListRelationsResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPM<RelationInfo>(1, _omitFieldNames ? '' : 'friend',
@@ -534,23 +535,23 @@ class ListRelationResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListRelationResp clone() => deepCopy();
+  ListRelationsResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListRelationResp copyWith(void Function(ListRelationResp) updates) =>
-      super.copyWith((message) => updates(message as ListRelationResp))
-          as ListRelationResp;
+  ListRelationsResp copyWith(void Function(ListRelationsResp) updates) =>
+      super.copyWith((message) => updates(message as ListRelationsResp))
+          as ListRelationsResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListRelationResp create() => ListRelationResp._();
+  static ListRelationsResp create() => ListRelationsResp._();
   @$core.override
-  ListRelationResp createEmptyInstance() => create();
+  ListRelationsResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListRelationResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListRelationResp>(create);
-  static ListRelationResp? _defaultInstance;
+  static ListRelationsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListRelationsResp>(create);
+  static ListRelationsResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<RelationInfo> get friend => $_getList(0);
