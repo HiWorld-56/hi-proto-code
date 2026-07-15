@@ -681,11 +681,12 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"@\n" +
 	"\x0eOrderEventResp\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\tR\apayload2\xdb\x03\n" +
+	"\apayload\x18\x02 \x01(\tR\apayload2\x94\x04\n" +
 	"\bMerchant\x126\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\x125\n" +
-	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\x12)\n" +
-	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\x125\n" +
+	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\x122\n" +
+	"\rListMerchants\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\x12.\n" +
+	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\"\x03\x88\x02\x01\x125\n" +
 	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.UserProfileGetResp\x12C\n" +
 	"\x0eSetUserProfile\x12\x19.hi.did.UserProfileSetReq\x1a\x16.google.protobuf.Empty\x12/\n" +
 	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\x12A\n" +
@@ -738,26 +739,28 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	12, // 7: hi.did.UserProfileGetResp.mqtt:type_name -> hi.MqttCredentials
 	13, // 8: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
 	2,  // 9: hi.did.Merchant.Set:input_type -> hi.did.MerchantSetReq
-	14, // 10: hi.did.Merchant.List:input_type -> hi.DID
-	14, // 11: hi.did.Merchant.GetUserProfile:input_type -> hi.DID
-	5,  // 12: hi.did.Merchant.SetUserProfile:input_type -> hi.did.UserProfileSetReq
-	14, // 13: hi.did.Merchant.GetMerchant:input_type -> hi.DID
-	6,  // 14: hi.did.Merchant.SaveUesrs:input_type -> hi.did.MerchantUsersSaveReq
-	7,  // 15: hi.did.Merchant.DeleteUesrs:input_type -> hi.did.MerchantUsersDeleteReq
-	14, // 16: hi.did.SSE.OrderEvents:input_type -> hi.DID
-	8,  // 17: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
-	1,  // 18: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
-	13, // 19: hi.did.Merchant.Set:output_type -> google.protobuf.Empty
-	3,  // 20: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
-	4,  // 21: hi.did.Merchant.GetUserProfile:output_type -> hi.did.UserProfileGetResp
-	13, // 22: hi.did.Merchant.SetUserProfile:output_type -> google.protobuf.Empty
-	1,  // 23: hi.did.Merchant.GetMerchant:output_type -> hi.did.MerchantGetResp
-	13, // 24: hi.did.Merchant.SaveUesrs:output_type -> google.protobuf.Empty
-	13, // 25: hi.did.Merchant.DeleteUesrs:output_type -> google.protobuf.Empty
-	9,  // 26: hi.did.SSE.OrderEvents:output_type -> hi.did.OrderEventResp
-	13, // 27: hi.did.SSE.Notify:output_type -> google.protobuf.Empty
-	18, // [18:28] is the sub-list for method output_type
-	8,  // [8:18] is the sub-list for method input_type
+	14, // 10: hi.did.Merchant.ListMerchants:input_type -> hi.DID
+	14, // 11: hi.did.Merchant.List:input_type -> hi.DID
+	14, // 12: hi.did.Merchant.GetUserProfile:input_type -> hi.DID
+	5,  // 13: hi.did.Merchant.SetUserProfile:input_type -> hi.did.UserProfileSetReq
+	14, // 14: hi.did.Merchant.GetMerchant:input_type -> hi.DID
+	6,  // 15: hi.did.Merchant.SaveUesrs:input_type -> hi.did.MerchantUsersSaveReq
+	7,  // 16: hi.did.Merchant.DeleteUesrs:input_type -> hi.did.MerchantUsersDeleteReq
+	14, // 17: hi.did.SSE.OrderEvents:input_type -> hi.DID
+	8,  // 18: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
+	1,  // 19: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
+	13, // 20: hi.did.Merchant.Set:output_type -> google.protobuf.Empty
+	3,  // 21: hi.did.Merchant.ListMerchants:output_type -> hi.did.MerchantListResp
+	3,  // 22: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
+	4,  // 23: hi.did.Merchant.GetUserProfile:output_type -> hi.did.UserProfileGetResp
+	13, // 24: hi.did.Merchant.SetUserProfile:output_type -> google.protobuf.Empty
+	1,  // 25: hi.did.Merchant.GetMerchant:output_type -> hi.did.MerchantGetResp
+	13, // 26: hi.did.Merchant.SaveUesrs:output_type -> google.protobuf.Empty
+	13, // 27: hi.did.Merchant.DeleteUesrs:output_type -> google.protobuf.Empty
+	9,  // 28: hi.did.SSE.OrderEvents:output_type -> hi.did.OrderEventResp
+	13, // 29: hi.did.SSE.Notify:output_type -> google.protobuf.Empty
+	19, // [19:30] is the sub-list for method output_type
+	8,  // [8:19] is the sub-list for method input_type
 	8,  // [8:8] is the sub-list for extension type_name
 	8,  // [8:8] is the sub-list for extension extendee
 	0,  // [0:8] is the sub-list for field type_name

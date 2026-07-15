@@ -24,6 +24,7 @@ const (
 	Training_TrainingStatus_FullMethodName        = "/hi.ai.Training/TrainingStatus"
 	Training_TrainingClear_FullMethodName         = "/hi.ai.Training/TrainingClear"
 	Training_UploadFile_FullMethodName            = "/hi.ai.Training/UploadFile"
+	Training_ListAgentFiles_FullMethodName        = "/hi.ai.Training/ListAgentFiles"
 	Training_ListAgentFile_FullMethodName         = "/hi.ai.Training/ListAgentFile"
 	Training_DeleteAgentFile_FullMethodName       = "/hi.ai.Training/DeleteAgentFile"
 	Training_DeleteAgentFiles_FullMethodName      = "/hi.ai.Training/DeleteAgentFiles"
@@ -46,6 +47,8 @@ type TrainingClient interface {
 	TrainingStatus(ctx context.Context, in *TrainingStatusReq, opts ...grpc.CallOption) (*TrainingStatusResp, error)
 	TrainingClear(ctx context.Context, in *TrainingClearReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UploadFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListAgentFiles(ctx context.Context, in *ListAgentFileReq, opts ...grpc.CallOption) (*ListAgentFileResp, error)
+	// Deprecated: Do not use.
 	ListAgentFile(ctx context.Context, in *ListAgentFileReq, opts ...grpc.CallOption) (*ListAgentFileResp, error)
 	DeleteAgentFile(ctx context.Context, in *DeleteAgentFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAgentFiles(ctx context.Context, in *DeleteAgentFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -106,6 +109,17 @@ func (c *trainingClient) UploadFile(ctx context.Context, in *UploadFileReq, opts
 	return out, nil
 }
 
+func (c *trainingClient) ListAgentFiles(ctx context.Context, in *ListAgentFileReq, opts ...grpc.CallOption) (*ListAgentFileResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentFileResp)
+	err := c.cc.Invoke(ctx, Training_ListAgentFiles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *trainingClient) ListAgentFile(ctx context.Context, in *ListAgentFileReq, opts ...grpc.CallOption) (*ListAgentFileResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentFileResp)
@@ -216,6 +230,8 @@ type TrainingServer interface {
 	TrainingStatus(context.Context, *TrainingStatusReq) (*TrainingStatusResp, error)
 	TrainingClear(context.Context, *TrainingClearReq) (*emptypb.Empty, error)
 	UploadFile(context.Context, *UploadFileReq) (*emptypb.Empty, error)
+	ListAgentFiles(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error)
+	// Deprecated: Do not use.
 	ListAgentFile(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error)
 	DeleteAgentFile(context.Context, *DeleteAgentFileReq) (*emptypb.Empty, error)
 	DeleteAgentFiles(context.Context, *DeleteAgentFilesReq) (*emptypb.Empty, error)
@@ -246,6 +262,9 @@ func (UnimplementedTrainingServer) TrainingClear(context.Context, *TrainingClear
 }
 func (UnimplementedTrainingServer) UploadFile(context.Context, *UploadFileReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadFile not implemented")
+}
+func (UnimplementedTrainingServer) ListAgentFiles(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListAgentFiles not implemented")
 }
 func (UnimplementedTrainingServer) ListAgentFile(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAgentFile not implemented")
@@ -365,6 +384,24 @@ func _Training_UploadFile_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TrainingServer).UploadFile(ctx, req.(*UploadFileReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Training_ListAgentFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAgentFileReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TrainingServer).ListAgentFiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Training_ListAgentFiles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TrainingServer).ListAgentFiles(ctx, req.(*ListAgentFileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -571,6 +608,10 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadFile",
 			Handler:    _Training_UploadFile_Handler,
+		},
+		{
+			MethodName: "ListAgentFiles",
+			Handler:    _Training_ListAgentFiles_Handler,
 		},
 		{
 			MethodName: "ListAgentFile",

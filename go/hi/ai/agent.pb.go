@@ -1630,24 +1630,31 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"pagination\"[\n" +
 	"\x1bListFavoriteAgentByDIDsResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos2\xd4\b\n" +
-	"\x05Agent\x125\n" +
-	"\aListLLM\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12A\n" +
-	"\rListEmbedding\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x125\n" +
-	"\aListSTT\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x125\n" +
-	"\aListTTS\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12=\n" +
+	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos2\xf2\v\n" +
+	"\x05Agent\x12;\n" +
+	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12:\n" +
+	"\aListLLM\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\"\x03\x88\x02\x01\x12B\n" +
+	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x12F\n" +
+	"\rListEmbedding\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\"\x03\x88\x02\x01\x12;\n" +
+	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x12:\n" +
+	"\aListSTT\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x03\x88\x02\x01\x12;\n" +
+	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12:\n" +
+	"\aListTTS\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\"\x03\x88\x02\x01\x12=\n" +
 	"\vAgentConfig\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.AgentConfigResp\x12<\n" +
 	"\vCreateAgent\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\x128\n" +
-	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\x121\n" +
-	"\tListAgent\x12\x0e.hi.Pagination\x1a\x14.hi.ai.ListAgentResp\x12H\n" +
+	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\x122\n" +
+	"\n" +
+	"ListAgents\x12\x0e.hi.Pagination\x1a\x14.hi.ai.ListAgentResp\x126\n" +
+	"\tListAgent\x12\x0e.hi.Pagination\x1a\x14.hi.ai.ListAgentResp\"\x03\x88\x02\x01\x12H\n" +
 	"\x0fListAgentByDids\x12\x19.hi.ai.ListAgentByDidsReq\x1a\x1a.hi.ai.ListAgentByDidsResp\x12<\n" +
 	"\vDeleteAgent\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\x126\n" +
 	"\tFindAgent\x12\x13.hi.ai.FindAgentReq\x1a\x14.hi.ai.FindAgentResp\x12E\n" +
 	"\x0eFindAgentCount\x12\x18.hi.ai.FindAgentCountReq\x1a\x19.hi.ai.FindAgentCountResp\x126\n" +
 	"\bTransfer\x12\x12.hi.ai.TransferReq\x1a\x16.google.protobuf.Empty\x12F\n" +
 	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\x12@\n" +
-	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\x12N\n" +
-	"\x11ListFavoriteAgent\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\x12`\n" +
+	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\x12O\n" +
+	"\x12ListFavoriteAgents\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\x12S\n" +
+	"\x11ListFavoriteAgent\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\"\x03\x88\x02\x01\x12`\n" +
 	"\x17FavoriteAgentListByDIDs\x12!.hi.ai.ListFavoriteAgentByDIDsReq\x1a\".hi.ai.ListFavoriteAgentByDIDsRespBu\n" +
 	"\tcom.hi.aiB\n" +
 	"AgentProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
@@ -1720,42 +1727,54 @@ var file_hi_ai_agent_proto_depIdxs = []int32{
 	4,  // 18: hi.ai.ListFavoriteAgentResp.infos:type_name -> hi.ai.AgentInfo
 	29, // 19: hi.ai.ListFavoriteAgentByDIDsReq.pagination:type_name -> hi.Pagination
 	4,  // 20: hi.ai.ListFavoriteAgentByDIDsResp.infos:type_name -> hi.ai.AgentInfo
-	30, // 21: hi.ai.Agent.ListLLM:input_type -> google.protobuf.Empty
-	30, // 22: hi.ai.Agent.ListEmbedding:input_type -> google.protobuf.Empty
-	30, // 23: hi.ai.Agent.ListSTT:input_type -> google.protobuf.Empty
-	30, // 24: hi.ai.Agent.ListTTS:input_type -> google.protobuf.Empty
-	30, // 25: hi.ai.Agent.AgentConfig:input_type -> google.protobuf.Empty
-	10, // 26: hi.ai.Agent.CreateAgent:input_type -> hi.ai.CreateAgentReq
-	12, // 27: hi.ai.Agent.EditAgent:input_type -> hi.ai.EditAgentReq
-	29, // 28: hi.ai.Agent.ListAgent:input_type -> hi.Pagination
-	14, // 29: hi.ai.Agent.ListAgentByDids:input_type -> hi.ai.ListAgentByDidsReq
-	16, // 30: hi.ai.Agent.DeleteAgent:input_type -> hi.ai.DeleteAgentReq
-	17, // 31: hi.ai.Agent.FindAgent:input_type -> hi.ai.FindAgentReq
-	19, // 32: hi.ai.Agent.FindAgentCount:input_type -> hi.ai.FindAgentCountReq
-	21, // 33: hi.ai.Agent.Transfer:input_type -> hi.ai.TransferReq
-	22, // 34: hi.ai.Agent.UpdatesToDefault:input_type -> hi.ai.UpdatesToDefaultReq
-	23, // 35: hi.ai.Agent.FavoriteAgent:input_type -> hi.ai.FavoriteAgentReq
-	24, // 36: hi.ai.Agent.ListFavoriteAgent:input_type -> hi.ai.ListFavoriteAgentReq
-	26, // 37: hi.ai.Agent.FavoriteAgentListByDIDs:input_type -> hi.ai.ListFavoriteAgentByDIDsReq
-	6,  // 38: hi.ai.Agent.ListLLM:output_type -> hi.ai.ListLLMResp
-	7,  // 39: hi.ai.Agent.ListEmbedding:output_type -> hi.ai.ListEmbeddingResp
-	8,  // 40: hi.ai.Agent.ListSTT:output_type -> hi.ai.ListSTTResp
-	9,  // 41: hi.ai.Agent.ListTTS:output_type -> hi.ai.ListTTSResp
-	5,  // 42: hi.ai.Agent.AgentConfig:output_type -> hi.ai.AgentConfigResp
-	11, // 43: hi.ai.Agent.CreateAgent:output_type -> hi.ai.CreateAgentResp
-	30, // 44: hi.ai.Agent.EditAgent:output_type -> google.protobuf.Empty
-	13, // 45: hi.ai.Agent.ListAgent:output_type -> hi.ai.ListAgentResp
-	15, // 46: hi.ai.Agent.ListAgentByDids:output_type -> hi.ai.ListAgentByDidsResp
-	30, // 47: hi.ai.Agent.DeleteAgent:output_type -> google.protobuf.Empty
-	18, // 48: hi.ai.Agent.FindAgent:output_type -> hi.ai.FindAgentResp
-	20, // 49: hi.ai.Agent.FindAgentCount:output_type -> hi.ai.FindAgentCountResp
-	30, // 50: hi.ai.Agent.Transfer:output_type -> google.protobuf.Empty
-	30, // 51: hi.ai.Agent.UpdatesToDefault:output_type -> google.protobuf.Empty
-	30, // 52: hi.ai.Agent.FavoriteAgent:output_type -> google.protobuf.Empty
-	25, // 53: hi.ai.Agent.ListFavoriteAgent:output_type -> hi.ai.ListFavoriteAgentResp
-	27, // 54: hi.ai.Agent.FavoriteAgentListByDIDs:output_type -> hi.ai.ListFavoriteAgentByDIDsResp
-	38, // [38:55] is the sub-list for method output_type
-	21, // [21:38] is the sub-list for method input_type
+	30, // 21: hi.ai.Agent.ListLlmModels:input_type -> google.protobuf.Empty
+	30, // 22: hi.ai.Agent.ListLLM:input_type -> google.protobuf.Empty
+	30, // 23: hi.ai.Agent.ListEmbeddings:input_type -> google.protobuf.Empty
+	30, // 24: hi.ai.Agent.ListEmbedding:input_type -> google.protobuf.Empty
+	30, // 25: hi.ai.Agent.ListSttModels:input_type -> google.protobuf.Empty
+	30, // 26: hi.ai.Agent.ListSTT:input_type -> google.protobuf.Empty
+	30, // 27: hi.ai.Agent.ListTtsModels:input_type -> google.protobuf.Empty
+	30, // 28: hi.ai.Agent.ListTTS:input_type -> google.protobuf.Empty
+	30, // 29: hi.ai.Agent.AgentConfig:input_type -> google.protobuf.Empty
+	10, // 30: hi.ai.Agent.CreateAgent:input_type -> hi.ai.CreateAgentReq
+	12, // 31: hi.ai.Agent.EditAgent:input_type -> hi.ai.EditAgentReq
+	29, // 32: hi.ai.Agent.ListAgents:input_type -> hi.Pagination
+	29, // 33: hi.ai.Agent.ListAgent:input_type -> hi.Pagination
+	14, // 34: hi.ai.Agent.ListAgentByDids:input_type -> hi.ai.ListAgentByDidsReq
+	16, // 35: hi.ai.Agent.DeleteAgent:input_type -> hi.ai.DeleteAgentReq
+	17, // 36: hi.ai.Agent.FindAgent:input_type -> hi.ai.FindAgentReq
+	19, // 37: hi.ai.Agent.FindAgentCount:input_type -> hi.ai.FindAgentCountReq
+	21, // 38: hi.ai.Agent.Transfer:input_type -> hi.ai.TransferReq
+	22, // 39: hi.ai.Agent.UpdatesToDefault:input_type -> hi.ai.UpdatesToDefaultReq
+	23, // 40: hi.ai.Agent.FavoriteAgent:input_type -> hi.ai.FavoriteAgentReq
+	24, // 41: hi.ai.Agent.ListFavoriteAgents:input_type -> hi.ai.ListFavoriteAgentReq
+	24, // 42: hi.ai.Agent.ListFavoriteAgent:input_type -> hi.ai.ListFavoriteAgentReq
+	26, // 43: hi.ai.Agent.FavoriteAgentListByDIDs:input_type -> hi.ai.ListFavoriteAgentByDIDsReq
+	6,  // 44: hi.ai.Agent.ListLlmModels:output_type -> hi.ai.ListLLMResp
+	6,  // 45: hi.ai.Agent.ListLLM:output_type -> hi.ai.ListLLMResp
+	7,  // 46: hi.ai.Agent.ListEmbeddings:output_type -> hi.ai.ListEmbeddingResp
+	7,  // 47: hi.ai.Agent.ListEmbedding:output_type -> hi.ai.ListEmbeddingResp
+	8,  // 48: hi.ai.Agent.ListSttModels:output_type -> hi.ai.ListSTTResp
+	8,  // 49: hi.ai.Agent.ListSTT:output_type -> hi.ai.ListSTTResp
+	9,  // 50: hi.ai.Agent.ListTtsModels:output_type -> hi.ai.ListTTSResp
+	9,  // 51: hi.ai.Agent.ListTTS:output_type -> hi.ai.ListTTSResp
+	5,  // 52: hi.ai.Agent.AgentConfig:output_type -> hi.ai.AgentConfigResp
+	11, // 53: hi.ai.Agent.CreateAgent:output_type -> hi.ai.CreateAgentResp
+	30, // 54: hi.ai.Agent.EditAgent:output_type -> google.protobuf.Empty
+	13, // 55: hi.ai.Agent.ListAgents:output_type -> hi.ai.ListAgentResp
+	13, // 56: hi.ai.Agent.ListAgent:output_type -> hi.ai.ListAgentResp
+	15, // 57: hi.ai.Agent.ListAgentByDids:output_type -> hi.ai.ListAgentByDidsResp
+	30, // 58: hi.ai.Agent.DeleteAgent:output_type -> google.protobuf.Empty
+	18, // 59: hi.ai.Agent.FindAgent:output_type -> hi.ai.FindAgentResp
+	20, // 60: hi.ai.Agent.FindAgentCount:output_type -> hi.ai.FindAgentCountResp
+	30, // 61: hi.ai.Agent.Transfer:output_type -> google.protobuf.Empty
+	30, // 62: hi.ai.Agent.UpdatesToDefault:output_type -> google.protobuf.Empty
+	30, // 63: hi.ai.Agent.FavoriteAgent:output_type -> google.protobuf.Empty
+	25, // 64: hi.ai.Agent.ListFavoriteAgents:output_type -> hi.ai.ListFavoriteAgentResp
+	25, // 65: hi.ai.Agent.ListFavoriteAgent:output_type -> hi.ai.ListFavoriteAgentResp
+	27, // 66: hi.ai.Agent.FavoriteAgentListByDIDs:output_type -> hi.ai.ListFavoriteAgentByDIDsResp
+	44, // [44:67] is the sub-list for method output_type
+	21, // [21:44] is the sub-list for method input_type
 	21, // [21:21] is the sub-list for extension type_name
 	21, // [21:21] is the sub-list for extension extendee
 	0,  // [0:21] is the sub-list for field type_name

@@ -20,9 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_List_FullMethodName   = "/hi.media.User/List"
-	User_Edit_FullMethodName   = "/hi.media.User/Edit"
-	User_Delete_FullMethodName = "/hi.media.User/Delete"
+	User_ListUsers_FullMethodName = "/hi.media.User/ListUsers"
+	User_List_FullMethodName      = "/hi.media.User/List"
+	User_Edit_FullMethodName      = "/hi.media.User/Edit"
+	User_Delete_FullMethodName    = "/hi.media.User/Delete"
 )
 
 // UserClient is the client API for User service.
@@ -31,6 +32,8 @@ const (
 //
 // Token鉴权
 type UserClient interface {
+	ListUsers(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserResp, error)
+	// Deprecated: Do not use.
 	List(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserResp, error)
 	Edit(ctx context.Context, in *EditUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -44,6 +47,17 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 	return &userClient{cc}
 }
 
+func (c *userClient) ListUsers(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserResp)
+	err := c.cc.Invoke(ctx, User_ListUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *userClient) List(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListUserResp)
@@ -80,6 +94,8 @@ func (c *userClient) Delete(ctx context.Context, in *DeleteUserReq, opts ...grpc
 //
 // Token鉴权
 type UserServer interface {
+	ListUsers(context.Context, *ListUserReq) (*ListUserResp, error)
+	// Deprecated: Do not use.
 	List(context.Context, *ListUserReq) (*ListUserResp, error)
 	Edit(context.Context, *EditUserReq) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteUserReq) (*emptypb.Empty, error)
@@ -92,6 +108,9 @@ type UserServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServer struct{}
 
+func (UnimplementedUserServer) ListUsers(context.Context, *ListUserReq) (*ListUserResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
+}
 func (UnimplementedUserServer) List(context.Context, *ListUserReq) (*ListUserResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
@@ -119,6 +138,24 @@ func RegisterUserServer(s grpc.ServiceRegistrar, srv UserServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&User_ServiceDesc, srv)
+}
+
+func _User_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListUsers(ctx, req.(*ListUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _User_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -182,6 +219,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.media.User",
 	HandlerType: (*UserServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListUsers",
+			Handler:    _User_ListUsers_Handler,
+		},
 		{
 			MethodName: "List",
 			Handler:    _User_List_Handler,

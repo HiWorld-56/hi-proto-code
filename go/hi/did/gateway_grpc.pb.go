@@ -20,14 +20,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	GatewayConfig_List_FullMethodName = "/hi.did.GatewayConfig/List"
-	GatewayConfig_Set_FullMethodName  = "/hi.did.GatewayConfig/Set"
+	GatewayConfig_ListGatewayConfigs_FullMethodName = "/hi.did.GatewayConfig/ListGatewayConfigs"
+	GatewayConfig_List_FullMethodName               = "/hi.did.GatewayConfig/List"
+	GatewayConfig_Set_FullMethodName                = "/hi.did.GatewayConfig/Set"
 )
 
 // GatewayConfigClient is the client API for GatewayConfig service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatewayConfigClient interface {
+	ListGatewayConfigs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error)
+	// Deprecated: Do not use.
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error)
 	Set(ctx context.Context, in *GatewayConfigSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -40,6 +43,17 @@ func NewGatewayConfigClient(cc grpc.ClientConnInterface) GatewayConfigClient {
 	return &gatewayConfigClient{cc}
 }
 
+func (c *gatewayConfigClient) ListGatewayConfigs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GatewayConfigListResp)
+	err := c.cc.Invoke(ctx, GatewayConfig_ListGatewayConfigs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *gatewayConfigClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GatewayConfigListResp)
@@ -64,6 +78,8 @@ func (c *gatewayConfigClient) Set(ctx context.Context, in *GatewayConfigSetReq, 
 // All implementations should embed UnimplementedGatewayConfigServer
 // for forward compatibility.
 type GatewayConfigServer interface {
+	ListGatewayConfigs(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error)
+	// Deprecated: Do not use.
 	List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error)
 	Set(context.Context, *GatewayConfigSetReq) (*emptypb.Empty, error)
 }
@@ -75,6 +91,9 @@ type GatewayConfigServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGatewayConfigServer struct{}
 
+func (UnimplementedGatewayConfigServer) ListGatewayConfigs(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListGatewayConfigs not implemented")
+}
 func (UnimplementedGatewayConfigServer) List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
@@ -99,6 +118,24 @@ func RegisterGatewayConfigServer(s grpc.ServiceRegistrar, srv GatewayConfigServe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&GatewayConfig_ServiceDesc, srv)
+}
+
+func _GatewayConfig_ListGatewayConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayConfigServer).ListGatewayConfigs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GatewayConfig_ListGatewayConfigs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayConfigServer).ListGatewayConfigs(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _GatewayConfig_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -144,6 +181,10 @@ var GatewayConfig_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.did.GatewayConfig",
 	HandlerType: (*GatewayConfigServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListGatewayConfigs",
+			Handler:    _GatewayConfig_ListGatewayConfigs_Handler,
+		},
 		{
 			MethodName: "List",
 			Handler:    _GatewayConfig_List_Handler,

@@ -425,12 +425,16 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x06master\";\n" +
 	"\x13ListOnlineAgentResp\x12$\n" +
-	"\x04list\x18\x01 \x03(\v2\x10.hi.ai.AgentInfoR\x04list2\xac\v\n" +
-	"\x05Agent\x125\n" +
-	"\aListLLM\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12A\n" +
-	"\rListEmbedding\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x125\n" +
-	"\aListSTT\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x125\n" +
-	"\aListTTS\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12=\n" +
+	"\x04list\x18\x01 \x03(\v2\x10.hi.ai.AgentInfoR\x04list2\x91\x0e\n" +
+	"\x05Agent\x12;\n" +
+	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12:\n" +
+	"\aListLLM\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\"\x03\x88\x02\x01\x12B\n" +
+	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x12F\n" +
+	"\rListEmbedding\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\"\x03\x88\x02\x01\x12;\n" +
+	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x12:\n" +
+	"\aListSTT\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x03\x88\x02\x01\x12;\n" +
+	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12:\n" +
+	"\aListTTS\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\"\x03\x88\x02\x01\x12=\n" +
 	"\vAgentConfig\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.AgentConfigResp\x12<\n" +
 	"\vCreateAgent\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\x128\n" +
 	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\x12H\n" +
@@ -440,8 +444,9 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x0eFindAgentCount\x12\x18.hi.ai.FindAgentCountReq\x1a\x19.hi.ai.FindAgentCountResp\x126\n" +
 	"\bTransfer\x12\x12.hi.ai.TransferReq\x1a\x16.google.protobuf.Empty\x12F\n" +
 	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\x12@\n" +
-	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\x12N\n" +
-	"\x11ListFavoriteAgent\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\x12`\n" +
+	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\x12O\n" +
+	"\x12ListFavoriteAgents\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\x12S\n" +
+	"\x11ListFavoriteAgent\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\"\x03\x88\x02\x01\x12`\n" +
 	"\x17FavoriteAgentListByDIDs\x12!.hi.ai.ListFavoriteAgentByDIDsReq\x1a\".hi.ai.ListFavoriteAgentByDIDsResp\x12<\n" +
 	"\n" +
 	"BindMaster\x12\x16.hi.club.BindMasterReq\x1a\x16.google.protobuf.Empty\x12@\n" +
@@ -509,52 +514,62 @@ var file_hi_club_agent_proto_depIdxs = []int32{
 	9,  // 1: hi.club.ListAllOnlineAgentResp.list:type_name -> hi.ai.AgentInfo
 	8,  // 2: hi.club.GetAgentMasterResp.master:type_name -> hi.Entity
 	9,  // 3: hi.club.ListOnlineAgentResp.list:type_name -> hi.ai.AgentInfo
-	10, // 4: hi.club.Agent.ListLLM:input_type -> google.protobuf.Empty
-	10, // 5: hi.club.Agent.ListEmbedding:input_type -> google.protobuf.Empty
-	10, // 6: hi.club.Agent.ListSTT:input_type -> google.protobuf.Empty
-	10, // 7: hi.club.Agent.ListTTS:input_type -> google.protobuf.Empty
-	10, // 8: hi.club.Agent.AgentConfig:input_type -> google.protobuf.Empty
-	11, // 9: hi.club.Agent.CreateAgent:input_type -> hi.ai.CreateAgentReq
-	12, // 10: hi.club.Agent.EditAgent:input_type -> hi.ai.EditAgentReq
-	13, // 11: hi.club.Agent.ListAgentByDids:input_type -> hi.ai.ListAgentByDidsReq
-	14, // 12: hi.club.Agent.DeleteAgent:input_type -> hi.ai.DeleteAgentReq
-	15, // 13: hi.club.Agent.FindAgent:input_type -> hi.ai.FindAgentReq
-	16, // 14: hi.club.Agent.FindAgentCount:input_type -> hi.ai.FindAgentCountReq
-	17, // 15: hi.club.Agent.Transfer:input_type -> hi.ai.TransferReq
-	18, // 16: hi.club.Agent.UpdatesToDefault:input_type -> hi.ai.UpdatesToDefaultReq
-	19, // 17: hi.club.Agent.FavoriteAgent:input_type -> hi.ai.FavoriteAgentReq
-	20, // 18: hi.club.Agent.ListFavoriteAgent:input_type -> hi.ai.ListFavoriteAgentReq
-	21, // 19: hi.club.Agent.FavoriteAgentListByDIDs:input_type -> hi.ai.ListFavoriteAgentByDIDsReq
-	0,  // 20: hi.club.Agent.BindMaster:input_type -> hi.club.BindMasterReq
-	1,  // 21: hi.club.Agent.UnbindMaster:input_type -> hi.club.UnbindMasterReq
-	2,  // 22: hi.club.Agent.BindStatus:input_type -> hi.club.BindStatusReq
-	22, // 23: hi.club.Agent.ListAllOnlineAgent:input_type -> hi.Pagination
-	23, // 24: hi.club.Agent.ListOnlineAgent:input_type -> hi.DID
-	5,  // 25: hi.club.Agent.GetAgentMaster:input_type -> hi.club.GetAgentMasterReq
-	24, // 26: hi.club.Agent.ListLLM:output_type -> hi.ai.ListLLMResp
-	25, // 27: hi.club.Agent.ListEmbedding:output_type -> hi.ai.ListEmbeddingResp
-	26, // 28: hi.club.Agent.ListSTT:output_type -> hi.ai.ListSTTResp
-	27, // 29: hi.club.Agent.ListTTS:output_type -> hi.ai.ListTTSResp
-	28, // 30: hi.club.Agent.AgentConfig:output_type -> hi.ai.AgentConfigResp
-	29, // 31: hi.club.Agent.CreateAgent:output_type -> hi.ai.CreateAgentResp
-	10, // 32: hi.club.Agent.EditAgent:output_type -> google.protobuf.Empty
-	30, // 33: hi.club.Agent.ListAgentByDids:output_type -> hi.ai.ListAgentByDidsResp
-	10, // 34: hi.club.Agent.DeleteAgent:output_type -> google.protobuf.Empty
-	31, // 35: hi.club.Agent.FindAgent:output_type -> hi.ai.FindAgentResp
-	32, // 36: hi.club.Agent.FindAgentCount:output_type -> hi.ai.FindAgentCountResp
-	10, // 37: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
-	10, // 38: hi.club.Agent.UpdatesToDefault:output_type -> google.protobuf.Empty
-	10, // 39: hi.club.Agent.FavoriteAgent:output_type -> google.protobuf.Empty
-	33, // 40: hi.club.Agent.ListFavoriteAgent:output_type -> hi.ai.ListFavoriteAgentResp
-	34, // 41: hi.club.Agent.FavoriteAgentListByDIDs:output_type -> hi.ai.ListFavoriteAgentByDIDsResp
-	10, // 42: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
-	10, // 43: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
-	3,  // 44: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp
-	4,  // 45: hi.club.Agent.ListAllOnlineAgent:output_type -> hi.club.ListAllOnlineAgentResp
-	7,  // 46: hi.club.Agent.ListOnlineAgent:output_type -> hi.club.ListOnlineAgentResp
-	6,  // 47: hi.club.Agent.GetAgentMaster:output_type -> hi.club.GetAgentMasterResp
-	26, // [26:48] is the sub-list for method output_type
-	4,  // [4:26] is the sub-list for method input_type
+	10, // 4: hi.club.Agent.ListLlmModels:input_type -> google.protobuf.Empty
+	10, // 5: hi.club.Agent.ListLLM:input_type -> google.protobuf.Empty
+	10, // 6: hi.club.Agent.ListEmbeddings:input_type -> google.protobuf.Empty
+	10, // 7: hi.club.Agent.ListEmbedding:input_type -> google.protobuf.Empty
+	10, // 8: hi.club.Agent.ListSttModels:input_type -> google.protobuf.Empty
+	10, // 9: hi.club.Agent.ListSTT:input_type -> google.protobuf.Empty
+	10, // 10: hi.club.Agent.ListTtsModels:input_type -> google.protobuf.Empty
+	10, // 11: hi.club.Agent.ListTTS:input_type -> google.protobuf.Empty
+	10, // 12: hi.club.Agent.AgentConfig:input_type -> google.protobuf.Empty
+	11, // 13: hi.club.Agent.CreateAgent:input_type -> hi.ai.CreateAgentReq
+	12, // 14: hi.club.Agent.EditAgent:input_type -> hi.ai.EditAgentReq
+	13, // 15: hi.club.Agent.ListAgentByDids:input_type -> hi.ai.ListAgentByDidsReq
+	14, // 16: hi.club.Agent.DeleteAgent:input_type -> hi.ai.DeleteAgentReq
+	15, // 17: hi.club.Agent.FindAgent:input_type -> hi.ai.FindAgentReq
+	16, // 18: hi.club.Agent.FindAgentCount:input_type -> hi.ai.FindAgentCountReq
+	17, // 19: hi.club.Agent.Transfer:input_type -> hi.ai.TransferReq
+	18, // 20: hi.club.Agent.UpdatesToDefault:input_type -> hi.ai.UpdatesToDefaultReq
+	19, // 21: hi.club.Agent.FavoriteAgent:input_type -> hi.ai.FavoriteAgentReq
+	20, // 22: hi.club.Agent.ListFavoriteAgents:input_type -> hi.ai.ListFavoriteAgentReq
+	20, // 23: hi.club.Agent.ListFavoriteAgent:input_type -> hi.ai.ListFavoriteAgentReq
+	21, // 24: hi.club.Agent.FavoriteAgentListByDIDs:input_type -> hi.ai.ListFavoriteAgentByDIDsReq
+	0,  // 25: hi.club.Agent.BindMaster:input_type -> hi.club.BindMasterReq
+	1,  // 26: hi.club.Agent.UnbindMaster:input_type -> hi.club.UnbindMasterReq
+	2,  // 27: hi.club.Agent.BindStatus:input_type -> hi.club.BindStatusReq
+	22, // 28: hi.club.Agent.ListAllOnlineAgent:input_type -> hi.Pagination
+	23, // 29: hi.club.Agent.ListOnlineAgent:input_type -> hi.DID
+	5,  // 30: hi.club.Agent.GetAgentMaster:input_type -> hi.club.GetAgentMasterReq
+	24, // 31: hi.club.Agent.ListLlmModels:output_type -> hi.ai.ListLLMResp
+	24, // 32: hi.club.Agent.ListLLM:output_type -> hi.ai.ListLLMResp
+	25, // 33: hi.club.Agent.ListEmbeddings:output_type -> hi.ai.ListEmbeddingResp
+	25, // 34: hi.club.Agent.ListEmbedding:output_type -> hi.ai.ListEmbeddingResp
+	26, // 35: hi.club.Agent.ListSttModels:output_type -> hi.ai.ListSTTResp
+	26, // 36: hi.club.Agent.ListSTT:output_type -> hi.ai.ListSTTResp
+	27, // 37: hi.club.Agent.ListTtsModels:output_type -> hi.ai.ListTTSResp
+	27, // 38: hi.club.Agent.ListTTS:output_type -> hi.ai.ListTTSResp
+	28, // 39: hi.club.Agent.AgentConfig:output_type -> hi.ai.AgentConfigResp
+	29, // 40: hi.club.Agent.CreateAgent:output_type -> hi.ai.CreateAgentResp
+	10, // 41: hi.club.Agent.EditAgent:output_type -> google.protobuf.Empty
+	30, // 42: hi.club.Agent.ListAgentByDids:output_type -> hi.ai.ListAgentByDidsResp
+	10, // 43: hi.club.Agent.DeleteAgent:output_type -> google.protobuf.Empty
+	31, // 44: hi.club.Agent.FindAgent:output_type -> hi.ai.FindAgentResp
+	32, // 45: hi.club.Agent.FindAgentCount:output_type -> hi.ai.FindAgentCountResp
+	10, // 46: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
+	10, // 47: hi.club.Agent.UpdatesToDefault:output_type -> google.protobuf.Empty
+	10, // 48: hi.club.Agent.FavoriteAgent:output_type -> google.protobuf.Empty
+	33, // 49: hi.club.Agent.ListFavoriteAgents:output_type -> hi.ai.ListFavoriteAgentResp
+	33, // 50: hi.club.Agent.ListFavoriteAgent:output_type -> hi.ai.ListFavoriteAgentResp
+	34, // 51: hi.club.Agent.FavoriteAgentListByDIDs:output_type -> hi.ai.ListFavoriteAgentByDIDsResp
+	10, // 52: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
+	10, // 53: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
+	3,  // 54: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp
+	4,  // 55: hi.club.Agent.ListAllOnlineAgent:output_type -> hi.club.ListAllOnlineAgentResp
+	7,  // 56: hi.club.Agent.ListOnlineAgent:output_type -> hi.club.ListOnlineAgentResp
+	6,  // 57: hi.club.Agent.GetAgentMaster:output_type -> hi.club.GetAgentMasterResp
+	31, // [31:58] is the sub-list for method output_type
+	4,  // [4:31] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
 	4,  // [4:4] is the sub-list for extension extendee
 	0,  // [0:4] is the sub-list for field type_name

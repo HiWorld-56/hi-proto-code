@@ -26,12 +26,14 @@ var File_hi_club_user_acl_proto protoreflect.FileDescriptor
 
 const file_hi_club_user_acl_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/club/user_acl.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/user_acl.proto2\xa7\x02\n" +
+	"\x16hi/club/user_acl.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/user_acl.proto2\xb8\x03\n" +
 	"\aUserACL\x123\n" +
 	"\x03Add\x12\x14.hi.ai.UserACLAddReq\x1a\x16.google.protobuf.Empty\x129\n" +
-	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\x125\n" +
-	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\x12>\n" +
-	"\bListType\x12\x16.google.protobuf.Empty\x1a\x1a.hi.ai.UserACLListTypeResp\x125\n" +
+	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\x12=\n" +
+	"\fListUserAcls\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\x12:\n" +
+	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\"\x03\x88\x02\x01\x12F\n" +
+	"\x10ListUserAclTypes\x12\x16.google.protobuf.Empty\x1a\x1a.hi.ai.UserACLListTypeResp\x12C\n" +
+	"\bListType\x12\x16.google.protobuf.Empty\x1a\x1a.hi.ai.UserACLListTypeResp\"\x03\x88\x02\x01\x125\n" +
 	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.EmptyB\x83\x01\n" +
 	"\vcom.hi.clubB\fUserAclProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
@@ -47,16 +49,20 @@ var file_hi_club_user_acl_proto_goTypes = []any{
 var file_hi_club_user_acl_proto_depIdxs = []int32{
 	0, // 0: hi.club.UserACL.Add:input_type -> hi.ai.UserACLAddReq
 	1, // 1: hi.club.UserACL.Delete:input_type -> hi.ai.UserACLDeleteReq
-	2, // 2: hi.club.UserACL.List:input_type -> hi.ai.UserACLListReq
-	3, // 3: hi.club.UserACL.ListType:input_type -> google.protobuf.Empty
-	4, // 4: hi.club.UserACL.Edit:input_type -> hi.ai.UserACLEditReq
-	3, // 5: hi.club.UserACL.Add:output_type -> google.protobuf.Empty
-	3, // 6: hi.club.UserACL.Delete:output_type -> google.protobuf.Empty
-	5, // 7: hi.club.UserACL.List:output_type -> hi.ai.UserACLListResp
-	6, // 8: hi.club.UserACL.ListType:output_type -> hi.ai.UserACLListTypeResp
-	3, // 9: hi.club.UserACL.Edit:output_type -> google.protobuf.Empty
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	2, // 2: hi.club.UserACL.ListUserAcls:input_type -> hi.ai.UserACLListReq
+	2, // 3: hi.club.UserACL.List:input_type -> hi.ai.UserACLListReq
+	3, // 4: hi.club.UserACL.ListUserAclTypes:input_type -> google.protobuf.Empty
+	3, // 5: hi.club.UserACL.ListType:input_type -> google.protobuf.Empty
+	4, // 6: hi.club.UserACL.Edit:input_type -> hi.ai.UserACLEditReq
+	3, // 7: hi.club.UserACL.Add:output_type -> google.protobuf.Empty
+	3, // 8: hi.club.UserACL.Delete:output_type -> google.protobuf.Empty
+	5, // 9: hi.club.UserACL.ListUserAcls:output_type -> hi.ai.UserACLListResp
+	5, // 10: hi.club.UserACL.List:output_type -> hi.ai.UserACLListResp
+	6, // 11: hi.club.UserACL.ListUserAclTypes:output_type -> hi.ai.UserACLListTypeResp
+	6, // 12: hi.club.UserACL.ListType:output_type -> hi.ai.UserACLListTypeResp
+	3, // 13: hi.club.UserACL.Edit:output_type -> google.protobuf.Empty
+	7, // [7:14] is the sub-list for method output_type
+	0, // [0:7] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

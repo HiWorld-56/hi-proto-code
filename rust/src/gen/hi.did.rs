@@ -1067,6 +1067,27 @@ pub mod api_key_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.ApiKey", "Edit"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn list_api_keys(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListApiKeyReq>,
+        ) -> std::result::Result<tonic::Response<super::ListApiKeyResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.ApiKey/ListApiKeys",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.ApiKey", "ListApiKeys"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApiKeyReq>,
@@ -1934,6 +1955,31 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Set"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn list_merchants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Did>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/ListMerchants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "ListMerchants"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Did>,
@@ -3079,6 +3125,31 @@ pub mod gateway_config_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        pub async fn list_gateway_configs(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::GatewayConfigListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.GatewayConfig/ListGatewayConfigs",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.GatewayConfig", "ListGatewayConfigs"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -3406,6 +3477,31 @@ pub mod invite_code_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.InviteCode", "Edit"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn list_invite_codes(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Pagination>,
+        ) -> std::result::Result<
+            tonic::Response<super::InviteCodeListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.InviteCode/ListInviteCodes",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.InviteCode", "ListInviteCodes"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,
@@ -3799,6 +3895,31 @@ pub mod merchant_manage_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        pub async fn list_merchants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantManageListReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantManageListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantManage/ListMerchants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantManage", "ListMerchants"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::MerchantManageListReq>,

@@ -297,9 +297,10 @@ const file_hi_media_user_proto_rawDesc = "" +
 	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12\x12\n" +
 	"\x04note\x18\x02 \x01(\tR\x04note\"/\n" +
 	"\rDeleteUserReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did2\xaf\x01\n" +
-	"\x04User\x125\n" +
-	"\x04List\x12\x15.hi.media.ListUserReq\x1a\x16.hi.media.ListUserResp\x125\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did2\xf0\x01\n" +
+	"\x04User\x12:\n" +
+	"\tListUsers\x12\x15.hi.media.ListUserReq\x1a\x16.hi.media.ListUserResp\x12:\n" +
+	"\x04List\x12\x15.hi.media.ListUserReq\x1a\x16.hi.media.ListUserResp\"\x03\x88\x02\x01\x125\n" +
 	"\x04Edit\x12\x15.hi.media.EditUserReq\x1a\x16.google.protobuf.Empty\x129\n" +
 	"\x06Delete\x12\x17.hi.media.DeleteUserReq\x1a\x16.google.protobuf.EmptyB\x86\x01\n" +
 	"\fcom.hi.mediaB\tUserProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
@@ -331,14 +332,16 @@ var file_hi_media_user_proto_depIdxs = []int32{
 	5, // 0: hi.media.UserInfo.base:type_name -> hi.Entity
 	6, // 1: hi.media.ListUserReq.pagination:type_name -> hi.Pagination
 	0, // 2: hi.media.ListUserResp.list:type_name -> hi.media.UserInfo
-	1, // 3: hi.media.User.List:input_type -> hi.media.ListUserReq
-	3, // 4: hi.media.User.Edit:input_type -> hi.media.EditUserReq
-	4, // 5: hi.media.User.Delete:input_type -> hi.media.DeleteUserReq
-	2, // 6: hi.media.User.List:output_type -> hi.media.ListUserResp
-	7, // 7: hi.media.User.Edit:output_type -> google.protobuf.Empty
-	7, // 8: hi.media.User.Delete:output_type -> google.protobuf.Empty
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
+	1, // 3: hi.media.User.ListUsers:input_type -> hi.media.ListUserReq
+	1, // 4: hi.media.User.List:input_type -> hi.media.ListUserReq
+	3, // 5: hi.media.User.Edit:input_type -> hi.media.EditUserReq
+	4, // 6: hi.media.User.Delete:input_type -> hi.media.DeleteUserReq
+	2, // 7: hi.media.User.ListUsers:output_type -> hi.media.ListUserResp
+	2, // 8: hi.media.User.List:output_type -> hi.media.ListUserResp
+	7, // 9: hi.media.User.Edit:output_type -> google.protobuf.Empty
+	7, // 10: hi.media.User.Delete:output_type -> google.protobuf.Empty
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name

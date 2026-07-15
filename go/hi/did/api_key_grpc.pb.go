@@ -20,11 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ApiKey_Create_FullMethodName = "/hi.did.ApiKey/Create"
-	ApiKey_Edit_FullMethodName   = "/hi.did.ApiKey/Edit"
-	ApiKey_List_FullMethodName   = "/hi.did.ApiKey/List"
-	ApiKey_Delete_FullMethodName = "/hi.did.ApiKey/Delete"
-	ApiKey_Get_FullMethodName    = "/hi.did.ApiKey/Get"
+	ApiKey_Create_FullMethodName      = "/hi.did.ApiKey/Create"
+	ApiKey_Edit_FullMethodName        = "/hi.did.ApiKey/Edit"
+	ApiKey_ListApiKeys_FullMethodName = "/hi.did.ApiKey/ListApiKeys"
+	ApiKey_List_FullMethodName        = "/hi.did.ApiKey/List"
+	ApiKey_Delete_FullMethodName      = "/hi.did.ApiKey/Delete"
+	ApiKey_Get_FullMethodName         = "/hi.did.ApiKey/Get"
 )
 
 // ApiKeyClient is the client API for ApiKey service.
@@ -33,6 +34,8 @@ const (
 type ApiKeyClient interface {
 	Create(ctx context.Context, in *CreateApiKeyReq, opts ...grpc.CallOption) (*CreateApiKeyResp, error)
 	Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
+	ListApiKeys(ctx context.Context, in *ListApiKeyReq, opts ...grpc.CallOption) (*ListApiKeyResp, error)
+	// Deprecated: Do not use.
 	List(ctx context.Context, in *ListApiKeyReq, opts ...grpc.CallOption) (*ListApiKeyResp, error)
 	Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetApiKeyReq, opts ...grpc.CallOption) (*GetApiKeyResp, error)
@@ -66,6 +69,17 @@ func (c *apiKeyClient) Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc
 	return out, nil
 }
 
+func (c *apiKeyClient) ListApiKeys(ctx context.Context, in *ListApiKeyReq, opts ...grpc.CallOption) (*ListApiKeyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListApiKeyResp)
+	err := c.cc.Invoke(ctx, ApiKey_ListApiKeys_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *apiKeyClient) List(ctx context.Context, in *ListApiKeyReq, opts ...grpc.CallOption) (*ListApiKeyResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListApiKeyResp)
@@ -102,6 +116,8 @@ func (c *apiKeyClient) Get(ctx context.Context, in *GetApiKeyReq, opts ...grpc.C
 type ApiKeyServer interface {
 	Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error)
 	Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error)
+	ListApiKeys(context.Context, *ListApiKeyReq) (*ListApiKeyResp, error)
+	// Deprecated: Do not use.
 	List(context.Context, *ListApiKeyReq) (*ListApiKeyResp, error)
 	Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetApiKeyReq) (*GetApiKeyResp, error)
@@ -119,6 +135,9 @@ func (UnimplementedApiKeyServer) Create(context.Context, *CreateApiKeyReq) (*Cre
 }
 func (UnimplementedApiKeyServer) Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedApiKeyServer) ListApiKeys(context.Context, *ListApiKeyReq) (*ListApiKeyResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListApiKeys not implemented")
 }
 func (UnimplementedApiKeyServer) List(context.Context, *ListApiKeyReq) (*ListApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -181,6 +200,24 @@ func _ApiKey_Edit_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiKeyServer).Edit(ctx, req.(*EditApiKeyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApiKey_ListApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListApiKeyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiKeyServer).ListApiKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiKey_ListApiKeys_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiKeyServer).ListApiKeys(ctx, req.(*ListApiKeyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -253,6 +290,10 @@ var ApiKey_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Edit",
 			Handler:    _ApiKey_Edit_Handler,
+		},
+		{
+			MethodName: "ListApiKeys",
+			Handler:    _ApiKey_ListApiKeys_Handler,
 		},
 		{
 			MethodName: "List",

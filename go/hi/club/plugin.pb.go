@@ -26,7 +26,7 @@ var File_hi_club_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_club_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto2\xef\x05\n" +
+	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto2\xb0\x06\n" +
 	"\x06Plugin\x12;\n" +
 	"\n" +
 	"DrawConfig\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.DrawConfigResp\x12?\n" +
@@ -34,8 +34,9 @@ const file_hi_club_plugin_proto_rawDesc = "" +
 	"\fSearchCreate\x12\x16.hi.ai.SearchCreateReq\x1a\x16.google.protobuf.Empty\x12?\n" +
 	"\fPythonCreate\x12\x16.hi.ai.PythonCreateReq\x1a\x17.hi.ai.PythonCreateResp\x129\n" +
 	"\n" +
-	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\x123\n" +
-	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\x128\n" +
+	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\x12:\n" +
+	"\vListPlugins\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\x128\n" +
+	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\"\x03\x88\x02\x01\x128\n" +
 	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\x12D\n" +
 	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\x124\n" +
 	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\x120\n" +
@@ -71,27 +72,29 @@ var file_hi_club_plugin_proto_depIdxs = []int32{
 	2,  // 2: hi.club.Plugin.SearchCreate:input_type -> hi.ai.SearchCreateReq
 	3,  // 3: hi.club.Plugin.PythonCreate:input_type -> hi.ai.PythonCreateReq
 	4,  // 4: hi.club.Plugin.DrawCreate:input_type -> hi.ai.DrawCreateReq
-	5,  // 5: hi.club.Plugin.List:input_type -> hi.ai.ListPluginReq
-	6,  // 6: hi.club.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
-	7,  // 7: hi.club.Plugin.DeleteByDids:input_type -> hi.ai.DeletePluginByDidsReq
-	8,  // 8: hi.club.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	9,  // 9: hi.club.Plugin.GetDraw:input_type -> hi.ai.GetDrawReq
-	10, // 10: hi.club.Plugin.PythonParamsSet:input_type -> hi.ai.PythonParamsSetReq
-	11, // 11: hi.club.Plugin.GetPythonParams:input_type -> hi.ai.GetPythonParamsReq
-	12, // 12: hi.club.Plugin.DrawConfig:output_type -> hi.ai.DrawConfigResp
-	13, // 13: hi.club.Plugin.PluginSwitch:output_type -> hi.ai.PluginSwitchResp
-	0,  // 14: hi.club.Plugin.SearchCreate:output_type -> google.protobuf.Empty
-	14, // 15: hi.club.Plugin.PythonCreate:output_type -> hi.ai.PythonCreateResp
-	15, // 16: hi.club.Plugin.DrawCreate:output_type -> hi.ai.DrawCreateResp
-	16, // 17: hi.club.Plugin.List:output_type -> hi.ai.ListPluginResp
-	0,  // 18: hi.club.Plugin.Delete:output_type -> google.protobuf.Empty
-	0,  // 19: hi.club.Plugin.DeleteByDids:output_type -> google.protobuf.Empty
-	0,  // 20: hi.club.Plugin.Edit:output_type -> google.protobuf.Empty
-	17, // 21: hi.club.Plugin.GetDraw:output_type -> hi.ai.GetDrawResp
-	0,  // 22: hi.club.Plugin.PythonParamsSet:output_type -> google.protobuf.Empty
-	18, // 23: hi.club.Plugin.GetPythonParams:output_type -> hi.ai.GetPythonParamsResp
-	12, // [12:24] is the sub-list for method output_type
-	0,  // [0:12] is the sub-list for method input_type
+	5,  // 5: hi.club.Plugin.ListPlugins:input_type -> hi.ai.ListPluginReq
+	5,  // 6: hi.club.Plugin.List:input_type -> hi.ai.ListPluginReq
+	6,  // 7: hi.club.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
+	7,  // 8: hi.club.Plugin.DeleteByDids:input_type -> hi.ai.DeletePluginByDidsReq
+	8,  // 9: hi.club.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	9,  // 10: hi.club.Plugin.GetDraw:input_type -> hi.ai.GetDrawReq
+	10, // 11: hi.club.Plugin.PythonParamsSet:input_type -> hi.ai.PythonParamsSetReq
+	11, // 12: hi.club.Plugin.GetPythonParams:input_type -> hi.ai.GetPythonParamsReq
+	12, // 13: hi.club.Plugin.DrawConfig:output_type -> hi.ai.DrawConfigResp
+	13, // 14: hi.club.Plugin.PluginSwitch:output_type -> hi.ai.PluginSwitchResp
+	0,  // 15: hi.club.Plugin.SearchCreate:output_type -> google.protobuf.Empty
+	14, // 16: hi.club.Plugin.PythonCreate:output_type -> hi.ai.PythonCreateResp
+	15, // 17: hi.club.Plugin.DrawCreate:output_type -> hi.ai.DrawCreateResp
+	16, // 18: hi.club.Plugin.ListPlugins:output_type -> hi.ai.ListPluginResp
+	16, // 19: hi.club.Plugin.List:output_type -> hi.ai.ListPluginResp
+	0,  // 20: hi.club.Plugin.Delete:output_type -> google.protobuf.Empty
+	0,  // 21: hi.club.Plugin.DeleteByDids:output_type -> google.protobuf.Empty
+	0,  // 22: hi.club.Plugin.Edit:output_type -> google.protobuf.Empty
+	17, // 23: hi.club.Plugin.GetDraw:output_type -> hi.ai.GetDrawResp
+	0,  // 24: hi.club.Plugin.PythonParamsSet:output_type -> google.protobuf.Empty
+	18, // 25: hi.club.Plugin.GetPythonParams:output_type -> hi.ai.GetPythonParamsResp
+	13, // [13:26] is the sub-list for method output_type
+	0,  // [0:13] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

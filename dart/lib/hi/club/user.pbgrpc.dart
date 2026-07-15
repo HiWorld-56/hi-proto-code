@@ -48,6 +48,14 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$updateUser, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.SystemMessages> listSystemMessages(
+    $1.ListSystemMessageReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listSystemMessages, request, options: options);
+  }
+
+  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.SystemMessages> listSystemMessage(
     $1.ListSystemMessageReq request, {
     $grpc.CallOptions? options,
@@ -112,6 +120,14 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$deleteFriend, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.ListGroupResp> listGroups(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listGroups, request, options: options);
+  }
+
+  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.ListGroupResp> listGroup(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -141,6 +157,14 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$setRemark, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.ListOnlineUserResp> listOnlineUsers(
+    $1.ListOnlineUserReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listOnlineUsers, request, options: options);
+  }
+
+  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.ListOnlineUserResp> listOnlineUser(
     $1.ListOnlineUserReq request, {
     $grpc.CallOptions? options,
@@ -158,6 +182,11 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/UpdateUser',
       ($1.UpdateUserReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
+  static final _$listSystemMessages =
+      $grpc.ClientMethod<$1.ListSystemMessageReq, $1.SystemMessages>(
+          '/hi.club.User/ListSystemMessages',
+          ($1.ListSystemMessageReq value) => value.writeToBuffer(),
+          $1.SystemMessages.fromBuffer);
   static final _$listSystemMessage =
       $grpc.ClientMethod<$1.ListSystemMessageReq, $1.SystemMessages>(
           '/hi.club.User/ListSystemMessage',
@@ -203,6 +232,10 @@ class UserClient extends $grpc.Client {
           '/hi.club.User/DeleteFriend',
           ($1.DeleteFriendReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
+  static final _$listGroups = $grpc.ClientMethod<$0.Empty, $1.ListGroupResp>(
+      '/hi.club.User/ListGroups',
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.ListGroupResp.fromBuffer);
   static final _$listGroup = $grpc.ClientMethod<$0.Empty, $1.ListGroupResp>(
       '/hi.club.User/ListGroup',
       ($0.Empty value) => value.writeToBuffer(),
@@ -220,6 +253,11 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/SetRemark',
       ($1.SetRemarkReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
+  static final _$listOnlineUsers =
+      $grpc.ClientMethod<$1.ListOnlineUserReq, $1.ListOnlineUserResp>(
+          '/hi.club.User/ListOnlineUsers',
+          ($1.ListOnlineUserReq value) => value.writeToBuffer(),
+          $1.ListOnlineUserResp.fromBuffer);
   static final _$listOnlineUser =
       $grpc.ClientMethod<$1.ListOnlineUserReq, $1.ListOnlineUserResp>(
           '/hi.club.User/ListOnlineUser',
@@ -246,6 +284,14 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.UpdateUserReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListSystemMessageReq, $1.SystemMessages>(
+        'ListSystemMessages',
+        listSystemMessages_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.ListSystemMessageReq.fromBuffer(value),
+        ($1.SystemMessages value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListSystemMessageReq, $1.SystemMessages>(
         'ListSystemMessage',
         listSystemMessage_Pre,
@@ -313,6 +359,13 @@ abstract class UserServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $1.DeleteFriendReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListGroupResp>(
+        'ListGroups',
+        listGroups_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListGroupResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListGroupResp>(
         'ListGroup',
         listGroup_Pre,
         false,
@@ -341,6 +394,13 @@ abstract class UserServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $1.SetRemarkReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListOnlineUserReq, $1.ListOnlineUserResp>(
+        'ListOnlineUsers',
+        listOnlineUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ListOnlineUserReq.fromBuffer(value),
+        ($1.ListOnlineUserResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListOnlineUserReq, $1.ListOnlineUserResp>(
         'ListOnlineUser',
         listOnlineUser_Pre,
         false,
@@ -364,6 +424,15 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> updateUser(
       $grpc.ServiceCall call, $1.UpdateUserReq request);
+
+  $async.Future<$1.SystemMessages> listSystemMessages_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.ListSystemMessageReq> $request) async {
+    return listSystemMessages($call, await $request);
+  }
+
+  $async.Future<$1.SystemMessages> listSystemMessages(
+      $grpc.ServiceCall call, $1.ListSystemMessageReq request);
 
   $async.Future<$1.SystemMessages> listSystemMessage_Pre(
       $grpc.ServiceCall $call,
@@ -438,6 +507,14 @@ abstract class UserServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> deleteFriend(
       $grpc.ServiceCall call, $1.DeleteFriendReq request);
 
+  $async.Future<$1.ListGroupResp> listGroups_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return listGroups($call, await $request);
+  }
+
+  $async.Future<$1.ListGroupResp> listGroups(
+      $grpc.ServiceCall call, $0.Empty request);
+
   $async.Future<$1.ListGroupResp> listGroup_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return listGroup($call, await $request);
@@ -469,6 +546,15 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> setRemark(
       $grpc.ServiceCall call, $1.SetRemarkReq request);
+
+  $async.Future<$1.ListOnlineUserResp> listOnlineUsers_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.ListOnlineUserReq> $request) async {
+    return listOnlineUsers($call, await $request);
+  }
+
+  $async.Future<$1.ListOnlineUserResp> listOnlineUsers(
+      $grpc.ServiceCall call, $1.ListOnlineUserReq request);
 
   $async.Future<$1.ListOnlineUserResp> listOnlineUser_Pre(
       $grpc.ServiceCall $call,

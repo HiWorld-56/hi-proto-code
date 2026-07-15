@@ -26,14 +26,15 @@ var File_hi_club_training_proto protoreflect.FileDescriptor
 
 const file_hi_club_training_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto2\xb4\a\n" +
+	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto2\xfe\a\n" +
 	"\bTraining\x12@\n" +
 	"\rTrainingAgent\x12\x17.hi.ai.TrainingAgentReq\x1a\x16.google.protobuf.Empty\x12E\n" +
 	"\x0eTrainingStatus\x12\x18.hi.ai.TrainingStatusReq\x1a\x19.hi.ai.TrainingStatusResp\x12@\n" +
 	"\rTrainingClear\x12\x17.hi.ai.TrainingClearReq\x1a\x16.google.protobuf.Empty\x12:\n" +
 	"\n" +
-	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\x12B\n" +
-	"\rListAgentFile\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\x12D\n" +
+	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\x12C\n" +
+	"\x0eListAgentFiles\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\x12G\n" +
+	"\rListAgentFile\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\"\x03\x88\x02\x01\x12D\n" +
 	"\x0fDeleteAgentFile\x12\x19.hi.ai.DeleteAgentFileReq\x1a\x16.google.protobuf.Empty\x12F\n" +
 	"\x10DeleteAgentFiles\x12\x1a.hi.ai.DeleteAgentFilesReq\x1a\x16.google.protobuf.Empty\x12P\n" +
 	"\x15DeleteAgentFilesByDid\x12\x1f.hi.ai.DeleteAgentFilesByDidReq\x1a\x16.google.protobuf.Empty\x12?\n" +
@@ -73,32 +74,34 @@ var file_hi_club_training_proto_depIdxs = []int32{
 	1,  // 1: hi.club.Training.TrainingStatus:input_type -> hi.ai.TrainingStatusReq
 	2,  // 2: hi.club.Training.TrainingClear:input_type -> hi.ai.TrainingClearReq
 	3,  // 3: hi.club.Training.UploadFile:input_type -> hi.ai.UploadFileReq
-	4,  // 4: hi.club.Training.ListAgentFile:input_type -> hi.ai.ListAgentFileReq
-	5,  // 5: hi.club.Training.DeleteAgentFile:input_type -> hi.ai.DeleteAgentFileReq
-	6,  // 6: hi.club.Training.DeleteAgentFiles:input_type -> hi.ai.DeleteAgentFilesReq
-	7,  // 7: hi.club.Training.DeleteAgentFilesByDid:input_type -> hi.ai.DeleteAgentFilesByDidReq
-	8,  // 8: hi.club.Training.GetAgentFile:input_type -> hi.ai.GetAgentFileReq
-	9,  // 9: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
-	10, // 10: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
-	11, // 11: hi.club.Training.EditDegest:input_type -> hi.ai.EditDigestReq
-	12, // 12: hi.club.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
-	13, // 13: hi.club.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
-	14, // 14: hi.club.Training.TrainingAgent:output_type -> google.protobuf.Empty
-	15, // 15: hi.club.Training.TrainingStatus:output_type -> hi.ai.TrainingStatusResp
-	14, // 16: hi.club.Training.TrainingClear:output_type -> google.protobuf.Empty
-	14, // 17: hi.club.Training.UploadFile:output_type -> google.protobuf.Empty
-	16, // 18: hi.club.Training.ListAgentFile:output_type -> hi.ai.ListAgentFileResp
-	14, // 19: hi.club.Training.DeleteAgentFile:output_type -> google.protobuf.Empty
-	14, // 20: hi.club.Training.DeleteAgentFiles:output_type -> google.protobuf.Empty
-	14, // 21: hi.club.Training.DeleteAgentFilesByDid:output_type -> google.protobuf.Empty
-	17, // 22: hi.club.Training.GetAgentFile:output_type -> hi.ai.GetAgentFileResp
-	14, // 23: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
-	18, // 24: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
-	14, // 25: hi.club.Training.EditDegest:output_type -> google.protobuf.Empty
-	14, // 26: hi.club.Training.SetMemModel:output_type -> google.protobuf.Empty
-	19, // 27: hi.club.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp
-	14, // [14:28] is the sub-list for method output_type
-	0,  // [0:14] is the sub-list for method input_type
+	4,  // 4: hi.club.Training.ListAgentFiles:input_type -> hi.ai.ListAgentFileReq
+	4,  // 5: hi.club.Training.ListAgentFile:input_type -> hi.ai.ListAgentFileReq
+	5,  // 6: hi.club.Training.DeleteAgentFile:input_type -> hi.ai.DeleteAgentFileReq
+	6,  // 7: hi.club.Training.DeleteAgentFiles:input_type -> hi.ai.DeleteAgentFilesReq
+	7,  // 8: hi.club.Training.DeleteAgentFilesByDid:input_type -> hi.ai.DeleteAgentFilesByDidReq
+	8,  // 9: hi.club.Training.GetAgentFile:input_type -> hi.ai.GetAgentFileReq
+	9,  // 10: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
+	10, // 11: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
+	11, // 12: hi.club.Training.EditDegest:input_type -> hi.ai.EditDigestReq
+	12, // 13: hi.club.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
+	13, // 14: hi.club.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
+	14, // 15: hi.club.Training.TrainingAgent:output_type -> google.protobuf.Empty
+	15, // 16: hi.club.Training.TrainingStatus:output_type -> hi.ai.TrainingStatusResp
+	14, // 17: hi.club.Training.TrainingClear:output_type -> google.protobuf.Empty
+	14, // 18: hi.club.Training.UploadFile:output_type -> google.protobuf.Empty
+	16, // 19: hi.club.Training.ListAgentFiles:output_type -> hi.ai.ListAgentFileResp
+	16, // 20: hi.club.Training.ListAgentFile:output_type -> hi.ai.ListAgentFileResp
+	14, // 21: hi.club.Training.DeleteAgentFile:output_type -> google.protobuf.Empty
+	14, // 22: hi.club.Training.DeleteAgentFiles:output_type -> google.protobuf.Empty
+	14, // 23: hi.club.Training.DeleteAgentFilesByDid:output_type -> google.protobuf.Empty
+	17, // 24: hi.club.Training.GetAgentFile:output_type -> hi.ai.GetAgentFileResp
+	14, // 25: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
+	18, // 26: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
+	14, // 27: hi.club.Training.EditDegest:output_type -> google.protobuf.Empty
+	14, // 28: hi.club.Training.SetMemModel:output_type -> google.protobuf.Empty
+	19, // 29: hi.club.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp
+	15, // [15:30] is the sub-list for method output_type
+	0,  // [0:15] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

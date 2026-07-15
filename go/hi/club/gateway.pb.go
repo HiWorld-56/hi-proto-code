@@ -26,9 +26,10 @@ var File_hi_club_gateway_proto protoreflect.FileDescriptor
 
 const file_hi_club_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/gateway.proto\x12\ahi.club\x1a\x14hi/did/gateway.proto\x1a\x1bgoogle/protobuf/empty.proto2N\n" +
-	"\rGatewayConfig\x12=\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListRespB\x83\x01\n" +
+	"\x15hi/club/gateway.proto\x12\ahi.club\x1a\x14hi/did/gateway.proto\x1a\x1bgoogle/protobuf/empty.proto2\xa0\x01\n" +
+	"\rGatewayConfig\x12K\n" +
+	"\x12ListGatewayConfigs\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\x12B\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x03\x88\x02\x01B\x83\x01\n" +
 	"\vcom.hi.clubB\fGatewayProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_gateway_proto_goTypes = []any{
@@ -36,10 +37,12 @@ var file_hi_club_gateway_proto_goTypes = []any{
 	(*did.GatewayConfigListResp)(nil), // 1: hi.did.GatewayConfigListResp
 }
 var file_hi_club_gateway_proto_depIdxs = []int32{
-	0, // 0: hi.club.GatewayConfig.List:input_type -> google.protobuf.Empty
-	1, // 1: hi.club.GatewayConfig.List:output_type -> hi.did.GatewayConfigListResp
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 0: hi.club.GatewayConfig.ListGatewayConfigs:input_type -> google.protobuf.Empty
+	0, // 1: hi.club.GatewayConfig.List:input_type -> google.protobuf.Empty
+	1, // 2: hi.club.GatewayConfig.ListGatewayConfigs:output_type -> hi.did.GatewayConfigListResp
+	1, // 3: hi.club.GatewayConfig.List:output_type -> hi.did.GatewayConfigListResp
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

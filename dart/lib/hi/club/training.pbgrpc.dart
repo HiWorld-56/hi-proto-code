@@ -62,6 +62,14 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$uploadFile, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListAgentFileResp> listAgentFiles(
+    $0.ListAgentFileReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listAgentFiles, request, options: options);
+  }
+
+  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$0.ListAgentFileResp> listAgentFile(
     $0.ListAgentFileReq request, {
     $grpc.CallOptions? options,
@@ -153,6 +161,11 @@ class TrainingClient extends $grpc.Client {
       '/hi.club.Training/UploadFile',
       ($0.UploadFileReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$listAgentFiles =
+      $grpc.ClientMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
+          '/hi.club.Training/ListAgentFiles',
+          ($0.ListAgentFileReq value) => value.writeToBuffer(),
+          $0.ListAgentFileResp.fromBuffer);
   static final _$listAgentFile =
       $grpc.ClientMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
           '/hi.club.Training/ListAgentFile',
@@ -236,6 +249,13 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UploadFileReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
+        'ListAgentFiles',
+        listAgentFiles_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ListAgentFileReq.fromBuffer(value),
+        ($0.ListAgentFileResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
         'ListAgentFile',
         listAgentFile_Pre,
@@ -343,6 +363,15 @@ abstract class TrainingServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> uploadFile(
       $grpc.ServiceCall call, $0.UploadFileReq request);
+
+  $async.Future<$0.ListAgentFileResp> listAgentFiles_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListAgentFileReq> $request) async {
+    return listAgentFiles($call, await $request);
+  }
+
+  $async.Future<$0.ListAgentFileResp> listAgentFiles(
+      $grpc.ServiceCall call, $0.ListAgentFileReq request);
 
   $async.Future<$0.ListAgentFileResp> listAgentFile_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListAgentFileReq> $request) async {

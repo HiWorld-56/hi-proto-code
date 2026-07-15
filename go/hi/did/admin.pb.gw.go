@@ -85,6 +85,33 @@ func local_request_InviteCode_Edit_0(ctx context.Context, marshaler runtime.Mars
 	return msg, metadata, err
 }
 
+func request_InviteCode_ListInviteCodes_0(ctx context.Context, marshaler runtime.Marshaler, client InviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq hi.Pagination
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.ListInviteCodes(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_InviteCode_ListInviteCodes_0(ctx context.Context, marshaler runtime.Marshaler, server InviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq hi.Pagination
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.ListInviteCodes(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_InviteCode_List_0(ctx context.Context, marshaler runtime.Marshaler, client InviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq hi.Pagination
@@ -364,6 +391,33 @@ func local_request_DApp_Delete_0(ctx context.Context, marshaler runtime.Marshale
 	return msg, metadata, err
 }
 
+func request_MerchantManage_ListMerchants_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq MerchantManageListReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.ListMerchants(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_MerchantManage_ListMerchants_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq MerchantManageListReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.ListMerchants(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_MerchantManage_List_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq MerchantManageListReq
@@ -491,13 +545,33 @@ func RegisterInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		}
 		forward_InviteCode_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_InviteCode_ListInviteCodes_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/ListInviteCodes", runtime.WithHTTPPathPattern("/api/v1/invitecode/list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_InviteCode_ListInviteCodes_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_InviteCode_ListInviteCodes_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_InviteCode_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invitecode/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/hi.did.InviteCode/List"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -731,13 +805,33 @@ func RegisterDAppHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMerchantManageHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterMerchantManageHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MerchantManageServer) error {
+	mux.Handle(http.MethodPost, pattern_MerchantManage_ListMerchants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantManage/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant_manage/list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_MerchantManage_ListMerchants_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_MerchantManage_ListMerchants_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_MerchantManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantManage/List", runtime.WithHTTPPathPattern("/api/v1/merchant_manage/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantManage/List", runtime.WithHTTPPathPattern("/hi.did.MerchantManage/List"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -865,11 +959,28 @@ func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		}
 		forward_InviteCode_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_InviteCode_ListInviteCodes_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/ListInviteCodes", runtime.WithHTTPPathPattern("/api/v1/invitecode/list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_InviteCode_ListInviteCodes_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_InviteCode_ListInviteCodes_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_InviteCode_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invitecode/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/hi.did.InviteCode/List"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -920,19 +1031,21 @@ func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_InviteCode_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "create"}, ""))
-	pattern_InviteCode_Edit_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "edit"}, ""))
-	pattern_InviteCode_List_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "list"}, ""))
-	pattern_InviteCode_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "delete"}, ""))
-	pattern_InviteCode_Verify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "verify"}, ""))
+	pattern_InviteCode_Create_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "create"}, ""))
+	pattern_InviteCode_Edit_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "edit"}, ""))
+	pattern_InviteCode_ListInviteCodes_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "list"}, ""))
+	pattern_InviteCode_List_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.InviteCode", "List"}, ""))
+	pattern_InviteCode_Delete_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "delete"}, ""))
+	pattern_InviteCode_Verify_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "verify"}, ""))
 )
 
 var (
-	forward_InviteCode_Create_0 = runtime.ForwardResponseMessage
-	forward_InviteCode_Edit_0   = runtime.ForwardResponseMessage
-	forward_InviteCode_List_0   = runtime.ForwardResponseMessage
-	forward_InviteCode_Delete_0 = runtime.ForwardResponseMessage
-	forward_InviteCode_Verify_0 = runtime.ForwardResponseMessage
+	forward_InviteCode_Create_0          = runtime.ForwardResponseMessage
+	forward_InviteCode_Edit_0            = runtime.ForwardResponseMessage
+	forward_InviteCode_ListInviteCodes_0 = runtime.ForwardResponseMessage
+	forward_InviteCode_List_0            = runtime.ForwardResponseMessage
+	forward_InviteCode_Delete_0          = runtime.ForwardResponseMessage
+	forward_InviteCode_Verify_0          = runtime.ForwardResponseMessage
 )
 
 // RegisterDAppHandlerFromEndpoint is same as RegisterDAppHandler but
@@ -1168,11 +1281,28 @@ func RegisterMerchantManageHandler(ctx context.Context, mux *runtime.ServeMux, c
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "MerchantManageClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterMerchantManageHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MerchantManageClient) error {
+	mux.Handle(http.MethodPost, pattern_MerchantManage_ListMerchants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantManage/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant_manage/list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_MerchantManage_ListMerchants_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_MerchantManage_ListMerchants_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_MerchantManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantManage/List", runtime.WithHTTPPathPattern("/api/v1/merchant_manage/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantManage/List", runtime.WithHTTPPathPattern("/hi.did.MerchantManage/List"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1223,13 +1353,15 @@ func RegisterMerchantManageHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_MerchantManage_List_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_manage", "list"}, ""))
-	pattern_MerchantManage_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_manage", "delete"}, ""))
-	pattern_MerchantManage_Edit_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_manage", "edit"}, ""))
+	pattern_MerchantManage_ListMerchants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_manage", "list"}, ""))
+	pattern_MerchantManage_List_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.MerchantManage", "List"}, ""))
+	pattern_MerchantManage_Delete_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_manage", "delete"}, ""))
+	pattern_MerchantManage_Edit_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_manage", "edit"}, ""))
 )
 
 var (
-	forward_MerchantManage_List_0   = runtime.ForwardResponseMessage
-	forward_MerchantManage_Delete_0 = runtime.ForwardResponseMessage
-	forward_MerchantManage_Edit_0   = runtime.ForwardResponseMessage
+	forward_MerchantManage_ListMerchants_0 = runtime.ForwardResponseMessage
+	forward_MerchantManage_List_0          = runtime.ForwardResponseMessage
+	forward_MerchantManage_Delete_0        = runtime.ForwardResponseMessage
+	forward_MerchantManage_Edit_0          = runtime.ForwardResponseMessage
 )

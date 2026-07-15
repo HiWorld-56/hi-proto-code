@@ -49,6 +49,14 @@ class InviteCodeClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.InviteCodeListResp> listInviteCodes(
+    $2.Pagination request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listInviteCodes, request, options: options);
+  }
+
+  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.InviteCodeListResp> list(
     $2.Pagination request, {
     $grpc.CallOptions? options,
@@ -80,6 +88,11 @@ class InviteCodeClient extends $grpc.Client {
       '/hi.media.InviteCode/Edit',
       ($1.InviteCodeEditReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
+  static final _$listInviteCodes =
+      $grpc.ClientMethod<$2.Pagination, $1.InviteCodeListResp>(
+          '/hi.media.InviteCode/ListInviteCodes',
+          ($2.Pagination value) => value.writeToBuffer(),
+          $1.InviteCodeListResp.fromBuffer);
   static final _$list =
       $grpc.ClientMethod<$2.Pagination, $1.InviteCodeListResp>(
           '/hi.media.InviteCode/List',
@@ -115,6 +128,13 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.InviteCodeEditReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.InviteCodeListResp>(
+        'ListInviteCodes',
+        listInviteCodes_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
+        ($1.InviteCodeListResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.Pagination, $1.InviteCodeListResp>(
         'List',
         list_Pre,
@@ -155,6 +175,14 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> edit(
       $grpc.ServiceCall call, $1.InviteCodeEditReq request);
+
+  $async.Future<$1.InviteCodeListResp> listInviteCodes_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
+    return listInviteCodes($call, await $request);
+  }
+
+  $async.Future<$1.InviteCodeListResp> listInviteCodes(
+      $grpc.ServiceCall call, $2.Pagination request);
 
   $async.Future<$1.InviteCodeListResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {

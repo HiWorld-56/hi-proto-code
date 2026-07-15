@@ -21,11 +21,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	InviteCode_Create_FullMethodName = "/hi.did.InviteCode/Create"
-	InviteCode_Edit_FullMethodName   = "/hi.did.InviteCode/Edit"
-	InviteCode_List_FullMethodName   = "/hi.did.InviteCode/List"
-	InviteCode_Delete_FullMethodName = "/hi.did.InviteCode/Delete"
-	InviteCode_Verify_FullMethodName = "/hi.did.InviteCode/Verify"
+	InviteCode_Create_FullMethodName          = "/hi.did.InviteCode/Create"
+	InviteCode_Edit_FullMethodName            = "/hi.did.InviteCode/Edit"
+	InviteCode_ListInviteCodes_FullMethodName = "/hi.did.InviteCode/ListInviteCodes"
+	InviteCode_List_FullMethodName            = "/hi.did.InviteCode/List"
+	InviteCode_Delete_FullMethodName          = "/hi.did.InviteCode/Delete"
+	InviteCode_Verify_FullMethodName          = "/hi.did.InviteCode/Verify"
 )
 
 // InviteCodeClient is the client API for InviteCode service.
@@ -34,6 +35,8 @@ const (
 type InviteCodeClient interface {
 	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InviteCodeCreateResp, error)
 	Edit(ctx context.Context, in *InviteCodeEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListInviteCodes(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*InviteCodeListResp, error)
+	// Deprecated: Do not use.
 	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*InviteCodeListResp, error)
 	Delete(ctx context.Context, in *InviteCodeDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Verify(ctx context.Context, in *InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
@@ -67,6 +70,17 @@ func (c *inviteCodeClient) Edit(ctx context.Context, in *InviteCodeEditReq, opts
 	return out, nil
 }
 
+func (c *inviteCodeClient) ListInviteCodes(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*InviteCodeListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InviteCodeListResp)
+	err := c.cc.Invoke(ctx, InviteCode_ListInviteCodes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *inviteCodeClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*InviteCodeListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(InviteCodeListResp)
@@ -103,6 +117,8 @@ func (c *inviteCodeClient) Verify(ctx context.Context, in *InviteCodeVerifyReq, 
 type InviteCodeServer interface {
 	Create(context.Context, *emptypb.Empty) (*InviteCodeCreateResp, error)
 	Edit(context.Context, *InviteCodeEditReq) (*emptypb.Empty, error)
+	ListInviteCodes(context.Context, *hi.Pagination) (*InviteCodeListResp, error)
+	// Deprecated: Do not use.
 	List(context.Context, *hi.Pagination) (*InviteCodeListResp, error)
 	Delete(context.Context, *InviteCodeDeleteReq) (*emptypb.Empty, error)
 	Verify(context.Context, *InviteCodeVerifyReq) (*hi.AuthToken, error)
@@ -120,6 +136,9 @@ func (UnimplementedInviteCodeServer) Create(context.Context, *emptypb.Empty) (*I
 }
 func (UnimplementedInviteCodeServer) Edit(context.Context, *InviteCodeEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedInviteCodeServer) ListInviteCodes(context.Context, *hi.Pagination) (*InviteCodeListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListInviteCodes not implemented")
 }
 func (UnimplementedInviteCodeServer) List(context.Context, *hi.Pagination) (*InviteCodeListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -182,6 +201,24 @@ func _InviteCode_Edit_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(InviteCodeServer).Edit(ctx, req.(*InviteCodeEditReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InviteCode_ListInviteCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.Pagination)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InviteCodeServer).ListInviteCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InviteCode_ListInviteCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InviteCodeServer).ListInviteCodes(ctx, req.(*hi.Pagination))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -254,6 +291,10 @@ var InviteCode_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Edit",
 			Handler:    _InviteCode_Edit_Handler,
+		},
+		{
+			MethodName: "ListInviteCodes",
+			Handler:    _InviteCode_ListInviteCodes_Handler,
 		},
 		{
 			MethodName: "List",
@@ -639,15 +680,18 @@ var DApp_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	MerchantManage_List_FullMethodName   = "/hi.did.MerchantManage/List"
-	MerchantManage_Delete_FullMethodName = "/hi.did.MerchantManage/Delete"
-	MerchantManage_Edit_FullMethodName   = "/hi.did.MerchantManage/Edit"
+	MerchantManage_ListMerchants_FullMethodName = "/hi.did.MerchantManage/ListMerchants"
+	MerchantManage_List_FullMethodName          = "/hi.did.MerchantManage/List"
+	MerchantManage_Delete_FullMethodName        = "/hi.did.MerchantManage/Delete"
+	MerchantManage_Edit_FullMethodName          = "/hi.did.MerchantManage/Edit"
 )
 
 // MerchantManageClient is the client API for MerchantManage service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MerchantManageClient interface {
+	ListMerchants(ctx context.Context, in *MerchantManageListReq, opts ...grpc.CallOption) (*MerchantManageListResp, error)
+	// Deprecated: Do not use.
 	List(ctx context.Context, in *MerchantManageListReq, opts ...grpc.CallOption) (*MerchantManageListResp, error)
 	Delete(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *MerchantManageEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -661,6 +705,17 @@ func NewMerchantManageClient(cc grpc.ClientConnInterface) MerchantManageClient {
 	return &merchantManageClient{cc}
 }
 
+func (c *merchantManageClient) ListMerchants(ctx context.Context, in *MerchantManageListReq, opts ...grpc.CallOption) (*MerchantManageListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantManageListResp)
+	err := c.cc.Invoke(ctx, MerchantManage_ListMerchants_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *merchantManageClient) List(ctx context.Context, in *MerchantManageListReq, opts ...grpc.CallOption) (*MerchantManageListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MerchantManageListResp)
@@ -695,6 +750,8 @@ func (c *merchantManageClient) Edit(ctx context.Context, in *MerchantManageEditR
 // All implementations should embed UnimplementedMerchantManageServer
 // for forward compatibility.
 type MerchantManageServer interface {
+	ListMerchants(context.Context, *MerchantManageListReq) (*MerchantManageListResp, error)
+	// Deprecated: Do not use.
 	List(context.Context, *MerchantManageListReq) (*MerchantManageListResp, error)
 	Delete(context.Context, *hi.DID) (*emptypb.Empty, error)
 	Edit(context.Context, *MerchantManageEditReq) (*emptypb.Empty, error)
@@ -707,6 +764,9 @@ type MerchantManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMerchantManageServer struct{}
 
+func (UnimplementedMerchantManageServer) ListMerchants(context.Context, *MerchantManageListReq) (*MerchantManageListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMerchants not implemented")
+}
 func (UnimplementedMerchantManageServer) List(context.Context, *MerchantManageListReq) (*MerchantManageListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
@@ -734,6 +794,24 @@ func RegisterMerchantManageServer(s grpc.ServiceRegistrar, srv MerchantManageSer
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&MerchantManage_ServiceDesc, srv)
+}
+
+func _MerchantManage_ListMerchants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MerchantManageListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantManageServer).ListMerchants(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantManage_ListMerchants_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantManageServer).ListMerchants(ctx, req.(*MerchantManageListReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _MerchantManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -797,6 +875,10 @@ var MerchantManage_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.did.MerchantManage",
 	HandlerType: (*MerchantManageServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListMerchants",
+			Handler:    _MerchantManage_ListMerchants_Handler,
+		},
 		{
 			MethodName: "List",
 			Handler:    _MerchantManage_List_Handler,

@@ -27,12 +27,13 @@ var File_hi_ai_invite_code_proto protoreflect.FileDescriptor
 
 const file_hi_ai_invite_code_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/ai/invite_code.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x12hi/did/admin.proto2\xb0\x02\n" +
+	"\x17hi/ai/invite_code.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x12hi/did/admin.proto2\xf4\x02\n" +
 	"\n" +
 	"InviteCode\x12>\n" +
 	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\x129\n" +
-	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\x122\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\x12=\n" +
+	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\x12=\n" +
+	"\x0fListInviteCodes\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\x127\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x03\x88\x02\x01\x12=\n" +
 	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\x124\n" +
 	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthTokenBz\n" +
 	"\tcom.hi.aiB\x0fInviteCodeProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
@@ -50,16 +51,18 @@ var file_hi_ai_invite_code_proto_goTypes = []any{
 var file_hi_ai_invite_code_proto_depIdxs = []int32{
 	0, // 0: hi.ai.InviteCode.Create:input_type -> google.protobuf.Empty
 	1, // 1: hi.ai.InviteCode.Edit:input_type -> hi.did.InviteCodeEditReq
-	2, // 2: hi.ai.InviteCode.List:input_type -> hi.Pagination
-	3, // 3: hi.ai.InviteCode.Delete:input_type -> hi.did.InviteCodeDeleteReq
-	4, // 4: hi.ai.InviteCode.Verify:input_type -> hi.did.InviteCodeVerifyReq
-	5, // 5: hi.ai.InviteCode.Create:output_type -> hi.did.InviteCodeCreateResp
-	0, // 6: hi.ai.InviteCode.Edit:output_type -> google.protobuf.Empty
-	6, // 7: hi.ai.InviteCode.List:output_type -> hi.did.InviteCodeListResp
-	0, // 8: hi.ai.InviteCode.Delete:output_type -> google.protobuf.Empty
-	7, // 9: hi.ai.InviteCode.Verify:output_type -> hi.AuthToken
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	2, // 2: hi.ai.InviteCode.ListInviteCodes:input_type -> hi.Pagination
+	2, // 3: hi.ai.InviteCode.List:input_type -> hi.Pagination
+	3, // 4: hi.ai.InviteCode.Delete:input_type -> hi.did.InviteCodeDeleteReq
+	4, // 5: hi.ai.InviteCode.Verify:input_type -> hi.did.InviteCodeVerifyReq
+	5, // 6: hi.ai.InviteCode.Create:output_type -> hi.did.InviteCodeCreateResp
+	0, // 7: hi.ai.InviteCode.Edit:output_type -> google.protobuf.Empty
+	6, // 8: hi.ai.InviteCode.ListInviteCodes:output_type -> hi.did.InviteCodeListResp
+	6, // 9: hi.ai.InviteCode.List:output_type -> hi.did.InviteCodeListResp
+	0, // 10: hi.ai.InviteCode.Delete:output_type -> google.protobuf.Empty
+	7, // 11: hi.ai.InviteCode.Verify:output_type -> hi.AuthToken
+	6, // [6:12] is the sub-list for method output_type
+	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

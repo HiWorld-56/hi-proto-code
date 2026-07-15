@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Merchant_Get_FullMethodName            = "/hi.did.Merchant/Get"
 	Merchant_Set_FullMethodName            = "/hi.did.Merchant/Set"
+	Merchant_ListMerchants_FullMethodName  = "/hi.did.Merchant/ListMerchants"
 	Merchant_List_FullMethodName           = "/hi.did.Merchant/List"
 	Merchant_GetUserProfile_FullMethodName = "/hi.did.Merchant/GetUserProfile"
 	Merchant_SetUserProfile_FullMethodName = "/hi.did.Merchant/SetUserProfile"
@@ -37,6 +38,8 @@ const (
 type MerchantClient interface {
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error)
 	Set(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListMerchants(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantListResp, error)
+	// Deprecated: Do not use.
 	List(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantListResp, error)
 	GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*UserProfileGetResp, error)
 	SetUserProfile(ctx context.Context, in *UserProfileSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -73,6 +76,17 @@ func (c *merchantClient) Set(ctx context.Context, in *MerchantSetReq, opts ...gr
 	return out, nil
 }
 
+func (c *merchantClient) ListMerchants(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantListResp)
+	err := c.cc.Invoke(ctx, Merchant_ListMerchants_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *merchantClient) List(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MerchantListResp)
@@ -139,6 +153,8 @@ func (c *merchantClient) DeleteUesrs(ctx context.Context, in *MerchantUsersDelet
 type MerchantServer interface {
 	Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error)
 	Set(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
+	ListMerchants(context.Context, *hi.DID) (*MerchantListResp, error)
+	// Deprecated: Do not use.
 	List(context.Context, *hi.DID) (*MerchantListResp, error)
 	GetUserProfile(context.Context, *hi.DID) (*UserProfileGetResp, error)
 	SetUserProfile(context.Context, *UserProfileSetReq) (*emptypb.Empty, error)
@@ -159,6 +175,9 @@ func (UnimplementedMerchantServer) Get(context.Context, *emptypb.Empty) (*Mercha
 }
 func (UnimplementedMerchantServer) Set(context.Context, *MerchantSetReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Set not implemented")
+}
+func (UnimplementedMerchantServer) ListMerchants(context.Context, *hi.DID) (*MerchantListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMerchants not implemented")
 }
 func (UnimplementedMerchantServer) List(context.Context, *hi.DID) (*MerchantListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -230,6 +249,24 @@ func _Merchant_Set_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MerchantServer).Set(ctx, req.(*MerchantSetReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Merchant_ListMerchants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.DID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).ListMerchants(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_ListMerchants_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).ListMerchants(ctx, req.(*hi.DID))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -356,6 +393,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Set",
 			Handler:    _Merchant_Set_Handler,
+		},
+		{
+			MethodName: "ListMerchants",
+			Handler:    _Merchant_ListMerchants_Handler,
 		},
 		{
 			MethodName: "List",

@@ -1187,14 +1187,15 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\x0eGetMemModelReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\".\n" +
 	"\x0fGetMemModelResp\x12\x1b\n" +
-	"\tmem_model\x18\x01 \x01(\tR\bmemModel2\xb4\a\n" +
+	"\tmem_model\x18\x01 \x01(\tR\bmemModel2\xfe\a\n" +
 	"\bTraining\x12@\n" +
 	"\rTrainingAgent\x12\x17.hi.ai.TrainingAgentReq\x1a\x16.google.protobuf.Empty\x12E\n" +
 	"\x0eTrainingStatus\x12\x18.hi.ai.TrainingStatusReq\x1a\x19.hi.ai.TrainingStatusResp\x12@\n" +
 	"\rTrainingClear\x12\x17.hi.ai.TrainingClearReq\x1a\x16.google.protobuf.Empty\x12:\n" +
 	"\n" +
-	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\x12B\n" +
-	"\rListAgentFile\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\x12D\n" +
+	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\x12C\n" +
+	"\x0eListAgentFiles\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\x12G\n" +
+	"\rListAgentFile\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\"\x03\x88\x02\x01\x12D\n" +
 	"\x0fDeleteAgentFile\x12\x19.hi.ai.DeleteAgentFileReq\x1a\x16.google.protobuf.Empty\x12F\n" +
 	"\x10DeleteAgentFiles\x12\x1a.hi.ai.DeleteAgentFilesReq\x1a\x16.google.protobuf.Empty\x12P\n" +
 	"\x15DeleteAgentFilesByDid\x12\x1f.hi.ai.DeleteAgentFilesByDidReq\x1a\x16.google.protobuf.Empty\x12?\n" +
@@ -1253,32 +1254,34 @@ var file_hi_ai_training_proto_depIdxs = []int32{
 	1,  // 5: hi.ai.Training.TrainingStatus:input_type -> hi.ai.TrainingStatusReq
 	3,  // 6: hi.ai.Training.TrainingClear:input_type -> hi.ai.TrainingClearReq
 	4,  // 7: hi.ai.Training.UploadFile:input_type -> hi.ai.UploadFileReq
-	6,  // 8: hi.ai.Training.ListAgentFile:input_type -> hi.ai.ListAgentFileReq
-	8,  // 9: hi.ai.Training.DeleteAgentFile:input_type -> hi.ai.DeleteAgentFileReq
-	9,  // 10: hi.ai.Training.DeleteAgentFiles:input_type -> hi.ai.DeleteAgentFilesReq
-	10, // 11: hi.ai.Training.DeleteAgentFilesByDid:input_type -> hi.ai.DeleteAgentFilesByDidReq
-	11, // 12: hi.ai.Training.GetAgentFile:input_type -> hi.ai.GetAgentFileReq
-	13, // 13: hi.ai.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
-	14, // 14: hi.ai.Training.CreateContent:input_type -> hi.ai.CreateContentReq
-	16, // 15: hi.ai.Training.EditDegest:input_type -> hi.ai.EditDigestReq
-	17, // 16: hi.ai.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
-	18, // 17: hi.ai.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
-	21, // 18: hi.ai.Training.TrainingAgent:output_type -> google.protobuf.Empty
-	2,  // 19: hi.ai.Training.TrainingStatus:output_type -> hi.ai.TrainingStatusResp
-	21, // 20: hi.ai.Training.TrainingClear:output_type -> google.protobuf.Empty
-	21, // 21: hi.ai.Training.UploadFile:output_type -> google.protobuf.Empty
-	7,  // 22: hi.ai.Training.ListAgentFile:output_type -> hi.ai.ListAgentFileResp
-	21, // 23: hi.ai.Training.DeleteAgentFile:output_type -> google.protobuf.Empty
-	21, // 24: hi.ai.Training.DeleteAgentFiles:output_type -> google.protobuf.Empty
-	21, // 25: hi.ai.Training.DeleteAgentFilesByDid:output_type -> google.protobuf.Empty
-	12, // 26: hi.ai.Training.GetAgentFile:output_type -> hi.ai.GetAgentFileResp
-	21, // 27: hi.ai.Training.UpdateContent:output_type -> google.protobuf.Empty
-	15, // 28: hi.ai.Training.CreateContent:output_type -> hi.ai.CreateContentResp
-	21, // 29: hi.ai.Training.EditDegest:output_type -> google.protobuf.Empty
-	21, // 30: hi.ai.Training.SetMemModel:output_type -> google.protobuf.Empty
-	19, // 31: hi.ai.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp
-	18, // [18:32] is the sub-list for method output_type
-	4,  // [4:18] is the sub-list for method input_type
+	6,  // 8: hi.ai.Training.ListAgentFiles:input_type -> hi.ai.ListAgentFileReq
+	6,  // 9: hi.ai.Training.ListAgentFile:input_type -> hi.ai.ListAgentFileReq
+	8,  // 10: hi.ai.Training.DeleteAgentFile:input_type -> hi.ai.DeleteAgentFileReq
+	9,  // 11: hi.ai.Training.DeleteAgentFiles:input_type -> hi.ai.DeleteAgentFilesReq
+	10, // 12: hi.ai.Training.DeleteAgentFilesByDid:input_type -> hi.ai.DeleteAgentFilesByDidReq
+	11, // 13: hi.ai.Training.GetAgentFile:input_type -> hi.ai.GetAgentFileReq
+	13, // 14: hi.ai.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
+	14, // 15: hi.ai.Training.CreateContent:input_type -> hi.ai.CreateContentReq
+	16, // 16: hi.ai.Training.EditDegest:input_type -> hi.ai.EditDigestReq
+	17, // 17: hi.ai.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
+	18, // 18: hi.ai.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
+	21, // 19: hi.ai.Training.TrainingAgent:output_type -> google.protobuf.Empty
+	2,  // 20: hi.ai.Training.TrainingStatus:output_type -> hi.ai.TrainingStatusResp
+	21, // 21: hi.ai.Training.TrainingClear:output_type -> google.protobuf.Empty
+	21, // 22: hi.ai.Training.UploadFile:output_type -> google.protobuf.Empty
+	7,  // 23: hi.ai.Training.ListAgentFiles:output_type -> hi.ai.ListAgentFileResp
+	7,  // 24: hi.ai.Training.ListAgentFile:output_type -> hi.ai.ListAgentFileResp
+	21, // 25: hi.ai.Training.DeleteAgentFile:output_type -> google.protobuf.Empty
+	21, // 26: hi.ai.Training.DeleteAgentFiles:output_type -> google.protobuf.Empty
+	21, // 27: hi.ai.Training.DeleteAgentFilesByDid:output_type -> google.protobuf.Empty
+	12, // 28: hi.ai.Training.GetAgentFile:output_type -> hi.ai.GetAgentFileResp
+	21, // 29: hi.ai.Training.UpdateContent:output_type -> google.protobuf.Empty
+	15, // 30: hi.ai.Training.CreateContent:output_type -> hi.ai.CreateContentResp
+	21, // 31: hi.ai.Training.EditDegest:output_type -> google.protobuf.Empty
+	21, // 32: hi.ai.Training.SetMemModel:output_type -> google.protobuf.Empty
+	19, // 33: hi.ai.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp
+	19, // [19:34] is the sub-list for method output_type
+	4,  // [4:19] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
 	4,  // [4:4] is the sub-list for extension extendee
 	0,  // [0:4] is the sub-list for field type_name
