@@ -35,6 +35,7 @@ const (
 type UserACLClient interface {
 	Add(ctx context.Context, in *UserACLAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *UserACLDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ⚠️ 不是超管接口 —— 详见 hi/club/user_acl.proto 里 List 的说明(同一个回归)。
 	List(ctx context.Context, in *UserACLListReq, opts ...grpc.CallOption) (*UserACLListResp, error)
 	ListTypes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserACLListTypeResp, error)
 	Edit(ctx context.Context, in *UserACLEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -106,6 +107,7 @@ func (c *userACLClient) Edit(ctx context.Context, in *UserACLEditReq, opts ...gr
 type UserACLServer interface {
 	Add(context.Context, *UserACLAddReq) (*emptypb.Empty, error)
 	Delete(context.Context, *UserACLDeleteReq) (*emptypb.Empty, error)
+	// ⚠️ 不是超管接口 —— 详见 hi/club/user_acl.proto 里 List 的说明(同一个回归)。
 	List(context.Context, *UserACLListReq) (*UserACLListResp, error)
 	ListTypes(context.Context, *emptypb.Empty) (*UserACLListTypeResp, error)
 	Edit(context.Context, *UserACLEditReq) (*emptypb.Empty, error)

@@ -181,6 +181,7 @@ pub mod user_acl_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.UserACL", "Delete"));
             self.inner.unary(req, path, codec).await
         }
+        /// ⚠️ 不是超管接口 —— 详见 hi/club/user_acl.proto 里 List 的说明(同一个回归)。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::UserAclListReq>,

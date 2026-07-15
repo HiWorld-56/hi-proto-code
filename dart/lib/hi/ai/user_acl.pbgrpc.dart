@@ -48,6 +48,7 @@ class UserACLClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
+  /// ⚠️ 不是超管接口 —— 详见 hi/club/user_acl.proto 里 List 的说明(同一个回归)。
   $grpc.ResponseFuture<$0.UserACLListResp> list(
     $0.UserACLListReq request, {
     $grpc.CallOptions? options,

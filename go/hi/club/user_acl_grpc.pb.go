@@ -34,6 +34,14 @@ const (
 type UserACLClient interface {
 	Add(ctx context.Context, in *ai.UserACLAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *ai.UserACLDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ⚠️ 不是超管接口:前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
+	// 拿它当 getPermissions 用(查自己有哪些权限以显隐功能)。handler 里也从来没有超管校验
+	// —— 同 service 的 Add/Delete/Edit 都有,唯独 List 没有。我曾按"整个 service 都是管理面"
+	// 把它一起标成 SUPERADMIN,普通用户当场 PermissionDenied,是实打实的回归。
+	//
+	// TODO 主体其实有两个:普通用户查自己(本方法) vs 超管查全部(前端 super 页也调这个 url)。
+	//
+	//	应拆开,并让本方法强制 did = 调用者 —— 现在传谁的 did 都能查,任意用户可读他人 ACL。
 	List(ctx context.Context, in *ai.UserACLListReq, opts ...grpc.CallOption) (*ai.UserACLListResp, error)
 	ListTypes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.UserACLListTypeResp, error)
 	Edit(ctx context.Context, in *ai.UserACLEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -103,6 +111,14 @@ func (c *userACLClient) Edit(ctx context.Context, in *ai.UserACLEditReq, opts ..
 type UserACLServer interface {
 	Add(context.Context, *ai.UserACLAddReq) (*emptypb.Empty, error)
 	Delete(context.Context, *ai.UserACLDeleteReq) (*emptypb.Empty, error)
+	// ⚠️ 不是超管接口:前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
+	// 拿它当 getPermissions 用(查自己有哪些权限以显隐功能)。handler 里也从来没有超管校验
+	// —— 同 service 的 Add/Delete/Edit 都有,唯独 List 没有。我曾按"整个 service 都是管理面"
+	// 把它一起标成 SUPERADMIN,普通用户当场 PermissionDenied,是实打实的回归。
+	//
+	// TODO 主体其实有两个:普通用户查自己(本方法) vs 超管查全部(前端 super 页也调这个 url)。
+	//
+	//	应拆开,并让本方法强制 did = 调用者 —— 现在传谁的 did 都能查,任意用户可读他人 ACL。
 	List(context.Context, *ai.UserACLListReq) (*ai.UserACLListResp, error)
 	ListTypes(context.Context, *emptypb.Empty) (*ai.UserACLListTypeResp, error)
 	Edit(context.Context, *ai.UserACLEditReq) (*emptypb.Empty, error)
