@@ -29,11 +29,11 @@ const file_hi_club_user_acl_proto_rawDesc = "" +
 	"\n" +
 	"\x16hi/club/user_acl.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/user_acl.proto\x1a\x10hi/options.proto2\xc6\x02\n" +
 	"\aUserACL\x129\n" +
-	"\x03Add\x12\x14.hi.ai.UserACLAddReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12?\n" +
-	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\"\x04\x88\xb5\x18\x02\x12E\n" +
+	"\x03Add\x12\x14.hi.ai.UserACLAddReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12?\n" +
+	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12;\n" +
+	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\"\x04\x88\xb5\x18\x05\x12E\n" +
 	"\tListTypes\x12\x16.google.protobuf.Empty\x1a\x1a.hi.ai.UserACLListTypeResp\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x83\x01\n" +
+	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05B\x83\x01\n" +
 	"\vcom.hi.clubB\fUserAclProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_user_acl_proto_goTypes = []any{

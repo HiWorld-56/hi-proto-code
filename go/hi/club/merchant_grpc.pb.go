@@ -31,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MerchantClient interface {
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.MerchantListResp, error)
+	// 查询所有商户列表。**内部使用**(转发 did 的管理面 MerchantManage.List),仅超管可调。
 	ListAll(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.MerchantListResp, error)
 }
 
@@ -67,6 +68,7 @@ func (c *merchantClient) ListAll(ctx context.Context, in *hi.Pagination, opts ..
 // for forward compatibility.
 type MerchantServer interface {
 	List(context.Context, *emptypb.Empty) (*did.MerchantListResp, error)
+	// 查询所有商户列表。**内部使用**(转发 did 的管理面 MerchantManage.List),仅超管可调。
 	ListAll(context.Context, *hi.Pagination) (*did.MerchantListResp, error)
 }
 

@@ -833,7 +833,7 @@ class UpdateTransHashReq extends $pb.GeneratedMessage {
   void clearHash() => $_clearField(2);
 }
 
-/// 交易列表的唯一入参:did/id 均为可选过滤条件(AIP-132:过滤走参数,不编码进方法名)。
+/// 查自己的交易。
 class ListTradeReq extends $pb.GeneratedMessage {
   factory ListTradeReq({
     $core.String? did,
@@ -913,6 +913,76 @@ class ListTradeReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
   $3.Pagination ensurePagination() => $_ensure(2);
+}
+
+/// 交易统计(内部使用)。id 为空 = 全量。
+class ListAllTradeReq extends $pb.GeneratedMessage {
+  factory ListAllTradeReq({
+    $core.String? id,
+    $3.Pagination? pagination,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListAllTradeReq._();
+
+  factory ListAllTradeReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListAllTradeReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListAllTradeReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAllTradeReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAllTradeReq copyWith(void Function(ListAllTradeReq) updates) =>
+      super.copyWith((message) => updates(message as ListAllTradeReq))
+          as ListAllTradeReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListAllTradeReq create() => ListAllTradeReq._();
+  @$core.override
+  ListAllTradeReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListAllTradeReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAllTradeReq>(create);
+  static ListAllTradeReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $3.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($3.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListTradeResp extends $pb.GeneratedMessage {

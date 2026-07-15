@@ -636,11 +636,11 @@ func (x *UpdateTransHashReq) GetHash() string {
 	return ""
 }
 
-// 交易列表的唯一入参:did/id 均为可选过滤条件(AIP-132:过滤走参数,不编码进方法名)。
+// 查自己的交易。
 type ListTradeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 可选:只看该用户的交易;空=不按用户过滤
-	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`   // 可选:只看该交易;空=不按 id 过滤
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"` // 可选:只看该交易
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -697,6 +697,59 @@ func (x *ListTradeReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
+// 交易统计(内部使用)。id 为空 = 全量。
+type ListAllTradeReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // 可选:只看该交易;空=全量
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAllTradeReq) Reset() {
+	*x = ListAllTradeReq{}
+	mi := &file_hi_club_trade_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAllTradeReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAllTradeReq) ProtoMessage() {}
+
+func (x *ListAllTradeReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_trade_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAllTradeReq.ProtoReflect.Descriptor instead.
+func (*ListAllTradeReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_trade_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ListAllTradeReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ListAllTradeReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
 type ListTradeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
@@ -707,7 +760,7 @@ type ListTradeResp struct {
 
 func (x *ListTradeResp) Reset() {
 	*x = ListTradeResp{}
-	mi := &file_hi_club_trade_proto_msgTypes[12]
+	mi := &file_hi_club_trade_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -719,7 +772,7 @@ func (x *ListTradeResp) String() string {
 func (*ListTradeResp) ProtoMessage() {}
 
 func (x *ListTradeResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_trade_proto_msgTypes[12]
+	mi := &file_hi_club_trade_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -732,7 +785,7 @@ func (x *ListTradeResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTradeResp.ProtoReflect.Descriptor instead.
 func (*ListTradeResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_trade_proto_rawDescGZIP(), []int{12}
+	return file_hi_club_trade_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListTradeResp) GetTotal() int32 {
@@ -802,16 +855,22 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"\x02id\x18\x02 \x01(\tR\x02id\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\"Q\n" +
+	"\x0fListAllTradeReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"O\n" +
 	"\rListTradeResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12(\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\xd8\x02\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\x9b\x03\n" +
 	"\x05Trade\x12F\n" +
 	"\vGetTradeFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x04\x88\xb5\x18\x02\x12=\n" +
 	"\bGetTrade\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x04\x88\xb5\x18\x02\x12=\n" +
 	"\bAddTrade\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x04\x88\xb5\x18\x02\x12L\n" +
 	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04List\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeResp\"\x04\x88\xb5\x18\x02B\x81\x01\n" +
+	"\x04List\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeResp\"\x04\x88\xb5\x18\x02\x12A\n" +
+	"\aListAll\x12\x18.hi.club.ListAllTradeReq\x1a\x16.hi.club.ListTradeResp\"\x04\x88\xb5\x18\x05B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"TradeProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
@@ -827,7 +886,7 @@ func file_hi_club_trade_proto_rawDescGZIP() []byte {
 	return file_hi_club_trade_proto_rawDescData
 }
 
-var file_hi_club_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_hi_club_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_hi_club_trade_proto_goTypes = []any{
 	(*TradeUnit)(nil),          // 0: hi.club.TradeUnit
 	(*TradeBase)(nil),          // 1: hi.club.TradeBase
@@ -841,44 +900,48 @@ var file_hi_club_trade_proto_goTypes = []any{
 	(*AddTradeResp)(nil),       // 9: hi.club.AddTradeResp
 	(*UpdateTransHashReq)(nil), // 10: hi.club.UpdateTransHashReq
 	(*ListTradeReq)(nil),       // 11: hi.club.ListTradeReq
-	(*ListTradeResp)(nil),      // 12: hi.club.ListTradeResp
-	nil,                        // 13: hi.club.TradeDetail.ListEntry
-	(*did.Coin)(nil),           // 14: hi.did.Coin
-	(*hi.Entity)(nil),          // 15: hi.Entity
-	(*did.Transaction)(nil),    // 16: hi.did.Transaction
-	(*hi.Pagination)(nil),      // 17: hi.Pagination
-	(*emptypb.Empty)(nil),      // 18: google.protobuf.Empty
+	(*ListAllTradeReq)(nil),    // 12: hi.club.ListAllTradeReq
+	(*ListTradeResp)(nil),      // 13: hi.club.ListTradeResp
+	nil,                        // 14: hi.club.TradeDetail.ListEntry
+	(*did.Coin)(nil),           // 15: hi.did.Coin
+	(*hi.Entity)(nil),          // 16: hi.Entity
+	(*did.Transaction)(nil),    // 17: hi.did.Transaction
+	(*hi.Pagination)(nil),      // 18: hi.Pagination
+	(*emptypb.Empty)(nil),      // 19: google.protobuf.Empty
 }
 var file_hi_club_trade_proto_depIdxs = []int32{
-	14, // 0: hi.club.TradeUnit.coin:type_name -> hi.did.Coin
-	15, // 1: hi.club.TradeUnit.user:type_name -> hi.Entity
+	15, // 0: hi.club.TradeUnit.coin:type_name -> hi.did.Coin
+	16, // 1: hi.club.TradeUnit.user:type_name -> hi.Entity
 	0,  // 2: hi.club.TradeBase.from:type_name -> hi.club.TradeUnit
 	0,  // 3: hi.club.TradeBase.to:type_name -> hi.club.TradeUnit
-	16, // 4: hi.club.TradeTrans.trans:type_name -> hi.did.Transaction
+	17, // 4: hi.club.TradeTrans.trans:type_name -> hi.did.Transaction
 	0,  // 5: hi.club.TradeDetail.from:type_name -> hi.club.TradeUnit
 	0,  // 6: hi.club.TradeDetail.to:type_name -> hi.club.TradeUnit
-	13, // 7: hi.club.TradeDetail.list:type_name -> hi.club.TradeDetail.ListEntry
+	14, // 7: hi.club.TradeDetail.list:type_name -> hi.club.TradeDetail.ListEntry
 	6,  // 8: hi.club.GetTradeResp.detail:type_name -> hi.club.TradeDetail
 	6,  // 9: hi.club.AddTradeReq.detail:type_name -> hi.club.TradeDetail
 	6,  // 10: hi.club.AddTradeResp.detail:type_name -> hi.club.TradeDetail
-	17, // 11: hi.club.ListTradeReq.pagination:type_name -> hi.Pagination
-	6,  // 12: hi.club.ListTradeResp.list:type_name -> hi.club.TradeDetail
-	5,  // 13: hi.club.TradeDetail.ListEntry.value:type_name -> hi.club.TradeTrans
-	2,  // 14: hi.club.Trade.GetTradeFee:input_type -> hi.club.GetTradeFeeReq
-	4,  // 15: hi.club.Trade.GetTrade:input_type -> hi.club.GetTradeReq
-	8,  // 16: hi.club.Trade.AddTrade:input_type -> hi.club.AddTradeReq
-	10, // 17: hi.club.Trade.UpdateTransHash:input_type -> hi.club.UpdateTransHashReq
-	11, // 18: hi.club.Trade.List:input_type -> hi.club.ListTradeReq
-	3,  // 19: hi.club.Trade.GetTradeFee:output_type -> hi.club.GetTradeFeeResp
-	7,  // 20: hi.club.Trade.GetTrade:output_type -> hi.club.GetTradeResp
-	9,  // 21: hi.club.Trade.AddTrade:output_type -> hi.club.AddTradeResp
-	18, // 22: hi.club.Trade.UpdateTransHash:output_type -> google.protobuf.Empty
-	12, // 23: hi.club.Trade.List:output_type -> hi.club.ListTradeResp
-	19, // [19:24] is the sub-list for method output_type
-	14, // [14:19] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	18, // 11: hi.club.ListTradeReq.pagination:type_name -> hi.Pagination
+	18, // 12: hi.club.ListAllTradeReq.pagination:type_name -> hi.Pagination
+	6,  // 13: hi.club.ListTradeResp.list:type_name -> hi.club.TradeDetail
+	5,  // 14: hi.club.TradeDetail.ListEntry.value:type_name -> hi.club.TradeTrans
+	2,  // 15: hi.club.Trade.GetTradeFee:input_type -> hi.club.GetTradeFeeReq
+	4,  // 16: hi.club.Trade.GetTrade:input_type -> hi.club.GetTradeReq
+	8,  // 17: hi.club.Trade.AddTrade:input_type -> hi.club.AddTradeReq
+	10, // 18: hi.club.Trade.UpdateTransHash:input_type -> hi.club.UpdateTransHashReq
+	11, // 19: hi.club.Trade.List:input_type -> hi.club.ListTradeReq
+	12, // 20: hi.club.Trade.ListAll:input_type -> hi.club.ListAllTradeReq
+	3,  // 21: hi.club.Trade.GetTradeFee:output_type -> hi.club.GetTradeFeeResp
+	7,  // 22: hi.club.Trade.GetTrade:output_type -> hi.club.GetTradeResp
+	9,  // 23: hi.club.Trade.AddTrade:output_type -> hi.club.AddTradeResp
+	19, // 24: hi.club.Trade.UpdateTransHash:output_type -> google.protobuf.Empty
+	13, // 25: hi.club.Trade.List:output_type -> hi.club.ListTradeResp
+	13, // 26: hi.club.Trade.ListAll:output_type -> hi.club.ListTradeResp
+	21, // [21:27] is the sub-list for method output_type
+	15, // [15:21] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_trade_proto_init() }
@@ -892,7 +955,7 @@ func file_hi_club_trade_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_trade_proto_rawDesc), len(file_hi_club_trade_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

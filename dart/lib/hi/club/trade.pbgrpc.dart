@@ -61,11 +61,22 @@ class TradeClient extends $grpc.Client {
     return $createUnaryCall(_$updateTransHash, request, options: options);
   }
 
+  /// 查自己的交易(did 必填)。普通用户可调。
   $grpc.ResponseFuture<$0.ListTradeResp> list(
     $0.ListTradeReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
+  }
+
+  /// 交易统计:全量/按 id 查(id 为空=全量)。**内部使用**,仅超管可调。
+  /// 不与 List 合并:二者鉴权级别不同,而档位是按方法挂的 —— 合并会导致
+  /// "did 留空即拿到全部人的交易",把 filter 值变成越权入口。
+  $grpc.ResponseFuture<$0.ListTradeResp> listAll(
+    $0.ListAllTradeReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listAll, request, options: options);
   }
 
   // method descriptors
@@ -92,6 +103,11 @@ class TradeClient extends $grpc.Client {
       '/hi.club.Trade/List',
       ($0.ListTradeReq value) => value.writeToBuffer(),
       $0.ListTradeResp.fromBuffer);
+  static final _$listAll =
+      $grpc.ClientMethod<$0.ListAllTradeReq, $0.ListTradeResp>(
+          '/hi.club.Trade/ListAll',
+          ($0.ListAllTradeReq value) => value.writeToBuffer(),
+          $0.ListTradeResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Trade')
@@ -135,6 +151,13 @@ abstract class TradeServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ListTradeReq.fromBuffer(value),
         ($0.ListTradeResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListAllTradeReq, $0.ListTradeResp>(
+        'ListAll',
+        listAll_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ListAllTradeReq.fromBuffer(value),
+        ($0.ListTradeResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.GetTradeFeeResp> getTradeFee_Pre($grpc.ServiceCall $call,
@@ -176,4 +199,12 @@ abstract class TradeServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListTradeResp> list(
       $grpc.ServiceCall call, $0.ListTradeReq request);
+
+  $async.Future<$0.ListTradeResp> listAll_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListAllTradeReq> $request) async {
+    return listAll($call, await $request);
+  }
+
+  $async.Future<$0.ListTradeResp> listAll(
+      $grpc.ServiceCall call, $0.ListAllTradeReq request);
 }

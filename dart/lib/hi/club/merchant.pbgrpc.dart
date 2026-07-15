@@ -41,6 +41,7 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  /// 查询所有商户列表。**内部使用**(转发 did 的管理面 MerchantManage.List),仅超管可调。
   $grpc.ResponseFuture<$1.MerchantListResp> listAll(
     $2.Pagination request, {
     $grpc.CallOptions? options,

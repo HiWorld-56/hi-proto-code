@@ -86,16 +86,24 @@ pub struct UpdateTransHashReq {
     #[prost(string, tag = "2")]
     pub hash: ::prost::alloc::string::String,
 }
-/// 交易列表的唯一入参:did/id 均为可选过滤条件(AIP-132:过滤走参数,不编码进方法名)。
+/// 查自己的交易。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListTradeReq {
-    /// 可选:只看该用户的交易;空=不按用户过滤
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    /// 可选:只看该交易;空=不按 id 过滤
+    /// 可选:只看该交易
     #[prost(string, tag = "2")]
     pub id: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// 交易统计(内部使用)。id 为空 = 全量。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListAllTradeReq {
+    /// 可选:只看该交易;空=全量
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -276,6 +284,7 @@ pub mod trade_client {
                 .insert(GrpcMethod::new("hi.club.Trade", "UpdateTransHash"));
             self.inner.unary(req, path, codec).await
         }
+        /// 查自己的交易(did 必填)。普通用户可调。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTradeReq>,
@@ -292,6 +301,27 @@ pub mod trade_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Trade/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 交易统计:全量/按 id 查(id 为空=全量)。**内部使用**,仅超管可调。
+        /// 不与 List 合并:二者鉴权级别不同,而档位是按方法挂的 —— 合并会导致
+        /// "did 留空即拿到全部人的交易",把 filter 值变成越权入口。
+        pub async fn list_all(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAllTradeReq>,
+        ) -> std::result::Result<tonic::Response<super::ListTradeResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Trade/ListAll");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "ListAll"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -2497,6 +2527,7 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Merchant", "List"));
             self.inner.unary(req, path, codec).await
         }
+        /// 查询所有商户列表。**内部使用**(转发 did 的管理面 MerchantManage.List),仅超管可调。
         pub async fn list_all(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,

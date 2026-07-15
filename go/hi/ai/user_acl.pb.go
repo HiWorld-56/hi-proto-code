@@ -425,11 +425,11 @@ const file_hi_ai_user_acl_proto_rawDesc = "" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
 	"\x04note\x18\x02 \x01(\tR\x04note2\xc6\x02\n" +
 	"\aUserACL\x129\n" +
-	"\x03Add\x12\x14.hi.ai.UserACLAddReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12?\n" +
-	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\"\x04\x88\xb5\x18\x02\x12E\n" +
+	"\x03Add\x12\x14.hi.ai.UserACLAddReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12?\n" +
+	"\x06Delete\x12\x17.hi.ai.UserACLDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12;\n" +
+	"\x04List\x12\x15.hi.ai.UserACLListReq\x1a\x16.hi.ai.UserACLListResp\"\x04\x88\xb5\x18\x05\x12E\n" +
 	"\tListTypes\x12\x16.google.protobuf.Empty\x1a\x1a.hi.ai.UserACLListTypeResp\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02Bw\n" +
+	"\x04Edit\x12\x15.hi.ai.UserACLEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05Bw\n" +
 	"\tcom.hi.aiB\fUserAclProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
