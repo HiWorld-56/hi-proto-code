@@ -27,6 +27,9 @@ const (
 	Merchant_GetUserProfile_FullMethodName = "/hi.did.Merchant/GetUserProfile"
 	Merchant_SetUserProfile_FullMethodName = "/hi.did.Merchant/SetUserProfile"
 	Merchant_GetMerchant_FullMethodName    = "/hi.did.Merchant/GetMerchant"
+	Merchant_ListGrants_FullMethodName     = "/hi.did.Merchant/ListGrants"
+	Merchant_AddGrant_FullMethodName       = "/hi.did.Merchant/AddGrant"
+	Merchant_RemoveGrant_FullMethodName    = "/hi.did.Merchant/RemoveGrant"
 	Merchant_SaveUsers_FullMethodName      = "/hi.did.Merchant/SaveUsers"
 	Merchant_DeleteUsers_FullMethodName    = "/hi.did.Merchant/DeleteUsers"
 )
@@ -41,6 +44,11 @@ type MerchantClient interface {
 	GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*GetUserProfileResp, error)
 	SetUserProfile(ctx context.Context, in *SetUserProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetMerchant(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantGetResp, error)
+	// ── 商户互授权 ──────────────────────────────────────────────
+	// 商户之间平级,跨商户读数据必须显式授权。授权方 = ExtendToken 认出的商户(不在入参里)。
+	ListGrants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGrantsResp, error)
+	AddGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RemoveGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SaveUsers(ctx context.Context, in *MerchantUsersSaveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteUsers(ctx context.Context, in *MerchantUsersDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -113,6 +121,36 @@ func (c *merchantClient) GetMerchant(ctx context.Context, in *hi.DID, opts ...gr
 	return out, nil
 }
 
+func (c *merchantClient) ListGrants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGrantsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListGrantsResp)
+	err := c.cc.Invoke(ctx, Merchant_ListGrants_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchantClient) AddGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Merchant_AddGrant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchantClient) RemoveGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Merchant_RemoveGrant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *merchantClient) SaveUsers(ctx context.Context, in *MerchantUsersSaveReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -143,6 +181,11 @@ type MerchantServer interface {
 	GetUserProfile(context.Context, *hi.DID) (*GetUserProfileResp, error)
 	SetUserProfile(context.Context, *SetUserProfileReq) (*emptypb.Empty, error)
 	GetMerchant(context.Context, *hi.DID) (*MerchantGetResp, error)
+	// ── 商户互授权 ──────────────────────────────────────────────
+	// 商户之间平级,跨商户读数据必须显式授权。授权方 = ExtendToken 认出的商户(不在入参里)。
+	ListGrants(context.Context, *emptypb.Empty) (*ListGrantsResp, error)
+	AddGrant(context.Context, *GrantReq) (*emptypb.Empty, error)
+	RemoveGrant(context.Context, *GrantReq) (*emptypb.Empty, error)
 	SaveUsers(context.Context, *MerchantUsersSaveReq) (*emptypb.Empty, error)
 	DeleteUsers(context.Context, *MerchantUsersDeleteReq) (*emptypb.Empty, error)
 }
@@ -171,6 +214,15 @@ func (UnimplementedMerchantServer) SetUserProfile(context.Context, *SetUserProfi
 }
 func (UnimplementedMerchantServer) GetMerchant(context.Context, *hi.DID) (*MerchantGetResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMerchant not implemented")
+}
+func (UnimplementedMerchantServer) ListGrants(context.Context, *emptypb.Empty) (*ListGrantsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListGrants not implemented")
+}
+func (UnimplementedMerchantServer) AddGrant(context.Context, *GrantReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddGrant not implemented")
+}
+func (UnimplementedMerchantServer) RemoveGrant(context.Context, *GrantReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemoveGrant not implemented")
 }
 func (UnimplementedMerchantServer) SaveUsers(context.Context, *MerchantUsersSaveReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SaveUsers not implemented")
@@ -306,6 +358,60 @@ func _Merchant_GetMerchant_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_ListGrants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).ListGrants(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_ListGrants_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).ListGrants(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Merchant_AddGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).AddGrant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_AddGrant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).AddGrant(ctx, req.(*GrantReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Merchant_RemoveGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).RemoveGrant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_RemoveGrant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).RemoveGrant(ctx, req.(*GrantReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Merchant_SaveUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MerchantUsersSaveReq)
 	if err := dec(in); err != nil {
@@ -372,6 +478,18 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMerchant",
 			Handler:    _Merchant_GetMerchant_Handler,
+		},
+		{
+			MethodName: "ListGrants",
+			Handler:    _Merchant_ListGrants_Handler,
+		},
+		{
+			MethodName: "AddGrant",
+			Handler:    _Merchant_AddGrant_Handler,
+		},
+		{
+			MethodName: "RemoveGrant",
+			Handler:    _Merchant_RemoveGrant_Handler,
 		},
 		{
 			MethodName: "SaveUsers",

@@ -1778,6 +1778,34 @@ pub struct SetUserProfileReq {
     #[prost(string, tag = "3")]
     pub avatar: ::prost::alloc::string::String,
 }
+/// 商户互授权:我(=ExtendToken 认出的商户)允许 grantee 访问我的数据。
+/// ⚠️ 入参里**没有授权方 did** —— 授权方永远取自 token,故商户只能改自己的授权列表。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantReq {
+    /// 被授权方商户 did
+    #[prost(string, tag = "1")]
+    pub grantee: ::prost::alloc::string::String,
+    /// 备注,给人看的
+    #[prost(string, tag = "2")]
+    pub note: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantUnit {
+    /// 被授权方
+    #[prost(message, optional, tag = "1")]
+    pub grantee: ::core::option::Option<super::Entity>,
+    #[prost(string, tag = "2")]
+    pub note: ::prost::alloc::string::String,
+    /// ms
+    #[prost(int64, tag = "3")]
+    pub created_at: i64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGrantsResp {
+    /// 我授权给了哪些商户
+    #[prost(message, repeated, tag = "1")]
+    pub grants: ::prost::alloc::vec::Vec<GrantUnit>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantUsersSaveReq {
     /// 用户did
@@ -2022,6 +2050,68 @@ pub mod merchant_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Merchant", "GetMerchant"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 商户互授权 ──────────────────────────────────────────────
+        /// 商户之间平级,跨商户读数据必须显式授权。授权方 = ExtendToken 认出的商户(不在入参里)。
+        pub async fn list_grants(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::ListGrantsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/ListGrants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "ListGrants"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn add_grant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/AddGrant");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "AddGrant"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn remove_grant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/RemoveGrant",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "RemoveGrant"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn save_users(

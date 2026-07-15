@@ -76,6 +76,29 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$getMerchant, request, options: options);
   }
 
+  /// ── 商户互授权 ──────────────────────────────────────────────
+  /// 商户之间平级,跨商户读数据必须显式授权。授权方 = ExtendToken 认出的商户(不在入参里)。
+  $grpc.ResponseFuture<$1.ListGrantsResp> listGrants(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listGrants, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> addGrant(
+    $1.GrantReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$addGrant, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> removeGrant(
+    $1.GrantReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$removeGrant, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.Empty> saveUsers(
     $1.MerchantUsersSaveReq request, {
     $grpc.CallOptions? options,
@@ -118,6 +141,18 @@ class MerchantClient extends $grpc.Client {
       '/hi.did.Merchant/GetMerchant',
       ($2.DID value) => value.writeToBuffer(),
       $1.MerchantGetResp.fromBuffer);
+  static final _$listGrants = $grpc.ClientMethod<$0.Empty, $1.ListGrantsResp>(
+      '/hi.did.Merchant/ListGrants',
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.ListGrantsResp.fromBuffer);
+  static final _$addGrant = $grpc.ClientMethod<$1.GrantReq, $0.Empty>(
+      '/hi.did.Merchant/AddGrant',
+      ($1.GrantReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$removeGrant = $grpc.ClientMethod<$1.GrantReq, $0.Empty>(
+      '/hi.did.Merchant/RemoveGrant',
+      ($1.GrantReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
   static final _$saveUsers =
       $grpc.ClientMethod<$1.MerchantUsersSaveReq, $0.Empty>(
           '/hi.did.Merchant/SaveUsers',
@@ -177,6 +212,27 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.DID.fromBuffer(value),
         ($1.MerchantGetResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListGrantsResp>(
+        'ListGrants',
+        listGrants_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListGrantsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GrantReq, $0.Empty>(
+        'AddGrant',
+        addGrant_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.GrantReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GrantReq, $0.Empty>(
+        'RemoveGrant',
+        removeGrant_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.GrantReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.MerchantUsersSaveReq, $0.Empty>(
         'SaveUsers',
         saveUsers_Pre,
@@ -242,6 +298,29 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$1.MerchantGetResp> getMerchant(
       $grpc.ServiceCall call, $2.DID request);
+
+  $async.Future<$1.ListGrantsResp> listGrants_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return listGrants($call, await $request);
+  }
+
+  $async.Future<$1.ListGrantsResp> listGrants(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$0.Empty> addGrant_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GrantReq> $request) async {
+    return addGrant($call, await $request);
+  }
+
+  $async.Future<$0.Empty> addGrant($grpc.ServiceCall call, $1.GrantReq request);
+
+  $async.Future<$0.Empty> removeGrant_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GrantReq> $request) async {
+    return removeGrant($call, await $request);
+  }
+
+  $async.Future<$0.Empty> removeGrant(
+      $grpc.ServiceCall call, $1.GrantReq request);
 
   $async.Future<$0.Empty> saveUsers_Pre($grpc.ServiceCall $call,
       $async.Future<$1.MerchantUsersSaveReq> $request) async {

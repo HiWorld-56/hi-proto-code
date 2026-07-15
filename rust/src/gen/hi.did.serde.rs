@@ -4772,6 +4772,244 @@ impl<'de> serde::Deserialize<'de> for get_wallet_resp::Unit {
         deserializer.deserialize_struct("hi.did.GetWalletResp.Unit", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for GrantReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.grantee.is_empty() {
+            len += 1;
+        }
+        if !self.note.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.GrantReq", len)?;
+        if !self.grantee.is_empty() {
+            struct_ser.serialize_field("grantee", &self.grantee)?;
+        }
+        if !self.note.is_empty() {
+            struct_ser.serialize_field("note", &self.note)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GrantReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "grantee",
+            "note",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Grantee,
+            Note,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "grantee" => Ok(GeneratedField::Grantee),
+                            "note" => Ok(GeneratedField::Note),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GrantReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.GrantReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GrantReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut grantee__ = None;
+                let mut note__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Grantee => {
+                            if grantee__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("grantee"));
+                            }
+                            grantee__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(GrantReq {
+                    grantee: grantee__.unwrap_or_default(),
+                    note: note__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.GrantReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GrantUnit {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.grantee.is_some() {
+            len += 1;
+        }
+        if !self.note.is_empty() {
+            len += 1;
+        }
+        if self.created_at != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.GrantUnit", len)?;
+        if let Some(v) = self.grantee.as_ref() {
+            struct_ser.serialize_field("grantee", v)?;
+        }
+        if !self.note.is_empty() {
+            struct_ser.serialize_field("note", &self.note)?;
+        }
+        if self.created_at != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&self.created_at).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GrantUnit {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "grantee",
+            "note",
+            "created_at",
+            "createdAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Grantee,
+            Note,
+            CreatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "grantee" => Ok(GeneratedField::Grantee),
+                            "note" => Ok(GeneratedField::Note),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GrantUnit;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.GrantUnit")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GrantUnit, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut grantee__ = None;
+                let mut note__ = None;
+                let mut created_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Grantee => {
+                            if grantee__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("grantee"));
+                            }
+                            grantee__ = map_.next_value()?;
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(GrantUnit {
+                    grantee: grantee__,
+                    note: note__.unwrap_or_default(),
+                    created_at: created_at__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.GrantUnit", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for HistoryReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -7024,6 +7262,97 @@ impl<'de> serde::Deserialize<'de> for ListCoinsResp {
             }
         }
         deserializer.deserialize_struct("hi.did.ListCoinsResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListGrantsResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.grants.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.ListGrantsResp", len)?;
+        if !self.grants.is_empty() {
+            struct_ser.serialize_field("grants", &self.grants)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListGrantsResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "grants",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Grants,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "grants" => Ok(GeneratedField::Grants),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListGrantsResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.ListGrantsResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGrantsResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut grants__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Grants => {
+                            if grants__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("grants"));
+                            }
+                            grants__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ListGrantsResp {
+                    grants: grants__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.ListGrantsResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListSuperAdminUsersResp {

@@ -154,6 +154,62 @@ final $typed_data.Uint8List setUserProfileReqDescriptor = $convert.base64Decode(
     'ChFTZXRVc2VyUHJvZmlsZVJlcRIQCgNkaWQYASABKAlSA2RpZBISCgRuYW1lGAIgASgJUgRuYW'
     '1lEhYKBmF2YXRhchgDIAEoCVIGYXZhdGFy');
 
+@$core.Deprecated('Use grantReqDescriptor instead')
+const GrantReq$json = {
+  '1': 'GrantReq',
+  '2': [
+    {'1': 'grantee', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantee'},
+    {'1': 'note', '3': 2, '4': 1, '5': 9, '10': 'note'},
+  ],
+};
+
+/// Descriptor for `GrantReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List grantReqDescriptor = $convert.base64Decode(
+    'CghHcmFudFJlcRImCgdncmFudGVlGAEgASgJQgy6SAlyBzIFXlxTKyRSB2dyYW50ZWUSEgoEbm'
+    '90ZRgCIAEoCVIEbm90ZQ==');
+
+@$core.Deprecated('Use grantUnitDescriptor instead')
+const GrantUnit$json = {
+  '1': 'GrantUnit',
+  '2': [
+    {
+      '1': 'grantee',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '10': 'grantee'
+    },
+    {'1': 'note', '3': 2, '4': 1, '5': 9, '10': 'note'},
+    {'1': 'created_at', '3': 3, '4': 1, '5': 3, '10': 'createdAt'},
+  ],
+};
+
+/// Descriptor for `GrantUnit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List grantUnitDescriptor = $convert.base64Decode(
+    'CglHcmFudFVuaXQSJAoHZ3JhbnRlZRgBIAEoCzIKLmhpLkVudGl0eVIHZ3JhbnRlZRISCgRub3'
+    'RlGAIgASgJUgRub3RlEh0KCmNyZWF0ZWRfYXQYAyABKANSCWNyZWF0ZWRBdA==');
+
+@$core.Deprecated('Use listGrantsRespDescriptor instead')
+const ListGrantsResp$json = {
+  '1': 'ListGrantsResp',
+  '2': [
+    {
+      '1': 'grants',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.did.GrantUnit',
+      '10': 'grants'
+    },
+  ],
+};
+
+/// Descriptor for `ListGrantsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listGrantsRespDescriptor = $convert.base64Decode(
+    'Cg5MaXN0R3JhbnRzUmVzcBIpCgZncmFudHMYASADKAsyES5oaS5kaWQuR3JhbnRVbml0UgZncm'
+    'FudHM=');
+
 @$core.Deprecated('Use merchantUsersSaveReqDescriptor instead')
 const MerchantUsersSaveReq$json = {
   '1': 'MerchantUsersSaveReq',

@@ -566,6 +566,202 @@ class SetUserProfileReq extends $pb.GeneratedMessage {
   void clearAvatar() => $_clearField(3);
 }
 
+/// 商户互授权:我(=ExtendToken 认出的商户)允许 grantee 访问我的数据。
+/// ⚠️ 入参里**没有授权方 did** —— 授权方永远取自 token,故商户只能改自己的授权列表。
+class GrantReq extends $pb.GeneratedMessage {
+  factory GrantReq({
+    $core.String? grantee,
+    $core.String? note,
+  }) {
+    final result = create();
+    if (grantee != null) result.grantee = grantee;
+    if (note != null) result.note = note;
+    return result;
+  }
+
+  GrantReq._();
+
+  factory GrantReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GrantReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GrantReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'grantee')
+    ..aOS(2, _omitFieldNames ? '' : 'note')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantReq copyWith(void Function(GrantReq) updates) =>
+      super.copyWith((message) => updates(message as GrantReq)) as GrantReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GrantReq create() => GrantReq._();
+  @$core.override
+  GrantReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GrantReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GrantReq>(create);
+  static GrantReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get grantee => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set grantee($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantee() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantee() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get note => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set note($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasNote() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNote() => $_clearField(2);
+}
+
+class GrantUnit extends $pb.GeneratedMessage {
+  factory GrantUnit({
+    $2.Entity? grantee,
+    $core.String? note,
+    $fixnum.Int64? createdAt,
+  }) {
+    final result = create();
+    if (grantee != null) result.grantee = grantee;
+    if (note != null) result.note = note;
+    if (createdAt != null) result.createdAt = createdAt;
+    return result;
+  }
+
+  GrantUnit._();
+
+  factory GrantUnit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GrantUnit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GrantUnit',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'grantee',
+        subBuilder: $2.Entity.create)
+    ..aOS(2, _omitFieldNames ? '' : 'note')
+    ..aInt64(3, _omitFieldNames ? '' : 'createdAt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantUnit clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantUnit copyWith(void Function(GrantUnit) updates) =>
+      super.copyWith((message) => updates(message as GrantUnit)) as GrantUnit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GrantUnit create() => GrantUnit._();
+  @$core.override
+  GrantUnit createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GrantUnit getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GrantUnit>(create);
+  static GrantUnit? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $2.Entity get grantee => $_getN(0);
+  @$pb.TagNumber(1)
+  set grantee($2.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantee() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantee() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $2.Entity ensureGrantee() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get note => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set note($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasNote() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNote() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get createdAt => $_getI64(2);
+  @$pb.TagNumber(3)
+  set createdAt($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCreatedAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCreatedAt() => $_clearField(3);
+}
+
+class ListGrantsResp extends $pb.GeneratedMessage {
+  factory ListGrantsResp({
+    $core.Iterable<GrantUnit>? grants,
+  }) {
+    final result = create();
+    if (grants != null) result.grants.addAll(grants);
+    return result;
+  }
+
+  ListGrantsResp._();
+
+  factory ListGrantsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListGrantsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListGrantsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..pPM<GrantUnit>(1, _omitFieldNames ? '' : 'grants',
+        subBuilder: GrantUnit.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGrantsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGrantsResp copyWith(void Function(ListGrantsResp) updates) =>
+      super.copyWith((message) => updates(message as ListGrantsResp))
+          as ListGrantsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListGrantsResp create() => ListGrantsResp._();
+  @$core.override
+  ListGrantsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListGrantsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGrantsResp>(create);
+  static ListGrantsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<GrantUnit> get grants => $_getList(0);
+}
+
 class MerchantUsersSaveReq extends $pb.GeneratedMessage {
   factory MerchantUsersSaveReq({
     $core.Iterable<$core.String>? users,
