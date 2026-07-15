@@ -210,6 +210,50 @@ final $typed_data.Uint8List listGrantsRespDescriptor = $convert.base64Decode(
     'Cg5MaXN0R3JhbnRzUmVzcBIpCgZncmFudHMYASADKAsyES5oaS5kaWQuR3JhbnRVbml0UgZncm'
     'FudHM=');
 
+@$core.Deprecated('Use merchantUsersListReqDescriptor instead')
+const MerchantUsersListReq$json = {
+  '1': 'MerchantUsersListReq',
+  '2': [
+    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '10': 'merchant'},
+    {'1': 'user', '3': 2, '4': 1, '5': 9, '10': 'user'},
+    {
+      '1': 'pagination',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `MerchantUsersListReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantUsersListReqDescriptor = $convert.base64Decode(
+    'ChRNZXJjaGFudFVzZXJzTGlzdFJlcRIaCghtZXJjaGFudBgBIAEoCVIIbWVyY2hhbnQSEgoEdX'
+    'NlchgCIAEoCVIEdXNlchIuCgpwYWdpbmF0aW9uGAMgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFn'
+    'aW5hdGlvbg==');
+
+@$core.Deprecated('Use merchantUsersListRespDescriptor instead')
+const MerchantUsersListResp$json = {
+  '1': 'MerchantUsersListResp',
+  '2': [
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {
+      '1': 'units',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.did.UserExtensionUnit',
+      '10': 'units'
+    },
+  ],
+};
+
+/// Descriptor for `MerchantUsersListResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantUsersListRespDescriptor = $convert.base64Decode(
+    'ChVNZXJjaGFudFVzZXJzTGlzdFJlc3ASFAoFdG90YWwYASABKAVSBXRvdGFsEi8KBXVuaXRzGA'
+    'IgAygLMhkuaGkuZGlkLlVzZXJFeHRlbnNpb25Vbml0UgV1bml0cw==');
+
 @$core.Deprecated('Use merchantUsersSaveReqDescriptor instead')
 const MerchantUsersSaveReq$json = {
   '1': 'MerchantUsersSaveReq',

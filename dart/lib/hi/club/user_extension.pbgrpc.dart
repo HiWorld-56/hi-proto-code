@@ -17,7 +17,6 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../did/user_extension.pb.dart' as $0;
-import 'user_extension.pb.dart' as $1;
 
 export 'user_extension.pb.dart';
 
@@ -33,18 +32,14 @@ class UserExtensionClient extends $grpc.Client {
 
   UserExtensionClient(super.channel, {super.options, super.interceptors});
 
+  /// 取某商户下某用户的扩展数据(如金标标记)。club 的节点渲染只需要这一个:
+  /// 用户选一个自己所在的商户节点 -> 按 (merchant, user) 取字段 -> 渲染。
+  /// 跨商户读由 did 侧的 requireGrant 把关(该商户须先授权 club)。
   $grpc.ResponseFuture<$0.UserExtensionGetResp> get(
     $0.UserExtensionGetReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.ListByMerchantDidResp> listByMerchantDid(
-    $0.ListByMerchantDidReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listByMerchantDid, request, options: options);
   }
 
   // method descriptors
@@ -54,11 +49,6 @@ class UserExtensionClient extends $grpc.Client {
           '/hi.club.UserExtension/Get',
           ($0.UserExtensionGetReq value) => value.writeToBuffer(),
           $0.UserExtensionGetResp.fromBuffer);
-  static final _$listByMerchantDid =
-      $grpc.ClientMethod<$0.ListByMerchantDidReq, $1.ListByMerchantDidResp>(
-          '/hi.club.UserExtension/ListByMerchantDid',
-          ($0.ListByMerchantDidReq value) => value.writeToBuffer(),
-          $1.ListByMerchantDidResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.UserExtension')
@@ -75,15 +65,6 @@ abstract class UserExtensionServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.UserExtensionGetReq.fromBuffer(value),
             ($0.UserExtensionGetResp value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$0.ListByMerchantDidReq, $1.ListByMerchantDidResp>(
-            'ListByMerchantDid',
-            listByMerchantDid_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.ListByMerchantDidReq.fromBuffer(value),
-            ($1.ListByMerchantDidResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.UserExtensionGetResp> get_Pre($grpc.ServiceCall $call,
@@ -93,13 +74,4 @@ abstract class UserExtensionServiceBase extends $grpc.Service {
 
   $async.Future<$0.UserExtensionGetResp> get(
       $grpc.ServiceCall call, $0.UserExtensionGetReq request);
-
-  $async.Future<$1.ListByMerchantDidResp> listByMerchantDid_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.ListByMerchantDidReq> $request) async {
-    return listByMerchantDid($call, await $request);
-  }
-
-  $async.Future<$1.ListByMerchantDidResp> listByMerchantDid(
-      $grpc.ServiceCall call, $0.ListByMerchantDidReq request);
 }

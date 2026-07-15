@@ -762,6 +762,149 @@ class ListGrantsResp extends $pb.GeneratedMessage {
   $pb.PbList<GrantUnit> get grants => $_getList(0);
 }
 
+class MerchantUsersListReq extends $pb.GeneratedMessage {
+  factory MerchantUsersListReq({
+    $core.String? merchant,
+    $core.String? user,
+    $2.Pagination? pagination,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    if (user != null) result.user = user;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  MerchantUsersListReq._();
+
+  factory MerchantUsersListReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantUsersListReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantUsersListReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..aOS(2, _omitFieldNames ? '' : 'user')
+    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantUsersListReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantUsersListReq copyWith(void Function(MerchantUsersListReq) updates) =>
+      super.copyWith((message) => updates(message as MerchantUsersListReq))
+          as MerchantUsersListReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantUsersListReq create() => MerchantUsersListReq._();
+  @$core.override
+  MerchantUsersListReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantUsersListReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantUsersListReq>(create);
+  static MerchantUsersListReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get merchant => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set merchant($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMerchant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMerchant() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get user => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set user($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUser() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUser() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $2.Pagination get pagination => $_getN(2);
+  @$pb.TagNumber(3)
+  set pagination($2.Pagination value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPagination() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPagination() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $2.Pagination ensurePagination() => $_ensure(2);
+}
+
+class MerchantUsersListResp extends $pb.GeneratedMessage {
+  factory MerchantUsersListResp({
+    $core.int? total,
+    $core.Iterable<$3.UserExtensionUnit>? units,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (units != null) result.units.addAll(units);
+    return result;
+  }
+
+  MerchantUsersListResp._();
+
+  factory MerchantUsersListResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantUsersListResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantUsersListResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<$3.UserExtensionUnit>(2, _omitFieldNames ? '' : 'units',
+        subBuilder: $3.UserExtensionUnit.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantUsersListResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantUsersListResp copyWith(
+          void Function(MerchantUsersListResp) updates) =>
+      super.copyWith((message) => updates(message as MerchantUsersListResp))
+          as MerchantUsersListResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantUsersListResp create() => MerchantUsersListResp._();
+  @$core.override
+  MerchantUsersListResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantUsersListResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantUsersListResp>(create);
+  static MerchantUsersListResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$3.UserExtensionUnit> get units => $_getList(1);
+}
+
 class MerchantUsersSaveReq extends $pb.GeneratedMessage {
   factory MerchantUsersSaveReq({
     $core.Iterable<$core.String>? users,

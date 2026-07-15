@@ -38,6 +38,26 @@ pub struct ListSuperAdminUsersResp {
     #[prost(string, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UserExtensionInfo {
+    #[prost(string, optional, tag = "1")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int32, optional, tag = "2")]
+    pub level: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub card: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub extend: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UserExtensionUnit {
+    #[prost(message, optional, tag = "1")]
+    pub user: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "2")]
+    pub info: ::core::option::Option<UserExtensionInfo>,
+}
 /// Generated client implementations.
 pub mod base_client {
     #![allow(
@@ -1123,6 +1143,611 @@ pub mod api_key_client {
         }
     }
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantInfo {
+    #[prost(message, optional, tag = "1")]
+    pub master: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "2")]
+    pub server: ::core::option::Option<super::Entity>,
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub logo: ::prost::alloc::string::String,
+    /// 公共币种
+    #[prost(message, repeated, tag = "5")]
+    pub public_coins: ::prost::alloc::vec::Vec<Coin>,
+    /// 自定义币种
+    #[prost(message, repeated, tag = "6")]
+    pub custom_tokens: ::prost::alloc::vec::Vec<Coin>,
+    #[prost(string, tag = "7")]
+    pub endpoint: ::prost::alloc::string::String,
+    #[prost(string, tag = "8")]
+    pub scheme: ::prost::alloc::string::String,
+    #[prost(string, tag = "9")]
+    pub extension_token: ::prost::alloc::string::String,
+    #[prost(int64, tag = "10")]
+    pub created_at: i64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantGetResp {
+    #[prost(message, optional, tag = "1")]
+    pub info: ::core::option::Option<MerchantInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantSetReq {
+    #[prost(string, tag = "1")]
+    pub server: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub logo: ::prost::alloc::string::String,
+    #[prost(string, repeated, tag = "4")]
+    pub coins: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, tag = "5")]
+    pub endpoint: ::prost::alloc::string::String,
+    #[prost(string, tag = "6")]
+    pub scheme: ::prost::alloc::string::String,
+    #[prost(string, tag = "7")]
+    pub comment: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantListResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub list: ::prost::alloc::vec::Vec<MerchantInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetUserProfileResp {
+    #[prost(message, optional, tag = "1")]
+    pub base: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "2")]
+    pub mqtt: ::core::option::Option<super::MqttCredentials>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetUserProfileReq {
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub avatar: ::prost::alloc::string::String,
+}
+/// 商户互授权:我(=ExtendToken 认出的商户)允许 grantee 访问我的数据。
+/// ⚠️ 入参里**没有授权方 did** —— 授权方永远取自 token,故商户只能改自己的授权列表。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantReq {
+    /// 被授权方商户 did
+    #[prost(string, tag = "1")]
+    pub grantee: ::prost::alloc::string::String,
+    /// 备注,给人看的
+    #[prost(string, tag = "2")]
+    pub note: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantUnit {
+    /// 被授权方
+    #[prost(message, optional, tag = "1")]
+    pub grantee: ::core::option::Option<super::Entity>,
+    #[prost(string, tag = "2")]
+    pub note: ::prost::alloc::string::String,
+    /// ms
+    #[prost(int64, tag = "3")]
+    pub created_at: i64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGrantsResp {
+    /// 我授权给了哪些商户
+    #[prost(message, repeated, tag = "1")]
+    pub grants: ::prost::alloc::vec::Vec<GrantUnit>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantUsersListReq {
+    /// 可选:指定商户(须先获其授权);空=自己(取 ExtendToken)
+    #[prost(string, tag = "1")]
+    pub merchant: ::prost::alloc::string::String,
+    /// 可选:按用户 did 过滤
+    #[prost(string, tag = "2")]
+    pub user: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantUsersListResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantUsersSaveReq {
+    /// 用户did
+    #[prost(string, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantUsersDeleteReq {
+    /// 用户did
+    #[prost(string, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantNotifyReq {
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub nonce: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OrderEventResp {
+    #[prost(string, tag = "1")]
+    pub event: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub payload: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod merchant_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct MerchantClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MerchantClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MerchantClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MerchantClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MerchantClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantGetResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantSetReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/Set");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Set"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_user_profile(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Did>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetUserProfileResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/GetUserProfile",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "GetUserProfile"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_user_profile(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetUserProfileReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/SetUserProfile",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "SetUserProfile"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_merchant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Did>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantGetResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/GetMerchant",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "GetMerchant"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 商户互授权 ──────────────────────────────────────────────
+        /// 商户之间平级,跨商户读数据必须显式授权。授权方 = ExtendToken 认出的商户(不在入参里)。
+        pub async fn list_grants(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::ListGrantsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/ListGrants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "ListGrants"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn add_grant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/AddGrant");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "AddGrant"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn remove_grant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/RemoveGrant",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "RemoveGrant"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 列商户下的用户。merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权)。
+        /// 合并原 UserExtension.List(商户从 token)+ ListByMerchantDid(商户从参数)——
+        /// 二者查的是同一张 extend_table、同一份数据,此前因信任模型不同不能合;
+        /// requireGrant 落地后,参数来的 merchant 必过授权校验,已无此顾虑。
+        pub async fn list_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantUsersListReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantUsersListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/ListUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "ListUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn save_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantUsersSaveReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/SaveUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "SaveUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn delete_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantUsersDeleteReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/DeleteUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "DeleteUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod sse_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct SseClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SseClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SseClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SseClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SseClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn order_events(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Did>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::OrderEventResp>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.SSE/OrderEvents");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.SSE", "OrderEvents"));
+            self.inner.server_streaming(req, path, codec).await
+        }
+        pub async fn notify(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantNotifyReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.SSE/Notify");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.SSE", "Notify"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UserExtensionSettingResp {
     #[prost(string, tag = "1")]
@@ -1162,44 +1787,9 @@ pub struct Card {
     #[prost(message, optional, tag = "5")]
     pub right: ::core::option::Option<Button>,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UserExtensionInfo {
-    #[prost(string, optional, tag = "1")]
-    pub logo: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int32, optional, tag = "2")]
-    pub level: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub card: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub extend: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "5")]
-    pub note: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UserExtensionUnit {
-    #[prost(message, optional, tag = "1")]
-    pub user: ::core::option::Option<super::Entity>,
-    #[prost(message, optional, tag = "2")]
-    pub info: ::core::option::Option<UserExtensionInfo>,
-}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserExtensionUpdateReq {
     #[prost(message, repeated, tag = "1")]
-    pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UserExtensionListReq {
-    /// 用户did
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserExtensionListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
     pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1208,16 +1798,14 @@ pub struct UserExtensionDeleteReq {
     #[prost(string, repeated, tag = "1")]
     pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// 列某用户所属的商户。主体是**用户** —— 故归 UserExtension(用户扩展)而非 Merchant。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListByMerchantDidReq {
-    /// 商户did
+pub struct ListMerchantsReq {
+    /// 用户 did(注意:不是商户 did)
     #[prost(string, tag = "1")]
-    pub merchant: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListByMerchantDidResp {
-    #[prost(message, repeated, tag = "1")]
-    pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
+    pub user_did: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UserExtensionGetReq {
@@ -1484,29 +2072,6 @@ pub mod user_extension_client {
                 .insert(GrpcMethod::new("hi.did.UserExtension", "Update"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UserExtensionListReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::UserExtensionListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.UserExtension/List",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.UserExtension", "List"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn delete(
             &mut self,
             request: impl tonic::IntoRequest<super::UserExtensionDeleteReq>,
@@ -1528,30 +2093,6 @@ pub mod user_extension_client {
                 .insert(GrpcMethod::new("hi.did.UserExtension", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_by_merchant_did(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListByMerchantDidReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListByMerchantDidResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.UserExtension/ListByMerchantDid",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.UserExtension", "ListByMerchantDid"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::UserExtensionGetReq>,
@@ -1571,6 +2112,32 @@ pub mod user_extension_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.UserExtension/Get");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.UserExtension", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 列某用户所属的商户。原 Merchant.List(hi.DID) 搬来:主体是用户,归 UserExtension 才准确;
+        /// 裸 hi.DID 入参也换成正经 Req —— "这是用户 did 不是商户 did"写进类型,而非靠注释。
+        pub async fn list_merchants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListMerchantsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.UserExtension/ListMerchants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.UserExtension", "ListMerchants"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -1704,587 +2271,6 @@ pub mod price_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Price/GetPrice");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Price", "GetPrice"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MerchantInfo {
-    #[prost(message, optional, tag = "1")]
-    pub master: ::core::option::Option<super::Entity>,
-    #[prost(message, optional, tag = "2")]
-    pub server: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub logo: ::prost::alloc::string::String,
-    /// 公共币种
-    #[prost(message, repeated, tag = "5")]
-    pub public_coins: ::prost::alloc::vec::Vec<Coin>,
-    /// 自定义币种
-    #[prost(message, repeated, tag = "6")]
-    pub custom_tokens: ::prost::alloc::vec::Vec<Coin>,
-    #[prost(string, tag = "7")]
-    pub endpoint: ::prost::alloc::string::String,
-    #[prost(string, tag = "8")]
-    pub scheme: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
-    pub extension_token: ::prost::alloc::string::String,
-    #[prost(int64, tag = "10")]
-    pub created_at: i64,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MerchantGetResp {
-    #[prost(message, optional, tag = "1")]
-    pub info: ::core::option::Option<MerchantInfo>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MerchantSetReq {
-    #[prost(string, tag = "1")]
-    pub server: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub logo: ::prost::alloc::string::String,
-    #[prost(string, repeated, tag = "4")]
-    pub coins: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, tag = "5")]
-    pub endpoint: ::prost::alloc::string::String,
-    #[prost(string, tag = "6")]
-    pub scheme: ::prost::alloc::string::String,
-    #[prost(string, tag = "7")]
-    pub comment: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MerchantListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub list: ::prost::alloc::vec::Vec<MerchantInfo>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetUserProfileResp {
-    #[prost(message, optional, tag = "1")]
-    pub base: ::core::option::Option<super::Entity>,
-    #[prost(message, optional, tag = "2")]
-    pub mqtt: ::core::option::Option<super::MqttCredentials>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetUserProfileReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub avatar: ::prost::alloc::string::String,
-}
-/// 商户互授权:我(=ExtendToken 认出的商户)允许 grantee 访问我的数据。
-/// ⚠️ 入参里**没有授权方 did** —— 授权方永远取自 token,故商户只能改自己的授权列表。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GrantReq {
-    /// 被授权方商户 did
-    #[prost(string, tag = "1")]
-    pub grantee: ::prost::alloc::string::String,
-    /// 备注,给人看的
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GrantUnit {
-    /// 被授权方
-    #[prost(message, optional, tag = "1")]
-    pub grantee: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
-    /// ms
-    #[prost(int64, tag = "3")]
-    pub created_at: i64,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGrantsResp {
-    /// 我授权给了哪些商户
-    #[prost(message, repeated, tag = "1")]
-    pub grants: ::prost::alloc::vec::Vec<GrantUnit>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MerchantUsersSaveReq {
-    /// 用户did
-    #[prost(string, repeated, tag = "1")]
-    pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MerchantUsersDeleteReq {
-    /// 用户did
-    #[prost(string, repeated, tag = "1")]
-    pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MerchantNotifyReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub nonce: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct OrderEventResp {
-    #[prost(string, tag = "1")]
-    pub event: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub payload: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod merchant_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct MerchantClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MerchantClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MerchantClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MerchantClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MerchantClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::MerchantGetResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/Get");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MerchantSetReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/Set");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Set"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Did>,
-        ) -> std::result::Result<
-            tonic::Response<super::MerchantListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/List");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_user_profile(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Did>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetUserProfileResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/GetUserProfile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "GetUserProfile"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set_user_profile(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SetUserProfileReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/SetUserProfile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "SetUserProfile"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_merchant(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Did>,
-        ) -> std::result::Result<
-            tonic::Response<super::MerchantGetResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/GetMerchant",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "GetMerchant"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// ── 商户互授权 ──────────────────────────────────────────────
-        /// 商户之间平级,跨商户读数据必须显式授权。授权方 = ExtendToken 认出的商户(不在入参里)。
-        pub async fn list_grants(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ListGrantsResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/ListGrants",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "ListGrants"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn add_grant(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GrantReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/AddGrant");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "AddGrant"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn remove_grant(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GrantReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/RemoveGrant",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "RemoveGrant"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn save_users(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MerchantUsersSaveReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/SaveUsers",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "SaveUsers"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn delete_users(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MerchantUsersDeleteReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/DeleteUsers",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "DeleteUsers"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod sse_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct SseClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl SseClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> SseClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SseClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            SseClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn order_events(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Did>,
-        ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::OrderEventResp>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.SSE/OrderEvents");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.SSE", "OrderEvents"));
-            self.inner.server_streaming(req, path, codec).await
-        }
-        pub async fn notify(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MerchantNotifyReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.SSE/Notify");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.SSE", "Notify"));
             self.inner.unary(req, path, codec).await
         }
     }

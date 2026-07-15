@@ -1077,19 +1077,6 @@ pub mod api_key_client {
         }
     }
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UserExtensionInfo {
-    #[prost(message, optional, tag = "1")]
-    pub unit: ::core::option::Option<super::did::UserExtensionUnit>,
-    /// 备注名
-    #[prost(string, tag = "2")]
-    pub remark: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListByMerchantDidResp {
-    #[prost(message, repeated, tag = "1")]
-    pub infos: ::prost::alloc::vec::Vec<UserExtensionInfo>,
-}
 /// Generated client implementations.
 pub mod user_extension_client {
     #![allow(
@@ -1181,6 +1168,9 @@ pub mod user_extension_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// 取某商户下某用户的扩展数据(如金标标记)。club 的节点渲染只需要这一个:
+        /// 用户选一个自己所在的商户节点 -> 按 (merchant, user) 取字段 -> 渲染。
+        /// 跨商户读由 did 侧的 requireGrant 把关(该商户须先授权 club)。
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::super::did::UserExtensionGetReq>,
@@ -1202,30 +1192,6 @@ pub mod user_extension_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.UserExtension", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_by_merchant_did(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::did::ListByMerchantDidReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListByMerchantDidResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.UserExtension/ListByMerchantDid",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.UserExtension", "ListByMerchantDid"));
             self.inner.unary(req, path, codec).await
         }
     }

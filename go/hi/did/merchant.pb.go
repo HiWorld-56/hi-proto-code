@@ -598,6 +598,118 @@ func (x *ListGrantsResp) GetGrants() []*GrantUnit {
 	return nil
 }
 
+type MerchantUsersListReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Merchant      string                 `protobuf:"bytes,1,opt,name=merchant,proto3" json:"merchant,omitempty"` // 可选:指定商户(须先获其授权);空=自己(取 ExtendToken)
+	User          string                 `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`         // 可选:按用户 did 过滤
+	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MerchantUsersListReq) Reset() {
+	*x = MerchantUsersListReq{}
+	mi := &file_hi_did_merchant_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MerchantUsersListReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MerchantUsersListReq) ProtoMessage() {}
+
+func (x *MerchantUsersListReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_merchant_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MerchantUsersListReq.ProtoReflect.Descriptor instead.
+func (*MerchantUsersListReq) Descriptor() ([]byte, []int) {
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *MerchantUsersListReq) GetMerchant() string {
+	if x != nil {
+		return x.Merchant
+	}
+	return ""
+}
+
+func (x *MerchantUsersListReq) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *MerchantUsersListReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type MerchantUsersListResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Units         []*UserExtensionUnit   `protobuf:"bytes,2,rep,name=units,proto3" json:"units,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MerchantUsersListResp) Reset() {
+	*x = MerchantUsersListResp{}
+	mi := &file_hi_did_merchant_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MerchantUsersListResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MerchantUsersListResp) ProtoMessage() {}
+
+func (x *MerchantUsersListResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_merchant_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MerchantUsersListResp.ProtoReflect.Descriptor instead.
+func (*MerchantUsersListResp) Descriptor() ([]byte, []int) {
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *MerchantUsersListResp) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *MerchantUsersListResp) GetUnits() []*UserExtensionUnit {
+	if x != nil {
+		return x.Units
+	}
+	return nil
+}
+
 type MerchantUsersSaveReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Users         []string               `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"` // 用户did
@@ -607,7 +719,7 @@ type MerchantUsersSaveReq struct {
 
 func (x *MerchantUsersSaveReq) Reset() {
 	*x = MerchantUsersSaveReq{}
-	mi := &file_hi_did_merchant_proto_msgTypes[9]
+	mi := &file_hi_did_merchant_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -619,7 +731,7 @@ func (x *MerchantUsersSaveReq) String() string {
 func (*MerchantUsersSaveReq) ProtoMessage() {}
 
 func (x *MerchantUsersSaveReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_merchant_proto_msgTypes[9]
+	mi := &file_hi_did_merchant_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -632,7 +744,7 @@ func (x *MerchantUsersSaveReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantUsersSaveReq.ProtoReflect.Descriptor instead.
 func (*MerchantUsersSaveReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_merchant_proto_rawDescGZIP(), []int{9}
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *MerchantUsersSaveReq) GetUsers() []string {
@@ -651,7 +763,7 @@ type MerchantUsersDeleteReq struct {
 
 func (x *MerchantUsersDeleteReq) Reset() {
 	*x = MerchantUsersDeleteReq{}
-	mi := &file_hi_did_merchant_proto_msgTypes[10]
+	mi := &file_hi_did_merchant_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -663,7 +775,7 @@ func (x *MerchantUsersDeleteReq) String() string {
 func (*MerchantUsersDeleteReq) ProtoMessage() {}
 
 func (x *MerchantUsersDeleteReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_merchant_proto_msgTypes[10]
+	mi := &file_hi_did_merchant_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -676,7 +788,7 @@ func (x *MerchantUsersDeleteReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantUsersDeleteReq.ProtoReflect.Descriptor instead.
 func (*MerchantUsersDeleteReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_merchant_proto_rawDescGZIP(), []int{10}
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *MerchantUsersDeleteReq) GetUsers() []string {
@@ -696,7 +808,7 @@ type MerchantNotifyReq struct {
 
 func (x *MerchantNotifyReq) Reset() {
 	*x = MerchantNotifyReq{}
-	mi := &file_hi_did_merchant_proto_msgTypes[11]
+	mi := &file_hi_did_merchant_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -708,7 +820,7 @@ func (x *MerchantNotifyReq) String() string {
 func (*MerchantNotifyReq) ProtoMessage() {}
 
 func (x *MerchantNotifyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_merchant_proto_msgTypes[11]
+	mi := &file_hi_did_merchant_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -721,7 +833,7 @@ func (x *MerchantNotifyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantNotifyReq.ProtoReflect.Descriptor instead.
 func (*MerchantNotifyReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_merchant_proto_rawDescGZIP(), []int{11}
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *MerchantNotifyReq) GetDid() string {
@@ -748,7 +860,7 @@ type OrderEventResp struct {
 
 func (x *OrderEventResp) Reset() {
 	*x = OrderEventResp{}
-	mi := &file_hi_did_merchant_proto_msgTypes[12]
+	mi := &file_hi_did_merchant_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -760,7 +872,7 @@ func (x *OrderEventResp) String() string {
 func (*OrderEventResp) ProtoMessage() {}
 
 func (x *OrderEventResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_merchant_proto_msgTypes[12]
+	mi := &file_hi_did_merchant_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -773,7 +885,7 @@ func (x *OrderEventResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderEventResp.ProtoReflect.Descriptor instead.
 func (*OrderEventResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_merchant_proto_rawDescGZIP(), []int{12}
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *OrderEventResp) GetEvent() string {
@@ -841,7 +953,16 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x03 \x01(\x03R\tcreatedAt\";\n" +
 	"\x0eListGrantsResp\x12)\n" +
-	"\x06grants\x18\x01 \x03(\v2\x11.hi.did.GrantUnitR\x06grants\",\n" +
+	"\x06grants\x18\x01 \x03(\v2\x11.hi.did.GrantUnitR\x06grants\"v\n" +
+	"\x14MerchantUsersListReq\x12\x1a\n" +
+	"\bmerchant\x18\x01 \x01(\tR\bmerchant\x12\x12\n" +
+	"\x04user\x18\x02 \x01(\tR\x04user\x12.\n" +
+	"\n" +
+	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\"^\n" +
+	"\x15MerchantUsersListResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x05R\x05total\x12/\n" +
+	"\x05units\x18\x02 \x03(\v2\x19.hi.did.UserExtensionUnitR\x05units\",\n" +
 	"\x14MerchantUsersSaveReq\x12\x14\n" +
 	"\x05users\x18\x01 \x03(\tR\x05users\".\n" +
 	"\x16MerchantUsersDeleteReq\x12\x14\n" +
@@ -851,18 +972,18 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"@\n" +
 	"\x0eOrderEventResp\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\tR\apayload2\xca\x05\n" +
+	"\apayload\x18\x02 \x01(\tR\apayload2\xe9\x05\n" +
 	"\bMerchant\x12<\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12/\n" +
-	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x03\x12;\n" +
+	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
 	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.GetUserProfileResp\"\x04\x88\xb5\x18\x03\x12I\n" +
 	"\x0eSetUserProfile\x12\x19.hi.did.SetUserProfileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x125\n" +
 	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x03\x12B\n" +
 	"\n" +
 	"ListGrants\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.ListGrantsResp\"\x04\x88\xb5\x18\x03\x12:\n" +
 	"\bAddGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12=\n" +
-	"\vRemoveGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12G\n" +
+	"\vRemoveGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12N\n" +
+	"\tListUsers\x12\x1c.hi.did.MerchantUsersListReq\x1a\x1d.hi.did.MerchantUsersListResp\"\x04\x88\xb5\x18\x03\x12G\n" +
 	"\tSaveUsers\x12\x1c.hi.did.MerchantUsersSaveReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12K\n" +
 	"\vDeleteUsers\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x032\x80\x01\n" +
 	"\x03SSE\x126\n" +
@@ -883,7 +1004,7 @@ func file_hi_did_merchant_proto_rawDescGZIP() []byte {
 	return file_hi_did_merchant_proto_rawDescData
 }
 
-var file_hi_did_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_hi_did_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_hi_did_merchant_proto_goTypes = []any{
 	(*MerchantInfo)(nil),           // 0: hi.did.MerchantInfo
 	(*MerchantGetResp)(nil),        // 1: hi.did.MerchantGetResp
@@ -894,58 +1015,64 @@ var file_hi_did_merchant_proto_goTypes = []any{
 	(*GrantReq)(nil),               // 6: hi.did.GrantReq
 	(*GrantUnit)(nil),              // 7: hi.did.GrantUnit
 	(*ListGrantsResp)(nil),         // 8: hi.did.ListGrantsResp
-	(*MerchantUsersSaveReq)(nil),   // 9: hi.did.MerchantUsersSaveReq
-	(*MerchantUsersDeleteReq)(nil), // 10: hi.did.MerchantUsersDeleteReq
-	(*MerchantNotifyReq)(nil),      // 11: hi.did.MerchantNotifyReq
-	(*OrderEventResp)(nil),         // 12: hi.did.OrderEventResp
-	(*hi.Entity)(nil),              // 13: hi.Entity
-	(*Coin)(nil),                   // 14: hi.did.Coin
-	(*hi.MqttCredentials)(nil),     // 15: hi.MqttCredentials
-	(*emptypb.Empty)(nil),          // 16: google.protobuf.Empty
-	(*hi.DID)(nil),                 // 17: hi.DID
+	(*MerchantUsersListReq)(nil),   // 9: hi.did.MerchantUsersListReq
+	(*MerchantUsersListResp)(nil),  // 10: hi.did.MerchantUsersListResp
+	(*MerchantUsersSaveReq)(nil),   // 11: hi.did.MerchantUsersSaveReq
+	(*MerchantUsersDeleteReq)(nil), // 12: hi.did.MerchantUsersDeleteReq
+	(*MerchantNotifyReq)(nil),      // 13: hi.did.MerchantNotifyReq
+	(*OrderEventResp)(nil),         // 14: hi.did.OrderEventResp
+	(*hi.Entity)(nil),              // 15: hi.Entity
+	(*Coin)(nil),                   // 16: hi.did.Coin
+	(*hi.MqttCredentials)(nil),     // 17: hi.MqttCredentials
+	(*hi.Pagination)(nil),          // 18: hi.Pagination
+	(*UserExtensionUnit)(nil),      // 19: hi.did.UserExtensionUnit
+	(*emptypb.Empty)(nil),          // 20: google.protobuf.Empty
+	(*hi.DID)(nil),                 // 21: hi.DID
 }
 var file_hi_did_merchant_proto_depIdxs = []int32{
-	13, // 0: hi.did.MerchantInfo.master:type_name -> hi.Entity
-	13, // 1: hi.did.MerchantInfo.server:type_name -> hi.Entity
-	14, // 2: hi.did.MerchantInfo.public_coins:type_name -> hi.did.Coin
-	14, // 3: hi.did.MerchantInfo.custom_tokens:type_name -> hi.did.Coin
+	15, // 0: hi.did.MerchantInfo.master:type_name -> hi.Entity
+	15, // 1: hi.did.MerchantInfo.server:type_name -> hi.Entity
+	16, // 2: hi.did.MerchantInfo.public_coins:type_name -> hi.did.Coin
+	16, // 3: hi.did.MerchantInfo.custom_tokens:type_name -> hi.did.Coin
 	0,  // 4: hi.did.MerchantGetResp.info:type_name -> hi.did.MerchantInfo
 	0,  // 5: hi.did.MerchantListResp.list:type_name -> hi.did.MerchantInfo
-	13, // 6: hi.did.GetUserProfileResp.base:type_name -> hi.Entity
-	15, // 7: hi.did.GetUserProfileResp.mqtt:type_name -> hi.MqttCredentials
-	13, // 8: hi.did.GrantUnit.grantee:type_name -> hi.Entity
+	15, // 6: hi.did.GetUserProfileResp.base:type_name -> hi.Entity
+	17, // 7: hi.did.GetUserProfileResp.mqtt:type_name -> hi.MqttCredentials
+	15, // 8: hi.did.GrantUnit.grantee:type_name -> hi.Entity
 	7,  // 9: hi.did.ListGrantsResp.grants:type_name -> hi.did.GrantUnit
-	16, // 10: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
-	2,  // 11: hi.did.Merchant.Set:input_type -> hi.did.MerchantSetReq
-	17, // 12: hi.did.Merchant.List:input_type -> hi.DID
-	17, // 13: hi.did.Merchant.GetUserProfile:input_type -> hi.DID
-	5,  // 14: hi.did.Merchant.SetUserProfile:input_type -> hi.did.SetUserProfileReq
-	17, // 15: hi.did.Merchant.GetMerchant:input_type -> hi.DID
-	16, // 16: hi.did.Merchant.ListGrants:input_type -> google.protobuf.Empty
-	6,  // 17: hi.did.Merchant.AddGrant:input_type -> hi.did.GrantReq
-	6,  // 18: hi.did.Merchant.RemoveGrant:input_type -> hi.did.GrantReq
-	9,  // 19: hi.did.Merchant.SaveUsers:input_type -> hi.did.MerchantUsersSaveReq
-	10, // 20: hi.did.Merchant.DeleteUsers:input_type -> hi.did.MerchantUsersDeleteReq
-	17, // 21: hi.did.SSE.OrderEvents:input_type -> hi.DID
-	11, // 22: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
-	1,  // 23: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
-	16, // 24: hi.did.Merchant.Set:output_type -> google.protobuf.Empty
-	3,  // 25: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
-	4,  // 26: hi.did.Merchant.GetUserProfile:output_type -> hi.did.GetUserProfileResp
-	16, // 27: hi.did.Merchant.SetUserProfile:output_type -> google.protobuf.Empty
-	1,  // 28: hi.did.Merchant.GetMerchant:output_type -> hi.did.MerchantGetResp
-	8,  // 29: hi.did.Merchant.ListGrants:output_type -> hi.did.ListGrantsResp
-	16, // 30: hi.did.Merchant.AddGrant:output_type -> google.protobuf.Empty
-	16, // 31: hi.did.Merchant.RemoveGrant:output_type -> google.protobuf.Empty
-	16, // 32: hi.did.Merchant.SaveUsers:output_type -> google.protobuf.Empty
-	16, // 33: hi.did.Merchant.DeleteUsers:output_type -> google.protobuf.Empty
-	12, // 34: hi.did.SSE.OrderEvents:output_type -> hi.did.OrderEventResp
-	16, // 35: hi.did.SSE.Notify:output_type -> google.protobuf.Empty
-	23, // [23:36] is the sub-list for method output_type
-	10, // [10:23] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	18, // 10: hi.did.MerchantUsersListReq.pagination:type_name -> hi.Pagination
+	19, // 11: hi.did.MerchantUsersListResp.units:type_name -> hi.did.UserExtensionUnit
+	20, // 12: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
+	2,  // 13: hi.did.Merchant.Set:input_type -> hi.did.MerchantSetReq
+	21, // 14: hi.did.Merchant.GetUserProfile:input_type -> hi.DID
+	5,  // 15: hi.did.Merchant.SetUserProfile:input_type -> hi.did.SetUserProfileReq
+	21, // 16: hi.did.Merchant.GetMerchant:input_type -> hi.DID
+	20, // 17: hi.did.Merchant.ListGrants:input_type -> google.protobuf.Empty
+	6,  // 18: hi.did.Merchant.AddGrant:input_type -> hi.did.GrantReq
+	6,  // 19: hi.did.Merchant.RemoveGrant:input_type -> hi.did.GrantReq
+	9,  // 20: hi.did.Merchant.ListUsers:input_type -> hi.did.MerchantUsersListReq
+	11, // 21: hi.did.Merchant.SaveUsers:input_type -> hi.did.MerchantUsersSaveReq
+	12, // 22: hi.did.Merchant.DeleteUsers:input_type -> hi.did.MerchantUsersDeleteReq
+	21, // 23: hi.did.SSE.OrderEvents:input_type -> hi.DID
+	13, // 24: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
+	1,  // 25: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
+	20, // 26: hi.did.Merchant.Set:output_type -> google.protobuf.Empty
+	4,  // 27: hi.did.Merchant.GetUserProfile:output_type -> hi.did.GetUserProfileResp
+	20, // 28: hi.did.Merchant.SetUserProfile:output_type -> google.protobuf.Empty
+	1,  // 29: hi.did.Merchant.GetMerchant:output_type -> hi.did.MerchantGetResp
+	8,  // 30: hi.did.Merchant.ListGrants:output_type -> hi.did.ListGrantsResp
+	20, // 31: hi.did.Merchant.AddGrant:output_type -> google.protobuf.Empty
+	20, // 32: hi.did.Merchant.RemoveGrant:output_type -> google.protobuf.Empty
+	10, // 33: hi.did.Merchant.ListUsers:output_type -> hi.did.MerchantUsersListResp
+	20, // 34: hi.did.Merchant.SaveUsers:output_type -> google.protobuf.Empty
+	20, // 35: hi.did.Merchant.DeleteUsers:output_type -> google.protobuf.Empty
+	14, // 36: hi.did.SSE.OrderEvents:output_type -> hi.did.OrderEventResp
+	20, // 37: hi.did.SSE.Notify:output_type -> google.protobuf.Empty
+	25, // [25:38] is the sub-list for method output_type
+	12, // [12:25] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_merchant_proto_init() }
@@ -960,7 +1087,7 @@ func file_hi_did_merchant_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_merchant_proto_rawDesc), len(file_hi_did_merchant_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

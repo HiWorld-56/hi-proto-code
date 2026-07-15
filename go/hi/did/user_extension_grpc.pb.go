@@ -158,11 +158,10 @@ var UserExtensionSettings_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	UserExtension_Update_FullMethodName            = "/hi.did.UserExtension/Update"
-	UserExtension_List_FullMethodName              = "/hi.did.UserExtension/List"
-	UserExtension_Delete_FullMethodName            = "/hi.did.UserExtension/Delete"
-	UserExtension_ListByMerchantDid_FullMethodName = "/hi.did.UserExtension/ListByMerchantDid"
-	UserExtension_Get_FullMethodName               = "/hi.did.UserExtension/Get"
+	UserExtension_Update_FullMethodName        = "/hi.did.UserExtension/Update"
+	UserExtension_Delete_FullMethodName        = "/hi.did.UserExtension/Delete"
+	UserExtension_Get_FullMethodName           = "/hi.did.UserExtension/Get"
+	UserExtension_ListMerchants_FullMethodName = "/hi.did.UserExtension/ListMerchants"
 )
 
 // UserExtensionClient is the client API for UserExtension service.
@@ -170,10 +169,11 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserExtensionClient interface {
 	Update(ctx context.Context, in *UserExtensionUpdateReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	List(ctx context.Context, in *UserExtensionListReq, opts ...grpc.CallOption) (*UserExtensionListResp, error)
 	Delete(ctx context.Context, in *UserExtensionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListByMerchantDid(ctx context.Context, in *ListByMerchantDidReq, opts ...grpc.CallOption) (*ListByMerchantDidResp, error)
 	Get(ctx context.Context, in *UserExtensionGetReq, opts ...grpc.CallOption) (*UserExtensionGetResp, error)
+	// 列某用户所属的商户。原 Merchant.List(hi.DID) 搬来:主体是用户,归 UserExtension 才准确;
+	// 裸 hi.DID 入参也换成正经 Req —— "这是用户 did 不是商户 did"写进类型,而非靠注释。
+	ListMerchants(ctx context.Context, in *ListMerchantsReq, opts ...grpc.CallOption) (*MerchantListResp, error)
 }
 
 type userExtensionClient struct {
@@ -194,30 +194,10 @@ func (c *userExtensionClient) Update(ctx context.Context, in *UserExtensionUpdat
 	return out, nil
 }
 
-func (c *userExtensionClient) List(ctx context.Context, in *UserExtensionListReq, opts ...grpc.CallOption) (*UserExtensionListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserExtensionListResp)
-	err := c.cc.Invoke(ctx, UserExtension_List_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userExtensionClient) Delete(ctx context.Context, in *UserExtensionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, UserExtension_Delete_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userExtensionClient) ListByMerchantDid(ctx context.Context, in *ListByMerchantDidReq, opts ...grpc.CallOption) (*ListByMerchantDidResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListByMerchantDidResp)
-	err := c.cc.Invoke(ctx, UserExtension_ListByMerchantDid_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -234,15 +214,26 @@ func (c *userExtensionClient) Get(ctx context.Context, in *UserExtensionGetReq, 
 	return out, nil
 }
 
+func (c *userExtensionClient) ListMerchants(ctx context.Context, in *ListMerchantsReq, opts ...grpc.CallOption) (*MerchantListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantListResp)
+	err := c.cc.Invoke(ctx, UserExtension_ListMerchants_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserExtensionServer is the server API for UserExtension service.
 // All implementations should embed UnimplementedUserExtensionServer
 // for forward compatibility.
 type UserExtensionServer interface {
 	Update(context.Context, *UserExtensionUpdateReq) (*emptypb.Empty, error)
-	List(context.Context, *UserExtensionListReq) (*UserExtensionListResp, error)
 	Delete(context.Context, *UserExtensionDeleteReq) (*emptypb.Empty, error)
-	ListByMerchantDid(context.Context, *ListByMerchantDidReq) (*ListByMerchantDidResp, error)
 	Get(context.Context, *UserExtensionGetReq) (*UserExtensionGetResp, error)
+	// 列某用户所属的商户。原 Merchant.List(hi.DID) 搬来:主体是用户,归 UserExtension 才准确;
+	// 裸 hi.DID 入参也换成正经 Req —— "这是用户 did 不是商户 did"写进类型,而非靠注释。
+	ListMerchants(context.Context, *ListMerchantsReq) (*MerchantListResp, error)
 }
 
 // UnimplementedUserExtensionServer should be embedded to have
@@ -255,17 +246,14 @@ type UnimplementedUserExtensionServer struct{}
 func (UnimplementedUserExtensionServer) Update(context.Context, *UserExtensionUpdateReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedUserExtensionServer) List(context.Context, *UserExtensionListReq) (*UserExtensionListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
 func (UnimplementedUserExtensionServer) Delete(context.Context, *UserExtensionDeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedUserExtensionServer) ListByMerchantDid(context.Context, *ListByMerchantDidReq) (*ListByMerchantDidResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListByMerchantDid not implemented")
-}
 func (UnimplementedUserExtensionServer) Get(context.Context, *UserExtensionGetReq) (*UserExtensionGetResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedUserExtensionServer) ListMerchants(context.Context, *ListMerchantsReq) (*MerchantListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMerchants not implemented")
 }
 func (UnimplementedUserExtensionServer) testEmbeddedByValue() {}
 
@@ -305,24 +293,6 @@ func _UserExtension_Update_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserExtension_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserExtensionListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserExtensionServer).List(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserExtension_List_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserExtensionServer).List(ctx, req.(*UserExtensionListReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserExtension_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserExtensionDeleteReq)
 	if err := dec(in); err != nil {
@@ -337,24 +307,6 @@ func _UserExtension_Delete_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserExtensionServer).Delete(ctx, req.(*UserExtensionDeleteReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserExtension_ListByMerchantDid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListByMerchantDidReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserExtensionServer).ListByMerchantDid(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserExtension_ListByMerchantDid_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserExtensionServer).ListByMerchantDid(ctx, req.(*ListByMerchantDidReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -377,6 +329,24 @@ func _UserExtension_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserExtension_ListMerchants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMerchantsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserExtensionServer).ListMerchants(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserExtension_ListMerchants_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserExtensionServer).ListMerchants(ctx, req.(*ListMerchantsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserExtension_ServiceDesc is the grpc.ServiceDesc for UserExtension service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -389,20 +359,16 @@ var UserExtension_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserExtension_Update_Handler,
 		},
 		{
-			MethodName: "List",
-			Handler:    _UserExtension_List_Handler,
-		},
-		{
 			MethodName: "Delete",
 			Handler:    _UserExtension_Delete_Handler,
 		},
 		{
-			MethodName: "ListByMerchantDid",
-			Handler:    _UserExtension_ListByMerchantDid_Handler,
-		},
-		{
 			MethodName: "Get",
 			Handler:    _UserExtension_Get_Handler,
+		},
+		{
+			MethodName: "ListMerchants",
+			Handler:    _UserExtension_ListMerchants_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

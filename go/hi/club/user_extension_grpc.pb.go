@@ -20,16 +20,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserExtension_Get_FullMethodName               = "/hi.club.UserExtension/Get"
-	UserExtension_ListByMerchantDid_FullMethodName = "/hi.club.UserExtension/ListByMerchantDid"
+	UserExtension_Get_FullMethodName = "/hi.club.UserExtension/Get"
 )
 
 // UserExtensionClient is the client API for UserExtension service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserExtensionClient interface {
+	// 取某商户下某用户的扩展数据(如金标标记)。club 的节点渲染只需要这一个:
+	// 用户选一个自己所在的商户节点 -> 按 (merchant, user) 取字段 -> 渲染。
+	// 跨商户读由 did 侧的 requireGrant 把关(该商户须先授权 club)。
 	Get(ctx context.Context, in *did.UserExtensionGetReq, opts ...grpc.CallOption) (*did.UserExtensionGetResp, error)
-	ListByMerchantDid(ctx context.Context, in *did.ListByMerchantDidReq, opts ...grpc.CallOption) (*ListByMerchantDidResp, error)
 }
 
 type userExtensionClient struct {
@@ -50,22 +51,14 @@ func (c *userExtensionClient) Get(ctx context.Context, in *did.UserExtensionGetR
 	return out, nil
 }
 
-func (c *userExtensionClient) ListByMerchantDid(ctx context.Context, in *did.ListByMerchantDidReq, opts ...grpc.CallOption) (*ListByMerchantDidResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListByMerchantDidResp)
-	err := c.cc.Invoke(ctx, UserExtension_ListByMerchantDid_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserExtensionServer is the server API for UserExtension service.
 // All implementations should embed UnimplementedUserExtensionServer
 // for forward compatibility.
 type UserExtensionServer interface {
+	// 取某商户下某用户的扩展数据(如金标标记)。club 的节点渲染只需要这一个:
+	// 用户选一个自己所在的商户节点 -> 按 (merchant, user) 取字段 -> 渲染。
+	// 跨商户读由 did 侧的 requireGrant 把关(该商户须先授权 club)。
 	Get(context.Context, *did.UserExtensionGetReq) (*did.UserExtensionGetResp, error)
-	ListByMerchantDid(context.Context, *did.ListByMerchantDidReq) (*ListByMerchantDidResp, error)
 }
 
 // UnimplementedUserExtensionServer should be embedded to have
@@ -77,9 +70,6 @@ type UnimplementedUserExtensionServer struct{}
 
 func (UnimplementedUserExtensionServer) Get(context.Context, *did.UserExtensionGetReq) (*did.UserExtensionGetResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
-}
-func (UnimplementedUserExtensionServer) ListByMerchantDid(context.Context, *did.ListByMerchantDidReq) (*ListByMerchantDidResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListByMerchantDid not implemented")
 }
 func (UnimplementedUserExtensionServer) testEmbeddedByValue() {}
 
@@ -119,24 +109,6 @@ func _UserExtension_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserExtension_ListByMerchantDid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.ListByMerchantDidReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserExtensionServer).ListByMerchantDid(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserExtension_ListByMerchantDid_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserExtensionServer).ListByMerchantDid(ctx, req.(*did.ListByMerchantDidReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UserExtension_ServiceDesc is the grpc.ServiceDesc for UserExtension service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -147,10 +119,6 @@ var UserExtension_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _UserExtension_Get_Handler,
-		},
-		{
-			MethodName: "ListByMerchantDid",
-			Handler:    _UserExtension_ListByMerchantDid_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

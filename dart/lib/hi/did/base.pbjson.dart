@@ -91,3 +91,50 @@ const ListSuperAdminUsersResp$json = {
 final $typed_data.Uint8List listSuperAdminUsersRespDescriptor =
     $convert.base64Decode(
         'ChdMaXN0U3VwZXJBZG1pblVzZXJzUmVzcBISCgRsaXN0GAEgAygJUgRsaXN0');
+
+@$core.Deprecated('Use userExtensionInfoDescriptor instead')
+const UserExtensionInfo$json = {
+  '1': 'UserExtensionInfo',
+  '2': [
+    {'1': 'logo', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'logo', '17': true},
+    {'1': 'level', '3': 2, '4': 1, '5': 5, '9': 1, '10': 'level', '17': true},
+    {'1': 'card', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'card', '17': true},
+    {'1': 'extend', '3': 4, '4': 1, '5': 9, '9': 3, '10': 'extend', '17': true},
+    {'1': 'note', '3': 5, '4': 1, '5': 9, '9': 4, '10': 'note', '17': true},
+  ],
+  '8': [
+    {'1': '_logo'},
+    {'1': '_level'},
+    {'1': '_card'},
+    {'1': '_extend'},
+    {'1': '_note'},
+  ],
+};
+
+/// Descriptor for `UserExtensionInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userExtensionInfoDescriptor = $convert.base64Decode(
+    'ChFVc2VyRXh0ZW5zaW9uSW5mbxIXCgRsb2dvGAEgASgJSABSBGxvZ2+IAQESGQoFbGV2ZWwYAi'
+    'ABKAVIAVIFbGV2ZWyIAQESFwoEY2FyZBgDIAEoCUgCUgRjYXJkiAEBEhsKBmV4dGVuZBgEIAEo'
+    'CUgDUgZleHRlbmSIAQESFwoEbm90ZRgFIAEoCUgEUgRub3RliAEBQgcKBV9sb2dvQggKBl9sZX'
+    'ZlbEIHCgVfY2FyZEIJCgdfZXh0ZW5kQgcKBV9ub3Rl');
+
+@$core.Deprecated('Use userExtensionUnitDescriptor instead')
+const UserExtensionUnit$json = {
+  '1': 'UserExtensionUnit',
+  '2': [
+    {'1': 'user', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'user'},
+    {
+      '1': 'info',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.UserExtensionInfo',
+      '10': 'info'
+    },
+  ],
+};
+
+/// Descriptor for `UserExtensionUnit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userExtensionUnitDescriptor = $convert.base64Decode(
+    'ChFVc2VyRXh0ZW5zaW9uVW5pdBIeCgR1c2VyGAEgASgLMgouaGkuRW50aXR5UgR1c2VyEi0KBG'
+    'luZm8YAiABKAsyGS5oaS5kaWQuVXNlckV4dGVuc2lvbkluZm9SBGluZm8=');
