@@ -5210,6 +5210,28 @@ pub mod training_client {
                 .insert(GrpcMethod::new("hi.club.Training", "CreateContent"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn edit_digest(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::EditDigestReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Training/EditDigest",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Training", "EditDigest"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn edit_degest(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::EditDigestReq>,

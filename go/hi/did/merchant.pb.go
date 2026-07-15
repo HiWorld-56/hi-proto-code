@@ -327,7 +327,7 @@ func (x *MerchantListResp) GetList() []*MerchantInfo {
 	return nil
 }
 
-type UserProfileGetResp struct {
+type GetUserProfileResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
 	Mqtt          *hi.MqttCredentials    `protobuf:"bytes,2,opt,name=mqtt,proto3" json:"mqtt,omitempty"`
@@ -335,20 +335,20 @@ type UserProfileGetResp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserProfileGetResp) Reset() {
-	*x = UserProfileGetResp{}
+func (x *GetUserProfileResp) Reset() {
+	*x = GetUserProfileResp{}
 	mi := &file_hi_did_merchant_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserProfileGetResp) String() string {
+func (x *GetUserProfileResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserProfileGetResp) ProtoMessage() {}
+func (*GetUserProfileResp) ProtoMessage() {}
 
-func (x *UserProfileGetResp) ProtoReflect() protoreflect.Message {
+func (x *GetUserProfileResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_did_merchant_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -360,26 +360,26 @@ func (x *UserProfileGetResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserProfileGetResp.ProtoReflect.Descriptor instead.
-func (*UserProfileGetResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserProfileResp.ProtoReflect.Descriptor instead.
+func (*GetUserProfileResp) Descriptor() ([]byte, []int) {
 	return file_hi_did_merchant_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *UserProfileGetResp) GetBase() *hi.Entity {
+func (x *GetUserProfileResp) GetBase() *hi.Entity {
 	if x != nil {
 		return x.Base
 	}
 	return nil
 }
 
-func (x *UserProfileGetResp) GetMqtt() *hi.MqttCredentials {
+func (x *GetUserProfileResp) GetMqtt() *hi.MqttCredentials {
 	if x != nil {
 		return x.Mqtt
 	}
 	return nil
 }
 
-type UserProfileSetReq struct {
+type SetUserProfileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -388,20 +388,20 @@ type UserProfileSetReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserProfileSetReq) Reset() {
-	*x = UserProfileSetReq{}
+func (x *SetUserProfileReq) Reset() {
+	*x = SetUserProfileReq{}
 	mi := &file_hi_did_merchant_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserProfileSetReq) String() string {
+func (x *SetUserProfileReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserProfileSetReq) ProtoMessage() {}
+func (*SetUserProfileReq) ProtoMessage() {}
 
-func (x *UserProfileSetReq) ProtoReflect() protoreflect.Message {
+func (x *SetUserProfileReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_did_merchant_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -413,26 +413,26 @@ func (x *UserProfileSetReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserProfileSetReq.ProtoReflect.Descriptor instead.
-func (*UserProfileSetReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use SetUserProfileReq.ProtoReflect.Descriptor instead.
+func (*SetUserProfileReq) Descriptor() ([]byte, []int) {
 	return file_hi_did_merchant_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *UserProfileSetReq) GetDid() string {
+func (x *SetUserProfileReq) GetDid() string {
 	if x != nil {
 		return x.Did
 	}
 	return ""
 }
 
-func (x *UserProfileSetReq) GetName() string {
+func (x *SetUserProfileReq) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *UserProfileSetReq) GetAvatar() string {
+func (x *SetUserProfileReq) GetAvatar() string {
 	if x != nil {
 		return x.Avatar
 	}
@@ -664,11 +664,11 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x10MerchantListResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12(\n" +
 	"\x04list\x18\x02 \x03(\v2\x14.hi.did.MerchantInfoR\x04list\"]\n" +
-	"\x12UserProfileGetResp\x12\x1e\n" +
+	"\x12GetUserProfileResp\x12\x1e\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04base\x12'\n" +
 	"\x04mqtt\x18\x02 \x01(\v2\x13.hi.MqttCredentialsR\x04mqtt\"Q\n" +
-	"\x11UserProfileSetReq\x12\x10\n" +
+	"\x11SetUserProfileReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
 	"\x06avatar\x18\x03 \x01(\tR\x06avatar\",\n" +
@@ -681,16 +681,18 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"@\n" +
 	"\x0eOrderEventResp\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\tR\apayload2\xdb\x03\n" +
+	"\apayload\x18\x02 \x01(\tR\apayload2\xef\x04\n" +
 	"\bMerchant\x126\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\x125\n" +
 	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\x12)\n" +
 	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\x125\n" +
-	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.UserProfileGetResp\x12C\n" +
-	"\x0eSetUserProfile\x12\x19.hi.did.UserProfileSetReq\x1a\x16.google.protobuf.Empty\x12/\n" +
+	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.GetUserProfileResp\x12C\n" +
+	"\x0eSetUserProfile\x12\x19.hi.did.SetUserProfileReq\x1a\x16.google.protobuf.Empty\x12/\n" +
 	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\x12A\n" +
-	"\tSaveUesrs\x12\x1c.hi.did.MerchantUsersSaveReq\x1a\x16.google.protobuf.Empty\x12E\n" +
-	"\vDeleteUesrs\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty2t\n" +
+	"\tSaveUsers\x12\x1c.hi.did.MerchantUsersSaveReq\x1a\x16.google.protobuf.Empty\x12F\n" +
+	"\tSaveUesrs\x12\x1c.hi.did.MerchantUsersSaveReq\x1a\x16.google.protobuf.Empty\"\x03\x88\x02\x01\x12E\n" +
+	"\vDeleteUsers\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty\x12J\n" +
+	"\vDeleteUesrs\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty\"\x03\x88\x02\x012t\n" +
 	"\x03SSE\x120\n" +
 	"\vOrderEvents\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp0\x01\x12;\n" +
 	"\x06Notify\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.EmptyB~\n" +
@@ -715,8 +717,8 @@ var file_hi_did_merchant_proto_goTypes = []any{
 	(*MerchantGetResp)(nil),        // 1: hi.did.MerchantGetResp
 	(*MerchantSetReq)(nil),         // 2: hi.did.MerchantSetReq
 	(*MerchantListResp)(nil),       // 3: hi.did.MerchantListResp
-	(*UserProfileGetResp)(nil),     // 4: hi.did.UserProfileGetResp
-	(*UserProfileSetReq)(nil),      // 5: hi.did.UserProfileSetReq
+	(*GetUserProfileResp)(nil),     // 4: hi.did.GetUserProfileResp
+	(*SetUserProfileReq)(nil),      // 5: hi.did.SetUserProfileReq
 	(*MerchantUsersSaveReq)(nil),   // 6: hi.did.MerchantUsersSaveReq
 	(*MerchantUsersDeleteReq)(nil), // 7: hi.did.MerchantUsersDeleteReq
 	(*MerchantNotifyReq)(nil),      // 8: hi.did.MerchantNotifyReq
@@ -734,30 +736,34 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	11, // 3: hi.did.MerchantInfo.custom_tokens:type_name -> hi.did.Coin
 	0,  // 4: hi.did.MerchantGetResp.info:type_name -> hi.did.MerchantInfo
 	0,  // 5: hi.did.MerchantListResp.list:type_name -> hi.did.MerchantInfo
-	10, // 6: hi.did.UserProfileGetResp.base:type_name -> hi.Entity
-	12, // 7: hi.did.UserProfileGetResp.mqtt:type_name -> hi.MqttCredentials
+	10, // 6: hi.did.GetUserProfileResp.base:type_name -> hi.Entity
+	12, // 7: hi.did.GetUserProfileResp.mqtt:type_name -> hi.MqttCredentials
 	13, // 8: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
 	2,  // 9: hi.did.Merchant.Set:input_type -> hi.did.MerchantSetReq
 	14, // 10: hi.did.Merchant.List:input_type -> hi.DID
 	14, // 11: hi.did.Merchant.GetUserProfile:input_type -> hi.DID
-	5,  // 12: hi.did.Merchant.SetUserProfile:input_type -> hi.did.UserProfileSetReq
+	5,  // 12: hi.did.Merchant.SetUserProfile:input_type -> hi.did.SetUserProfileReq
 	14, // 13: hi.did.Merchant.GetMerchant:input_type -> hi.DID
-	6,  // 14: hi.did.Merchant.SaveUesrs:input_type -> hi.did.MerchantUsersSaveReq
-	7,  // 15: hi.did.Merchant.DeleteUesrs:input_type -> hi.did.MerchantUsersDeleteReq
-	14, // 16: hi.did.SSE.OrderEvents:input_type -> hi.DID
-	8,  // 17: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
-	1,  // 18: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
-	13, // 19: hi.did.Merchant.Set:output_type -> google.protobuf.Empty
-	3,  // 20: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
-	4,  // 21: hi.did.Merchant.GetUserProfile:output_type -> hi.did.UserProfileGetResp
-	13, // 22: hi.did.Merchant.SetUserProfile:output_type -> google.protobuf.Empty
-	1,  // 23: hi.did.Merchant.GetMerchant:output_type -> hi.did.MerchantGetResp
-	13, // 24: hi.did.Merchant.SaveUesrs:output_type -> google.protobuf.Empty
-	13, // 25: hi.did.Merchant.DeleteUesrs:output_type -> google.protobuf.Empty
-	9,  // 26: hi.did.SSE.OrderEvents:output_type -> hi.did.OrderEventResp
-	13, // 27: hi.did.SSE.Notify:output_type -> google.protobuf.Empty
-	18, // [18:28] is the sub-list for method output_type
-	8,  // [8:18] is the sub-list for method input_type
+	6,  // 14: hi.did.Merchant.SaveUsers:input_type -> hi.did.MerchantUsersSaveReq
+	6,  // 15: hi.did.Merchant.SaveUesrs:input_type -> hi.did.MerchantUsersSaveReq
+	7,  // 16: hi.did.Merchant.DeleteUsers:input_type -> hi.did.MerchantUsersDeleteReq
+	7,  // 17: hi.did.Merchant.DeleteUesrs:input_type -> hi.did.MerchantUsersDeleteReq
+	14, // 18: hi.did.SSE.OrderEvents:input_type -> hi.DID
+	8,  // 19: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
+	1,  // 20: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
+	13, // 21: hi.did.Merchant.Set:output_type -> google.protobuf.Empty
+	3,  // 22: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
+	4,  // 23: hi.did.Merchant.GetUserProfile:output_type -> hi.did.GetUserProfileResp
+	13, // 24: hi.did.Merchant.SetUserProfile:output_type -> google.protobuf.Empty
+	1,  // 25: hi.did.Merchant.GetMerchant:output_type -> hi.did.MerchantGetResp
+	13, // 26: hi.did.Merchant.SaveUsers:output_type -> google.protobuf.Empty
+	13, // 27: hi.did.Merchant.SaveUesrs:output_type -> google.protobuf.Empty
+	13, // 28: hi.did.Merchant.DeleteUsers:output_type -> google.protobuf.Empty
+	13, // 29: hi.did.Merchant.DeleteUesrs:output_type -> google.protobuf.Empty
+	9,  // 30: hi.did.SSE.OrderEvents:output_type -> hi.did.OrderEventResp
+	13, // 31: hi.did.SSE.Notify:output_type -> google.protobuf.Empty
+	20, // [20:32] is the sub-list for method output_type
+	8,  // [8:20] is the sub-list for method input_type
 	8,  // [8:8] is the sub-list for extension type_name
 	8,  // [8:8] is the sub-list for extension extendee
 	0,  // [0:8] is the sub-list for field type_name

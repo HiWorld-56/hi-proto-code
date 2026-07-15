@@ -118,9 +118,9 @@ final $typed_data.Uint8List merchantListRespDescriptor = $convert.base64Decode(
     'ChBNZXJjaGFudExpc3RSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIoCgRsaXN0GAIgAygLMh'
     'QuaGkuZGlkLk1lcmNoYW50SW5mb1IEbGlzdA==');
 
-@$core.Deprecated('Use userProfileGetRespDescriptor instead')
-const UserProfileGetResp$json = {
-  '1': 'UserProfileGetResp',
+@$core.Deprecated('Use getUserProfileRespDescriptor instead')
+const GetUserProfileResp$json = {
+  '1': 'GetUserProfileResp',
   '2': [
     {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
     {
@@ -134,14 +134,14 @@ const UserProfileGetResp$json = {
   ],
 };
 
-/// Descriptor for `UserProfileGetResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List userProfileGetRespDescriptor = $convert.base64Decode(
-    'ChJVc2VyUHJvZmlsZUdldFJlc3ASHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRInCg'
+/// Descriptor for `GetUserProfileResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getUserProfileRespDescriptor = $convert.base64Decode(
+    'ChJHZXRVc2VyUHJvZmlsZVJlc3ASHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRInCg'
     'RtcXR0GAIgASgLMhMuaGkuTXF0dENyZWRlbnRpYWxzUgRtcXR0');
 
-@$core.Deprecated('Use userProfileSetReqDescriptor instead')
-const UserProfileSetReq$json = {
-  '1': 'UserProfileSetReq',
+@$core.Deprecated('Use setUserProfileReqDescriptor instead')
+const SetUserProfileReq$json = {
+  '1': 'SetUserProfileReq',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
@@ -149,9 +149,9 @@ const UserProfileSetReq$json = {
   ],
 };
 
-/// Descriptor for `UserProfileSetReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List userProfileSetReqDescriptor = $convert.base64Decode(
-    'ChFVc2VyUHJvZmlsZVNldFJlcRIQCgNkaWQYASABKAlSA2RpZBISCgRuYW1lGAIgASgJUgRuYW'
+/// Descriptor for `SetUserProfileReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setUserProfileReqDescriptor = $convert.base64Decode(
+    'ChFTZXRVc2VyUHJvZmlsZVJlcRIQCgNkaWQYASABKAlSA2RpZBISCgRuYW1lGAIgASgJUgRuYW'
     '1lEhYKBmF2YXRhchgDIAEoCVIGYXZhdGFy');
 
 @$core.Deprecated('Use merchantUsersSaveReqDescriptor instead')

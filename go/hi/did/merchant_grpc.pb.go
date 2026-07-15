@@ -27,7 +27,9 @@ const (
 	Merchant_GetUserProfile_FullMethodName = "/hi.did.Merchant/GetUserProfile"
 	Merchant_SetUserProfile_FullMethodName = "/hi.did.Merchant/SetUserProfile"
 	Merchant_GetMerchant_FullMethodName    = "/hi.did.Merchant/GetMerchant"
+	Merchant_SaveUsers_FullMethodName      = "/hi.did.Merchant/SaveUsers"
 	Merchant_SaveUesrs_FullMethodName      = "/hi.did.Merchant/SaveUesrs"
+	Merchant_DeleteUsers_FullMethodName    = "/hi.did.Merchant/DeleteUsers"
 	Merchant_DeleteUesrs_FullMethodName    = "/hi.did.Merchant/DeleteUesrs"
 )
 
@@ -38,10 +40,14 @@ type MerchantClient interface {
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error)
 	Set(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	List(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantListResp, error)
-	GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*UserProfileGetResp, error)
-	SetUserProfile(ctx context.Context, in *UserProfileSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*GetUserProfileResp, error)
+	SetUserProfile(ctx context.Context, in *SetUserProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetMerchant(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantGetResp, error)
+	SaveUsers(ctx context.Context, in *MerchantUsersSaveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Deprecated: Do not use.
 	SaveUesrs(ctx context.Context, in *MerchantUsersSaveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteUsers(ctx context.Context, in *MerchantUsersDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Deprecated: Do not use.
 	DeleteUesrs(ctx context.Context, in *MerchantUsersDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -83,9 +89,9 @@ func (c *merchantClient) List(ctx context.Context, in *hi.DID, opts ...grpc.Call
 	return out, nil
 }
 
-func (c *merchantClient) GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*UserProfileGetResp, error) {
+func (c *merchantClient) GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*GetUserProfileResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserProfileGetResp)
+	out := new(GetUserProfileResp)
 	err := c.cc.Invoke(ctx, Merchant_GetUserProfile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -93,7 +99,7 @@ func (c *merchantClient) GetUserProfile(ctx context.Context, in *hi.DID, opts ..
 	return out, nil
 }
 
-func (c *merchantClient) SetUserProfile(ctx context.Context, in *UserProfileSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *merchantClient) SetUserProfile(ctx context.Context, in *SetUserProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Merchant_SetUserProfile_FullMethodName, in, out, cOpts...)
@@ -113,6 +119,17 @@ func (c *merchantClient) GetMerchant(ctx context.Context, in *hi.DID, opts ...gr
 	return out, nil
 }
 
+func (c *merchantClient) SaveUsers(ctx context.Context, in *MerchantUsersSaveReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Merchant_SaveUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *merchantClient) SaveUesrs(ctx context.Context, in *MerchantUsersSaveReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -123,6 +140,17 @@ func (c *merchantClient) SaveUesrs(ctx context.Context, in *MerchantUsersSaveReq
 	return out, nil
 }
 
+func (c *merchantClient) DeleteUsers(ctx context.Context, in *MerchantUsersDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Merchant_DeleteUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *merchantClient) DeleteUesrs(ctx context.Context, in *MerchantUsersDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -140,10 +168,14 @@ type MerchantServer interface {
 	Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error)
 	Set(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
 	List(context.Context, *hi.DID) (*MerchantListResp, error)
-	GetUserProfile(context.Context, *hi.DID) (*UserProfileGetResp, error)
-	SetUserProfile(context.Context, *UserProfileSetReq) (*emptypb.Empty, error)
+	GetUserProfile(context.Context, *hi.DID) (*GetUserProfileResp, error)
+	SetUserProfile(context.Context, *SetUserProfileReq) (*emptypb.Empty, error)
 	GetMerchant(context.Context, *hi.DID) (*MerchantGetResp, error)
+	SaveUsers(context.Context, *MerchantUsersSaveReq) (*emptypb.Empty, error)
+	// Deprecated: Do not use.
 	SaveUesrs(context.Context, *MerchantUsersSaveReq) (*emptypb.Empty, error)
+	DeleteUsers(context.Context, *MerchantUsersDeleteReq) (*emptypb.Empty, error)
+	// Deprecated: Do not use.
 	DeleteUesrs(context.Context, *MerchantUsersDeleteReq) (*emptypb.Empty, error)
 }
 
@@ -163,17 +195,23 @@ func (UnimplementedMerchantServer) Set(context.Context, *MerchantSetReq) (*empty
 func (UnimplementedMerchantServer) List(context.Context, *hi.DID) (*MerchantListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedMerchantServer) GetUserProfile(context.Context, *hi.DID) (*UserProfileGetResp, error) {
+func (UnimplementedMerchantServer) GetUserProfile(context.Context, *hi.DID) (*GetUserProfileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserProfile not implemented")
 }
-func (UnimplementedMerchantServer) SetUserProfile(context.Context, *UserProfileSetReq) (*emptypb.Empty, error) {
+func (UnimplementedMerchantServer) SetUserProfile(context.Context, *SetUserProfileReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetUserProfile not implemented")
 }
 func (UnimplementedMerchantServer) GetMerchant(context.Context, *hi.DID) (*MerchantGetResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMerchant not implemented")
 }
+func (UnimplementedMerchantServer) SaveUsers(context.Context, *MerchantUsersSaveReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveUsers not implemented")
+}
 func (UnimplementedMerchantServer) SaveUesrs(context.Context, *MerchantUsersSaveReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SaveUesrs not implemented")
+}
+func (UnimplementedMerchantServer) DeleteUsers(context.Context, *MerchantUsersDeleteReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteUsers not implemented")
 }
 func (UnimplementedMerchantServer) DeleteUesrs(context.Context, *MerchantUsersDeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteUesrs not implemented")
@@ -271,7 +309,7 @@ func _Merchant_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _Merchant_SetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserProfileSetReq)
+	in := new(SetUserProfileReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -283,7 +321,7 @@ func _Merchant_SetUserProfile_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: Merchant_SetUserProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).SetUserProfile(ctx, req.(*UserProfileSetReq))
+		return srv.(MerchantServer).SetUserProfile(ctx, req.(*SetUserProfileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -306,6 +344,24 @@ func _Merchant_GetMerchant_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_SaveUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MerchantUsersSaveReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).SaveUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_SaveUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).SaveUsers(ctx, req.(*MerchantUsersSaveReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Merchant_SaveUesrs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MerchantUsersSaveReq)
 	if err := dec(in); err != nil {
@@ -320,6 +376,24 @@ func _Merchant_SaveUesrs_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MerchantServer).SaveUesrs(ctx, req.(*MerchantUsersSaveReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Merchant_DeleteUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MerchantUsersDeleteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).DeleteUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_DeleteUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).DeleteUsers(ctx, req.(*MerchantUsersDeleteReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -374,8 +448,16 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Merchant_GetMerchant_Handler,
 		},
 		{
+			MethodName: "SaveUsers",
+			Handler:    _Merchant_SaveUsers_Handler,
+		},
+		{
 			MethodName: "SaveUesrs",
 			Handler:    _Merchant_SaveUesrs_Handler,
+		},
+		{
+			MethodName: "DeleteUsers",
+			Handler:    _Merchant_DeleteUsers_Handler,
 		},
 		{
 			MethodName: "DeleteUesrs",

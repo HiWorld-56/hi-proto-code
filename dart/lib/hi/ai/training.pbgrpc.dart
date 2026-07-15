@@ -119,6 +119,14 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$createContent, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> editDigest(
+    $0.EditDigestReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$editDigest, request, options: options);
+  }
+
+  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.Empty> editDegest(
     $0.EditDigestReq request, {
     $grpc.CallOptions? options,
@@ -201,6 +209,10 @@ class TrainingClient extends $grpc.Client {
           '/hi.ai.Training/CreateContent',
           ($0.CreateContentReq value) => value.writeToBuffer(),
           $0.CreateContentResp.fromBuffer);
+  static final _$editDigest = $grpc.ClientMethod<$0.EditDigestReq, $1.Empty>(
+      '/hi.ai.Training/EditDigest',
+      ($0.EditDigestReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$editDegest = $grpc.ClientMethod<$0.EditDigestReq, $1.Empty>(
       '/hi.ai.Training/EditDegest',
       ($0.EditDigestReq value) => value.writeToBuffer(),
@@ -308,6 +320,13 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CreateContentReq.fromBuffer(value),
         ($0.CreateContentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EditDigestReq, $1.Empty>(
+        'EditDigest',
+        editDigest_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.EditDigestReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditDigestReq, $1.Empty>(
         'EditDegest',
         editDegest_Pre,
@@ -428,6 +447,14 @@ abstract class TrainingServiceBase extends $grpc.Service {
 
   $async.Future<$0.CreateContentResp> createContent(
       $grpc.ServiceCall call, $0.CreateContentReq request);
+
+  $async.Future<$1.Empty> editDigest_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.EditDigestReq> $request) async {
+    return editDigest($call, await $request);
+  }
+
+  $async.Future<$1.Empty> editDigest(
+      $grpc.ServiceCall call, $0.EditDigestReq request);
 
   $async.Future<$1.Empty> editDegest_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditDigestReq> $request) async {

@@ -33,6 +33,7 @@ const (
 	Training_GetAgentFile_FullMethodName          = "/hi.club.Training/GetAgentFile"
 	Training_UpdateContent_FullMethodName         = "/hi.club.Training/UpdateContent"
 	Training_CreateContent_FullMethodName         = "/hi.club.Training/CreateContent"
+	Training_EditDigest_FullMethodName            = "/hi.club.Training/EditDigest"
 	Training_EditDegest_FullMethodName            = "/hi.club.Training/EditDegest"
 	Training_SetMemModel_FullMethodName           = "/hi.club.Training/SetMemModel"
 	Training_GetMemModel_FullMethodName           = "/hi.club.Training/GetMemModel"
@@ -57,6 +58,8 @@ type TrainingClient interface {
 	GetAgentFile(ctx context.Context, in *ai.GetAgentFileReq, opts ...grpc.CallOption) (*ai.GetAgentFileResp, error)
 	UpdateContent(ctx context.Context, in *ai.UpdateContentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateContent(ctx context.Context, in *ai.CreateContentReq, opts ...grpc.CallOption) (*ai.CreateContentResp, error)
+	EditDigest(ctx context.Context, in *ai.EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Deprecated: Do not use.
 	EditDegest(ctx context.Context, in *ai.EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetMemModel(ctx context.Context, in *ai.SetMemModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetMemModel(ctx context.Context, in *ai.GetMemModelReq, opts ...grpc.CallOption) (*ai.GetMemModelResp, error)
@@ -191,6 +194,17 @@ func (c *trainingClient) CreateContent(ctx context.Context, in *ai.CreateContent
 	return out, nil
 }
 
+func (c *trainingClient) EditDigest(ctx context.Context, in *ai.EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Training_EditDigest_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Deprecated: Do not use.
 func (c *trainingClient) EditDegest(ctx context.Context, in *ai.EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -240,6 +254,8 @@ type TrainingServer interface {
 	GetAgentFile(context.Context, *ai.GetAgentFileReq) (*ai.GetAgentFileResp, error)
 	UpdateContent(context.Context, *ai.UpdateContentReq) (*emptypb.Empty, error)
 	CreateContent(context.Context, *ai.CreateContentReq) (*ai.CreateContentResp, error)
+	EditDigest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error)
+	// Deprecated: Do not use.
 	EditDegest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error)
 	SetMemModel(context.Context, *ai.SetMemModelReq) (*emptypb.Empty, error)
 	GetMemModel(context.Context, *ai.GetMemModelReq) (*ai.GetMemModelResp, error)
@@ -287,6 +303,9 @@ func (UnimplementedTrainingServer) UpdateContent(context.Context, *ai.UpdateCont
 }
 func (UnimplementedTrainingServer) CreateContent(context.Context, *ai.CreateContentReq) (*ai.CreateContentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateContent not implemented")
+}
+func (UnimplementedTrainingServer) EditDigest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method EditDigest not implemented")
 }
 func (UnimplementedTrainingServer) EditDegest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditDegest not implemented")
@@ -533,6 +552,24 @@ func _Training_CreateContent_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Training_EditDigest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.EditDigestReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TrainingServer).EditDigest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Training_EditDigest_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TrainingServer).EditDigest(ctx, req.(*ai.EditDigestReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Training_EditDegest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.EditDigestReq)
 	if err := dec(in); err != nil {
@@ -641,6 +678,10 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateContent",
 			Handler:    _Training_CreateContent_Handler,
+		},
+		{
+			MethodName: "EditDigest",
+			Handler:    _Training_EditDigest_Handler,
 		},
 		{
 			MethodName: "EditDegest",

@@ -1763,14 +1763,14 @@ pub struct MerchantListResp {
     pub list: ::prost::alloc::vec::Vec<MerchantInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UserProfileGetResp {
+pub struct GetUserProfileResp {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "2")]
     pub mqtt: ::core::option::Option<super::MqttCredentials>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UserProfileSetReq {
+pub struct SetUserProfileReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
@@ -1959,7 +1959,7 @@ pub mod merchant_client {
             &mut self,
             request: impl tonic::IntoRequest<super::super::Did>,
         ) -> std::result::Result<
-            tonic::Response<super::UserProfileGetResp>,
+            tonic::Response<super::GetUserProfileResp>,
             tonic::Status,
         > {
             self.inner
@@ -1981,7 +1981,7 @@ pub mod merchant_client {
         }
         pub async fn set_user_profile(
             &mut self,
-            request: impl tonic::IntoRequest<super::UserProfileSetReq>,
+            request: impl tonic::IntoRequest<super::SetUserProfileReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -2024,6 +2024,27 @@ pub mod merchant_client {
                 .insert(GrpcMethod::new("hi.did.Merchant", "GetMerchant"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn save_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantUsersSaveReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/SaveUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "SaveUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn save_uesrs(
             &mut self,
             request: impl tonic::IntoRequest<super::MerchantUsersSaveReq>,
@@ -2044,6 +2065,28 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "SaveUesrs"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn delete_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantUsersDeleteReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/DeleteUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "DeleteUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        #[deprecated]
         pub async fn delete_uesrs(
             &mut self,
             request: impl tonic::IntoRequest<super::MerchantUsersDeleteReq>,

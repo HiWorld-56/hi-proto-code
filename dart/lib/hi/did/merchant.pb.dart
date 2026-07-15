@@ -416,8 +416,8 @@ class MerchantListResp extends $pb.GeneratedMessage {
   $pb.PbList<MerchantInfo> get list => $_getList(1);
 }
 
-class UserProfileGetResp extends $pb.GeneratedMessage {
-  factory UserProfileGetResp({
+class GetUserProfileResp extends $pb.GeneratedMessage {
+  factory GetUserProfileResp({
     $2.Entity? base,
     $2.MqttCredentials? mqtt,
   }) {
@@ -427,17 +427,17 @@ class UserProfileGetResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  UserProfileGetResp._();
+  GetUserProfileResp._();
 
-  factory UserProfileGetResp.fromBuffer($core.List<$core.int> data,
+  factory GetUserProfileResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory UserProfileGetResp.fromJson($core.String json,
+  factory GetUserProfileResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UserProfileGetResp',
+      _omitMessageNames ? '' : 'GetUserProfileResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
     ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
@@ -447,23 +447,23 @@ class UserProfileGetResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserProfileGetResp clone() => deepCopy();
+  GetUserProfileResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserProfileGetResp copyWith(void Function(UserProfileGetResp) updates) =>
-      super.copyWith((message) => updates(message as UserProfileGetResp))
-          as UserProfileGetResp;
+  GetUserProfileResp copyWith(void Function(GetUserProfileResp) updates) =>
+      super.copyWith((message) => updates(message as GetUserProfileResp))
+          as GetUserProfileResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static UserProfileGetResp create() => UserProfileGetResp._();
+  static GetUserProfileResp create() => GetUserProfileResp._();
   @$core.override
-  UserProfileGetResp createEmptyInstance() => create();
+  GetUserProfileResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static UserProfileGetResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UserProfileGetResp>(create);
-  static UserProfileGetResp? _defaultInstance;
+  static GetUserProfileResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetUserProfileResp>(create);
+  static GetUserProfileResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $2.Entity get base => $_getN(0);
@@ -488,8 +488,8 @@ class UserProfileGetResp extends $pb.GeneratedMessage {
   $2.MqttCredentials ensureMqtt() => $_ensure(1);
 }
 
-class UserProfileSetReq extends $pb.GeneratedMessage {
-  factory UserProfileSetReq({
+class SetUserProfileReq extends $pb.GeneratedMessage {
+  factory SetUserProfileReq({
     $core.String? did,
     $core.String? name,
     $core.String? avatar,
@@ -501,17 +501,17 @@ class UserProfileSetReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  UserProfileSetReq._();
+  SetUserProfileReq._();
 
-  factory UserProfileSetReq.fromBuffer($core.List<$core.int> data,
+  factory SetUserProfileReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory UserProfileSetReq.fromJson($core.String json,
+  factory SetUserProfileReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UserProfileSetReq',
+      _omitMessageNames ? '' : 'SetUserProfileReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
@@ -520,23 +520,23 @@ class UserProfileSetReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserProfileSetReq clone() => deepCopy();
+  SetUserProfileReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserProfileSetReq copyWith(void Function(UserProfileSetReq) updates) =>
-      super.copyWith((message) => updates(message as UserProfileSetReq))
-          as UserProfileSetReq;
+  SetUserProfileReq copyWith(void Function(SetUserProfileReq) updates) =>
+      super.copyWith((message) => updates(message as SetUserProfileReq))
+          as SetUserProfileReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static UserProfileSetReq create() => UserProfileSetReq._();
+  static SetUserProfileReq create() => SetUserProfileReq._();
   @$core.override
-  UserProfileSetReq createEmptyInstance() => create();
+  SetUserProfileReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static UserProfileSetReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UserProfileSetReq>(create);
-  static UserProfileSetReq? _defaultInstance;
+  static SetUserProfileReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetUserProfileReq>(create);
+  static SetUserProfileReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
