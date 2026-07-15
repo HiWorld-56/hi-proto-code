@@ -68,27 +68,11 @@ class GroupClient extends $grpc.Client {
     return $createUnaryCall(_$listMembers, request, options: options);
   }
 
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$0.GroupInfo> listMember(
-    $0.ListGroupMemberReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listMember, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.Q3GroupInfo> listQ3GroupMembers(
     $0.ListQ3GroupMemberReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listQ3GroupMembers, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$0.Q3GroupInfo> listQ3GroupMember(
-    $0.ListQ3GroupMemberReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listQ3GroupMember, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.GetGroupMemberTotalResp> getMemberTotal(
@@ -131,14 +115,6 @@ class GroupClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listMessages, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$0.ListGroupMessageResp> listMessage(
-    $0.ListGroupMessageReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listMessage, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> updateLastUUID(
@@ -200,19 +176,9 @@ class GroupClient extends $grpc.Client {
           '/hi.club.Group/ListMembers',
           ($0.ListGroupMemberReq value) => value.writeToBuffer(),
           $0.GroupInfo.fromBuffer);
-  static final _$listMember =
-      $grpc.ClientMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
-          '/hi.club.Group/ListMember',
-          ($0.ListGroupMemberReq value) => value.writeToBuffer(),
-          $0.GroupInfo.fromBuffer);
   static final _$listQ3GroupMembers =
       $grpc.ClientMethod<$0.ListQ3GroupMemberReq, $0.Q3GroupInfo>(
           '/hi.club.Group/ListQ3GroupMembers',
-          ($0.ListQ3GroupMemberReq value) => value.writeToBuffer(),
-          $0.Q3GroupInfo.fromBuffer);
-  static final _$listQ3GroupMember =
-      $grpc.ClientMethod<$0.ListQ3GroupMemberReq, $0.Q3GroupInfo>(
-          '/hi.club.Group/ListQ3GroupMember',
           ($0.ListQ3GroupMemberReq value) => value.writeToBuffer(),
           $0.Q3GroupInfo.fromBuffer);
   static final _$getMemberTotal =
@@ -239,11 +205,6 @@ class GroupClient extends $grpc.Client {
   static final _$listMessages =
       $grpc.ClientMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
           '/hi.club.Group/ListMessages',
-          ($0.ListGroupMessageReq value) => value.writeToBuffer(),
-          $0.ListGroupMessageResp.fromBuffer);
-  static final _$listMessage =
-      $grpc.ClientMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
-          '/hi.club.Group/ListMessage',
           ($0.ListGroupMessageReq value) => value.writeToBuffer(),
           $0.ListGroupMessageResp.fromBuffer);
   static final _$updateLastUUID = $grpc.ClientMethod<$0.LastUUID, $1.Empty>(
@@ -310,25 +271,9 @@ abstract class GroupServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.ListGroupMemberReq.fromBuffer(value),
         ($0.GroupInfo value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
-        'ListMember',
-        listMember_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.ListGroupMemberReq.fromBuffer(value),
-        ($0.GroupInfo value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListQ3GroupMemberReq, $0.Q3GroupInfo>(
         'ListQ3GroupMembers',
         listQ3GroupMembers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.ListQ3GroupMemberReq.fromBuffer(value),
-        ($0.Q3GroupInfo value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListQ3GroupMemberReq, $0.Q3GroupInfo>(
-        'ListQ3GroupMember',
-        listQ3GroupMember_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
@@ -375,15 +320,6 @@ abstract class GroupServiceBase extends $grpc.Service {
         $grpc.ServiceMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
             'ListMessages',
             listMessages_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.ListGroupMessageReq.fromBuffer(value),
-            ($0.ListGroupMessageResp value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
-            'ListMessage',
-            listMessage_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
@@ -465,28 +401,12 @@ abstract class GroupServiceBase extends $grpc.Service {
   $async.Future<$0.GroupInfo> listMembers(
       $grpc.ServiceCall call, $0.ListGroupMemberReq request);
 
-  $async.Future<$0.GroupInfo> listMember_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListGroupMemberReq> $request) async {
-    return listMember($call, await $request);
-  }
-
-  $async.Future<$0.GroupInfo> listMember(
-      $grpc.ServiceCall call, $0.ListGroupMemberReq request);
-
   $async.Future<$0.Q3GroupInfo> listQ3GroupMembers_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListQ3GroupMemberReq> $request) async {
     return listQ3GroupMembers($call, await $request);
   }
 
   $async.Future<$0.Q3GroupInfo> listQ3GroupMembers(
-      $grpc.ServiceCall call, $0.ListQ3GroupMemberReq request);
-
-  $async.Future<$0.Q3GroupInfo> listQ3GroupMember_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListQ3GroupMemberReq> $request) async {
-    return listQ3GroupMember($call, await $request);
-  }
-
-  $async.Future<$0.Q3GroupInfo> listQ3GroupMember(
       $grpc.ServiceCall call, $0.ListQ3GroupMemberReq request);
 
   $async.Future<$0.GetGroupMemberTotalResp> getMemberTotal_Pre(
@@ -535,15 +455,6 @@ abstract class GroupServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.ListGroupMessageResp> listMessages(
-      $grpc.ServiceCall call, $0.ListGroupMessageReq request);
-
-  $async.Future<$0.ListGroupMessageResp> listMessage_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.ListGroupMessageReq> $request) async {
-    return listMessage($call, await $request);
-  }
-
-  $async.Future<$0.ListGroupMessageResp> listMessage(
       $grpc.ServiceCall call, $0.ListGroupMessageReq request);
 
   $async.Future<$1.Empty> updateLastUUID_Pre(

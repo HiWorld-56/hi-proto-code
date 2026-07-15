@@ -1072,8 +1072,9 @@ class ListAgentResp extends $pb.GeneratedMessage {
   $pb.PbList<AgentInfo> get infos => $_getList(1);
 }
 
-class ListAgentByDidsReq extends $pb.GeneratedMessage {
-  factory ListAgentByDidsReq({
+/// Agent 列表入参(公开,免鉴权):合并原 ListAgent(全量)+ ListAgentByDids。
+class ListAgentReq extends $pb.GeneratedMessage {
+  factory ListAgentReq({
     $core.Iterable<$core.String>? dids,
     $2.Pagination? pagination,
   }) {
@@ -1083,17 +1084,17 @@ class ListAgentByDidsReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListAgentByDidsReq._();
+  ListAgentReq._();
 
-  factory ListAgentByDidsReq.fromBuffer($core.List<$core.int> data,
+  factory ListAgentReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAgentByDidsReq.fromJson($core.String json,
+  factory ListAgentReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentByDidsReq',
+      _omitMessageNames ? '' : 'ListAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'dids')
@@ -1102,23 +1103,23 @@ class ListAgentByDidsReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentByDidsReq clone() => deepCopy();
+  ListAgentReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentByDidsReq copyWith(void Function(ListAgentByDidsReq) updates) =>
-      super.copyWith((message) => updates(message as ListAgentByDidsReq))
-          as ListAgentByDidsReq;
+  ListAgentReq copyWith(void Function(ListAgentReq) updates) =>
+      super.copyWith((message) => updates(message as ListAgentReq))
+          as ListAgentReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAgentByDidsReq create() => ListAgentByDidsReq._();
+  static ListAgentReq create() => ListAgentReq._();
   @$core.override
-  ListAgentByDidsReq createEmptyInstance() => create();
+  ListAgentReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAgentByDidsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentByDidsReq>(create);
-  static ListAgentByDidsReq? _defaultInstance;
+  static ListAgentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentReq>(create);
+  static ListAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get dids => $_getList(0);
@@ -1135,65 +1136,70 @@ class ListAgentByDidsReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
-class ListAgentByDidsResp extends $pb.GeneratedMessage {
-  factory ListAgentByDidsResp({
-    $core.int? total,
-    $core.Iterable<AgentInfo>? infos,
+/// 收藏列表入参(需鉴权:查的是**调用者**收藏的,必须有身份)。
+/// 合并原 ListFavoriteAgents + FavoriteAgentListByDIDs。
+/// 注:favorite 不能做成 ListAgentReq 的 filter —— List 免鉴权、拿不到调用者身份。
+class ListFavoriteReq extends $pb.GeneratedMessage {
+  factory ListFavoriteReq({
+    $core.Iterable<$core.String>? dids,
+    $2.Pagination? pagination,
   }) {
     final result = create();
-    if (total != null) result.total = total;
-    if (infos != null) result.infos.addAll(infos);
+    if (dids != null) result.dids.addAll(dids);
+    if (pagination != null) result.pagination = pagination;
     return result;
   }
 
-  ListAgentByDidsResp._();
+  ListFavoriteReq._();
 
-  factory ListAgentByDidsResp.fromBuffer($core.List<$core.int> data,
+  factory ListFavoriteReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAgentByDidsResp.fromJson($core.String json,
+  factory ListFavoriteReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentByDidsResp',
+      _omitMessageNames ? '' : 'ListFavoriteReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: AgentInfo.create)
+    ..pPS(1, _omitFieldNames ? '' : 'dids')
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentByDidsResp clone() => deepCopy();
+  ListFavoriteReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentByDidsResp copyWith(void Function(ListAgentByDidsResp) updates) =>
-      super.copyWith((message) => updates(message as ListAgentByDidsResp))
-          as ListAgentByDidsResp;
+  ListFavoriteReq copyWith(void Function(ListFavoriteReq) updates) =>
+      super.copyWith((message) => updates(message as ListFavoriteReq))
+          as ListFavoriteReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAgentByDidsResp create() => ListAgentByDidsResp._();
+  static ListFavoriteReq create() => ListFavoriteReq._();
   @$core.override
-  ListAgentByDidsResp createEmptyInstance() => create();
+  ListFavoriteReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAgentByDidsResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentByDidsResp>(create);
-  static ListAgentByDidsResp? _defaultInstance;
+  static ListFavoriteReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFavoriteReq>(create);
+  static ListFavoriteReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get total => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set total($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTotal() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTotal() => $_clearField(1);
+  $pb.PbList<$core.String> get dids => $_getList(0);
 
   @$pb.TagNumber(2)
-  $pb.PbList<AgentInfo> get infos => $_getList(1);
+  $2.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class DeleteAgentReq extends $pb.GeneratedMessage {
@@ -1662,254 +1668,6 @@ class FavoriteAgentReq extends $pb.GeneratedMessage {
   $core.bool hasOpt() => $_has(1);
   @$pb.TagNumber(2)
   void clearOpt() => $_clearField(2);
-}
-
-class ListFavoriteAgentReq extends $pb.GeneratedMessage {
-  factory ListFavoriteAgentReq({
-    $2.Pagination? pagination,
-  }) {
-    final result = create();
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListFavoriteAgentReq._();
-
-  factory ListFavoriteAgentReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListFavoriteAgentReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListFavoriteAgentReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentReq copyWith(void Function(ListFavoriteAgentReq) updates) =>
-      super.copyWith((message) => updates(message as ListFavoriteAgentReq))
-          as ListFavoriteAgentReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentReq create() => ListFavoriteAgentReq._();
-  @$core.override
-  ListFavoriteAgentReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListFavoriteAgentReq>(create);
-  static ListFavoriteAgentReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $2.Pagination get pagination => $_getN(0);
-  @$pb.TagNumber(1)
-  set pagination($2.Pagination value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasPagination() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearPagination() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $2.Pagination ensurePagination() => $_ensure(0);
-}
-
-class ListFavoriteAgentResp extends $pb.GeneratedMessage {
-  factory ListFavoriteAgentResp({
-    $core.int? total,
-    $core.Iterable<AgentInfo>? infos,
-  }) {
-    final result = create();
-    if (total != null) result.total = total;
-    if (infos != null) result.infos.addAll(infos);
-    return result;
-  }
-
-  ListFavoriteAgentResp._();
-
-  factory ListFavoriteAgentResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListFavoriteAgentResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListFavoriteAgentResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: AgentInfo.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentResp copyWith(
-          void Function(ListFavoriteAgentResp) updates) =>
-      super.copyWith((message) => updates(message as ListFavoriteAgentResp))
-          as ListFavoriteAgentResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentResp create() => ListFavoriteAgentResp._();
-  @$core.override
-  ListFavoriteAgentResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListFavoriteAgentResp>(create);
-  static ListFavoriteAgentResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get total => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set total($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTotal() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTotal() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<AgentInfo> get infos => $_getList(1);
-}
-
-class ListFavoriteAgentByDIDsReq extends $pb.GeneratedMessage {
-  factory ListFavoriteAgentByDIDsReq({
-    $core.Iterable<$core.String>? dids,
-    $2.Pagination? pagination,
-  }) {
-    final result = create();
-    if (dids != null) result.dids.addAll(dids);
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListFavoriteAgentByDIDsReq._();
-
-  factory ListFavoriteAgentByDIDsReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListFavoriteAgentByDIDsReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListFavoriteAgentByDIDsReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'dids')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentByDIDsReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentByDIDsReq copyWith(
-          void Function(ListFavoriteAgentByDIDsReq) updates) =>
-      super.copyWith(
-              (message) => updates(message as ListFavoriteAgentByDIDsReq))
-          as ListFavoriteAgentByDIDsReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentByDIDsReq create() => ListFavoriteAgentByDIDsReq._();
-  @$core.override
-  ListFavoriteAgentByDIDsReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentByDIDsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListFavoriteAgentByDIDsReq>(create);
-  static ListFavoriteAgentByDIDsReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get dids => $_getList(0);
-
-  @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
-}
-
-class ListFavoriteAgentByDIDsResp extends $pb.GeneratedMessage {
-  factory ListFavoriteAgentByDIDsResp({
-    $core.int? total,
-    $core.Iterable<AgentInfo>? infos,
-  }) {
-    final result = create();
-    if (total != null) result.total = total;
-    if (infos != null) result.infos.addAll(infos);
-    return result;
-  }
-
-  ListFavoriteAgentByDIDsResp._();
-
-  factory ListFavoriteAgentByDIDsResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListFavoriteAgentByDIDsResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListFavoriteAgentByDIDsResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: AgentInfo.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentByDIDsResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteAgentByDIDsResp copyWith(
-          void Function(ListFavoriteAgentByDIDsResp) updates) =>
-      super.copyWith(
-              (message) => updates(message as ListFavoriteAgentByDIDsResp))
-          as ListFavoriteAgentByDIDsResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentByDIDsResp create() =>
-      ListFavoriteAgentByDIDsResp._();
-  @$core.override
-  ListFavoriteAgentByDIDsResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListFavoriteAgentByDIDsResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListFavoriteAgentByDIDsResp>(create);
-  static ListFavoriteAgentByDIDsResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get total => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set total($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTotal() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTotal() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<AgentInfo> get infos => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =

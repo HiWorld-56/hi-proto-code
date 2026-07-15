@@ -1354,24 +1354,20 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x04role\x18\x01 \x01(\tR\x04role\":\n" +
 	"\fMuteGroupReq\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12\x14\n" +
-	"\x05muted\x18\x02 \x01(\bR\x05muted2\xf9\t\n" +
+	"\x05muted\x18\x02 \x01(\bR\x05muted2\x95\b\n" +
 	"\x05Group\x12/\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x12.hi.club.GroupBase\x125\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\x12<\n" +
 	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\x124\n" +
 	"\x06Update\x12\x12.hi.club.GroupBase\x1a\x16.google.protobuf.Empty\x12>\n" +
-	"\vListMembers\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\x12B\n" +
-	"\n" +
-	"ListMember\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\"\x03\x88\x02\x01\x12I\n" +
-	"\x12ListQ3GroupMembers\x12\x1d.hi.club.ListQ3GroupMemberReq\x1a\x14.hi.club.Q3GroupInfo\x12M\n" +
-	"\x11ListQ3GroupMember\x12\x1d.hi.club.ListQ3GroupMemberReq\x1a\x14.hi.club.Q3GroupInfo\"\x03\x88\x02\x01\x12S\n" +
+	"\vListMembers\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\x12I\n" +
+	"\x12ListQ3GroupMembers\x12\x1d.hi.club.ListQ3GroupMemberReq\x1a\x14.hi.club.Q3GroupInfo\x12S\n" +
 	"\x0eGetMemberTotal\x12\x1f.hi.club.GetGroupMemberTotalReq\x1a .hi.club.GetGroupMemberTotalResp\x129\n" +
 	"\x06Invite\x12\x17.hi.club.InviteGroupReq\x1a\x16.google.protobuf.Empty\x125\n" +
 	"\x04Join\x12\x15.hi.club.JoinGroupReq\x1a\x16.google.protobuf.Empty\x125\n" +
 	"\x04Quit\x12\x15.hi.club.QuitGroupReq\x1a\x16.google.protobuf.Empty\x129\n" +
 	"\x06Remove\x12\x17.hi.club.RemoveGroupReq\x1a\x16.google.protobuf.Empty\x12K\n" +
-	"\fListMessages\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\x12O\n" +
-	"\vListMessage\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\"\x03\x88\x02\x01\x12;\n" +
+	"\fListMessages\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\x12;\n" +
 	"\x0eUpdateLastUUID\x12\x11.hi.club.LastUUID\x1a\x16.google.protobuf.Empty\x12=\n" +
 	"\rCheckLastUUID\x12\x15.hi.club.ListLastUUID\x1a\x15.hi.club.ListLastUUID\x126\n" +
 	"\aSetRole\x12\x13.hi.club.SetRoleReq\x1a\x16.google.protobuf.Empty\x124\n" +
@@ -1440,43 +1436,37 @@ var file_hi_club_group_proto_depIdxs = []int32{
 	6,  // 13: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
 	0,  // 14: hi.club.Group.Update:input_type -> hi.club.GroupBase
 	9,  // 15: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMemberReq
-	9,  // 16: hi.club.Group.ListMember:input_type -> hi.club.ListGroupMemberReq
-	11, // 17: hi.club.Group.ListQ3GroupMembers:input_type -> hi.club.ListQ3GroupMemberReq
-	11, // 18: hi.club.Group.ListQ3GroupMember:input_type -> hi.club.ListQ3GroupMemberReq
-	10, // 19: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
-	14, // 20: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
-	15, // 21: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
-	16, // 22: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
-	17, // 23: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
-	7,  // 24: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessageReq
-	7,  // 25: hi.club.Group.ListMessage:input_type -> hi.club.ListGroupMessageReq
-	18, // 26: hi.club.Group.UpdateLastUUID:input_type -> hi.club.LastUUID
-	19, // 27: hi.club.Group.CheckLastUUID:input_type -> hi.club.ListLastUUID
-	20, // 28: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
-	21, // 29: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
-	23, // 30: hi.club.Group.Mute:input_type -> hi.club.MuteGroupReq
-	0,  // 31: hi.club.Group.Get:output_type -> hi.club.GroupBase
-	0,  // 32: hi.club.Group.Create:output_type -> hi.club.GroupBase
-	0,  // 33: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
-	27, // 34: hi.club.Group.Update:output_type -> google.protobuf.Empty
-	3,  // 35: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
-	3,  // 36: hi.club.Group.ListMember:output_type -> hi.club.GroupInfo
-	12, // 37: hi.club.Group.ListQ3GroupMembers:output_type -> hi.club.Q3GroupInfo
-	12, // 38: hi.club.Group.ListQ3GroupMember:output_type -> hi.club.Q3GroupInfo
-	13, // 39: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
-	27, // 40: hi.club.Group.Invite:output_type -> google.protobuf.Empty
-	27, // 41: hi.club.Group.Join:output_type -> google.protobuf.Empty
-	27, // 42: hi.club.Group.Quit:output_type -> google.protobuf.Empty
-	27, // 43: hi.club.Group.Remove:output_type -> google.protobuf.Empty
-	8,  // 44: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessageResp
-	8,  // 45: hi.club.Group.ListMessage:output_type -> hi.club.ListGroupMessageResp
-	27, // 46: hi.club.Group.UpdateLastUUID:output_type -> google.protobuf.Empty
-	19, // 47: hi.club.Group.CheckLastUUID:output_type -> hi.club.ListLastUUID
-	27, // 48: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
-	22, // 49: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
-	27, // 50: hi.club.Group.Mute:output_type -> google.protobuf.Empty
-	31, // [31:51] is the sub-list for method output_type
-	11, // [11:31] is the sub-list for method input_type
+	11, // 16: hi.club.Group.ListQ3GroupMembers:input_type -> hi.club.ListQ3GroupMemberReq
+	10, // 17: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
+	14, // 18: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
+	15, // 19: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
+	16, // 20: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
+	17, // 21: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
+	7,  // 22: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessageReq
+	18, // 23: hi.club.Group.UpdateLastUUID:input_type -> hi.club.LastUUID
+	19, // 24: hi.club.Group.CheckLastUUID:input_type -> hi.club.ListLastUUID
+	20, // 25: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
+	21, // 26: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
+	23, // 27: hi.club.Group.Mute:input_type -> hi.club.MuteGroupReq
+	0,  // 28: hi.club.Group.Get:output_type -> hi.club.GroupBase
+	0,  // 29: hi.club.Group.Create:output_type -> hi.club.GroupBase
+	0,  // 30: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
+	27, // 31: hi.club.Group.Update:output_type -> google.protobuf.Empty
+	3,  // 32: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
+	12, // 33: hi.club.Group.ListQ3GroupMembers:output_type -> hi.club.Q3GroupInfo
+	13, // 34: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
+	27, // 35: hi.club.Group.Invite:output_type -> google.protobuf.Empty
+	27, // 36: hi.club.Group.Join:output_type -> google.protobuf.Empty
+	27, // 37: hi.club.Group.Quit:output_type -> google.protobuf.Empty
+	27, // 38: hi.club.Group.Remove:output_type -> google.protobuf.Empty
+	8,  // 39: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessageResp
+	27, // 40: hi.club.Group.UpdateLastUUID:output_type -> google.protobuf.Empty
+	19, // 41: hi.club.Group.CheckLastUUID:output_type -> hi.club.ListLastUUID
+	27, // 42: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
+	22, // 43: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
+	27, // 44: hi.club.Group.Mute:output_type -> google.protobuf.Empty
+	28, // [28:45] is the sub-list for method output_type
+	11, // [11:28] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
 	11, // [11:11] is the sub-list for extension extendee
 	0,  // [0:11] is the sub-list for field type_name

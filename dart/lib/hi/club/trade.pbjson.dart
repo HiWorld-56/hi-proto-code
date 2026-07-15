@@ -250,9 +250,10 @@ const ListTradeReq$json = {
   '1': 'ListTradeReq',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
     {
       '1': 'pagination',
-      '3': 2,
+      '3': 3,
       '4': 1,
       '5': 11,
       '6': '.hi.Pagination',
@@ -263,8 +264,8 @@ const ListTradeReq$json = {
 
 /// Descriptor for `ListTradeReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listTradeReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0VHJhZGVSZXESEAoDZGlkGAEgASgJUgNkaWQSLgoKcGFnaW5hdGlvbhgCIAEoCzIOLm'
-    'hpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+    'CgxMaXN0VHJhZGVSZXESEAoDZGlkGAEgASgJUgNkaWQSDgoCaWQYAiABKAlSAmlkEi4KCnBhZ2'
+    'luYXRpb24YAyABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
 
 @$core.Deprecated('Use listTradeRespDescriptor instead')
 const ListTradeResp$json = {
@@ -286,45 +287,3 @@ const ListTradeResp$json = {
 final $typed_data.Uint8List listTradeRespDescriptor = $convert.base64Decode(
     'Cg1MaXN0VHJhZGVSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIoCgRsaXN0GAIgAygLMhQuaG'
     'kuY2x1Yi5UcmFkZURldGFpbFIEbGlzdA==');
-
-@$core.Deprecated('Use listAllTradeReqDescriptor instead')
-const ListAllTradeReq$json = {
-  '1': 'ListAllTradeReq',
-  '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
-    {
-      '1': 'pagination',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
-    },
-  ],
-};
-
-/// Descriptor for `ListAllTradeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAllTradeReqDescriptor = $convert.base64Decode(
-    'Cg9MaXN0QWxsVHJhZGVSZXESDgoCaWQYASABKAlSAmlkEi4KCnBhZ2luYXRpb24YAiABKAsyDi'
-    '5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
-
-@$core.Deprecated('Use listAllTradeRespDescriptor instead')
-const ListAllTradeResp$json = {
-  '1': 'ListAllTradeResp',
-  '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
-    {
-      '1': 'list',
-      '3': 2,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.club.TradeDetail',
-      '10': 'list'
-    },
-  ],
-};
-
-/// Descriptor for `ListAllTradeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAllTradeRespDescriptor = $convert.base64Decode(
-    'ChBMaXN0QWxsVHJhZGVSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIoCgRsaXN0GAIgAygLMh'
-    'QuaGkuY2x1Yi5UcmFkZURldGFpbFIEbGlzdA==');

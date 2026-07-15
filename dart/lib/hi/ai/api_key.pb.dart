@@ -15,8 +15,6 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
-
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 class ApiKeyInfo extends $pb.GeneratedMessage {
@@ -425,75 +423,6 @@ class DeleteApiKeyReq extends $pb.GeneratedMessage {
   $core.bool hasApiKey() => $_has(0);
   @$pb.TagNumber(1)
   void clearApiKey() => $_clearField(1);
-}
-
-class ListAgentReq extends $pb.GeneratedMessage {
-  factory ListAgentReq({
-    $core.String? agentDid,
-    $2.Pagination? pagination,
-  }) {
-    final result = create();
-    if (agentDid != null) result.agentDid = agentDid;
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListAgentReq._();
-
-  factory ListAgentReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListAgentReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agentDid')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentReq copyWith(void Function(ListAgentReq) updates) =>
-      super.copyWith((message) => updates(message as ListAgentReq))
-          as ListAgentReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListAgentReq create() => ListAgentReq._();
-  @$core.override
-  ListAgentReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentReq>(create);
-  static ListAgentReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agentDid => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agentDid($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgentDid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgentDid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 const $core.bool _omitFieldNames =

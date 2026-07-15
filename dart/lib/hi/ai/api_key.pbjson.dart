@@ -120,24 +120,3 @@ const DeleteApiKeyReq$json = {
 /// Descriptor for `DeleteApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteApiKeyReqDescriptor = $convert
     .base64Decode('Cg9EZWxldGVBcGlLZXlSZXESFwoHYXBpX2tleRgBIAEoCVIGYXBpS2V5');
-
-@$core.Deprecated('Use listAgentReqDescriptor instead')
-const ListAgentReq$json = {
-  '1': 'ListAgentReq',
-  '2': [
-    {'1': 'agent_did', '3': 1, '4': 1, '5': 9, '10': 'agentDid'},
-    {
-      '1': 'pagination',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
-    },
-  ],
-};
-
-/// Descriptor for `ListAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAgentReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0QWdlbnRSZXESGwoJYWdlbnRfZGlkGAEgASgJUghhZ2VudERpZBIuCgpwYWdpbmF0aW'
-    '9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');

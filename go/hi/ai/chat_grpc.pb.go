@@ -27,7 +27,6 @@ const (
 	Chat_ClearContext_FullMethodName       = "/hi.ai.Chat/ClearContext"
 	Chat_GetContext_FullMethodName         = "/hi.ai.Chat/GetContext"
 	Chat_ListAgentDelays_FullMethodName    = "/hi.ai.Chat/ListAgentDelays"
-	Chat_ListAgentDelay_FullMethodName     = "/hi.ai.Chat/ListAgentDelay"
 	Chat_GetAgentDelay_FullMethodName      = "/hi.ai.Chat/GetAgentDelay"
 	Chat_SimpleTextToSpeech_FullMethodName = "/hi.ai.Chat/SimpleTextToSpeech"
 	Chat_SimpleSpeechToText_FullMethodName = "/hi.ai.Chat/SimpleSpeechToText"
@@ -52,8 +51,6 @@ type ChatClient interface {
 	ClearContext(ctx context.Context, in *ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetContext(ctx context.Context, in *GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error)
 	ListAgentDelays(ctx context.Context, in *ListAgentDelayReq, opts ...grpc.CallOption) (*ListAgentDelayResp, error)
-	// Deprecated: Do not use.
-	ListAgentDelay(ctx context.Context, in *ListAgentDelayReq, opts ...grpc.CallOption) (*ListAgentDelayResp, error)
 	GetAgentDelay(ctx context.Context, in *GetAgentDelayReq, opts ...grpc.CallOption) (*GetAgentDelayResp, error)
 	SimpleTextToSpeech(ctx context.Context, in *SimpleTextToSpeechReq, opts ...grpc.CallOption) (*SimpleTextToSpeechResp, error)
 	SimpleSpeechToText(ctx context.Context, in *SimpleSpeechToTextReq, opts ...grpc.CallOption) (*SimpleSpeechToTextResp, error)
@@ -146,17 +143,6 @@ func (c *chatClient) ListAgentDelays(ctx context.Context, in *ListAgentDelayReq,
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentDelayResp)
 	err := c.cc.Invoke(ctx, Chat_ListAgentDelays_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
-func (c *chatClient) ListAgentDelay(ctx context.Context, in *ListAgentDelayReq, opts ...grpc.CallOption) (*ListAgentDelayResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentDelayResp)
-	err := c.cc.Invoke(ctx, Chat_ListAgentDelay_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -266,8 +252,6 @@ type ChatServer interface {
 	ClearContext(context.Context, *ClearContextReq) (*emptypb.Empty, error)
 	GetContext(context.Context, *GetContextReq) (*GetContextResp, error)
 	ListAgentDelays(context.Context, *ListAgentDelayReq) (*ListAgentDelayResp, error)
-	// Deprecated: Do not use.
-	ListAgentDelay(context.Context, *ListAgentDelayReq) (*ListAgentDelayResp, error)
 	GetAgentDelay(context.Context, *GetAgentDelayReq) (*GetAgentDelayResp, error)
 	SimpleTextToSpeech(context.Context, *SimpleTextToSpeechReq) (*SimpleTextToSpeechResp, error)
 	SimpleSpeechToText(context.Context, *SimpleSpeechToTextReq) (*SimpleSpeechToTextResp, error)
@@ -306,9 +290,6 @@ func (UnimplementedChatServer) GetContext(context.Context, *GetContextReq) (*Get
 }
 func (UnimplementedChatServer) ListAgentDelays(context.Context, *ListAgentDelayReq) (*ListAgentDelayResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAgentDelays not implemented")
-}
-func (UnimplementedChatServer) ListAgentDelay(context.Context, *ListAgentDelayReq) (*ListAgentDelayResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAgentDelay not implemented")
 }
 func (UnimplementedChatServer) GetAgentDelay(context.Context, *GetAgentDelayReq) (*GetAgentDelayResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAgentDelay not implemented")
@@ -472,24 +453,6 @@ func _Chat_ListAgentDelays_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ChatServer).ListAgentDelays(ctx, req.(*ListAgentDelayReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Chat_ListAgentDelay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAgentDelayReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).ListAgentDelay(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_ListAgentDelay_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).ListAgentDelay(ctx, req.(*ListAgentDelayReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -686,10 +649,6 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAgentDelays",
 			Handler:    _Chat_ListAgentDelays_Handler,
-		},
-		{
-			MethodName: "ListAgentDelay",
-			Handler:    _Chat_ListAgentDelay_Handler,
 		},
 		{
 			MethodName: "GetAgentDelay",

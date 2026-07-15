@@ -20,11 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserACL_Add_FullMethodName      = "/hi.ai.UserACL/Add"
-	UserACL_Delete_FullMethodName   = "/hi.ai.UserACL/Delete"
-	UserACL_List_FullMethodName     = "/hi.ai.UserACL/List"
-	UserACL_ListType_FullMethodName = "/hi.ai.UserACL/ListType"
-	UserACL_Edit_FullMethodName     = "/hi.ai.UserACL/Edit"
+	UserACL_Add_FullMethodName       = "/hi.ai.UserACL/Add"
+	UserACL_Delete_FullMethodName    = "/hi.ai.UserACL/Delete"
+	UserACL_List_FullMethodName      = "/hi.ai.UserACL/List"
+	UserACL_ListTypes_FullMethodName = "/hi.ai.UserACL/ListTypes"
+	UserACL_Edit_FullMethodName      = "/hi.ai.UserACL/Edit"
 )
 
 // UserACLClient is the client API for UserACL service.
@@ -36,7 +36,7 @@ type UserACLClient interface {
 	Add(ctx context.Context, in *UserACLAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *UserACLDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	List(ctx context.Context, in *UserACLListReq, opts ...grpc.CallOption) (*UserACLListResp, error)
-	ListType(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserACLListTypeResp, error)
+	ListTypes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserACLListTypeResp, error)
 	Edit(ctx context.Context, in *UserACLEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -78,10 +78,10 @@ func (c *userACLClient) List(ctx context.Context, in *UserACLListReq, opts ...gr
 	return out, nil
 }
 
-func (c *userACLClient) ListType(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserACLListTypeResp, error) {
+func (c *userACLClient) ListTypes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserACLListTypeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserACLListTypeResp)
-	err := c.cc.Invoke(ctx, UserACL_ListType_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserACL_ListTypes_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ type UserACLServer interface {
 	Add(context.Context, *UserACLAddReq) (*emptypb.Empty, error)
 	Delete(context.Context, *UserACLDeleteReq) (*emptypb.Empty, error)
 	List(context.Context, *UserACLListReq) (*UserACLListResp, error)
-	ListType(context.Context, *emptypb.Empty) (*UserACLListTypeResp, error)
+	ListTypes(context.Context, *emptypb.Empty) (*UserACLListTypeResp, error)
 	Edit(context.Context, *UserACLEditReq) (*emptypb.Empty, error)
 }
 
@@ -127,8 +127,8 @@ func (UnimplementedUserACLServer) Delete(context.Context, *UserACLDeleteReq) (*e
 func (UnimplementedUserACLServer) List(context.Context, *UserACLListReq) (*UserACLListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedUserACLServer) ListType(context.Context, *emptypb.Empty) (*UserACLListTypeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListType not implemented")
+func (UnimplementedUserACLServer) ListTypes(context.Context, *emptypb.Empty) (*UserACLListTypeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTypes not implemented")
 }
 func (UnimplementedUserACLServer) Edit(context.Context, *UserACLEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -207,20 +207,20 @@ func _UserACL_List_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserACL_ListType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserACL_ListTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserACLServer).ListType(ctx, in)
+		return srv.(UserACLServer).ListTypes(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserACL_ListType_FullMethodName,
+		FullMethod: UserACL_ListTypes_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserACLServer).ListType(ctx, req.(*emptypb.Empty))
+		return srv.(UserACLServer).ListTypes(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -263,8 +263,8 @@ var UserACL_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserACL_List_Handler,
 		},
 		{
-			MethodName: "ListType",
-			Handler:    _UserACL_ListType_Handler,
+			MethodName: "ListTypes",
+			Handler:    _UserACL_ListTypes_Handler,
 		},
 		{
 			MethodName: "Edit",

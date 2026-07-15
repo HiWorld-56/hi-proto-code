@@ -24,7 +24,6 @@ const (
 	User_GetCurrentUser_FullMethodName         = "/hi.club.User/GetCurrentUser"
 	User_UpdateUser_FullMethodName             = "/hi.club.User/UpdateUser"
 	User_ListSystemMessages_FullMethodName     = "/hi.club.User/ListSystemMessages"
-	User_ListSystemMessage_FullMethodName      = "/hi.club.User/ListSystemMessage"
 	User_DeleteSystemMessage_FullMethodName    = "/hi.club.User/DeleteSystemMessage"
 	User_DeleteAllSystemMessage_FullMethodName = "/hi.club.User/DeleteAllSystemMessage"
 	User_HandleSystemMessage_FullMethodName    = "/hi.club.User/HandleSystemMessage"
@@ -34,12 +33,10 @@ const (
 	User_AddFriend_FullMethodName              = "/hi.club.User/AddFriend"
 	User_DeleteFriend_FullMethodName           = "/hi.club.User/DeleteFriend"
 	User_ListGroups_FullMethodName             = "/hi.club.User/ListGroups"
-	User_ListGroup_FullMethodName              = "/hi.club.User/ListGroup"
 	User_GetOther_FullMethodName               = "/hi.club.User/GetOther"
 	User_UnprocessedSysMsgCount_FullMethodName = "/hi.club.User/UnprocessedSysMsgCount"
 	User_SetRemark_FullMethodName              = "/hi.club.User/SetRemark"
 	User_ListOnlineUsers_FullMethodName        = "/hi.club.User/ListOnlineUsers"
-	User_ListOnlineUser_FullMethodName         = "/hi.club.User/ListOnlineUser"
 )
 
 // UserClient is the client API for User service.
@@ -49,8 +46,6 @@ type UserClient interface {
 	GetCurrentUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
 	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListSystemMessages(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error)
-	// Deprecated: Do not use.
-	ListSystemMessage(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error)
 	DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	HandleSystemMessage(ctx context.Context, in *HandleSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -60,14 +55,10 @@ type UserClient interface {
 	AddFriend(ctx context.Context, in *AddFriendReq, opts ...grpc.CallOption) (*AddFriendResp, error)
 	DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupResp, error)
-	// Deprecated: Do not use.
-	ListGroup(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupResp, error)
 	GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*hi.Entity, error)
 	UnprocessedSysMsgCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(ctx context.Context, in *SetRemarkReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListOnlineUsers(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error)
-	// Deprecated: Do not use.
-	ListOnlineUser(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error)
 }
 
 type userClient struct {
@@ -102,17 +93,6 @@ func (c *userClient) ListSystemMessages(ctx context.Context, in *ListSystemMessa
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SystemMessages)
 	err := c.cc.Invoke(ctx, User_ListSystemMessages_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
-func (c *userClient) ListSystemMessage(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SystemMessages)
-	err := c.cc.Invoke(ctx, User_ListSystemMessage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -209,17 +189,6 @@ func (c *userClient) ListGroups(ctx context.Context, in *emptypb.Empty, opts ...
 	return out, nil
 }
 
-// Deprecated: Do not use.
-func (c *userClient) ListGroup(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListGroupResp)
-	err := c.cc.Invoke(ctx, User_ListGroup_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userClient) GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*hi.Entity, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.Entity)
@@ -260,17 +229,6 @@ func (c *userClient) ListOnlineUsers(ctx context.Context, in *ListOnlineUserReq,
 	return out, nil
 }
 
-// Deprecated: Do not use.
-func (c *userClient) ListOnlineUser(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListOnlineUserResp)
-	err := c.cc.Invoke(ctx, User_ListOnlineUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
@@ -278,8 +236,6 @@ type UserServer interface {
 	GetCurrentUser(context.Context, *emptypb.Empty) (*UserInfo, error)
 	UpdateUser(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
 	ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error)
-	// Deprecated: Do not use.
-	ListSystemMessage(context.Context, *ListSystemMessageReq) (*SystemMessages, error)
 	DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error)
@@ -289,14 +245,10 @@ type UserServer interface {
 	AddFriend(context.Context, *AddFriendReq) (*AddFriendResp, error)
 	DeleteFriend(context.Context, *DeleteFriendReq) (*emptypb.Empty, error)
 	ListGroups(context.Context, *emptypb.Empty) (*ListGroupResp, error)
-	// Deprecated: Do not use.
-	ListGroup(context.Context, *emptypb.Empty) (*ListGroupResp, error)
 	GetOther(context.Context, *GetUserReq) (*hi.Entity, error)
 	UnprocessedSysMsgCount(context.Context, *emptypb.Empty) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error)
 	ListOnlineUsers(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error)
-	// Deprecated: Do not use.
-	ListOnlineUser(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error)
 }
 
 // UnimplementedUserServer should be embedded to have
@@ -314,9 +266,6 @@ func (UnimplementedUserServer) UpdateUser(context.Context, *UpdateUserReq) (*emp
 }
 func (UnimplementedUserServer) ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSystemMessages not implemented")
-}
-func (UnimplementedUserServer) ListSystemMessage(context.Context, *ListSystemMessageReq) (*SystemMessages, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSystemMessage not implemented")
 }
 func (UnimplementedUserServer) DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteSystemMessage not implemented")
@@ -345,9 +294,6 @@ func (UnimplementedUserServer) DeleteFriend(context.Context, *DeleteFriendReq) (
 func (UnimplementedUserServer) ListGroups(context.Context, *emptypb.Empty) (*ListGroupResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGroups not implemented")
 }
-func (UnimplementedUserServer) ListGroup(context.Context, *emptypb.Empty) (*ListGroupResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListGroup not implemented")
-}
 func (UnimplementedUserServer) GetOther(context.Context, *GetUserReq) (*hi.Entity, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOther not implemented")
 }
@@ -359,9 +305,6 @@ func (UnimplementedUserServer) SetRemark(context.Context, *SetRemarkReq) (*empty
 }
 func (UnimplementedUserServer) ListOnlineUsers(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListOnlineUsers not implemented")
-}
-func (UnimplementedUserServer) ListOnlineUser(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListOnlineUser not implemented")
 }
 func (UnimplementedUserServer) testEmbeddedByValue() {}
 
@@ -433,24 +376,6 @@ func _User_ListSystemMessages_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).ListSystemMessages(ctx, req.(*ListSystemMessageReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _User_ListSystemMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListSystemMessageReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).ListSystemMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_ListSystemMessage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListSystemMessage(ctx, req.(*ListSystemMessageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -617,24 +542,6 @@ func _User_ListGroups_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_ListGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).ListGroup(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_ListGroup_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListGroup(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _User_GetOther_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserReq)
 	if err := dec(in); err != nil {
@@ -707,24 +614,6 @@ func _User_ListOnlineUsers_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_ListOnlineUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListOnlineUserReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).ListOnlineUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_ListOnlineUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListOnlineUser(ctx, req.(*ListOnlineUserReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -743,10 +632,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSystemMessages",
 			Handler:    _User_ListSystemMessages_Handler,
-		},
-		{
-			MethodName: "ListSystemMessage",
-			Handler:    _User_ListSystemMessage_Handler,
 		},
 		{
 			MethodName: "DeleteSystemMessage",
@@ -785,10 +670,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_ListGroups_Handler,
 		},
 		{
-			MethodName: "ListGroup",
-			Handler:    _User_ListGroup_Handler,
-		},
-		{
 			MethodName: "GetOther",
 			Handler:    _User_GetOther_Handler,
 		},
@@ -803,10 +684,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListOnlineUsers",
 			Handler:    _User_ListOnlineUsers_Handler,
-		},
-		{
-			MethodName: "ListOnlineUser",
-			Handler:    _User_ListOnlineUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1924,7 +1924,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01B\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
-	"\x06_state2\xbb\b\n" +
+	"\x06_state2\xef\a\n" +
 	"\x04Chat\x12-\n" +
 	"\x06Simple\x12\x10.hi.ai.SimpleReq\x1a\x11.hi.ai.DialogResp\x12=\n" +
 	"\vGenerateCid\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.GenerateCidResp\x12-\n" +
@@ -1933,8 +1933,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\fClearContext\x12\x16.hi.ai.ClearContextReq\x1a\x16.google.protobuf.Empty\x129\n" +
 	"\n" +
 	"GetContext\x12\x14.hi.ai.GetContextReq\x1a\x15.hi.ai.GetContextResp\x12F\n" +
-	"\x0fListAgentDelays\x12\x18.hi.ai.ListAgentDelayReq\x1a\x19.hi.ai.ListAgentDelayResp\x12J\n" +
-	"\x0eListAgentDelay\x12\x18.hi.ai.ListAgentDelayReq\x1a\x19.hi.ai.ListAgentDelayResp\"\x03\x88\x02\x01\x12B\n" +
+	"\x0fListAgentDelays\x12\x18.hi.ai.ListAgentDelayReq\x1a\x19.hi.ai.ListAgentDelayResp\x12B\n" +
 	"\rGetAgentDelay\x12\x17.hi.ai.GetAgentDelayReq\x1a\x18.hi.ai.GetAgentDelayResp\x12Q\n" +
 	"\x12SimpleTextToSpeech\x12\x1c.hi.ai.SimpleTextToSpeechReq\x1a\x1d.hi.ai.SimpleTextToSpeechResp\x12Q\n" +
 	"\x12SimpleSpeechToText\x12\x1c.hi.ai.SimpleSpeechToTextReq\x1a\x1d.hi.ai.SimpleSpeechToTextResp\x12;\n" +
@@ -2022,35 +2021,33 @@ var file_hi_ai_chat_proto_depIdxs = []int32{
 	6,  // 24: hi.ai.Chat.ClearContext:input_type -> hi.ai.ClearContextReq
 	7,  // 25: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
 	21, // 26: hi.ai.Chat.ListAgentDelays:input_type -> hi.ai.ListAgentDelayReq
-	21, // 27: hi.ai.Chat.ListAgentDelay:input_type -> hi.ai.ListAgentDelayReq
-	24, // 28: hi.ai.Chat.GetAgentDelay:input_type -> hi.ai.GetAgentDelayReq
-	10, // 29: hi.ai.Chat.SimpleTextToSpeech:input_type -> hi.ai.SimpleTextToSpeechReq
-	12, // 30: hi.ai.Chat.SimpleSpeechToText:input_type -> hi.ai.SimpleSpeechToTextReq
-	14, // 31: hi.ai.Chat.SpeechToSpeech:input_type -> hi.ai.SpeechToSpeechReq
-	17, // 32: hi.ai.Chat.SpeechToSpeech2:input_type -> hi.ai.ToolCallResultsReq
-	15, // 33: hi.ai.Chat.TextToText:input_type -> hi.ai.TextToTextReq
-	17, // 34: hi.ai.Chat.TextToText2:input_type -> hi.ai.ToolCallResultsReq
-	26, // 35: hi.ai.Chat.SpeechToText:input_type -> hi.ai.SpeechToTextReq
-	17, // 36: hi.ai.Chat.SpeechToText2:input_type -> hi.ai.ToolCallResultsReq
-	4,  // 37: hi.ai.Chat.Simple:output_type -> hi.ai.DialogResp
-	2,  // 38: hi.ai.Chat.GenerateCid:output_type -> hi.ai.GenerateCidResp
-	4,  // 39: hi.ai.Chat.Dialog:output_type -> hi.ai.DialogResp
-	5,  // 40: hi.ai.Chat.DialogStream:output_type -> hi.ai.DialogStreamResp
-	31, // 41: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
-	9,  // 42: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
-	23, // 43: hi.ai.Chat.ListAgentDelays:output_type -> hi.ai.ListAgentDelayResp
-	23, // 44: hi.ai.Chat.ListAgentDelay:output_type -> hi.ai.ListAgentDelayResp
-	25, // 45: hi.ai.Chat.GetAgentDelay:output_type -> hi.ai.GetAgentDelayResp
-	11, // 46: hi.ai.Chat.SimpleTextToSpeech:output_type -> hi.ai.SimpleTextToSpeechResp
-	13, // 47: hi.ai.Chat.SimpleSpeechToText:output_type -> hi.ai.SimpleSpeechToTextResp
-	20, // 48: hi.ai.Chat.SpeechToSpeech:output_type -> hi.ai.ChatResp
-	20, // 49: hi.ai.Chat.SpeechToSpeech2:output_type -> hi.ai.ChatResp
-	20, // 50: hi.ai.Chat.TextToText:output_type -> hi.ai.ChatResp
-	20, // 51: hi.ai.Chat.TextToText2:output_type -> hi.ai.ChatResp
-	20, // 52: hi.ai.Chat.SpeechToText:output_type -> hi.ai.ChatResp
-	20, // 53: hi.ai.Chat.SpeechToText2:output_type -> hi.ai.ChatResp
-	37, // [37:54] is the sub-list for method output_type
-	20, // [20:37] is the sub-list for method input_type
+	24, // 27: hi.ai.Chat.GetAgentDelay:input_type -> hi.ai.GetAgentDelayReq
+	10, // 28: hi.ai.Chat.SimpleTextToSpeech:input_type -> hi.ai.SimpleTextToSpeechReq
+	12, // 29: hi.ai.Chat.SimpleSpeechToText:input_type -> hi.ai.SimpleSpeechToTextReq
+	14, // 30: hi.ai.Chat.SpeechToSpeech:input_type -> hi.ai.SpeechToSpeechReq
+	17, // 31: hi.ai.Chat.SpeechToSpeech2:input_type -> hi.ai.ToolCallResultsReq
+	15, // 32: hi.ai.Chat.TextToText:input_type -> hi.ai.TextToTextReq
+	17, // 33: hi.ai.Chat.TextToText2:input_type -> hi.ai.ToolCallResultsReq
+	26, // 34: hi.ai.Chat.SpeechToText:input_type -> hi.ai.SpeechToTextReq
+	17, // 35: hi.ai.Chat.SpeechToText2:input_type -> hi.ai.ToolCallResultsReq
+	4,  // 36: hi.ai.Chat.Simple:output_type -> hi.ai.DialogResp
+	2,  // 37: hi.ai.Chat.GenerateCid:output_type -> hi.ai.GenerateCidResp
+	4,  // 38: hi.ai.Chat.Dialog:output_type -> hi.ai.DialogResp
+	5,  // 39: hi.ai.Chat.DialogStream:output_type -> hi.ai.DialogStreamResp
+	31, // 40: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
+	9,  // 41: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
+	23, // 42: hi.ai.Chat.ListAgentDelays:output_type -> hi.ai.ListAgentDelayResp
+	25, // 43: hi.ai.Chat.GetAgentDelay:output_type -> hi.ai.GetAgentDelayResp
+	11, // 44: hi.ai.Chat.SimpleTextToSpeech:output_type -> hi.ai.SimpleTextToSpeechResp
+	13, // 45: hi.ai.Chat.SimpleSpeechToText:output_type -> hi.ai.SimpleSpeechToTextResp
+	20, // 46: hi.ai.Chat.SpeechToSpeech:output_type -> hi.ai.ChatResp
+	20, // 47: hi.ai.Chat.SpeechToSpeech2:output_type -> hi.ai.ChatResp
+	20, // 48: hi.ai.Chat.TextToText:output_type -> hi.ai.ChatResp
+	20, // 49: hi.ai.Chat.TextToText2:output_type -> hi.ai.ChatResp
+	20, // 50: hi.ai.Chat.SpeechToText:output_type -> hi.ai.ChatResp
+	20, // 51: hi.ai.Chat.SpeechToText2:output_type -> hi.ai.ChatResp
+	36, // [36:52] is the sub-list for method output_type
+	20, // [20:36] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
 	20, // [20:20] is the sub-list for extension extendee
 	0,  // [0:20] is the sub-list for field type_name

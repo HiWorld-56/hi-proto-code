@@ -85,14 +85,6 @@ class ChatClient extends $grpc.Client {
     return $createUnaryCall(_$listAgentDelays, request, options: options);
   }
 
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$0.ListAgentDelayResp> listAgentDelay(
-    $0.ListAgentDelayReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listAgentDelay, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.GetAgentDelayResp> getAgentDelay(
     $0.GetAgentDelayReq request, {
     $grpc.CallOptions? options,
@@ -188,11 +180,6 @@ class ChatClient extends $grpc.Client {
   static final _$listAgentDelays =
       $grpc.ClientMethod<$0.ListAgentDelayReq, $0.ListAgentDelayResp>(
           '/hi.ai.Chat/ListAgentDelays',
-          ($0.ListAgentDelayReq value) => value.writeToBuffer(),
-          $0.ListAgentDelayResp.fromBuffer);
-  static final _$listAgentDelay =
-      $grpc.ClientMethod<$0.ListAgentDelayReq, $0.ListAgentDelayResp>(
-          '/hi.ai.Chat/ListAgentDelay',
           ($0.ListAgentDelayReq value) => value.writeToBuffer(),
           $0.ListAgentDelayResp.fromBuffer);
   static final _$getAgentDelay =
@@ -291,13 +278,6 @@ abstract class ChatServiceBase extends $grpc.Service {
     $addMethod($grpc.ServiceMethod<$0.ListAgentDelayReq, $0.ListAgentDelayResp>(
         'ListAgentDelays',
         listAgentDelays_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListAgentDelayReq.fromBuffer(value),
-        ($0.ListAgentDelayResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListAgentDelayReq, $0.ListAgentDelayResp>(
-        'ListAgentDelay',
-        listAgentDelay_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.ListAgentDelayReq.fromBuffer(value),
@@ -429,15 +409,6 @@ abstract class ChatServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.ListAgentDelayResp> listAgentDelays(
-      $grpc.ServiceCall call, $0.ListAgentDelayReq request);
-
-  $async.Future<$0.ListAgentDelayResp> listAgentDelay_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.ListAgentDelayReq> $request) async {
-    return listAgentDelay($call, await $request);
-  }
-
-  $async.Future<$0.ListAgentDelayResp> listAgentDelay(
       $grpc.ServiceCall call, $0.ListAgentDelayReq request);
 
   $async.Future<$0.GetAgentDelayResp> getAgentDelay_Pre($grpc.ServiceCall $call,

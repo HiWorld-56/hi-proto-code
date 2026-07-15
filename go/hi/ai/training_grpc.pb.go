@@ -25,7 +25,6 @@ const (
 	Training_TrainingClear_FullMethodName         = "/hi.ai.Training/TrainingClear"
 	Training_UploadFile_FullMethodName            = "/hi.ai.Training/UploadFile"
 	Training_ListAgentFiles_FullMethodName        = "/hi.ai.Training/ListAgentFiles"
-	Training_ListAgentFile_FullMethodName         = "/hi.ai.Training/ListAgentFile"
 	Training_DeleteAgentFile_FullMethodName       = "/hi.ai.Training/DeleteAgentFile"
 	Training_DeleteAgentFiles_FullMethodName      = "/hi.ai.Training/DeleteAgentFiles"
 	Training_DeleteAgentFilesByDid_FullMethodName = "/hi.ai.Training/DeleteAgentFilesByDid"
@@ -33,7 +32,6 @@ const (
 	Training_UpdateContent_FullMethodName         = "/hi.ai.Training/UpdateContent"
 	Training_CreateContent_FullMethodName         = "/hi.ai.Training/CreateContent"
 	Training_EditDigest_FullMethodName            = "/hi.ai.Training/EditDigest"
-	Training_EditDegest_FullMethodName            = "/hi.ai.Training/EditDegest"
 	Training_SetMemModel_FullMethodName           = "/hi.ai.Training/SetMemModel"
 	Training_GetMemModel_FullMethodName           = "/hi.ai.Training/GetMemModel"
 )
@@ -49,8 +47,6 @@ type TrainingClient interface {
 	TrainingClear(ctx context.Context, in *TrainingClearReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UploadFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListAgentFiles(ctx context.Context, in *ListAgentFileReq, opts ...grpc.CallOption) (*ListAgentFileResp, error)
-	// Deprecated: Do not use.
-	ListAgentFile(ctx context.Context, in *ListAgentFileReq, opts ...grpc.CallOption) (*ListAgentFileResp, error)
 	DeleteAgentFile(ctx context.Context, in *DeleteAgentFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAgentFiles(ctx context.Context, in *DeleteAgentFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAgentFilesByDid(ctx context.Context, in *DeleteAgentFilesByDidReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -58,8 +54,6 @@ type TrainingClient interface {
 	UpdateContent(ctx context.Context, in *UpdateContentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateContent(ctx context.Context, in *CreateContentReq, opts ...grpc.CallOption) (*CreateContentResp, error)
 	EditDigest(ctx context.Context, in *EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Deprecated: Do not use.
-	EditDegest(ctx context.Context, in *EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetMemModel(ctx context.Context, in *SetMemModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetMemModel(ctx context.Context, in *GetMemModelReq, opts ...grpc.CallOption) (*GetMemModelResp, error)
 }
@@ -116,17 +110,6 @@ func (c *trainingClient) ListAgentFiles(ctx context.Context, in *ListAgentFileRe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentFileResp)
 	err := c.cc.Invoke(ctx, Training_ListAgentFiles_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
-func (c *trainingClient) ListAgentFile(ctx context.Context, in *ListAgentFileReq, opts ...grpc.CallOption) (*ListAgentFileResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentFileResp)
-	err := c.cc.Invoke(ctx, Training_ListAgentFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -203,17 +186,6 @@ func (c *trainingClient) EditDigest(ctx context.Context, in *EditDigestReq, opts
 	return out, nil
 }
 
-// Deprecated: Do not use.
-func (c *trainingClient) EditDegest(ctx context.Context, in *EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_EditDegest_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *trainingClient) SetMemModel(ctx context.Context, in *SetMemModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -245,8 +217,6 @@ type TrainingServer interface {
 	TrainingClear(context.Context, *TrainingClearReq) (*emptypb.Empty, error)
 	UploadFile(context.Context, *UploadFileReq) (*emptypb.Empty, error)
 	ListAgentFiles(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error)
-	// Deprecated: Do not use.
-	ListAgentFile(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error)
 	DeleteAgentFile(context.Context, *DeleteAgentFileReq) (*emptypb.Empty, error)
 	DeleteAgentFiles(context.Context, *DeleteAgentFilesReq) (*emptypb.Empty, error)
 	DeleteAgentFilesByDid(context.Context, *DeleteAgentFilesByDidReq) (*emptypb.Empty, error)
@@ -254,8 +224,6 @@ type TrainingServer interface {
 	UpdateContent(context.Context, *UpdateContentReq) (*emptypb.Empty, error)
 	CreateContent(context.Context, *CreateContentReq) (*CreateContentResp, error)
 	EditDigest(context.Context, *EditDigestReq) (*emptypb.Empty, error)
-	// Deprecated: Do not use.
-	EditDegest(context.Context, *EditDigestReq) (*emptypb.Empty, error)
 	SetMemModel(context.Context, *SetMemModelReq) (*emptypb.Empty, error)
 	GetMemModel(context.Context, *GetMemModelReq) (*GetMemModelResp, error)
 }
@@ -282,9 +250,6 @@ func (UnimplementedTrainingServer) UploadFile(context.Context, *UploadFileReq) (
 func (UnimplementedTrainingServer) ListAgentFiles(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAgentFiles not implemented")
 }
-func (UnimplementedTrainingServer) ListAgentFile(context.Context, *ListAgentFileReq) (*ListAgentFileResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAgentFile not implemented")
-}
 func (UnimplementedTrainingServer) DeleteAgentFile(context.Context, *DeleteAgentFileReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteAgentFile not implemented")
 }
@@ -305,9 +270,6 @@ func (UnimplementedTrainingServer) CreateContent(context.Context, *CreateContent
 }
 func (UnimplementedTrainingServer) EditDigest(context.Context, *EditDigestReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditDigest not implemented")
-}
-func (UnimplementedTrainingServer) EditDegest(context.Context, *EditDigestReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method EditDegest not implemented")
 }
 func (UnimplementedTrainingServer) SetMemModel(context.Context, *SetMemModelReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetMemModel not implemented")
@@ -421,24 +383,6 @@ func _Training_ListAgentFiles_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TrainingServer).ListAgentFiles(ctx, req.(*ListAgentFileReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Training_ListAgentFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAgentFileReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TrainingServer).ListAgentFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Training_ListAgentFile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).ListAgentFile(ctx, req.(*ListAgentFileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -569,24 +513,6 @@ func _Training_EditDigest_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_EditDegest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EditDigestReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TrainingServer).EditDegest(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Training_EditDegest_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).EditDegest(ctx, req.(*EditDigestReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Training_SetMemModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetMemModelReq)
 	if err := dec(in); err != nil {
@@ -651,10 +577,6 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Training_ListAgentFiles_Handler,
 		},
 		{
-			MethodName: "ListAgentFile",
-			Handler:    _Training_ListAgentFile_Handler,
-		},
-		{
 			MethodName: "DeleteAgentFile",
 			Handler:    _Training_DeleteAgentFile_Handler,
 		},
@@ -681,10 +603,6 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditDigest",
 			Handler:    _Training_EditDigest_Handler,
-		},
-		{
-			MethodName: "EditDegest",
-			Handler:    _Training_EditDegest_Handler,
 		},
 		{
 			MethodName: "SetMemModel",

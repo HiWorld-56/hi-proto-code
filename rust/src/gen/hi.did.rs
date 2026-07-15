@@ -2044,27 +2044,6 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "SaveUsers"));
             self.inner.unary(req, path, codec).await
         }
-        #[deprecated]
-        pub async fn save_uesrs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MerchantUsersSaveReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/SaveUesrs",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "SaveUesrs"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn delete_users(
             &mut self,
             request: impl tonic::IntoRequest<super::MerchantUsersDeleteReq>,
@@ -2084,28 +2063,6 @@ pub mod merchant_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Merchant", "DeleteUsers"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
-        pub async fn delete_uesrs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MerchantUsersDeleteReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/DeleteUesrs",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "DeleteUesrs"));
             self.inner.unary(req, path, codec).await
         }
     }

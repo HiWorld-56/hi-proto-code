@@ -1050,14 +1050,12 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"!FRIEND_REQUEST_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eFRIEND_REQUEST_STATUS_REJECTED\x10\x01\x12\x1e\n" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
-	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xb0\n" +
-	"\n" +
+	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xcc\b\n" +
 	"\x04User\x12;\n" +
 	"\x0eGetCurrentUser\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\x12<\n" +
 	"\n" +
 	"UpdateUser\x12\x16.hi.club.UpdateUserReq\x1a\x16.google.protobuf.Empty\x12L\n" +
-	"\x12ListSystemMessages\x12\x1d.hi.club.ListSystemMessageReq\x1a\x17.hi.club.SystemMessages\x12P\n" +
-	"\x11ListSystemMessage\x12\x1d.hi.club.ListSystemMessageReq\x1a\x17.hi.club.SystemMessages\"\x03\x88\x02\x01\x12N\n" +
+	"\x12ListSystemMessages\x12\x1d.hi.club.ListSystemMessageReq\x1a\x17.hi.club.SystemMessages\x12N\n" +
 	"\x13DeleteSystemMessage\x12\x1f.hi.club.DeleteSystemMessageReq\x1a\x16.google.protobuf.Empty\x12H\n" +
 	"\x16DeleteAllSystemMessage\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\x12N\n" +
 	"\x13HandleSystemMessage\x12\x1f.hi.club.HandleSystemMessageReq\x1a\x16.google.protobuf.Empty\x12@\n" +
@@ -1067,14 +1065,12 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\tAddFriend\x12\x15.hi.club.AddFriendReq\x1a\x16.hi.club.AddFriendResp\x12@\n" +
 	"\fDeleteFriend\x12\x18.hi.club.DeleteFriendReq\x1a\x16.google.protobuf.Empty\x12<\n" +
 	"\n" +
-	"ListGroups\x12\x16.google.protobuf.Empty\x1a\x16.hi.club.ListGroupResp\x12@\n" +
-	"\tListGroup\x12\x16.google.protobuf.Empty\x1a\x16.hi.club.ListGroupResp\"\x03\x88\x02\x01\x12+\n" +
+	"ListGroups\x12\x16.google.protobuf.Empty\x1a\x16.hi.club.ListGroupResp\x12+\n" +
 	"\bGetOther\x12\x13.hi.club.GetUserReq\x1a\n" +
 	".hi.Entity\x12U\n" +
 	"\x16UnprocessedSysMsgCount\x12\x16.google.protobuf.Empty\x1a#.hi.club.UnprocessedSysMsgCountResp\x12:\n" +
 	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\x12J\n" +
-	"\x0fListOnlineUsers\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserResp\x12N\n" +
-	"\x0eListOnlineUser\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserResp\"\x03\x88\x02\x01B\x80\x01\n" +
+	"\x0fListOnlineUsers\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserRespB\x80\x01\n" +
 	"\vcom.hi.clubB\tUserProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -1132,43 +1128,37 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	23, // 11: hi.club.User.GetCurrentUser:input_type -> google.protobuf.Empty
 	15, // 12: hi.club.User.UpdateUser:input_type -> hi.club.UpdateUserReq
 	2,  // 13: hi.club.User.ListSystemMessages:input_type -> hi.club.ListSystemMessageReq
-	2,  // 14: hi.club.User.ListSystemMessage:input_type -> hi.club.ListSystemMessageReq
-	4,  // 15: hi.club.User.DeleteSystemMessage:input_type -> hi.club.DeleteSystemMessageReq
-	23, // 16: hi.club.User.DeleteAllSystemMessage:input_type -> google.protobuf.Empty
-	5,  // 17: hi.club.User.HandleSystemMessage:input_type -> hi.club.HandleSystemMessageReq
-	23, // 18: hi.club.User.ListFriends:input_type -> google.protobuf.Empty
-	23, // 19: hi.club.User.ListServitors:input_type -> google.protobuf.Empty
-	23, // 20: hi.club.User.ListRelations:input_type -> google.protobuf.Empty
-	9,  // 21: hi.club.User.AddFriend:input_type -> hi.club.AddFriendReq
-	11, // 22: hi.club.User.DeleteFriend:input_type -> hi.club.DeleteFriendReq
-	23, // 23: hi.club.User.ListGroups:input_type -> google.protobuf.Empty
-	23, // 24: hi.club.User.ListGroup:input_type -> google.protobuf.Empty
-	13, // 25: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
-	23, // 26: hi.club.User.UnprocessedSysMsgCount:input_type -> google.protobuf.Empty
-	16, // 27: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
-	17, // 28: hi.club.User.ListOnlineUsers:input_type -> hi.club.ListOnlineUserReq
-	17, // 29: hi.club.User.ListOnlineUser:input_type -> hi.club.ListOnlineUserReq
-	1,  // 30: hi.club.User.GetCurrentUser:output_type -> hi.club.UserInfo
-	23, // 31: hi.club.User.UpdateUser:output_type -> google.protobuf.Empty
-	3,  // 32: hi.club.User.ListSystemMessages:output_type -> hi.club.SystemMessages
-	3,  // 33: hi.club.User.ListSystemMessage:output_type -> hi.club.SystemMessages
-	23, // 34: hi.club.User.DeleteSystemMessage:output_type -> google.protobuf.Empty
-	23, // 35: hi.club.User.DeleteAllSystemMessage:output_type -> google.protobuf.Empty
-	23, // 36: hi.club.User.HandleSystemMessage:output_type -> google.protobuf.Empty
-	7,  // 37: hi.club.User.ListFriends:output_type -> hi.club.RelationListResp
-	7,  // 38: hi.club.User.ListServitors:output_type -> hi.club.RelationListResp
-	8,  // 39: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
-	10, // 40: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
-	23, // 41: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
-	12, // 42: hi.club.User.ListGroups:output_type -> hi.club.ListGroupResp
-	12, // 43: hi.club.User.ListGroup:output_type -> hi.club.ListGroupResp
-	19, // 44: hi.club.User.GetOther:output_type -> hi.Entity
-	14, // 45: hi.club.User.UnprocessedSysMsgCount:output_type -> hi.club.UnprocessedSysMsgCountResp
-	23, // 46: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
-	18, // 47: hi.club.User.ListOnlineUsers:output_type -> hi.club.ListOnlineUserResp
-	18, // 48: hi.club.User.ListOnlineUser:output_type -> hi.club.ListOnlineUserResp
-	30, // [30:49] is the sub-list for method output_type
-	11, // [11:30] is the sub-list for method input_type
+	4,  // 14: hi.club.User.DeleteSystemMessage:input_type -> hi.club.DeleteSystemMessageReq
+	23, // 15: hi.club.User.DeleteAllSystemMessage:input_type -> google.protobuf.Empty
+	5,  // 16: hi.club.User.HandleSystemMessage:input_type -> hi.club.HandleSystemMessageReq
+	23, // 17: hi.club.User.ListFriends:input_type -> google.protobuf.Empty
+	23, // 18: hi.club.User.ListServitors:input_type -> google.protobuf.Empty
+	23, // 19: hi.club.User.ListRelations:input_type -> google.protobuf.Empty
+	9,  // 20: hi.club.User.AddFriend:input_type -> hi.club.AddFriendReq
+	11, // 21: hi.club.User.DeleteFriend:input_type -> hi.club.DeleteFriendReq
+	23, // 22: hi.club.User.ListGroups:input_type -> google.protobuf.Empty
+	13, // 23: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
+	23, // 24: hi.club.User.UnprocessedSysMsgCount:input_type -> google.protobuf.Empty
+	16, // 25: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
+	17, // 26: hi.club.User.ListOnlineUsers:input_type -> hi.club.ListOnlineUserReq
+	1,  // 27: hi.club.User.GetCurrentUser:output_type -> hi.club.UserInfo
+	23, // 28: hi.club.User.UpdateUser:output_type -> google.protobuf.Empty
+	3,  // 29: hi.club.User.ListSystemMessages:output_type -> hi.club.SystemMessages
+	23, // 30: hi.club.User.DeleteSystemMessage:output_type -> google.protobuf.Empty
+	23, // 31: hi.club.User.DeleteAllSystemMessage:output_type -> google.protobuf.Empty
+	23, // 32: hi.club.User.HandleSystemMessage:output_type -> google.protobuf.Empty
+	7,  // 33: hi.club.User.ListFriends:output_type -> hi.club.RelationListResp
+	7,  // 34: hi.club.User.ListServitors:output_type -> hi.club.RelationListResp
+	8,  // 35: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
+	10, // 36: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
+	23, // 37: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
+	12, // 38: hi.club.User.ListGroups:output_type -> hi.club.ListGroupResp
+	19, // 39: hi.club.User.GetOther:output_type -> hi.Entity
+	14, // 40: hi.club.User.UnprocessedSysMsgCount:output_type -> hi.club.UnprocessedSysMsgCountResp
+	23, // 41: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
+	18, // 42: hi.club.User.ListOnlineUsers:output_type -> hi.club.ListOnlineUserResp
+	27, // [27:43] is the sub-list for method output_type
+	11, // [11:27] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
 	11, // [11:11] is the sub-list for extension extendee
 	0,  // [0:11] is the sub-list for field type_name

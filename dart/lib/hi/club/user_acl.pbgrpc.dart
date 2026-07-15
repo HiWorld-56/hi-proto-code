@@ -54,11 +54,11 @@ class UserACLClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.UserACLListTypeResp> listType(
+  $grpc.ResponseFuture<$0.UserACLListTypeResp> listTypes(
     $1.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listType, request, options: options);
+    return $createUnaryCall(_$listTypes, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> edit(
@@ -83,9 +83,9 @@ class UserACLClient extends $grpc.Client {
           '/hi.club.UserACL/List',
           ($0.UserACLListReq value) => value.writeToBuffer(),
           $0.UserACLListResp.fromBuffer);
-  static final _$listType =
+  static final _$listTypes =
       $grpc.ClientMethod<$1.Empty, $0.UserACLListTypeResp>(
-          '/hi.club.UserACL/ListType',
+          '/hi.club.UserACL/ListTypes',
           ($1.Empty value) => value.writeToBuffer(),
           $0.UserACLListTypeResp.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.UserACLEditReq, $1.Empty>(
@@ -121,8 +121,8 @@ abstract class UserACLServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.UserACLListReq.fromBuffer(value),
         ($0.UserACLListResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.Empty, $0.UserACLListTypeResp>(
-        'ListType',
-        listType_Pre,
+        'ListTypes',
+        listTypes_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
@@ -159,12 +159,12 @@ abstract class UserACLServiceBase extends $grpc.Service {
   $async.Future<$0.UserACLListResp> list(
       $grpc.ServiceCall call, $0.UserACLListReq request);
 
-  $async.Future<$0.UserACLListTypeResp> listType_Pre(
+  $async.Future<$0.UserACLListTypeResp> listTypes_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
-    return listType($call, await $request);
+    return listTypes($call, await $request);
   }
 
-  $async.Future<$0.UserACLListTypeResp> listType(
+  $async.Future<$0.UserACLListTypeResp> listTypes(
       $grpc.ServiceCall call, $1.Empty request);
 
   $async.Future<$1.Empty> edit_Pre($grpc.ServiceCall $call,

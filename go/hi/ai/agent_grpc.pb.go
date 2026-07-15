@@ -8,7 +8,6 @@ package ai
 
 import (
 	context "context"
-	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,28 +20,21 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_ListLlmModels_FullMethodName           = "/hi.ai.Agent/ListLlmModels"
-	Agent_ListLLM_FullMethodName                 = "/hi.ai.Agent/ListLLM"
-	Agent_ListEmbeddings_FullMethodName          = "/hi.ai.Agent/ListEmbeddings"
-	Agent_ListEmbedding_FullMethodName           = "/hi.ai.Agent/ListEmbedding"
-	Agent_ListSttModels_FullMethodName           = "/hi.ai.Agent/ListSttModels"
-	Agent_ListSTT_FullMethodName                 = "/hi.ai.Agent/ListSTT"
-	Agent_ListTtsModels_FullMethodName           = "/hi.ai.Agent/ListTtsModels"
-	Agent_ListTTS_FullMethodName                 = "/hi.ai.Agent/ListTTS"
-	Agent_AgentConfig_FullMethodName             = "/hi.ai.Agent/AgentConfig"
-	Agent_CreateAgent_FullMethodName             = "/hi.ai.Agent/CreateAgent"
-	Agent_EditAgent_FullMethodName               = "/hi.ai.Agent/EditAgent"
-	Agent_ListAgent_FullMethodName               = "/hi.ai.Agent/ListAgent"
-	Agent_ListAgentByDids_FullMethodName         = "/hi.ai.Agent/ListAgentByDids"
-	Agent_DeleteAgent_FullMethodName             = "/hi.ai.Agent/DeleteAgent"
-	Agent_FindAgent_FullMethodName               = "/hi.ai.Agent/FindAgent"
-	Agent_FindAgentCount_FullMethodName          = "/hi.ai.Agent/FindAgentCount"
-	Agent_Transfer_FullMethodName                = "/hi.ai.Agent/Transfer"
-	Agent_UpdatesToDefault_FullMethodName        = "/hi.ai.Agent/UpdatesToDefault"
-	Agent_FavoriteAgent_FullMethodName           = "/hi.ai.Agent/FavoriteAgent"
-	Agent_ListFavoriteAgents_FullMethodName      = "/hi.ai.Agent/ListFavoriteAgents"
-	Agent_ListFavoriteAgent_FullMethodName       = "/hi.ai.Agent/ListFavoriteAgent"
-	Agent_FavoriteAgentListByDIDs_FullMethodName = "/hi.ai.Agent/FavoriteAgentListByDIDs"
+	Agent_ListLlmModels_FullMethodName    = "/hi.ai.Agent/ListLlmModels"
+	Agent_ListEmbeddings_FullMethodName   = "/hi.ai.Agent/ListEmbeddings"
+	Agent_ListSttModels_FullMethodName    = "/hi.ai.Agent/ListSttModels"
+	Agent_ListTtsModels_FullMethodName    = "/hi.ai.Agent/ListTtsModels"
+	Agent_AgentConfig_FullMethodName      = "/hi.ai.Agent/AgentConfig"
+	Agent_CreateAgent_FullMethodName      = "/hi.ai.Agent/CreateAgent"
+	Agent_EditAgent_FullMethodName        = "/hi.ai.Agent/EditAgent"
+	Agent_List_FullMethodName             = "/hi.ai.Agent/List"
+	Agent_ListFavorites_FullMethodName    = "/hi.ai.Agent/ListFavorites"
+	Agent_DeleteAgent_FullMethodName      = "/hi.ai.Agent/DeleteAgent"
+	Agent_FindAgent_FullMethodName        = "/hi.ai.Agent/FindAgent"
+	Agent_FindAgentCount_FullMethodName   = "/hi.ai.Agent/FindAgentCount"
+	Agent_Transfer_FullMethodName         = "/hi.ai.Agent/Transfer"
+	Agent_UpdatesToDefault_FullMethodName = "/hi.ai.Agent/UpdatesToDefault"
+	Agent_FavoriteAgent_FullMethodName    = "/hi.ai.Agent/FavoriteAgent"
 )
 
 // AgentClient is the client API for Agent service.
@@ -52,32 +44,20 @@ const (
 // apiKey鉴权
 type AgentClient interface {
 	ListLlmModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListLLMResp, error)
-	// Deprecated: Do not use.
-	ListLLM(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListLLMResp, error)
 	ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListEmbeddingResp, error)
-	// Deprecated: Do not use.
-	ListEmbedding(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListEmbeddingResp, error)
 	ListSttModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSTTResp, error)
-	// Deprecated: Do not use.
-	ListSTT(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSTTResp, error)
 	ListTtsModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTTSResp, error)
-	// Deprecated: Do not use.
-	ListTTS(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTTSResp, error)
 	AgentConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AgentConfigResp, error)
 	CreateAgent(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
 	EditAgent(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListAgent(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error)
-	ListAgentByDids(ctx context.Context, in *ListAgentByDidsReq, opts ...grpc.CallOption) (*ListAgentByDidsResp, error)
+	List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	ListFavorites(ctx context.Context, in *ListFavoriteReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	DeleteAgent(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FindAgent(ctx context.Context, in *FindAgentReq, opts ...grpc.CallOption) (*FindAgentResp, error)
 	FindAgentCount(ctx context.Context, in *FindAgentCountReq, opts ...grpc.CallOption) (*FindAgentCountResp, error)
 	Transfer(ctx context.Context, in *TransferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdatesToDefault(ctx context.Context, in *UpdatesToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FavoriteAgent(ctx context.Context, in *FavoriteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListFavoriteAgents(ctx context.Context, in *ListFavoriteAgentReq, opts ...grpc.CallOption) (*ListFavoriteAgentResp, error)
-	// Deprecated: Do not use.
-	ListFavoriteAgent(ctx context.Context, in *ListFavoriteAgentReq, opts ...grpc.CallOption) (*ListFavoriteAgentResp, error)
-	FavoriteAgentListByDIDs(ctx context.Context, in *ListFavoriteAgentByDIDsReq, opts ...grpc.CallOption) (*ListFavoriteAgentByDIDsResp, error)
 }
 
 type agentClient struct {
@@ -98,32 +78,10 @@ func (c *agentClient) ListLlmModels(ctx context.Context, in *emptypb.Empty, opts
 	return out, nil
 }
 
-// Deprecated: Do not use.
-func (c *agentClient) ListLLM(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListLLMResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListLLMResp)
-	err := c.cc.Invoke(ctx, Agent_ListLLM_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *agentClient) ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListEmbeddingResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListEmbeddingResp)
 	err := c.cc.Invoke(ctx, Agent_ListEmbeddings_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
-func (c *agentClient) ListEmbedding(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListEmbeddingResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListEmbeddingResp)
-	err := c.cc.Invoke(ctx, Agent_ListEmbedding_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -140,32 +98,10 @@ func (c *agentClient) ListSttModels(ctx context.Context, in *emptypb.Empty, opts
 	return out, nil
 }
 
-// Deprecated: Do not use.
-func (c *agentClient) ListSTT(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSTTResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListSTTResp)
-	err := c.cc.Invoke(ctx, Agent_ListSTT_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *agentClient) ListTtsModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTTSResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListTTSResp)
 	err := c.cc.Invoke(ctx, Agent_ListTtsModels_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
-func (c *agentClient) ListTTS(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTTSResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListTTSResp)
-	err := c.cc.Invoke(ctx, Agent_ListTTS_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -202,20 +138,20 @@ func (c *agentClient) EditAgent(ctx context.Context, in *EditAgentReq, opts ...g
 	return out, nil
 }
 
-func (c *agentClient) ListAgent(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentClient) List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListAgent_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentClient) ListAgentByDids(ctx context.Context, in *ListAgentByDidsReq, opts ...grpc.CallOption) (*ListAgentByDidsResp, error) {
+func (c *agentClient) ListFavorites(ctx context.Context, in *ListFavoriteReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentByDidsResp)
-	err := c.cc.Invoke(ctx, Agent_ListAgentByDids_FullMethodName, in, out, cOpts...)
+	out := new(ListAgentResp)
+	err := c.cc.Invoke(ctx, Agent_ListFavorites_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -282,37 +218,6 @@ func (c *agentClient) FavoriteAgent(ctx context.Context, in *FavoriteAgentReq, o
 	return out, nil
 }
 
-func (c *agentClient) ListFavoriteAgents(ctx context.Context, in *ListFavoriteAgentReq, opts ...grpc.CallOption) (*ListFavoriteAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListFavoriteAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListFavoriteAgents_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
-func (c *agentClient) ListFavoriteAgent(ctx context.Context, in *ListFavoriteAgentReq, opts ...grpc.CallOption) (*ListFavoriteAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListFavoriteAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListFavoriteAgent_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) FavoriteAgentListByDIDs(ctx context.Context, in *ListFavoriteAgentByDIDsReq, opts ...grpc.CallOption) (*ListFavoriteAgentByDIDsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListFavoriteAgentByDIDsResp)
-	err := c.cc.Invoke(ctx, Agent_FavoriteAgentListByDIDs_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AgentServer is the server API for Agent service.
 // All implementations should embed UnimplementedAgentServer
 // for forward compatibility.
@@ -320,32 +225,20 @@ func (c *agentClient) FavoriteAgentListByDIDs(ctx context.Context, in *ListFavor
 // apiKey鉴权
 type AgentServer interface {
 	ListLlmModels(context.Context, *emptypb.Empty) (*ListLLMResp, error)
-	// Deprecated: Do not use.
-	ListLLM(context.Context, *emptypb.Empty) (*ListLLMResp, error)
 	ListEmbeddings(context.Context, *emptypb.Empty) (*ListEmbeddingResp, error)
-	// Deprecated: Do not use.
-	ListEmbedding(context.Context, *emptypb.Empty) (*ListEmbeddingResp, error)
 	ListSttModels(context.Context, *emptypb.Empty) (*ListSTTResp, error)
-	// Deprecated: Do not use.
-	ListSTT(context.Context, *emptypb.Empty) (*ListSTTResp, error)
 	ListTtsModels(context.Context, *emptypb.Empty) (*ListTTSResp, error)
-	// Deprecated: Do not use.
-	ListTTS(context.Context, *emptypb.Empty) (*ListTTSResp, error)
 	AgentConfig(context.Context, *emptypb.Empty) (*AgentConfigResp, error)
 	CreateAgent(context.Context, *CreateAgentReq) (*CreateAgentResp, error)
 	EditAgent(context.Context, *EditAgentReq) (*emptypb.Empty, error)
-	ListAgent(context.Context, *hi.Pagination) (*ListAgentResp, error)
-	ListAgentByDids(context.Context, *ListAgentByDidsReq) (*ListAgentByDidsResp, error)
+	List(context.Context, *ListAgentReq) (*ListAgentResp, error)
+	ListFavorites(context.Context, *ListFavoriteReq) (*ListAgentResp, error)
 	DeleteAgent(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
 	FindAgent(context.Context, *FindAgentReq) (*FindAgentResp, error)
 	FindAgentCount(context.Context, *FindAgentCountReq) (*FindAgentCountResp, error)
 	Transfer(context.Context, *TransferReq) (*emptypb.Empty, error)
 	UpdatesToDefault(context.Context, *UpdatesToDefaultReq) (*emptypb.Empty, error)
 	FavoriteAgent(context.Context, *FavoriteAgentReq) (*emptypb.Empty, error)
-	ListFavoriteAgents(context.Context, *ListFavoriteAgentReq) (*ListFavoriteAgentResp, error)
-	// Deprecated: Do not use.
-	ListFavoriteAgent(context.Context, *ListFavoriteAgentReq) (*ListFavoriteAgentResp, error)
-	FavoriteAgentListByDIDs(context.Context, *ListFavoriteAgentByDIDsReq) (*ListFavoriteAgentByDIDsResp, error)
 }
 
 // UnimplementedAgentServer should be embedded to have
@@ -358,26 +251,14 @@ type UnimplementedAgentServer struct{}
 func (UnimplementedAgentServer) ListLlmModels(context.Context, *emptypb.Empty) (*ListLLMResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListLlmModels not implemented")
 }
-func (UnimplementedAgentServer) ListLLM(context.Context, *emptypb.Empty) (*ListLLMResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListLLM not implemented")
-}
 func (UnimplementedAgentServer) ListEmbeddings(context.Context, *emptypb.Empty) (*ListEmbeddingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListEmbeddings not implemented")
-}
-func (UnimplementedAgentServer) ListEmbedding(context.Context, *emptypb.Empty) (*ListEmbeddingResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListEmbedding not implemented")
 }
 func (UnimplementedAgentServer) ListSttModels(context.Context, *emptypb.Empty) (*ListSTTResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSttModels not implemented")
 }
-func (UnimplementedAgentServer) ListSTT(context.Context, *emptypb.Empty) (*ListSTTResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSTT not implemented")
-}
 func (UnimplementedAgentServer) ListTtsModels(context.Context, *emptypb.Empty) (*ListTTSResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTtsModels not implemented")
-}
-func (UnimplementedAgentServer) ListTTS(context.Context, *emptypb.Empty) (*ListTTSResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListTTS not implemented")
 }
 func (UnimplementedAgentServer) AgentConfig(context.Context, *emptypb.Empty) (*AgentConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AgentConfig not implemented")
@@ -388,11 +269,11 @@ func (UnimplementedAgentServer) CreateAgent(context.Context, *CreateAgentReq) (*
 func (UnimplementedAgentServer) EditAgent(context.Context, *EditAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditAgent not implemented")
 }
-func (UnimplementedAgentServer) ListAgent(context.Context, *hi.Pagination) (*ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAgent not implemented")
+func (UnimplementedAgentServer) List(context.Context, *ListAgentReq) (*ListAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedAgentServer) ListAgentByDids(context.Context, *ListAgentByDidsReq) (*ListAgentByDidsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAgentByDids not implemented")
+func (UnimplementedAgentServer) ListFavorites(context.Context, *ListFavoriteReq) (*ListAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFavorites not implemented")
 }
 func (UnimplementedAgentServer) DeleteAgent(context.Context, *DeleteAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteAgent not implemented")
@@ -411,15 +292,6 @@ func (UnimplementedAgentServer) UpdatesToDefault(context.Context, *UpdatesToDefa
 }
 func (UnimplementedAgentServer) FavoriteAgent(context.Context, *FavoriteAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method FavoriteAgent not implemented")
-}
-func (UnimplementedAgentServer) ListFavoriteAgents(context.Context, *ListFavoriteAgentReq) (*ListFavoriteAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListFavoriteAgents not implemented")
-}
-func (UnimplementedAgentServer) ListFavoriteAgent(context.Context, *ListFavoriteAgentReq) (*ListFavoriteAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListFavoriteAgent not implemented")
-}
-func (UnimplementedAgentServer) FavoriteAgentListByDIDs(context.Context, *ListFavoriteAgentByDIDsReq) (*ListFavoriteAgentByDIDsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method FavoriteAgentListByDIDs not implemented")
 }
 func (UnimplementedAgentServer) testEmbeddedByValue() {}
 
@@ -459,24 +331,6 @@ func _Agent_ListLlmModels_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListLLM_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListLLM(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListLLM_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListLLM(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_ListEmbeddings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -491,24 +345,6 @@ func _Agent_ListEmbeddings_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).ListEmbeddings(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListEmbedding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListEmbedding(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListEmbedding_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListEmbedding(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -531,24 +367,6 @@ func _Agent_ListSttModels_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListSTT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListSTT(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListSTT_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListSTT(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_ListTtsModels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -563,24 +381,6 @@ func _Agent_ListTtsModels_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).ListTtsModels(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListTTS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListTTS(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListTTS_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListTTS(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -639,38 +439,38 @@ func _Agent_EditAgent_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.Pagination)
+func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).ListAgent(ctx, in)
+		return srv.(AgentServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_ListAgent_FullMethodName,
+		FullMethod: Agent_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListAgent(ctx, req.(*hi.Pagination))
+		return srv.(AgentServer).List(ctx, req.(*ListAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListAgentByDids_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAgentByDidsReq)
+func _Agent_ListFavorites_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFavoriteReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).ListAgentByDids(ctx, in)
+		return srv.(AgentServer).ListFavorites(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_ListAgentByDids_FullMethodName,
+		FullMethod: Agent_ListFavorites_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListAgentByDids(ctx, req.(*ListAgentByDidsReq))
+		return srv.(AgentServer).ListFavorites(ctx, req.(*ListFavoriteReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -783,60 +583,6 @@ func _Agent_FavoriteAgent_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListFavoriteAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFavoriteAgentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListFavoriteAgents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListFavoriteAgents_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListFavoriteAgents(ctx, req.(*ListFavoriteAgentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListFavoriteAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFavoriteAgentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListFavoriteAgent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListFavoriteAgent_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListFavoriteAgent(ctx, req.(*ListFavoriteAgentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_FavoriteAgentListByDIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFavoriteAgentByDIDsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).FavoriteAgentListByDIDs(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_FavoriteAgentListByDIDs_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).FavoriteAgentListByDIDs(ctx, req.(*ListFavoriteAgentByDIDsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Agent_ServiceDesc is the grpc.ServiceDesc for Agent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -849,32 +595,16 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_ListLlmModels_Handler,
 		},
 		{
-			MethodName: "ListLLM",
-			Handler:    _Agent_ListLLM_Handler,
-		},
-		{
 			MethodName: "ListEmbeddings",
 			Handler:    _Agent_ListEmbeddings_Handler,
-		},
-		{
-			MethodName: "ListEmbedding",
-			Handler:    _Agent_ListEmbedding_Handler,
 		},
 		{
 			MethodName: "ListSttModels",
 			Handler:    _Agent_ListSttModels_Handler,
 		},
 		{
-			MethodName: "ListSTT",
-			Handler:    _Agent_ListSTT_Handler,
-		},
-		{
 			MethodName: "ListTtsModels",
 			Handler:    _Agent_ListTtsModels_Handler,
-		},
-		{
-			MethodName: "ListTTS",
-			Handler:    _Agent_ListTTS_Handler,
 		},
 		{
 			MethodName: "AgentConfig",
@@ -889,12 +619,12 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_EditAgent_Handler,
 		},
 		{
-			MethodName: "ListAgent",
-			Handler:    _Agent_ListAgent_Handler,
+			MethodName: "List",
+			Handler:    _Agent_List_Handler,
 		},
 		{
-			MethodName: "ListAgentByDids",
-			Handler:    _Agent_ListAgentByDids_Handler,
+			MethodName: "ListFavorites",
+			Handler:    _Agent_ListFavorites_Handler,
 		},
 		{
 			MethodName: "DeleteAgent",
@@ -919,18 +649,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FavoriteAgent",
 			Handler:    _Agent_FavoriteAgent_Handler,
-		},
-		{
-			MethodName: "ListFavoriteAgents",
-			Handler:    _Agent_ListFavoriteAgents_Handler,
-		},
-		{
-			MethodName: "ListFavoriteAgent",
-			Handler:    _Agent_ListFavoriteAgent_Handler,
-		},
-		{
-			MethodName: "FavoriteAgentListByDIDs",
-			Handler:    _Agent_FavoriteAgentListByDIDs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

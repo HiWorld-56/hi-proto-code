@@ -69,14 +69,6 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$listAgentFiles, request, options: options);
   }
 
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$0.ListAgentFileResp> listAgentFile(
-    $0.ListAgentFileReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listAgentFile, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> deleteAgentFile(
     $0.DeleteAgentFileReq request, {
     $grpc.CallOptions? options,
@@ -126,14 +118,6 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$editDigest, request, options: options);
   }
 
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$1.Empty> editDegest(
-    $0.EditDigestReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$editDegest, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> setMemModel(
     $0.SetMemModelReq request, {
     $grpc.CallOptions? options,
@@ -174,11 +158,6 @@ class TrainingClient extends $grpc.Client {
           '/hi.club.Training/ListAgentFiles',
           ($0.ListAgentFileReq value) => value.writeToBuffer(),
           $0.ListAgentFileResp.fromBuffer);
-  static final _$listAgentFile =
-      $grpc.ClientMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
-          '/hi.club.Training/ListAgentFile',
-          ($0.ListAgentFileReq value) => value.writeToBuffer(),
-          $0.ListAgentFileResp.fromBuffer);
   static final _$deleteAgentFile =
       $grpc.ClientMethod<$0.DeleteAgentFileReq, $1.Empty>(
           '/hi.club.Training/DeleteAgentFile',
@@ -211,10 +190,6 @@ class TrainingClient extends $grpc.Client {
           $0.CreateContentResp.fromBuffer);
   static final _$editDigest = $grpc.ClientMethod<$0.EditDigestReq, $1.Empty>(
       '/hi.club.Training/EditDigest',
-      ($0.EditDigestReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$editDegest = $grpc.ClientMethod<$0.EditDigestReq, $1.Empty>(
-      '/hi.club.Training/EditDegest',
       ($0.EditDigestReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
   static final _$setMemModel = $grpc.ClientMethod<$0.SetMemModelReq, $1.Empty>(
@@ -268,13 +243,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ListAgentFileReq.fromBuffer(value),
         ($0.ListAgentFileResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
-        'ListAgentFile',
-        listAgentFile_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListAgentFileReq.fromBuffer(value),
-        ($0.ListAgentFileResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteAgentFileReq, $1.Empty>(
         'DeleteAgentFile',
         deleteAgentFile_Pre,
@@ -323,13 +291,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
     $addMethod($grpc.ServiceMethod<$0.EditDigestReq, $1.Empty>(
         'EditDigest',
         editDigest_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.EditDigestReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.EditDigestReq, $1.Empty>(
-        'EditDegest',
-        editDegest_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.EditDigestReq.fromBuffer(value),
@@ -392,14 +353,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
   $async.Future<$0.ListAgentFileResp> listAgentFiles(
       $grpc.ServiceCall call, $0.ListAgentFileReq request);
 
-  $async.Future<$0.ListAgentFileResp> listAgentFile_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListAgentFileReq> $request) async {
-    return listAgentFile($call, await $request);
-  }
-
-  $async.Future<$0.ListAgentFileResp> listAgentFile(
-      $grpc.ServiceCall call, $0.ListAgentFileReq request);
-
   $async.Future<$1.Empty> deleteAgentFile_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteAgentFileReq> $request) async {
     return deleteAgentFile($call, await $request);
@@ -454,14 +407,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.Empty> editDigest(
-      $grpc.ServiceCall call, $0.EditDigestReq request);
-
-  $async.Future<$1.Empty> editDegest_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.EditDigestReq> $request) async {
-    return editDegest($call, await $request);
-  }
-
-  $async.Future<$1.Empty> editDegest(
       $grpc.ServiceCall call, $0.EditDigestReq request);
 
   $async.Future<$1.Empty> setMemModel_Pre($grpc.ServiceCall $call,

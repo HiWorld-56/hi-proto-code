@@ -841,28 +841,29 @@ func (x *ListAgentResp) GetInfos() []*AgentInfo {
 	return nil
 }
 
-type ListAgentByDidsReq struct {
+// Agent 列表入参(公开,免鉴权):合并原 ListAgent(全量)+ ListAgentByDids。
+type ListAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dids          []string               `protobuf:"bytes,1,rep,name=dids,proto3" json:"dids,omitempty"`
+	Dids          []string               `protobuf:"bytes,1,rep,name=dids,proto3" json:"dids,omitempty"` // 可选:只看这些 did;空=不按 did 过滤
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAgentByDidsReq) Reset() {
-	*x = ListAgentByDidsReq{}
+func (x *ListAgentReq) Reset() {
+	*x = ListAgentReq{}
 	mi := &file_hi_ai_agent_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAgentByDidsReq) String() string {
+func (x *ListAgentReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAgentByDidsReq) ProtoMessage() {}
+func (*ListAgentReq) ProtoMessage() {}
 
-func (x *ListAgentByDidsReq) ProtoReflect() protoreflect.Message {
+func (x *ListAgentReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_agent_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -874,47 +875,50 @@ func (x *ListAgentByDidsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAgentByDidsReq.ProtoReflect.Descriptor instead.
-func (*ListAgentByDidsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListAgentReq.ProtoReflect.Descriptor instead.
+func (*ListAgentReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *ListAgentByDidsReq) GetDids() []string {
+func (x *ListAgentReq) GetDids() []string {
 	if x != nil {
 		return x.Dids
 	}
 	return nil
 }
 
-func (x *ListAgentByDidsReq) GetPagination() *hi.Pagination {
+func (x *ListAgentReq) GetPagination() *hi.Pagination {
 	if x != nil {
 		return x.Pagination
 	}
 	return nil
 }
 
-type ListAgentByDidsResp struct {
+// 收藏列表入参(需鉴权:查的是**调用者**收藏的,必须有身份)。
+// 合并原 ListFavoriteAgents + FavoriteAgentListByDIDs。
+// 注:favorite 不能做成 ListAgentReq 的 filter —— List 免鉴权、拿不到调用者身份。
+type ListFavoriteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Infos         []*AgentInfo           `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
+	Dids          []string               `protobuf:"bytes,1,rep,name=dids,proto3" json:"dids,omitempty"` // 可选:在我的收藏里再按 did 过滤
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAgentByDidsResp) Reset() {
-	*x = ListAgentByDidsResp{}
+func (x *ListFavoriteReq) Reset() {
+	*x = ListFavoriteReq{}
 	mi := &file_hi_ai_agent_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAgentByDidsResp) String() string {
+func (x *ListFavoriteReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAgentByDidsResp) ProtoMessage() {}
+func (*ListFavoriteReq) ProtoMessage() {}
 
-func (x *ListAgentByDidsResp) ProtoReflect() protoreflect.Message {
+func (x *ListFavoriteReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_agent_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -926,21 +930,21 @@ func (x *ListAgentByDidsResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAgentByDidsResp.ProtoReflect.Descriptor instead.
-func (*ListAgentByDidsResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListFavoriteReq.ProtoReflect.Descriptor instead.
+func (*ListFavoriteReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *ListAgentByDidsResp) GetTotal() int32 {
+func (x *ListFavoriteReq) GetDids() []string {
 	if x != nil {
-		return x.Total
+		return x.Dids
 	}
-	return 0
+	return nil
 }
 
-func (x *ListAgentByDidsResp) GetInfos() []*AgentInfo {
+func (x *ListFavoriteReq) GetPagination() *hi.Pagination {
 	if x != nil {
-		return x.Infos
+		return x.Pagination
 	}
 	return nil
 }
@@ -1321,206 +1325,6 @@ func (x *FavoriteAgentReq) GetOpt() string {
 	return ""
 }
 
-type ListFavoriteAgentReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListFavoriteAgentReq) Reset() {
-	*x = ListFavoriteAgentReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListFavoriteAgentReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListFavoriteAgentReq) ProtoMessage() {}
-
-func (x *ListFavoriteAgentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListFavoriteAgentReq.ProtoReflect.Descriptor instead.
-func (*ListFavoriteAgentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{24}
-}
-
-func (x *ListFavoriteAgentReq) GetPagination() *hi.Pagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
-type ListFavoriteAgentResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Infos         []*AgentInfo           `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListFavoriteAgentResp) Reset() {
-	*x = ListFavoriteAgentResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListFavoriteAgentResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListFavoriteAgentResp) ProtoMessage() {}
-
-func (x *ListFavoriteAgentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListFavoriteAgentResp.ProtoReflect.Descriptor instead.
-func (*ListFavoriteAgentResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *ListFavoriteAgentResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *ListFavoriteAgentResp) GetInfos() []*AgentInfo {
-	if x != nil {
-		return x.Infos
-	}
-	return nil
-}
-
-type ListFavoriteAgentByDIDsReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dids          []string               `protobuf:"bytes,1,rep,name=dids,proto3" json:"dids,omitempty"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListFavoriteAgentByDIDsReq) Reset() {
-	*x = ListFavoriteAgentByDIDsReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[26]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListFavoriteAgentByDIDsReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListFavoriteAgentByDIDsReq) ProtoMessage() {}
-
-func (x *ListFavoriteAgentByDIDsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[26]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListFavoriteAgentByDIDsReq.ProtoReflect.Descriptor instead.
-func (*ListFavoriteAgentByDIDsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{26}
-}
-
-func (x *ListFavoriteAgentByDIDsReq) GetDids() []string {
-	if x != nil {
-		return x.Dids
-	}
-	return nil
-}
-
-func (x *ListFavoriteAgentByDIDsReq) GetPagination() *hi.Pagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
-type ListFavoriteAgentByDIDsResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Infos         []*AgentInfo           `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListFavoriteAgentByDIDsResp) Reset() {
-	*x = ListFavoriteAgentByDIDsResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[27]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListFavoriteAgentByDIDsResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListFavoriteAgentByDIDsResp) ProtoMessage() {}
-
-func (x *ListFavoriteAgentByDIDsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[27]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListFavoriteAgentByDIDsResp.ProtoReflect.Descriptor instead.
-func (*ListFavoriteAgentByDIDsResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{27}
-}
-
-func (x *ListFavoriteAgentByDIDsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *ListFavoriteAgentByDIDsResp) GetInfos() []*AgentInfo {
-	if x != nil {
-		return x.Infos
-	}
-	return nil
-}
-
 var File_hi_ai_agent_proto protoreflect.FileDescriptor
 
 const file_hi_ai_agent_proto_rawDesc = "" +
@@ -1588,15 +1392,17 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04note\x18\x03 \x01(\tR\x04note\"M\n" +
 	"\rListAgentResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\"X\n" +
-	"\x12ListAgentByDidsReq\x12\x12\n" +
+	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\"R\n" +
+	"\fListAgentReq\x12\x12\n" +
 	"\x04dids\x18\x01 \x03(\tR\x04dids\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"S\n" +
-	"\x13ListAgentByDidsResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\"\"\n" +
+	"pagination\"U\n" +
+	"\x0fListFavoriteReq\x12\x12\n" +
+	"\x04dids\x18\x01 \x03(\tR\x04dids\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\"\"\n" +
 	"\x0eDeleteAgentReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\" \n" +
 	"\fFindAgentReq\x12\x10\n" +
@@ -1615,45 +1421,23 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04dids\x18\x01 \x03(\tR\x04dids\"6\n" +
 	"\x10FavoriteAgentReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
-	"\x03opt\x18\x02 \x01(\tR\x03opt\"F\n" +
-	"\x14ListFavoriteAgentReq\x12.\n" +
-	"\n" +
-	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"U\n" +
-	"\x15ListFavoriteAgentResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\"`\n" +
-	"\x1aListFavoriteAgentByDIDsReq\x12\x12\n" +
-	"\x04dids\x18\x01 \x03(\tR\x04dids\x12.\n" +
-	"\n" +
-	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"[\n" +
-	"\x1bListFavoriteAgentByDIDsResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos2\xb9\v\n" +
+	"\x03opt\x18\x02 \x01(\tR\x03opt2\xaa\a\n" +
 	"\x05Agent\x12;\n" +
-	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12:\n" +
-	"\aListLLM\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\"\x03\x88\x02\x01\x12B\n" +
-	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x12F\n" +
-	"\rListEmbedding\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\"\x03\x88\x02\x01\x12;\n" +
-	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x12:\n" +
-	"\aListSTT\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x03\x88\x02\x01\x12;\n" +
-	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12:\n" +
-	"\aListTTS\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\"\x03\x88\x02\x01\x12=\n" +
+	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12B\n" +
+	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x12;\n" +
+	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x12;\n" +
+	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12=\n" +
 	"\vAgentConfig\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.AgentConfigResp\x12<\n" +
 	"\vCreateAgent\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\x128\n" +
 	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\x121\n" +
-	"\tListAgent\x12\x0e.hi.Pagination\x1a\x14.hi.ai.ListAgentResp\x12H\n" +
-	"\x0fListAgentByDids\x12\x19.hi.ai.ListAgentByDidsReq\x1a\x1a.hi.ai.ListAgentByDidsResp\x12<\n" +
+	"\x04List\x12\x13.hi.ai.ListAgentReq\x1a\x14.hi.ai.ListAgentResp\x12=\n" +
+	"\rListFavorites\x12\x16.hi.ai.ListFavoriteReq\x1a\x14.hi.ai.ListAgentResp\x12<\n" +
 	"\vDeleteAgent\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\x126\n" +
 	"\tFindAgent\x12\x13.hi.ai.FindAgentReq\x1a\x14.hi.ai.FindAgentResp\x12E\n" +
 	"\x0eFindAgentCount\x12\x18.hi.ai.FindAgentCountReq\x1a\x19.hi.ai.FindAgentCountResp\x126\n" +
 	"\bTransfer\x12\x12.hi.ai.TransferReq\x1a\x16.google.protobuf.Empty\x12F\n" +
 	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\x12@\n" +
-	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\x12O\n" +
-	"\x12ListFavoriteAgents\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\x12S\n" +
-	"\x11ListFavoriteAgent\x12\x1b.hi.ai.ListFavoriteAgentReq\x1a\x1c.hi.ai.ListFavoriteAgentResp\"\x03\x88\x02\x01\x12`\n" +
-	"\x17FavoriteAgentListByDIDs\x12!.hi.ai.ListFavoriteAgentByDIDsReq\x1a\".hi.ai.ListFavoriteAgentByDIDsRespBu\n" +
+	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.EmptyBu\n" +
 	"\tcom.hi.aiB\n" +
 	"AgentProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
@@ -1669,111 +1453,89 @@ func file_hi_ai_agent_proto_rawDescGZIP() []byte {
 	return file_hi_ai_agent_proto_rawDescData
 }
 
-var file_hi_ai_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+var file_hi_ai_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_hi_ai_agent_proto_goTypes = []any{
-	(*Prompt)(nil),                      // 0: hi.ai.Prompt
-	(*Model)(nil),                       // 1: hi.ai.Model
-	(*AgentConfig)(nil),                 // 2: hi.ai.AgentConfig
-	(*TokenUsage)(nil),                  // 3: hi.ai.TokenUsage
-	(*AgentInfo)(nil),                   // 4: hi.ai.AgentInfo
-	(*AgentConfigResp)(nil),             // 5: hi.ai.AgentConfigResp
-	(*ListLLMResp)(nil),                 // 6: hi.ai.ListLLMResp
-	(*ListEmbeddingResp)(nil),           // 7: hi.ai.ListEmbeddingResp
-	(*ListSTTResp)(nil),                 // 8: hi.ai.ListSTTResp
-	(*ListTTSResp)(nil),                 // 9: hi.ai.ListTTSResp
-	(*CreateAgentReq)(nil),              // 10: hi.ai.CreateAgentReq
-	(*CreateAgentResp)(nil),             // 11: hi.ai.CreateAgentResp
-	(*EditAgentReq)(nil),                // 12: hi.ai.EditAgentReq
-	(*ListAgentResp)(nil),               // 13: hi.ai.ListAgentResp
-	(*ListAgentByDidsReq)(nil),          // 14: hi.ai.ListAgentByDidsReq
-	(*ListAgentByDidsResp)(nil),         // 15: hi.ai.ListAgentByDidsResp
-	(*DeleteAgentReq)(nil),              // 16: hi.ai.DeleteAgentReq
-	(*FindAgentReq)(nil),                // 17: hi.ai.FindAgentReq
-	(*FindAgentResp)(nil),               // 18: hi.ai.FindAgentResp
-	(*FindAgentCountReq)(nil),           // 19: hi.ai.FindAgentCountReq
-	(*FindAgentCountResp)(nil),          // 20: hi.ai.FindAgentCountResp
-	(*TransferReq)(nil),                 // 21: hi.ai.TransferReq
-	(*UpdatesToDefaultReq)(nil),         // 22: hi.ai.UpdatesToDefaultReq
-	(*FavoriteAgentReq)(nil),            // 23: hi.ai.FavoriteAgentReq
-	(*ListFavoriteAgentReq)(nil),        // 24: hi.ai.ListFavoriteAgentReq
-	(*ListFavoriteAgentResp)(nil),       // 25: hi.ai.ListFavoriteAgentResp
-	(*ListFavoriteAgentByDIDsReq)(nil),  // 26: hi.ai.ListFavoriteAgentByDIDsReq
-	(*ListFavoriteAgentByDIDsResp)(nil), // 27: hi.ai.ListFavoriteAgentByDIDsResp
-	(*hi.Entity)(nil),                   // 28: hi.Entity
-	(*hi.Pagination)(nil),               // 29: hi.Pagination
-	(*emptypb.Empty)(nil),               // 30: google.protobuf.Empty
+	(*Prompt)(nil),              // 0: hi.ai.Prompt
+	(*Model)(nil),               // 1: hi.ai.Model
+	(*AgentConfig)(nil),         // 2: hi.ai.AgentConfig
+	(*TokenUsage)(nil),          // 3: hi.ai.TokenUsage
+	(*AgentInfo)(nil),           // 4: hi.ai.AgentInfo
+	(*AgentConfigResp)(nil),     // 5: hi.ai.AgentConfigResp
+	(*ListLLMResp)(nil),         // 6: hi.ai.ListLLMResp
+	(*ListEmbeddingResp)(nil),   // 7: hi.ai.ListEmbeddingResp
+	(*ListSTTResp)(nil),         // 8: hi.ai.ListSTTResp
+	(*ListTTSResp)(nil),         // 9: hi.ai.ListTTSResp
+	(*CreateAgentReq)(nil),      // 10: hi.ai.CreateAgentReq
+	(*CreateAgentResp)(nil),     // 11: hi.ai.CreateAgentResp
+	(*EditAgentReq)(nil),        // 12: hi.ai.EditAgentReq
+	(*ListAgentResp)(nil),       // 13: hi.ai.ListAgentResp
+	(*ListAgentReq)(nil),        // 14: hi.ai.ListAgentReq
+	(*ListFavoriteReq)(nil),     // 15: hi.ai.ListFavoriteReq
+	(*DeleteAgentReq)(nil),      // 16: hi.ai.DeleteAgentReq
+	(*FindAgentReq)(nil),        // 17: hi.ai.FindAgentReq
+	(*FindAgentResp)(nil),       // 18: hi.ai.FindAgentResp
+	(*FindAgentCountReq)(nil),   // 19: hi.ai.FindAgentCountReq
+	(*FindAgentCountResp)(nil),  // 20: hi.ai.FindAgentCountResp
+	(*TransferReq)(nil),         // 21: hi.ai.TransferReq
+	(*UpdatesToDefaultReq)(nil), // 22: hi.ai.UpdatesToDefaultReq
+	(*FavoriteAgentReq)(nil),    // 23: hi.ai.FavoriteAgentReq
+	(*hi.Entity)(nil),           // 24: hi.Entity
+	(*hi.Pagination)(nil),       // 25: hi.Pagination
+	(*emptypb.Empty)(nil),       // 26: google.protobuf.Empty
 }
 var file_hi_ai_agent_proto_depIdxs = []int32{
 	0,  // 0: hi.ai.AgentConfig.prompt:type_name -> hi.ai.Prompt
 	1,  // 1: hi.ai.AgentConfig.model:type_name -> hi.ai.Model
-	28, // 2: hi.ai.AgentInfo.base:type_name -> hi.Entity
+	24, // 2: hi.ai.AgentInfo.base:type_name -> hi.Entity
 	2,  // 3: hi.ai.AgentInfo.config:type_name -> hi.ai.AgentConfig
 	3,  // 4: hi.ai.AgentInfo.token:type_name -> hi.ai.TokenUsage
 	2,  // 5: hi.ai.AgentConfigResp.config:type_name -> hi.ai.AgentConfig
-	28, // 6: hi.ai.CreateAgentReq.base:type_name -> hi.Entity
-	28, // 7: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
+	24, // 6: hi.ai.CreateAgentReq.base:type_name -> hi.Entity
+	24, // 7: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
 	2,  // 8: hi.ai.CreateAgentResp.config:type_name -> hi.ai.AgentConfig
-	28, // 9: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
-	28, // 10: hi.ai.EditAgentReq.base:type_name -> hi.Entity
+	24, // 9: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
+	24, // 10: hi.ai.EditAgentReq.base:type_name -> hi.Entity
 	2,  // 11: hi.ai.EditAgentReq.config:type_name -> hi.ai.AgentConfig
 	4,  // 12: hi.ai.ListAgentResp.infos:type_name -> hi.ai.AgentInfo
-	29, // 13: hi.ai.ListAgentByDidsReq.pagination:type_name -> hi.Pagination
-	4,  // 14: hi.ai.ListAgentByDidsResp.infos:type_name -> hi.ai.AgentInfo
+	25, // 13: hi.ai.ListAgentReq.pagination:type_name -> hi.Pagination
+	25, // 14: hi.ai.ListFavoriteReq.pagination:type_name -> hi.Pagination
 	4,  // 15: hi.ai.FindAgentResp.info:type_name -> hi.ai.AgentInfo
 	3,  // 16: hi.ai.FindAgentCountResp.token:type_name -> hi.ai.TokenUsage
-	29, // 17: hi.ai.ListFavoriteAgentReq.pagination:type_name -> hi.Pagination
-	4,  // 18: hi.ai.ListFavoriteAgentResp.infos:type_name -> hi.ai.AgentInfo
-	29, // 19: hi.ai.ListFavoriteAgentByDIDsReq.pagination:type_name -> hi.Pagination
-	4,  // 20: hi.ai.ListFavoriteAgentByDIDsResp.infos:type_name -> hi.ai.AgentInfo
-	30, // 21: hi.ai.Agent.ListLlmModels:input_type -> google.protobuf.Empty
-	30, // 22: hi.ai.Agent.ListLLM:input_type -> google.protobuf.Empty
-	30, // 23: hi.ai.Agent.ListEmbeddings:input_type -> google.protobuf.Empty
-	30, // 24: hi.ai.Agent.ListEmbedding:input_type -> google.protobuf.Empty
-	30, // 25: hi.ai.Agent.ListSttModels:input_type -> google.protobuf.Empty
-	30, // 26: hi.ai.Agent.ListSTT:input_type -> google.protobuf.Empty
-	30, // 27: hi.ai.Agent.ListTtsModels:input_type -> google.protobuf.Empty
-	30, // 28: hi.ai.Agent.ListTTS:input_type -> google.protobuf.Empty
-	30, // 29: hi.ai.Agent.AgentConfig:input_type -> google.protobuf.Empty
-	10, // 30: hi.ai.Agent.CreateAgent:input_type -> hi.ai.CreateAgentReq
-	12, // 31: hi.ai.Agent.EditAgent:input_type -> hi.ai.EditAgentReq
-	29, // 32: hi.ai.Agent.ListAgent:input_type -> hi.Pagination
-	14, // 33: hi.ai.Agent.ListAgentByDids:input_type -> hi.ai.ListAgentByDidsReq
-	16, // 34: hi.ai.Agent.DeleteAgent:input_type -> hi.ai.DeleteAgentReq
-	17, // 35: hi.ai.Agent.FindAgent:input_type -> hi.ai.FindAgentReq
-	19, // 36: hi.ai.Agent.FindAgentCount:input_type -> hi.ai.FindAgentCountReq
-	21, // 37: hi.ai.Agent.Transfer:input_type -> hi.ai.TransferReq
-	22, // 38: hi.ai.Agent.UpdatesToDefault:input_type -> hi.ai.UpdatesToDefaultReq
-	23, // 39: hi.ai.Agent.FavoriteAgent:input_type -> hi.ai.FavoriteAgentReq
-	24, // 40: hi.ai.Agent.ListFavoriteAgents:input_type -> hi.ai.ListFavoriteAgentReq
-	24, // 41: hi.ai.Agent.ListFavoriteAgent:input_type -> hi.ai.ListFavoriteAgentReq
-	26, // 42: hi.ai.Agent.FavoriteAgentListByDIDs:input_type -> hi.ai.ListFavoriteAgentByDIDsReq
-	6,  // 43: hi.ai.Agent.ListLlmModels:output_type -> hi.ai.ListLLMResp
-	6,  // 44: hi.ai.Agent.ListLLM:output_type -> hi.ai.ListLLMResp
-	7,  // 45: hi.ai.Agent.ListEmbeddings:output_type -> hi.ai.ListEmbeddingResp
-	7,  // 46: hi.ai.Agent.ListEmbedding:output_type -> hi.ai.ListEmbeddingResp
-	8,  // 47: hi.ai.Agent.ListSttModels:output_type -> hi.ai.ListSTTResp
-	8,  // 48: hi.ai.Agent.ListSTT:output_type -> hi.ai.ListSTTResp
-	9,  // 49: hi.ai.Agent.ListTtsModels:output_type -> hi.ai.ListTTSResp
-	9,  // 50: hi.ai.Agent.ListTTS:output_type -> hi.ai.ListTTSResp
-	5,  // 51: hi.ai.Agent.AgentConfig:output_type -> hi.ai.AgentConfigResp
-	11, // 52: hi.ai.Agent.CreateAgent:output_type -> hi.ai.CreateAgentResp
-	30, // 53: hi.ai.Agent.EditAgent:output_type -> google.protobuf.Empty
-	13, // 54: hi.ai.Agent.ListAgent:output_type -> hi.ai.ListAgentResp
-	15, // 55: hi.ai.Agent.ListAgentByDids:output_type -> hi.ai.ListAgentByDidsResp
-	30, // 56: hi.ai.Agent.DeleteAgent:output_type -> google.protobuf.Empty
-	18, // 57: hi.ai.Agent.FindAgent:output_type -> hi.ai.FindAgentResp
-	20, // 58: hi.ai.Agent.FindAgentCount:output_type -> hi.ai.FindAgentCountResp
-	30, // 59: hi.ai.Agent.Transfer:output_type -> google.protobuf.Empty
-	30, // 60: hi.ai.Agent.UpdatesToDefault:output_type -> google.protobuf.Empty
-	30, // 61: hi.ai.Agent.FavoriteAgent:output_type -> google.protobuf.Empty
-	25, // 62: hi.ai.Agent.ListFavoriteAgents:output_type -> hi.ai.ListFavoriteAgentResp
-	25, // 63: hi.ai.Agent.ListFavoriteAgent:output_type -> hi.ai.ListFavoriteAgentResp
-	27, // 64: hi.ai.Agent.FavoriteAgentListByDIDs:output_type -> hi.ai.ListFavoriteAgentByDIDsResp
-	43, // [43:65] is the sub-list for method output_type
-	21, // [21:43] is the sub-list for method input_type
-	21, // [21:21] is the sub-list for extension type_name
-	21, // [21:21] is the sub-list for extension extendee
-	0,  // [0:21] is the sub-list for field type_name
+	26, // 17: hi.ai.Agent.ListLlmModels:input_type -> google.protobuf.Empty
+	26, // 18: hi.ai.Agent.ListEmbeddings:input_type -> google.protobuf.Empty
+	26, // 19: hi.ai.Agent.ListSttModels:input_type -> google.protobuf.Empty
+	26, // 20: hi.ai.Agent.ListTtsModels:input_type -> google.protobuf.Empty
+	26, // 21: hi.ai.Agent.AgentConfig:input_type -> google.protobuf.Empty
+	10, // 22: hi.ai.Agent.CreateAgent:input_type -> hi.ai.CreateAgentReq
+	12, // 23: hi.ai.Agent.EditAgent:input_type -> hi.ai.EditAgentReq
+	14, // 24: hi.ai.Agent.List:input_type -> hi.ai.ListAgentReq
+	15, // 25: hi.ai.Agent.ListFavorites:input_type -> hi.ai.ListFavoriteReq
+	16, // 26: hi.ai.Agent.DeleteAgent:input_type -> hi.ai.DeleteAgentReq
+	17, // 27: hi.ai.Agent.FindAgent:input_type -> hi.ai.FindAgentReq
+	19, // 28: hi.ai.Agent.FindAgentCount:input_type -> hi.ai.FindAgentCountReq
+	21, // 29: hi.ai.Agent.Transfer:input_type -> hi.ai.TransferReq
+	22, // 30: hi.ai.Agent.UpdatesToDefault:input_type -> hi.ai.UpdatesToDefaultReq
+	23, // 31: hi.ai.Agent.FavoriteAgent:input_type -> hi.ai.FavoriteAgentReq
+	6,  // 32: hi.ai.Agent.ListLlmModels:output_type -> hi.ai.ListLLMResp
+	7,  // 33: hi.ai.Agent.ListEmbeddings:output_type -> hi.ai.ListEmbeddingResp
+	8,  // 34: hi.ai.Agent.ListSttModels:output_type -> hi.ai.ListSTTResp
+	9,  // 35: hi.ai.Agent.ListTtsModels:output_type -> hi.ai.ListTTSResp
+	5,  // 36: hi.ai.Agent.AgentConfig:output_type -> hi.ai.AgentConfigResp
+	11, // 37: hi.ai.Agent.CreateAgent:output_type -> hi.ai.CreateAgentResp
+	26, // 38: hi.ai.Agent.EditAgent:output_type -> google.protobuf.Empty
+	13, // 39: hi.ai.Agent.List:output_type -> hi.ai.ListAgentResp
+	13, // 40: hi.ai.Agent.ListFavorites:output_type -> hi.ai.ListAgentResp
+	26, // 41: hi.ai.Agent.DeleteAgent:output_type -> google.protobuf.Empty
+	18, // 42: hi.ai.Agent.FindAgent:output_type -> hi.ai.FindAgentResp
+	20, // 43: hi.ai.Agent.FindAgentCount:output_type -> hi.ai.FindAgentCountResp
+	26, // 44: hi.ai.Agent.Transfer:output_type -> google.protobuf.Empty
+	26, // 45: hi.ai.Agent.UpdatesToDefault:output_type -> google.protobuf.Empty
+	26, // 46: hi.ai.Agent.FavoriteAgent:output_type -> google.protobuf.Empty
+	32, // [32:47] is the sub-list for method output_type
+	17, // [17:32] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_agent_proto_init() }
@@ -1788,7 +1550,7 @@ func file_hi_ai_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_agent_proto_rawDesc), len(file_hi_ai_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   28,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

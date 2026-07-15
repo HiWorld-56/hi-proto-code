@@ -151,7 +151,7 @@ func local_request_Trade_UpdateTransHash_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
-func request_Trade_ListTrade_0(ctx context.Context, marshaler runtime.Marshaler, client TradeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Trade_List_0(ctx context.Context, marshaler runtime.Marshaler, client TradeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListTradeReq
 		metadata runtime.ServerMetadata
@@ -162,11 +162,11 @@ func request_Trade_ListTrade_0(ctx context.Context, marshaler runtime.Marshaler,
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.ListTrade(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.List(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_Trade_ListTrade_0(ctx context.Context, marshaler runtime.Marshaler, server TradeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Trade_List_0(ctx context.Context, marshaler runtime.Marshaler, server TradeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListTradeReq
 		metadata runtime.ServerMetadata
@@ -174,34 +174,7 @@ func local_request_Trade_ListTrade_0(ctx context.Context, marshaler runtime.Mars
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.ListTrade(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_Trade_ListAllTrade_0(ctx context.Context, marshaler runtime.Marshaler, client TradeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListAllTradeReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.ListAllTrade(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Trade_ListAllTrade_0(ctx context.Context, marshaler runtime.Marshaler, server TradeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListAllTradeReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.ListAllTrade(ctx, &protoReq)
+	msg, err := server.List(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -291,45 +264,25 @@ func RegisterTradeHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		}
 		forward_Trade_UpdateTransHash_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Trade_ListTrade_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Trade_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Trade/ListTrade", runtime.WithHTTPPathPattern("/api/v1/trade/list_trade"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Trade/List", runtime.WithHTTPPathPattern("/api/v1/trade/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Trade_ListTrade_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Trade_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Trade_ListTrade_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Trade_ListAllTrade_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Trade/ListAllTrade", runtime.WithHTTPPathPattern("/api/v1/trade/list_all_trade"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Trade_ListAllTrade_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Trade_ListAllTrade_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Trade_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -439,39 +392,22 @@ func RegisterTradeHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		}
 		forward_Trade_UpdateTransHash_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Trade_ListTrade_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Trade_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Trade/ListTrade", runtime.WithHTTPPathPattern("/api/v1/trade/list_trade"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Trade/List", runtime.WithHTTPPathPattern("/api/v1/trade/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Trade_ListTrade_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Trade_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Trade_ListTrade_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Trade_ListAllTrade_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Trade/ListAllTrade", runtime.WithHTTPPathPattern("/api/v1/trade/list_all_trade"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Trade_ListAllTrade_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Trade_ListAllTrade_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Trade_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
@@ -481,8 +417,7 @@ var (
 	pattern_Trade_GetTrade_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "trade", "get_trade"}, ""))
 	pattern_Trade_AddTrade_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Trade", "AddTrade"}, ""))
 	pattern_Trade_UpdateTransHash_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Trade", "UpdateTransHash"}, ""))
-	pattern_Trade_ListTrade_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "trade", "list_trade"}, ""))
-	pattern_Trade_ListAllTrade_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "trade", "list_all_trade"}, ""))
+	pattern_Trade_List_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "trade", "list"}, ""))
 )
 
 var (
@@ -490,6 +425,5 @@ var (
 	forward_Trade_GetTrade_0        = runtime.ForwardResponseMessage
 	forward_Trade_AddTrade_0        = runtime.ForwardResponseMessage
 	forward_Trade_UpdateTransHash_0 = runtime.ForwardResponseMessage
-	forward_Trade_ListTrade_0       = runtime.ForwardResponseMessage
-	forward_Trade_ListAllTrade_0    = runtime.ForwardResponseMessage
+	forward_Trade_List_0            = runtime.ForwardResponseMessage
 )

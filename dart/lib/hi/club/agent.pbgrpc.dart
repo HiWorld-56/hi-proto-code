@@ -18,7 +18,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
 import '../ai/agent.pb.dart' as $1;
-import '../common.pb.dart' as $3;
 import 'agent.pb.dart' as $2;
 
 export 'agent.pb.dart';
@@ -42,27 +41,11 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$listLlmModels, request, options: options);
   }
 
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$1.ListLLMResp> listLLM(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listLLM, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.ListEmbeddingResp> listEmbeddings(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listEmbeddings, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$1.ListEmbeddingResp> listEmbedding(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listEmbedding, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.ListSTTResp> listSttModels(
@@ -72,27 +55,11 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$listSttModels, request, options: options);
   }
 
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$1.ListSTTResp> listSTT(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listSTT, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.ListTTSResp> listTtsModels(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listTtsModels, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$1.ListTTSResp> listTTS(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listTTS, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.AgentConfigResp> agentConfig(
@@ -116,11 +83,18 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$editAgent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListAgentByDidsResp> listAgentByDids(
-    $1.ListAgentByDidsReq request, {
+  $grpc.ResponseFuture<$1.ListAgentResp> list(
+    $1.ListAgentReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listAgentByDids, request, options: options);
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListAgentResp> listFavorites(
+    $1.ListFavoriteReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listFavorites, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> deleteAgent(
@@ -165,29 +139,6 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$favoriteAgent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListFavoriteAgentResp> listFavoriteAgents(
-    $1.ListFavoriteAgentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listFavoriteAgents, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$1.ListFavoriteAgentResp> listFavoriteAgent(
-    $1.ListFavoriteAgentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listFavoriteAgent, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.ListFavoriteAgentByDIDsResp> favoriteAgentListByDIDs(
-    $1.ListFavoriteAgentByDIDsReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$favoriteAgentListByDIDs, request,
-        options: options);
-  }
-
   $grpc.ResponseFuture<$0.Empty> bindMaster(
     $2.BindMasterReq request, {
     $grpc.CallOptions? options,
@@ -209,18 +160,11 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$bindStatus, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.ListAllOnlineAgentResp> listAllOnlineAgent(
-    $3.Pagination request, {
+  $grpc.ResponseFuture<$2.ListOnlineResp> listOnline(
+    $2.ListOnlineReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listAllOnlineAgent, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$2.ListOnlineAgentResp> listOnlineAgent(
-    $3.DID request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listOnlineAgent, request, options: options);
+    return $createUnaryCall(_$listOnline, request, options: options);
   }
 
   $grpc.ResponseFuture<$2.GetAgentMasterResp> getAgentMaster(
@@ -236,34 +180,17 @@ class AgentClient extends $grpc.Client {
       '/hi.club.Agent/ListLlmModels',
       ($0.Empty value) => value.writeToBuffer(),
       $1.ListLLMResp.fromBuffer);
-  static final _$listLLM = $grpc.ClientMethod<$0.Empty, $1.ListLLMResp>(
-      '/hi.club.Agent/ListLLM',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.ListLLMResp.fromBuffer);
   static final _$listEmbeddings =
       $grpc.ClientMethod<$0.Empty, $1.ListEmbeddingResp>(
           '/hi.club.Agent/ListEmbeddings',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.ListEmbeddingResp.fromBuffer);
-  static final _$listEmbedding =
-      $grpc.ClientMethod<$0.Empty, $1.ListEmbeddingResp>(
-          '/hi.club.Agent/ListEmbedding',
           ($0.Empty value) => value.writeToBuffer(),
           $1.ListEmbeddingResp.fromBuffer);
   static final _$listSttModels = $grpc.ClientMethod<$0.Empty, $1.ListSTTResp>(
       '/hi.club.Agent/ListSttModels',
       ($0.Empty value) => value.writeToBuffer(),
       $1.ListSTTResp.fromBuffer);
-  static final _$listSTT = $grpc.ClientMethod<$0.Empty, $1.ListSTTResp>(
-      '/hi.club.Agent/ListSTT',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.ListSTTResp.fromBuffer);
   static final _$listTtsModels = $grpc.ClientMethod<$0.Empty, $1.ListTTSResp>(
       '/hi.club.Agent/ListTtsModels',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.ListTTSResp.fromBuffer);
-  static final _$listTTS = $grpc.ClientMethod<$0.Empty, $1.ListTTSResp>(
-      '/hi.club.Agent/ListTTS',
       ($0.Empty value) => value.writeToBuffer(),
       $1.ListTTSResp.fromBuffer);
   static final _$agentConfig = $grpc.ClientMethod<$0.Empty, $1.AgentConfigResp>(
@@ -279,11 +206,15 @@ class AgentClient extends $grpc.Client {
       '/hi.club.Agent/EditAgent',
       ($1.EditAgentReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$listAgentByDids =
-      $grpc.ClientMethod<$1.ListAgentByDidsReq, $1.ListAgentByDidsResp>(
-          '/hi.club.Agent/ListAgentByDids',
-          ($1.ListAgentByDidsReq value) => value.writeToBuffer(),
-          $1.ListAgentByDidsResp.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$1.ListAgentReq, $1.ListAgentResp>(
+      '/hi.club.Agent/List',
+      ($1.ListAgentReq value) => value.writeToBuffer(),
+      $1.ListAgentResp.fromBuffer);
+  static final _$listFavorites =
+      $grpc.ClientMethod<$1.ListFavoriteReq, $1.ListAgentResp>(
+          '/hi.club.Agent/ListFavorites',
+          ($1.ListFavoriteReq value) => value.writeToBuffer(),
+          $1.ListAgentResp.fromBuffer);
   static final _$deleteAgent = $grpc.ClientMethod<$1.DeleteAgentReq, $0.Empty>(
       '/hi.club.Agent/DeleteAgent',
       ($1.DeleteAgentReq value) => value.writeToBuffer(),
@@ -312,21 +243,6 @@ class AgentClient extends $grpc.Client {
           '/hi.club.Agent/FavoriteAgent',
           ($1.FavoriteAgentReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
-  static final _$listFavoriteAgents =
-      $grpc.ClientMethod<$1.ListFavoriteAgentReq, $1.ListFavoriteAgentResp>(
-          '/hi.club.Agent/ListFavoriteAgents',
-          ($1.ListFavoriteAgentReq value) => value.writeToBuffer(),
-          $1.ListFavoriteAgentResp.fromBuffer);
-  static final _$listFavoriteAgent =
-      $grpc.ClientMethod<$1.ListFavoriteAgentReq, $1.ListFavoriteAgentResp>(
-          '/hi.club.Agent/ListFavoriteAgent',
-          ($1.ListFavoriteAgentReq value) => value.writeToBuffer(),
-          $1.ListFavoriteAgentResp.fromBuffer);
-  static final _$favoriteAgentListByDIDs = $grpc.ClientMethod<
-          $1.ListFavoriteAgentByDIDsReq, $1.ListFavoriteAgentByDIDsResp>(
-      '/hi.club.Agent/FavoriteAgentListByDIDs',
-      ($1.ListFavoriteAgentByDIDsReq value) => value.writeToBuffer(),
-      $1.ListFavoriteAgentByDIDsResp.fromBuffer);
   static final _$bindMaster = $grpc.ClientMethod<$2.BindMasterReq, $0.Empty>(
       '/hi.club.Agent/BindMaster',
       ($2.BindMasterReq value) => value.writeToBuffer(),
@@ -341,16 +257,11 @@ class AgentClient extends $grpc.Client {
           '/hi.club.Agent/BindStatus',
           ($2.BindStatusReq value) => value.writeToBuffer(),
           $2.BindStatusResp.fromBuffer);
-  static final _$listAllOnlineAgent =
-      $grpc.ClientMethod<$3.Pagination, $2.ListAllOnlineAgentResp>(
-          '/hi.club.Agent/ListAllOnlineAgent',
-          ($3.Pagination value) => value.writeToBuffer(),
-          $2.ListAllOnlineAgentResp.fromBuffer);
-  static final _$listOnlineAgent =
-      $grpc.ClientMethod<$3.DID, $2.ListOnlineAgentResp>(
-          '/hi.club.Agent/ListOnlineAgent',
-          ($3.DID value) => value.writeToBuffer(),
-          $2.ListOnlineAgentResp.fromBuffer);
+  static final _$listOnline =
+      $grpc.ClientMethod<$2.ListOnlineReq, $2.ListOnlineResp>(
+          '/hi.club.Agent/ListOnline',
+          ($2.ListOnlineReq value) => value.writeToBuffer(),
+          $2.ListOnlineResp.fromBuffer);
   static final _$getAgentMaster =
       $grpc.ClientMethod<$2.GetAgentMasterReq, $2.GetAgentMasterResp>(
           '/hi.club.Agent/GetAgentMaster',
@@ -370,23 +281,9 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.ListLLMResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListLLMResp>(
-        'ListLLM',
-        listLLM_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListLLMResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListEmbeddingResp>(
         'ListEmbeddings',
         listEmbeddings_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListEmbeddingResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListEmbeddingResp>(
-        'ListEmbedding',
-        listEmbedding_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
@@ -398,23 +295,9 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.ListSTTResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSTTResp>(
-        'ListSTT',
-        listSTT_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListSTTResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListTTSResp>(
         'ListTtsModels',
         listTtsModels_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListTTSResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListTTSResp>(
-        'ListTTS',
-        listTTS_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
@@ -440,15 +323,20 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.EditAgentReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$1.ListAgentByDidsReq, $1.ListAgentByDidsResp>(
-            'ListAgentByDids',
-            listAgentByDids_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $1.ListAgentByDidsReq.fromBuffer(value),
-            ($1.ListAgentByDidsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListAgentReq, $1.ListAgentResp>(
+        'List',
+        list_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ListAgentReq.fromBuffer(value),
+        ($1.ListAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListFavoriteReq, $1.ListAgentResp>(
+        'ListFavorites',
+        listFavorites_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ListFavoriteReq.fromBuffer(value),
+        ($1.ListAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.DeleteAgentReq, $0.Empty>(
         'DeleteAgent',
         deleteAgent_Pre,
@@ -492,33 +380,6 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.FavoriteAgentReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$1.ListFavoriteAgentReq, $1.ListFavoriteAgentResp>(
-            'ListFavoriteAgents',
-            listFavoriteAgents_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $1.ListFavoriteAgentReq.fromBuffer(value),
-            ($1.ListFavoriteAgentResp value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$1.ListFavoriteAgentReq, $1.ListFavoriteAgentResp>(
-            'ListFavoriteAgent',
-            listFavoriteAgent_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $1.ListFavoriteAgentReq.fromBuffer(value),
-            ($1.ListFavoriteAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ListFavoriteAgentByDIDsReq,
-            $1.ListFavoriteAgentByDIDsResp>(
-        'FavoriteAgentListByDIDs',
-        favoriteAgentListByDIDs_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.ListFavoriteAgentByDIDsReq.fromBuffer(value),
-        ($1.ListFavoriteAgentByDIDsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.BindMasterReq, $0.Empty>(
         'BindMaster',
         bindMaster_Pre,
@@ -540,20 +401,13 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.BindStatusReq.fromBuffer(value),
         ($2.BindStatusResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.Pagination, $2.ListAllOnlineAgentResp>(
-        'ListAllOnlineAgent',
-        listAllOnlineAgent_Pre,
+    $addMethod($grpc.ServiceMethod<$2.ListOnlineReq, $2.ListOnlineResp>(
+        'ListOnline',
+        listOnline_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.Pagination.fromBuffer(value),
-        ($2.ListAllOnlineAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.DID, $2.ListOnlineAgentResp>(
-        'ListOnlineAgent',
-        listOnlineAgent_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $3.DID.fromBuffer(value),
-        ($2.ListOnlineAgentResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $2.ListOnlineReq.fromBuffer(value),
+        ($2.ListOnlineResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.GetAgentMasterReq, $2.GetAgentMasterResp>(
         'GetAgentMaster',
         getAgentMaster_Pre,
@@ -571,28 +425,12 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$1.ListLLMResp> listLlmModels(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$1.ListLLMResp> listLLM_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listLLM($call, await $request);
-  }
-
-  $async.Future<$1.ListLLMResp> listLLM(
-      $grpc.ServiceCall call, $0.Empty request);
-
   $async.Future<$1.ListEmbeddingResp> listEmbeddings_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return listEmbeddings($call, await $request);
   }
 
   $async.Future<$1.ListEmbeddingResp> listEmbeddings(
-      $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$1.ListEmbeddingResp> listEmbedding_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listEmbedding($call, await $request);
-  }
-
-  $async.Future<$1.ListEmbeddingResp> listEmbedding(
       $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.ListSTTResp> listSttModels_Pre(
@@ -603,28 +441,12 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$1.ListSTTResp> listSttModels(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$1.ListSTTResp> listSTT_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listSTT($call, await $request);
-  }
-
-  $async.Future<$1.ListSTTResp> listSTT(
-      $grpc.ServiceCall call, $0.Empty request);
-
   $async.Future<$1.ListTTSResp> listTtsModels_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return listTtsModels($call, await $request);
   }
 
   $async.Future<$1.ListTTSResp> listTtsModels(
-      $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$1.ListTTSResp> listTTS_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listTTS($call, await $request);
-  }
-
-  $async.Future<$1.ListTTSResp> listTTS(
       $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.AgentConfigResp> agentConfig_Pre(
@@ -651,14 +473,21 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> editAgent(
       $grpc.ServiceCall call, $1.EditAgentReq request);
 
-  $async.Future<$1.ListAgentByDidsResp> listAgentByDids_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.ListAgentByDidsReq> $request) async {
-    return listAgentByDids($call, await $request);
+  $async.Future<$1.ListAgentResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.ListAgentReq> $request) async {
+    return list($call, await $request);
   }
 
-  $async.Future<$1.ListAgentByDidsResp> listAgentByDids(
-      $grpc.ServiceCall call, $1.ListAgentByDidsReq request);
+  $async.Future<$1.ListAgentResp> list(
+      $grpc.ServiceCall call, $1.ListAgentReq request);
+
+  $async.Future<$1.ListAgentResp> listFavorites_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ListFavoriteReq> $request) async {
+    return listFavorites($call, await $request);
+  }
+
+  $async.Future<$1.ListAgentResp> listFavorites(
+      $grpc.ServiceCall call, $1.ListFavoriteReq request);
 
   $async.Future<$0.Empty> deleteAgent_Pre($grpc.ServiceCall $call,
       $async.Future<$1.DeleteAgentReq> $request) async {
@@ -709,33 +538,6 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> favoriteAgent(
       $grpc.ServiceCall call, $1.FavoriteAgentReq request);
 
-  $async.Future<$1.ListFavoriteAgentResp> listFavoriteAgents_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.ListFavoriteAgentReq> $request) async {
-    return listFavoriteAgents($call, await $request);
-  }
-
-  $async.Future<$1.ListFavoriteAgentResp> listFavoriteAgents(
-      $grpc.ServiceCall call, $1.ListFavoriteAgentReq request);
-
-  $async.Future<$1.ListFavoriteAgentResp> listFavoriteAgent_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.ListFavoriteAgentReq> $request) async {
-    return listFavoriteAgent($call, await $request);
-  }
-
-  $async.Future<$1.ListFavoriteAgentResp> listFavoriteAgent(
-      $grpc.ServiceCall call, $1.ListFavoriteAgentReq request);
-
-  $async.Future<$1.ListFavoriteAgentByDIDsResp> favoriteAgentListByDIDs_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.ListFavoriteAgentByDIDsReq> $request) async {
-    return favoriteAgentListByDIDs($call, await $request);
-  }
-
-  $async.Future<$1.ListFavoriteAgentByDIDsResp> favoriteAgentListByDIDs(
-      $grpc.ServiceCall call, $1.ListFavoriteAgentByDIDsReq request);
-
   $async.Future<$0.Empty> bindMaster_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.BindMasterReq> $request) async {
     return bindMaster($call, await $request);
@@ -760,21 +562,13 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$2.BindStatusResp> bindStatus(
       $grpc.ServiceCall call, $2.BindStatusReq request);
 
-  $async.Future<$2.ListAllOnlineAgentResp> listAllOnlineAgent_Pre(
-      $grpc.ServiceCall $call, $async.Future<$3.Pagination> $request) async {
-    return listAllOnlineAgent($call, await $request);
+  $async.Future<$2.ListOnlineResp> listOnline_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.ListOnlineReq> $request) async {
+    return listOnline($call, await $request);
   }
 
-  $async.Future<$2.ListAllOnlineAgentResp> listAllOnlineAgent(
-      $grpc.ServiceCall call, $3.Pagination request);
-
-  $async.Future<$2.ListOnlineAgentResp> listOnlineAgent_Pre(
-      $grpc.ServiceCall $call, $async.Future<$3.DID> $request) async {
-    return listOnlineAgent($call, await $request);
-  }
-
-  $async.Future<$2.ListOnlineAgentResp> listOnlineAgent(
-      $grpc.ServiceCall call, $3.DID request);
+  $async.Future<$2.ListOnlineResp> listOnline(
+      $grpc.ServiceCall call, $2.ListOnlineReq request);
 
   $async.Future<$2.GetAgentMasterResp> getAgentMaster_Pre(
       $grpc.ServiceCall $call,

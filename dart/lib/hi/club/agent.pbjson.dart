@@ -67,27 +67,47 @@ const BindStatusResp$json = {
 final $typed_data.Uint8List bindStatusRespDescriptor = $convert.base64Decode(
     'Cg5CaW5kU3RhdHVzUmVzcBIiCgZtYXN0ZXIYASABKAsyCi5oaS5FbnRpdHlSBm1hc3Rlcg==');
 
-@$core.Deprecated('Use listAllOnlineAgentRespDescriptor instead')
-const ListAllOnlineAgentResp$json = {
-  '1': 'ListAllOnlineAgentResp',
+@$core.Deprecated('Use listOnlineReqDescriptor instead')
+const ListOnlineReq$json = {
+  '1': 'ListOnlineReq',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'owner_did', '3': 1, '4': 1, '5': 9, '10': 'ownerDid'},
     {
-      '1': 'list',
+      '1': 'pagination',
       '3': 2,
-      '4': 3,
+      '4': 1,
       '5': 11,
-      '6': '.hi.ai.AgentInfo',
-      '10': 'list'
+      '6': '.hi.Pagination',
+      '10': 'pagination'
     },
   ],
 };
 
-/// Descriptor for `ListAllOnlineAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAllOnlineAgentRespDescriptor =
-    $convert.base64Decode(
-        'ChZMaXN0QWxsT25saW5lQWdlbnRSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIkCgRsaXN0GA'
-        'IgAygLMhAuaGkuYWkuQWdlbnRJbmZvUgRsaXN0');
+/// Descriptor for `ListOnlineReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listOnlineReqDescriptor = $convert.base64Decode(
+    'Cg1MaXN0T25saW5lUmVxEhsKCW93bmVyX2RpZBgBIAEoCVIIb3duZXJEaWQSLgoKcGFnaW5hdG'
+    'lvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+
+@$core.Deprecated('Use listOnlineRespDescriptor instead')
+const ListOnlineResp$json = {
+  '1': 'ListOnlineResp',
+  '2': [
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {
+      '1': 'infos',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.AgentInfo',
+      '10': 'infos'
+    },
+  ],
+};
+
+/// Descriptor for `ListOnlineResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listOnlineRespDescriptor = $convert.base64Decode(
+    'Cg5MaXN0T25saW5lUmVzcBIUCgV0b3RhbBgBIAEoBVIFdG90YWwSJgoFaW5mb3MYAiADKAsyEC'
+    '5oaS5haS5BZ2VudEluZm9SBWluZm9z');
 
 @$core.Deprecated('Use getAgentMasterReqDescriptor instead')
 const GetAgentMasterReq$json = {
@@ -113,23 +133,3 @@ const GetAgentMasterResp$json = {
 final $typed_data.Uint8List getAgentMasterRespDescriptor = $convert.base64Decode(
     'ChJHZXRBZ2VudE1hc3RlclJlc3ASIgoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5UgZtYXN0ZX'
     'I=');
-
-@$core.Deprecated('Use listOnlineAgentRespDescriptor instead')
-const ListOnlineAgentResp$json = {
-  '1': 'ListOnlineAgentResp',
-  '2': [
-    {
-      '1': 'list',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.AgentInfo',
-      '10': 'list'
-    },
-  ],
-};
-
-/// Descriptor for `ListOnlineAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listOnlineAgentRespDescriptor = $convert.base64Decode(
-    'ChNMaXN0T25saW5lQWdlbnRSZXNwEiQKBGxpc3QYASADKAsyEC5oaS5haS5BZ2VudEluZm9SBG'
-    'xpc3Q=');

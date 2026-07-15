@@ -262,54 +262,123 @@ class BindStatusResp extends $pb.GeneratedMessage {
   $3.Entity ensureMaster() => $_ensure(0);
 }
 
-class ListAllOnlineAgentResp extends $pb.GeneratedMessage {
-  factory ListAllOnlineAgentResp({
-    $core.int? total,
-    $core.Iterable<$1.AgentInfo>? list,
+/// 在线 agent 列表(club 本地 presence,非转发 ai)。合并原 ListOnlineAgent(按用户)+ ListAllOnlineAgent(全量)。
+class ListOnlineReq extends $pb.GeneratedMessage {
+  factory ListOnlineReq({
+    $core.String? ownerDid,
+    $3.Pagination? pagination,
   }) {
     final result = create();
-    if (total != null) result.total = total;
-    if (list != null) result.list.addAll(list);
+    if (ownerDid != null) result.ownerDid = ownerDid;
+    if (pagination != null) result.pagination = pagination;
     return result;
   }
 
-  ListAllOnlineAgentResp._();
+  ListOnlineReq._();
 
-  factory ListAllOnlineAgentResp.fromBuffer($core.List<$core.int> data,
+  factory ListOnlineReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAllOnlineAgentResp.fromJson($core.String json,
+  factory ListOnlineReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAllOnlineAgentResp',
+      _omitMessageNames ? '' : 'ListOnlineReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$1.AgentInfo>(2, _omitFieldNames ? '' : 'list',
-        subBuilder: $1.AgentInfo.create)
+    ..aOS(1, _omitFieldNames ? '' : 'ownerDid')
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAllOnlineAgentResp clone() => deepCopy();
+  ListOnlineReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAllOnlineAgentResp copyWith(
-          void Function(ListAllOnlineAgentResp) updates) =>
-      super.copyWith((message) => updates(message as ListAllOnlineAgentResp))
-          as ListAllOnlineAgentResp;
+  ListOnlineReq copyWith(void Function(ListOnlineReq) updates) =>
+      super.copyWith((message) => updates(message as ListOnlineReq))
+          as ListOnlineReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAllOnlineAgentResp create() => ListAllOnlineAgentResp._();
+  static ListOnlineReq create() => ListOnlineReq._();
   @$core.override
-  ListAllOnlineAgentResp createEmptyInstance() => create();
+  ListOnlineReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAllOnlineAgentResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAllOnlineAgentResp>(create);
-  static ListAllOnlineAgentResp? _defaultInstance;
+  static ListOnlineReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListOnlineReq>(create);
+  static ListOnlineReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get ownerDid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set ownerDid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOwnerDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOwnerDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $3.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($3.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Pagination ensurePagination() => $_ensure(1);
+}
+
+class ListOnlineResp extends $pb.GeneratedMessage {
+  factory ListOnlineResp({
+    $core.int? total,
+    $core.Iterable<$1.AgentInfo>? infos,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (infos != null) result.infos.addAll(infos);
+    return result;
+  }
+
+  ListOnlineResp._();
+
+  factory ListOnlineResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListOnlineResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListOnlineResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<$1.AgentInfo>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: $1.AgentInfo.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListOnlineResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListOnlineResp copyWith(void Function(ListOnlineResp) updates) =>
+      super.copyWith((message) => updates(message as ListOnlineResp))
+          as ListOnlineResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListOnlineResp create() => ListOnlineResp._();
+  @$core.override
+  ListOnlineResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListOnlineResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListOnlineResp>(create);
+  static ListOnlineResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);
@@ -321,7 +390,7 @@ class ListAllOnlineAgentResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$1.AgentInfo> get list => $_getList(1);
+  $pb.PbList<$1.AgentInfo> get infos => $_getList(1);
 }
 
 class GetAgentMasterReq extends $pb.GeneratedMessage {
@@ -433,55 +502,6 @@ class GetAgentMasterResp extends $pb.GeneratedMessage {
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
   $3.Entity ensureMaster() => $_ensure(0);
-}
-
-class ListOnlineAgentResp extends $pb.GeneratedMessage {
-  factory ListOnlineAgentResp({
-    $core.Iterable<$1.AgentInfo>? list,
-  }) {
-    final result = create();
-    if (list != null) result.list.addAll(list);
-    return result;
-  }
-
-  ListOnlineAgentResp._();
-
-  factory ListOnlineAgentResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListOnlineAgentResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListOnlineAgentResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..pPM<$1.AgentInfo>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: $1.AgentInfo.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListOnlineAgentResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListOnlineAgentResp copyWith(void Function(ListOnlineAgentResp) updates) =>
-      super.copyWith((message) => updates(message as ListOnlineAgentResp))
-          as ListOnlineAgentResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListOnlineAgentResp create() => ListOnlineAgentResp._();
-  @$core.override
-  ListOnlineAgentResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListOnlineAgentResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListOnlineAgentResp>(create);
-  static ListOnlineAgentResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$1.AgentInfo> get list => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

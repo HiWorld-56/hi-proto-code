@@ -83,27 +83,11 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$saveUsers, request, options: options);
   }
 
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$0.Empty> saveUesrs(
-    $1.MerchantUsersSaveReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$saveUesrs, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.Empty> deleteUsers(
     $1.MerchantUsersDeleteReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$deleteUsers, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
-  $grpc.ResponseFuture<$0.Empty> deleteUesrs(
-    $1.MerchantUsersDeleteReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$deleteUesrs, request, options: options);
   }
 
   // method descriptors
@@ -139,19 +123,9 @@ class MerchantClient extends $grpc.Client {
           '/hi.did.Merchant/SaveUsers',
           ($1.MerchantUsersSaveReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
-  static final _$saveUesrs =
-      $grpc.ClientMethod<$1.MerchantUsersSaveReq, $0.Empty>(
-          '/hi.did.Merchant/SaveUesrs',
-          ($1.MerchantUsersSaveReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
   static final _$deleteUsers =
       $grpc.ClientMethod<$1.MerchantUsersDeleteReq, $0.Empty>(
           '/hi.did.Merchant/DeleteUsers',
-          ($1.MerchantUsersDeleteReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$deleteUesrs =
-      $grpc.ClientMethod<$1.MerchantUsersDeleteReq, $0.Empty>(
-          '/hi.did.Merchant/DeleteUesrs',
           ($1.MerchantUsersDeleteReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
 }
@@ -211,25 +185,9 @@ abstract class MerchantServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.MerchantUsersSaveReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.MerchantUsersSaveReq, $0.Empty>(
-        'SaveUesrs',
-        saveUesrs_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.MerchantUsersSaveReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.MerchantUsersDeleteReq, $0.Empty>(
         'DeleteUsers',
         deleteUsers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.MerchantUsersDeleteReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.MerchantUsersDeleteReq, $0.Empty>(
-        'DeleteUesrs',
-        deleteUesrs_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
@@ -293,28 +251,12 @@ abstract class MerchantServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> saveUsers(
       $grpc.ServiceCall call, $1.MerchantUsersSaveReq request);
 
-  $async.Future<$0.Empty> saveUesrs_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.MerchantUsersSaveReq> $request) async {
-    return saveUesrs($call, await $request);
-  }
-
-  $async.Future<$0.Empty> saveUesrs(
-      $grpc.ServiceCall call, $1.MerchantUsersSaveReq request);
-
   $async.Future<$0.Empty> deleteUsers_Pre($grpc.ServiceCall $call,
       $async.Future<$1.MerchantUsersDeleteReq> $request) async {
     return deleteUsers($call, await $request);
   }
 
   $async.Future<$0.Empty> deleteUsers(
-      $grpc.ServiceCall call, $1.MerchantUsersDeleteReq request);
-
-  $async.Future<$0.Empty> deleteUesrs_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.MerchantUsersDeleteReq> $request) async {
-    return deleteUesrs($call, await $request);
-  }
-
-  $async.Future<$0.Empty> deleteUesrs(
       $grpc.ServiceCall call, $1.MerchantUsersDeleteReq request);
 }
 

@@ -305,9 +305,9 @@ final $typed_data.Uint8List listAgentRespDescriptor = $convert.base64Decode(
     'Cg1MaXN0QWdlbnRSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBImCgVpbmZvcxgCIAMoCzIQLm'
     'hpLmFpLkFnZW50SW5mb1IFaW5mb3M=');
 
-@$core.Deprecated('Use listAgentByDidsReqDescriptor instead')
-const ListAgentByDidsReq$json = {
-  '1': 'ListAgentByDidsReq',
+@$core.Deprecated('Use listAgentReqDescriptor instead')
+const ListAgentReq$json = {
+  '1': 'ListAgentReq',
   '2': [
     {'1': 'dids', '3': 1, '4': 3, '5': 9, '10': 'dids'},
     {
@@ -321,31 +321,31 @@ const ListAgentByDidsReq$json = {
   ],
 };
 
-/// Descriptor for `ListAgentByDidsReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAgentByDidsReqDescriptor = $convert.base64Decode(
-    'ChJMaXN0QWdlbnRCeURpZHNSZXESEgoEZGlkcxgBIAMoCVIEZGlkcxIuCgpwYWdpbmF0aW9uGA'
-    'IgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+/// Descriptor for `ListAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentReqDescriptor = $convert.base64Decode(
+    'CgxMaXN0QWdlbnRSZXESEgoEZGlkcxgBIAMoCVIEZGlkcxIuCgpwYWdpbmF0aW9uGAIgASgLMg'
+    '4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
 
-@$core.Deprecated('Use listAgentByDidsRespDescriptor instead')
-const ListAgentByDidsResp$json = {
-  '1': 'ListAgentByDidsResp',
+@$core.Deprecated('Use listFavoriteReqDescriptor instead')
+const ListFavoriteReq$json = {
+  '1': 'ListFavoriteReq',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'dids', '3': 1, '4': 3, '5': 9, '10': 'dids'},
     {
-      '1': 'infos',
+      '1': 'pagination',
       '3': 2,
-      '4': 3,
+      '4': 1,
       '5': 11,
-      '6': '.hi.ai.AgentInfo',
-      '10': 'infos'
+      '6': '.hi.Pagination',
+      '10': 'pagination'
     },
   ],
 };
 
-/// Descriptor for `ListAgentByDidsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAgentByDidsRespDescriptor = $convert.base64Decode(
-    'ChNMaXN0QWdlbnRCeURpZHNSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBImCgVpbmZvcxgCIA'
-    'MoCzIQLmhpLmFpLkFnZW50SW5mb1IFaW5mb3M=');
+/// Descriptor for `ListFavoriteReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listFavoriteReqDescriptor = $convert.base64Decode(
+    'Cg9MaXN0RmF2b3JpdGVSZXESEgoEZGlkcxgBIAMoCVIEZGlkcxIuCgpwYWdpbmF0aW9uGAIgAS'
+    'gLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
 
 @$core.Deprecated('Use deleteAgentReqDescriptor instead')
 const DeleteAgentReq$json = {
@@ -460,88 +460,3 @@ const FavoriteAgentReq$json = {
 /// Descriptor for `FavoriteAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List favoriteAgentReqDescriptor = $convert.base64Decode(
     'ChBGYXZvcml0ZUFnZW50UmVxEhAKA2RpZBgBIAEoCVIDZGlkEhAKA29wdBgCIAEoCVIDb3B0');
-
-@$core.Deprecated('Use listFavoriteAgentReqDescriptor instead')
-const ListFavoriteAgentReq$json = {
-  '1': 'ListFavoriteAgentReq',
-  '2': [
-    {
-      '1': 'pagination',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
-    },
-  ],
-};
-
-/// Descriptor for `ListFavoriteAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listFavoriteAgentReqDescriptor = $convert.base64Decode(
-    'ChRMaXN0RmF2b3JpdGVBZ2VudFJlcRIuCgpwYWdpbmF0aW9uGAEgASgLMg4uaGkuUGFnaW5hdG'
-    'lvblIKcGFnaW5hdGlvbg==');
-
-@$core.Deprecated('Use listFavoriteAgentRespDescriptor instead')
-const ListFavoriteAgentResp$json = {
-  '1': 'ListFavoriteAgentResp',
-  '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
-    {
-      '1': 'infos',
-      '3': 2,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.AgentInfo',
-      '10': 'infos'
-    },
-  ],
-};
-
-/// Descriptor for `ListFavoriteAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listFavoriteAgentRespDescriptor = $convert.base64Decode(
-    'ChVMaXN0RmF2b3JpdGVBZ2VudFJlc3ASFAoFdG90YWwYASABKAVSBXRvdGFsEiYKBWluZm9zGA'
-    'IgAygLMhAuaGkuYWkuQWdlbnRJbmZvUgVpbmZvcw==');
-
-@$core.Deprecated('Use listFavoriteAgentByDIDsReqDescriptor instead')
-const ListFavoriteAgentByDIDsReq$json = {
-  '1': 'ListFavoriteAgentByDIDsReq',
-  '2': [
-    {'1': 'dids', '3': 1, '4': 3, '5': 9, '10': 'dids'},
-    {
-      '1': 'pagination',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
-    },
-  ],
-};
-
-/// Descriptor for `ListFavoriteAgentByDIDsReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listFavoriteAgentByDIDsReqDescriptor =
-    $convert.base64Decode(
-        'ChpMaXN0RmF2b3JpdGVBZ2VudEJ5RElEc1JlcRISCgRkaWRzGAEgAygJUgRkaWRzEi4KCnBhZ2'
-        'luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
-
-@$core.Deprecated('Use listFavoriteAgentByDIDsRespDescriptor instead')
-const ListFavoriteAgentByDIDsResp$json = {
-  '1': 'ListFavoriteAgentByDIDsResp',
-  '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
-    {
-      '1': 'infos',
-      '3': 2,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.AgentInfo',
-      '10': 'infos'
-    },
-  ],
-};
-
-/// Descriptor for `ListFavoriteAgentByDIDsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listFavoriteAgentByDIDsRespDescriptor =
-    $convert.base64Decode(
-        'ChtMaXN0RmF2b3JpdGVBZ2VudEJ5RElEc1Jlc3ASFAoFdG90YWwYASABKAVSBXRvdGFsEiYKBW'
-        'luZm9zGAIgAygLMhAuaGkuYWkuQWdlbnRJbmZvUgVpbmZvcw==');

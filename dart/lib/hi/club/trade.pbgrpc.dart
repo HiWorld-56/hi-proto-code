@@ -61,18 +61,11 @@ class TradeClient extends $grpc.Client {
     return $createUnaryCall(_$updateTransHash, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListTradeResp> listTrade(
+  $grpc.ResponseFuture<$0.ListTradeResp> list(
     $0.ListTradeReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listTrade, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.ListAllTradeResp> listAllTrade(
-    $0.ListAllTradeReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listAllTrade, request, options: options);
+    return $createUnaryCall(_$list, request, options: options);
   }
 
   // method descriptors
@@ -95,16 +88,10 @@ class TradeClient extends $grpc.Client {
           '/hi.club.Trade/UpdateTransHash',
           ($0.UpdateTransHashReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$listTrade =
-      $grpc.ClientMethod<$0.ListTradeReq, $0.ListTradeResp>(
-          '/hi.club.Trade/ListTrade',
-          ($0.ListTradeReq value) => value.writeToBuffer(),
-          $0.ListTradeResp.fromBuffer);
-  static final _$listAllTrade =
-      $grpc.ClientMethod<$0.ListAllTradeReq, $0.ListAllTradeResp>(
-          '/hi.club.Trade/ListAllTrade',
-          ($0.ListAllTradeReq value) => value.writeToBuffer(),
-          $0.ListAllTradeResp.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$0.ListTradeReq, $0.ListTradeResp>(
+      '/hi.club.Trade/List',
+      ($0.ListTradeReq value) => value.writeToBuffer(),
+      $0.ListTradeResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Trade')
@@ -142,19 +129,12 @@ abstract class TradeServiceBase extends $grpc.Service {
             $0.UpdateTransHashReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListTradeReq, $0.ListTradeResp>(
-        'ListTrade',
-        listTrade_Pre,
+        'List',
+        list_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.ListTradeReq.fromBuffer(value),
         ($0.ListTradeResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListAllTradeReq, $0.ListAllTradeResp>(
-        'ListAllTrade',
-        listAllTrade_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListAllTradeReq.fromBuffer(value),
-        ($0.ListAllTradeResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.GetTradeFeeResp> getTradeFee_Pre($grpc.ServiceCall $call,
@@ -189,19 +169,11 @@ abstract class TradeServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> updateTransHash(
       $grpc.ServiceCall call, $0.UpdateTransHashReq request);
 
-  $async.Future<$0.ListTradeResp> listTrade_Pre(
+  $async.Future<$0.ListTradeResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListTradeReq> $request) async {
-    return listTrade($call, await $request);
+    return list($call, await $request);
   }
 
-  $async.Future<$0.ListTradeResp> listTrade(
+  $async.Future<$0.ListTradeResp> list(
       $grpc.ServiceCall call, $0.ListTradeReq request);
-
-  $async.Future<$0.ListAllTradeResp> listAllTrade_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListAllTradeReq> $request) async {
-    return listAllTrade($call, await $request);
-  }
-
-  $async.Future<$0.ListAllTradeResp> listAllTrade(
-      $grpc.ServiceCall call, $0.ListAllTradeReq request);
 }

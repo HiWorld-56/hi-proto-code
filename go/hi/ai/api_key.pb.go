@@ -343,58 +343,6 @@ func (x *DeleteApiKeyReq) GetApiKey() string {
 	return ""
 }
 
-type ListAgentReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AgentDid      string                 `protobuf:"bytes,1,opt,name=agent_did,json=agentDid,proto3" json:"agent_did,omitempty"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListAgentReq) Reset() {
-	*x = ListAgentReq{}
-	mi := &file_hi_ai_api_key_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListAgentReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListAgentReq) ProtoMessage() {}
-
-func (x *ListAgentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_api_key_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListAgentReq.ProtoReflect.Descriptor instead.
-func (*ListAgentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_api_key_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *ListAgentReq) GetAgentDid() string {
-	if x != nil {
-		return x.AgentDid
-	}
-	return ""
-}
-
-func (x *ListAgentReq) GetPagination() *hi.Pagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
 var File_hi_ai_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_ai_api_key_proto_rawDesc = "" +
@@ -421,12 +369,7 @@ const file_hi_ai_api_key_proto_rawDesc = "" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12'\n" +
 	"\x05infos\x18\x02 \x03(\v2\x11.hi.ai.ApiKeyInfoR\x05infos\"*\n" +
 	"\x0fDeleteApiKeyReq\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\"[\n" +
-	"\fListAgentReq\x12\x1b\n" +
-	"\tagent_did\x18\x01 \x01(\tR\bagentDid\x12.\n" +
-	"\n" +
-	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination2\xe1\x01\n" +
+	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\xe1\x01\n" +
 	"\x06ApiKey\x129\n" +
 	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\x123\n" +
 	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\x12-\n" +
@@ -446,7 +389,7 @@ func file_hi_ai_api_key_proto_rawDescGZIP() []byte {
 	return file_hi_ai_api_key_proto_rawDescData
 }
 
-var file_hi_ai_api_key_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_hi_ai_api_key_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_hi_ai_api_key_proto_goTypes = []any{
 	(*ApiKeyInfo)(nil),       // 0: hi.ai.ApiKeyInfo
 	(*CreateApiKeyResp)(nil), // 1: hi.ai.CreateApiKeyResp
@@ -454,28 +397,26 @@ var file_hi_ai_api_key_proto_goTypes = []any{
 	(*EditApiKeyResp)(nil),   // 3: hi.ai.EditApiKeyResp
 	(*ListApiKeyResp)(nil),   // 4: hi.ai.ListApiKeyResp
 	(*DeleteApiKeyReq)(nil),  // 5: hi.ai.DeleteApiKeyReq
-	(*ListAgentReq)(nil),     // 6: hi.ai.ListAgentReq
+	(*emptypb.Empty)(nil),    // 6: google.protobuf.Empty
 	(*hi.Pagination)(nil),    // 7: hi.Pagination
-	(*emptypb.Empty)(nil),    // 8: google.protobuf.Empty
 }
 var file_hi_ai_api_key_proto_depIdxs = []int32{
 	0, // 0: hi.ai.CreateApiKeyResp.info:type_name -> hi.ai.ApiKeyInfo
 	0, // 1: hi.ai.EditApiKeyResp.info:type_name -> hi.ai.ApiKeyInfo
 	0, // 2: hi.ai.ListApiKeyResp.infos:type_name -> hi.ai.ApiKeyInfo
-	7, // 3: hi.ai.ListAgentReq.pagination:type_name -> hi.Pagination
-	8, // 4: hi.ai.ApiKey.Create:input_type -> google.protobuf.Empty
-	2, // 5: hi.ai.ApiKey.Edit:input_type -> hi.ai.EditApiKeyReq
-	7, // 6: hi.ai.ApiKey.List:input_type -> hi.Pagination
-	5, // 7: hi.ai.ApiKey.Delete:input_type -> hi.ai.DeleteApiKeyReq
-	1, // 8: hi.ai.ApiKey.Create:output_type -> hi.ai.CreateApiKeyResp
-	3, // 9: hi.ai.ApiKey.Edit:output_type -> hi.ai.EditApiKeyResp
-	4, // 10: hi.ai.ApiKey.List:output_type -> hi.ai.ListApiKeyResp
-	8, // 11: hi.ai.ApiKey.Delete:output_type -> google.protobuf.Empty
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	6, // 3: hi.ai.ApiKey.Create:input_type -> google.protobuf.Empty
+	2, // 4: hi.ai.ApiKey.Edit:input_type -> hi.ai.EditApiKeyReq
+	7, // 5: hi.ai.ApiKey.List:input_type -> hi.Pagination
+	5, // 6: hi.ai.ApiKey.Delete:input_type -> hi.ai.DeleteApiKeyReq
+	1, // 7: hi.ai.ApiKey.Create:output_type -> hi.ai.CreateApiKeyResp
+	3, // 8: hi.ai.ApiKey.Edit:output_type -> hi.ai.EditApiKeyResp
+	4, // 9: hi.ai.ApiKey.List:output_type -> hi.ai.ListApiKeyResp
+	6, // 10: hi.ai.ApiKey.Delete:output_type -> google.protobuf.Empty
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_api_key_proto_init() }
@@ -489,7 +430,7 @@ func file_hi_ai_api_key_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_api_key_proto_rawDesc), len(file_hi_ai_api_key_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
