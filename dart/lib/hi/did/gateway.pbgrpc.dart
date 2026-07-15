@@ -33,6 +33,8 @@ class GatewayConfigClient extends $grpc.Client {
 
   GatewayConfigClient(super.channel, {super.options, super.interceptors});
 
+  /// 网关配置列表。此前免鉴权;调用方是主服务(club 等)持 ExtendToken 转发,
+  /// 故用 AUTH_EXTEND_TOKEN 而非 AUTH_TOKEN —— 后者会让 club 的转发直接 401(它不带用户 Token)。
   $grpc.ResponseFuture<$1.GatewayConfigListResp> list(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -40,6 +42,8 @@ class GatewayConfigClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  /// 设置网关配置(含 api_key)。**内部使用**:handler 里本就有 IsAdmin 校验,
+  /// 现收敛到拦截器 —— AUTH_SUPERADMIN = token 鉴权 + 多一层"当前用户是否超管"。
   $grpc.ResponseFuture<$0.Empty> set(
     $1.GatewayConfigSetReq request, {
     $grpc.CallOptions? options,

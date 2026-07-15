@@ -28,6 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatewayConfigClient interface {
+	// 网关配置列表(面向登录用户)。此前误为免鉴权。
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.GatewayConfigListResp, error)
 }
 
@@ -53,6 +54,7 @@ func (c *gatewayConfigClient) List(ctx context.Context, in *emptypb.Empty, opts 
 // All implementations should embed UnimplementedGatewayConfigServer
 // for forward compatibility.
 type GatewayConfigServer interface {
+	// 网关配置列表(面向登录用户)。此前误为免鉴权。
 	List(context.Context, *emptypb.Empty) (*did.GatewayConfigListResp, error)
 }
 

@@ -5923,6 +5923,7 @@ pub mod gateway_config_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// 网关配置列表(面向登录用户)。此前误为免鉴权。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,

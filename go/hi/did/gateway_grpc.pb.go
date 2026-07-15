@@ -28,7 +28,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatewayConfigClient interface {
+	// 网关配置列表。此前免鉴权;调用方是主服务(club 等)持 ExtendToken 转发,
+	// 故用 AUTH_EXTEND_TOKEN 而非 AUTH_TOKEN —— 后者会让 club 的转发直接 401(它不带用户 Token)。
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error)
+	// 设置网关配置(含 api_key)。**内部使用**:handler 里本就有 IsAdmin 校验,
+	// 现收敛到拦截器 —— AUTH_SUPERADMIN = token 鉴权 + 多一层"当前用户是否超管"。
 	Set(ctx context.Context, in *GatewayConfigSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -64,7 +68,11 @@ func (c *gatewayConfigClient) Set(ctx context.Context, in *GatewayConfigSetReq, 
 // All implementations should embed UnimplementedGatewayConfigServer
 // for forward compatibility.
 type GatewayConfigServer interface {
+	// 网关配置列表。此前免鉴权;调用方是主服务(club 等)持 ExtendToken 转发,
+	// 故用 AUTH_EXTEND_TOKEN 而非 AUTH_TOKEN —— 后者会让 club 的转发直接 401(它不带用户 Token)。
 	List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error)
+	// 设置网关配置(含 api_key)。**内部使用**:handler 里本就有 IsAdmin 校验,
+	// 现收敛到拦截器 —— AUTH_SUPERADMIN = token 鉴权 + 多一层"当前用户是否超管"。
 	Set(context.Context, *GatewayConfigSetReq) (*emptypb.Empty, error)
 }
 

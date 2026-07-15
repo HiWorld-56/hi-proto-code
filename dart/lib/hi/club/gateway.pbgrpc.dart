@@ -33,6 +33,7 @@ class GatewayConfigClient extends $grpc.Client {
 
   GatewayConfigClient(super.channel, {super.options, super.interceptors});
 
+  /// 网关配置列表(面向登录用户)。此前误为免鉴权。
   $grpc.ResponseFuture<$1.GatewayConfigListResp> list(
     $0.Empty request, {
     $grpc.CallOptions? options,
