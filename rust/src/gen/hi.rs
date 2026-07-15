@@ -112,7 +112,7 @@ pub enum Auth {
     ExtendToken = 3,
     /// apiKey:三方程序化调用
     ApiKey = 4,
-    /// 超管:在 AUTH_TOKEN 基础上再校验 caller did ∈ 超管名单
+    /// 超管 = **二级验证**:先按 AUTH_TOKEN 验 token,再多一层
     Superadmin = 5,
     /// ⚠️ AUTH_WEB3:传输层不鉴权,**鉴权在载荷里** —— 入参是 hi.SignedData,由 handler
     /// 自行验签(见 didapi.VerifySignature / VerifyOffline)确认调用者身份。

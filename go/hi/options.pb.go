@@ -39,7 +39,7 @@ const (
 	Auth_AUTH_TOKEN        Auth = 2 // 用户 token(JWT):普通登录用户
 	Auth_AUTH_EXTEND_TOKEN Auth = 3 // 商户 ExtendToken:hisrv 商户身份,ctx 内含 merchant_did / extend_table
 	Auth_AUTH_API_KEY      Auth = 4 // apiKey:三方程序化调用
-	Auth_AUTH_SUPERADMIN   Auth = 5 // 超管:在 AUTH_TOKEN 基础上再校验 caller did ∈ 超管名单
+	Auth_AUTH_SUPERADMIN   Auth = 5 // 超管 = **二级验证**:先按 AUTH_TOKEN 验 token,再多一层
 	// ⚠️ AUTH_WEB3:传输层不鉴权,**鉴权在载荷里** —— 入参是 hi.SignedData,由 handler
 	// 自行验签(见 didapi.VerifySignature / VerifyOffline)确认调用者身份。
 	//
