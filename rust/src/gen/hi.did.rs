@@ -190,6 +190,9 @@ pub mod base_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Base", "LatestVersion"));
             self.inner.unary(req, path, codec).await
         }
+        /// 超管名单。hisrv web 登录后拿它显隐"内部使用"菜单 —— 任何登录商户都要调,
+        /// 故不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
+        /// 此前是 AUTH_NONE,等于把内部团队的 did 名单公开挂着。
         pub async fn list_super_admin_users(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -349,6 +352,128 @@ pub mod assist_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Assist", "VerifySignature"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod super_admin_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 超管名单的**唯一持有方**。超管是内部团队的后门(方便快速做全局操作/查询),与业务无关,
+    /// 人员固定就那几个。club/ai/media 一律穿透到这里问,不许自己留表 ——
+    /// 此前四个服务四张表,实测已漂移(did 11 / club 14 / ai 15 / media 3),
+    /// 且在一处撤权另一处不生效(zGzji3gw 在 did 已停用,在 club/ai 仍是超管)。
+    ///
+    /// 与 Base.ListSuperAdminUsers 的区别是**主体不同**,故分开:
+    /// Base.ListSuperAdminUsers → 主体是登录用户(hisrv web),带用户 token,只为显隐菜单
+    /// SuperAdmin.List          → 主体是兄弟服务,带 ExtendToken,用于它们的拦截器判档
+    #[derive(Debug, Clone)]
+    pub struct SuperAdminClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SuperAdminClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SuperAdminClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SuperAdminClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SuperAdminClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListSuperAdminUsersResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.SuperAdmin/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.SuperAdmin", "List"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -3045,164 +3170,6 @@ pub mod agent_market_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GatewayConfigUnit {
-    /// aptos/bitcoin/ethereum/solana/tatum/tron-grpc/tron-http
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub url: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub api_key: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GatewayConfigListResp {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<GatewayConfigUnit>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GatewayConfigSetReq {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<GatewayConfigUnit>,
-}
-/// Generated client implementations.
-pub mod gateway_config_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct GatewayConfigClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl GatewayConfigClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> GatewayConfigClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> GatewayConfigClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            GatewayConfigClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        /// 网关配置列表。此前免鉴权;调用方是主服务(club 等)持 ExtendToken 转发,
-        /// 故用 AUTH_EXTEND_TOKEN 而非 AUTH_TOKEN —— 后者会让 club 的转发直接 401(它不带用户 Token)。
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::GatewayConfigListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.GatewayConfig/List",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayConfig", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// 设置网关配置(含 api_key)。**内部使用**:handler 里本就有 IsAdmin 校验,
-        /// 现收敛到拦截器 —— AUTH_SUPERADMIN = token 鉴权 + 多一层"当前用户是否超管"。
-        pub async fn set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GatewayConfigSetReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.GatewayConfig/Set");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayConfig", "Set"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InviteCodeCreateResp {
     #[prost(string, tag = "1")]
     pub code: ::prost::alloc::string::String,
@@ -4391,6 +4358,166 @@ pub struct Notice {
     pub extra: ::core::option::Option<::pbjson_types::Any>,
     #[prost(string, tag = "5")]
     pub ex_type: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GatewayConfigUnit {
+    /// aptos/bitcoin/ethereum/solana/tatum/tron-grpc/tron-http
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub url: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub api_key: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GatewayConfigListResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<GatewayConfigUnit>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GatewayConfigSetReq {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<GatewayConfigUnit>,
+}
+/// Generated client implementations.
+pub mod gateway_config_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 网关配置(区块链节点 url + api_key)。**纯内部运维接口**,整个 service 都只有超管能碰。
+    ///
+    /// 唯一调用方是 hisrv web 的"网关配置"页,它直连 did 的 HTTP(9533)、带用户 token。
+    /// 该页在前端属于"内部使用"菜单组,只对超管显示 —— 但那只是菜单显隐,
+    /// 路由守卫只查有没有 token,敲 URL 就能进。所以真正的闸门只有这里。
+    #[derive(Debug, Clone)]
+    pub struct GatewayConfigClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl GatewayConfigClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> GatewayConfigClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> GatewayConfigClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            GatewayConfigClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 列出网关配置。resp 里含 api_key,泄露即等于把节点凭证给出去。
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::GatewayConfigListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.GatewayConfig/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayConfig", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GatewayConfigSetReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.GatewayConfig/Set");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayConfig", "Set"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
 }
 /// Generated client implementations.
 pub mod login_callback_client {

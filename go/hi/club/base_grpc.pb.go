@@ -22,11 +22,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Base_ListCoins_FullMethodName           = "/hi.club.Base/ListCoins"
-	Base_LatestVersion_FullMethodName       = "/hi.club.Base/LatestVersion"
-	Base_ListSuperAdminUsers_FullMethodName = "/hi.club.Base/ListSuperAdminUsers"
-	Base_GetConfig_FullMethodName           = "/hi.club.Base/GetConfig"
-	Base_ServerVersion_FullMethodName       = "/hi.club.Base/ServerVersion"
+	Base_ListCoins_FullMethodName     = "/hi.club.Base/ListCoins"
+	Base_LatestVersion_FullMethodName = "/hi.club.Base/LatestVersion"
+	Base_GetConfig_FullMethodName     = "/hi.club.Base/GetConfig"
+	Base_ServerVersion_FullMethodName = "/hi.club.Base/ServerVersion"
 )
 
 // BaseClient is the client API for Base service.
@@ -35,7 +34,6 @@ const (
 type BaseClient interface {
 	ListCoins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListCoinsResp, error)
 	LatestVersion(ctx context.Context, in *did.LatestVersionReq, opts ...grpc.CallOption) (*did.LatestVersionResp, error)
-	ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error)
 	GetConfig(ctx context.Context, in *GetConfigReq, opts ...grpc.CallOption) (*GetConfigResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 }
@@ -68,16 +66,6 @@ func (c *baseClient) LatestVersion(ctx context.Context, in *did.LatestVersionReq
 	return out, nil
 }
 
-func (c *baseClient) ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.ListSuperAdminUsersResp)
-	err := c.cc.Invoke(ctx, Base_ListSuperAdminUsers_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *baseClient) GetConfig(ctx context.Context, in *GetConfigReq, opts ...grpc.CallOption) (*GetConfigResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetConfigResp)
@@ -104,7 +92,6 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 type BaseServer interface {
 	ListCoins(context.Context, *emptypb.Empty) (*did.ListCoinsResp, error)
 	LatestVersion(context.Context, *did.LatestVersionReq) (*did.LatestVersionResp, error)
-	ListSuperAdminUsers(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error)
 	GetConfig(context.Context, *GetConfigReq) (*GetConfigResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 }
@@ -121,9 +108,6 @@ func (UnimplementedBaseServer) ListCoins(context.Context, *emptypb.Empty) (*did.
 }
 func (UnimplementedBaseServer) LatestVersion(context.Context, *did.LatestVersionReq) (*did.LatestVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method LatestVersion not implemented")
-}
-func (UnimplementedBaseServer) ListSuperAdminUsers(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSuperAdminUsers not implemented")
 }
 func (UnimplementedBaseServer) GetConfig(context.Context, *GetConfigReq) (*GetConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetConfig not implemented")
@@ -187,24 +171,6 @@ func _Base_LatestVersion_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_ListSuperAdminUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).ListSuperAdminUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_ListSuperAdminUsers_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).ListSuperAdminUsers(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Base_GetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetConfigReq)
 	if err := dec(in); err != nil {
@@ -255,10 +221,6 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LatestVersion",
 			Handler:    _Base_LatestVersion_Handler,
-		},
-		{
-			MethodName: "ListSuperAdminUsers",
-			Handler:    _Base_ListSuperAdminUsers_Handler,
 		},
 		{
 			MethodName: "GetConfig",

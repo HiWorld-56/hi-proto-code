@@ -29,7 +29,7 @@ const file_hi_media_base_proto_rawDesc = "" +
 	"\n" +
 	"\x13hi/media/base.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2\xa2\x01\n" +
 	"\x04Base\x12T\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x01\x12D\n" +
+	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x02\x12D\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x01B\x86\x01\n" +
 	"\fcom.hi.mediaB\tBaseProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 

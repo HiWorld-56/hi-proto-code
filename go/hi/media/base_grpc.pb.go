@@ -30,6 +30,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BaseClient interface {
+	// 超管名单。himedia web 登录后拿它显隐内部菜单,故须登录可调、不能标 SUPERADMIN。
+	// 实现须穿透到 hidid(hi.did.SuperAdmin.List)—— media 不得自留名单表。
 	ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 }
@@ -66,6 +68,8 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
 type BaseServer interface {
+	// 超管名单。himedia web 登录后拿它显隐内部菜单,故须登录可调、不能标 SUPERADMIN。
+	// 实现须穿透到 hidid(hi.did.SuperAdmin.List)—— media 不得自留名单表。
 	ListSuperAdminUsers(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 }

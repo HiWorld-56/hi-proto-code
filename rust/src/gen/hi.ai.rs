@@ -3650,30 +3650,6 @@ pub mod base_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn list_super_admin_users(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::did::ListSuperAdminUsersResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Base/ListSuperAdminUsers",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Base", "ListSuperAdminUsers"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn server_version(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,

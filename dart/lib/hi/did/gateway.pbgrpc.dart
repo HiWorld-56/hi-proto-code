@@ -21,6 +21,11 @@ import 'gateway.pb.dart' as $1;
 
 export 'gateway.pb.dart';
 
+/// 网关配置(区块链节点 url + api_key)。**纯内部运维接口**,整个 service 都只有超管能碰。
+///
+/// 唯一调用方是 hisrv web 的"网关配置"页,它直连 did 的 HTTP(9533)、带用户 token。
+/// 该页在前端属于"内部使用"菜单组,只对超管显示 —— 但那只是菜单显隐,
+/// 路由守卫只查有没有 token,敲 URL 就能进。所以真正的闸门只有这里。
 @$pb.GrpcServiceName('hi.did.GatewayConfig')
 class GatewayConfigClient extends $grpc.Client {
   /// The hostname for this service.
@@ -33,8 +38,7 @@ class GatewayConfigClient extends $grpc.Client {
 
   GatewayConfigClient(super.channel, {super.options, super.interceptors});
 
-  /// 网关配置列表。此前免鉴权;调用方是主服务(club 等)持 ExtendToken 转发,
-  /// 故用 AUTH_EXTEND_TOKEN 而非 AUTH_TOKEN —— 后者会让 club 的转发直接 401(它不带用户 Token)。
+  /// 列出网关配置。resp 里含 api_key,泄露即等于把节点凭证给出去。
   $grpc.ResponseFuture<$1.GatewayConfigListResp> list(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -42,8 +46,6 @@ class GatewayConfigClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  /// 设置网关配置(含 api_key)。**内部使用**:handler 里本就有 IsAdmin 校验,
-  /// 现收敛到拦截器 —— AUTH_SUPERADMIN = token 鉴权 + 多一层"当前用户是否超管"。
   $grpc.ResponseFuture<$0.Empty> set(
     $1.GatewayConfigSetReq request, {
     $grpc.CallOptions? options,

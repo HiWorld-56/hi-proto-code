@@ -49,13 +49,6 @@ class BaseClient extends $grpc.Client {
     return $createUnaryCall(_$latestVersion, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listSuperAdminUsers, request, options: options);
-  }
-
   $grpc.ResponseFuture<$2.GetConfigResp> getConfig(
     $2.GetConfigReq request, {
     $grpc.CallOptions? options,
@@ -81,11 +74,6 @@ class BaseClient extends $grpc.Client {
           '/hi.club.Base/LatestVersion',
           ($1.LatestVersionReq value) => value.writeToBuffer(),
           $1.LatestVersionResp.fromBuffer);
-  static final _$listSuperAdminUsers =
-      $grpc.ClientMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
-          '/hi.club.Base/ListSuperAdminUsers',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.ListSuperAdminUsersResp.fromBuffer);
   static final _$getConfig =
       $grpc.ClientMethod<$2.GetConfigReq, $2.GetConfigResp>(
           '/hi.club.Base/GetConfig',
@@ -117,13 +105,6 @@ abstract class BaseServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.LatestVersionReq.fromBuffer(value),
         ($1.LatestVersionResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
-        'ListSuperAdminUsers',
-        listSuperAdminUsers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListSuperAdminUsersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.GetConfigReq, $2.GetConfigResp>(
         'GetConfig',
         getConfig_Pre,
@@ -155,14 +136,6 @@ abstract class BaseServiceBase extends $grpc.Service {
 
   $async.Future<$1.LatestVersionResp> latestVersion(
       $grpc.ServiceCall call, $1.LatestVersionReq request);
-
-  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listSuperAdminUsers($call, await $request);
-  }
-
-  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
-      $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$2.GetConfigResp> getConfig_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.GetConfigReq> $request) async {

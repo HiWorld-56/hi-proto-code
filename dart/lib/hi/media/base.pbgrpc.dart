@@ -34,6 +34,8 @@ class BaseClient extends $grpc.Client {
 
   BaseClient(super.channel, {super.options, super.interceptors});
 
+  /// 超管名单。himedia web 登录后拿它显隐内部菜单,故须登录可调、不能标 SUPERADMIN。
+  /// 实现须穿透到 hidid(hi.did.SuperAdmin.List)—— media 不得自留名单表。
   $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
     $0.Empty request, {
     $grpc.CallOptions? options,

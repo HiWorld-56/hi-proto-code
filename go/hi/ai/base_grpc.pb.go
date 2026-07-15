@@ -9,7 +9,6 @@ package ai
 import (
 	context "context"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
-	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,15 +21,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Base_ListSuperAdminUsers_FullMethodName = "/hi.ai.Base/ListSuperAdminUsers"
-	Base_ServerVersion_FullMethodName       = "/hi.ai.Base/ServerVersion"
+	Base_ServerVersion_FullMethodName = "/hi.ai.Base/ServerVersion"
 )
 
 // BaseClient is the client API for Base service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BaseClient interface {
-	ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 }
 
@@ -40,16 +37,6 @@ type baseClient struct {
 
 func NewBaseClient(cc grpc.ClientConnInterface) BaseClient {
 	return &baseClient{cc}
-}
-
-func (c *baseClient) ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.ListSuperAdminUsersResp)
-	err := c.cc.Invoke(ctx, Base_ListSuperAdminUsers_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error) {
@@ -66,7 +53,6 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
 type BaseServer interface {
-	ListSuperAdminUsers(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 }
 
@@ -77,9 +63,6 @@ type BaseServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBaseServer struct{}
 
-func (UnimplementedBaseServer) ListSuperAdminUsers(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSuperAdminUsers not implemented")
-}
 func (UnimplementedBaseServer) ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ServerVersion not implemented")
 }
@@ -101,24 +84,6 @@ func RegisterBaseServer(s grpc.ServiceRegistrar, srv BaseServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Base_ServiceDesc, srv)
-}
-
-func _Base_ListSuperAdminUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).ListSuperAdminUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_ListSuperAdminUsers_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).ListSuperAdminUsers(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Base_ServerVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -146,10 +111,6 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.ai.Base",
 	HandlerType: (*BaseServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "ListSuperAdminUsers",
-			Handler:    _Base_ListSuperAdminUsers_Handler,
-		},
 		{
 			MethodName: "ServerVersion",
 			Handler:    _Base_ServerVersion_Handler,

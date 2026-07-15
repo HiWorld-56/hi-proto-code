@@ -17,8 +17,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
-import '../common.pb.dart' as $2;
-import '../did/base.pb.dart' as $1;
+import '../common.pb.dart' as $1;
 
 export 'base.pb.dart';
 
@@ -34,14 +33,7 @@ class BaseClient extends $grpc.Client {
 
   BaseClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listSuperAdminUsers, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$2.ServerVersionResp> serverVersion(
+  $grpc.ResponseFuture<$1.ServerVersionResp> serverVersion(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
@@ -50,16 +42,11 @@ class BaseClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$listSuperAdminUsers =
-      $grpc.ClientMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
-          '/hi.ai.Base/ListSuperAdminUsers',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.ListSuperAdminUsersResp.fromBuffer);
   static final _$serverVersion =
-      $grpc.ClientMethod<$0.Empty, $2.ServerVersionResp>(
+      $grpc.ClientMethod<$0.Empty, $1.ServerVersionResp>(
           '/hi.ai.Base/ServerVersion',
           ($0.Empty value) => value.writeToBuffer(),
-          $2.ServerVersionResp.fromBuffer);
+          $1.ServerVersionResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Base')
@@ -67,35 +54,20 @@ abstract class BaseServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.Base';
 
   BaseServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
-        'ListSuperAdminUsers',
-        listSuperAdminUsers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListSuperAdminUsersResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $2.ServerVersionResp>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ServerVersionResp>(
         'ServerVersion',
         serverVersion_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($2.ServerVersionResp value) => value.writeToBuffer()));
+        ($1.ServerVersionResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listSuperAdminUsers($call, await $request);
-  }
-
-  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
-      $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$2.ServerVersionResp> serverVersion_Pre(
+  $async.Future<$1.ServerVersionResp> serverVersion_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return serverVersion($call, await $request);
   }
 
-  $async.Future<$2.ServerVersionResp> serverVersion(
+  $async.Future<$1.ServerVersionResp> serverVersion(
       $grpc.ServiceCall call, $0.Empty request);
 }

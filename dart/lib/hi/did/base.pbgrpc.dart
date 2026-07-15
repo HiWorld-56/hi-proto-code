@@ -48,6 +48,9 @@ class BaseClient extends $grpc.Client {
     return $createUnaryCall(_$latestVersion, request, options: options);
   }
 
+  /// 超管名单。hisrv web 登录后拿它显隐"内部使用"菜单 —— 任何登录商户都要调,
+  /// 故不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
+  /// 此前是 AUTH_NONE,等于把内部团队的 did 名单公开挂着。
   $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -201,4 +204,63 @@ abstract class AssistServiceBase extends $grpc.Service {
 
   $async.Future<$2.DID> verifySignature(
       $grpc.ServiceCall call, $2.SignedData request);
+}
+
+/// 超管名单的**唯一持有方**。超管是内部团队的后门(方便快速做全局操作/查询),与业务无关,
+/// 人员固定就那几个。club/ai/media 一律穿透到这里问,不许自己留表 ——
+/// 此前四个服务四张表,实测已漂移(did 11 / club 14 / ai 15 / media 3),
+/// 且在一处撤权另一处不生效(zGzji3gw 在 did 已停用,在 club/ai 仍是超管)。
+///
+/// 与 Base.ListSuperAdminUsers 的区别是**主体不同**,故分开:
+///   Base.ListSuperAdminUsers → 主体是登录用户(hisrv web),带用户 token,只为显隐菜单
+///   SuperAdmin.List          → 主体是兄弟服务,带 ExtendToken,用于它们的拦截器判档
+@$pb.GrpcServiceName('hi.did.SuperAdmin')
+class SuperAdminClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  SuperAdminClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> list(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$list =
+      $grpc.ClientMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
+          '/hi.did.SuperAdmin/List',
+          ($0.Empty value) => value.writeToBuffer(),
+          $1.ListSuperAdminUsersResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.SuperAdmin')
+abstract class SuperAdminServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.SuperAdmin';
+
+  SuperAdminServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
+        'List',
+        list_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListSuperAdminUsersResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.ListSuperAdminUsersResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return list($call, await $request);
+  }
+
+  $async.Future<$1.ListSuperAdminUsersResp> list(
+      $grpc.ServiceCall call, $0.Empty request);
 }
