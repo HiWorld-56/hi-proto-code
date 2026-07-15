@@ -1,3 +1,86 @@
+impl serde::Serialize for Auth {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "AUTH_UNSPECIFIED",
+            Self::None => "AUTH_NONE",
+            Self::Token => "AUTH_TOKEN",
+            Self::ExtendToken => "AUTH_EXTEND_TOKEN",
+            Self::ApiKey => "AUTH_API_KEY",
+            Self::Superadmin => "AUTH_SUPERADMIN",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for Auth {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "AUTH_UNSPECIFIED",
+            "AUTH_NONE",
+            "AUTH_TOKEN",
+            "AUTH_EXTEND_TOKEN",
+            "AUTH_API_KEY",
+            "AUTH_SUPERADMIN",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = Auth;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "AUTH_UNSPECIFIED" => Ok(Auth::Unspecified),
+                    "AUTH_NONE" => Ok(Auth::None),
+                    "AUTH_TOKEN" => Ok(Auth::Token),
+                    "AUTH_EXTEND_TOKEN" => Ok(Auth::ExtendToken),
+                    "AUTH_API_KEY" => Ok(Auth::ApiKey),
+                    "AUTH_SUPERADMIN" => Ok(Auth::Superadmin),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for AuthToken {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

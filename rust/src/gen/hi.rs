@@ -89,3 +89,57 @@ pub struct ServerVersionResp {
     #[prost(string, tag = "2")]
     pub env: ::prost::alloc::string::String,
 }
+/// 方法鉴权档位。
+///
+/// 设计要点:**规则长在方法身上**,后端拦截器读 descriptor 判断,不再维护 Go 里的字符串表。
+///
+/// * 改名时选项跟着方法走 → 物理上不可能错位(历史上曾因改名导致 15 处鉴权静默漂移)
+/// * 删方法时规则一并消失 → 不会留下悬空条目
+/// * 未标注 = AUTH_UNSPECIFIED(0)= **fail-closed,拦截器直接拒绝**
+///   (旧的表驱动方式是 fail-open:不在表里就掉进某个默认档,did 那个默认档还更宽松)
+///
+/// CI 校验:每个 rpc 必须显式标注;标注与后端实现不一致即构建失败。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Auth {
+    /// 未标注 —— 拦截器拒绝(fail-closed);仅作为漏标的哨兵,不要主动使用
+    Unspecified = 0,
+    /// 免鉴权:公开接口(健康检查、版本、登录握手、给三方查在线机器人等)
+    None = 1,
+    /// 用户 token(JWT):普通登录用户
+    Token = 2,
+    /// 商户 ExtendToken:hisrv 商户身份,ctx 内含 merchant_did / extend_table
+    ExtendToken = 3,
+    /// apiKey:三方程序化调用
+    ApiKey = 4,
+    /// 超管:在 AUTH_TOKEN 基础上再校验 caller did ∈ 超管名单
+    Superadmin = 5,
+}
+impl Auth {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "AUTH_UNSPECIFIED",
+            Self::None => "AUTH_NONE",
+            Self::Token => "AUTH_TOKEN",
+            Self::ExtendToken => "AUTH_EXTEND_TOKEN",
+            Self::ApiKey => "AUTH_API_KEY",
+            Self::Superadmin => "AUTH_SUPERADMIN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "AUTH_UNSPECIFIED" => Some(Self::Unspecified),
+            "AUTH_NONE" => Some(Self::None),
+            "AUTH_TOKEN" => Some(Self::Token),
+            "AUTH_EXTEND_TOKEN" => Some(Self::ExtendToken),
+            "AUTH_API_KEY" => Some(Self::ApiKey),
+            "AUTH_SUPERADMIN" => Some(Self::Superadmin),
+            _ => None,
+        }
+    }
+}

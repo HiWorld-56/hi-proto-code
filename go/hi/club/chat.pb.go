@@ -7,6 +7,7 @@
 package club
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -655,7 +656,7 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\"3\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"3\n" +
 	"\tSimpleReq\x12&\n" +
 	"\x05conts\x18\x01 \x03(\v2\x10.hi.club.ContentR\x05conts\"\x8a\x02\n" +
 	"\tDialogReq\x12\x10\n" +
@@ -715,24 +716,24 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01B\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
-	"\x06_state2\xf7\x06\n" +
-	"\x04Chat\x12/\n" +
-	"\x06Simple\x12\x12.hi.club.SimpleReq\x1a\x11.hi.ai.DialogResp\x12=\n" +
-	"\vGenerateCid\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.GenerateCidResp\x12/\n" +
-	"\x06Dialog\x12\x12.hi.club.DialogReq\x1a\x11.hi.ai.DialogResp\x12=\n" +
-	"\fDialogStream\x12\x12.hi.club.DialogReq\x1a\x17.hi.ai.DialogStreamResp0\x01\x12>\n" +
-	"\fClearContext\x12\x16.hi.ai.ClearContextReq\x1a\x16.google.protobuf.Empty\x12;\n" +
+	"\x06_state2\xcb\a\n" +
+	"\x04Chat\x125\n" +
+	"\x06Simple\x12\x12.hi.club.SimpleReq\x1a\x11.hi.ai.DialogResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\vGenerateCid\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.GenerateCidResp\"\x04\x88\xb5\x18\x02\x125\n" +
+	"\x06Dialog\x12\x12.hi.club.DialogReq\x1a\x11.hi.ai.DialogResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\fDialogStream\x12\x12.hi.club.DialogReq\x1a\x17.hi.ai.DialogStreamResp\"\x04\x88\xb5\x18\x020\x01\x12D\n" +
+	"\fClearContext\x12\x16.hi.ai.ClearContextReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12A\n" +
 	"\n" +
-	"GetContext\x12\x14.hi.ai.GetContextReq\x1a\x17.hi.club.GetContextResp\x12Q\n" +
-	"\x12SimpleTextToSpeech\x12\x1c.hi.ai.SimpleTextToSpeechReq\x1a\x1d.hi.ai.SimpleTextToSpeechResp\x12Q\n" +
-	"\x12SimpleSpeechToText\x12\x1c.hi.ai.SimpleSpeechToTextReq\x1a\x1d.hi.ai.SimpleSpeechToTextResp\x12=\n" +
-	"\x0eSpeechToSpeech\x12\x1a.hi.club.SpeechToSpeechReq\x1a\x0f.hi.ai.ChatResp\x12?\n" +
-	"\x0fSpeechToSpeech2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\x125\n" +
+	"GetContext\x12\x14.hi.ai.GetContextReq\x1a\x17.hi.club.GetContextResp\"\x04\x88\xb5\x18\x02\x12W\n" +
+	"\x12SimpleTextToSpeech\x12\x1c.hi.ai.SimpleTextToSpeechReq\x1a\x1d.hi.ai.SimpleTextToSpeechResp\"\x04\x88\xb5\x18\x02\x12W\n" +
+	"\x12SimpleSpeechToText\x12\x1c.hi.ai.SimpleSpeechToTextReq\x1a\x1d.hi.ai.SimpleSpeechToTextResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\x0eSpeechToSpeech\x12\x1a.hi.club.SpeechToSpeechReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x02\x12E\n" +
+	"\x0fSpeechToSpeech2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x02\x12;\n" +
 	"\n" +
-	"TextToText\x12\x16.hi.club.TextToTextReq\x1a\x0f.hi.ai.ChatResp\x12;\n" +
-	"\vTextToText2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\x129\n" +
-	"\fSpeechToText\x12\x18.hi.club.SpeechToTextReq\x1a\x0f.hi.ai.ChatResp\x12=\n" +
-	"\rSpeechToText2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatRespB\x80\x01\n" +
+	"TextToText\x12\x16.hi.club.TextToTextReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x02\x12A\n" +
+	"\vTextToText2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x02\x12?\n" +
+	"\fSpeechToText\x12\x18.hi.club.SpeechToTextReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\rSpeechToText2\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x02B\x80\x01\n" +
 	"\vcom.hi.clubB\tChatProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

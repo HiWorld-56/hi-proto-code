@@ -7,6 +7,7 @@
 package club
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -26,12 +27,12 @@ var File_hi_club_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_club_api_key_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/did/api_key.proto2\xee\x01\n" +
-	"\x06ApiKey\x12;\n" +
-	"\x06Create\x12\x17.hi.did.CreateApiKeyReq\x1a\x18.hi.did.CreateApiKeyResp\x125\n" +
-	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\x125\n" +
-	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\x129\n" +
-	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.EmptyB\x82\x01\n" +
+	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/did/api_key.proto\x1a\x10hi/options.proto2\x86\x02\n" +
+	"\x06ApiKey\x12A\n" +
+	"\x06Create\x12\x17.hi.did.CreateApiKeyReq\x1a\x18.hi.did.CreateApiKeyResp\"\x04\x88\xb5\x18\x02\x12;\n" +
+	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\"\x04\x88\xb5\x18\x02\x12;\n" +
+	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\"\x04\x88\xb5\x18\x02\x12?\n" +
+	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x82\x01\n" +
 	"\vcom.hi.clubB\vApiKeyProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_api_key_proto_goTypes = []any{

@@ -1115,7 +1115,7 @@ var File_hi_ai_training_proto protoreflect.FileDescriptor
 
 const file_hi_ai_training_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\":\n" +
+	"\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\":\n" +
 	"\x10TrainingAgentReq\x12\x10\n" +
 	"\x03ids\x18\x01 \x03(\x05R\x03ids\x12\x14\n" +
 	"\x05agent\x18\x02 \x01(\tR\x05agent\")\n" +
@@ -1187,24 +1187,24 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\x0eGetMemModelReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\".\n" +
 	"\x0fGetMemModelResp\x12\x1b\n" +
-	"\tmem_model\x18\x01 \x01(\tR\bmemModel2\xb5\a\n" +
-	"\bTraining\x12@\n" +
-	"\rTrainingAgent\x12\x17.hi.ai.TrainingAgentReq\x1a\x16.google.protobuf.Empty\x12E\n" +
-	"\x0eTrainingStatus\x12\x18.hi.ai.TrainingStatusReq\x1a\x19.hi.ai.TrainingStatusResp\x12@\n" +
-	"\rTrainingClear\x12\x17.hi.ai.TrainingClearReq\x1a\x16.google.protobuf.Empty\x12:\n" +
+	"\tmem_model\x18\x01 \x01(\tR\bmemModel2\x89\b\n" +
+	"\bTraining\x12F\n" +
+	"\rTrainingAgent\x12\x17.hi.ai.TrainingAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12K\n" +
+	"\x0eTrainingStatus\x12\x18.hi.ai.TrainingStatusReq\x1a\x19.hi.ai.TrainingStatusResp\"\x04\x88\xb5\x18\x04\x12F\n" +
+	"\rTrainingClear\x12\x17.hi.ai.TrainingClearReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12@\n" +
 	"\n" +
-	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\x12C\n" +
-	"\x0eListAgentFiles\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\x12D\n" +
-	"\x0fDeleteAgentFile\x12\x19.hi.ai.DeleteAgentFileReq\x1a\x16.google.protobuf.Empty\x12F\n" +
-	"\x10DeleteAgentFiles\x12\x1a.hi.ai.DeleteAgentFilesReq\x1a\x16.google.protobuf.Empty\x12P\n" +
-	"\x15DeleteAgentFilesByDid\x12\x1f.hi.ai.DeleteAgentFilesByDidReq\x1a\x16.google.protobuf.Empty\x12?\n" +
-	"\fGetAgentFile\x12\x16.hi.ai.GetAgentFileReq\x1a\x17.hi.ai.GetAgentFileResp\x12@\n" +
-	"\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\x12B\n" +
-	"\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\x12:\n" +
+	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12I\n" +
+	"\x0eListAgentFiles\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\"\x04\x88\xb5\x18\x04\x12J\n" +
+	"\x0fDeleteAgentFile\x12\x19.hi.ai.DeleteAgentFileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12L\n" +
+	"\x10DeleteAgentFiles\x12\x1a.hi.ai.DeleteAgentFilesReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12V\n" +
+	"\x15DeleteAgentFilesByDid\x12\x1f.hi.ai.DeleteAgentFilesByDidReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12E\n" +
+	"\fGetAgentFile\x12\x16.hi.ai.GetAgentFileReq\x1a\x17.hi.ai.GetAgentFileResp\"\x04\x88\xb5\x18\x04\x12F\n" +
+	"\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12H\n" +
+	"\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\"\x04\x88\xb5\x18\x04\x12@\n" +
 	"\n" +
-	"EditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\x12<\n" +
-	"\vSetMemModel\x12\x15.hi.ai.SetMemModelReq\x1a\x16.google.protobuf.Empty\x12<\n" +
-	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelRespBx\n" +
+	"EditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12B\n" +
+	"\vSetMemModel\x12\x15.hi.ai.SetMemModelReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12B\n" +
+	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelResp\"\x04\x88\xb5\x18\x04Bx\n" +
 	"\tcom.hi.aiB\rTrainingProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (

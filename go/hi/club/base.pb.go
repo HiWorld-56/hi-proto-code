@@ -116,17 +116,17 @@ var File_hi_club_base_proto protoreflect.FileDescriptor
 
 const file_hi_club_base_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\"\"\n" +
+	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\"\n" +
 	"\fGetConfigReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"%\n" +
 	"\rGetConfigResp\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\tR\x05value2\xd4\x02\n" +
-	"\x04Base\x12:\n" +
-	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\x12D\n" +
-	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\x12N\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\x12:\n" +
-	"\tGetConfig\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigResp\x12>\n" +
-	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionRespB\x80\x01\n" +
+	"\x05value\x18\x01 \x01(\tR\x05value2\xf2\x02\n" +
+	"\x04Base\x12@\n" +
+	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x04\x88\xb5\x18\x02\x12J\n" +
+	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x04\x88\xb5\x18\x01\x12T\n" +
+	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x01\x12@\n" +
+	"\tGetConfig\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigResp\"\x04\x88\xb5\x18\x02\x12D\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x01B\x80\x01\n" +
 	"\vcom.hi.clubB\tBaseProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

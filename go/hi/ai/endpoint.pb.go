@@ -7,6 +7,7 @@
 package ai
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -114,14 +115,14 @@ var File_hi_ai_endpoint_proto protoreflect.FileDescriptor
 
 const file_hi_ai_endpoint_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/ai/endpoint.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\",\n" +
+	"\x14hi/ai/endpoint.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\",\n" +
 	"\x0eEndpointSetReq\x12\x1a\n" +
 	"\bendpoint\x18\x01 \x01(\tR\bendpoint\"-\n" +
 	"\x0fEndpointGetResp\x12\x1a\n" +
-	"\bendpoint\x18\x01 \x01(\tR\bendpoint2}\n" +
-	"\x0ePluginEndpoint\x124\n" +
-	"\x03Set\x12\x15.hi.ai.EndpointSetReq\x1a\x16.google.protobuf.Empty\x125\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.EndpointGetRespBx\n" +
+	"\bendpoint\x18\x01 \x01(\tR\bendpoint2\x89\x01\n" +
+	"\x0ePluginEndpoint\x12:\n" +
+	"\x03Set\x12\x15.hi.ai.EndpointSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.EndpointGetResp\"\x04\x88\xb5\x18\x02Bx\n" +
 	"\tcom.hi.aiB\rEndpointProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (

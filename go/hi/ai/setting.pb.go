@@ -7,6 +7,7 @@
 package ai
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -174,7 +175,7 @@ var File_hi_ai_setting_proto protoreflect.FileDescriptor
 
 const file_hi_ai_setting_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\"^\n" +
+	"\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"^\n" +
 	"\vSettingInfo\x12\x1b\n" +
 	"\tproxy_url\x18\x01 \x01(\tR\bproxyUrl\x12\x16\n" +
 	"\x06enable\x18\x02 \x01(\bR\x06enable\x12\x1a\n" +
@@ -182,10 +183,10 @@ const file_hi_ai_setting_proto_rawDesc = "" +
 	"\x0eSettingEditReq\x12&\n" +
 	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info\"8\n" +
 	"\x0eSettingGetResp\x12&\n" +
-	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info2v\n" +
-	"\aSetting\x125\n" +
-	"\x04Edit\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\x124\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetRespBw\n" +
+	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info2\x82\x01\n" +
+	"\aSetting\x12;\n" +
+	"\x04Edit\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12:\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetResp\"\x04\x88\xb5\x18\x02Bw\n" +
 	"\tcom.hi.aiB\fSettingProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (

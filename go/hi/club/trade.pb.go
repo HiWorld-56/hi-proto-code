@@ -753,7 +753,7 @@ var File_hi_club_trade_proto protoreflect.FileDescriptor
 
 const file_hi_club_trade_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/trade.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/transfer.proto\"\x89\x01\n" +
+	"\x13hi/club/trade.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\"\x89\x01\n" +
 	"\tTradeUnit\x12 \n" +
 	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinR\x04coin\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
@@ -805,13 +805,13 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"pagination\"O\n" +
 	"\rListTradeResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12(\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\xba\x02\n" +
-	"\x05Trade\x12@\n" +
-	"\vGetTradeFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\x127\n" +
-	"\bGetTrade\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\x127\n" +
-	"\bAddTrade\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\x12F\n" +
-	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\x125\n" +
-	"\x04List\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeRespB\x81\x01\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\xd8\x02\n" +
+	"\x05Trade\x12F\n" +
+	"\vGetTradeFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x04\x88\xb5\x18\x02\x12=\n" +
+	"\bGetTrade\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x04\x88\xb5\x18\x02\x12=\n" +
+	"\bAddTrade\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x04\x88\xb5\x18\x02\x12L\n" +
+	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
+	"\x04List\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeResp\"\x04\x88\xb5\x18\x02B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"TradeProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 

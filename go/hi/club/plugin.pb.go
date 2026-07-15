@@ -7,6 +7,7 @@
 package club
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -26,22 +27,22 @@ var File_hi_club_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_club_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto2\xef\x05\n" +
-	"\x06Plugin\x12;\n" +
+	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto2\xb7\x06\n" +
+	"\x06Plugin\x12A\n" +
 	"\n" +
-	"DrawConfig\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.DrawConfigResp\x12?\n" +
-	"\fPluginSwitch\x12\x16.hi.ai.PluginSwitchReq\x1a\x17.hi.ai.PluginSwitchResp\x12>\n" +
-	"\fSearchCreate\x12\x16.hi.ai.SearchCreateReq\x1a\x16.google.protobuf.Empty\x12?\n" +
-	"\fPythonCreate\x12\x16.hi.ai.PythonCreateReq\x1a\x17.hi.ai.PythonCreateResp\x129\n" +
+	"DrawConfig\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.DrawConfigResp\"\x04\x88\xb5\x18\x02\x12E\n" +
+	"\fPluginSwitch\x12\x16.hi.ai.PluginSwitchReq\x1a\x17.hi.ai.PluginSwitchResp\"\x04\x88\xb5\x18\x02\x12D\n" +
+	"\fSearchCreate\x12\x16.hi.ai.SearchCreateReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12E\n" +
+	"\fPythonCreate\x12\x16.hi.ai.PythonCreateReq\x1a\x17.hi.ai.PythonCreateResp\"\x04\x88\xb5\x18\x02\x12?\n" +
 	"\n" +
-	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\x123\n" +
-	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\x128\n" +
-	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\x12D\n" +
-	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\x124\n" +
-	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\x120\n" +
-	"\aGetDraw\x12\x11.hi.ai.GetDrawReq\x1a\x12.hi.ai.GetDrawResp\x12D\n" +
-	"\x0fPythonParamsSet\x12\x19.hi.ai.PythonParamsSetReq\x1a\x16.google.protobuf.Empty\x12H\n" +
-	"\x0fGetPythonParams\x12\x19.hi.ai.GetPythonParamsReq\x1a\x1a.hi.ai.GetPythonParamsRespB\x82\x01\n" +
+	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\"\x04\x88\xb5\x18\x02\x129\n" +
+	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\"\x04\x88\xb5\x18\x02\x12>\n" +
+	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12J\n" +
+	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12:\n" +
+	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x126\n" +
+	"\aGetDraw\x12\x11.hi.ai.GetDrawReq\x1a\x12.hi.ai.GetDrawResp\"\x04\x88\xb5\x18\x02\x12J\n" +
+	"\x0fPythonParamsSet\x12\x19.hi.ai.PythonParamsSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12N\n" +
+	"\x0fGetPythonParams\x12\x19.hi.ai.GetPythonParamsReq\x1a\x1a.hi.ai.GetPythonParamsResp\"\x04\x88\xb5\x18\x02B\x82\x01\n" +
 	"\vcom.hi.clubB\vPluginProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_plugin_proto_goTypes = []any{

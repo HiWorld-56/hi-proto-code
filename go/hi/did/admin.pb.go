@@ -967,7 +967,7 @@ var File_hi_did_admin_proto protoreflect.FileDescriptor
 
 const file_hi_did_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/did/admin.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\"G\n" +
+	"\x12hi/did/admin.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"G\n" +
 	"\x14InviteCodeCreateResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x1b\n" +
 	"\tis_active\x18\x02 \x01(\bR\bisActive\";\n" +
@@ -1028,27 +1028,27 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\acomment\x18\x02 \x01(\tR\acomment\"C\n" +
 	"\x15MerchantManageEditReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x18\n" +
-	"\acomment\x18\x02 \x01(\tR\acomment2\xb0\x02\n" +
+	"\acomment\x18\x02 \x01(\tR\acomment2\xce\x02\n" +
 	"\n" +
-	"InviteCode\x12>\n" +
-	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\x129\n" +
-	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\x122\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\x12=\n" +
-	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\x124\n" +
-	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken2\xd9\x03\n" +
-	"\x04DApp\x12B\n" +
-	"\vListByClass\x12\x16.google.protobuf.Empty\x1a\x1b.hi.did.DAppListByClassResp\x128\n" +
-	"\x06GetRWA\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.DAppGetRWAResp\x122\n" +
-	"\x06GetTop\x12\x16.google.protobuf.Empty\x1a\x10.hi.did.DAppInfo\x12=\n" +
-	"\tUpdateTop\x12\x18.hi.did.DAppUpdateTopReq\x1a\x16.google.protobuf.Empty\x122\n" +
-	"\x06Create\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\x120\n" +
-	"\x04Edit\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\x12A\n" +
-	"\vUpdateOrder\x12\x1a.hi.did.DAppUpdateOrderReq\x1a\x16.google.protobuf.Empty\x127\n" +
-	"\x06Delete\x12\x15.hi.did.DAppDeleteReq\x1a\x16.google.protobuf.Empty2\xc1\x01\n" +
-	"\x0eMerchantManage\x12E\n" +
-	"\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\x12)\n" +
-	"\x06Delete\x12\a.hi.DID\x1a\x16.google.protobuf.Empty\x12=\n" +
-	"\x04Edit\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.EmptyB{\n" +
+	"InviteCode\x12D\n" +
+	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\"\x04\x88\xb5\x18\x02\x12?\n" +
+	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x128\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12:\n" +
+	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x012\x89\x04\n" +
+	"\x04DApp\x12H\n" +
+	"\vListByClass\x12\x16.google.protobuf.Empty\x1a\x1b.hi.did.DAppListByClassResp\"\x04\x88\xb5\x18\x02\x12>\n" +
+	"\x06GetRWA\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.DAppGetRWAResp\"\x04\x88\xb5\x18\x02\x128\n" +
+	"\x06GetTop\x12\x16.google.protobuf.Empty\x1a\x10.hi.did.DAppInfo\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\tUpdateTop\x12\x18.hi.did.DAppUpdateTopReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x128\n" +
+	"\x06Create\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x126\n" +
+	"\x04Edit\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12G\n" +
+	"\vUpdateOrder\x12\x1a.hi.did.DAppUpdateOrderReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12=\n" +
+	"\x06Delete\x12\x15.hi.did.DAppDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x022\xd3\x01\n" +
+	"\x0eMerchantManage\x12K\n" +
+	"\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x04\x88\xb5\x18\x01\x12/\n" +
+	"\x06Delete\x12\a.hi.DID\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\x04Edit\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B{\n" +
 	"\n" +
 	"com.hi.didB\n" +
 	"AdminProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"

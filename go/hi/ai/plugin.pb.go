@@ -1834,7 +1834,7 @@ var File_hi_ai_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x10hi/ai/chat.proto\x1a\x1bbuf/validate/validate.proto\"\xe9\x01\n" +
+	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x10hi/ai/chat.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xe9\x01\n" +
 	"\x0eDrawConfigResp\x12\x14\n" +
 	"\x05style\x18\x01 \x03(\tR\x05style\x12#\n" +
 	"\rstyle_default\x18\x02 \x01(\tR\fstyleDefault\x12\x18\n" +
@@ -1963,28 +1963,28 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04uuid\x18\x03 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04envs\x18\x04 \x03(\tR\x04envs\"C\n" +
 	"\x17CleanupPythonProjectReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\xa7\x06\n" +
-	"\x06Plugin\x12;\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\xf5\x06\n" +
+	"\x06Plugin\x12A\n" +
 	"\n" +
-	"DrawConfig\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.DrawConfigResp\x12?\n" +
-	"\fPluginSwitch\x12\x16.hi.ai.PluginSwitchReq\x1a\x17.hi.ai.PluginSwitchResp\x12>\n" +
-	"\fSearchCreate\x12\x16.hi.ai.SearchCreateReq\x1a\x16.google.protobuf.Empty\x12?\n" +
-	"\fPythonCreate\x12\x16.hi.ai.PythonCreateReq\x1a\x17.hi.ai.PythonCreateResp\x129\n" +
+	"DrawConfig\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.DrawConfigResp\"\x04\x88\xb5\x18\x04\x12E\n" +
+	"\fPluginSwitch\x12\x16.hi.ai.PluginSwitchReq\x1a\x17.hi.ai.PluginSwitchResp\"\x04\x88\xb5\x18\x04\x12D\n" +
+	"\fSearchCreate\x12\x16.hi.ai.SearchCreateReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12E\n" +
+	"\fPythonCreate\x12\x16.hi.ai.PythonCreateReq\x1a\x17.hi.ai.PythonCreateResp\"\x04\x88\xb5\x18\x04\x12?\n" +
 	"\n" +
-	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\x123\n" +
-	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\x128\n" +
-	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\x12D\n" +
-	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\x124\n" +
-	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\x120\n" +
-	"\aGetDraw\x12\x11.hi.ai.GetDrawReq\x1a\x12.hi.ai.GetDrawResp\x12D\n" +
-	"\x0fPythonParamsSet\x12\x19.hi.ai.PythonParamsSetReq\x1a\x16.google.protobuf.Empty\x12H\n" +
-	"\x0fGetPythonParams\x12\x19.hi.ai.GetPythonParamsReq\x1a\x1a.hi.ai.GetPythonParamsResp\x126\n" +
-	"\tGetPlugin\x12\x13.hi.ai.GetPluginReq\x1a\x14.hi.ai.GetPluginResp2\xf5\x01\n" +
-	"\bAiPlugin\x12-\n" +
-	"\x06Search\x12\x10.hi.ai.SearchReq\x1a\x11.hi.ai.SearchResp\x12-\n" +
-	"\x06Python\x12\x10.hi.ai.PythonReq\x1a\x11.hi.ai.PythonResp\x12;\n" +
-	"\rPythonProject\x12\x17.hi.ai.PythonProjectReq\x1a\x11.hi.ai.PythonResp\x12N\n" +
-	"\x14CleanupPythonProject\x12\x1e.hi.ai.CleanupPythonProjectReq\x1a\x16.google.protobuf.EmptyBv\n" +
+	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\"\x04\x88\xb5\x18\x04\x129\n" +
+	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\"\x04\x88\xb5\x18\x04\x12>\n" +
+	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12J\n" +
+	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12:\n" +
+	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x126\n" +
+	"\aGetDraw\x12\x11.hi.ai.GetDrawReq\x1a\x12.hi.ai.GetDrawResp\"\x04\x88\xb5\x18\x04\x12J\n" +
+	"\x0fPythonParamsSet\x12\x19.hi.ai.PythonParamsSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12N\n" +
+	"\x0fGetPythonParams\x12\x19.hi.ai.GetPythonParamsReq\x1a\x1a.hi.ai.GetPythonParamsResp\"\x04\x88\xb5\x18\x04\x12<\n" +
+	"\tGetPlugin\x12\x13.hi.ai.GetPluginReq\x1a\x14.hi.ai.GetPluginResp\"\x04\x88\xb5\x18\x042\x8d\x02\n" +
+	"\bAiPlugin\x123\n" +
+	"\x06Search\x12\x10.hi.ai.SearchReq\x1a\x11.hi.ai.SearchResp\"\x04\x88\xb5\x18\x02\x123\n" +
+	"\x06Python\x12\x10.hi.ai.PythonReq\x1a\x11.hi.ai.PythonResp\"\x04\x88\xb5\x18\x02\x12A\n" +
+	"\rPythonProject\x12\x17.hi.ai.PythonProjectReq\x1a\x11.hi.ai.PythonResp\"\x04\x88\xb5\x18\x02\x12T\n" +
+	"\x14CleanupPythonProject\x12\x1e.hi.ai.CleanupPythonProjectReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02Bv\n" +
 	"\tcom.hi.aiB\vPluginProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (

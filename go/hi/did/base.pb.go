@@ -295,7 +295,7 @@ var File_hi_did_base_proto protoreflect.FileDescriptor
 
 const file_hi_did_base_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\"J\n" +
+	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"J\n" +
 	"\x04Coin\x12\x12\n" +
 	"\x04icon\x18\x01 \x01(\tR\x04icon\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
@@ -311,14 +311,14 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\achanges\x18\x04 \x03(\tR\achanges\x12!\n" +
 	"\frelease_time\x18\x05 \x01(\x03R\vreleaseTime\"-\n" +
 	"\x17ListSuperAdminUsersResp\x12\x12\n" +
-	"\x04list\x18\x01 \x03(\tR\x04list2\x98\x02\n" +
-	"\x04Base\x12:\n" +
-	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\x12D\n" +
-	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\x12N\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\x12>\n" +
-	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp24\n" +
-	"\x06Assist\x12*\n" +
-	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DIDBz\n" +
+	"\x04list\x18\x01 \x03(\tR\x04list2\xb0\x02\n" +
+	"\x04Base\x12@\n" +
+	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x04\x88\xb5\x18\x01\x12J\n" +
+	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x04\x88\xb5\x18\x01\x12T\n" +
+	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x01\x12D\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x012:\n" +
+	"\x06Assist\x120\n" +
+	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x04\x88\xb5\x18\x01Bz\n" +
 	"\n" +
 	"com.hi.didB\tBaseProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

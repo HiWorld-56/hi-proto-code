@@ -7,6 +7,7 @@
 package did
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -173,7 +174,7 @@ var File_hi_did_price_proto protoreflect.FileDescriptor
 
 const file_hi_did_price_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/did/price.proto\x12\x06hi.did\x1a\x11hi/did/base.proto\"!\n" +
+	"\x12hi/did/price.proto\x12\x06hi.did\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"!\n" +
 	"\vGetPriceReq\x12\x12\n" +
 	"\x04coin\x18\x01 \x01(\tR\x04coin\"\x99\x01\n" +
 	"\fGetPriceResp\x12-\n" +
@@ -181,9 +182,9 @@ const file_hi_did_price_proto_rawDesc = "" +
 	"\bexchange\x18\x02 \x01(\tR\bexchange\x1a>\n" +
 	"\x04Unit\x12\x14\n" +
 	"\x05price\x18\x01 \x01(\tR\x05price\x12 \n" +
-	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinR\x04coin2>\n" +
-	"\x05Price\x125\n" +
-	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceRespB{\n" +
+	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinR\x04coin2D\n" +
+	"\x05Price\x12;\n" +
+	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x04\x88\xb5\x18\x01B{\n" +
 	"\n" +
 	"com.hi.didB\n" +
 	"PriceProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"

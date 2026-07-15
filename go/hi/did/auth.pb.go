@@ -372,7 +372,7 @@ var File_hi_did_auth_proto protoreflect.FileDescriptor
 
 const file_hi_did_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/auth.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\"l\n" +
+	"\x11hi/did/auth.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"l\n" +
 	"\x0fRefreshTokenReq\x12\"\n" +
 	"\x04node\x18\x01 \x01(\v2\x0e.hi.ClientInfoR\x04node\x12\x10\n" +
 	"\x03did\x18\x02 \x01(\tR\x03did\x12#\n" +
@@ -396,15 +396,15 @@ const file_hi_did_auth_proto_rawDesc = "" +
 	"\x05token\x18\x03 \x01(\v2\r.hi.AuthTokenR\x05token\x12'\n" +
 	"\x04mqtt\x18\x04 \x01(\v2\x13.hi.MqttCredentialsR\x04mqtt\"&\n" +
 	"\tLogoutReq\x12\x19\n" +
-	"\x03did\x18\x01 \x01(\v2\a.hi.DIDR\x03did2\xf3\x02\n" +
-	"\x04Auth\x126\n" +
-	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\x12+\n" +
-	"\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\x122\n" +
-	"\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\x128\n" +
-	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\x124\n" +
-	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\x120\n" +
-	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\x120\n" +
-	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyBz\n" +
+	"\x03did\x18\x01 \x01(\v2\a.hi.DIDR\x03did2\x9d\x03\n" +
+	"\x04Auth\x12<\n" +
+	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x01\x121\n" +
+	"\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x04\x88\xb5\x18\x01\x128\n" +
+	"\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x04\x88\xb5\x18\x01\x12>\n" +
+	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x04\x88\xb5\x18\x01\x12:\n" +
+	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x04\x88\xb5\x18\x01\x126\n" +
+	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01\x126\n" +
+	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01Bz\n" +
 	"\n" +
 	"com.hi.didB\tAuthProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

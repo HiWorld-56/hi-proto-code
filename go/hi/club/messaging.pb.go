@@ -827,7 +827,7 @@ var File_hi_club_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\"i\n" +
+	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\"i\n" +
 	"\x06Packet\x12)\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0f.hi.club.NoticeH\x00R\x06notice\x12,\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageH\x00R\amessageB\x06\n" +
@@ -891,9 +891,9 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
 	"PublishReq\x12\x14\n" +
 	"\x05topic\x18\x01 \x01(\tR\x05topic\x12)\n" +
-	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayload2C\n" +
-	"\tPublisher\x126\n" +
-	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.EmptyB\x85\x01\n" +
+	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayload2I\n" +
+	"\tPublisher\x12<\n" +
+	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x85\x01\n" +
 	"\vcom.hi.clubB\x0eMessagingProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

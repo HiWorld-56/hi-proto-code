@@ -26,11 +26,11 @@ var File_hi_did_callback_proto protoreflect.FileDescriptor
 
 const file_hi_did_callback_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/did/callback.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto2@\n" +
-	"\rLoginCallback\x12/\n" +
-	"\x05Login\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty2<\n" +
-	"\vPayCallback\x12-\n" +
-	"\x03Pay\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB~\n" +
+	"\x15hi/did/callback.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2F\n" +
+	"\rLoginCallback\x125\n" +
+	"\x05Login\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x022B\n" +
+	"\vPayCallback\x123\n" +
+	"\x03Pay\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B~\n" +
 	"\n" +
 	"com.hi.didB\rCallbackProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

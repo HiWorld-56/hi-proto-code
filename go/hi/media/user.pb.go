@@ -280,7 +280,7 @@ var File_hi_media_user_proto protoreflect.FileDescriptor
 
 const file_hi_media_user_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/user.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\">\n" +
+	"\x13hi/media/user.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\">\n" +
 	"\bUserInfo\x12\x1e\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04base\x12\x12\n" +
@@ -297,11 +297,11 @@ const file_hi_media_user_proto_rawDesc = "" +
 	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12\x12\n" +
 	"\x04note\x18\x02 \x01(\tR\x04note\"/\n" +
 	"\rDeleteUserReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did2\xaf\x01\n" +
-	"\x04User\x125\n" +
-	"\x04List\x12\x15.hi.media.ListUserReq\x1a\x16.hi.media.ListUserResp\x125\n" +
-	"\x04Edit\x12\x15.hi.media.EditUserReq\x1a\x16.google.protobuf.Empty\x129\n" +
-	"\x06Delete\x12\x17.hi.media.DeleteUserReq\x1a\x16.google.protobuf.EmptyB\x86\x01\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did2\xc1\x01\n" +
+	"\x04User\x12;\n" +
+	"\x04List\x12\x15.hi.media.ListUserReq\x1a\x16.hi.media.ListUserResp\"\x04\x88\xb5\x18\x02\x12;\n" +
+	"\x04Edit\x12\x15.hi.media.EditUserReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12?\n" +
+	"\x06Delete\x12\x17.hi.media.DeleteUserReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x86\x01\n" +
 	"\fcom.hi.mediaB\tUserProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (

@@ -167,7 +167,7 @@ var File_hi_did_user_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\"=\n" +
+	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"=\n" +
 	"\vUserListReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
@@ -177,13 +177,13 @@ const file_hi_did_user_proto_rawDesc = "" +
 	"\x04list\x18\x02 \x03(\v2\n" +
 	".hi.EntityR\x04list\"%\n" +
 	"\rUserTotalResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total2\x97\x01\n" +
-	"\x04User\x12*\n" +
+	"\x05total\x18\x01 \x01(\x05R\x05total2\xa9\x01\n" +
+	"\x04User\x120\n" +
 	"\x04Edit\x12\n" +
-	".hi.Entity\x1a\x16.google.protobuf.Empty\x12+\n" +
+	".hi.Entity\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x121\n" +
 	"\x05Query\x12\x16.google.protobuf.Empty\x1a\n" +
-	".hi.Entity\x126\n" +
-	"\x05Total\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.UserTotalRespBz\n" +
+	".hi.Entity\"\x04\x88\xb5\x18\x02\x12<\n" +
+	"\x05Total\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.UserTotalResp\"\x04\x88\xb5\x18\x01Bz\n" +
 	"\n" +
 	"com.hi.didB\tUserProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

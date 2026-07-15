@@ -27,14 +27,14 @@ var File_hi_media_invite_code_proto protoreflect.FileDescriptor
 
 const file_hi_media_invite_code_proto_rawDesc = "" +
 	"\n" +
-	"\x1ahi/media/invite_code.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x12hi/did/admin.proto2\xb0\x02\n" +
+	"\x1ahi/media/invite_code.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x12hi/did/admin.proto\x1a\x10hi/options.proto2\xce\x02\n" +
 	"\n" +
-	"InviteCode\x12>\n" +
-	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\x129\n" +
-	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\x122\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\x12=\n" +
-	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\x124\n" +
-	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthTokenB\x8c\x01\n" +
+	"InviteCode\x12D\n" +
+	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\"\x04\x88\xb5\x18\x02\x12?\n" +
+	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x128\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12:\n" +
+	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x01B\x8c\x01\n" +
 	"\fcom.hi.mediaB\x0fInviteCodeProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var file_hi_media_invite_code_proto_goTypes = []any{

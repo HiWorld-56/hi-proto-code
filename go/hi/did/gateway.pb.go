@@ -7,6 +7,7 @@
 package did
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -174,7 +175,7 @@ var File_hi_did_gateway_proto protoreflect.FileDescriptor
 
 const file_hi_did_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\"R\n" +
+	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"R\n" +
 	"\x11GatewayConfigUnit\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12\x17\n" +
@@ -182,10 +183,10 @@ const file_hi_did_gateway_proto_rawDesc = "" +
 	"\x15GatewayConfigListResp\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list\"D\n" +
 	"\x13GatewayConfigSetReq\x12-\n" +
-	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2\x8a\x01\n" +
-	"\rGatewayConfig\x12=\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\x12:\n" +
-	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.EmptyB}\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2\x96\x01\n" +
+	"\rGatewayConfig\x12C\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x04\x88\xb5\x18\x01\x12@\n" +
+	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B}\n" +
 	"\n" +
 	"com.hi.didB\fGatewayProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

@@ -361,7 +361,7 @@ var File_hi_club_order_proto protoreflect.FileDescriptor
 
 const file_hi_club_order_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\"5\n" +
+	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"5\n" +
 	"\vPcOrderData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\xfe\x01\n" +
@@ -389,10 +389,10 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"a\n" +
 	"\x17UpdatePulledPcOrderData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x124\n" +
-	"\x06orders\x18\x02 \x03(\v2\x1c.hi.club.UpdatePulledPcOrderR\x06orders2\x92\x01\n" +
-	"\x05Order\x12I\n" +
-	"\x14GetNotPulledPcOrders\x12\x0e.hi.SignedData\x1a!.hi.club.GetNotPulledPcOrdersResp\x12>\n" +
-	"\x14UpdatePulledPcOrders\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.EmptyB\x81\x01\n" +
+	"\x06orders\x18\x02 \x03(\v2\x1c.hi.club.UpdatePulledPcOrderR\x06orders2\x9e\x01\n" +
+	"\x05Order\x12O\n" +
+	"\x14GetNotPulledPcOrders\x12\x0e.hi.SignedData\x1a!.hi.club.GetNotPulledPcOrdersResp\"\x04\x88\xb5\x18\x01\x12D\n" +
+	"\x14UpdatePulledPcOrders\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"OrderProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 

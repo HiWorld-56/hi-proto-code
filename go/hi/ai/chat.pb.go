@@ -1785,7 +1785,7 @@ var File_hi_ai_chat_proto protoreflect.FileDescriptor
 
 const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\"7\n" +
+	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"7\n" +
 	"\aContent\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\"1\n" +
@@ -1924,26 +1924,26 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01B\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
-	"\x06_state2\xef\a\n" +
-	"\x04Chat\x12-\n" +
-	"\x06Simple\x12\x10.hi.ai.SimpleReq\x1a\x11.hi.ai.DialogResp\x12=\n" +
-	"\vGenerateCid\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.GenerateCidResp\x12-\n" +
-	"\x06Dialog\x12\x10.hi.ai.DialogReq\x1a\x11.hi.ai.DialogResp\x12;\n" +
-	"\fDialogStream\x12\x10.hi.ai.DialogReq\x1a\x17.hi.ai.DialogStreamResp0\x01\x12>\n" +
-	"\fClearContext\x12\x16.hi.ai.ClearContextReq\x1a\x16.google.protobuf.Empty\x129\n" +
+	"\x06_state2\xcf\b\n" +
+	"\x04Chat\x123\n" +
+	"\x06Simple\x12\x10.hi.ai.SimpleReq\x1a\x11.hi.ai.DialogResp\"\x04\x88\xb5\x18\x04\x12C\n" +
+	"\vGenerateCid\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.GenerateCidResp\"\x04\x88\xb5\x18\x04\x123\n" +
+	"\x06Dialog\x12\x10.hi.ai.DialogReq\x1a\x11.hi.ai.DialogResp\"\x04\x88\xb5\x18\x04\x12A\n" +
+	"\fDialogStream\x12\x10.hi.ai.DialogReq\x1a\x17.hi.ai.DialogStreamResp\"\x04\x88\xb5\x18\x020\x01\x12D\n" +
+	"\fClearContext\x12\x16.hi.ai.ClearContextReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12?\n" +
 	"\n" +
-	"GetContext\x12\x14.hi.ai.GetContextReq\x1a\x15.hi.ai.GetContextResp\x12F\n" +
-	"\x0fListAgentDelays\x12\x18.hi.ai.ListAgentDelayReq\x1a\x19.hi.ai.ListAgentDelayResp\x12B\n" +
-	"\rGetAgentDelay\x12\x17.hi.ai.GetAgentDelayReq\x1a\x18.hi.ai.GetAgentDelayResp\x12Q\n" +
-	"\x12SimpleTextToSpeech\x12\x1c.hi.ai.SimpleTextToSpeechReq\x1a\x1d.hi.ai.SimpleTextToSpeechResp\x12Q\n" +
-	"\x12SimpleSpeechToText\x12\x1c.hi.ai.SimpleSpeechToTextReq\x1a\x1d.hi.ai.SimpleSpeechToTextResp\x12;\n" +
-	"\x0eSpeechToSpeech\x12\x18.hi.ai.SpeechToSpeechReq\x1a\x0f.hi.ai.ChatResp\x12=\n" +
-	"\x0fSpeechToSpeech2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\x123\n" +
+	"GetContext\x12\x14.hi.ai.GetContextReq\x1a\x15.hi.ai.GetContextResp\"\x04\x88\xb5\x18\x04\x12L\n" +
+	"\x0fListAgentDelays\x12\x18.hi.ai.ListAgentDelayReq\x1a\x19.hi.ai.ListAgentDelayResp\"\x04\x88\xb5\x18\x02\x12H\n" +
+	"\rGetAgentDelay\x12\x17.hi.ai.GetAgentDelayReq\x1a\x18.hi.ai.GetAgentDelayResp\"\x04\x88\xb5\x18\x02\x12W\n" +
+	"\x12SimpleTextToSpeech\x12\x1c.hi.ai.SimpleTextToSpeechReq\x1a\x1d.hi.ai.SimpleTextToSpeechResp\"\x04\x88\xb5\x18\x04\x12W\n" +
+	"\x12SimpleSpeechToText\x12\x1c.hi.ai.SimpleSpeechToTextReq\x1a\x1d.hi.ai.SimpleSpeechToTextResp\"\x04\x88\xb5\x18\x04\x12A\n" +
+	"\x0eSpeechToSpeech\x12\x18.hi.ai.SpeechToSpeechReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x04\x12C\n" +
+	"\x0fSpeechToSpeech2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x04\x129\n" +
 	"\n" +
-	"TextToText\x12\x14.hi.ai.TextToTextReq\x1a\x0f.hi.ai.ChatResp\x129\n" +
-	"\vTextToText2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\x127\n" +
-	"\fSpeechToText\x12\x16.hi.ai.SpeechToTextReq\x1a\x0f.hi.ai.ChatResp\x12;\n" +
-	"\rSpeechToText2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatRespBt\n" +
+	"TextToText\x12\x14.hi.ai.TextToTextReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x04\x12?\n" +
+	"\vTextToText2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x04\x12=\n" +
+	"\fSpeechToText\x12\x16.hi.ai.SpeechToTextReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x04\x12A\n" +
+	"\rSpeechToText2\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x04\x88\xb5\x18\x04Bt\n" +
 	"\tcom.hi.aiB\tChatProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (

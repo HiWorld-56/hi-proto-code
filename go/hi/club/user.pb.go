@@ -987,7 +987,7 @@ var File_hi_club_user_proto protoreflect.FileDescriptor
 
 const file_hi_club_user_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/user.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x13hi/club/group.proto\"\x89\x01\n" +
+	"\x12hi/club/user.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x13hi/club/group.proto\x1a\x10hi/options.proto\"\x89\x01\n" +
 	"\bUserInfo\x12\x1e\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04base\x12 \n" +
@@ -1050,27 +1050,27 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"!FRIEND_REQUEST_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eFRIEND_REQUEST_STATUS_REJECTED\x10\x01\x12\x1e\n" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
-	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xcc\b\n" +
-	"\x04User\x12;\n" +
-	"\x0eGetCurrentUser\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\x12<\n" +
+	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xac\t\n" +
+	"\x04User\x12A\n" +
+	"\x0eGetCurrentUser\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x04\x88\xb5\x18\x02\x12B\n" +
 	"\n" +
-	"UpdateUser\x12\x16.hi.club.UpdateUserReq\x1a\x16.google.protobuf.Empty\x12L\n" +
-	"\x12ListSystemMessages\x12\x1d.hi.club.ListSystemMessageReq\x1a\x17.hi.club.SystemMessages\x12N\n" +
-	"\x13DeleteSystemMessage\x12\x1f.hi.club.DeleteSystemMessageReq\x1a\x16.google.protobuf.Empty\x12H\n" +
-	"\x16DeleteAllSystemMessage\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\x12N\n" +
-	"\x13HandleSystemMessage\x12\x1f.hi.club.HandleSystemMessageReq\x1a\x16.google.protobuf.Empty\x12@\n" +
-	"\vListFriends\x12\x16.google.protobuf.Empty\x1a\x19.hi.club.RelationListResp\x12B\n" +
-	"\rListServitors\x12\x16.google.protobuf.Empty\x1a\x19.hi.club.RelationListResp\x12C\n" +
-	"\rListRelations\x12\x16.google.protobuf.Empty\x1a\x1a.hi.club.ListRelationsResp\x12:\n" +
-	"\tAddFriend\x12\x15.hi.club.AddFriendReq\x1a\x16.hi.club.AddFriendResp\x12@\n" +
-	"\fDeleteFriend\x12\x18.hi.club.DeleteFriendReq\x1a\x16.google.protobuf.Empty\x12<\n" +
+	"UpdateUser\x12\x16.hi.club.UpdateUserReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12R\n" +
+	"\x12ListSystemMessages\x12\x1d.hi.club.ListSystemMessageReq\x1a\x17.hi.club.SystemMessages\"\x04\x88\xb5\x18\x02\x12T\n" +
+	"\x13DeleteSystemMessage\x12\x1f.hi.club.DeleteSystemMessageReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12N\n" +
+	"\x16DeleteAllSystemMessage\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12T\n" +
+	"\x13HandleSystemMessage\x12\x1f.hi.club.HandleSystemMessageReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12F\n" +
+	"\vListFriends\x12\x16.google.protobuf.Empty\x1a\x19.hi.club.RelationListResp\"\x04\x88\xb5\x18\x02\x12H\n" +
+	"\rListServitors\x12\x16.google.protobuf.Empty\x1a\x19.hi.club.RelationListResp\"\x04\x88\xb5\x18\x02\x12I\n" +
+	"\rListRelations\x12\x16.google.protobuf.Empty\x1a\x1a.hi.club.ListRelationsResp\"\x04\x88\xb5\x18\x02\x12@\n" +
+	"\tAddFriend\x12\x15.hi.club.AddFriendReq\x1a\x16.hi.club.AddFriendResp\"\x04\x88\xb5\x18\x02\x12F\n" +
+	"\fDeleteFriend\x12\x18.hi.club.DeleteFriendReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12B\n" +
 	"\n" +
-	"ListGroups\x12\x16.google.protobuf.Empty\x1a\x16.hi.club.ListGroupResp\x12+\n" +
+	"ListGroups\x12\x16.google.protobuf.Empty\x1a\x16.hi.club.ListGroupResp\"\x04\x88\xb5\x18\x02\x121\n" +
 	"\bGetOther\x12\x13.hi.club.GetUserReq\x1a\n" +
-	".hi.Entity\x12U\n" +
-	"\x16UnprocessedSysMsgCount\x12\x16.google.protobuf.Empty\x1a#.hi.club.UnprocessedSysMsgCountResp\x12:\n" +
-	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\x12J\n" +
-	"\x0fListOnlineUsers\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserRespB\x80\x01\n" +
+	".hi.Entity\"\x04\x88\xb5\x18\x02\x12[\n" +
+	"\x16UnprocessedSysMsgCount\x12\x16.google.protobuf.Empty\x1a#.hi.club.UnprocessedSysMsgCountResp\"\x04\x88\xb5\x18\x02\x12@\n" +
+	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12P\n" +
+	"\x0fListOnlineUsers\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserResp\"\x04\x88\xb5\x18\x02B\x80\x01\n" +
 	"\vcom.hi.clubB\tUserProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

@@ -26,11 +26,11 @@ var File_hi_media_auth_proto protoreflect.FileDescriptor
 
 const file_hi_media_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/auth.proto\x12\bhi.media\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto2\xae\x01\n" +
-	"\x04Auth\x126\n" +
-	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\x128\n" +
-	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\x124\n" +
-	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusRespB\x86\x01\n" +
+	"\x13hi/media/auth.proto\x12\bhi.media\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto2\xc0\x01\n" +
+	"\x04Auth\x12<\n" +
+	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x01\x12>\n" +
+	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x04\x88\xb5\x18\x01\x12:\n" +
+	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x04\x88\xb5\x18\x01B\x86\x01\n" +
 	"\fcom.hi.mediaB\tAuthProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var file_hi_media_auth_proto_goTypes = []any{

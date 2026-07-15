@@ -7,6 +7,7 @@
 package club
 
 import (
+	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -25,9 +26,9 @@ var File_hi_club_health_proto protoreflect.FileDescriptor
 
 const file_hi_club_health_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/health.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto2A\n" +
-	"\x06Health\x127\n" +
-	"\x05Check\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.EmptyB\x82\x01\n" +
+	"\x14hi/club/health.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto2G\n" +
+	"\x06Health\x12=\n" +
+	"\x05Check\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01B\x82\x01\n" +
 	"\vcom.hi.clubB\vHealthProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_health_proto_goTypes = []any{

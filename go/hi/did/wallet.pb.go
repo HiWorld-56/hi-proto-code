@@ -1146,7 +1146,7 @@ var File_hi_did_wallet_proto protoreflect.FileDescriptor
 
 const file_hi_did_wallet_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/did/wallet.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x1bbuf/validate/validate.proto\"\xce\x01\n" +
+	"\x13hi/did/wallet.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xce\x01\n" +
 	"\x12UpdateAddressesReq\x12\x15\n" +
 	"\x03did\x18\x01 \x01(\tH\x00R\x03did\x88\x01\x01\x12\x15\n" +
 	"\x03btc\x18\x02 \x01(\tH\x01R\x03btc\x88\x01\x01\x12\x15\n" +
@@ -1230,16 +1230,16 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\x13GetUserByAddressReq\x12&\n" +
 	"\aaddress\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aaddress\"(\n" +
 	"\x14GetUserByAddressResp\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did2\xa5\x04\n" +
-	"\x06Wallet\x129\n" +
-	"\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\x12?\n" +
-	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\x128\n" +
-	"\tGetWallet\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\x12D\n" +
-	"\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\x12>\n" +
-	"\vTotalAssets\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\x12J\n" +
-	"\x0fListUsersAssets\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\x12D\n" +
-	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\x12M\n" +
-	"\x10GetUserByAddress\x12\x1b.hi.did.GetUserByAddressReq\x1a\x1c.hi.did.GetUserByAddressRespB|\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did2\xd5\x04\n" +
+	"\x06Wallet\x12?\n" +
+	"\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01\x12E\n" +
+	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12>\n" +
+	"\tGetWallet\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x04\x88\xb5\x18\x02\x12J\n" +
+	"\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x04\x88\xb5\x18\x02\x12D\n" +
+	"\vTotalAssets\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\"\x04\x88\xb5\x18\x01\x12P\n" +
+	"\x0fListUsersAssets\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\"\x04\x88\xb5\x18\x01\x12J\n" +
+	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x04\x88\xb5\x18\x01\x12S\n" +
+	"\x10GetUserByAddress\x12\x1b.hi.did.GetUserByAddressReq\x1a\x1c.hi.did.GetUserByAddressResp\"\x04\x88\xb5\x18\x02B|\n" +
 	"\n" +
 	"com.hi.didB\vWalletProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

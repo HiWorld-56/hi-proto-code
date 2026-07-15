@@ -515,7 +515,7 @@ var File_hi_did_agent_market_proto protoreflect.FileDescriptor
 
 const file_hi_did_agent_market_proto_rawDesc = "" +
 	"\n" +
-	"\x19hi/did/agent_market.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\"\xf0\x02\n" +
+	"\x19hi/did/agent_market.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\xf0\x02\n" +
 	"\tAgentInfo\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x1a\n" +
 	"\bcategory\x18\x02 \x01(\tR\bcategory\x12!\n" +
@@ -555,14 +555,14 @@ const file_hi_did_agent_market_proto_rawDesc = "" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
 	"\x05order\x18\x02 \x01(\x05R\x05order\"$\n" +
 	"\x0eAgentDeleteReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid2\xf2\x02\n" +
-	"\vAgentMarket\x123\n" +
-	"\x04List\x12\x14.hi.did.AgentListReq\x1a\x15.hi.did.AgentListResp\x12H\n" +
-	"\vListByClass\x12\x1b.hi.did.AgentListByClassReq\x1a\x1c.hi.did.AgentListByClassResp\x123\n" +
-	"\x06Create\x12\x11.hi.did.AgentInfo\x1a\x16.google.protobuf.Empty\x121\n" +
-	"\x04Edit\x12\x11.hi.did.AgentInfo\x1a\x16.google.protobuf.Empty\x128\n" +
-	"\x06Delete\x12\x16.hi.did.AgentDeleteReq\x1a\x16.google.protobuf.Empty\x12B\n" +
-	"\vUpdateOrder\x12\x1b.hi.did.AgentUpdateOrderReq\x1a\x16.google.protobuf.EmptyB\x81\x01\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid2\x96\x03\n" +
+	"\vAgentMarket\x129\n" +
+	"\x04List\x12\x14.hi.did.AgentListReq\x1a\x15.hi.did.AgentListResp\"\x04\x88\xb5\x18\x02\x12N\n" +
+	"\vListByClass\x12\x1b.hi.did.AgentListByClassReq\x1a\x1c.hi.did.AgentListByClassResp\"\x04\x88\xb5\x18\x03\x129\n" +
+	"\x06Create\x12\x11.hi.did.AgentInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x127\n" +
+	"\x04Edit\x12\x11.hi.did.AgentInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12>\n" +
+	"\x06Delete\x12\x16.hi.did.AgentDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12H\n" +
+	"\vUpdateOrder\x12\x1b.hi.did.AgentUpdateOrderReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x81\x01\n" +
 	"\n" +
 	"com.hi.didB\x10AgentMarketProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

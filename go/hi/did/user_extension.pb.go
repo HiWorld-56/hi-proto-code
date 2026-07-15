@@ -728,7 +728,7 @@ var File_hi_did_user_extension_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_extension_proto_rawDesc = "" +
 	"\n" +
-	"\x1bhi/did/user_extension.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\"F\n" +
+	"\x1bhi/did/user_extension.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"F\n" +
 	"\x18UserExtensionSettingResp\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x14\n" +
 	"\x05table\x18\x02 \x01(\tR\x05table\"_\n" +
@@ -778,16 +778,16 @@ const file_hi_did_user_extension_proto_rawDesc = "" +
 	"\bmerchant\x18\x01 \x01(\tR\bmerchant\x12\x12\n" +
 	"\x04user\x18\x02 \x01(\tR\x04user\"E\n" +
 	"\x14UserExtensionGetResp\x12-\n" +
-	"\x04unit\x18\x01 \x01(\v2\x19.hi.did.UserExtensionUnitR\x04unit2\x9c\x01\n" +
-	"\x15UserExtensionSettings\x12B\n" +
-	"\x06Update\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\x12?\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp2\xec\x02\n" +
-	"\rUserExtension\x12@\n" +
-	"\x06Update\x12\x1e.hi.did.UserExtensionUpdateReq\x1a\x16.google.protobuf.Empty\x12C\n" +
-	"\x04List\x12\x1c.hi.did.UserExtensionListReq\x1a\x1d.hi.did.UserExtensionListResp\x12@\n" +
-	"\x06Delete\x12\x1e.hi.did.UserExtensionDeleteReq\x1a\x16.google.protobuf.Empty\x12P\n" +
-	"\x11ListByMerchantDid\x12\x1c.hi.did.ListByMerchantDidReq\x1a\x1d.hi.did.ListByMerchantDidResp\x12@\n" +
-	"\x03Get\x12\x1b.hi.did.UserExtensionGetReq\x1a\x1c.hi.did.UserExtensionGetRespB\x83\x01\n" +
+	"\x04unit\x18\x01 \x01(\v2\x19.hi.did.UserExtensionUnitR\x04unit2\xa8\x01\n" +
+	"\x15UserExtensionSettings\x12H\n" +
+	"\x06Update\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x02\x12E\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x022\x8a\x03\n" +
+	"\rUserExtension\x12F\n" +
+	"\x06Update\x12\x1e.hi.did.UserExtensionUpdateReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12I\n" +
+	"\x04List\x12\x1c.hi.did.UserExtensionListReq\x1a\x1d.hi.did.UserExtensionListResp\"\x04\x88\xb5\x18\x03\x12F\n" +
+	"\x06Delete\x12\x1e.hi.did.UserExtensionDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12V\n" +
+	"\x11ListByMerchantDid\x12\x1c.hi.did.ListByMerchantDidReq\x1a\x1d.hi.did.ListByMerchantDidResp\"\x04\x88\xb5\x18\x03\x12F\n" +
+	"\x03Get\x12\x1b.hi.did.UserExtensionGetReq\x1a\x1c.hi.did.UserExtensionGetResp\"\x04\x88\xb5\x18\x03B\x83\x01\n" +
 	"\n" +
 	"com.hi.didB\x12UserExtensionProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

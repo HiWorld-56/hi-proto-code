@@ -1329,7 +1329,7 @@ var File_hi_ai_agent_proto protoreflect.FileDescriptor
 
 const file_hi_ai_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\"4\n" +
+	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"4\n" +
 	"\x06Prompt\x12\x16\n" +
 	"\x06system\x18\x01 \x01(\tR\x06system\x12\x12\n" +
 	"\x04user\x18\x02 \x01(\tR\x04user\"[\n" +
@@ -1421,23 +1421,23 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04dids\x18\x01 \x03(\tR\x04dids\"6\n" +
 	"\x10FavoriteAgentReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
-	"\x03opt\x18\x02 \x01(\tR\x03opt2\xaa\a\n" +
-	"\x05Agent\x12;\n" +
-	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12B\n" +
-	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x12;\n" +
-	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x12;\n" +
-	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12=\n" +
-	"\vAgentConfig\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.AgentConfigResp\x12<\n" +
-	"\vCreateAgent\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\x128\n" +
-	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\x121\n" +
-	"\x04List\x12\x13.hi.ai.ListAgentReq\x1a\x14.hi.ai.ListAgentResp\x12=\n" +
-	"\rListFavorites\x12\x16.hi.ai.ListFavoriteReq\x1a\x14.hi.ai.ListAgentResp\x12<\n" +
-	"\vDeleteAgent\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\x126\n" +
-	"\tFindAgent\x12\x13.hi.ai.FindAgentReq\x1a\x14.hi.ai.FindAgentResp\x12E\n" +
-	"\x0eFindAgentCount\x12\x18.hi.ai.FindAgentCountReq\x1a\x19.hi.ai.FindAgentCountResp\x126\n" +
-	"\bTransfer\x12\x12.hi.ai.TransferReq\x1a\x16.google.protobuf.Empty\x12F\n" +
-	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\x12@\n" +
-	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.EmptyBu\n" +
+	"\x03opt\x18\x02 \x01(\tR\x03opt2\x84\b\n" +
+	"\x05Agent\x12A\n" +
+	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\"\x04\x88\xb5\x18\x04\x12H\n" +
+	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\"\x04\x88\xb5\x18\x04\x12A\n" +
+	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x04\x88\xb5\x18\x04\x12A\n" +
+	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\"\x04\x88\xb5\x18\x04\x12C\n" +
+	"\vAgentConfig\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.AgentConfigResp\"\x04\x88\xb5\x18\x04\x12B\n" +
+	"\vCreateAgent\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x04\x88\xb5\x18\x04\x12>\n" +
+	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x127\n" +
+	"\x04List\x12\x13.hi.ai.ListAgentReq\x1a\x14.hi.ai.ListAgentResp\"\x04\x88\xb5\x18\x04\x12C\n" +
+	"\rListFavorites\x12\x16.hi.ai.ListFavoriteReq\x1a\x14.hi.ai.ListAgentResp\"\x04\x88\xb5\x18\x02\x12B\n" +
+	"\vDeleteAgent\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12<\n" +
+	"\tFindAgent\x12\x13.hi.ai.FindAgentReq\x1a\x14.hi.ai.FindAgentResp\"\x04\x88\xb5\x18\x04\x12K\n" +
+	"\x0eFindAgentCount\x12\x18.hi.ai.FindAgentCountReq\x1a\x19.hi.ai.FindAgentCountResp\"\x04\x88\xb5\x18\x04\x12<\n" +
+	"\bTransfer\x12\x12.hi.ai.TransferReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12L\n" +
+	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04\x12F\n" +
+	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x04Bu\n" +
 	"\tcom.hi.aiB\n" +
 	"AgentProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 

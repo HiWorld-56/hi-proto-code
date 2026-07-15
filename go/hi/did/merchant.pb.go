@@ -635,7 +635,7 @@ var File_hi_did_merchant_proto protoreflect.FileDescriptor
 
 const file_hi_did_merchant_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/did/merchant.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\"\xde\x02\n" +
+	"\x15hi/did/merchant.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\xde\x02\n" +
 	"\fMerchantInfo\x12\"\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x06master\x12\"\n" +
@@ -681,19 +681,19 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"@\n" +
 	"\x0eOrderEventResp\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\tR\apayload2\xdb\x03\n" +
-	"\bMerchant\x126\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\x125\n" +
-	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\x12)\n" +
-	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\x125\n" +
-	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.GetUserProfileResp\x12C\n" +
-	"\x0eSetUserProfile\x12\x19.hi.did.SetUserProfileReq\x1a\x16.google.protobuf.Empty\x12/\n" +
-	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\x12A\n" +
-	"\tSaveUsers\x12\x1c.hi.did.MerchantUsersSaveReq\x1a\x16.google.protobuf.Empty\x12E\n" +
-	"\vDeleteUsers\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty2t\n" +
-	"\x03SSE\x120\n" +
-	"\vOrderEvents\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp0\x01\x12;\n" +
-	"\x06Notify\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.EmptyB~\n" +
+	"\apayload\x18\x02 \x01(\tR\apayload2\x8b\x04\n" +
+	"\bMerchant\x12<\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x02\x12;\n" +
+	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12/\n" +
+	"\x04List\x12\a.hi.DID\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x01\x12;\n" +
+	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.GetUserProfileResp\"\x04\x88\xb5\x18\x03\x12I\n" +
+	"\x0eSetUserProfile\x12\x19.hi.did.SetUserProfileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x125\n" +
+	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x01\x12G\n" +
+	"\tSaveUsers\x12\x1c.hi.did.MerchantUsersSaveReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12K\n" +
+	"\vDeleteUsers\x12\x1e.hi.did.MerchantUsersDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x032\x80\x01\n" +
+	"\x03SSE\x126\n" +
+	"\vOrderEvents\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp\"\x04\x88\xb5\x18\x020\x01\x12A\n" +
+	"\x06Notify\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01B~\n" +
 	"\n" +
 	"com.hi.didB\rMerchantProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

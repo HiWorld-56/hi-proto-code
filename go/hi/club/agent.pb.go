@@ -413,7 +413,7 @@ var File_hi_club_agent_proto protoreflect.FileDescriptor
 
 const file_hi_club_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/agent.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\"=\n" +
+	"\x13hi/club/agent.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"=\n" +
 	"\rBindMasterReq\x12\x16\n" +
 	"\x06master\x18\x01 \x01(\tR\x06master\x12\x14\n" +
 	"\x05agent\x18\x02 \x01(\tR\x05agent\"?\n" +
@@ -437,31 +437,32 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"8\n" +
 	"\x12GetAgentMasterResp\x12\"\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x06master2\xf3\t\n" +
-	"\x05Agent\x12;\n" +
-	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\x12B\n" +
-	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\x12;\n" +
-	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\x12;\n" +
-	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\x12=\n" +
-	"\vAgentConfig\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.AgentConfigResp\x12<\n" +
-	"\vCreateAgent\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\x128\n" +
-	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\x121\n" +
-	"\x04List\x12\x13.hi.ai.ListAgentReq\x1a\x14.hi.ai.ListAgentResp\x12=\n" +
-	"\rListFavorites\x12\x16.hi.ai.ListFavoriteReq\x1a\x14.hi.ai.ListAgentResp\x12<\n" +
-	"\vDeleteAgent\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\x126\n" +
-	"\tFindAgent\x12\x13.hi.ai.FindAgentReq\x1a\x14.hi.ai.FindAgentResp\x12E\n" +
-	"\x0eFindAgentCount\x12\x18.hi.ai.FindAgentCountReq\x1a\x19.hi.ai.FindAgentCountResp\x126\n" +
-	"\bTransfer\x12\x12.hi.ai.TransferReq\x1a\x16.google.protobuf.Empty\x12F\n" +
-	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\x12@\n" +
-	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\x12<\n" +
+	".hi.EntityR\x06master2\xeb\n" +
 	"\n" +
-	"BindMaster\x12\x16.hi.club.BindMasterReq\x1a\x16.google.protobuf.Empty\x12@\n" +
-	"\fUnbindMaster\x12\x18.hi.club.UnbindMasterReq\x1a\x16.google.protobuf.Empty\x12=\n" +
+	"\x05Agent\x12A\n" +
+	"\rListLlmModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\"\x04\x88\xb5\x18\x02\x12H\n" +
+	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\"\x04\x88\xb5\x18\x02\x12A\n" +
+	"\rListSttModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x04\x88\xb5\x18\x02\x12A\n" +
+	"\rListTtsModels\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\vAgentConfig\x12\x16.google.protobuf.Empty\x1a\x16.hi.ai.AgentConfigResp\"\x04\x88\xb5\x18\x02\x12B\n" +
+	"\vCreateAgent\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x04\x88\xb5\x18\x02\x12>\n" +
+	"\tEditAgent\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x127\n" +
+	"\x04List\x12\x13.hi.ai.ListAgentReq\x1a\x14.hi.ai.ListAgentResp\"\x04\x88\xb5\x18\x01\x12C\n" +
+	"\rListFavorites\x12\x16.hi.ai.ListFavoriteReq\x1a\x14.hi.ai.ListAgentResp\"\x04\x88\xb5\x18\x02\x12B\n" +
+	"\vDeleteAgent\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12<\n" +
+	"\tFindAgent\x12\x13.hi.ai.FindAgentReq\x1a\x14.hi.ai.FindAgentResp\"\x04\x88\xb5\x18\x02\x12K\n" +
+	"\x0eFindAgentCount\x12\x18.hi.ai.FindAgentCountReq\x1a\x19.hi.ai.FindAgentCountResp\"\x04\x88\xb5\x18\x02\x12<\n" +
+	"\bTransfer\x12\x12.hi.ai.TransferReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12L\n" +
+	"\x10UpdatesToDefault\x12\x1a.hi.ai.UpdatesToDefaultReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12F\n" +
+	"\rFavoriteAgent\x12\x17.hi.ai.FavoriteAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12B\n" +
 	"\n" +
-	"BindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\x12=\n" +
+	"BindMaster\x12\x16.hi.club.BindMasterReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12F\n" +
+	"\fUnbindMaster\x12\x18.hi.club.UnbindMasterReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12C\n" +
 	"\n" +
-	"ListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\x12I\n" +
-	"\x0eGetAgentMaster\x12\x1a.hi.club.GetAgentMasterReq\x1a\x1b.hi.club.GetAgentMasterRespB\x81\x01\n" +
+	"BindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\"\x04\x88\xb5\x18\x02\x12C\n" +
+	"\n" +
+	"ListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\"\x04\x88\xb5\x18\x01\x12O\n" +
+	"\x0eGetAgentMaster\x12\x1a.hi.club.GetAgentMasterReq\x1a\x1b.hi.club.GetAgentMasterResp\"\x04\x88\xb5\x18\x01B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"AgentProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
