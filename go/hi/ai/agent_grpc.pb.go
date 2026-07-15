@@ -32,7 +32,6 @@ const (
 	Agent_AgentConfig_FullMethodName             = "/hi.ai.Agent/AgentConfig"
 	Agent_CreateAgent_FullMethodName             = "/hi.ai.Agent/CreateAgent"
 	Agent_EditAgent_FullMethodName               = "/hi.ai.Agent/EditAgent"
-	Agent_ListAgents_FullMethodName              = "/hi.ai.Agent/ListAgents"
 	Agent_ListAgent_FullMethodName               = "/hi.ai.Agent/ListAgent"
 	Agent_ListAgentByDids_FullMethodName         = "/hi.ai.Agent/ListAgentByDids"
 	Agent_DeleteAgent_FullMethodName             = "/hi.ai.Agent/DeleteAgent"
@@ -67,8 +66,6 @@ type AgentClient interface {
 	AgentConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AgentConfigResp, error)
 	CreateAgent(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
 	EditAgent(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListAgents(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error)
-	// Deprecated: Do not use.
 	ListAgent(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error)
 	ListAgentByDids(ctx context.Context, in *ListAgentByDidsReq, opts ...grpc.CallOption) (*ListAgentByDidsResp, error)
 	DeleteAgent(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -205,17 +202,6 @@ func (c *agentClient) EditAgent(ctx context.Context, in *EditAgentReq, opts ...g
 	return out, nil
 }
 
-func (c *agentClient) ListAgents(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListAgents_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
 func (c *agentClient) ListAgent(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentResp)
@@ -348,8 +334,6 @@ type AgentServer interface {
 	AgentConfig(context.Context, *emptypb.Empty) (*AgentConfigResp, error)
 	CreateAgent(context.Context, *CreateAgentReq) (*CreateAgentResp, error)
 	EditAgent(context.Context, *EditAgentReq) (*emptypb.Empty, error)
-	ListAgents(context.Context, *hi.Pagination) (*ListAgentResp, error)
-	// Deprecated: Do not use.
 	ListAgent(context.Context, *hi.Pagination) (*ListAgentResp, error)
 	ListAgentByDids(context.Context, *ListAgentByDidsReq) (*ListAgentByDidsResp, error)
 	DeleteAgent(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
@@ -403,9 +387,6 @@ func (UnimplementedAgentServer) CreateAgent(context.Context, *CreateAgentReq) (*
 }
 func (UnimplementedAgentServer) EditAgent(context.Context, *EditAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditAgent not implemented")
-}
-func (UnimplementedAgentServer) ListAgents(context.Context, *hi.Pagination) (*ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAgents not implemented")
 }
 func (UnimplementedAgentServer) ListAgent(context.Context, *hi.Pagination) (*ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAgent not implemented")
@@ -658,24 +639,6 @@ func _Agent_EditAgent_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.Pagination)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListAgents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListAgents_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListAgents(ctx, req.(*hi.Pagination))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_ListAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.Pagination)
 	if err := dec(in); err != nil {
@@ -924,10 +887,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditAgent",
 			Handler:    _Agent_EditAgent_Handler,
-		},
-		{
-			MethodName: "ListAgents",
-			Handler:    _Agent_ListAgents_Handler,
 		},
 		{
 			MethodName: "ListAgent",

@@ -69,14 +69,6 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$drawCreate, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListPluginResp> listPlugins(
-    $1.ListPluginReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listPlugins, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.ListPluginResp> list(
     $1.ListPluginReq request, {
     $grpc.CallOptions? options,
@@ -159,11 +151,6 @@ class PluginClient extends $grpc.Client {
           '/hi.ai.Plugin/DrawCreate',
           ($1.DrawCreateReq value) => value.writeToBuffer(),
           $1.DrawCreateResp.fromBuffer);
-  static final _$listPlugins =
-      $grpc.ClientMethod<$1.ListPluginReq, $1.ListPluginResp>(
-          '/hi.ai.Plugin/ListPlugins',
-          ($1.ListPluginReq value) => value.writeToBuffer(),
-          $1.ListPluginResp.fromBuffer);
   static final _$list = $grpc.ClientMethod<$1.ListPluginReq, $1.ListPluginResp>(
       '/hi.ai.Plugin/List',
       ($1.ListPluginReq value) => value.writeToBuffer(),
@@ -242,13 +229,6 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.DrawCreateReq.fromBuffer(value),
         ($1.DrawCreateResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ListPluginReq, $1.ListPluginResp>(
-        'ListPlugins',
-        listPlugins_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.ListPluginReq.fromBuffer(value),
-        ($1.ListPluginResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListPluginReq, $1.ListPluginResp>(
         'List',
         list_Pre,
@@ -350,14 +330,6 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.DrawCreateResp> drawCreate(
       $grpc.ServiceCall call, $1.DrawCreateReq request);
-
-  $async.Future<$1.ListPluginResp> listPlugins_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.ListPluginReq> $request) async {
-    return listPlugins($call, await $request);
-  }
-
-  $async.Future<$1.ListPluginResp> listPlugins(
-      $grpc.ServiceCall call, $1.ListPluginReq request);
 
   $async.Future<$1.ListPluginResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.ListPluginReq> $request) async {

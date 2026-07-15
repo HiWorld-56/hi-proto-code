@@ -401,25 +401,6 @@ pub mod user_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn list_users(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListUserReq>,
-        ) -> std::result::Result<tonic::Response<super::ListUserResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.User/ListUsers");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.User", "ListUsers"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListUserReq>,
@@ -751,31 +732,6 @@ pub mod invite_code_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.InviteCode", "Edit"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_invite_codes(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Pagination>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::did::InviteCodeListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.InviteCode/ListInviteCodes",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.InviteCode", "ListInviteCodes"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,

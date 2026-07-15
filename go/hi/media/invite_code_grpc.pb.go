@@ -22,12 +22,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	InviteCode_Create_FullMethodName          = "/hi.media.InviteCode/Create"
-	InviteCode_Edit_FullMethodName            = "/hi.media.InviteCode/Edit"
-	InviteCode_ListInviteCodes_FullMethodName = "/hi.media.InviteCode/ListInviteCodes"
-	InviteCode_List_FullMethodName            = "/hi.media.InviteCode/List"
-	InviteCode_Delete_FullMethodName          = "/hi.media.InviteCode/Delete"
-	InviteCode_Verify_FullMethodName          = "/hi.media.InviteCode/Verify"
+	InviteCode_Create_FullMethodName = "/hi.media.InviteCode/Create"
+	InviteCode_Edit_FullMethodName   = "/hi.media.InviteCode/Edit"
+	InviteCode_List_FullMethodName   = "/hi.media.InviteCode/List"
+	InviteCode_Delete_FullMethodName = "/hi.media.InviteCode/Delete"
+	InviteCode_Verify_FullMethodName = "/hi.media.InviteCode/Verify"
 )
 
 // InviteCodeClient is the client API for InviteCode service.
@@ -38,8 +37,6 @@ const (
 type InviteCodeClient interface {
 	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.InviteCodeCreateResp, error)
 	Edit(ctx context.Context, in *did.InviteCodeEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListInviteCodes(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.InviteCodeListResp, error)
-	// Deprecated: Do not use.
 	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.InviteCodeListResp, error)
 	Delete(ctx context.Context, in *did.InviteCodeDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Verify(ctx context.Context, in *did.InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
@@ -73,17 +70,6 @@ func (c *inviteCodeClient) Edit(ctx context.Context, in *did.InviteCodeEditReq, 
 	return out, nil
 }
 
-func (c *inviteCodeClient) ListInviteCodes(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.InviteCodeListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.InviteCodeListResp)
-	err := c.cc.Invoke(ctx, InviteCode_ListInviteCodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
 func (c *inviteCodeClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.InviteCodeListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(did.InviteCodeListResp)
@@ -122,8 +108,6 @@ func (c *inviteCodeClient) Verify(ctx context.Context, in *did.InviteCodeVerifyR
 type InviteCodeServer interface {
 	Create(context.Context, *emptypb.Empty) (*did.InviteCodeCreateResp, error)
 	Edit(context.Context, *did.InviteCodeEditReq) (*emptypb.Empty, error)
-	ListInviteCodes(context.Context, *hi.Pagination) (*did.InviteCodeListResp, error)
-	// Deprecated: Do not use.
 	List(context.Context, *hi.Pagination) (*did.InviteCodeListResp, error)
 	Delete(context.Context, *did.InviteCodeDeleteReq) (*emptypb.Empty, error)
 	Verify(context.Context, *did.InviteCodeVerifyReq) (*hi.AuthToken, error)
@@ -141,9 +125,6 @@ func (UnimplementedInviteCodeServer) Create(context.Context, *emptypb.Empty) (*d
 }
 func (UnimplementedInviteCodeServer) Edit(context.Context, *did.InviteCodeEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
-}
-func (UnimplementedInviteCodeServer) ListInviteCodes(context.Context, *hi.Pagination) (*did.InviteCodeListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListInviteCodes not implemented")
 }
 func (UnimplementedInviteCodeServer) List(context.Context, *hi.Pagination) (*did.InviteCodeListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -206,24 +187,6 @@ func _InviteCode_Edit_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(InviteCodeServer).Edit(ctx, req.(*did.InviteCodeEditReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _InviteCode_ListInviteCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.Pagination)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(InviteCodeServer).ListInviteCodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: InviteCode_ListInviteCodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InviteCodeServer).ListInviteCodes(ctx, req.(*hi.Pagination))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -296,10 +259,6 @@ var InviteCode_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Edit",
 			Handler:    _InviteCode_Edit_Handler,
-		},
-		{
-			MethodName: "ListInviteCodes",
-			Handler:    _InviteCode_ListInviteCodes_Handler,
 		},
 		{
 			MethodName: "List",

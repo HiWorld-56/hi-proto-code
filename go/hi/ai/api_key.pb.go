@@ -426,12 +426,11 @@ const file_hi_ai_api_key_proto_rawDesc = "" +
 	"\tagent_did\x18\x01 \x01(\tR\bagentDid\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination2\x9c\x02\n" +
+	"pagination2\xe1\x01\n" +
 	"\x06ApiKey\x129\n" +
 	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\x123\n" +
-	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\x124\n" +
-	"\vListApiKeys\x12\x0e.hi.Pagination\x1a\x15.hi.ai.ListApiKeyResp\x122\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x15.hi.ai.ListApiKeyResp\"\x03\x88\x02\x01\x128\n" +
+	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\x12-\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x15.hi.ai.ListApiKeyResp\x128\n" +
 	"\x06Delete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.EmptyBv\n" +
 	"\tcom.hi.aiB\vApiKeyProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
@@ -466,16 +465,14 @@ var file_hi_ai_api_key_proto_depIdxs = []int32{
 	7, // 3: hi.ai.ListAgentReq.pagination:type_name -> hi.Pagination
 	8, // 4: hi.ai.ApiKey.Create:input_type -> google.protobuf.Empty
 	2, // 5: hi.ai.ApiKey.Edit:input_type -> hi.ai.EditApiKeyReq
-	7, // 6: hi.ai.ApiKey.ListApiKeys:input_type -> hi.Pagination
-	7, // 7: hi.ai.ApiKey.List:input_type -> hi.Pagination
-	5, // 8: hi.ai.ApiKey.Delete:input_type -> hi.ai.DeleteApiKeyReq
-	1, // 9: hi.ai.ApiKey.Create:output_type -> hi.ai.CreateApiKeyResp
-	3, // 10: hi.ai.ApiKey.Edit:output_type -> hi.ai.EditApiKeyResp
-	4, // 11: hi.ai.ApiKey.ListApiKeys:output_type -> hi.ai.ListApiKeyResp
-	4, // 12: hi.ai.ApiKey.List:output_type -> hi.ai.ListApiKeyResp
-	8, // 13: hi.ai.ApiKey.Delete:output_type -> google.protobuf.Empty
-	9, // [9:14] is the sub-list for method output_type
-	4, // [4:9] is the sub-list for method input_type
+	7, // 6: hi.ai.ApiKey.List:input_type -> hi.Pagination
+	5, // 7: hi.ai.ApiKey.Delete:input_type -> hi.ai.DeleteApiKeyReq
+	1, // 8: hi.ai.ApiKey.Create:output_type -> hi.ai.CreateApiKeyResp
+	3, // 9: hi.ai.ApiKey.Edit:output_type -> hi.ai.EditApiKeyResp
+	4, // 10: hi.ai.ApiKey.List:output_type -> hi.ai.ListApiKeyResp
+	8, // 11: hi.ai.ApiKey.Delete:output_type -> google.protobuf.Empty
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name

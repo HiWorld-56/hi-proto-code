@@ -33,14 +33,6 @@ class GatewayConfigClient extends $grpc.Client {
 
   GatewayConfigClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.GatewayConfigListResp> listGatewayConfigs(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listGatewayConfigs, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.GatewayConfigListResp> list(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -57,11 +49,6 @@ class GatewayConfigClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$listGatewayConfigs =
-      $grpc.ClientMethod<$0.Empty, $1.GatewayConfigListResp>(
-          '/hi.did.GatewayConfig/ListGatewayConfigs',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.GatewayConfigListResp.fromBuffer);
   static final _$list = $grpc.ClientMethod<$0.Empty, $1.GatewayConfigListResp>(
       '/hi.did.GatewayConfig/List',
       ($0.Empty value) => value.writeToBuffer(),
@@ -78,13 +65,6 @@ abstract class GatewayConfigServiceBase extends $grpc.Service {
 
   GatewayConfigServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.GatewayConfigListResp>(
-        'ListGatewayConfigs',
-        listGatewayConfigs_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.GatewayConfigListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.GatewayConfigListResp>(
         'List',
         list_Pre,
         false,
@@ -100,14 +80,6 @@ abstract class GatewayConfigServiceBase extends $grpc.Service {
             $1.GatewayConfigSetReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
-
-  $async.Future<$1.GatewayConfigListResp> listGatewayConfigs_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listGatewayConfigs($call, await $request);
-  }
-
-  $async.Future<$1.GatewayConfigListResp> listGatewayConfigs(
-      $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.GatewayConfigListResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {

@@ -545,12 +545,11 @@ const file_hi_did_api_key_proto_rawDesc = "" +
 	"\fGetApiKeyReq\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\"7\n" +
 	"\rGetApiKeyResp\x12&\n" +
-	"\x04info\x18\x01 \x01(\v2\x12.hi.did.ApiKeyInfoR\x04info2\xe5\x02\n" +
+	"\x04info\x18\x01 \x01(\v2\x12.hi.did.ApiKeyInfoR\x04info2\xa2\x02\n" +
 	"\x06ApiKey\x12;\n" +
 	"\x06Create\x12\x17.hi.did.CreateApiKeyReq\x1a\x18.hi.did.CreateApiKeyResp\x125\n" +
-	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\x12<\n" +
-	"\vListApiKeys\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\x12:\n" +
-	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\"\x03\x88\x02\x01\x129\n" +
+	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\x125\n" +
+	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\x129\n" +
 	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\x122\n" +
 	"\x03Get\x12\x14.hi.did.GetApiKeyReq\x1a\x15.hi.did.GetApiKeyRespB|\n" +
 	"\n" +
@@ -591,18 +590,16 @@ var file_hi_did_api_key_proto_depIdxs = []int32{
 	0,  // 4: hi.did.GetApiKeyResp.info:type_name -> hi.did.ApiKeyInfo
 	1,  // 5: hi.did.ApiKey.Create:input_type -> hi.did.CreateApiKeyReq
 	3,  // 6: hi.did.ApiKey.Edit:input_type -> hi.did.EditApiKeyReq
-	5,  // 7: hi.did.ApiKey.ListApiKeys:input_type -> hi.did.ListApiKeyReq
-	5,  // 8: hi.did.ApiKey.List:input_type -> hi.did.ListApiKeyReq
-	7,  // 9: hi.did.ApiKey.Delete:input_type -> hi.did.DeleteApiKeyReq
-	8,  // 10: hi.did.ApiKey.Get:input_type -> hi.did.GetApiKeyReq
-	2,  // 11: hi.did.ApiKey.Create:output_type -> hi.did.CreateApiKeyResp
-	4,  // 12: hi.did.ApiKey.Edit:output_type -> hi.did.EditApiKeyResp
-	6,  // 13: hi.did.ApiKey.ListApiKeys:output_type -> hi.did.ListApiKeyResp
-	6,  // 14: hi.did.ApiKey.List:output_type -> hi.did.ListApiKeyResp
-	11, // 15: hi.did.ApiKey.Delete:output_type -> google.protobuf.Empty
-	9,  // 16: hi.did.ApiKey.Get:output_type -> hi.did.GetApiKeyResp
-	11, // [11:17] is the sub-list for method output_type
-	5,  // [5:11] is the sub-list for method input_type
+	5,  // 7: hi.did.ApiKey.List:input_type -> hi.did.ListApiKeyReq
+	7,  // 8: hi.did.ApiKey.Delete:input_type -> hi.did.DeleteApiKeyReq
+	8,  // 9: hi.did.ApiKey.Get:input_type -> hi.did.GetApiKeyReq
+	2,  // 10: hi.did.ApiKey.Create:output_type -> hi.did.CreateApiKeyResp
+	4,  // 11: hi.did.ApiKey.Edit:output_type -> hi.did.EditApiKeyResp
+	6,  // 12: hi.did.ApiKey.List:output_type -> hi.did.ListApiKeyResp
+	11, // 13: hi.did.ApiKey.Delete:output_type -> google.protobuf.Empty
+	9,  // 14: hi.did.ApiKey.Get:output_type -> hi.did.GetApiKeyResp
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name

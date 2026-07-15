@@ -26,7 +26,6 @@ const (
 	Plugin_SearchCreate_FullMethodName    = "/hi.club.Plugin/SearchCreate"
 	Plugin_PythonCreate_FullMethodName    = "/hi.club.Plugin/PythonCreate"
 	Plugin_DrawCreate_FullMethodName      = "/hi.club.Plugin/DrawCreate"
-	Plugin_ListPlugins_FullMethodName     = "/hi.club.Plugin/ListPlugins"
 	Plugin_List_FullMethodName            = "/hi.club.Plugin/List"
 	Plugin_Delete_FullMethodName          = "/hi.club.Plugin/Delete"
 	Plugin_DeleteByDids_FullMethodName    = "/hi.club.Plugin/DeleteByDids"
@@ -47,8 +46,6 @@ type PluginClient interface {
 	SearchCreate(ctx context.Context, in *ai.SearchCreateReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PythonCreate(ctx context.Context, in *ai.PythonCreateReq, opts ...grpc.CallOption) (*ai.PythonCreateResp, error)
 	DrawCreate(ctx context.Context, in *ai.DrawCreateReq, opts ...grpc.CallOption) (*ai.DrawCreateResp, error)
-	ListPlugins(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
-	// Deprecated: Do not use.
 	List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
 	Delete(ctx context.Context, in *ai.DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByDids(ctx context.Context, in *ai.DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -116,17 +113,6 @@ func (c *pluginClient) DrawCreate(ctx context.Context, in *ai.DrawCreateReq, opt
 	return out, nil
 }
 
-func (c *pluginClient) ListPlugins(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListPluginResp)
-	err := c.cc.Invoke(ctx, Plugin_ListPlugins_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Deprecated: Do not use.
 func (c *pluginClient) List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.ListPluginResp)
@@ -208,8 +194,6 @@ type PluginServer interface {
 	SearchCreate(context.Context, *ai.SearchCreateReq) (*emptypb.Empty, error)
 	PythonCreate(context.Context, *ai.PythonCreateReq) (*ai.PythonCreateResp, error)
 	DrawCreate(context.Context, *ai.DrawCreateReq) (*ai.DrawCreateResp, error)
-	ListPlugins(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error)
-	// Deprecated: Do not use.
 	List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error)
 	Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error)
 	DeleteByDids(context.Context, *ai.DeletePluginByDidsReq) (*emptypb.Empty, error)
@@ -240,9 +224,6 @@ func (UnimplementedPluginServer) PythonCreate(context.Context, *ai.PythonCreateR
 }
 func (UnimplementedPluginServer) DrawCreate(context.Context, *ai.DrawCreateReq) (*ai.DrawCreateResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DrawCreate not implemented")
-}
-func (UnimplementedPluginServer) ListPlugins(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListPlugins not implemented")
 }
 func (UnimplementedPluginServer) List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -371,24 +352,6 @@ func _Plugin_DrawCreate_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PluginServer).DrawCreate(ctx, req.(*ai.DrawCreateReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Plugin_ListPlugins_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ListPluginReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).ListPlugins(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_ListPlugins_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).ListPlugins(ctx, req.(*ai.ListPluginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -545,10 +508,6 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DrawCreate",
 			Handler:    _Plugin_DrawCreate_Handler,
-		},
-		{
-			MethodName: "ListPlugins",
-			Handler:    _Plugin_ListPlugins_Handler,
 		},
 		{
 			MethodName: "List",

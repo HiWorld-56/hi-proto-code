@@ -1963,7 +1963,7 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04uuid\x18\x03 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04envs\x18\x04 \x03(\tR\x04envs\"C\n" +
 	"\x17CleanupPythonProjectReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\xe8\x06\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\xa7\x06\n" +
 	"\x06Plugin\x12;\n" +
 	"\n" +
 	"DrawConfig\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.DrawConfigResp\x12?\n" +
@@ -1971,9 +1971,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\fSearchCreate\x12\x16.hi.ai.SearchCreateReq\x1a\x16.google.protobuf.Empty\x12?\n" +
 	"\fPythonCreate\x12\x16.hi.ai.PythonCreateReq\x1a\x17.hi.ai.PythonCreateResp\x129\n" +
 	"\n" +
-	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\x12:\n" +
-	"\vListPlugins\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\x128\n" +
-	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\"\x03\x88\x02\x01\x128\n" +
+	"DrawCreate\x12\x14.hi.ai.DrawCreateReq\x1a\x15.hi.ai.DrawCreateResp\x123\n" +
+	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\x128\n" +
 	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\x12D\n" +
 	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\x124\n" +
 	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\x120\n" +
@@ -2056,39 +2055,37 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	4,  // 16: hi.ai.Plugin.SearchCreate:input_type -> hi.ai.SearchCreateReq
 	5,  // 17: hi.ai.Plugin.PythonCreate:input_type -> hi.ai.PythonCreateReq
 	9,  // 18: hi.ai.Plugin.DrawCreate:input_type -> hi.ai.DrawCreateReq
-	11, // 19: hi.ai.Plugin.ListPlugins:input_type -> hi.ai.ListPluginReq
-	11, // 20: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginReq
-	13, // 21: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
-	14, // 22: hi.ai.Plugin.DeleteByDids:input_type -> hi.ai.DeletePluginByDidsReq
-	15, // 23: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	16, // 24: hi.ai.Plugin.GetDraw:input_type -> hi.ai.GetDrawReq
-	18, // 25: hi.ai.Plugin.PythonParamsSet:input_type -> hi.ai.PythonParamsSetReq
-	19, // 26: hi.ai.Plugin.GetPythonParams:input_type -> hi.ai.GetPythonParamsReq
-	21, // 27: hi.ai.Plugin.GetPlugin:input_type -> hi.ai.GetPluginReq
-	23, // 28: hi.ai.AiPlugin.Search:input_type -> hi.ai.SearchReq
-	25, // 29: hi.ai.AiPlugin.Python:input_type -> hi.ai.PythonReq
-	27, // 30: hi.ai.AiPlugin.PythonProject:input_type -> hi.ai.PythonProjectReq
-	28, // 31: hi.ai.AiPlugin.CleanupPythonProject:input_type -> hi.ai.CleanupPythonProjectReq
-	0,  // 32: hi.ai.Plugin.DrawConfig:output_type -> hi.ai.DrawConfigResp
-	3,  // 33: hi.ai.Plugin.PluginSwitch:output_type -> hi.ai.PluginSwitchResp
-	32, // 34: hi.ai.Plugin.SearchCreate:output_type -> google.protobuf.Empty
-	6,  // 35: hi.ai.Plugin.PythonCreate:output_type -> hi.ai.PythonCreateResp
-	10, // 36: hi.ai.Plugin.DrawCreate:output_type -> hi.ai.DrawCreateResp
-	12, // 37: hi.ai.Plugin.ListPlugins:output_type -> hi.ai.ListPluginResp
-	12, // 38: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginResp
-	32, // 39: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	32, // 40: hi.ai.Plugin.DeleteByDids:output_type -> google.protobuf.Empty
-	32, // 41: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	17, // 42: hi.ai.Plugin.GetDraw:output_type -> hi.ai.GetDrawResp
-	32, // 43: hi.ai.Plugin.PythonParamsSet:output_type -> google.protobuf.Empty
-	20, // 44: hi.ai.Plugin.GetPythonParams:output_type -> hi.ai.GetPythonParamsResp
-	22, // 45: hi.ai.Plugin.GetPlugin:output_type -> hi.ai.GetPluginResp
-	24, // 46: hi.ai.AiPlugin.Search:output_type -> hi.ai.SearchResp
-	26, // 47: hi.ai.AiPlugin.Python:output_type -> hi.ai.PythonResp
-	26, // 48: hi.ai.AiPlugin.PythonProject:output_type -> hi.ai.PythonResp
-	32, // 49: hi.ai.AiPlugin.CleanupPythonProject:output_type -> google.protobuf.Empty
-	32, // [32:50] is the sub-list for method output_type
-	14, // [14:32] is the sub-list for method input_type
+	11, // 19: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginReq
+	13, // 20: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
+	14, // 21: hi.ai.Plugin.DeleteByDids:input_type -> hi.ai.DeletePluginByDidsReq
+	15, // 22: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	16, // 23: hi.ai.Plugin.GetDraw:input_type -> hi.ai.GetDrawReq
+	18, // 24: hi.ai.Plugin.PythonParamsSet:input_type -> hi.ai.PythonParamsSetReq
+	19, // 25: hi.ai.Plugin.GetPythonParams:input_type -> hi.ai.GetPythonParamsReq
+	21, // 26: hi.ai.Plugin.GetPlugin:input_type -> hi.ai.GetPluginReq
+	23, // 27: hi.ai.AiPlugin.Search:input_type -> hi.ai.SearchReq
+	25, // 28: hi.ai.AiPlugin.Python:input_type -> hi.ai.PythonReq
+	27, // 29: hi.ai.AiPlugin.PythonProject:input_type -> hi.ai.PythonProjectReq
+	28, // 30: hi.ai.AiPlugin.CleanupPythonProject:input_type -> hi.ai.CleanupPythonProjectReq
+	0,  // 31: hi.ai.Plugin.DrawConfig:output_type -> hi.ai.DrawConfigResp
+	3,  // 32: hi.ai.Plugin.PluginSwitch:output_type -> hi.ai.PluginSwitchResp
+	32, // 33: hi.ai.Plugin.SearchCreate:output_type -> google.protobuf.Empty
+	6,  // 34: hi.ai.Plugin.PythonCreate:output_type -> hi.ai.PythonCreateResp
+	10, // 35: hi.ai.Plugin.DrawCreate:output_type -> hi.ai.DrawCreateResp
+	12, // 36: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginResp
+	32, // 37: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	32, // 38: hi.ai.Plugin.DeleteByDids:output_type -> google.protobuf.Empty
+	32, // 39: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	17, // 40: hi.ai.Plugin.GetDraw:output_type -> hi.ai.GetDrawResp
+	32, // 41: hi.ai.Plugin.PythonParamsSet:output_type -> google.protobuf.Empty
+	20, // 42: hi.ai.Plugin.GetPythonParams:output_type -> hi.ai.GetPythonParamsResp
+	22, // 43: hi.ai.Plugin.GetPlugin:output_type -> hi.ai.GetPluginResp
+	24, // 44: hi.ai.AiPlugin.Search:output_type -> hi.ai.SearchResp
+	26, // 45: hi.ai.AiPlugin.Python:output_type -> hi.ai.PythonResp
+	26, // 46: hi.ai.AiPlugin.PythonProject:output_type -> hi.ai.PythonResp
+	32, // 47: hi.ai.AiPlugin.CleanupPythonProject:output_type -> google.protobuf.Empty
+	31, // [31:48] is the sub-list for method output_type
+	14, // [14:31] is the sub-list for method input_type
 	14, // [14:14] is the sub-list for extension type_name
 	14, // [14:14] is the sub-list for extension extendee
 	0,  // [0:14] is the sub-list for field type_name

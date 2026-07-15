@@ -34,14 +34,6 @@ class UserClient extends $grpc.Client {
 
   UserClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.ListUserResp> listUsers(
-    $0.ListUserReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listUsers, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$0.ListUserResp> list(
     $0.ListUserReq request, {
     $grpc.CallOptions? options,
@@ -65,11 +57,6 @@ class UserClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$listUsers =
-      $grpc.ClientMethod<$0.ListUserReq, $0.ListUserResp>(
-          '/hi.media.User/ListUsers',
-          ($0.ListUserReq value) => value.writeToBuffer(),
-          $0.ListUserResp.fromBuffer);
   static final _$list = $grpc.ClientMethod<$0.ListUserReq, $0.ListUserResp>(
       '/hi.media.User/List',
       ($0.ListUserReq value) => value.writeToBuffer(),
@@ -89,13 +76,6 @@ abstract class UserServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.media.User';
 
   UserServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.ListUserReq, $0.ListUserResp>(
-        'ListUsers',
-        listUsers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListUserReq.fromBuffer(value),
-        ($0.ListUserResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListUserReq, $0.ListUserResp>(
         'List',
         list_Pre,
@@ -118,14 +98,6 @@ abstract class UserServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.DeleteUserReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
   }
-
-  $async.Future<$0.ListUserResp> listUsers_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.ListUserReq> $request) async {
-    return listUsers($call, await $request);
-  }
-
-  $async.Future<$0.ListUserResp> listUsers(
-      $grpc.ServiceCall call, $0.ListUserReq request);
 
   $async.Future<$0.ListUserResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListUserReq> $request) async {

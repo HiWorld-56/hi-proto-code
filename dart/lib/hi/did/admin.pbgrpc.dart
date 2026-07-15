@@ -48,14 +48,6 @@ class InviteCodeClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.InviteCodeListResp> listInviteCodes(
-    $2.Pagination request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listInviteCodes, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.InviteCodeListResp> list(
     $2.Pagination request, {
     $grpc.CallOptions? options,
@@ -87,11 +79,6 @@ class InviteCodeClient extends $grpc.Client {
       '/hi.did.InviteCode/Edit',
       ($1.InviteCodeEditReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$listInviteCodes =
-      $grpc.ClientMethod<$2.Pagination, $1.InviteCodeListResp>(
-          '/hi.did.InviteCode/ListInviteCodes',
-          ($2.Pagination value) => value.writeToBuffer(),
-          $1.InviteCodeListResp.fromBuffer);
   static final _$list =
       $grpc.ClientMethod<$2.Pagination, $1.InviteCodeListResp>(
           '/hi.did.InviteCode/List',
@@ -127,13 +114,6 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.InviteCodeEditReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.InviteCodeListResp>(
-        'ListInviteCodes',
-        listInviteCodes_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
-        ($1.InviteCodeListResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.Pagination, $1.InviteCodeListResp>(
         'List',
         list_Pre,
@@ -174,14 +154,6 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> edit(
       $grpc.ServiceCall call, $1.InviteCodeEditReq request);
-
-  $async.Future<$1.InviteCodeListResp> listInviteCodes_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
-    return listInviteCodes($call, await $request);
-  }
-
-  $async.Future<$1.InviteCodeListResp> listInviteCodes(
-      $grpc.ServiceCall call, $2.Pagination request);
 
   $async.Future<$1.InviteCodeListResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
@@ -452,14 +424,6 @@ class MerchantManageClient extends $grpc.Client {
 
   MerchantManageClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.MerchantManageListResp> listMerchants(
-    $1.MerchantManageListReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listMerchants, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.MerchantManageListResp> list(
     $1.MerchantManageListReq request, {
     $grpc.CallOptions? options,
@@ -483,11 +447,6 @@ class MerchantManageClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$listMerchants =
-      $grpc.ClientMethod<$1.MerchantManageListReq, $1.MerchantManageListResp>(
-          '/hi.did.MerchantManage/ListMerchants',
-          ($1.MerchantManageListReq value) => value.writeToBuffer(),
-          $1.MerchantManageListResp.fromBuffer);
   static final _$list =
       $grpc.ClientMethod<$1.MerchantManageListReq, $1.MerchantManageListResp>(
           '/hi.did.MerchantManage/List',
@@ -508,15 +467,6 @@ abstract class MerchantManageServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.MerchantManage';
 
   MerchantManageServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.MerchantManageListReq,
-            $1.MerchantManageListResp>(
-        'ListMerchants',
-        listMerchants_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.MerchantManageListReq.fromBuffer(value),
-        ($1.MerchantManageListResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.MerchantManageListReq,
             $1.MerchantManageListResp>(
         'List',
@@ -542,15 +492,6 @@ abstract class MerchantManageServiceBase extends $grpc.Service {
             $1.MerchantManageEditReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
-
-  $async.Future<$1.MerchantManageListResp> listMerchants_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.MerchantManageListReq> $request) async {
-    return listMerchants($call, await $request);
-  }
-
-  $async.Future<$1.MerchantManageListResp> listMerchants(
-      $grpc.ServiceCall call, $1.MerchantManageListReq request);
 
   $async.Future<$1.MerchantManageListResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$1.MerchantManageListReq> $request) async {

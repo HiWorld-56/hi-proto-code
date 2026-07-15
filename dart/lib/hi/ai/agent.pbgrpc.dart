@@ -116,14 +116,6 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$editAgent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListAgentResp> listAgents(
-    $2.Pagination request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listAgents, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$1.ListAgentResp> listAgent(
     $2.Pagination request, {
     $grpc.CallOptions? options,
@@ -252,11 +244,6 @@ class AgentClient extends $grpc.Client {
       '/hi.ai.Agent/EditAgent',
       ($1.EditAgentReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$listAgents =
-      $grpc.ClientMethod<$2.Pagination, $1.ListAgentResp>(
-          '/hi.ai.Agent/ListAgents',
-          ($2.Pagination value) => value.writeToBuffer(),
-          $1.ListAgentResp.fromBuffer);
   static final _$listAgent =
       $grpc.ClientMethod<$2.Pagination, $1.ListAgentResp>(
           '/hi.ai.Agent/ListAgent',
@@ -394,13 +381,6 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.EditAgentReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.ListAgentResp>(
-        'ListAgents',
-        listAgents_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
-        ($1.ListAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.Pagination, $1.ListAgentResp>(
         'ListAgent',
         listAgent_Pre,
@@ -576,14 +556,6 @@ abstract class AgentServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> editAgent(
       $grpc.ServiceCall call, $1.EditAgentReq request);
-
-  $async.Future<$1.ListAgentResp> listAgents_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
-    return listAgents($call, await $request);
-  }
-
-  $async.Future<$1.ListAgentResp> listAgents(
-      $grpc.ServiceCall call, $2.Pagination request);
 
   $async.Future<$1.ListAgentResp> listAgent_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {

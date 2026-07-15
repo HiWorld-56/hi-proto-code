@@ -26,12 +26,11 @@ var File_hi_club_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_club_api_key_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/did/api_key.proto2\xb1\x02\n" +
+	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/did/api_key.proto2\xee\x01\n" +
 	"\x06ApiKey\x12;\n" +
 	"\x06Create\x12\x17.hi.did.CreateApiKeyReq\x1a\x18.hi.did.CreateApiKeyResp\x125\n" +
-	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\x12<\n" +
-	"\vListApiKeys\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\x12:\n" +
-	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\"\x03\x88\x02\x01\x129\n" +
+	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\x125\n" +
+	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\x129\n" +
 	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.EmptyB\x82\x01\n" +
 	"\vcom.hi.clubB\vApiKeyProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
@@ -48,16 +47,14 @@ var file_hi_club_api_key_proto_goTypes = []any{
 var file_hi_club_api_key_proto_depIdxs = []int32{
 	0, // 0: hi.club.ApiKey.Create:input_type -> hi.did.CreateApiKeyReq
 	1, // 1: hi.club.ApiKey.Edit:input_type -> hi.did.EditApiKeyReq
-	2, // 2: hi.club.ApiKey.ListApiKeys:input_type -> hi.did.ListApiKeyReq
-	2, // 3: hi.club.ApiKey.List:input_type -> hi.did.ListApiKeyReq
-	3, // 4: hi.club.ApiKey.Delete:input_type -> hi.did.DeleteApiKeyReq
-	4, // 5: hi.club.ApiKey.Create:output_type -> hi.did.CreateApiKeyResp
-	5, // 6: hi.club.ApiKey.Edit:output_type -> hi.did.EditApiKeyResp
-	6, // 7: hi.club.ApiKey.ListApiKeys:output_type -> hi.did.ListApiKeyResp
-	6, // 8: hi.club.ApiKey.List:output_type -> hi.did.ListApiKeyResp
-	7, // 9: hi.club.ApiKey.Delete:output_type -> google.protobuf.Empty
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	2, // 2: hi.club.ApiKey.List:input_type -> hi.did.ListApiKeyReq
+	3, // 3: hi.club.ApiKey.Delete:input_type -> hi.did.DeleteApiKeyReq
+	4, // 4: hi.club.ApiKey.Create:output_type -> hi.did.CreateApiKeyResp
+	5, // 5: hi.club.ApiKey.Edit:output_type -> hi.did.EditApiKeyResp
+	6, // 6: hi.club.ApiKey.List:output_type -> hi.did.ListApiKeyResp
+	7, // 7: hi.club.ApiKey.Delete:output_type -> google.protobuf.Empty
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

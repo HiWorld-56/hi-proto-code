@@ -47,14 +47,6 @@ class UserACLClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.UserACLListResp> listUserAcls(
-    $0.UserACLListReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listUserAcls, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$0.UserACLListResp> list(
     $0.UserACLListReq request, {
     $grpc.CallOptions? options,
@@ -62,14 +54,6 @@ class UserACLClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.UserACLListTypeResp> listUserAclTypes(
-    $1.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listUserAclTypes, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$0.UserACLListTypeResp> listType(
     $1.Empty request, {
     $grpc.CallOptions? options,
@@ -94,21 +78,11 @@ class UserACLClient extends $grpc.Client {
       '/hi.club.UserACL/Delete',
       ($0.UserACLDeleteReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
-  static final _$listUserAcls =
-      $grpc.ClientMethod<$0.UserACLListReq, $0.UserACLListResp>(
-          '/hi.club.UserACL/ListUserAcls',
-          ($0.UserACLListReq value) => value.writeToBuffer(),
-          $0.UserACLListResp.fromBuffer);
   static final _$list =
       $grpc.ClientMethod<$0.UserACLListReq, $0.UserACLListResp>(
           '/hi.club.UserACL/List',
           ($0.UserACLListReq value) => value.writeToBuffer(),
           $0.UserACLListResp.fromBuffer);
-  static final _$listUserAclTypes =
-      $grpc.ClientMethod<$1.Empty, $0.UserACLListTypeResp>(
-          '/hi.club.UserACL/ListUserAclTypes',
-          ($1.Empty value) => value.writeToBuffer(),
-          $0.UserACLListTypeResp.fromBuffer);
   static final _$listType =
       $grpc.ClientMethod<$1.Empty, $0.UserACLListTypeResp>(
           '/hi.club.UserACL/ListType',
@@ -140,26 +114,12 @@ abstract class UserACLServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.UserACLDeleteReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UserACLListReq, $0.UserACLListResp>(
-        'ListUserAcls',
-        listUserAcls_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.UserACLListReq.fromBuffer(value),
-        ($0.UserACLListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UserACLListReq, $0.UserACLListResp>(
         'List',
         list_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.UserACLListReq.fromBuffer(value),
         ($0.UserACLListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Empty, $0.UserACLListTypeResp>(
-        'ListUserAclTypes',
-        listUserAclTypes_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
-        ($0.UserACLListTypeResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.Empty, $0.UserACLListTypeResp>(
         'ListType',
         listType_Pre,
@@ -191,14 +151,6 @@ abstract class UserACLServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> delete(
       $grpc.ServiceCall call, $0.UserACLDeleteReq request);
 
-  $async.Future<$0.UserACLListResp> listUserAcls_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.UserACLListReq> $request) async {
-    return listUserAcls($call, await $request);
-  }
-
-  $async.Future<$0.UserACLListResp> listUserAcls(
-      $grpc.ServiceCall call, $0.UserACLListReq request);
-
   $async.Future<$0.UserACLListResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$0.UserACLListReq> $request) async {
     return list($call, await $request);
@@ -206,14 +158,6 @@ abstract class UserACLServiceBase extends $grpc.Service {
 
   $async.Future<$0.UserACLListResp> list(
       $grpc.ServiceCall call, $0.UserACLListReq request);
-
-  $async.Future<$0.UserACLListTypeResp> listUserAclTypes_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
-    return listUserAclTypes($call, await $request);
-  }
-
-  $async.Future<$0.UserACLListTypeResp> listUserAclTypes(
-      $grpc.ServiceCall call, $1.Empty request);
 
   $async.Future<$0.UserACLListTypeResp> listType_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {

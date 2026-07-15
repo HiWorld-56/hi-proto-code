@@ -181,31 +181,6 @@ pub mod user_acl_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.UserACL", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_user_acls(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UserAclListReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::UserAclListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.UserACL/ListUserAcls",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.UserACL", "ListUserAcls"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::UserAclListReq>,
@@ -227,31 +202,6 @@ pub mod user_acl_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.UserACL", "List"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_user_acl_types(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::UserAclListTypeResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.UserACL/ListUserAclTypes",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.UserACL", "ListUserAclTypes"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list_type(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -827,25 +777,6 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "EditAgent"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_agents(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Pagination>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/ListAgents");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "ListAgents"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list_agent(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,
@@ -2293,25 +2224,6 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DrawCreate"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_plugins(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPluginReq>,
-        ) -> std::result::Result<tonic::Response<super::ListPluginResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/ListPlugins");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "ListPlugins"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListPluginReq>,
@@ -3583,25 +3495,6 @@ pub mod api_key_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.ApiKey", "Edit"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_api_keys(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Pagination>,
-        ) -> std::result::Result<tonic::Response<super::ListApiKeyResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.ApiKey/ListApiKeys");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.ApiKey", "ListApiKeys"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,
@@ -4169,31 +4062,6 @@ pub mod invite_code_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.InviteCode", "Edit"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_invite_codes(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::Pagination>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::did::InviteCodeListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.InviteCode/ListInviteCodes",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.InviteCode", "ListInviteCodes"));
-            self.inner.unary(req, path, codec).await
-        }
-        #[deprecated]
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,

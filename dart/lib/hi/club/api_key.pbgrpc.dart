@@ -48,14 +48,6 @@ class ApiKeyClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListApiKeyResp> listApiKeys(
-    $0.ListApiKeyReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listApiKeys, request, options: options);
-  }
-
-  @$core.Deprecated('This method is deprecated')
   $grpc.ResponseFuture<$0.ListApiKeyResp> list(
     $0.ListApiKeyReq request, {
     $grpc.CallOptions? options,
@@ -81,11 +73,6 @@ class ApiKeyClient extends $grpc.Client {
       '/hi.club.ApiKey/Edit',
       ($0.EditApiKeyReq value) => value.writeToBuffer(),
       $0.EditApiKeyResp.fromBuffer);
-  static final _$listApiKeys =
-      $grpc.ClientMethod<$0.ListApiKeyReq, $0.ListApiKeyResp>(
-          '/hi.club.ApiKey/ListApiKeys',
-          ($0.ListApiKeyReq value) => value.writeToBuffer(),
-          $0.ListApiKeyResp.fromBuffer);
   static final _$list = $grpc.ClientMethod<$0.ListApiKeyReq, $0.ListApiKeyResp>(
       '/hi.club.ApiKey/List',
       ($0.ListApiKeyReq value) => value.writeToBuffer(),
@@ -115,13 +102,6 @@ abstract class ApiKeyServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.EditApiKeyReq.fromBuffer(value),
         ($0.EditApiKeyResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListApiKeyReq, $0.ListApiKeyResp>(
-        'ListApiKeys',
-        listApiKeys_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListApiKeyReq.fromBuffer(value),
-        ($0.ListApiKeyResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListApiKeyReq, $0.ListApiKeyResp>(
         'List',
         list_Pre,
@@ -153,14 +133,6 @@ abstract class ApiKeyServiceBase extends $grpc.Service {
 
   $async.Future<$0.EditApiKeyResp> edit(
       $grpc.ServiceCall call, $0.EditApiKeyReq request);
-
-  $async.Future<$0.ListApiKeyResp> listApiKeys_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.ListApiKeyReq> $request) async {
-    return listApiKeys($call, await $request);
-  }
-
-  $async.Future<$0.ListApiKeyResp> listApiKeys(
-      $grpc.ServiceCall call, $0.ListApiKeyReq request);
 
   $async.Future<$0.ListApiKeyResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListApiKeyReq> $request) async {

@@ -89,33 +89,6 @@ func local_request_ApiKey_Edit_0(ctx context.Context, marshaler runtime.Marshale
 	return msg, metadata, err
 }
 
-func request_ApiKey_ListApiKeys_0(ctx context.Context, marshaler runtime.Marshaler, client ApiKeyClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListApiKeyReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.ListApiKeys(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_ApiKey_ListApiKeys_0(ctx context.Context, marshaler runtime.Marshaler, server ApiKeyServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListApiKeyReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.ListApiKeys(ctx, &protoReq)
-	return msg, metadata, err
-}
-
 func request_ApiKey_List_0(ctx context.Context, marshaler runtime.Marshaler, client ApiKeyClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListApiKeyReq
@@ -242,26 +215,6 @@ func RegisterApiKeyHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 			return
 		}
 		forward_ApiKey_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_ApiKey_ListApiKeys_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.ApiKey/ListApiKeys", runtime.WithHTTPPathPattern("/hi.did.ApiKey/ListApiKeys"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_ApiKey_ListApiKeys_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_ApiKey_ListApiKeys_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_ApiKey_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -397,23 +350,6 @@ func RegisterApiKeyHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		}
 		forward_ApiKey_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_ApiKey_ListApiKeys_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.ApiKey/ListApiKeys", runtime.WithHTTPPathPattern("/hi.did.ApiKey/ListApiKeys"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_ApiKey_ListApiKeys_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_ApiKey_ListApiKeys_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_ApiKey_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -469,19 +405,17 @@ func RegisterApiKeyHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
-	pattern_ApiKey_Create_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Create"}, ""))
-	pattern_ApiKey_Edit_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Edit"}, ""))
-	pattern_ApiKey_ListApiKeys_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "ListApiKeys"}, ""))
-	pattern_ApiKey_List_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "List"}, ""))
-	pattern_ApiKey_Delete_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Delete"}, ""))
-	pattern_ApiKey_Get_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Get"}, ""))
+	pattern_ApiKey_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Create"}, ""))
+	pattern_ApiKey_Edit_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Edit"}, ""))
+	pattern_ApiKey_List_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "List"}, ""))
+	pattern_ApiKey_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Delete"}, ""))
+	pattern_ApiKey_Get_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ApiKey", "Get"}, ""))
 )
 
 var (
-	forward_ApiKey_Create_0      = runtime.ForwardResponseMessage
-	forward_ApiKey_Edit_0        = runtime.ForwardResponseMessage
-	forward_ApiKey_ListApiKeys_0 = runtime.ForwardResponseMessage
-	forward_ApiKey_List_0        = runtime.ForwardResponseMessage
-	forward_ApiKey_Delete_0      = runtime.ForwardResponseMessage
-	forward_ApiKey_Get_0         = runtime.ForwardResponseMessage
+	forward_ApiKey_Create_0 = runtime.ForwardResponseMessage
+	forward_ApiKey_Edit_0   = runtime.ForwardResponseMessage
+	forward_ApiKey_List_0   = runtime.ForwardResponseMessage
+	forward_ApiKey_Delete_0 = runtime.ForwardResponseMessage
+	forward_ApiKey_Get_0    = runtime.ForwardResponseMessage
 )
