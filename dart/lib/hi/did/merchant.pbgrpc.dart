@@ -61,13 +61,13 @@ class MerchantClient extends $grpc.Client {
   }
 
   /// ── 商户管理其用户的扩展信息 ──
-  /// GetExUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
-  /// GetExUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
-  $grpc.ResponseFuture<$1.UserExtensionUnit> getExUser(
-    $1.GetExUserReq request, {
+  /// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+  /// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
+  $grpc.ResponseFuture<$1.UserExtensionUnit> getUser(
+    $1.GetUserReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getExUser, request, options: options);
+    return $createUnaryCall(_$getUser, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.ListUsersResp> listUsers(
@@ -138,10 +138,10 @@ class MerchantClient extends $grpc.Client {
       '/hi.did.Merchant/Update',
       ($1.MerchantSetReq value) => value.writeToBuffer(),
       $2.Empty.fromBuffer);
-  static final _$getExUser =
-      $grpc.ClientMethod<$1.GetExUserReq, $1.UserExtensionUnit>(
-          '/hi.did.Merchant/GetExUser',
-          ($1.GetExUserReq value) => value.writeToBuffer(),
+  static final _$getUser =
+      $grpc.ClientMethod<$1.GetUserReq, $1.UserExtensionUnit>(
+          '/hi.did.Merchant/GetUser',
+          ($1.GetUserReq value) => value.writeToBuffer(),
           $1.UserExtensionUnit.fromBuffer);
   static final _$listUsers =
       $grpc.ClientMethod<$1.ListUsersReq, $1.ListUsersResp>(
@@ -198,12 +198,12 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.MerchantSetReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GetExUserReq, $1.UserExtensionUnit>(
-        'GetExUser',
-        getExUser_Pre,
+    $addMethod($grpc.ServiceMethod<$1.GetUserReq, $1.UserExtensionUnit>(
+        'GetUser',
+        getUser_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.GetExUserReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.GetUserReq.fromBuffer(value),
         ($1.UserExtensionUnit value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListUsersReq, $1.ListUsersResp>(
         'ListUsers',
@@ -278,13 +278,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
   $async.Future<$2.Empty> update(
       $grpc.ServiceCall call, $1.MerchantSetReq request);
 
-  $async.Future<$1.UserExtensionUnit> getExUser_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GetExUserReq> $request) async {
-    return getExUser($call, await $request);
+  $async.Future<$1.UserExtensionUnit> getUser_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GetUserReq> $request) async {
+    return getUser($call, await $request);
   }
 
-  $async.Future<$1.UserExtensionUnit> getExUser(
-      $grpc.ServiceCall call, $1.GetExUserReq request);
+  $async.Future<$1.UserExtensionUnit> getUser(
+      $grpc.ServiceCall call, $1.GetUserReq request);
 
   $async.Future<$1.ListUsersResp> listUsers_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.ListUsersReq> $request) async {

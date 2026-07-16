@@ -221,19 +221,19 @@ final $typed_data.Uint8List listGrantsRespDescriptor = $convert.base64Decode(
     'Cg5MaXN0R3JhbnRzUmVzcBIpCgZncmFudHMYASADKAsyES5oaS5kaWQuR3JhbnRVbml0UgZncm'
     'FudHM=');
 
-@$core.Deprecated('Use getExUserReqDescriptor instead')
-const GetExUserReq$json = {
-  '1': 'GetExUserReq',
+@$core.Deprecated('Use getUserReqDescriptor instead')
+const GetUserReq$json = {
+  '1': 'GetUserReq',
   '2': [
     {'1': 'merchant', '3': 1, '4': 1, '5': 9, '10': 'merchant'},
     {'1': 'user', '3': 2, '4': 1, '5': 9, '10': 'user'},
   ],
 };
 
-/// Descriptor for `GetExUserReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getExUserReqDescriptor = $convert.base64Decode(
-    'CgxHZXRFeFVzZXJSZXESGgoIbWVyY2hhbnQYASABKAlSCG1lcmNoYW50EhIKBHVzZXIYAiABKA'
-    'lSBHVzZXI=');
+/// Descriptor for `GetUserReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getUserReqDescriptor = $convert.base64Decode(
+    'CgpHZXRVc2VyUmVxEhoKCG1lcmNoYW50GAEgASgJUghtZXJjaGFudBISCgR1c2VyGAIgASgJUg'
+    'R1c2Vy');
 
 @$core.Deprecated('Use listUsersReqDescriptor instead')
 const ListUsersReq$json = {

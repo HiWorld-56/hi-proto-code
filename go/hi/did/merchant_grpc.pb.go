@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Merchant_Get_FullMethodName         = "/hi.did.Merchant/Get"
 	Merchant_Update_FullMethodName      = "/hi.did.Merchant/Update"
-	Merchant_GetExUser_FullMethodName   = "/hi.did.Merchant/GetExUser"
+	Merchant_GetUser_FullMethodName     = "/hi.did.Merchant/GetUser"
 	Merchant_ListUsers_FullMethodName   = "/hi.did.Merchant/ListUsers"
 	Merchant_SetUsers_FullMethodName    = "/hi.did.Merchant/SetUsers"
 	Merchant_AddUsers_FullMethodName    = "/hi.did.Merchant/AddUsers"
@@ -57,9 +57,9 @@ type MerchantClient interface {
 	Get(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantGetResp, error)
 	Update(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 商户管理其用户的扩展信息 ──
-	// GetExUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
-	// GetExUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
-	GetExUser(ctx context.Context, in *GetExUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error)
+	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+	// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
+	GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error)
 	ListUsers(ctx context.Context, in *ListUsersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
 	SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddUsers(ctx context.Context, in *AddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -100,10 +100,10 @@ func (c *merchantClient) Update(ctx context.Context, in *MerchantSetReq, opts ..
 	return out, nil
 }
 
-func (c *merchantClient) GetExUser(ctx context.Context, in *GetExUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error) {
+func (c *merchantClient) GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserExtensionUnit)
-	err := c.cc.Invoke(ctx, Merchant_GetExUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Merchant_GetUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -213,9 +213,9 @@ type MerchantServer interface {
 	Get(context.Context, *hi.DID) (*MerchantGetResp, error)
 	Update(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
 	// ── 商户管理其用户的扩展信息 ──
-	// GetExUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
-	// GetExUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
-	GetExUser(context.Context, *GetExUserReq) (*UserExtensionUnit, error)
+	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+	// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
+	GetUser(context.Context, *GetUserReq) (*UserExtensionUnit, error)
 	ListUsers(context.Context, *ListUsersReq) (*ListUsersResp, error)
 	SetUsers(context.Context, *SetUsersReq) (*emptypb.Empty, error)
 	AddUsers(context.Context, *AddUsersReq) (*emptypb.Empty, error)
@@ -241,8 +241,8 @@ func (UnimplementedMerchantServer) Get(context.Context, *hi.DID) (*MerchantGetRe
 func (UnimplementedMerchantServer) Update(context.Context, *MerchantSetReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedMerchantServer) GetExUser(context.Context, *GetExUserReq) (*UserExtensionUnit, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetExUser not implemented")
+func (UnimplementedMerchantServer) GetUser(context.Context, *GetUserReq) (*UserExtensionUnit, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedMerchantServer) ListUsers(context.Context, *ListUsersReq) (*ListUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
@@ -324,20 +324,20 @@ func _Merchant_Update_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Merchant_GetExUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetExUserReq)
+func _Merchant_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MerchantServer).GetExUser(ctx, in)
+		return srv.(MerchantServer).GetUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Merchant_GetExUser_FullMethodName,
+		FullMethod: Merchant_GetUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).GetExUser(ctx, req.(*GetExUserReq))
+		return srv.(MerchantServer).GetUser(ctx, req.(*GetUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -502,8 +502,8 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Merchant_Update_Handler,
 		},
 		{
-			MethodName: "GetExUser",
-			Handler:    _Merchant_GetExUser_Handler,
+			MethodName: "GetUser",
+			Handler:    _Merchant_GetUser_Handler,
 		},
 		{
 			MethodName: "ListUsers",

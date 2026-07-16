@@ -29,11 +29,11 @@ const (
 //
 // ⚠️ 待 club 阶段复核主体:此方法是**用户**(token)读某商户下某(他人)用户的扩展数据用于渲染
 //
-//	(如金标标记)。但 did 侧已定"扩展是商户地盘、读扩展是商户主体(Merchant.GetExUser)"。
+//	(如金标标记)。但 did 侧已定"扩展是商户地盘、读扩展是商户主体(Merchant.GetUser)"。
 //	club 这个 user-token 的读扩展是否合理、如何对齐,留 club 阶段处理。本轮仅跟随 did 的类型改名。
 type UserExtensionClient interface {
-	// 取某商户下某用户的扩展数据。转发到 did 的 Merchant.GetExUser。
-	Get(ctx context.Context, in *did.GetExUserReq, opts ...grpc.CallOption) (*did.UserExtensionUnit, error)
+	// 取某商户下某用户的扩展数据。转发到 did 的 Merchant.GetUser。
+	Get(ctx context.Context, in *did.GetUserReq, opts ...grpc.CallOption) (*did.UserExtensionUnit, error)
 }
 
 type userExtensionClient struct {
@@ -44,7 +44,7 @@ func NewUserExtensionClient(cc grpc.ClientConnInterface) UserExtensionClient {
 	return &userExtensionClient{cc}
 }
 
-func (c *userExtensionClient) Get(ctx context.Context, in *did.GetExUserReq, opts ...grpc.CallOption) (*did.UserExtensionUnit, error) {
+func (c *userExtensionClient) Get(ctx context.Context, in *did.GetUserReq, opts ...grpc.CallOption) (*did.UserExtensionUnit, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(did.UserExtensionUnit)
 	err := c.cc.Invoke(ctx, UserExtension_Get_FullMethodName, in, out, cOpts...)
@@ -60,11 +60,11 @@ func (c *userExtensionClient) Get(ctx context.Context, in *did.GetExUserReq, opt
 //
 // ⚠️ 待 club 阶段复核主体:此方法是**用户**(token)读某商户下某(他人)用户的扩展数据用于渲染
 //
-//	(如金标标记)。但 did 侧已定"扩展是商户地盘、读扩展是商户主体(Merchant.GetExUser)"。
+//	(如金标标记)。但 did 侧已定"扩展是商户地盘、读扩展是商户主体(Merchant.GetUser)"。
 //	club 这个 user-token 的读扩展是否合理、如何对齐,留 club 阶段处理。本轮仅跟随 did 的类型改名。
 type UserExtensionServer interface {
-	// 取某商户下某用户的扩展数据。转发到 did 的 Merchant.GetExUser。
-	Get(context.Context, *did.GetExUserReq) (*did.UserExtensionUnit, error)
+	// 取某商户下某用户的扩展数据。转发到 did 的 Merchant.GetUser。
+	Get(context.Context, *did.GetUserReq) (*did.UserExtensionUnit, error)
 }
 
 // UnimplementedUserExtensionServer should be embedded to have
@@ -74,7 +74,7 @@ type UserExtensionServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserExtensionServer struct{}
 
-func (UnimplementedUserExtensionServer) Get(context.Context, *did.GetExUserReq) (*did.UserExtensionUnit, error) {
+func (UnimplementedUserExtensionServer) Get(context.Context, *did.GetUserReq) (*did.UserExtensionUnit, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedUserExtensionServer) testEmbeddedByValue() {}
@@ -98,7 +98,7 @@ func RegisterUserExtensionServer(s grpc.ServiceRegistrar, srv UserExtensionServe
 }
 
 func _UserExtension_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.GetExUserReq)
+	in := new(did.GetUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func _UserExtension_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: UserExtension_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserExtensionServer).Get(ctx, req.(*did.GetExUserReq))
+		return srv.(UserExtensionServer).Get(ctx, req.(*did.GetUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

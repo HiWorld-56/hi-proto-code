@@ -1464,7 +1464,7 @@ pub struct ListGrantsResp {
 /// ── 商户管理用户(扩展数据)的入参 ───────────────────────────────────
 /// merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权,requireGrant)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetExUserReq {
+pub struct GetUserReq {
     /// 商户 did;空=自己
     #[prost(string, tag = "1")]
     pub merchant: ::prost::alloc::string::String,
@@ -1680,11 +1680,11 @@ pub mod merchant_client {
             self.inner.unary(req, path, codec).await
         }
         /// ── 商户管理其用户的扩展信息 ──
-        /// GetExUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
-        /// GetExUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
-        pub async fn get_ex_user(
+        /// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+        /// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
+        pub async fn get_user(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetExUserReq>,
+            request: impl tonic::IntoRequest<super::GetUserReq>,
         ) -> std::result::Result<
             tonic::Response<super::UserExtensionUnit>,
             tonic::Status,
@@ -1698,11 +1698,9 @@ pub mod merchant_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/GetExUser",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/GetUser");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "GetExUser"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "GetUser"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_users(

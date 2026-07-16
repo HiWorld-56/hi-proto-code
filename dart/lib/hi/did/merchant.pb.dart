@@ -793,8 +793,8 @@ class ListGrantsResp extends $pb.GeneratedMessage {
 
 /// ── 商户管理用户(扩展数据)的入参 ───────────────────────────────────
 /// merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权,requireGrant)。
-class GetExUserReq extends $pb.GeneratedMessage {
-  factory GetExUserReq({
+class GetUserReq extends $pb.GeneratedMessage {
+  factory GetUserReq({
     $core.String? merchant,
     $core.String? user,
   }) {
@@ -804,17 +804,17 @@ class GetExUserReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetExUserReq._();
+  GetUserReq._();
 
-  factory GetExUserReq.fromBuffer($core.List<$core.int> data,
+  factory GetUserReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetExUserReq.fromJson($core.String json,
+  factory GetUserReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetExUserReq',
+      _omitMessageNames ? '' : 'GetUserReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'merchant')
@@ -822,23 +822,22 @@ class GetExUserReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetExUserReq clone() => deepCopy();
+  GetUserReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetExUserReq copyWith(void Function(GetExUserReq) updates) =>
-      super.copyWith((message) => updates(message as GetExUserReq))
-          as GetExUserReq;
+  GetUserReq copyWith(void Function(GetUserReq) updates) =>
+      super.copyWith((message) => updates(message as GetUserReq)) as GetUserReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetExUserReq create() => GetExUserReq._();
+  static GetUserReq create() => GetUserReq._();
   @$core.override
-  GetExUserReq createEmptyInstance() => create();
+  GetUserReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetExUserReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetExUserReq>(create);
-  static GetExUserReq? _defaultInstance;
+  static GetUserReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetUserReq>(create);
+  static GetUserReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get merchant => $_getSZ(0);
