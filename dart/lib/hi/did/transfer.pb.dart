@@ -15,8 +15,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
-import 'base.pb.dart' as $1;
+import '../common.pb.dart' as $1;
+import 'base.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -24,9 +24,9 @@ class Transaction extends $pb.GeneratedMessage {
   factory Transaction({
     $core.String? hash,
     $core.String? amount,
-    $1.Coin? coin,
-    $2.Entity? from,
-    $2.Entity? to,
+    $2.Coin? coin,
+    $1.Entity? from,
+    $1.Entity? to,
     $core.String? remark,
   }) {
     final result = create();
@@ -54,11 +54,11 @@ class Transaction extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'hash')
     ..aOS(2, _omitFieldNames ? '' : 'amount')
-    ..aOM<$1.Coin>(3, _omitFieldNames ? '' : 'coin', subBuilder: $1.Coin.create)
-    ..aOM<$2.Entity>(4, _omitFieldNames ? '' : 'from',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(5, _omitFieldNames ? '' : 'to',
-        subBuilder: $2.Entity.create)
+    ..aOM<$2.Coin>(3, _omitFieldNames ? '' : 'coin', subBuilder: $2.Coin.create)
+    ..aOM<$1.Entity>(4, _omitFieldNames ? '' : 'from',
+        subBuilder: $1.Entity.create)
+    ..aOM<$1.Entity>(5, _omitFieldNames ? '' : 'to',
+        subBuilder: $1.Entity.create)
     ..aOS(6, _omitFieldNames ? '' : 'remark')
     ..hasRequiredFields = false;
 
@@ -100,37 +100,37 @@ class Transaction extends $pb.GeneratedMessage {
   void clearAmount() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $1.Coin get coin => $_getN(2);
+  $2.Coin get coin => $_getN(2);
   @$pb.TagNumber(3)
-  set coin($1.Coin value) => $_setField(3, value);
+  set coin($2.Coin value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasCoin() => $_has(2);
   @$pb.TagNumber(3)
   void clearCoin() => $_clearField(3);
   @$pb.TagNumber(3)
-  $1.Coin ensureCoin() => $_ensure(2);
+  $2.Coin ensureCoin() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $2.Entity get from => $_getN(3);
+  $1.Entity get from => $_getN(3);
   @$pb.TagNumber(4)
-  set from($2.Entity value) => $_setField(4, value);
+  set from($1.Entity value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasFrom() => $_has(3);
   @$pb.TagNumber(4)
   void clearFrom() => $_clearField(4);
   @$pb.TagNumber(4)
-  $2.Entity ensureFrom() => $_ensure(3);
+  $1.Entity ensureFrom() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $2.Entity get to => $_getN(4);
+  $1.Entity get to => $_getN(4);
   @$pb.TagNumber(5)
-  set to($2.Entity value) => $_setField(5, value);
+  set to($1.Entity value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasTo() => $_has(4);
   @$pb.TagNumber(5)
   void clearTo() => $_clearField(5);
   @$pb.TagNumber(5)
-  $2.Entity ensureTo() => $_ensure(4);
+  $1.Entity ensureTo() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $core.String get remark => $_getSZ(5);

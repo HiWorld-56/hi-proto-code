@@ -8,6 +8,7 @@ package did
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,17 +23,20 @@ const (
 	Transfer_History_FullMethodName           = "/hi.did.Transfer/History"
 	Transfer_TxStatus_FullMethodName          = "/hi.did.Transfer/TxStatus"
 	Transfer_VerifyTransaction_FullMethodName = "/hi.did.Transfer/VerifyTransaction"
+	Transfer_VerifySignature_FullMethodName   = "/hi.did.Transfer/VerifySignature"
 )
 
 // TransferClient is the client API for Transfer service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 转账/交易查询。History、TxStatus 是链上公开数据(无隐藏性,故公开)。
+// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
+// 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
 type TransferClient interface {
 	History(ctx context.Context, in *HistoryReq, opts ...grpc.CallOption) (*HistoryResp, error)
 	TxStatus(ctx context.Context, in *TxStatusReq, opts ...grpc.CallOption) (*TxStatusResp, error)
 	VerifyTransaction(ctx context.Context, in *VerifyTransactionReq, opts ...grpc.CallOption) (*VerifyTransactionResp, error)
+	VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error)
 }
 
 type transferClient struct {
@@ -73,15 +77,27 @@ func (c *transferClient) VerifyTransaction(ctx context.Context, in *VerifyTransa
 	return out, nil
 }
 
+func (c *transferClient) VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.DID)
+	err := c.cc.Invoke(ctx, Transfer_VerifySignature_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransferServer is the server API for Transfer service.
 // All implementations should embed UnimplementedTransferServer
 // for forward compatibility.
 //
-// 转账/交易查询。History、TxStatus 是链上公开数据(无隐藏性,故公开)。
+// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
+// 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
 type TransferServer interface {
 	History(context.Context, *HistoryReq) (*HistoryResp, error)
 	TxStatus(context.Context, *TxStatusReq) (*TxStatusResp, error)
 	VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error)
+	VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error)
 }
 
 // UnimplementedTransferServer should be embedded to have
@@ -99,6 +115,9 @@ func (UnimplementedTransferServer) TxStatus(context.Context, *TxStatusReq) (*TxS
 }
 func (UnimplementedTransferServer) VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyTransaction not implemented")
+}
+func (UnimplementedTransferServer) VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error) {
+	return nil, status.Error(codes.Unimplemented, "method VerifySignature not implemented")
 }
 func (UnimplementedTransferServer) testEmbeddedByValue() {}
 
@@ -174,6 +193,24 @@ func _Transfer_VerifyTransaction_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transfer_VerifySignature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.SignedData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransferServer).VerifySignature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transfer_VerifySignature_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransferServer).VerifySignature(ctx, req.(*hi.SignedData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transfer_ServiceDesc is the grpc.ServiceDesc for Transfer service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -192,6 +229,10 @@ var Transfer_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyTransaction",
 			Handler:    _Transfer_VerifyTransaction_Handler,
+		},
+		{
+			MethodName: "VerifySignature",
+			Handler:    _Transfer_VerifySignature_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

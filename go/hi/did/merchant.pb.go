@@ -1338,9 +1338,10 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\vRemoveGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x032\x90\x01\n" +
 	"\fMerchantExDB\x12=\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x04\x88\xb5\x18\x02\x12A\n" +
-	"\aRefresh\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x04\x88\xb5\x18\x022\x80\x01\n" +
+	"\aRefresh\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x04\x88\xb5\x18\x022=\n" +
 	"\x03SSE\x126\n" +
-	"\vOrderEvents\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp\"\x04\x88\xb5\x18\x020\x01\x12A\n" +
+	"\vOrderEvents\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp\"\x04\x88\xb5\x18\x020\x012N\n" +
+	"\tPayNotify\x12A\n" +
 	"\x06Notify\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01B~\n" +
 	"\n" +
 	"com.hi.didB\rMerchantProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -1416,7 +1417,7 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	25, // 26: hi.did.MerchantExDB.Get:input_type -> google.protobuf.Empty
 	25, // 27: hi.did.MerchantExDB.Refresh:input_type -> google.protobuf.Empty
 	24, // 28: hi.did.SSE.OrderEvents:input_type -> hi.DID
-	19, // 29: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
+	19, // 29: hi.did.PayNotify.Notify:input_type -> hi.did.MerchantNotifyReq
 	1,  // 30: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
 	25, // 31: hi.did.Merchant.Update:output_type -> google.protobuf.Empty
 	5,  // 32: hi.did.Merchant.GetUser:output_type -> hi.did.UserExtensionUnit
@@ -1432,7 +1433,7 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	18, // 42: hi.did.MerchantExDB.Get:output_type -> hi.did.MerchantExDBResp
 	18, // 43: hi.did.MerchantExDB.Refresh:output_type -> hi.did.MerchantExDBResp
 	20, // 44: hi.did.SSE.OrderEvents:output_type -> hi.did.OrderEventResp
-	25, // 45: hi.did.SSE.Notify:output_type -> google.protobuf.Empty
+	25, // 45: hi.did.PayNotify.Notify:output_type -> google.protobuf.Empty
 	30, // [30:46] is the sub-list for method output_type
 	14, // [14:30] is the sub-list for method input_type
 	14, // [14:14] is the sub-list for extension type_name
@@ -1455,7 +1456,7 @@ func file_hi_did_merchant_proto_init() {
 			NumEnums:      0,
 			NumMessages:   21,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   4,
 		},
 		GoTypes:           file_hi_did_merchant_proto_goTypes,
 		DependencyIndexes: file_hi_did_merchant_proto_depIdxs,

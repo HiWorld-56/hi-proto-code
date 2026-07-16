@@ -53,6 +53,10 @@ const (
 	// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
 	// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
 	Auth_AUTH_WEB3 Auth = 6
+	// token 或 ExtendToken 均可 —— 拦截器先试 token、再试 ExtendToken,任一通过即放行。
+	// 仅用于**身份无关的读**:不管调用者是用户(token)还是商户服务(ExtendToken),
+	// 返回都一样(如超管名单)。**别滥用**:凡是操作依赖"我是谁"的,不能用这档。
+	Auth_AUTH_TOKEN_OR_EXTEND Auth = 7
 )
 
 // Enum value maps for Auth.
@@ -65,15 +69,17 @@ var (
 		4: "AUTH_API_KEY",
 		5: "AUTH_SUPERADMIN",
 		6: "AUTH_WEB3",
+		7: "AUTH_TOKEN_OR_EXTEND",
 	}
 	Auth_value = map[string]int32{
-		"AUTH_UNSPECIFIED":  0,
-		"AUTH_NONE":         1,
-		"AUTH_TOKEN":        2,
-		"AUTH_EXTEND_TOKEN": 3,
-		"AUTH_API_KEY":      4,
-		"AUTH_SUPERADMIN":   5,
-		"AUTH_WEB3":         6,
+		"AUTH_UNSPECIFIED":     0,
+		"AUTH_NONE":            1,
+		"AUTH_TOKEN":           2,
+		"AUTH_EXTEND_TOKEN":    3,
+		"AUTH_API_KEY":         4,
+		"AUTH_SUPERADMIN":      5,
+		"AUTH_WEB3":            6,
+		"AUTH_TOKEN_OR_EXTEND": 7,
 	}
 )
 
@@ -127,7 +133,7 @@ var File_hi_options_proto protoreflect.FileDescriptor
 
 const file_hi_options_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*\x88\x01\n" +
+	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*\xa2\x01\n" +
 	"\x04Auth\x12\x14\n" +
 	"\x10AUTH_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tAUTH_NONE\x10\x01\x12\x0e\n" +
@@ -136,7 +142,8 @@ const file_hi_options_proto_rawDesc = "" +
 	"\x11AUTH_EXTEND_TOKEN\x10\x03\x12\x10\n" +
 	"\fAUTH_API_KEY\x10\x04\x12\x13\n" +
 	"\x0fAUTH_SUPERADMIN\x10\x05\x12\r\n" +
-	"\tAUTH_WEB3\x10\x06:>\n" +
+	"\tAUTH_WEB3\x10\x06\x12\x18\n" +
+	"\x14AUTH_TOKEN_OR_EXTEND\x10\a:>\n" +
 	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x01(\x0e2\b.hi.AuthR\x04authBd\n" +
 	"\x06com.hiB\fOptionsProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 

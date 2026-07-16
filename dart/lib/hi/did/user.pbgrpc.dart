@@ -18,10 +18,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
 import '../common.pb.dart' as $0;
-import 'user.pb.dart' as $2;
 
 export 'user.pb.dart';
 
+/// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
 @$pb.GrpcServiceName('hi.did.User')
 class UserClient extends $grpc.Client {
   /// The hostname for this service.
@@ -48,13 +48,6 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$query, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.UserTotalResp> total(
-    $1.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$total, request, options: options);
-  }
-
   // method descriptors
 
   static final _$edit = $grpc.ClientMethod<$0.Entity, $1.Empty>(
@@ -65,10 +58,6 @@ class UserClient extends $grpc.Client {
       '/hi.did.User/Query',
       ($1.Empty value) => value.writeToBuffer(),
       $0.Entity.fromBuffer);
-  static final _$total = $grpc.ClientMethod<$1.Empty, $2.UserTotalResp>(
-      '/hi.did.User/Total',
-      ($1.Empty value) => value.writeToBuffer(),
-      $2.UserTotalResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.User')
@@ -90,13 +79,6 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
         ($0.Entity value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Empty, $2.UserTotalResp>(
-        'Total',
-        total_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
-        ($2.UserTotalResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.Empty> edit_Pre(
@@ -112,12 +94,4 @@ abstract class UserServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.Entity> query($grpc.ServiceCall call, $1.Empty request);
-
-  $async.Future<$2.UserTotalResp> total_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
-    return total($call, await $request);
-  }
-
-  $async.Future<$2.UserTotalResp> total(
-      $grpc.ServiceCall call, $1.Empty request);
 }

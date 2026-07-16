@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $0;
+import '../common.pb.dart' as $2;
 import 'base.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -669,7 +669,7 @@ class TotalAssetsResp extends $pb.GeneratedMessage {
 class ListUsersAssetsReq extends $pb.GeneratedMessage {
   factory ListUsersAssetsReq({
     $core.String? currency,
-    $0.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (currency != null) result.currency = currency;
@@ -691,8 +691,8 @@ class ListUsersAssetsReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'currency')
-    ..aOM<$0.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $0.Pagination.create)
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -724,15 +724,15 @@ class ListUsersAssetsReq extends $pb.GeneratedMessage {
   void clearCurrency() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $0.Pagination get pagination => $_getN(1);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($0.Pagination value) => $_setField(2, value);
+  set pagination($2.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $0.Pagination ensurePagination() => $_ensure(1);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListUsersAssetsResp_Unit extends $pb.GeneratedMessage {

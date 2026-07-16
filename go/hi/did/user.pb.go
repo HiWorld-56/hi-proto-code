@@ -12,7 +12,6 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
-	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -23,205 +22,33 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type UserListReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserListReq) Reset() {
-	*x = UserListReq{}
-	mi := &file_hi_did_user_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserListReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserListReq) ProtoMessage() {}
-
-func (x *UserListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserListReq.ProtoReflect.Descriptor instead.
-func (*UserListReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *UserListReq) GetPagination() *hi.Pagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
-type UserListResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	List          []*hi.Entity           `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserListResp) Reset() {
-	*x = UserListResp{}
-	mi := &file_hi_did_user_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserListResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserListResp) ProtoMessage() {}
-
-func (x *UserListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserListResp.ProtoReflect.Descriptor instead.
-func (*UserListResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *UserListResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *UserListResp) GetList() []*hi.Entity {
-	if x != nil {
-		return x.List
-	}
-	return nil
-}
-
-type UserTotalResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserTotalResp) Reset() {
-	*x = UserTotalResp{}
-	mi := &file_hi_did_user_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserTotalResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserTotalResp) ProtoMessage() {}
-
-func (x *UserTotalResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserTotalResp.ProtoReflect.Descriptor instead.
-func (*UserTotalResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *UserTotalResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
 var File_hi_did_user_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"=\n" +
-	"\vUserListReq\x12.\n" +
-	"\n" +
-	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"D\n" +
-	"\fUserListResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12\x1e\n" +
-	"\x04list\x18\x02 \x03(\v2\n" +
-	".hi.EntityR\x04list\"%\n" +
-	"\rUserTotalResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total2\xa9\x01\n" +
+	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2k\n" +
 	"\x04User\x120\n" +
 	"\x04Edit\x12\n" +
 	".hi.Entity\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x121\n" +
 	"\x05Query\x12\x16.google.protobuf.Empty\x1a\n" +
-	".hi.Entity\"\x04\x88\xb5\x18\x02\x12<\n" +
-	"\x05Total\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.UserTotalResp\"\x04\x88\xb5\x18\x01Bz\n" +
+	".hi.Entity\"\x04\x88\xb5\x18\x02Bz\n" +
 	"\n" +
 	"com.hi.didB\tUserProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
-var (
-	file_hi_did_user_proto_rawDescOnce sync.Once
-	file_hi_did_user_proto_rawDescData []byte
-)
-
-func file_hi_did_user_proto_rawDescGZIP() []byte {
-	file_hi_did_user_proto_rawDescOnce.Do(func() {
-		file_hi_did_user_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_hi_did_user_proto_rawDesc), len(file_hi_did_user_proto_rawDesc)))
-	})
-	return file_hi_did_user_proto_rawDescData
-}
-
-var file_hi_did_user_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_hi_did_user_proto_goTypes = []any{
-	(*UserListReq)(nil),   // 0: hi.did.UserListReq
-	(*UserListResp)(nil),  // 1: hi.did.UserListResp
-	(*UserTotalResp)(nil), // 2: hi.did.UserTotalResp
-	(*hi.Pagination)(nil), // 3: hi.Pagination
-	(*hi.Entity)(nil),     // 4: hi.Entity
-	(*emptypb.Empty)(nil), // 5: google.protobuf.Empty
+	(*hi.Entity)(nil),     // 0: hi.Entity
+	(*emptypb.Empty)(nil), // 1: google.protobuf.Empty
 }
 var file_hi_did_user_proto_depIdxs = []int32{
-	3, // 0: hi.did.UserListReq.pagination:type_name -> hi.Pagination
-	4, // 1: hi.did.UserListResp.list:type_name -> hi.Entity
-	4, // 2: hi.did.User.Edit:input_type -> hi.Entity
-	5, // 3: hi.did.User.Query:input_type -> google.protobuf.Empty
-	5, // 4: hi.did.User.Total:input_type -> google.protobuf.Empty
-	5, // 5: hi.did.User.Edit:output_type -> google.protobuf.Empty
-	4, // 6: hi.did.User.Query:output_type -> hi.Entity
-	2, // 7: hi.did.User.Total:output_type -> hi.did.UserTotalResp
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 0: hi.did.User.Edit:input_type -> hi.Entity
+	1, // 1: hi.did.User.Query:input_type -> google.protobuf.Empty
+	1, // 2: hi.did.User.Edit:output_type -> google.protobuf.Empty
+	0, // 3: hi.did.User.Query:output_type -> hi.Entity
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_user_proto_init() }
@@ -235,13 +62,12 @@ func file_hi_did_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_user_proto_rawDesc), len(file_hi_did_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_hi_did_user_proto_goTypes,
 		DependencyIndexes: file_hi_did_user_proto_depIdxs,
-		MessageInfos:      file_hi_did_user_proto_msgTypes,
 	}.Build()
 	File_hi_did_user_proto = out.File
 	file_hi_did_user_proto_goTypes = nil

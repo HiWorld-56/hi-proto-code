@@ -24,18 +24,20 @@ const (
 	Base_ListCoins_FullMethodName     = "/hi.did.Base/ListCoins"
 	Base_LatestVersion_FullMethodName = "/hi.did.Base/LatestVersion"
 	Base_ServerVersion_FullMethodName = "/hi.did.Base/ServerVersion"
+	Base_UserTotal_FullMethodName     = "/hi.did.Base/UserTotal"
 )
 
 // BaseClient is the client API for Base service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本),全部公开。
+// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本/用户总数),全部公开。
 // 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
 type BaseClient interface {
 	ListCoins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCoinsResp, error)
 	LatestVersion(ctx context.Context, in *LatestVersionReq, opts ...grpc.CallOption) (*LatestVersionResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
+	UserTotal(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserTotalResp, error)
 }
 
 type baseClient struct {
@@ -76,16 +78,27 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 	return out, nil
 }
 
+func (c *baseClient) UserTotal(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserTotalResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserTotalResp)
+	err := c.cc.Invoke(ctx, Base_UserTotal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServer is the server API for Base service.
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
 //
-// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本),全部公开。
+// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本/用户总数),全部公开。
 // 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
 type BaseServer interface {
 	ListCoins(context.Context, *emptypb.Empty) (*ListCoinsResp, error)
 	LatestVersion(context.Context, *LatestVersionReq) (*LatestVersionResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
+	UserTotal(context.Context, *emptypb.Empty) (*UserTotalResp, error)
 }
 
 // UnimplementedBaseServer should be embedded to have
@@ -103,6 +116,9 @@ func (UnimplementedBaseServer) LatestVersion(context.Context, *LatestVersionReq)
 }
 func (UnimplementedBaseServer) ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ServerVersion not implemented")
+}
+func (UnimplementedBaseServer) UserTotal(context.Context, *emptypb.Empty) (*UserTotalResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserTotal not implemented")
 }
 func (UnimplementedBaseServer) testEmbeddedByValue() {}
 
@@ -178,6 +194,24 @@ func _Base_ServerVersion_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_UserTotal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).UserTotal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_UserTotal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).UserTotal(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Base_ServiceDesc is the grpc.ServiceDesc for Base service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -197,217 +231,9 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ServerVersion",
 			Handler:    _Base_ServerVersion_Handler,
 		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "hi/did/base.proto",
-}
-
-const (
-	SuperAdminView_ListSuperAdminUsers_FullMethodName = "/hi.did.SuperAdminView/ListSuperAdminUsers"
-)
-
-// SuperAdminViewClient is the client API for SuperAdminView service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 超管名单(面向登录用户)。裁决 N3:从 Base 拎出,让 Base 归于全公开一致。
-//
-// 主体是**登录用户**:hisrv web 登录后拿它显隐"内部使用"菜单,任何登录商户都要调,
-// 故标 AUTH_TOKEN —— 不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
-// 与 SuperAdmin.List 主体不同(那个是兄弟服务带 ExtendToken 穿透),故两个 service 并存。
-type SuperAdminViewClient interface {
-	ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error)
-}
-
-type superAdminViewClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewSuperAdminViewClient(cc grpc.ClientConnInterface) SuperAdminViewClient {
-	return &superAdminViewClient{cc}
-}
-
-func (c *superAdminViewClient) ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListSuperAdminUsersResp)
-	err := c.cc.Invoke(ctx, SuperAdminView_ListSuperAdminUsers_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// SuperAdminViewServer is the server API for SuperAdminView service.
-// All implementations should embed UnimplementedSuperAdminViewServer
-// for forward compatibility.
-//
-// 超管名单(面向登录用户)。裁决 N3:从 Base 拎出,让 Base 归于全公开一致。
-//
-// 主体是**登录用户**:hisrv web 登录后拿它显隐"内部使用"菜单,任何登录商户都要调,
-// 故标 AUTH_TOKEN —— 不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
-// 与 SuperAdmin.List 主体不同(那个是兄弟服务带 ExtendToken 穿透),故两个 service 并存。
-type SuperAdminViewServer interface {
-	ListSuperAdminUsers(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error)
-}
-
-// UnimplementedSuperAdminViewServer should be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedSuperAdminViewServer struct{}
-
-func (UnimplementedSuperAdminViewServer) ListSuperAdminUsers(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSuperAdminUsers not implemented")
-}
-func (UnimplementedSuperAdminViewServer) testEmbeddedByValue() {}
-
-// UnsafeSuperAdminViewServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to SuperAdminViewServer will
-// result in compilation errors.
-type UnsafeSuperAdminViewServer interface {
-	mustEmbedUnimplementedSuperAdminViewServer()
-}
-
-func RegisterSuperAdminViewServer(s grpc.ServiceRegistrar, srv SuperAdminViewServer) {
-	// If the following call panics, it indicates UnimplementedSuperAdminViewServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&SuperAdminView_ServiceDesc, srv)
-}
-
-func _SuperAdminView_ListSuperAdminUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SuperAdminViewServer).ListSuperAdminUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: SuperAdminView_ListSuperAdminUsers_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SuperAdminViewServer).ListSuperAdminUsers(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// SuperAdminView_ServiceDesc is the grpc.ServiceDesc for SuperAdminView service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var SuperAdminView_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.SuperAdminView",
-	HandlerType: (*SuperAdminViewServer)(nil),
-	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListSuperAdminUsers",
-			Handler:    _SuperAdminView_ListSuperAdminUsers_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "hi/did/base.proto",
-}
-
-const (
-	Assist_VerifySignature_FullMethodName = "/hi.did.Assist/VerifySignature"
-)
-
-// AssistClient is the client API for Assist service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AssistClient interface {
-	VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error)
-}
-
-type assistClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewAssistClient(cc grpc.ClientConnInterface) AssistClient {
-	return &assistClient{cc}
-}
-
-func (c *assistClient) VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.DID)
-	err := c.cc.Invoke(ctx, Assist_VerifySignature_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// AssistServer is the server API for Assist service.
-// All implementations should embed UnimplementedAssistServer
-// for forward compatibility.
-type AssistServer interface {
-	VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error)
-}
-
-// UnimplementedAssistServer should be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedAssistServer struct{}
-
-func (UnimplementedAssistServer) VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error) {
-	return nil, status.Error(codes.Unimplemented, "method VerifySignature not implemented")
-}
-func (UnimplementedAssistServer) testEmbeddedByValue() {}
-
-// UnsafeAssistServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AssistServer will
-// result in compilation errors.
-type UnsafeAssistServer interface {
-	mustEmbedUnimplementedAssistServer()
-}
-
-func RegisterAssistServer(s grpc.ServiceRegistrar, srv AssistServer) {
-	// If the following call panics, it indicates UnimplementedAssistServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&Assist_ServiceDesc, srv)
-}
-
-func _Assist_VerifySignature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.SignedData)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AssistServer).VerifySignature(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Assist_VerifySignature_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AssistServer).VerifySignature(ctx, req.(*hi.SignedData))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// Assist_ServiceDesc is the grpc.ServiceDesc for Assist service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var Assist_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.Assist",
-	HandlerType: (*AssistServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "VerifySignature",
-			Handler:    _Assist_VerifySignature_Handler,
+			MethodName: "UserTotal",
+			Handler:    _Base_UserTotal_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -427,10 +253,10 @@ const (
 // 此前四个服务四张表,实测已漂移(did 11 / club 14 / ai 15 / media 3),
 // 且在一处撤权另一处不生效(zGzji3gw 在 did 已停用,在 club/ai 仍是超管)。
 //
-// 与 Base.ListSuperAdminUsers 的区别是**主体不同**,故分开:
-//
-//	Base.ListSuperAdminUsers → 主体是登录用户(hisrv web),带用户 token,只为显隐菜单
-//	SuperAdmin.List          → 主体是兄弟服务,带 ExtendToken,用于它们的拦截器判档
+// List 是**身份无关的读**(不管谁调返回都一样):前端登录用户拿它显隐"内部使用"菜单,
+// 兄弟服务(club/ai)穿透过来判档。两类调用方凭证不同(token / ExtendToken),
+// 故用 AUTH_TOKEN_OR_EXTEND 一个方法通吃(原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)。
+// 注意:不能标 AUTH_SUPERADMIN,否则变成"先是超管才能知道自己是不是超管"。
 type SuperAdminClient interface {
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error)
 }
@@ -462,10 +288,10 @@ func (c *superAdminClient) List(ctx context.Context, in *emptypb.Empty, opts ...
 // 此前四个服务四张表,实测已漂移(did 11 / club 14 / ai 15 / media 3),
 // 且在一处撤权另一处不生效(zGzji3gw 在 did 已停用,在 club/ai 仍是超管)。
 //
-// 与 Base.ListSuperAdminUsers 的区别是**主体不同**,故分开:
-//
-//	Base.ListSuperAdminUsers → 主体是登录用户(hisrv web),带用户 token,只为显隐菜单
-//	SuperAdmin.List          → 主体是兄弟服务,带 ExtendToken,用于它们的拦截器判档
+// List 是**身份无关的读**(不管谁调返回都一样):前端登录用户拿它显隐"内部使用"菜单,
+// 兄弟服务(club/ai)穿透过来判档。两类调用方凭证不同(token / ExtendToken),
+// 故用 AUTH_TOKEN_OR_EXTEND 一个方法通吃(原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)。
+// 注意:不能标 AUTH_SUPERADMIN,否则变成"先是超管才能知道自己是不是超管"。
 type SuperAdminServer interface {
 	List(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error)
 }

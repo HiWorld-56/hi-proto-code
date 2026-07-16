@@ -49,6 +49,12 @@ class Auth extends $pb.ProtobufEnum {
   /// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
   static const Auth AUTH_WEB3 = Auth._(6, _omitEnumNames ? '' : 'AUTH_WEB3');
 
+  /// token 或 ExtendToken 均可 —— 拦截器先试 token、再试 ExtendToken,任一通过即放行。
+  /// 仅用于**身份无关的读**:不管调用者是用户(token)还是商户服务(ExtendToken),
+  /// 返回都一样(如超管名单)。**别滥用**:凡是操作依赖"我是谁"的,不能用这档。
+  static const Auth AUTH_TOKEN_OR_EXTEND =
+      Auth._(7, _omitEnumNames ? '' : 'AUTH_TOKEN_OR_EXTEND');
+
   static const $core.List<Auth> values = <Auth>[
     AUTH_UNSPECIFIED,
     AUTH_NONE,
@@ -57,10 +63,11 @@ class Auth extends $pb.ProtobufEnum {
     AUTH_API_KEY,
     AUTH_SUPERADMIN,
     AUTH_WEB3,
+    AUTH_TOKEN_OR_EXTEND,
   ];
 
   static final $core.List<Auth?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 6);
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
   static Auth? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

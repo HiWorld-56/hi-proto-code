@@ -36,33 +36,6 @@ var (
 	_ = metadata.Join
 )
 
-func request_Wallet_UpdateAddresses_0(ctx context.Context, marshaler runtime.Marshaler, client WalletClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq hi.SignedData
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.UpdateAddresses(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Wallet_UpdateAddresses_0(ctx context.Context, marshaler runtime.Marshaler, server WalletServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq hi.SignedData
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.UpdateAddresses(ctx, &protoReq)
-	return msg, metadata, err
-}
-
 func request_Wallet_UpdateAssets_0(ctx context.Context, marshaler runtime.Marshaler, client WalletClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq UpdateAssetsReq
@@ -144,7 +117,7 @@ func local_request_Wallet_ListAddresses_0(ctx context.Context, marshaler runtime
 	return msg, metadata, err
 }
 
-func request_Wallet_TotalAssets_0(ctx context.Context, marshaler runtime.Marshaler, client WalletClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Assets_TotalAssets_0(ctx context.Context, marshaler runtime.Marshaler, client AssetsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq TotalAssetsReq
 		metadata runtime.ServerMetadata
@@ -159,7 +132,7 @@ func request_Wallet_TotalAssets_0(ctx context.Context, marshaler runtime.Marshal
 	return msg, metadata, err
 }
 
-func local_request_Wallet_TotalAssets_0(ctx context.Context, marshaler runtime.Marshaler, server WalletServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Assets_TotalAssets_0(ctx context.Context, marshaler runtime.Marshaler, server AssetsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq TotalAssetsReq
 		metadata runtime.ServerMetadata
@@ -171,7 +144,7 @@ func local_request_Wallet_TotalAssets_0(ctx context.Context, marshaler runtime.M
 	return msg, metadata, err
 }
 
-func request_Wallet_ListUsersAssets_0(ctx context.Context, marshaler runtime.Marshaler, client WalletClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Assets_ListUsersAssets_0(ctx context.Context, marshaler runtime.Marshaler, client AssetsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListUsersAssetsReq
 		metadata runtime.ServerMetadata
@@ -186,7 +159,7 @@ func request_Wallet_ListUsersAssets_0(ctx context.Context, marshaler runtime.Mar
 	return msg, metadata, err
 }
 
-func local_request_Wallet_ListUsersAssets_0(ctx context.Context, marshaler runtime.Marshaler, server WalletServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Assets_ListUsersAssets_0(ctx context.Context, marshaler runtime.Marshaler, server AssetsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListUsersAssetsReq
 		metadata runtime.ServerMetadata
@@ -198,7 +171,7 @@ func local_request_Wallet_ListUsersAssets_0(ctx context.Context, marshaler runti
 	return msg, metadata, err
 }
 
-func request_Wallet_GetUserAssets_0(ctx context.Context, marshaler runtime.Marshaler, client WalletClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Assets_GetUserAssets_0(ctx context.Context, marshaler runtime.Marshaler, client AssetsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetUserAssetsReq
 		metadata runtime.ServerMetadata
@@ -213,7 +186,7 @@ func request_Wallet_GetUserAssets_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func local_request_Wallet_GetUserAssets_0(ctx context.Context, marshaler runtime.Marshaler, server WalletServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Assets_GetUserAssets_0(ctx context.Context, marshaler runtime.Marshaler, server AssetsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetUserAssetsReq
 		metadata runtime.ServerMetadata
@@ -225,32 +198,39 @@ func local_request_Wallet_GetUserAssets_0(ctx context.Context, marshaler runtime
 	return msg, metadata, err
 }
 
+func request_Assets_UpdateAddresses_0(ctx context.Context, marshaler runtime.Marshaler, client AssetsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq hi.SignedData
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.UpdateAddresses(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_Assets_UpdateAddresses_0(ctx context.Context, marshaler runtime.Marshaler, server AssetsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq hi.SignedData
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.UpdateAddresses(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 // RegisterWalletHandlerServer registers the http handlers for service Wallet to "mux".
 // UnaryRPC     :call WalletServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterWalletHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterWalletHandlerServer(ctx context.Context, mux *runtime.ServeMux, server WalletServer) error {
-	mux.Handle(http.MethodPost, pattern_Wallet_UpdateAddresses_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Wallet/UpdateAddresses", runtime.WithHTTPPathPattern("/hi.did.Wallet/UpdateAddresses"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Wallet_UpdateAddresses_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Wallet_UpdateAddresses_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Wallet_UpdateAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -311,65 +291,95 @@ func RegisterWalletHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		}
 		forward_Wallet_ListAddresses_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Wallet_TotalAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+
+	return nil
+}
+
+// RegisterAssetsHandlerServer registers the http handlers for service Assets to "mux".
+// UnaryRPC     :call AssetsServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterAssetsHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
+func RegisterAssetsHandlerServer(ctx context.Context, mux *runtime.ServeMux, server AssetsServer) error {
+	mux.Handle(http.MethodPost, pattern_Assets_TotalAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Wallet/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/total_assets"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/total_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Wallet_TotalAssets_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Assets_TotalAssets_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Wallet_TotalAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Assets_TotalAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Wallet_ListUsersAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Assets_ListUsersAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Wallet/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/list_user_assets"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/list_user_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Wallet_ListUsersAssets_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Assets_ListUsersAssets_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Wallet_ListUsersAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Assets_ListUsersAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Wallet_GetUserAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Assets_GetUserAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Wallet/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/get_user_assets"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/get_user_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Wallet_GetUserAssets_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Assets_GetUserAssets_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Wallet_GetUserAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Assets_GetUserAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_Assets_UpdateAddresses_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/UpdateAddresses", runtime.WithHTTPPathPattern("/hi.did.Assets/UpdateAddresses"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Assets_UpdateAddresses_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Assets_UpdateAddresses_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -411,23 +421,6 @@ func RegisterWalletHandler(ctx context.Context, mux *runtime.ServeMux, conn *grp
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "WalletClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterWalletHandlerClient(ctx context.Context, mux *runtime.ServeMux, client WalletClient) error {
-	mux.Handle(http.MethodPost, pattern_Wallet_UpdateAddresses_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Wallet/UpdateAddresses", runtime.WithHTTPPathPattern("/hi.did.Wallet/UpdateAddresses"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Wallet_UpdateAddresses_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Wallet_UpdateAddresses_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Wallet_UpdateAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -479,76 +472,138 @@ func RegisterWalletHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		}
 		forward_Wallet_ListAddresses_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Wallet_TotalAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	return nil
+}
+
+var (
+	pattern_Wallet_UpdateAssets_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Wallet", "UpdateAssets"}, ""))
+	pattern_Wallet_GetWallet_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Wallet", "GetWallet"}, ""))
+	pattern_Wallet_ListAddresses_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Wallet", "ListAddresses"}, ""))
+)
+
+var (
+	forward_Wallet_UpdateAssets_0  = runtime.ForwardResponseMessage
+	forward_Wallet_GetWallet_0     = runtime.ForwardResponseMessage
+	forward_Wallet_ListAddresses_0 = runtime.ForwardResponseMessage
+)
+
+// RegisterAssetsHandlerFromEndpoint is same as RegisterAssetsHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterAssetsHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.NewClient(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+	return RegisterAssetsHandler(ctx, mux, conn)
+}
+
+// RegisterAssetsHandler registers the http handlers for service Assets to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterAssetsHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterAssetsHandlerClient(ctx, mux, NewAssetsClient(conn))
+}
+
+// RegisterAssetsHandlerClient registers the http handlers for service Assets
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "AssetsClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "AssetsClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "AssetsClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterAssetsHandlerClient(ctx context.Context, mux *runtime.ServeMux, client AssetsClient) error {
+	mux.Handle(http.MethodPost, pattern_Assets_TotalAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Wallet/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/total_assets"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/total_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Wallet_TotalAssets_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Assets_TotalAssets_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Wallet_TotalAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Assets_TotalAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Wallet_ListUsersAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Assets_ListUsersAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Wallet/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/list_user_assets"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/list_user_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Wallet_ListUsersAssets_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Assets_ListUsersAssets_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Wallet_ListUsersAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Assets_ListUsersAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Wallet_GetUserAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Assets_GetUserAssets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Wallet/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/get_user_assets"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/get_user_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Wallet_GetUserAssets_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Assets_GetUserAssets_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Wallet_GetUserAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Assets_GetUserAssets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_Assets_UpdateAddresses_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/UpdateAddresses", runtime.WithHTTPPathPattern("/hi.did.Assets/UpdateAddresses"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Assets_UpdateAddresses_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Assets_UpdateAddresses_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_Wallet_UpdateAddresses_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Wallet", "UpdateAddresses"}, ""))
-	pattern_Wallet_UpdateAssets_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Wallet", "UpdateAssets"}, ""))
-	pattern_Wallet_GetWallet_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Wallet", "GetWallet"}, ""))
-	pattern_Wallet_ListAddresses_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Wallet", "ListAddresses"}, ""))
-	pattern_Wallet_TotalAssets_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "total_assets"}, ""))
-	pattern_Wallet_ListUsersAssets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "list_user_assets"}, ""))
-	pattern_Wallet_GetUserAssets_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "get_user_assets"}, ""))
+	pattern_Assets_TotalAssets_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "total_assets"}, ""))
+	pattern_Assets_ListUsersAssets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "list_user_assets"}, ""))
+	pattern_Assets_GetUserAssets_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "get_user_assets"}, ""))
+	pattern_Assets_UpdateAddresses_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Assets", "UpdateAddresses"}, ""))
 )
 
 var (
-	forward_Wallet_UpdateAddresses_0 = runtime.ForwardResponseMessage
-	forward_Wallet_UpdateAssets_0    = runtime.ForwardResponseMessage
-	forward_Wallet_GetWallet_0       = runtime.ForwardResponseMessage
-	forward_Wallet_ListAddresses_0   = runtime.ForwardResponseMessage
-	forward_Wallet_TotalAssets_0     = runtime.ForwardResponseMessage
-	forward_Wallet_ListUsersAssets_0 = runtime.ForwardResponseMessage
-	forward_Wallet_GetUserAssets_0   = runtime.ForwardResponseMessage
+	forward_Assets_TotalAssets_0     = runtime.ForwardResponseMessage
+	forward_Assets_ListUsersAssets_0 = runtime.ForwardResponseMessage
+	forward_Assets_GetUserAssets_0   = runtime.ForwardResponseMessage
+	forward_Assets_UpdateAddresses_0 = runtime.ForwardResponseMessage
 )

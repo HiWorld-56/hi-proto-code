@@ -467,6 +467,7 @@ abstract class MerchantExDBServiceBase extends $grpc.Service {
 ///       ⑤付款结果通过用户设置的地址回传。
 /// 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
 ///       hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
+/// hidid-pc 订阅端(用户主体,token):长连接接收订单事件。
 @$pb.GrpcServiceName('hi.did.SSE')
 class SSEClient extends $grpc.Client {
   /// The hostname for this service.
@@ -488,23 +489,12 @@ class SSEClient extends $grpc.Client {
         options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> notify(
-    $1.MerchantNotifyReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$notify, request, options: options);
-  }
-
   // method descriptors
 
   static final _$orderEvents = $grpc.ClientMethod<$0.DID, $1.OrderEventResp>(
       '/hi.did.SSE/OrderEvents',
       ($0.DID value) => value.writeToBuffer(),
       $1.OrderEventResp.fromBuffer);
-  static final _$notify = $grpc.ClientMethod<$1.MerchantNotifyReq, $2.Empty>(
-      '/hi.did.SSE/Notify',
-      ($1.MerchantNotifyReq value) => value.writeToBuffer(),
-      $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.SSE')
@@ -519,13 +509,6 @@ abstract class SSEServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.DID.fromBuffer(value),
         ($1.OrderEventResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.MerchantNotifyReq, $2.Empty>(
-        'Notify',
-        notify_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.MerchantNotifyReq.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
   }
 
   $async.Stream<$1.OrderEventResp> orderEvents_Pre(
@@ -535,6 +518,51 @@ abstract class SSEServiceBase extends $grpc.Service {
 
   $async.Stream<$1.OrderEventResp> orderEvents(
       $grpc.ServiceCall call, $0.DID request);
+}
+
+/// 商户触发端(公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
+/// 公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
+/// 从 SSE 拆出:与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token)。
+@$pb.GrpcServiceName('hi.did.PayNotify')
+class PayNotifyClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  PayNotifyClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$2.Empty> notify(
+    $1.MerchantNotifyReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$notify, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$notify = $grpc.ClientMethod<$1.MerchantNotifyReq, $2.Empty>(
+      '/hi.did.PayNotify/Notify',
+      ($1.MerchantNotifyReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.PayNotify')
+abstract class PayNotifyServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.PayNotify';
+
+  PayNotifyServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.MerchantNotifyReq, $2.Empty>(
+        'Notify',
+        notify_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.MerchantNotifyReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+  }
 
   $async.Future<$2.Empty> notify_Pre($grpc.ServiceCall $call,
       $async.Future<$1.MerchantNotifyReq> $request) async {

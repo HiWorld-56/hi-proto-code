@@ -291,6 +291,50 @@ func (x *ListSuperAdminUsersResp) GetList() []string {
 	return nil
 }
 
+type UserTotalResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserTotalResp) Reset() {
+	*x = UserTotalResp{}
+	mi := &file_hi_did_base_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserTotalResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserTotalResp) ProtoMessage() {}
+
+func (x *UserTotalResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_base_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserTotalResp.ProtoReflect.Descriptor instead.
+func (*UserTotalResp) Descriptor() ([]byte, []int) {
+	return file_hi_did_base_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UserTotalResp) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 var File_hi_did_base_proto protoreflect.FileDescriptor
 
 const file_hi_did_base_proto_rawDesc = "" +
@@ -311,18 +355,17 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\achanges\x18\x04 \x03(\tR\achanges\x12!\n" +
 	"\frelease_time\x18\x05 \x01(\x03R\vreleaseTime\"-\n" +
 	"\x17ListSuperAdminUsersResp\x12\x12\n" +
-	"\x04list\x18\x01 \x03(\tR\x04list2\xda\x01\n" +
+	"\x04list\x18\x01 \x03(\tR\x04list\"%\n" +
+	"\rUserTotalResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x05R\x05total2\x9c\x02\n" +
 	"\x04Base\x12@\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x04\x88\xb5\x18\x01\x12J\n" +
 	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x04\x88\xb5\x18\x01\x12D\n" +
-	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x012f\n" +
-	"\x0eSuperAdminView\x12T\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x022:\n" +
-	"\x06Assist\x120\n" +
-	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x04\x88\xb5\x18\x062S\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x01\x12@\n" +
+	"\tUserTotal\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.UserTotalResp\"\x04\x88\xb5\x18\x012S\n" +
 	"\n" +
 	"SuperAdmin\x12E\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x03Bz\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\aBz\n" +
 	"\n" +
 	"com.hi.didB\tBaseProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -338,34 +381,31 @@ func file_hi_did_base_proto_rawDescGZIP() []byte {
 	return file_hi_did_base_proto_rawDescData
 }
 
-var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_hi_did_base_proto_goTypes = []any{
 	(*Coin)(nil),                    // 0: hi.did.Coin
 	(*ListCoinsResp)(nil),           // 1: hi.did.ListCoinsResp
 	(*LatestVersionReq)(nil),        // 2: hi.did.LatestVersionReq
 	(*LatestVersionResp)(nil),       // 3: hi.did.LatestVersionResp
 	(*ListSuperAdminUsersResp)(nil), // 4: hi.did.ListSuperAdminUsersResp
-	(*emptypb.Empty)(nil),           // 5: google.protobuf.Empty
-	(*hi.SignedData)(nil),           // 6: hi.SignedData
+	(*UserTotalResp)(nil),           // 5: hi.did.UserTotalResp
+	(*emptypb.Empty)(nil),           // 6: google.protobuf.Empty
 	(*hi.ServerVersionResp)(nil),    // 7: hi.ServerVersionResp
-	(*hi.DID)(nil),                  // 8: hi.DID
 }
 var file_hi_did_base_proto_depIdxs = []int32{
 	0, // 0: hi.did.ListCoinsResp.list:type_name -> hi.did.Coin
-	5, // 1: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
+	6, // 1: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
 	2, // 2: hi.did.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
-	5, // 3: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
-	5, // 4: hi.did.SuperAdminView.ListSuperAdminUsers:input_type -> google.protobuf.Empty
-	6, // 5: hi.did.Assist.VerifySignature:input_type -> hi.SignedData
-	5, // 6: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
-	1, // 7: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	3, // 8: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	7, // 9: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	4, // 10: hi.did.SuperAdminView.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
-	8, // 11: hi.did.Assist.VerifySignature:output_type -> hi.DID
-	4, // 12: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
-	7, // [7:13] is the sub-list for method output_type
-	1, // [1:7] is the sub-list for method input_type
+	6, // 3: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
+	6, // 4: hi.did.Base.UserTotal:input_type -> google.protobuf.Empty
+	6, // 5: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
+	1, // 6: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	3, // 7: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
+	7, // 8: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	5, // 9: hi.did.Base.UserTotal:output_type -> hi.did.UserTotalResp
+	4, // 10: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
+	6, // [6:11] is the sub-list for method output_type
+	1, // [1:6] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -382,9 +422,9 @@ func file_hi_did_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_base_proto_rawDesc), len(file_hi_did_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
-			NumServices:   4,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_did_base_proto_goTypes,
 		DependencyIndexes: file_hi_did_base_proto_depIdxs,

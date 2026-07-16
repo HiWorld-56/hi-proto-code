@@ -16,11 +16,13 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common.pb.dart' as $1;
 import 'transfer.pb.dart' as $0;
 
 export 'transfer.pb.dart';
 
-/// 转账/交易查询。History、TxStatus 是链上公开数据(无隐藏性,故公开)。
+/// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
+/// 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
 @$pb.GrpcServiceName('hi.did.Transfer')
 class TransferClient extends $grpc.Client {
   /// The hostname for this service.
@@ -54,6 +56,13 @@ class TransferClient extends $grpc.Client {
     return $createUnaryCall(_$verifyTransaction, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.DID> verifySignature(
+    $1.SignedData request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$verifySignature, request, options: options);
+  }
+
   // method descriptors
 
   static final _$history = $grpc.ClientMethod<$0.HistoryReq, $0.HistoryResp>(
@@ -69,6 +78,10 @@ class TransferClient extends $grpc.Client {
           '/hi.did.Transfer/VerifyTransaction',
           ($0.VerifyTransactionReq value) => value.writeToBuffer(),
           $0.VerifyTransactionResp.fromBuffer);
+  static final _$verifySignature = $grpc.ClientMethod<$1.SignedData, $1.DID>(
+      '/hi.did.Transfer/VerifySignature',
+      ($1.SignedData value) => value.writeToBuffer(),
+      $1.DID.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.Transfer')
@@ -99,6 +112,13 @@ abstract class TransferServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.VerifyTransactionReq.fromBuffer(value),
             ($0.VerifyTransactionResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SignedData, $1.DID>(
+        'VerifySignature',
+        verifySignature_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.SignedData.fromBuffer(value),
+        ($1.DID value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.HistoryResp> history_Pre(
@@ -125,4 +145,12 @@ abstract class TransferServiceBase extends $grpc.Service {
 
   $async.Future<$0.VerifyTransactionResp> verifyTransaction(
       $grpc.ServiceCall call, $0.VerifyTransactionReq request);
+
+  $async.Future<$1.DID> verifySignature_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {
+    return verifySignature($call, await $request);
+  }
+
+  $async.Future<$1.DID> verifySignature(
+      $grpc.ServiceCall call, $1.SignedData request);
 }

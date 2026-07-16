@@ -21,28 +21,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Wallet_UpdateAddresses_FullMethodName = "/hi.did.Wallet/UpdateAddresses"
-	Wallet_UpdateAssets_FullMethodName    = "/hi.did.Wallet/UpdateAssets"
-	Wallet_GetWallet_FullMethodName       = "/hi.did.Wallet/GetWallet"
-	Wallet_ListAddresses_FullMethodName   = "/hi.did.Wallet/ListAddresses"
-	Wallet_TotalAssets_FullMethodName     = "/hi.did.Wallet/TotalAssets"
-	Wallet_ListUsersAssets_FullMethodName = "/hi.did.Wallet/ListUsersAssets"
-	Wallet_GetUserAssets_FullMethodName   = "/hi.did.Wallet/GetUserAssets"
+	Wallet_UpdateAssets_FullMethodName  = "/hi.did.Wallet/UpdateAssets"
+	Wallet_GetWallet_FullMethodName     = "/hi.did.Wallet/GetWallet"
+	Wallet_ListAddresses_FullMethodName = "/hi.did.Wallet/ListAddresses"
 )
 
 // WalletClient is the client API for Wallet service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 钱包:链上地址与资产。资产类查询是链上公开数据(无隐藏性),故全部公开。
+// 用户自己的钱包(用户主体,token)。UpdateAddresses 需签名证明地址归属,故 web3 —— 已拆去 Assets。
 type WalletClient interface {
-	UpdateAddresses(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateAssets(ctx context.Context, in *UpdateAssetsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetWallet(ctx context.Context, in *GetWalletReq, opts ...grpc.CallOption) (*GetWalletResp, error)
 	ListAddresses(ctx context.Context, in *ListAddressesReq, opts ...grpc.CallOption) (*ListAddressesResp, error)
-	TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error)
-	ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error)
-	GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error)
 }
 
 type walletClient struct {
@@ -51,16 +43,6 @@ type walletClient struct {
 
 func NewWalletClient(cc grpc.ClientConnInterface) WalletClient {
 	return &walletClient{cc}
-}
-
-func (c *walletClient) UpdateAddresses(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Wallet_UpdateAddresses_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *walletClient) UpdateAssets(ctx context.Context, in *UpdateAssetsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -93,49 +75,15 @@ func (c *walletClient) ListAddresses(ctx context.Context, in *ListAddressesReq, 
 	return out, nil
 }
 
-func (c *walletClient) TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TotalAssetsResp)
-	err := c.cc.Invoke(ctx, Wallet_TotalAssets_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *walletClient) ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListUsersAssetsResp)
-	err := c.cc.Invoke(ctx, Wallet_ListUsersAssets_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *walletClient) GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserAssetsResp)
-	err := c.cc.Invoke(ctx, Wallet_GetUserAssets_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // WalletServer is the server API for Wallet service.
 // All implementations should embed UnimplementedWalletServer
 // for forward compatibility.
 //
-// 钱包:链上地址与资产。资产类查询是链上公开数据(无隐藏性),故全部公开。
+// 用户自己的钱包(用户主体,token)。UpdateAddresses 需签名证明地址归属,故 web3 —— 已拆去 Assets。
 type WalletServer interface {
-	UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 	UpdateAssets(context.Context, *UpdateAssetsReq) (*emptypb.Empty, error)
 	GetWallet(context.Context, *GetWalletReq) (*GetWalletResp, error)
 	ListAddresses(context.Context, *ListAddressesReq) (*ListAddressesResp, error)
-	TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error)
-	ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error)
-	GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error)
 }
 
 // UnimplementedWalletServer should be embedded to have
@@ -145,9 +93,6 @@ type WalletServer interface {
 // pointer dereference when methods are called.
 type UnimplementedWalletServer struct{}
 
-func (UnimplementedWalletServer) UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateAddresses not implemented")
-}
 func (UnimplementedWalletServer) UpdateAssets(context.Context, *UpdateAssetsReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateAssets not implemented")
 }
@@ -156,15 +101,6 @@ func (UnimplementedWalletServer) GetWallet(context.Context, *GetWalletReq) (*Get
 }
 func (UnimplementedWalletServer) ListAddresses(context.Context, *ListAddressesReq) (*ListAddressesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAddresses not implemented")
-}
-func (UnimplementedWalletServer) TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method TotalAssets not implemented")
-}
-func (UnimplementedWalletServer) ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListUsersAssets not implemented")
-}
-func (UnimplementedWalletServer) GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserAssets not implemented")
 }
 func (UnimplementedWalletServer) testEmbeddedByValue() {}
 
@@ -184,24 +120,6 @@ func RegisterWalletServer(s grpc.ServiceRegistrar, srv WalletServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Wallet_ServiceDesc, srv)
-}
-
-func _Wallet_UpdateAddresses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.SignedData)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServer).UpdateAddresses(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Wallet_UpdateAddresses_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServer).UpdateAddresses(ctx, req.(*hi.SignedData))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Wallet_UpdateAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -258,60 +176,6 @@ func _Wallet_ListAddresses_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Wallet_TotalAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TotalAssetsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServer).TotalAssets(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Wallet_TotalAssets_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServer).TotalAssets(ctx, req.(*TotalAssetsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Wallet_ListUsersAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUsersAssetsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServer).ListUsersAssets(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Wallet_ListUsersAssets_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServer).ListUsersAssets(ctx, req.(*ListUsersAssetsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Wallet_GetUserAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserAssetsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServer).GetUserAssets(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Wallet_GetUserAssets_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServer).GetUserAssets(ctx, req.(*GetUserAssetsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Wallet_ServiceDesc is the grpc.ServiceDesc for Wallet service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -319,10 +183,6 @@ var Wallet_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.did.Wallet",
 	HandlerType: (*WalletServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "UpdateAddresses",
-			Handler:    _Wallet_UpdateAddresses_Handler,
-		},
 		{
 			MethodName: "UpdateAssets",
 			Handler:    _Wallet_UpdateAssets_Handler,
@@ -335,17 +195,225 @@ var Wallet_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ListAddresses",
 			Handler:    _Wallet_ListAddresses_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/wallet.proto",
+}
+
+const (
+	Assets_TotalAssets_FullMethodName     = "/hi.did.Assets/TotalAssets"
+	Assets_ListUsersAssets_FullMethodName = "/hi.did.Assets/ListUsersAssets"
+	Assets_GetUserAssets_FullMethodName   = "/hi.did.Assets/GetUserAssets"
+	Assets_UpdateAddresses_FullMethodName = "/hi.did.Assets/UpdateAddresses"
+)
+
+// AssetsClient is the client API for Assets service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
+// UpdateAddresses 用签名自证地址归属(不依赖登录 token),故归此。
+type AssetsClient interface {
+	TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error)
+	ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error)
+	GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error)
+	UpdateAddresses(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type assetsClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAssetsClient(cc grpc.ClientConnInterface) AssetsClient {
+	return &assetsClient{cc}
+}
+
+func (c *assetsClient) TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TotalAssetsResp)
+	err := c.cc.Invoke(ctx, Assets_TotalAssets_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assetsClient) ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUsersAssetsResp)
+	err := c.cc.Invoke(ctx, Assets_ListUsersAssets_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assetsClient) GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserAssetsResp)
+	err := c.cc.Invoke(ctx, Assets_GetUserAssets_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assetsClient) UpdateAddresses(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Assets_UpdateAddresses_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AssetsServer is the server API for Assets service.
+// All implementations should embed UnimplementedAssetsServer
+// for forward compatibility.
+//
+// 资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
+// UpdateAddresses 用签名自证地址归属(不依赖登录 token),故归此。
+type AssetsServer interface {
+	TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error)
+	ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error)
+	GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error)
+	UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error)
+}
+
+// UnimplementedAssetsServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedAssetsServer struct{}
+
+func (UnimplementedAssetsServer) TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method TotalAssets not implemented")
+}
+func (UnimplementedAssetsServer) ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListUsersAssets not implemented")
+}
+func (UnimplementedAssetsServer) GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserAssets not implemented")
+}
+func (UnimplementedAssetsServer) UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateAddresses not implemented")
+}
+func (UnimplementedAssetsServer) testEmbeddedByValue() {}
+
+// UnsafeAssetsServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AssetsServer will
+// result in compilation errors.
+type UnsafeAssetsServer interface {
+	mustEmbedUnimplementedAssetsServer()
+}
+
+func RegisterAssetsServer(s grpc.ServiceRegistrar, srv AssetsServer) {
+	// If the following call panics, it indicates UnimplementedAssetsServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&Assets_ServiceDesc, srv)
+}
+
+func _Assets_TotalAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TotalAssetsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssetsServer).TotalAssets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assets_TotalAssets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssetsServer).TotalAssets(ctx, req.(*TotalAssetsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assets_ListUsersAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUsersAssetsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssetsServer).ListUsersAssets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assets_ListUsersAssets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssetsServer).ListUsersAssets(ctx, req.(*ListUsersAssetsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assets_GetUserAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserAssetsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssetsServer).GetUserAssets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assets_GetUserAssets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssetsServer).GetUserAssets(ctx, req.(*GetUserAssetsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assets_UpdateAddresses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.SignedData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssetsServer).UpdateAddresses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assets_UpdateAddresses_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssetsServer).UpdateAddresses(ctx, req.(*hi.SignedData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Assets_ServiceDesc is the grpc.ServiceDesc for Assets service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Assets_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.Assets",
+	HandlerType: (*AssetsServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "TotalAssets",
-			Handler:    _Wallet_TotalAssets_Handler,
+			Handler:    _Assets_TotalAssets_Handler,
 		},
 		{
 			MethodName: "ListUsersAssets",
-			Handler:    _Wallet_ListUsersAssets_Handler,
+			Handler:    _Assets_ListUsersAssets_Handler,
 		},
 		{
 			MethodName: "GetUserAssets",
-			Handler:    _Wallet_GetUserAssets_Handler,
+			Handler:    _Assets_GetUserAssets_Handler,
+		},
+		{
+			MethodName: "UpdateAddresses",
+			Handler:    _Assets_UpdateAddresses_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

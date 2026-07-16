@@ -128,6 +128,10 @@ pub enum Auth {
     /// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
     /// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
     Web3 = 6,
+    /// token 或 ExtendToken 均可 —— 拦截器先试 token、再试 ExtendToken,任一通过即放行。
+    /// 仅用于**身份无关的读**:不管调用者是用户(token)还是商户服务(ExtendToken),
+    /// 返回都一样(如超管名单)。**别滥用**:凡是操作依赖"我是谁"的,不能用这档。
+    TokenOrExtend = 7,
 }
 impl Auth {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -143,6 +147,7 @@ impl Auth {
             Self::ApiKey => "AUTH_API_KEY",
             Self::Superadmin => "AUTH_SUPERADMIN",
             Self::Web3 => "AUTH_WEB3",
+            Self::TokenOrExtend => "AUTH_TOKEN_OR_EXTEND",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -155,6 +160,7 @@ impl Auth {
             "AUTH_API_KEY" => Some(Self::ApiKey),
             "AUTH_SUPERADMIN" => Some(Self::Superadmin),
             "AUTH_WEB3" => Some(Self::Web3),
+            "AUTH_TOKEN_OR_EXTEND" => Some(Self::TokenOrExtend),
             _ => None,
         }
     }

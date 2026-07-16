@@ -606,11 +606,12 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x10confirmed_blocks\x18\x04 \x01(\x03R\x0fconfirmedBlocks\x12\x1c\n" +
 	"\ttimestamp\x18\x05 \x01(\x03R\ttimestamp\x12\x1f\n" +
 	"\vquery_count\x18\x06 \x01(\rR\n" +
-	"queryCount2\xd9\x01\n" +
+	"queryCount2\x8b\x02\n" +
 	"\bTransfer\x128\n" +
 	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\"\x04\x88\xb5\x18\x01\x12;\n" +
 	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusResp\"\x04\x88\xb5\x18\x01\x12V\n" +
-	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x04\x88\xb5\x18\x02B~\n" +
+	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x04\x88\xb5\x18\x01\x120\n" +
+	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x04\x88\xb5\x18\x06B~\n" +
 	"\n" +
 	"com.hi.didB\rTransferProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -638,24 +639,28 @@ var file_hi_did_transfer_proto_goTypes = []any{
 	(*HistoryResp_Unit)(nil),      // 7: hi.did.HistoryResp.Unit
 	(*Coin)(nil),                  // 8: hi.did.Coin
 	(*hi.Entity)(nil),             // 9: hi.Entity
+	(*hi.SignedData)(nil),         // 10: hi.SignedData
+	(*hi.DID)(nil),                // 11: hi.DID
 }
 var file_hi_did_transfer_proto_depIdxs = []int32{
-	8, // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
-	9, // 1: hi.did.Transaction.from:type_name -> hi.Entity
-	9, // 2: hi.did.Transaction.to:type_name -> hi.Entity
-	7, // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
-	0, // 4: hi.did.HistoryResp.Unit.trans:type_name -> hi.did.Transaction
-	1, // 5: hi.did.Transfer.History:input_type -> hi.did.HistoryReq
-	3, // 6: hi.did.Transfer.TxStatus:input_type -> hi.did.TxStatusReq
-	5, // 7: hi.did.Transfer.VerifyTransaction:input_type -> hi.did.VerifyTransactionReq
-	2, // 8: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
-	4, // 9: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
-	6, // 10: hi.did.Transfer.VerifyTransaction:output_type -> hi.did.VerifyTransactionResp
-	8, // [8:11] is the sub-list for method output_type
-	5, // [5:8] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	8,  // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
+	9,  // 1: hi.did.Transaction.from:type_name -> hi.Entity
+	9,  // 2: hi.did.Transaction.to:type_name -> hi.Entity
+	7,  // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
+	0,  // 4: hi.did.HistoryResp.Unit.trans:type_name -> hi.did.Transaction
+	1,  // 5: hi.did.Transfer.History:input_type -> hi.did.HistoryReq
+	3,  // 6: hi.did.Transfer.TxStatus:input_type -> hi.did.TxStatusReq
+	5,  // 7: hi.did.Transfer.VerifyTransaction:input_type -> hi.did.VerifyTransactionReq
+	10, // 8: hi.did.Transfer.VerifySignature:input_type -> hi.SignedData
+	2,  // 9: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
+	4,  // 10: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
+	6,  // 11: hi.did.Transfer.VerifyTransaction:output_type -> hi.did.VerifyTransactionResp
+	11, // 12: hi.did.Transfer.VerifySignature:output_type -> hi.DID
+	9,  // [9:13] is the sub-list for method output_type
+	5,  // [5:9] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_transfer_proto_init() }

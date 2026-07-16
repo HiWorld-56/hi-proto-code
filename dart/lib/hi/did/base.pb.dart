@@ -342,6 +342,60 @@ class ListSuperAdminUsersResp extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get list => $_getList(0);
 }
 
+class UserTotalResp extends $pb.GeneratedMessage {
+  factory UserTotalResp({
+    $core.int? total,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    return result;
+  }
+
+  UserTotalResp._();
+
+  factory UserTotalResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UserTotalResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserTotalResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserTotalResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserTotalResp copyWith(void Function(UserTotalResp) updates) =>
+      super.copyWith((message) => updates(message as UserTotalResp))
+          as UserTotalResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UserTotalResp create() => UserTotalResp._();
+  @$core.override
+  UserTotalResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UserTotalResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UserTotalResp>(create);
+  static UserTotalResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

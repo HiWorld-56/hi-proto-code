@@ -23,16 +23,16 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	User_Edit_FullMethodName  = "/hi.did.User/Edit"
 	User_Query_FullMethodName = "/hi.did.User/Query"
-	User_Total_FullMethodName = "/hi.did.User/Total"
 )
 
 // UserClient is the client API for User service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
 type UserClient interface {
 	Edit(ctx context.Context, in *hi.Entity, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Query(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.Entity, error)
-	Total(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserTotalResp, error)
 }
 
 type userClient struct {
@@ -63,23 +63,14 @@ func (c *userClient) Query(ctx context.Context, in *emptypb.Empty, opts ...grpc.
 	return out, nil
 }
 
-func (c *userClient) Total(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserTotalResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserTotalResp)
-	err := c.cc.Invoke(ctx, User_Total_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
+//
+// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
 type UserServer interface {
 	Edit(context.Context, *hi.Entity) (*emptypb.Empty, error)
 	Query(context.Context, *emptypb.Empty) (*hi.Entity, error)
-	Total(context.Context, *emptypb.Empty) (*UserTotalResp, error)
 }
 
 // UnimplementedUserServer should be embedded to have
@@ -94,9 +85,6 @@ func (UnimplementedUserServer) Edit(context.Context, *hi.Entity) (*emptypb.Empty
 }
 func (UnimplementedUserServer) Query(context.Context, *emptypb.Empty) (*hi.Entity, error) {
 	return nil, status.Error(codes.Unimplemented, "method Query not implemented")
-}
-func (UnimplementedUserServer) Total(context.Context, *emptypb.Empty) (*UserTotalResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Total not implemented")
 }
 func (UnimplementedUserServer) testEmbeddedByValue() {}
 
@@ -154,24 +142,6 @@ func _User_Query_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_Total_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).Total(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_Total_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).Total(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -186,10 +156,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Query",
 			Handler:    _User_Query_Handler,
-		},
-		{
-			MethodName: "Total",
-			Handler:    _User_Total_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

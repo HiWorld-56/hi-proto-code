@@ -736,7 +736,6 @@ var MerchantExDB_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	SSE_OrderEvents_FullMethodName = "/hi.did.SSE/OrderEvents"
-	SSE_Notify_FullMethodName      = "/hi.did.SSE/Notify"
 )
 
 // SSEClient is the client API for SSE service.
@@ -754,9 +753,10 @@ const (
 // 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
 //
 //	hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
+//
+// hidid-pc 订阅端(用户主体,token):长连接接收订单事件。
 type SSEClient interface {
 	OrderEvents(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error)
-	Notify(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type sSEClient struct {
@@ -786,16 +786,6 @@ func (c *sSEClient) OrderEvents(ctx context.Context, in *hi.DID, opts ...grpc.Ca
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SSE_OrderEventsClient = grpc.ServerStreamingClient[OrderEventResp]
 
-func (c *sSEClient) Notify(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, SSE_Notify_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // SSEServer is the server API for SSE service.
 // All implementations should embed UnimplementedSSEServer
 // for forward compatibility.
@@ -811,9 +801,10 @@ func (c *sSEClient) Notify(ctx context.Context, in *MerchantNotifyReq, opts ...g
 // 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
 //
 //	hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
+//
+// hidid-pc 订阅端(用户主体,token):长连接接收订单事件。
 type SSEServer interface {
 	OrderEvents(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error
-	Notify(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedSSEServer should be embedded to have
@@ -825,9 +816,6 @@ type UnimplementedSSEServer struct{}
 
 func (UnimplementedSSEServer) OrderEvents(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error {
 	return status.Error(codes.Unimplemented, "method OrderEvents not implemented")
-}
-func (UnimplementedSSEServer) Notify(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Notify not implemented")
 }
 func (UnimplementedSSEServer) testEmbeddedByValue() {}
 
@@ -860,36 +848,13 @@ func _SSE_OrderEvents_Handler(srv interface{}, stream grpc.ServerStream) error {
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SSE_OrderEventsServer = grpc.ServerStreamingServer[OrderEventResp]
 
-func _SSE_Notify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MerchantNotifyReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SSEServer).Notify(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: SSE_Notify_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SSEServer).Notify(ctx, req.(*MerchantNotifyReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // SSE_ServiceDesc is the grpc.ServiceDesc for SSE service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SSE_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.did.SSE",
 	HandlerType: (*SSEServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Notify",
-			Handler:    _SSE_Notify_Handler,
-		},
-	},
+	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "OrderEvents",
@@ -897,5 +862,113 @@ var SSE_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
+	Metadata: "hi/did/merchant.proto",
+}
+
+const (
+	PayNotify_Notify_FullMethodName = "/hi.did.PayNotify/Notify"
+)
+
+// PayNotifyClient is the client API for PayNotify service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 商户触发端(公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
+// 公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
+// 从 SSE 拆出:与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token)。
+type PayNotifyClient interface {
+	Notify(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type payNotifyClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPayNotifyClient(cc grpc.ClientConnInterface) PayNotifyClient {
+	return &payNotifyClient{cc}
+}
+
+func (c *payNotifyClient) Notify(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PayNotify_Notify_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PayNotifyServer is the server API for PayNotify service.
+// All implementations should embed UnimplementedPayNotifyServer
+// for forward compatibility.
+//
+// 商户触发端(公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
+// 公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
+// 从 SSE 拆出:与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token)。
+type PayNotifyServer interface {
+	Notify(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error)
+}
+
+// UnimplementedPayNotifyServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPayNotifyServer struct{}
+
+func (UnimplementedPayNotifyServer) Notify(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Notify not implemented")
+}
+func (UnimplementedPayNotifyServer) testEmbeddedByValue() {}
+
+// UnsafePayNotifyServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PayNotifyServer will
+// result in compilation errors.
+type UnsafePayNotifyServer interface {
+	mustEmbedUnimplementedPayNotifyServer()
+}
+
+func RegisterPayNotifyServer(s grpc.ServiceRegistrar, srv PayNotifyServer) {
+	// If the following call panics, it indicates UnimplementedPayNotifyServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PayNotify_ServiceDesc, srv)
+}
+
+func _PayNotify_Notify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MerchantNotifyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PayNotifyServer).Notify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PayNotify_Notify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PayNotifyServer).Notify(ctx, req.(*MerchantNotifyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PayNotify_ServiceDesc is the grpc.ServiceDesc for PayNotify service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PayNotify_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.PayNotify",
+	HandlerType: (*PayNotifyServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Notify",
+			Handler:    _PayNotify_Notify_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "hi/did/merchant.proto",
 }
