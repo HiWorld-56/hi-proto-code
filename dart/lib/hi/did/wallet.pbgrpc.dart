@@ -22,7 +22,7 @@ import 'wallet.pb.dart' as $2;
 
 export 'wallet.pb.dart';
 
-/// 钱包:链上地址与资产。资产类查询多为链上公开数据(无隐藏性)。
+/// 钱包:链上地址与资产。资产类查询是链上公开数据(无隐藏性),故全部公开。
 @$pb.GrpcServiceName('hi.did.Wallet')
 class WalletClient extends $grpc.Client {
   /// The hostname for this service.
@@ -77,22 +77,11 @@ class WalletClient extends $grpc.Client {
     return $createUnaryCall(_$listUsersAssets, request, options: options);
   }
 
-  /// 裁决 #5:GetUserAssets 应改公开(链上数据无隐藏性,与 TotalAssets/ListUsersAssets 同类)。
-  ///          TODO 改 AUTH_NONE。这也解决"同一份资产数据三种档位"的不一致
-  ///          (club.Assets.GetUserAssets 已是公开)。
   $grpc.ResponseFuture<$2.GetUserAssetsResp> getUserAssets(
     $2.GetUserAssetsReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getUserAssets, request, options: options);
-  }
-
-  /// 裁决 #8:GetUserByAddress 应删 —— hidid 用户体系里 did 是唯一标识,不需要按地址反查用户。TODO 删除。
-  $grpc.ResponseFuture<$2.GetUserByAddressResp> getUserByAddress(
-    $2.GetUserByAddressReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$getUserByAddress, request, options: options);
   }
 
   // method descriptors
@@ -131,11 +120,6 @@ class WalletClient extends $grpc.Client {
           '/hi.did.Wallet/GetUserAssets',
           ($2.GetUserAssetsReq value) => value.writeToBuffer(),
           $2.GetUserAssetsResp.fromBuffer);
-  static final _$getUserByAddress =
-      $grpc.ClientMethod<$2.GetUserByAddressReq, $2.GetUserByAddressResp>(
-          '/hi.did.Wallet/GetUserByAddress',
-          ($2.GetUserByAddressReq value) => value.writeToBuffer(),
-          $2.GetUserByAddressResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.Wallet')
@@ -194,15 +178,6 @@ abstract class WalletServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.GetUserAssetsReq.fromBuffer(value),
         ($2.GetUserAssetsResp value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$2.GetUserByAddressReq, $2.GetUserByAddressResp>(
-            'GetUserByAddress',
-            getUserByAddress_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $2.GetUserByAddressReq.fromBuffer(value),
-            ($2.GetUserByAddressResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.Empty> updateAddresses_Pre(
@@ -261,13 +236,4 @@ abstract class WalletServiceBase extends $grpc.Service {
 
   $async.Future<$2.GetUserAssetsResp> getUserAssets(
       $grpc.ServiceCall call, $2.GetUserAssetsReq request);
-
-  $async.Future<$2.GetUserByAddressResp> getUserByAddress_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$2.GetUserByAddressReq> $request) async {
-    return getUserByAddress($call, await $request);
-  }
-
-  $async.Future<$2.GetUserByAddressResp> getUserByAddress(
-      $grpc.ServiceCall call, $2.GetUserByAddressReq request);
 }

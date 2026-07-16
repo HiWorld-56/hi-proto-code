@@ -22,10 +22,8 @@ import 'admin.pb.dart' as $1;
 
 export 'admin.pb.dart';
 
-/// 邀请码。前 4 个是超管管理邀请码,Verify 是待注册用户验码换 token —— 主体不同。
-///
-/// TODO 裁决:① Create/Edit/List/Delete 标 AUTH_SUPERADMIN(handler 已有超管校验,现 proto 标错成 TOKEN)
-///            ② Verify 拆到独立 service(主体是"还没注册的人",与超管无关)
+/// 邀请码管理:超管发/改/查/删邀请码。整个 service 都是超管面。
+/// (待注册用户"验码"是另一个主体,已拆到下面 InviteCodeVerify。)
 @$pb.GrpcServiceName('hi.did.InviteCode')
 class InviteCodeClient extends $grpc.Client {
   /// The hostname for this service.
@@ -66,13 +64,6 @@ class InviteCodeClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.AuthToken> verify(
-    $1.InviteCodeVerifyReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$verify, request, options: options);
-  }
-
   // method descriptors
 
   static final _$create = $grpc.ClientMethod<$0.Empty, $1.InviteCodeCreateResp>(
@@ -92,11 +83,6 @@ class InviteCodeClient extends $grpc.Client {
       '/hi.did.InviteCode/Delete',
       ($1.InviteCodeDeleteReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$verify =
-      $grpc.ClientMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
-          '/hi.did.InviteCode/Verify',
-          ($1.InviteCodeVerifyReq value) => value.writeToBuffer(),
-          $2.AuthToken.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.InviteCode')
@@ -133,14 +119,6 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.InviteCodeDeleteReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
-        'Verify',
-        verify_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.InviteCodeVerifyReq.fromBuffer(value),
-        ($2.AuthToken value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.InviteCodeCreateResp> create_Pre(
@@ -174,6 +152,52 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> delete(
       $grpc.ServiceCall call, $1.InviteCodeDeleteReq request);
+}
+
+/// 邀请码校验:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
+/// 从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
+@$pb.GrpcServiceName('hi.did.InviteCodeVerify')
+class InviteCodeVerifyClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  InviteCodeVerifyClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$2.AuthToken> verify(
+    $1.InviteCodeVerifyReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$verify, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$verify =
+      $grpc.ClientMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
+          '/hi.did.InviteCodeVerify/Verify',
+          ($1.InviteCodeVerifyReq value) => value.writeToBuffer(),
+          $2.AuthToken.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.InviteCodeVerify')
+abstract class InviteCodeVerifyServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.InviteCodeVerify';
+
+  InviteCodeVerifyServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
+        'Verify',
+        verify_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.InviteCodeVerifyReq.fromBuffer(value),
+        ($2.AuthToken value) => value.writeToBuffer()));
+  }
 
   $async.Future<$2.AuthToken> verify_Pre($grpc.ServiceCall $call,
       $async.Future<$1.InviteCodeVerifyReq> $request) async {
@@ -184,6 +208,7 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.InviteCodeVerifyReq request);
 }
 
+/// DApp 浏览(app 面):普通登录用户看首页 DApp 列表。只读。
 @$pb.GrpcServiceName('hi.did.DApp')
 class DAppClient extends $grpc.Client {
   /// The hostname for this service.
@@ -196,7 +221,6 @@ class DAppClient extends $grpc.Client {
 
   DAppClient(super.channel, {super.options, super.interceptors});
 
-  /// ── app 面(读):普通登录用户浏览首页 DApp ──
   $grpc.ResponseFuture<$1.DAppListByClassResp> listByClass(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -218,42 +242,6 @@ class DAppClient extends $grpc.Client {
     return $createUnaryCall(_$getTop, request, options: options);
   }
 
-  /// ── 超管面(写):维护 DApp 目录。handler 已有超管校验,proto 标错成 TOKEN,待拆去 DAppAdmin ──
-  $grpc.ResponseFuture<$0.Empty> updateTop(
-    $1.DAppUpdateTopReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$updateTop, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> create(
-    $1.DAppInfo request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$create, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> edit(
-    $1.DAppInfo request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$edit, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> updateOrder(
-    $1.DAppUpdateOrderReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$updateOrder, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> delete(
-    $1.DAppDeleteReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$delete, request, options: options);
-  }
-
   // method descriptors
 
   static final _$listByClass =
@@ -269,27 +257,6 @@ class DAppClient extends $grpc.Client {
       '/hi.did.DApp/GetTop',
       ($0.Empty value) => value.writeToBuffer(),
       $1.DAppInfo.fromBuffer);
-  static final _$updateTop = $grpc.ClientMethod<$1.DAppUpdateTopReq, $0.Empty>(
-      '/hi.did.DApp/UpdateTop',
-      ($1.DAppUpdateTopReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$create = $grpc.ClientMethod<$1.DAppInfo, $0.Empty>(
-      '/hi.did.DApp/Create',
-      ($1.DAppInfo value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$1.DAppInfo, $0.Empty>(
-      '/hi.did.DApp/Edit',
-      ($1.DAppInfo value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$updateOrder =
-      $grpc.ClientMethod<$1.DAppUpdateOrderReq, $0.Empty>(
-          '/hi.did.DApp/UpdateOrder',
-          ($1.DAppUpdateOrderReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$1.DAppDeleteReq, $0.Empty>(
-      '/hi.did.DApp/Delete',
-      ($1.DAppDeleteReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.DApp')
@@ -318,42 +285,6 @@ abstract class DAppServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.DAppInfo value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DAppUpdateTopReq, $0.Empty>(
-        'UpdateTop',
-        updateTop_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.DAppUpdateTopReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DAppInfo, $0.Empty>(
-        'Create',
-        create_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.DAppInfo.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DAppInfo, $0.Empty>(
-        'Edit',
-        edit_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.DAppInfo.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DAppUpdateOrderReq, $0.Empty>(
-        'UpdateOrder',
-        updateOrder_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.DAppUpdateOrderReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DAppDeleteReq, $0.Empty>(
-        'Delete',
-        delete_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.DAppDeleteReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.DAppListByClassResp> listByClass_Pre(
@@ -378,14 +309,123 @@ abstract class DAppServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.DAppInfo> getTop($grpc.ServiceCall call, $0.Empty request);
+}
 
-  $async.Future<$0.Empty> updateTop_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.DAppUpdateTopReq> $request) async {
-    return updateTop($call, await $request);
+/// DApp 维护(超管面):上架/下架/改/排序/置顶。handler 里本有超管校验,收敛到拦截器。
+@$pb.GrpcServiceName('hi.did.DAppAdmin')
+class DAppAdminClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  DAppAdminClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$0.Empty> create(
+    $1.DAppInfo request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$create, request, options: options);
   }
 
-  $async.Future<$0.Empty> updateTop(
-      $grpc.ServiceCall call, $1.DAppUpdateTopReq request);
+  $grpc.ResponseFuture<$0.Empty> edit(
+    $1.DAppInfo request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$edit, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> delete(
+    $1.DAppDeleteReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$delete, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> updateOrder(
+    $1.DAppUpdateOrderReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updateOrder, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> updateTop(
+    $1.DAppUpdateTopReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updateTop, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$create = $grpc.ClientMethod<$1.DAppInfo, $0.Empty>(
+      '/hi.did.DAppAdmin/Create',
+      ($1.DAppInfo value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$edit = $grpc.ClientMethod<$1.DAppInfo, $0.Empty>(
+      '/hi.did.DAppAdmin/Edit',
+      ($1.DAppInfo value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$1.DAppDeleteReq, $0.Empty>(
+      '/hi.did.DAppAdmin/Delete',
+      ($1.DAppDeleteReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$updateOrder =
+      $grpc.ClientMethod<$1.DAppUpdateOrderReq, $0.Empty>(
+          '/hi.did.DAppAdmin/UpdateOrder',
+          ($1.DAppUpdateOrderReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
+  static final _$updateTop = $grpc.ClientMethod<$1.DAppUpdateTopReq, $0.Empty>(
+      '/hi.did.DAppAdmin/UpdateTop',
+      ($1.DAppUpdateTopReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.DAppAdmin')
+abstract class DAppAdminServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.DAppAdmin';
+
+  DAppAdminServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.DAppInfo, $0.Empty>(
+        'Create',
+        create_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.DAppInfo.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DAppInfo, $0.Empty>(
+        'Edit',
+        edit_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.DAppInfo.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DAppDeleteReq, $0.Empty>(
+        'Delete',
+        delete_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.DAppDeleteReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DAppUpdateOrderReq, $0.Empty>(
+        'UpdateOrder',
+        updateOrder_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.DAppUpdateOrderReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DAppUpdateTopReq, $0.Empty>(
+        'UpdateTop',
+        updateTop_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.DAppUpdateTopReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+  }
 
   $async.Future<$0.Empty> create_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.DAppInfo> $request) async {
@@ -401,6 +441,14 @@ abstract class DAppServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> edit($grpc.ServiceCall call, $1.DAppInfo request);
 
+  $async.Future<$0.Empty> delete_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.DAppDeleteReq> $request) async {
+    return delete($call, await $request);
+  }
+
+  $async.Future<$0.Empty> delete(
+      $grpc.ServiceCall call, $1.DAppDeleteReq request);
+
   $async.Future<$0.Empty> updateOrder_Pre($grpc.ServiceCall $call,
       $async.Future<$1.DAppUpdateOrderReq> $request) async {
     return updateOrder($call, await $request);
@@ -409,19 +457,18 @@ abstract class DAppServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> updateOrder(
       $grpc.ServiceCall call, $1.DAppUpdateOrderReq request);
 
-  $async.Future<$0.Empty> delete_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.DAppDeleteReq> $request) async {
-    return delete($call, await $request);
+  $async.Future<$0.Empty> updateTop_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.DAppUpdateTopReq> $request) async {
+    return updateTop($call, await $request);
   }
 
-  $async.Future<$0.Empty> delete(
-      $grpc.ServiceCall call, $1.DAppDeleteReq request);
+  $async.Future<$0.Empty> updateTop(
+      $grpc.ServiceCall call, $1.DAppUpdateTopReq request);
 }
 
-/// 商户管理(超管面)。
-///
-/// ⚠️ 漏洞(裁决 #11):Delete/Edit 现标 AUTH_TOKEN 且 handler 零校验 ——
-///    **任何登录用户都能删改商户**。三个方法都要收紧为 AUTH_SUPERADMIN。
+/// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_TOKEN 且 handler 零校验
+/// (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
+/// ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
 @$pb.GrpcServiceName('hi.did.MerchantManage')
 class MerchantManageClient extends $grpc.Client {
   /// The hostname for this service.

@@ -20,8 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserExtensionSettings_Get_FullMethodName    = "/hi.did.UserExtensionSettings/Get"
-	UserExtensionSettings_Update_FullMethodName = "/hi.did.UserExtensionSettings/Update"
+	UserExtensionSettings_Get_FullMethodName     = "/hi.did.UserExtensionSettings/Get"
+	UserExtensionSettings_Refresh_FullMethodName = "/hi.did.UserExtensionSettings/Refresh"
 )
 
 // UserExtensionSettingsClient is the client API for UserExtensionSettings service.
@@ -32,10 +32,8 @@ const (
 // resp.token = 当前 extoken;resp.table = 扩展数据标配(表名/结构)。
 type UserExtensionSettingsClient interface {
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error)
-	// ⚠️ 裁决 #7:此方法实为"刷新/重新生成"(重签 extoken 那套),不是"更新"。
-	//
-	//	入参 Empty 也印证 —— 没有要更新的内容。TODO 改名 Refresh/Regenerate。
-	Update(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error)
+	// 裁决 #7:原名 Update 词不达意 —— 它是重新生成 extoken(入参 Empty 也印证没有要更新的内容),改名 Refresh。
+	Refresh(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error)
 }
 
 type userExtensionSettingsClient struct {
@@ -56,10 +54,10 @@ func (c *userExtensionSettingsClient) Get(ctx context.Context, in *emptypb.Empty
 	return out, nil
 }
 
-func (c *userExtensionSettingsClient) Update(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error) {
+func (c *userExtensionSettingsClient) Refresh(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserExtensionSettingResp)
-	err := c.cc.Invoke(ctx, UserExtensionSettings_Update_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserExtensionSettings_Refresh_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -74,10 +72,8 @@ func (c *userExtensionSettingsClient) Update(ctx context.Context, in *emptypb.Em
 // resp.token = 当前 extoken;resp.table = 扩展数据标配(表名/结构)。
 type UserExtensionSettingsServer interface {
 	Get(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error)
-	// ⚠️ 裁决 #7:此方法实为"刷新/重新生成"(重签 extoken 那套),不是"更新"。
-	//
-	//	入参 Empty 也印证 —— 没有要更新的内容。TODO 改名 Refresh/Regenerate。
-	Update(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error)
+	// 裁决 #7:原名 Update 词不达意 —— 它是重新生成 extoken(入参 Empty 也印证没有要更新的内容),改名 Refresh。
+	Refresh(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error)
 }
 
 // UnimplementedUserExtensionSettingsServer should be embedded to have
@@ -90,8 +86,8 @@ type UnimplementedUserExtensionSettingsServer struct{}
 func (UnimplementedUserExtensionSettingsServer) Get(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedUserExtensionSettingsServer) Update(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
+func (UnimplementedUserExtensionSettingsServer) Refresh(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Refresh not implemented")
 }
 func (UnimplementedUserExtensionSettingsServer) testEmbeddedByValue() {}
 
@@ -131,20 +127,20 @@ func _UserExtensionSettings_Get_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserExtensionSettings_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserExtensionSettings_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserExtensionSettingsServer).Update(ctx, in)
+		return srv.(UserExtensionSettingsServer).Refresh(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserExtensionSettings_Update_FullMethodName,
+		FullMethod: UserExtensionSettings_Refresh_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserExtensionSettingsServer).Update(ctx, req.(*emptypb.Empty))
+		return srv.(UserExtensionSettingsServer).Refresh(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -161,8 +157,8 @@ var UserExtensionSettings_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserExtensionSettings_Get_Handler,
 		},
 		{
-			MethodName: "Update",
-			Handler:    _UserExtensionSettings_Update_Handler,
+			MethodName: "Refresh",
+			Handler:    _UserExtensionSettings_Refresh_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

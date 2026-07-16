@@ -454,12 +454,13 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\x11UserExtensionUnit\x12\x1e\n" +
 	"\x04user\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04user\x12-\n" +
-	"\x04info\x18\x02 \x01(\v2\x19.hi.did.UserExtensionInfoR\x04info2\xb0\x02\n" +
+	"\x04info\x18\x02 \x01(\v2\x19.hi.did.UserExtensionInfoR\x04info2\xda\x01\n" +
 	"\x04Base\x12@\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x04\x88\xb5\x18\x01\x12J\n" +
-	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x04\x88\xb5\x18\x01\x12T\n" +
-	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x02\x12D\n" +
-	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x012:\n" +
+	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x04\x88\xb5\x18\x01\x12D\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x012f\n" +
+	"\x0eSuperAdminView\x12T\n" +
+	"\x13ListSuperAdminUsers\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x04\x88\xb5\x18\x022:\n" +
 	"\x06Assist\x120\n" +
 	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x04\x88\xb5\x18\x062S\n" +
 	"\n" +
@@ -501,14 +502,14 @@ var file_hi_did_base_proto_depIdxs = []int32{
 	5,  // 2: hi.did.UserExtensionUnit.info:type_name -> hi.did.UserExtensionInfo
 	8,  // 3: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
 	2,  // 4: hi.did.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
-	8,  // 5: hi.did.Base.ListSuperAdminUsers:input_type -> google.protobuf.Empty
-	8,  // 6: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
+	8,  // 5: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
+	8,  // 6: hi.did.SuperAdminView.ListSuperAdminUsers:input_type -> google.protobuf.Empty
 	9,  // 7: hi.did.Assist.VerifySignature:input_type -> hi.SignedData
 	8,  // 8: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
 	1,  // 9: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
 	3,  // 10: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	4,  // 11: hi.did.Base.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
-	10, // 12: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	10, // 11: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	4,  // 12: hi.did.SuperAdminView.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
 	11, // 13: hi.did.Assist.VerifySignature:output_type -> hi.DID
 	4,  // 14: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
 	9,  // [9:15] is the sub-list for method output_type
@@ -532,7 +533,7 @@ func file_hi_did_base_proto_init() {
 			NumEnums:      0,
 			NumMessages:   7,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   4,
 		},
 		GoTypes:           file_hi_did_base_proto_goTypes,
 		DependencyIndexes: file_hi_did_base_proto_depIdxs,

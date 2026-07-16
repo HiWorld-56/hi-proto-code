@@ -44,13 +44,12 @@ class UserExtensionSettingsClient extends $grpc.Client {
     return $createUnaryCall(_$get, request, options: options);
   }
 
-  /// ⚠️ 裁决 #7:此方法实为"刷新/重新生成"(重签 extoken 那套),不是"更新"。
-  ///    入参 Empty 也印证 —— 没有要更新的内容。TODO 改名 Refresh/Regenerate。
-  $grpc.ResponseFuture<$1.UserExtensionSettingResp> update(
+  /// 裁决 #7:原名 Update 词不达意 —— 它是重新生成 extoken(入参 Empty 也印证没有要更新的内容),改名 Refresh。
+  $grpc.ResponseFuture<$1.UserExtensionSettingResp> refresh(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$update, request, options: options);
+    return $createUnaryCall(_$refresh, request, options: options);
   }
 
   // method descriptors
@@ -60,9 +59,9 @@ class UserExtensionSettingsClient extends $grpc.Client {
           '/hi.did.UserExtensionSettings/Get',
           ($0.Empty value) => value.writeToBuffer(),
           $1.UserExtensionSettingResp.fromBuffer);
-  static final _$update =
+  static final _$refresh =
       $grpc.ClientMethod<$0.Empty, $1.UserExtensionSettingResp>(
-          '/hi.did.UserExtensionSettings/Update',
+          '/hi.did.UserExtensionSettings/Refresh',
           ($0.Empty value) => value.writeToBuffer(),
           $1.UserExtensionSettingResp.fromBuffer);
 }
@@ -80,8 +79,8 @@ abstract class UserExtensionSettingsServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.UserExtensionSettingResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.UserExtensionSettingResp>(
-        'Update',
-        update_Pre,
+        'Refresh',
+        refresh_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
@@ -96,12 +95,12 @@ abstract class UserExtensionSettingsServiceBase extends $grpc.Service {
   $async.Future<$1.UserExtensionSettingResp> get(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$1.UserExtensionSettingResp> update_Pre(
+  $async.Future<$1.UserExtensionSettingResp> refresh_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return update($call, await $request);
+    return refresh($call, await $request);
   }
 
-  $async.Future<$1.UserExtensionSettingResp> update(
+  $async.Future<$1.UserExtensionSettingResp> refresh(
       $grpc.ServiceCall call, $0.Empty request);
 }
 

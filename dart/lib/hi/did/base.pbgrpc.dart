@@ -22,8 +22,8 @@ import 'base.pb.dart' as $1;
 
 export 'base.pb.dart';
 
-/// Base —— 杂物袋:公开的版本/币种查询 + 一个需登录的超管名单查询。
-/// TODO(一致性):ListCoins/LatestVersion/ServerVersion 是真公开,可挪进 Health,让 Base 归于一致。
+/// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本),全部公开。
+/// 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
 @$pb.GrpcServiceName('hi.did.Base')
 class BaseClient extends $grpc.Client {
   /// The hostname for this service.
@@ -50,16 +50,6 @@ class BaseClient extends $grpc.Client {
     return $createUnaryCall(_$latestVersion, request, options: options);
   }
 
-  /// 超管名单。hisrv web 登录后拿它显隐"内部使用"菜单 —— 任何登录商户都要调,
-  /// 故不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
-  /// 此前是 AUTH_NONE,等于把内部团队的 did 名单公开挂着。
-  $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listSuperAdminUsers, request, options: options);
-  }
-
   $grpc.ResponseFuture<$2.ServerVersionResp> serverVersion(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -78,11 +68,6 @@ class BaseClient extends $grpc.Client {
           '/hi.did.Base/LatestVersion',
           ($1.LatestVersionReq value) => value.writeToBuffer(),
           $1.LatestVersionResp.fromBuffer);
-  static final _$listSuperAdminUsers =
-      $grpc.ClientMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
-          '/hi.did.Base/ListSuperAdminUsers',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.ListSuperAdminUsersResp.fromBuffer);
   static final _$serverVersion =
       $grpc.ClientMethod<$0.Empty, $2.ServerVersionResp>(
           '/hi.did.Base/ServerVersion',
@@ -109,13 +94,6 @@ abstract class BaseServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.LatestVersionReq.fromBuffer(value),
         ($1.LatestVersionResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
-        'ListSuperAdminUsers',
-        listSuperAdminUsers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListSuperAdminUsersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $2.ServerVersionResp>(
         'ServerVersion',
         serverVersion_Pre,
@@ -141,20 +119,68 @@ abstract class BaseServiceBase extends $grpc.Service {
   $async.Future<$1.LatestVersionResp> latestVersion(
       $grpc.ServiceCall call, $1.LatestVersionReq request);
 
-  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listSuperAdminUsers($call, await $request);
-  }
-
-  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
-      $grpc.ServiceCall call, $0.Empty request);
-
   $async.Future<$2.ServerVersionResp> serverVersion_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return serverVersion($call, await $request);
   }
 
   $async.Future<$2.ServerVersionResp> serverVersion(
+      $grpc.ServiceCall call, $0.Empty request);
+}
+
+/// 超管名单(面向登录用户)。裁决 N3:从 Base 拎出,让 Base 归于全公开一致。
+///
+/// 主体是**登录用户**:hisrv web 登录后拿它显隐"内部使用"菜单,任何登录商户都要调,
+/// 故标 AUTH_TOKEN —— 不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
+/// 与 SuperAdmin.List 主体不同(那个是兄弟服务带 ExtendToken 穿透),故两个 service 并存。
+@$pb.GrpcServiceName('hi.did.SuperAdminView')
+class SuperAdminViewClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  SuperAdminViewClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listSuperAdminUsers, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$listSuperAdminUsers =
+      $grpc.ClientMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
+          '/hi.did.SuperAdminView/ListSuperAdminUsers',
+          ($0.Empty value) => value.writeToBuffer(),
+          $1.ListSuperAdminUsersResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.SuperAdminView')
+abstract class SuperAdminViewServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.SuperAdminView';
+
+  SuperAdminViewServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
+        'ListSuperAdminUsers',
+        listSuperAdminUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListSuperAdminUsersResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return listSuperAdminUsers($call, await $request);
+  }
+
+  $async.Future<$1.ListSuperAdminUsersResp> listSuperAdminUsers(
       $grpc.ServiceCall call, $0.Empty request);
 }
 

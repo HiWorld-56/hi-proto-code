@@ -762,94 +762,6 @@ func (x *UpdateAssetsReq) GetWsmApt() string {
 	return ""
 }
 
-type GetUserByAddressReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Address       string                 `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"` // 钱包地址
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetUserByAddressReq) Reset() {
-	*x = GetUserByAddressReq{}
-	mi := &file_hi_did_wallet_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetUserByAddressReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetUserByAddressReq) ProtoMessage() {}
-
-func (x *GetUserByAddressReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_wallet_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetUserByAddressReq.ProtoReflect.Descriptor instead.
-func (*GetUserByAddressReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_wallet_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *GetUserByAddressReq) GetAddress() string {
-	if x != nil {
-		return x.Address
-	}
-	return ""
-}
-
-type GetUserByAddressResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 用户did
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetUserByAddressResp) Reset() {
-	*x = GetUserByAddressResp{}
-	mi := &file_hi_did_wallet_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetUserByAddressResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetUserByAddressResp) ProtoMessage() {}
-
-func (x *GetUserByAddressResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_wallet_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetUserByAddressResp.ProtoReflect.Descriptor instead.
-func (*GetUserByAddressResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_wallet_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *GetUserByAddressResp) GetDid() string {
-	if x != nil {
-		return x.Did
-	}
-	return ""
-}
-
 type GetWalletResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Chain         string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
@@ -860,7 +772,7 @@ type GetWalletResp_Unit struct {
 
 func (x *GetWalletResp_Unit) Reset() {
 	*x = GetWalletResp_Unit{}
-	mi := &file_hi_did_wallet_proto_msgTypes[14]
+	mi := &file_hi_did_wallet_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -872,7 +784,7 @@ func (x *GetWalletResp_Unit) String() string {
 func (*GetWalletResp_Unit) ProtoMessage() {}
 
 func (x *GetWalletResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_wallet_proto_msgTypes[14]
+	mi := &file_hi_did_wallet_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -912,7 +824,7 @@ type ListAddressesReq_Unit struct {
 
 func (x *ListAddressesReq_Unit) Reset() {
 	*x = ListAddressesReq_Unit{}
-	mi := &file_hi_did_wallet_proto_msgTypes[15]
+	mi := &file_hi_did_wallet_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -924,7 +836,7 @@ func (x *ListAddressesReq_Unit) String() string {
 func (*ListAddressesReq_Unit) ProtoMessage() {}
 
 func (x *ListAddressesReq_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_wallet_proto_msgTypes[15]
+	mi := &file_hi_did_wallet_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -965,7 +877,7 @@ type ListAddressesResp_Unit struct {
 
 func (x *ListAddressesResp_Unit) Reset() {
 	*x = ListAddressesResp_Unit{}
-	mi := &file_hi_did_wallet_proto_msgTypes[16]
+	mi := &file_hi_did_wallet_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -977,7 +889,7 @@ func (x *ListAddressesResp_Unit) String() string {
 func (*ListAddressesResp_Unit) ProtoMessage() {}
 
 func (x *ListAddressesResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_wallet_proto_msgTypes[16]
+	mi := &file_hi_did_wallet_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1025,7 +937,7 @@ type ListUsersAssetsResp_Unit struct {
 
 func (x *ListUsersAssetsResp_Unit) Reset() {
 	*x = ListUsersAssetsResp_Unit{}
-	mi := &file_hi_did_wallet_proto_msgTypes[17]
+	mi := &file_hi_did_wallet_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1037,7 +949,7 @@ func (x *ListUsersAssetsResp_Unit) String() string {
 func (*ListUsersAssetsResp_Unit) ProtoMessage() {}
 
 func (x *ListUsersAssetsResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_wallet_proto_msgTypes[17]
+	mi := &file_hi_did_wallet_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1086,7 +998,7 @@ type GetUserAssetsResp_Unit struct {
 
 func (x *GetUserAssetsResp_Unit) Reset() {
 	*x = GetUserAssetsResp_Unit{}
-	mi := &file_hi_did_wallet_proto_msgTypes[18]
+	mi := &file_hi_did_wallet_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1098,7 +1010,7 @@ func (x *GetUserAssetsResp_Unit) String() string {
 func (*GetUserAssetsResp_Unit) ProtoMessage() {}
 
 func (x *GetUserAssetsResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_wallet_proto_msgTypes[18]
+	mi := &file_hi_did_wallet_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1226,11 +1138,7 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\bwhds_apt\x18> \x01(\tR\awhdsApt\x12\x19\n" +
 	"\bhwhd_apt\x18? \x01(\tR\ahwhdApt\x12\x19\n" +
 	"\bslkj_apt\x18@ \x01(\tR\aslkjApt\x12\x17\n" +
-	"\awsm_apt\x18A \x01(\tR\x06wsmApt\"=\n" +
-	"\x13GetUserByAddressReq\x12&\n" +
-	"\aaddress\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aaddress\"(\n" +
-	"\x14GetUserByAddressResp\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did2\xd5\x04\n" +
+	"\awsm_apt\x18A \x01(\tR\x06wsmApt2\x80\x04\n" +
 	"\x06Wallet\x12?\n" +
 	"\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x06\x12E\n" +
 	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12>\n" +
@@ -1238,8 +1146,7 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x04\x88\xb5\x18\x02\x12D\n" +
 	"\vTotalAssets\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\"\x04\x88\xb5\x18\x01\x12P\n" +
 	"\x0fListUsersAssets\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\"\x04\x88\xb5\x18\x01\x12J\n" +
-	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x04\x88\xb5\x18\x03\x12S\n" +
-	"\x10GetUserByAddress\x12\x1b.hi.did.GetUserByAddressReq\x1a\x1c.hi.did.GetUserByAddressResp\"\x04\x88\xb5\x18\x02B|\n" +
+	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x04\x88\xb5\x18\x01B|\n" +
 	"\n" +
 	"com.hi.didB\vWalletProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -1255,7 +1162,7 @@ func file_hi_did_wallet_proto_rawDescGZIP() []byte {
 	return file_hi_did_wallet_proto_rawDescData
 }
 
-var file_hi_did_wallet_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_hi_did_wallet_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_hi_did_wallet_proto_goTypes = []any{
 	(*UpdateAddressesReq)(nil),       // 0: hi.did.UpdateAddressesReq
 	(*GetWalletReq)(nil),             // 1: hi.did.GetWalletReq
@@ -1269,44 +1176,40 @@ var file_hi_did_wallet_proto_goTypes = []any{
 	(*GetUserAssetsReq)(nil),         // 9: hi.did.GetUserAssetsReq
 	(*GetUserAssetsResp)(nil),        // 10: hi.did.GetUserAssetsResp
 	(*UpdateAssetsReq)(nil),          // 11: hi.did.UpdateAssetsReq
-	(*GetUserByAddressReq)(nil),      // 12: hi.did.GetUserByAddressReq
-	(*GetUserByAddressResp)(nil),     // 13: hi.did.GetUserByAddressResp
-	(*GetWalletResp_Unit)(nil),       // 14: hi.did.GetWalletResp.Unit
-	(*ListAddressesReq_Unit)(nil),    // 15: hi.did.ListAddressesReq.Unit
-	(*ListAddressesResp_Unit)(nil),   // 16: hi.did.ListAddressesResp.Unit
-	(*ListUsersAssetsResp_Unit)(nil), // 17: hi.did.ListUsersAssetsResp.Unit
-	(*GetUserAssetsResp_Unit)(nil),   // 18: hi.did.GetUserAssetsResp.Unit
-	(*hi.Pagination)(nil),            // 19: hi.Pagination
-	(*Coin)(nil),                     // 20: hi.did.Coin
-	(*hi.SignedData)(nil),            // 21: hi.SignedData
-	(*emptypb.Empty)(nil),            // 22: google.protobuf.Empty
+	(*GetWalletResp_Unit)(nil),       // 12: hi.did.GetWalletResp.Unit
+	(*ListAddressesReq_Unit)(nil),    // 13: hi.did.ListAddressesReq.Unit
+	(*ListAddressesResp_Unit)(nil),   // 14: hi.did.ListAddressesResp.Unit
+	(*ListUsersAssetsResp_Unit)(nil), // 15: hi.did.ListUsersAssetsResp.Unit
+	(*GetUserAssetsResp_Unit)(nil),   // 16: hi.did.GetUserAssetsResp.Unit
+	(*hi.Pagination)(nil),            // 17: hi.Pagination
+	(*Coin)(nil),                     // 18: hi.did.Coin
+	(*hi.SignedData)(nil),            // 19: hi.SignedData
+	(*emptypb.Empty)(nil),            // 20: google.protobuf.Empty
 }
 var file_hi_did_wallet_proto_depIdxs = []int32{
-	14, // 0: hi.did.GetWalletResp.list:type_name -> hi.did.GetWalletResp.Unit
-	15, // 1: hi.did.ListAddressesReq.list:type_name -> hi.did.ListAddressesReq.Unit
-	16, // 2: hi.did.ListAddressesResp.list:type_name -> hi.did.ListAddressesResp.Unit
-	19, // 3: hi.did.ListUsersAssetsReq.pagination:type_name -> hi.Pagination
-	17, // 4: hi.did.ListUsersAssetsResp.list:type_name -> hi.did.ListUsersAssetsResp.Unit
-	18, // 5: hi.did.GetUserAssetsResp.unit:type_name -> hi.did.GetUserAssetsResp.Unit
-	20, // 6: hi.did.GetUserAssetsResp.Unit.coin:type_name -> hi.did.Coin
-	21, // 7: hi.did.Wallet.UpdateAddresses:input_type -> hi.SignedData
+	12, // 0: hi.did.GetWalletResp.list:type_name -> hi.did.GetWalletResp.Unit
+	13, // 1: hi.did.ListAddressesReq.list:type_name -> hi.did.ListAddressesReq.Unit
+	14, // 2: hi.did.ListAddressesResp.list:type_name -> hi.did.ListAddressesResp.Unit
+	17, // 3: hi.did.ListUsersAssetsReq.pagination:type_name -> hi.Pagination
+	15, // 4: hi.did.ListUsersAssetsResp.list:type_name -> hi.did.ListUsersAssetsResp.Unit
+	16, // 5: hi.did.GetUserAssetsResp.unit:type_name -> hi.did.GetUserAssetsResp.Unit
+	18, // 6: hi.did.GetUserAssetsResp.Unit.coin:type_name -> hi.did.Coin
+	19, // 7: hi.did.Wallet.UpdateAddresses:input_type -> hi.SignedData
 	11, // 8: hi.did.Wallet.UpdateAssets:input_type -> hi.did.UpdateAssetsReq
 	1,  // 9: hi.did.Wallet.GetWallet:input_type -> hi.did.GetWalletReq
 	3,  // 10: hi.did.Wallet.ListAddresses:input_type -> hi.did.ListAddressesReq
 	5,  // 11: hi.did.Wallet.TotalAssets:input_type -> hi.did.TotalAssetsReq
 	7,  // 12: hi.did.Wallet.ListUsersAssets:input_type -> hi.did.ListUsersAssetsReq
 	9,  // 13: hi.did.Wallet.GetUserAssets:input_type -> hi.did.GetUserAssetsReq
-	12, // 14: hi.did.Wallet.GetUserByAddress:input_type -> hi.did.GetUserByAddressReq
-	22, // 15: hi.did.Wallet.UpdateAddresses:output_type -> google.protobuf.Empty
-	22, // 16: hi.did.Wallet.UpdateAssets:output_type -> google.protobuf.Empty
-	2,  // 17: hi.did.Wallet.GetWallet:output_type -> hi.did.GetWalletResp
-	4,  // 18: hi.did.Wallet.ListAddresses:output_type -> hi.did.ListAddressesResp
-	6,  // 19: hi.did.Wallet.TotalAssets:output_type -> hi.did.TotalAssetsResp
-	8,  // 20: hi.did.Wallet.ListUsersAssets:output_type -> hi.did.ListUsersAssetsResp
-	10, // 21: hi.did.Wallet.GetUserAssets:output_type -> hi.did.GetUserAssetsResp
-	13, // 22: hi.did.Wallet.GetUserByAddress:output_type -> hi.did.GetUserByAddressResp
-	15, // [15:23] is the sub-list for method output_type
-	7,  // [7:15] is the sub-list for method input_type
+	20, // 14: hi.did.Wallet.UpdateAddresses:output_type -> google.protobuf.Empty
+	20, // 15: hi.did.Wallet.UpdateAssets:output_type -> google.protobuf.Empty
+	2,  // 16: hi.did.Wallet.GetWallet:output_type -> hi.did.GetWalletResp
+	4,  // 17: hi.did.Wallet.ListAddresses:output_type -> hi.did.ListAddressesResp
+	6,  // 18: hi.did.Wallet.TotalAssets:output_type -> hi.did.TotalAssetsResp
+	8,  // 19: hi.did.Wallet.ListUsersAssets:output_type -> hi.did.ListUsersAssetsResp
+	10, // 20: hi.did.Wallet.GetUserAssets:output_type -> hi.did.GetUserAssetsResp
+	14, // [14:21] is the sub-list for method output_type
+	7,  // [7:14] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name
@@ -1325,7 +1228,7 @@ func file_hi_did_wallet_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_wallet_proto_rawDesc), len(file_hi_did_wallet_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   19,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

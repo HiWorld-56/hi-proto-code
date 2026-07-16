@@ -57,7 +57,7 @@ func local_request_UserExtensionSettings_Get_0(ctx context.Context, marshaler ru
 	return msg, metadata, err
 }
 
-func request_UserExtensionSettings_Update_0(ctx context.Context, marshaler runtime.Marshaler, client UserExtensionSettingsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_UserExtensionSettings_Refresh_0(ctx context.Context, marshaler runtime.Marshaler, client UserExtensionSettingsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
@@ -65,16 +65,16 @@ func request_UserExtensionSettings_Update_0(ctx context.Context, marshaler runti
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.Update(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Refresh(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_UserExtensionSettings_Update_0(ctx context.Context, marshaler runtime.Marshaler, server UserExtensionSettingsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_UserExtensionSettings_Refresh_0(ctx context.Context, marshaler runtime.Marshaler, server UserExtensionSettingsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
-	msg, err := server.Update(ctx, &protoReq)
+	msg, err := server.Refresh(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -212,25 +212,25 @@ func RegisterUserExtensionSettingsHandlerServer(ctx context.Context, mux *runtim
 		}
 		forward_UserExtensionSettings_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_UserExtensionSettings_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_UserExtensionSettings_Refresh_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.UserExtensionSettings/Update", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/update"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.UserExtensionSettings/Refresh", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_UserExtensionSettings_Update_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_UserExtensionSettings_Refresh_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_UserExtensionSettings_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UserExtensionSettings_Refresh_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -379,34 +379,34 @@ func RegisterUserExtensionSettingsHandlerClient(ctx context.Context, mux *runtim
 		}
 		forward_UserExtensionSettings_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_UserExtensionSettings_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_UserExtensionSettings_Refresh_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.UserExtensionSettings/Update", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/update"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.UserExtensionSettings/Refresh", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_UserExtensionSettings_Update_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_UserExtensionSettings_Refresh_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_UserExtensionSettings_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UserExtensionSettings_Refresh_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_UserExtensionSettings_Get_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension_settings", "get"}, ""))
-	pattern_UserExtensionSettings_Update_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension_settings", "update"}, ""))
+	pattern_UserExtensionSettings_Get_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension_settings", "get"}, ""))
+	pattern_UserExtensionSettings_Refresh_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension_settings", "update"}, ""))
 )
 
 var (
-	forward_UserExtensionSettings_Get_0    = runtime.ForwardResponseMessage
-	forward_UserExtensionSettings_Update_0 = runtime.ForwardResponseMessage
+	forward_UserExtensionSettings_Get_0     = runtime.ForwardResponseMessage
+	forward_UserExtensionSettings_Refresh_0 = runtime.ForwardResponseMessage
 )
 
 // RegisterUserExtensionHandlerFromEndpoint is same as RegisterUserExtensionHandler but

@@ -311,28 +311,3 @@ final $typed_data.Uint8List updateAssetsReqDescriptor = $convert.base64Decode(
     'IbCglwYW5kYV9zb2wYNiABKAlSCHBhbmRhU29sEhAKA2FwdBg9IAEoCVIDYXB0EhkKCHdoZHNf'
     'YXB0GD4gASgJUgd3aGRzQXB0EhkKCGh3aGRfYXB0GD8gASgJUgdod2hkQXB0EhkKCHNsa2pfYX'
     'B0GEAgASgJUgdzbGtqQXB0EhcKB3dzbV9hcHQYQSABKAlSBndzbUFwdA==');
-
-@$core.Deprecated('Use getUserByAddressReqDescriptor instead')
-const GetUserByAddressReq$json = {
-  '1': 'GetUserByAddressReq',
-  '2': [
-    {'1': 'address', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'address'},
-  ],
-};
-
-/// Descriptor for `GetUserByAddressReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getUserByAddressReqDescriptor = $convert.base64Decode(
-    'ChNHZXRVc2VyQnlBZGRyZXNzUmVxEiYKB2FkZHJlc3MYASABKAlCDLpICXIHMgVeXFMrJFIHYW'
-    'RkcmVzcw==');
-
-@$core.Deprecated('Use getUserByAddressRespDescriptor instead')
-const GetUserByAddressResp$json = {
-  '1': 'GetUserByAddressResp',
-  '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-  ],
-};
-
-/// Descriptor for `GetUserByAddressResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getUserByAddressRespDescriptor = $convert
-    .base64Decode('ChRHZXRVc2VyQnlBZGRyZXNzUmVzcBIQCgNkaWQYASABKAlSA2RpZA==');

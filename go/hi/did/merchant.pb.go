@@ -972,10 +972,11 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"@\n" +
 	"\x0eOrderEventResp\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\tR\apayload2\xe9\x05\n" +
-	"\bMerchant\x12<\n" +
+	"\apayload\x18\x02 \x01(\tR\apayload2\x89\x01\n" +
+	"\fUserMerchant\x12<\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
+	"\x03Set\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x022\xee\x04\n" +
+	"\bMerchant\x12;\n" +
 	"\x0eGetUserProfile\x12\a.hi.DID\x1a\x1a.hi.did.GetUserProfileResp\"\x04\x88\xb5\x18\x03\x12I\n" +
 	"\x0eSetUserProfile\x12\x19.hi.did.SetUserProfileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x125\n" +
 	"\vGetMerchant\x12\a.hi.DID\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x03\x12B\n" +
@@ -1042,8 +1043,8 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	7,  // 9: hi.did.ListGrantsResp.grants:type_name -> hi.did.GrantUnit
 	18, // 10: hi.did.MerchantUsersListReq.pagination:type_name -> hi.Pagination
 	19, // 11: hi.did.MerchantUsersListResp.units:type_name -> hi.did.UserExtensionUnit
-	20, // 12: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
-	2,  // 13: hi.did.Merchant.Set:input_type -> hi.did.MerchantSetReq
+	20, // 12: hi.did.UserMerchant.Get:input_type -> google.protobuf.Empty
+	2,  // 13: hi.did.UserMerchant.Set:input_type -> hi.did.MerchantSetReq
 	21, // 14: hi.did.Merchant.GetUserProfile:input_type -> hi.DID
 	5,  // 15: hi.did.Merchant.SetUserProfile:input_type -> hi.did.SetUserProfileReq
 	21, // 16: hi.did.Merchant.GetMerchant:input_type -> hi.DID
@@ -1055,8 +1056,8 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	12, // 22: hi.did.Merchant.DeleteUsers:input_type -> hi.did.MerchantUsersDeleteReq
 	21, // 23: hi.did.SSE.OrderEvents:input_type -> hi.DID
 	13, // 24: hi.did.SSE.Notify:input_type -> hi.did.MerchantNotifyReq
-	1,  // 25: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
-	20, // 26: hi.did.Merchant.Set:output_type -> google.protobuf.Empty
+	1,  // 25: hi.did.UserMerchant.Get:output_type -> hi.did.MerchantGetResp
+	20, // 26: hi.did.UserMerchant.Set:output_type -> google.protobuf.Empty
 	4,  // 27: hi.did.Merchant.GetUserProfile:output_type -> hi.did.GetUserProfileResp
 	20, // 28: hi.did.Merchant.SetUserProfile:output_type -> google.protobuf.Empty
 	1,  // 29: hi.did.Merchant.GetMerchant:output_type -> hi.did.MerchantGetResp
@@ -1089,7 +1090,7 @@ func file_hi_did_merchant_proto_init() {
 			NumEnums:      0,
 			NumMessages:   15,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_hi_did_merchant_proto_goTypes,
 		DependencyIndexes: file_hi_did_merchant_proto_depIdxs,

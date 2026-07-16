@@ -1028,27 +1028,29 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\acomment\x18\x02 \x01(\tR\acomment\"C\n" +
 	"\x15MerchantManageEditReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x18\n" +
-	"\acomment\x18\x02 \x01(\tR\acomment2\xce\x02\n" +
+	"\acomment\x18\x02 \x01(\tR\acomment2\x92\x02\n" +
 	"\n" +
 	"InviteCode\x12D\n" +
-	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\"\x04\x88\xb5\x18\x02\x12?\n" +
-	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x128\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x04\x88\xb5\x18\x02\x12C\n" +
-	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12:\n" +
-	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x012\x89\x04\n" +
+	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\"\x04\x88\xb5\x18\x05\x12?\n" +
+	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x128\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x04\x88\xb5\x18\x05\x12C\n" +
+	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x052N\n" +
+	"\x10InviteCodeVerify\x12:\n" +
+	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x012\xca\x01\n" +
 	"\x04DApp\x12H\n" +
 	"\vListByClass\x12\x16.google.protobuf.Empty\x1a\x1b.hi.did.DAppListByClassResp\"\x04\x88\xb5\x18\x02\x12>\n" +
 	"\x06GetRWA\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.DAppGetRWAResp\"\x04\x88\xb5\x18\x02\x128\n" +
-	"\x06GetTop\x12\x16.google.protobuf.Empty\x1a\x10.hi.did.DAppInfo\"\x04\x88\xb5\x18\x02\x12C\n" +
-	"\tUpdateTop\x12\x18.hi.did.DAppUpdateTopReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x128\n" +
-	"\x06Create\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x126\n" +
-	"\x04Edit\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12G\n" +
-	"\vUpdateOrder\x12\x1a.hi.did.DAppUpdateOrderReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12=\n" +
-	"\x06Delete\x12\x15.hi.did.DAppDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x022\xd3\x01\n" +
+	"\x06GetTop\x12\x16.google.protobuf.Empty\x1a\x10.hi.did.DAppInfo\"\x04\x88\xb5\x18\x022\xca\x02\n" +
+	"\tDAppAdmin\x128\n" +
+	"\x06Create\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x126\n" +
+	"\x04Edit\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12=\n" +
+	"\x06Delete\x12\x15.hi.did.DAppDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12G\n" +
+	"\vUpdateOrder\x12\x1a.hi.did.DAppUpdateOrderReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12C\n" +
+	"\tUpdateTop\x12\x18.hi.did.DAppUpdateTopReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x052\xd3\x01\n" +
 	"\x0eMerchantManage\x12K\n" +
-	"\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x04\x88\xb5\x18\x03\x12/\n" +
-	"\x06Delete\x12\a.hi.DID\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12C\n" +
-	"\x04Edit\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B{\n" +
+	"\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x04\x88\xb5\x18\x05\x12/\n" +
+	"\x06Delete\x12\a.hi.DID\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x12C\n" +
+	"\x04Edit\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05B{\n" +
 	"\n" +
 	"com.hi.didB\n" +
 	"AdminProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -1103,15 +1105,15 @@ var file_hi_did_admin_proto_depIdxs = []int32{
 	1,  // 9: hi.did.InviteCode.Edit:input_type -> hi.did.InviteCodeEditReq
 	17, // 10: hi.did.InviteCode.List:input_type -> hi.Pagination
 	3,  // 11: hi.did.InviteCode.Delete:input_type -> hi.did.InviteCodeDeleteReq
-	4,  // 12: hi.did.InviteCode.Verify:input_type -> hi.did.InviteCodeVerifyReq
+	4,  // 12: hi.did.InviteCodeVerify.Verify:input_type -> hi.did.InviteCodeVerifyReq
 	19, // 13: hi.did.DApp.ListByClass:input_type -> google.protobuf.Empty
 	19, // 14: hi.did.DApp.GetRWA:input_type -> google.protobuf.Empty
 	19, // 15: hi.did.DApp.GetTop:input_type -> google.protobuf.Empty
-	8,  // 16: hi.did.DApp.UpdateTop:input_type -> hi.did.DAppUpdateTopReq
-	5,  // 17: hi.did.DApp.Create:input_type -> hi.did.DAppInfo
-	5,  // 18: hi.did.DApp.Edit:input_type -> hi.did.DAppInfo
-	9,  // 19: hi.did.DApp.UpdateOrder:input_type -> hi.did.DAppUpdateOrderReq
-	10, // 20: hi.did.DApp.Delete:input_type -> hi.did.DAppDeleteReq
+	5,  // 16: hi.did.DAppAdmin.Create:input_type -> hi.did.DAppInfo
+	5,  // 17: hi.did.DAppAdmin.Edit:input_type -> hi.did.DAppInfo
+	10, // 18: hi.did.DAppAdmin.Delete:input_type -> hi.did.DAppDeleteReq
+	9,  // 19: hi.did.DAppAdmin.UpdateOrder:input_type -> hi.did.DAppUpdateOrderReq
+	8,  // 20: hi.did.DAppAdmin.UpdateTop:input_type -> hi.did.DAppUpdateTopReq
 	11, // 21: hi.did.MerchantManage.List:input_type -> hi.did.MerchantManageListReq
 	20, // 22: hi.did.MerchantManage.Delete:input_type -> hi.DID
 	13, // 23: hi.did.MerchantManage.Edit:input_type -> hi.did.MerchantManageEditReq
@@ -1119,15 +1121,15 @@ var file_hi_did_admin_proto_depIdxs = []int32{
 	19, // 25: hi.did.InviteCode.Edit:output_type -> google.protobuf.Empty
 	2,  // 26: hi.did.InviteCode.List:output_type -> hi.did.InviteCodeListResp
 	19, // 27: hi.did.InviteCode.Delete:output_type -> google.protobuf.Empty
-	21, // 28: hi.did.InviteCode.Verify:output_type -> hi.AuthToken
+	21, // 28: hi.did.InviteCodeVerify.Verify:output_type -> hi.AuthToken
 	6,  // 29: hi.did.DApp.ListByClass:output_type -> hi.did.DAppListByClassResp
 	7,  // 30: hi.did.DApp.GetRWA:output_type -> hi.did.DAppGetRWAResp
 	5,  // 31: hi.did.DApp.GetTop:output_type -> hi.did.DAppInfo
-	19, // 32: hi.did.DApp.UpdateTop:output_type -> google.protobuf.Empty
-	19, // 33: hi.did.DApp.Create:output_type -> google.protobuf.Empty
-	19, // 34: hi.did.DApp.Edit:output_type -> google.protobuf.Empty
-	19, // 35: hi.did.DApp.UpdateOrder:output_type -> google.protobuf.Empty
-	19, // 36: hi.did.DApp.Delete:output_type -> google.protobuf.Empty
+	19, // 32: hi.did.DAppAdmin.Create:output_type -> google.protobuf.Empty
+	19, // 33: hi.did.DAppAdmin.Edit:output_type -> google.protobuf.Empty
+	19, // 34: hi.did.DAppAdmin.Delete:output_type -> google.protobuf.Empty
+	19, // 35: hi.did.DAppAdmin.UpdateOrder:output_type -> google.protobuf.Empty
+	19, // 36: hi.did.DAppAdmin.UpdateTop:output_type -> google.protobuf.Empty
 	12, // 37: hi.did.MerchantManage.List:output_type -> hi.did.MerchantManageListResp
 	19, // 38: hi.did.MerchantManage.Delete:output_type -> google.protobuf.Empty
 	19, // 39: hi.did.MerchantManage.Edit:output_type -> google.protobuf.Empty
@@ -1152,7 +1154,7 @@ func file_hi_did_admin_proto_init() {
 			NumEnums:      0,
 			NumMessages:   17,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   5,
 		},
 		GoTypes:           file_hi_did_admin_proto_goTypes,
 		DependencyIndexes: file_hi_did_admin_proto_depIdxs,

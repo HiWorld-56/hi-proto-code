@@ -21,25 +21,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Base_ListCoins_FullMethodName           = "/hi.did.Base/ListCoins"
-	Base_LatestVersion_FullMethodName       = "/hi.did.Base/LatestVersion"
-	Base_ListSuperAdminUsers_FullMethodName = "/hi.did.Base/ListSuperAdminUsers"
-	Base_ServerVersion_FullMethodName       = "/hi.did.Base/ServerVersion"
+	Base_ListCoins_FullMethodName     = "/hi.did.Base/ListCoins"
+	Base_LatestVersion_FullMethodName = "/hi.did.Base/LatestVersion"
+	Base_ServerVersion_FullMethodName = "/hi.did.Base/ServerVersion"
 )
 
 // BaseClient is the client API for Base service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Base —— 杂物袋:公开的版本/币种查询 + 一个需登录的超管名单查询。
-// TODO(一致性):ListCoins/LatestVersion/ServerVersion 是真公开,可挪进 Health,让 Base 归于一致。
+// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本),全部公开。
+// 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
 type BaseClient interface {
 	ListCoins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCoinsResp, error)
 	LatestVersion(ctx context.Context, in *LatestVersionReq, opts ...grpc.CallOption) (*LatestVersionResp, error)
-	// 超管名单。hisrv web 登录后拿它显隐"内部使用"菜单 —— 任何登录商户都要调,
-	// 故不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
-	// 此前是 AUTH_NONE,等于把内部团队的 did 名单公开挂着。
-	ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 }
 
@@ -71,16 +66,6 @@ func (c *baseClient) LatestVersion(ctx context.Context, in *LatestVersionReq, op
 	return out, nil
 }
 
-func (c *baseClient) ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListSuperAdminUsersResp)
-	err := c.cc.Invoke(ctx, Base_ListSuperAdminUsers_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.ServerVersionResp)
@@ -95,15 +80,11 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
 //
-// Base —— 杂物袋:公开的版本/币种查询 + 一个需登录的超管名单查询。
-// TODO(一致性):ListCoins/LatestVersion/ServerVersion 是真公开,可挪进 Health,让 Base 归于一致。
+// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本),全部公开。
+// 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
 type BaseServer interface {
 	ListCoins(context.Context, *emptypb.Empty) (*ListCoinsResp, error)
 	LatestVersion(context.Context, *LatestVersionReq) (*LatestVersionResp, error)
-	// 超管名单。hisrv web 登录后拿它显隐"内部使用"菜单 —— 任何登录商户都要调,
-	// 故不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
-	// 此前是 AUTH_NONE,等于把内部团队的 did 名单公开挂着。
-	ListSuperAdminUsers(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 }
 
@@ -119,9 +100,6 @@ func (UnimplementedBaseServer) ListCoins(context.Context, *emptypb.Empty) (*List
 }
 func (UnimplementedBaseServer) LatestVersion(context.Context, *LatestVersionReq) (*LatestVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method LatestVersion not implemented")
-}
-func (UnimplementedBaseServer) ListSuperAdminUsers(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSuperAdminUsers not implemented")
 }
 func (UnimplementedBaseServer) ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ServerVersion not implemented")
@@ -182,24 +160,6 @@ func _Base_LatestVersion_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_ListSuperAdminUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).ListSuperAdminUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_ListSuperAdminUsers_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).ListSuperAdminUsers(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Base_ServerVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -234,12 +194,120 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Base_LatestVersion_Handler,
 		},
 		{
-			MethodName: "ListSuperAdminUsers",
-			Handler:    _Base_ListSuperAdminUsers_Handler,
-		},
-		{
 			MethodName: "ServerVersion",
 			Handler:    _Base_ServerVersion_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/base.proto",
+}
+
+const (
+	SuperAdminView_ListSuperAdminUsers_FullMethodName = "/hi.did.SuperAdminView/ListSuperAdminUsers"
+)
+
+// SuperAdminViewClient is the client API for SuperAdminView service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 超管名单(面向登录用户)。裁决 N3:从 Base 拎出,让 Base 归于全公开一致。
+//
+// 主体是**登录用户**:hisrv web 登录后拿它显隐"内部使用"菜单,任何登录商户都要调,
+// 故标 AUTH_TOKEN —— 不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
+// 与 SuperAdmin.List 主体不同(那个是兄弟服务带 ExtendToken 穿透),故两个 service 并存。
+type SuperAdminViewClient interface {
+	ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error)
+}
+
+type superAdminViewClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSuperAdminViewClient(cc grpc.ClientConnInterface) SuperAdminViewClient {
+	return &superAdminViewClient{cc}
+}
+
+func (c *superAdminViewClient) ListSuperAdminUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSuperAdminUsersResp)
+	err := c.cc.Invoke(ctx, SuperAdminView_ListSuperAdminUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SuperAdminViewServer is the server API for SuperAdminView service.
+// All implementations should embed UnimplementedSuperAdminViewServer
+// for forward compatibility.
+//
+// 超管名单(面向登录用户)。裁决 N3:从 Base 拎出,让 Base 归于全公开一致。
+//
+// 主体是**登录用户**:hisrv web 登录后拿它显隐"内部使用"菜单,任何登录商户都要调,
+// 故标 AUTH_TOKEN —— 不能标 AUTH_SUPERADMIN(会变成"先是超管才能知道自己是不是超管")。
+// 与 SuperAdmin.List 主体不同(那个是兄弟服务带 ExtendToken 穿透),故两个 service 并存。
+type SuperAdminViewServer interface {
+	ListSuperAdminUsers(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error)
+}
+
+// UnimplementedSuperAdminViewServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedSuperAdminViewServer struct{}
+
+func (UnimplementedSuperAdminViewServer) ListSuperAdminUsers(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSuperAdminUsers not implemented")
+}
+func (UnimplementedSuperAdminViewServer) testEmbeddedByValue() {}
+
+// UnsafeSuperAdminViewServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SuperAdminViewServer will
+// result in compilation errors.
+type UnsafeSuperAdminViewServer interface {
+	mustEmbedUnimplementedSuperAdminViewServer()
+}
+
+func RegisterSuperAdminViewServer(s grpc.ServiceRegistrar, srv SuperAdminViewServer) {
+	// If the following call panics, it indicates UnimplementedSuperAdminViewServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&SuperAdminView_ServiceDesc, srv)
+}
+
+func _SuperAdminView_ListSuperAdminUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SuperAdminViewServer).ListSuperAdminUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SuperAdminView_ListSuperAdminUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SuperAdminViewServer).ListSuperAdminUsers(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// SuperAdminView_ServiceDesc is the grpc.ServiceDesc for SuperAdminView service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var SuperAdminView_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.SuperAdminView",
+	HandlerType: (*SuperAdminViewServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListSuperAdminUsers",
+			Handler:    _SuperAdminView_ListSuperAdminUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

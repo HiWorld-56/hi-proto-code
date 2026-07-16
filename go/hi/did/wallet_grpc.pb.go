@@ -21,21 +21,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Wallet_UpdateAddresses_FullMethodName  = "/hi.did.Wallet/UpdateAddresses"
-	Wallet_UpdateAssets_FullMethodName     = "/hi.did.Wallet/UpdateAssets"
-	Wallet_GetWallet_FullMethodName        = "/hi.did.Wallet/GetWallet"
-	Wallet_ListAddresses_FullMethodName    = "/hi.did.Wallet/ListAddresses"
-	Wallet_TotalAssets_FullMethodName      = "/hi.did.Wallet/TotalAssets"
-	Wallet_ListUsersAssets_FullMethodName  = "/hi.did.Wallet/ListUsersAssets"
-	Wallet_GetUserAssets_FullMethodName    = "/hi.did.Wallet/GetUserAssets"
-	Wallet_GetUserByAddress_FullMethodName = "/hi.did.Wallet/GetUserByAddress"
+	Wallet_UpdateAddresses_FullMethodName = "/hi.did.Wallet/UpdateAddresses"
+	Wallet_UpdateAssets_FullMethodName    = "/hi.did.Wallet/UpdateAssets"
+	Wallet_GetWallet_FullMethodName       = "/hi.did.Wallet/GetWallet"
+	Wallet_ListAddresses_FullMethodName   = "/hi.did.Wallet/ListAddresses"
+	Wallet_TotalAssets_FullMethodName     = "/hi.did.Wallet/TotalAssets"
+	Wallet_ListUsersAssets_FullMethodName = "/hi.did.Wallet/ListUsersAssets"
+	Wallet_GetUserAssets_FullMethodName   = "/hi.did.Wallet/GetUserAssets"
 )
 
 // WalletClient is the client API for Wallet service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 钱包:链上地址与资产。资产类查询多为链上公开数据(无隐藏性)。
+// 钱包:链上地址与资产。资产类查询是链上公开数据(无隐藏性),故全部公开。
 type WalletClient interface {
 	UpdateAddresses(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateAssets(ctx context.Context, in *UpdateAssetsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -43,13 +42,7 @@ type WalletClient interface {
 	ListAddresses(ctx context.Context, in *ListAddressesReq, opts ...grpc.CallOption) (*ListAddressesResp, error)
 	TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error)
 	ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error)
-	// 裁决 #5:GetUserAssets 应改公开(链上数据无隐藏性,与 TotalAssets/ListUsersAssets 同类)。
-	//
-	//	TODO 改 AUTH_NONE。这也解决"同一份资产数据三种档位"的不一致
-	//	(club.Assets.GetUserAssets 已是公开)。
 	GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error)
-	// 裁决 #8:GetUserByAddress 应删 —— hidid 用户体系里 did 是唯一标识,不需要按地址反查用户。TODO 删除。
-	GetUserByAddress(ctx context.Context, in *GetUserByAddressReq, opts ...grpc.CallOption) (*GetUserByAddressResp, error)
 }
 
 type walletClient struct {
@@ -130,21 +123,11 @@ func (c *walletClient) GetUserAssets(ctx context.Context, in *GetUserAssetsReq, 
 	return out, nil
 }
 
-func (c *walletClient) GetUserByAddress(ctx context.Context, in *GetUserByAddressReq, opts ...grpc.CallOption) (*GetUserByAddressResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserByAddressResp)
-	err := c.cc.Invoke(ctx, Wallet_GetUserByAddress_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // WalletServer is the server API for Wallet service.
 // All implementations should embed UnimplementedWalletServer
 // for forward compatibility.
 //
-// 钱包:链上地址与资产。资产类查询多为链上公开数据(无隐藏性)。
+// 钱包:链上地址与资产。资产类查询是链上公开数据(无隐藏性),故全部公开。
 type WalletServer interface {
 	UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 	UpdateAssets(context.Context, *UpdateAssetsReq) (*emptypb.Empty, error)
@@ -152,13 +135,7 @@ type WalletServer interface {
 	ListAddresses(context.Context, *ListAddressesReq) (*ListAddressesResp, error)
 	TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error)
 	ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error)
-	// 裁决 #5:GetUserAssets 应改公开(链上数据无隐藏性,与 TotalAssets/ListUsersAssets 同类)。
-	//
-	//	TODO 改 AUTH_NONE。这也解决"同一份资产数据三种档位"的不一致
-	//	(club.Assets.GetUserAssets 已是公开)。
 	GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error)
-	// 裁决 #8:GetUserByAddress 应删 —— hidid 用户体系里 did 是唯一标识,不需要按地址反查用户。TODO 删除。
-	GetUserByAddress(context.Context, *GetUserByAddressReq) (*GetUserByAddressResp, error)
 }
 
 // UnimplementedWalletServer should be embedded to have
@@ -188,9 +165,6 @@ func (UnimplementedWalletServer) ListUsersAssets(context.Context, *ListUsersAsse
 }
 func (UnimplementedWalletServer) GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserAssets not implemented")
-}
-func (UnimplementedWalletServer) GetUserByAddress(context.Context, *GetUserByAddressReq) (*GetUserByAddressResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserByAddress not implemented")
 }
 func (UnimplementedWalletServer) testEmbeddedByValue() {}
 
@@ -338,24 +312,6 @@ func _Wallet_GetUserAssets_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Wallet_GetUserByAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserByAddressReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServer).GetUserByAddress(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Wallet_GetUserByAddress_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServer).GetUserByAddress(ctx, req.(*GetUserByAddressReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Wallet_ServiceDesc is the grpc.ServiceDesc for Wallet service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -390,10 +346,6 @@ var Wallet_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserAssets",
 			Handler:    _Wallet_GetUserAssets_Handler,
-		},
-		{
-			MethodName: "GetUserByAddress",
-			Handler:    _Wallet_GetUserByAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -22,11 +22,88 @@ import 'merchant.pb.dart' as $1;
 
 export 'merchant.pb.dart';
 
-/// ⚠️ 裁决 #3:这个 service 混了两个主体 —— Get/Set 是**用户**查/设自己绑的商户节点(用户token),
-///    其余全是**商户**操作(ExtendToken)。TODO:把 Get/Set 拆去用户面 service。
+/// 用户绑定的商户节点(用户主体)。裁决 #3:从 Merchant 拆出 —— 主体是"用户"(用户token),
+/// 与下面 Merchant(商户主体,ExtendToken)分开。
+@$pb.GrpcServiceName('hi.did.UserMerchant')
+class UserMerchantClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  UserMerchantClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.MerchantGetResp> get(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$get, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> set(
+    $1.MerchantSetReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$set, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$get = $grpc.ClientMethod<$0.Empty, $1.MerchantGetResp>(
+      '/hi.did.UserMerchant/Get',
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.MerchantGetResp.fromBuffer);
+  static final _$set = $grpc.ClientMethod<$1.MerchantSetReq, $0.Empty>(
+      '/hi.did.UserMerchant/Set',
+      ($1.MerchantSetReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.UserMerchant')
+abstract class UserMerchantServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.UserMerchant';
+
+  UserMerchantServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.MerchantGetResp>(
+        'Get',
+        get_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.MerchantGetResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.MerchantSetReq, $0.Empty>(
+        'Set',
+        set_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.MerchantSetReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.MerchantGetResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return get($call, await $request);
+  }
+
+  $async.Future<$1.MerchantGetResp> get(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$0.Empty> set_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.MerchantSetReq> $request) async {
+    return set($call, await $request);
+  }
+
+  $async.Future<$0.Empty> set(
+      $grpc.ServiceCall call, $1.MerchantSetReq request);
+}
+
+/// 商户操作(商户主体,ExtendToken)。
 ///
-/// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在没有授权校验 ——
-///    club 就走 GetUserProfile 读用户档案。TODO:加互授权校验,无授权不得取他人商户的用户信息。
+/// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在缺授权校验 —— club 就走
+///    GetUserProfile 读用户档案。TODO(后端):加互授权校验,无授权不得取他人商户的用户信息。
 ///
 /// 授权机制(裁决 #4,定稿):商户 X 操作商户 A 的数据时 —— 从 X 的 ExtendToken 解出 didx,
 ///    若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
@@ -42,22 +119,6 @@ class MerchantClient extends $grpc.Client {
 
   MerchantClient(super.channel, {super.options, super.interceptors});
 
-  /// ── 用户主体(TODO 拆走)──
-  $grpc.ResponseFuture<$1.MerchantGetResp> get(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$get, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> set(
-    $1.MerchantSetReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$set, request, options: options);
-  }
-
-  /// ── 商户主体 ──
   $grpc.ResponseFuture<$1.GetUserProfileResp> getUserProfile(
     $2.DID request, {
     $grpc.CallOptions? options,
@@ -129,14 +190,6 @@ class MerchantClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.Empty, $1.MerchantGetResp>(
-      '/hi.did.Merchant/Get',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.MerchantGetResp.fromBuffer);
-  static final _$set = $grpc.ClientMethod<$1.MerchantSetReq, $0.Empty>(
-      '/hi.did.Merchant/Set',
-      ($1.MerchantSetReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
   static final _$getUserProfile =
       $grpc.ClientMethod<$2.DID, $1.GetUserProfileResp>(
           '/hi.did.Merchant/GetUserProfile',
@@ -185,20 +238,6 @@ abstract class MerchantServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.Merchant';
 
   MerchantServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.MerchantGetResp>(
-        'Get',
-        get_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.MerchantGetResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.MerchantSetReq, $0.Empty>(
-        'Set',
-        set_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.MerchantSetReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.DID, $1.GetUserProfileResp>(
         'GetUserProfile',
         getUserProfile_Pre,
@@ -267,22 +306,6 @@ abstract class MerchantServiceBase extends $grpc.Service {
             $1.MerchantUsersDeleteReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
-
-  $async.Future<$1.MerchantGetResp> get_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return get($call, await $request);
-  }
-
-  $async.Future<$1.MerchantGetResp> get(
-      $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$0.Empty> set_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.MerchantSetReq> $request) async {
-    return set($call, await $request);
-  }
-
-  $async.Future<$0.Empty> set(
-      $grpc.ServiceCall call, $1.MerchantSetReq request);
 
   $async.Future<$1.GetUserProfileResp> getUserProfile_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.DID> $request) async {

@@ -21,8 +21,150 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Merchant_Get_FullMethodName            = "/hi.did.Merchant/Get"
-	Merchant_Set_FullMethodName            = "/hi.did.Merchant/Set"
+	UserMerchant_Get_FullMethodName = "/hi.did.UserMerchant/Get"
+	UserMerchant_Set_FullMethodName = "/hi.did.UserMerchant/Set"
+)
+
+// UserMerchantClient is the client API for UserMerchant service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 用户绑定的商户节点(用户主体)。裁决 #3:从 Merchant 拆出 —— 主体是"用户"(用户token),
+// 与下面 Merchant(商户主体,ExtendToken)分开。
+type UserMerchantClient interface {
+	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error)
+	Set(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type userMerchantClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUserMerchantClient(cc grpc.ClientConnInterface) UserMerchantClient {
+	return &userMerchantClient{cc}
+}
+
+func (c *userMerchantClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantGetResp)
+	err := c.cc.Invoke(ctx, UserMerchant_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userMerchantClient) Set(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, UserMerchant_Set_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UserMerchantServer is the server API for UserMerchant service.
+// All implementations should embed UnimplementedUserMerchantServer
+// for forward compatibility.
+//
+// 用户绑定的商户节点(用户主体)。裁决 #3:从 Merchant 拆出 —— 主体是"用户"(用户token),
+// 与下面 Merchant(商户主体,ExtendToken)分开。
+type UserMerchantServer interface {
+	Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error)
+	Set(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
+}
+
+// UnimplementedUserMerchantServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedUserMerchantServer struct{}
+
+func (UnimplementedUserMerchantServer) Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedUserMerchantServer) Set(context.Context, *MerchantSetReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Set not implemented")
+}
+func (UnimplementedUserMerchantServer) testEmbeddedByValue() {}
+
+// UnsafeUserMerchantServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserMerchantServer will
+// result in compilation errors.
+type UnsafeUserMerchantServer interface {
+	mustEmbedUnimplementedUserMerchantServer()
+}
+
+func RegisterUserMerchantServer(s grpc.ServiceRegistrar, srv UserMerchantServer) {
+	// If the following call panics, it indicates UnimplementedUserMerchantServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&UserMerchant_ServiceDesc, srv)
+}
+
+func _UserMerchant_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserMerchantServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserMerchant_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserMerchantServer).Get(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserMerchant_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MerchantSetReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserMerchantServer).Set(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserMerchant_Set_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserMerchantServer).Set(ctx, req.(*MerchantSetReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// UserMerchant_ServiceDesc is the grpc.ServiceDesc for UserMerchant service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UserMerchant_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.UserMerchant",
+	HandlerType: (*UserMerchantServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Get",
+			Handler:    _UserMerchant_Get_Handler,
+		},
+		{
+			MethodName: "Set",
+			Handler:    _UserMerchant_Set_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/merchant.proto",
+}
+
+const (
 	Merchant_GetUserProfile_FullMethodName = "/hi.did.Merchant/GetUserProfile"
 	Merchant_SetUserProfile_FullMethodName = "/hi.did.Merchant/SetUserProfile"
 	Merchant_GetMerchant_FullMethodName    = "/hi.did.Merchant/GetMerchant"
@@ -38,22 +180,16 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// ⚠️ 裁决 #3:这个 service 混了两个主体 —— Get/Set 是**用户**查/设自己绑的商户节点(用户token),
+// 商户操作(商户主体,ExtendToken)。
 //
-//	其余全是**商户**操作(ExtendToken)。TODO:把 Get/Set 拆去用户面 service。
+// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在缺授权校验 —— club 就走
 //
-// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在没有授权校验 ——
-//
-//	club 就走 GetUserProfile 读用户档案。TODO:加互授权校验,无授权不得取他人商户的用户信息。
+//	GetUserProfile 读用户档案。TODO(后端):加互授权校验,无授权不得取他人商户的用户信息。
 //
 // 授权机制(裁决 #4,定稿):商户 X 操作商户 A 的数据时 —— 从 X 的 ExtendToken 解出 didx,
 //
 //	若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
 type MerchantClient interface {
-	// ── 用户主体(TODO 拆走)──
-	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error)
-	Set(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// ── 商户主体 ──
 	GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*GetUserProfileResp, error)
 	SetUserProfile(ctx context.Context, in *SetUserProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetMerchant(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantGetResp, error)
@@ -77,26 +213,6 @@ type merchantClient struct {
 
 func NewMerchantClient(cc grpc.ClientConnInterface) MerchantClient {
 	return &merchantClient{cc}
-}
-
-func (c *merchantClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MerchantGetResp)
-	err := c.cc.Invoke(ctx, Merchant_Get_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *merchantClient) Set(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Merchant_Set_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *merchantClient) GetUserProfile(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*GetUserProfileResp, error) {
@@ -193,22 +309,16 @@ func (c *merchantClient) DeleteUsers(ctx context.Context, in *MerchantUsersDelet
 // All implementations should embed UnimplementedMerchantServer
 // for forward compatibility.
 //
-// ⚠️ 裁决 #3:这个 service 混了两个主体 —— Get/Set 是**用户**查/设自己绑的商户节点(用户token),
+// 商户操作(商户主体,ExtendToken)。
 //
-//	其余全是**商户**操作(ExtendToken)。TODO:把 Get/Set 拆去用户面 service。
+// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在缺授权校验 —— club 就走
 //
-// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在没有授权校验 ——
-//
-//	club 就走 GetUserProfile 读用户档案。TODO:加互授权校验,无授权不得取他人商户的用户信息。
+//	GetUserProfile 读用户档案。TODO(后端):加互授权校验,无授权不得取他人商户的用户信息。
 //
 // 授权机制(裁决 #4,定稿):商户 X 操作商户 A 的数据时 —— 从 X 的 ExtendToken 解出 didx,
 //
 //	若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
 type MerchantServer interface {
-	// ── 用户主体(TODO 拆走)──
-	Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error)
-	Set(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
-	// ── 商户主体 ──
 	GetUserProfile(context.Context, *hi.DID) (*GetUserProfileResp, error)
 	SetUserProfile(context.Context, *SetUserProfileReq) (*emptypb.Empty, error)
 	GetMerchant(context.Context, *hi.DID) (*MerchantGetResp, error)
@@ -233,12 +343,6 @@ type MerchantServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMerchantServer struct{}
 
-func (UnimplementedMerchantServer) Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
-}
-func (UnimplementedMerchantServer) Set(context.Context, *MerchantSetReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Set not implemented")
-}
 func (UnimplementedMerchantServer) GetUserProfile(context.Context, *hi.DID) (*GetUserProfileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserProfile not implemented")
 }
@@ -284,42 +388,6 @@ func RegisterMerchantServer(s grpc.ServiceRegistrar, srv MerchantServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Merchant_ServiceDesc, srv)
-}
-
-func _Merchant_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MerchantServer).Get(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Merchant_Get_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).Get(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Merchant_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MerchantSetReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MerchantServer).Set(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Merchant_Set_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).Set(ctx, req.(*MerchantSetReq))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Merchant_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -491,14 +559,6 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.did.Merchant",
 	HandlerType: (*MerchantServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Get",
-			Handler:    _Merchant_Get_Handler,
-		},
-		{
-			MethodName: "Set",
-			Handler:    _Merchant_Set_Handler,
-		},
 		{
 			MethodName: "GetUserProfile",
 			Handler:    _Merchant_GetUserProfile_Handler,

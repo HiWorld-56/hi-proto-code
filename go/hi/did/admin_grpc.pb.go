@@ -25,24 +25,19 @@ const (
 	InviteCode_Edit_FullMethodName   = "/hi.did.InviteCode/Edit"
 	InviteCode_List_FullMethodName   = "/hi.did.InviteCode/List"
 	InviteCode_Delete_FullMethodName = "/hi.did.InviteCode/Delete"
-	InviteCode_Verify_FullMethodName = "/hi.did.InviteCode/Verify"
 )
 
 // InviteCodeClient is the client API for InviteCode service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 邀请码。前 4 个是超管管理邀请码,Verify 是待注册用户验码换 token —— 主体不同。
-//
-// TODO 裁决:① Create/Edit/List/Delete 标 AUTH_SUPERADMIN(handler 已有超管校验,现 proto 标错成 TOKEN)
-//
-//	② Verify 拆到独立 service(主体是"还没注册的人",与超管无关)
+// 邀请码管理:超管发/改/查/删邀请码。整个 service 都是超管面。
+// (待注册用户"验码"是另一个主体,已拆到下面 InviteCodeVerify。)
 type InviteCodeClient interface {
 	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InviteCodeCreateResp, error)
 	Edit(ctx context.Context, in *InviteCodeEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*InviteCodeListResp, error)
 	Delete(ctx context.Context, in *InviteCodeDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Verify(ctx context.Context, in *InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 }
 
 type inviteCodeClient struct {
@@ -93,31 +88,17 @@ func (c *inviteCodeClient) Delete(ctx context.Context, in *InviteCodeDeleteReq, 
 	return out, nil
 }
 
-func (c *inviteCodeClient) Verify(ctx context.Context, in *InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.AuthToken)
-	err := c.cc.Invoke(ctx, InviteCode_Verify_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // InviteCodeServer is the server API for InviteCode service.
 // All implementations should embed UnimplementedInviteCodeServer
 // for forward compatibility.
 //
-// 邀请码。前 4 个是超管管理邀请码,Verify 是待注册用户验码换 token —— 主体不同。
-//
-// TODO 裁决:① Create/Edit/List/Delete 标 AUTH_SUPERADMIN(handler 已有超管校验,现 proto 标错成 TOKEN)
-//
-//	② Verify 拆到独立 service(主体是"还没注册的人",与超管无关)
+// 邀请码管理:超管发/改/查/删邀请码。整个 service 都是超管面。
+// (待注册用户"验码"是另一个主体,已拆到下面 InviteCodeVerify。)
 type InviteCodeServer interface {
 	Create(context.Context, *emptypb.Empty) (*InviteCodeCreateResp, error)
 	Edit(context.Context, *InviteCodeEditReq) (*emptypb.Empty, error)
 	List(context.Context, *hi.Pagination) (*InviteCodeListResp, error)
 	Delete(context.Context, *InviteCodeDeleteReq) (*emptypb.Empty, error)
-	Verify(context.Context, *InviteCodeVerifyReq) (*hi.AuthToken, error)
 }
 
 // UnimplementedInviteCodeServer should be embedded to have
@@ -138,9 +119,6 @@ func (UnimplementedInviteCodeServer) List(context.Context, *hi.Pagination) (*Inv
 }
 func (UnimplementedInviteCodeServer) Delete(context.Context, *InviteCodeDeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
-}
-func (UnimplementedInviteCodeServer) Verify(context.Context, *InviteCodeVerifyReq) (*hi.AuthToken, error) {
-	return nil, status.Error(codes.Unimplemented, "method Verify not implemented")
 }
 func (UnimplementedInviteCodeServer) testEmbeddedByValue() {}
 
@@ -234,24 +212,6 @@ func _InviteCode_Delete_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _InviteCode_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InviteCodeVerifyReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(InviteCodeServer).Verify(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: InviteCode_Verify_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InviteCodeServer).Verify(ctx, req.(*InviteCodeVerifyReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // InviteCode_ServiceDesc is the grpc.ServiceDesc for InviteCode service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -275,9 +235,111 @@ var InviteCode_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "Delete",
 			Handler:    _InviteCode_Delete_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/admin.proto",
+}
+
+const (
+	InviteCodeVerify_Verify_FullMethodName = "/hi.did.InviteCodeVerify/Verify"
+)
+
+// InviteCodeVerifyClient is the client API for InviteCodeVerify service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 邀请码校验:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
+// 从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
+type InviteCodeVerifyClient interface {
+	Verify(ctx context.Context, in *InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
+}
+
+type inviteCodeVerifyClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewInviteCodeVerifyClient(cc grpc.ClientConnInterface) InviteCodeVerifyClient {
+	return &inviteCodeVerifyClient{cc}
+}
+
+func (c *inviteCodeVerifyClient) Verify(ctx context.Context, in *InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.AuthToken)
+	err := c.cc.Invoke(ctx, InviteCodeVerify_Verify_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// InviteCodeVerifyServer is the server API for InviteCodeVerify service.
+// All implementations should embed UnimplementedInviteCodeVerifyServer
+// for forward compatibility.
+//
+// 邀请码校验:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
+// 从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
+type InviteCodeVerifyServer interface {
+	Verify(context.Context, *InviteCodeVerifyReq) (*hi.AuthToken, error)
+}
+
+// UnimplementedInviteCodeVerifyServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedInviteCodeVerifyServer struct{}
+
+func (UnimplementedInviteCodeVerifyServer) Verify(context.Context, *InviteCodeVerifyReq) (*hi.AuthToken, error) {
+	return nil, status.Error(codes.Unimplemented, "method Verify not implemented")
+}
+func (UnimplementedInviteCodeVerifyServer) testEmbeddedByValue() {}
+
+// UnsafeInviteCodeVerifyServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to InviteCodeVerifyServer will
+// result in compilation errors.
+type UnsafeInviteCodeVerifyServer interface {
+	mustEmbedUnimplementedInviteCodeVerifyServer()
+}
+
+func RegisterInviteCodeVerifyServer(s grpc.ServiceRegistrar, srv InviteCodeVerifyServer) {
+	// If the following call panics, it indicates UnimplementedInviteCodeVerifyServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&InviteCodeVerify_ServiceDesc, srv)
+}
+
+func _InviteCodeVerify_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InviteCodeVerifyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InviteCodeVerifyServer).Verify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InviteCodeVerify_Verify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InviteCodeVerifyServer).Verify(ctx, req.(*InviteCodeVerifyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// InviteCodeVerify_ServiceDesc is the grpc.ServiceDesc for InviteCodeVerify service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var InviteCodeVerify_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.InviteCodeVerify",
+	HandlerType: (*InviteCodeVerifyServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Verify",
-			Handler:    _InviteCode_Verify_Handler,
+			Handler:    _InviteCodeVerify_Verify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -288,27 +350,17 @@ const (
 	DApp_ListByClass_FullMethodName = "/hi.did.DApp/ListByClass"
 	DApp_GetRWA_FullMethodName      = "/hi.did.DApp/GetRWA"
 	DApp_GetTop_FullMethodName      = "/hi.did.DApp/GetTop"
-	DApp_UpdateTop_FullMethodName   = "/hi.did.DApp/UpdateTop"
-	DApp_Create_FullMethodName      = "/hi.did.DApp/Create"
-	DApp_Edit_FullMethodName        = "/hi.did.DApp/Edit"
-	DApp_UpdateOrder_FullMethodName = "/hi.did.DApp/UpdateOrder"
-	DApp_Delete_FullMethodName      = "/hi.did.DApp/Delete"
 )
 
 // DAppClient is the client API for DApp service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// DApp 浏览(app 面):普通登录用户看首页 DApp 列表。只读。
 type DAppClient interface {
-	// ── app 面(读):普通登录用户浏览首页 DApp ──
 	ListByClass(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DAppListByClassResp, error)
 	GetRWA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DAppGetRWAResp, error)
 	GetTop(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DAppInfo, error)
-	// ── 超管面(写):维护 DApp 目录。handler 已有超管校验,proto 标错成 TOKEN,待拆去 DAppAdmin ──
-	UpdateTop(ctx context.Context, in *DAppUpdateTopReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Create(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Edit(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateOrder(ctx context.Context, in *DAppUpdateOrderReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Delete(ctx context.Context, in *DAppDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type dAppClient struct {
@@ -349,70 +401,15 @@ func (c *dAppClient) GetTop(ctx context.Context, in *emptypb.Empty, opts ...grpc
 	return out, nil
 }
 
-func (c *dAppClient) UpdateTop(ctx context.Context, in *DAppUpdateTopReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, DApp_UpdateTop_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dAppClient) Create(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, DApp_Create_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dAppClient) Edit(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, DApp_Edit_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dAppClient) UpdateOrder(ctx context.Context, in *DAppUpdateOrderReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, DApp_UpdateOrder_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dAppClient) Delete(ctx context.Context, in *DAppDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, DApp_Delete_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // DAppServer is the server API for DApp service.
 // All implementations should embed UnimplementedDAppServer
 // for forward compatibility.
+//
+// DApp 浏览(app 面):普通登录用户看首页 DApp 列表。只读。
 type DAppServer interface {
-	// ── app 面(读):普通登录用户浏览首页 DApp ──
 	ListByClass(context.Context, *emptypb.Empty) (*DAppListByClassResp, error)
 	GetRWA(context.Context, *emptypb.Empty) (*DAppGetRWAResp, error)
 	GetTop(context.Context, *emptypb.Empty) (*DAppInfo, error)
-	// ── 超管面(写):维护 DApp 目录。handler 已有超管校验,proto 标错成 TOKEN,待拆去 DAppAdmin ──
-	UpdateTop(context.Context, *DAppUpdateTopReq) (*emptypb.Empty, error)
-	Create(context.Context, *DAppInfo) (*emptypb.Empty, error)
-	Edit(context.Context, *DAppInfo) (*emptypb.Empty, error)
-	UpdateOrder(context.Context, *DAppUpdateOrderReq) (*emptypb.Empty, error)
-	Delete(context.Context, *DAppDeleteReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedDAppServer should be embedded to have
@@ -430,21 +427,6 @@ func (UnimplementedDAppServer) GetRWA(context.Context, *emptypb.Empty) (*DAppGet
 }
 func (UnimplementedDAppServer) GetTop(context.Context, *emptypb.Empty) (*DAppInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetTop not implemented")
-}
-func (UnimplementedDAppServer) UpdateTop(context.Context, *DAppUpdateTopReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateTop not implemented")
-}
-func (UnimplementedDAppServer) Create(context.Context, *DAppInfo) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
-}
-func (UnimplementedDAppServer) Edit(context.Context, *DAppInfo) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
-}
-func (UnimplementedDAppServer) UpdateOrder(context.Context, *DAppUpdateOrderReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateOrder not implemented")
-}
-func (UnimplementedDAppServer) Delete(context.Context, *DAppDeleteReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedDAppServer) testEmbeddedByValue() {}
 
@@ -520,96 +502,6 @@ func _DApp_GetTop_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DApp_UpdateTop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DAppUpdateTopReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DAppServer).UpdateTop(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DApp_UpdateTop_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DAppServer).UpdateTop(ctx, req.(*DAppUpdateTopReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DApp_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DAppInfo)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DAppServer).Create(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DApp_Create_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DAppServer).Create(ctx, req.(*DAppInfo))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DApp_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DAppInfo)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DAppServer).Edit(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DApp_Edit_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DAppServer).Edit(ctx, req.(*DAppInfo))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DApp_UpdateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DAppUpdateOrderReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DAppServer).UpdateOrder(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DApp_UpdateOrder_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DAppServer).UpdateOrder(ctx, req.(*DAppUpdateOrderReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DApp_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DAppDeleteReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DAppServer).Delete(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DApp_Delete_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DAppServer).Delete(ctx, req.(*DAppDeleteReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // DApp_ServiceDesc is the grpc.ServiceDesc for DApp service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -629,25 +521,261 @@ var DApp_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetTop",
 			Handler:    _DApp_GetTop_Handler,
 		},
-		{
-			MethodName: "UpdateTop",
-			Handler:    _DApp_UpdateTop_Handler,
-		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/admin.proto",
+}
+
+const (
+	DAppAdmin_Create_FullMethodName      = "/hi.did.DAppAdmin/Create"
+	DAppAdmin_Edit_FullMethodName        = "/hi.did.DAppAdmin/Edit"
+	DAppAdmin_Delete_FullMethodName      = "/hi.did.DAppAdmin/Delete"
+	DAppAdmin_UpdateOrder_FullMethodName = "/hi.did.DAppAdmin/UpdateOrder"
+	DAppAdmin_UpdateTop_FullMethodName   = "/hi.did.DAppAdmin/UpdateTop"
+)
+
+// DAppAdminClient is the client API for DAppAdmin service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// DApp 维护(超管面):上架/下架/改/排序/置顶。handler 里本有超管校验,收敛到拦截器。
+type DAppAdminClient interface {
+	Create(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Edit(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Delete(ctx context.Context, in *DAppDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateOrder(ctx context.Context, in *DAppUpdateOrderReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateTop(ctx context.Context, in *DAppUpdateTopReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type dAppAdminClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewDAppAdminClient(cc grpc.ClientConnInterface) DAppAdminClient {
+	return &dAppAdminClient{cc}
+}
+
+func (c *dAppAdminClient) Create(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, DAppAdmin_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dAppAdminClient) Edit(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, DAppAdmin_Edit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dAppAdminClient) Delete(ctx context.Context, in *DAppDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, DAppAdmin_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dAppAdminClient) UpdateOrder(ctx context.Context, in *DAppUpdateOrderReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, DAppAdmin_UpdateOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dAppAdminClient) UpdateTop(ctx context.Context, in *DAppUpdateTopReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, DAppAdmin_UpdateTop_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DAppAdminServer is the server API for DAppAdmin service.
+// All implementations should embed UnimplementedDAppAdminServer
+// for forward compatibility.
+//
+// DApp 维护(超管面):上架/下架/改/排序/置顶。handler 里本有超管校验,收敛到拦截器。
+type DAppAdminServer interface {
+	Create(context.Context, *DAppInfo) (*emptypb.Empty, error)
+	Edit(context.Context, *DAppInfo) (*emptypb.Empty, error)
+	Delete(context.Context, *DAppDeleteReq) (*emptypb.Empty, error)
+	UpdateOrder(context.Context, *DAppUpdateOrderReq) (*emptypb.Empty, error)
+	UpdateTop(context.Context, *DAppUpdateTopReq) (*emptypb.Empty, error)
+}
+
+// UnimplementedDAppAdminServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedDAppAdminServer struct{}
+
+func (UnimplementedDAppAdminServer) Create(context.Context, *DAppInfo) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedDAppAdminServer) Edit(context.Context, *DAppInfo) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedDAppAdminServer) Delete(context.Context, *DAppDeleteReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedDAppAdminServer) UpdateOrder(context.Context, *DAppUpdateOrderReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateOrder not implemented")
+}
+func (UnimplementedDAppAdminServer) UpdateTop(context.Context, *DAppUpdateTopReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTop not implemented")
+}
+func (UnimplementedDAppAdminServer) testEmbeddedByValue() {}
+
+// UnsafeDAppAdminServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DAppAdminServer will
+// result in compilation errors.
+type UnsafeDAppAdminServer interface {
+	mustEmbedUnimplementedDAppAdminServer()
+}
+
+func RegisterDAppAdminServer(s grpc.ServiceRegistrar, srv DAppAdminServer) {
+	// If the following call panics, it indicates UnimplementedDAppAdminServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&DAppAdmin_ServiceDesc, srv)
+}
+
+func _DAppAdmin_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DAppInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DAppAdminServer).Create(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DAppAdmin_Create_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DAppAdminServer).Create(ctx, req.(*DAppInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DAppAdmin_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DAppInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DAppAdminServer).Edit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DAppAdmin_Edit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DAppAdminServer).Edit(ctx, req.(*DAppInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DAppAdmin_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DAppDeleteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DAppAdminServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DAppAdmin_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DAppAdminServer).Delete(ctx, req.(*DAppDeleteReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DAppAdmin_UpdateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DAppUpdateOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DAppAdminServer).UpdateOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DAppAdmin_UpdateOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DAppAdminServer).UpdateOrder(ctx, req.(*DAppUpdateOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DAppAdmin_UpdateTop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DAppUpdateTopReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DAppAdminServer).UpdateTop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DAppAdmin_UpdateTop_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DAppAdminServer).UpdateTop(ctx, req.(*DAppUpdateTopReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// DAppAdmin_ServiceDesc is the grpc.ServiceDesc for DAppAdmin service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var DAppAdmin_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.DAppAdmin",
+	HandlerType: (*DAppAdminServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Create",
-			Handler:    _DApp_Create_Handler,
+			Handler:    _DAppAdmin_Create_Handler,
 		},
 		{
 			MethodName: "Edit",
-			Handler:    _DApp_Edit_Handler,
-		},
-		{
-			MethodName: "UpdateOrder",
-			Handler:    _DApp_UpdateOrder_Handler,
+			Handler:    _DAppAdmin_Edit_Handler,
 		},
 		{
 			MethodName: "Delete",
-			Handler:    _DApp_Delete_Handler,
+			Handler:    _DAppAdmin_Delete_Handler,
+		},
+		{
+			MethodName: "UpdateOrder",
+			Handler:    _DAppAdmin_UpdateOrder_Handler,
+		},
+		{
+			MethodName: "UpdateTop",
+			Handler:    _DAppAdmin_UpdateTop_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -664,11 +792,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 商户管理(超管面)。
-//
-// ⚠️ 漏洞(裁决 #11):Delete/Edit 现标 AUTH_TOKEN 且 handler 零校验 ——
-//
-//	**任何登录用户都能删改商户**。三个方法都要收紧为 AUTH_SUPERADMIN。
+// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_TOKEN 且 handler 零校验
+// (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
+// ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
 type MerchantManageClient interface {
 	List(ctx context.Context, in *MerchantManageListReq, opts ...grpc.CallOption) (*MerchantManageListResp, error)
 	Delete(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -717,11 +843,9 @@ func (c *merchantManageClient) Edit(ctx context.Context, in *MerchantManageEditR
 // All implementations should embed UnimplementedMerchantManageServer
 // for forward compatibility.
 //
-// 商户管理(超管面)。
-//
-// ⚠️ 漏洞(裁决 #11):Delete/Edit 现标 AUTH_TOKEN 且 handler 零校验 ——
-//
-//	**任何登录用户都能删改商户**。三个方法都要收紧为 AUTH_SUPERADMIN。
+// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_TOKEN 且 handler 零校验
+// (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
+// ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
 type MerchantManageServer interface {
 	List(context.Context, *MerchantManageListReq) (*MerchantManageListResp, error)
 	Delete(context.Context, *hi.DID) (*emptypb.Empty, error)
