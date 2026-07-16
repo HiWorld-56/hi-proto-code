@@ -1034,8 +1034,8 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\"\x04\x88\xb5\x18\x05\x12?\n" +
 	"\x04Edit\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05\x128\n" +
 	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x04\x88\xb5\x18\x05\x12C\n" +
-	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x052N\n" +
-	"\x10InviteCodeVerify\x12:\n" +
+	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x052F\n" +
+	"\bRegister\x12:\n" +
 	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x012\xca\x01\n" +
 	"\x04DApp\x12H\n" +
 	"\vListByClass\x12\x16.google.protobuf.Empty\x1a\x1b.hi.did.DAppListByClassResp\"\x04\x88\xb5\x18\x02\x12>\n" +
@@ -1105,7 +1105,7 @@ var file_hi_did_admin_proto_depIdxs = []int32{
 	1,  // 9: hi.did.InviteCode.Edit:input_type -> hi.did.InviteCodeEditReq
 	17, // 10: hi.did.InviteCode.List:input_type -> hi.Pagination
 	3,  // 11: hi.did.InviteCode.Delete:input_type -> hi.did.InviteCodeDeleteReq
-	4,  // 12: hi.did.InviteCodeVerify.Verify:input_type -> hi.did.InviteCodeVerifyReq
+	4,  // 12: hi.did.Register.Verify:input_type -> hi.did.InviteCodeVerifyReq
 	19, // 13: hi.did.DApp.ListByClass:input_type -> google.protobuf.Empty
 	19, // 14: hi.did.DApp.GetRWA:input_type -> google.protobuf.Empty
 	19, // 15: hi.did.DApp.GetTop:input_type -> google.protobuf.Empty
@@ -1121,7 +1121,7 @@ var file_hi_did_admin_proto_depIdxs = []int32{
 	19, // 25: hi.did.InviteCode.Edit:output_type -> google.protobuf.Empty
 	2,  // 26: hi.did.InviteCode.List:output_type -> hi.did.InviteCodeListResp
 	19, // 27: hi.did.InviteCode.Delete:output_type -> google.protobuf.Empty
-	21, // 28: hi.did.InviteCodeVerify.Verify:output_type -> hi.AuthToken
+	21, // 28: hi.did.Register.Verify:output_type -> hi.AuthToken
 	6,  // 29: hi.did.DApp.ListByClass:output_type -> hi.did.DAppListByClassResp
 	7,  // 30: hi.did.DApp.GetRWA:output_type -> hi.did.DAppGetRWAResp
 	5,  // 31: hi.did.DApp.GetTop:output_type -> hi.did.DAppInfo

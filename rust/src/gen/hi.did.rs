@@ -1866,7 +1866,7 @@ pub mod merchant_ex_db_client {
     }
 }
 /// Generated client implementations.
-pub mod sse_client {
+pub mod order_event_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -1876,20 +1876,12 @@ pub mod sse_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// SSE —— web3 自动付款机制(裁决 #10)。
-    ///
-    /// 架构:PC 端跑 hidid-pc,通过 SSE 与 hidid 后台保持长连接(hidid-pc 无公网 IP)。
-    /// 流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 Notify → hidid 后端把通知转发给
-    /// 对应的 hidid-pc → ③hidid-pc 按用户在软件里设置的地址**去拉订单** → ④付款 →
-    /// ⑤付款结果通过用户设置的地址回传。
-    /// 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
-    /// hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
-    /// hidid-pc 订阅端(用户主体,token):长连接接收订单事件。
+    /// 订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
     #[derive(Debug, Clone)]
-    pub struct SseClient<T> {
+    pub struct OrderEventClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl SseClient<tonic::transport::Channel> {
+    impl OrderEventClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -1900,7 +1892,7 @@ pub mod sse_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> SseClient<T>
+    impl<T> OrderEventClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -1918,7 +1910,7 @@ pub mod sse_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> SseClient<InterceptedService<T, F>>
+        ) -> OrderEventClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -1932,7 +1924,7 @@ pub mod sse_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            SseClient::new(InterceptedService::new(inner, interceptor))
+            OrderEventClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -1965,7 +1957,7 @@ pub mod sse_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn order_events(
+        pub async fn sub(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Did>,
         ) -> std::result::Result<
@@ -1981,15 +1973,15 @@ pub mod sse_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.SSE/OrderEvents");
+            let path = http::uri::PathAndQuery::from_static("/hi.did.OrderEvent/Sub");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.SSE", "OrderEvents"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.OrderEvent", "Sub"));
             self.inner.server_streaming(req, path, codec).await
         }
     }
 }
 /// Generated client implementations.
-pub mod pay_notify_client {
+pub mod order_notify_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -1999,14 +1991,14 @@ pub mod pay_notify_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 商户触发端(公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
+    /// 订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
     /// 公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
-    /// 从 SSE 拆出:与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token)。
+    /// 与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
     #[derive(Debug, Clone)]
-    pub struct PayNotifyClient<T> {
+    pub struct OrderNotifyClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl PayNotifyClient<tonic::transport::Channel> {
+    impl OrderNotifyClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -2017,7 +2009,7 @@ pub mod pay_notify_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> PayNotifyClient<T>
+    impl<T> OrderNotifyClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -2035,7 +2027,7 @@ pub mod pay_notify_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> PayNotifyClient<InterceptedService<T, F>>
+        ) -> OrderNotifyClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2049,7 +2041,7 @@ pub mod pay_notify_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            PayNotifyClient::new(InterceptedService::new(inner, interceptor))
+            OrderNotifyClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -2082,7 +2074,7 @@ pub mod pay_notify_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn notify(
+        pub async fn send(
             &mut self,
             request: impl tonic::IntoRequest<super::MerchantNotifyReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
@@ -2095,9 +2087,9 @@ pub mod pay_notify_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.PayNotify/Notify");
+            let path = http::uri::PathAndQuery::from_static("/hi.did.OrderNotify/Send");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.PayNotify", "Notify"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.OrderNotify", "Send"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -3083,7 +3075,7 @@ pub mod invite_code_client {
     }
 }
 /// Generated client implementations.
-pub mod invite_code_verify_client {
+pub mod register_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -3093,13 +3085,14 @@ pub mod invite_code_verify_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 邀请码校验:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
+    /// 注册:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
     /// 从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
+    /// 原名 InviteCodeVerify.Verify 是 stutter,改 Register.Verify。
     #[derive(Debug, Clone)]
-    pub struct InviteCodeVerifyClient<T> {
+    pub struct RegisterClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl InviteCodeVerifyClient<tonic::transport::Channel> {
+    impl RegisterClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -3110,7 +3103,7 @@ pub mod invite_code_verify_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> InviteCodeVerifyClient<T>
+    impl<T> RegisterClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -3128,7 +3121,7 @@ pub mod invite_code_verify_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> InviteCodeVerifyClient<InterceptedService<T, F>>
+        ) -> RegisterClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -3142,7 +3135,7 @@ pub mod invite_code_verify_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            InviteCodeVerifyClient::new(InterceptedService::new(inner, interceptor))
+            RegisterClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -3191,12 +3184,9 @@ pub mod invite_code_verify_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.InviteCodeVerify/Verify",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Register/Verify");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.InviteCodeVerify", "Verify"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Register", "Verify"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -3966,7 +3956,8 @@ pub mod pay_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Pay —— 支付握手。与 SSE 的 web3 自动付款配套。
+    /// Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+    /// 先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
     #[derive(Debug, Clone)]
     pub struct PayClient<T> {
         inner: tonic::client::Grpc<T>,

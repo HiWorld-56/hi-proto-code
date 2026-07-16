@@ -21,7 +21,8 @@ import '../common.pb.dart' as $0;
 
 export 'payment.pb.dart';
 
-/// Pay —— 支付握手。与 SSE 的 web3 自动付款配套。
+/// Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+/// 先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
 @$pb.GrpcServiceName('hi.did.Pay')
 class PayClient extends $grpc.Client {
   /// The hostname for this service.

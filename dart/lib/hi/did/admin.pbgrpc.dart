@@ -154,10 +154,11 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.InviteCodeDeleteReq request);
 }
 
-/// 邀请码校验:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
+/// 注册:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
 /// 从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
-@$pb.GrpcServiceName('hi.did.InviteCodeVerify')
-class InviteCodeVerifyClient extends $grpc.Client {
+/// 原名 InviteCodeVerify.Verify 是 stutter,改 Register.Verify。
+@$pb.GrpcServiceName('hi.did.Register')
+class RegisterClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -166,7 +167,7 @@ class InviteCodeVerifyClient extends $grpc.Client {
     '',
   ];
 
-  InviteCodeVerifyClient(super.channel, {super.options, super.interceptors});
+  RegisterClient(super.channel, {super.options, super.interceptors});
 
   $grpc.ResponseFuture<$2.AuthToken> verify(
     $1.InviteCodeVerifyReq request, {
@@ -179,16 +180,16 @@ class InviteCodeVerifyClient extends $grpc.Client {
 
   static final _$verify =
       $grpc.ClientMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
-          '/hi.did.InviteCodeVerify/Verify',
+          '/hi.did.Register/Verify',
           ($1.InviteCodeVerifyReq value) => value.writeToBuffer(),
           $2.AuthToken.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.did.InviteCodeVerify')
-abstract class InviteCodeVerifyServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.did.InviteCodeVerify';
+@$pb.GrpcServiceName('hi.did.Register')
+abstract class RegisterServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.Register';
 
-  InviteCodeVerifyServiceBase() {
+  RegisterServiceBase() {
     $addMethod($grpc.ServiceMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
         'Verify',
         verify_Pre,

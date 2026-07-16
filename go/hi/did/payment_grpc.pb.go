@@ -29,7 +29,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Pay —— 支付握手。与 SSE 的 web3 自动付款配套。
+// Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+// 先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
 type PayClient interface {
 	GenerateReq(ctx context.Context, in *hi.ClientInfo, opts ...grpc.CallOption) (*hi.RequestId, error)
 	Notify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -67,7 +68,8 @@ func (c *payClient) Notify(ctx context.Context, in *hi.SignedData, opts ...grpc.
 // All implementations should embed UnimplementedPayServer
 // for forward compatibility.
 //
-// Pay —— 支付握手。与 SSE 的 web3 自动付款配套。
+// Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+// 先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
 type PayServer interface {
 	GenerateReq(context.Context, *hi.ClientInfo) (*hi.RequestId, error)
 	Notify(context.Context, *hi.SignedData) (*emptypb.Empty, error)

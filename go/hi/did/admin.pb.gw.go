@@ -139,7 +139,7 @@ func local_request_InviteCode_Delete_0(ctx context.Context, marshaler runtime.Ma
 	return msg, metadata, err
 }
 
-func request_InviteCodeVerify_Verify_0(ctx context.Context, marshaler runtime.Marshaler, client InviteCodeVerifyClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Register_Verify_0(ctx context.Context, marshaler runtime.Marshaler, client RegisterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq InviteCodeVerifyReq
 		metadata runtime.ServerMetadata
@@ -154,7 +154,7 @@ func request_InviteCodeVerify_Verify_0(ctx context.Context, marshaler runtime.Ma
 	return msg, metadata, err
 }
 
-func local_request_InviteCodeVerify_Verify_0(ctx context.Context, marshaler runtime.Marshaler, server InviteCodeVerifyServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Register_Verify_0(ctx context.Context, marshaler runtime.Marshaler, server RegisterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq InviteCodeVerifyReq
 		metadata runtime.ServerMetadata
@@ -535,31 +535,31 @@ func RegisterInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 	return nil
 }
 
-// RegisterInviteCodeVerifyHandlerServer registers the http handlers for service InviteCodeVerify to "mux".
-// UnaryRPC     :call InviteCodeVerifyServer directly.
+// RegisterRegisterHandlerServer registers the http handlers for service Register to "mux".
+// UnaryRPC     :call RegisterServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterInviteCodeVerifyHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRegisterHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterInviteCodeVerifyHandlerServer(ctx context.Context, mux *runtime.ServeMux, server InviteCodeVerifyServer) error {
-	mux.Handle(http.MethodPost, pattern_InviteCodeVerify_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterRegisterHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RegisterServer) error {
+	mux.Handle(http.MethodPost, pattern_Register_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCodeVerify/Verify", runtime.WithHTTPPathPattern("/api/v1/invitecode/verify"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/invitecode/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_InviteCodeVerify_Verify_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Register_Verify_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_InviteCodeVerify_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Register_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -936,9 +936,9 @@ var (
 	forward_InviteCode_Delete_0 = runtime.ForwardResponseMessage
 )
 
-// RegisterInviteCodeVerifyHandlerFromEndpoint is same as RegisterInviteCodeVerifyHandler but
+// RegisterRegisterHandlerFromEndpoint is same as RegisterRegisterHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterInviteCodeVerifyHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterRegisterHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -957,47 +957,47 @@ func RegisterInviteCodeVerifyHandlerFromEndpoint(ctx context.Context, mux *runti
 			}
 		}()
 	}()
-	return RegisterInviteCodeVerifyHandler(ctx, mux, conn)
+	return RegisterRegisterHandler(ctx, mux, conn)
 }
 
-// RegisterInviteCodeVerifyHandler registers the http handlers for service InviteCodeVerify to "mux".
+// RegisterRegisterHandler registers the http handlers for service Register to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterInviteCodeVerifyHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterInviteCodeVerifyHandlerClient(ctx, mux, NewInviteCodeVerifyClient(conn))
+func RegisterRegisterHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterRegisterHandlerClient(ctx, mux, NewRegisterClient(conn))
 }
 
-// RegisterInviteCodeVerifyHandlerClient registers the http handlers for service InviteCodeVerify
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "InviteCodeVerifyClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "InviteCodeVerifyClient"
+// RegisterRegisterHandlerClient registers the http handlers for service Register
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "RegisterClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "RegisterClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "InviteCodeVerifyClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterInviteCodeVerifyHandlerClient(ctx context.Context, mux *runtime.ServeMux, client InviteCodeVerifyClient) error {
-	mux.Handle(http.MethodPost, pattern_InviteCodeVerify_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "RegisterClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterRegisterHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RegisterClient) error {
+	mux.Handle(http.MethodPost, pattern_Register_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCodeVerify/Verify", runtime.WithHTTPPathPattern("/api/v1/invitecode/verify"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/invitecode/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_InviteCodeVerify_Verify_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Register_Verify_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_InviteCodeVerify_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Register_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_InviteCodeVerify_Verify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "verify"}, ""))
+	pattern_Register_Verify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "verify"}, ""))
 )
 
 var (
-	forward_InviteCodeVerify_Verify_0 = runtime.ForwardResponseMessage
+	forward_Register_Verify_0 = runtime.ForwardResponseMessage
 )
 
 // RegisterDAppHandlerFromEndpoint is same as RegisterDAppHandler but

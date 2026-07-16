@@ -735,41 +735,29 @@ var MerchantExDB_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	SSE_OrderEvents_FullMethodName = "/hi.did.SSE/OrderEvents"
+	OrderEvent_Sub_FullMethodName = "/hi.did.OrderEvent/Sub"
 )
 
-// SSEClient is the client API for SSE service.
+// OrderEventClient is the client API for OrderEvent service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// SSE —— web3 自动付款机制(裁决 #10)。
-//
-// 架构:PC 端跑 hidid-pc,通过 SSE 与 hidid 后台保持长连接(hidid-pc 无公网 IP)。
-// 流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 Notify → hidid 后端把通知转发给
-//
-//	对应的 hidid-pc → ③hidid-pc 按用户在软件里设置的地址**去拉订单** → ④付款 →
-//	⑤付款结果通过用户设置的地址回传。
-//
-// 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
-//
-//	hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
-//
-// hidid-pc 订阅端(用户主体,token):长连接接收订单事件。
-type SSEClient interface {
-	OrderEvents(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error)
+// 订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
+type OrderEventClient interface {
+	Sub(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error)
 }
 
-type sSEClient struct {
+type orderEventClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewSSEClient(cc grpc.ClientConnInterface) SSEClient {
-	return &sSEClient{cc}
+func NewOrderEventClient(cc grpc.ClientConnInterface) OrderEventClient {
+	return &orderEventClient{cc}
 }
 
-func (c *sSEClient) OrderEvents(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error) {
+func (c *orderEventClient) Sub(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &SSE_ServiceDesc.Streams[0], SSE_OrderEvents_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &OrderEvent_ServiceDesc.Streams[0], OrderEvent_Sub_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -784,81 +772,69 @@ func (c *sSEClient) OrderEvents(ctx context.Context, in *hi.DID, opts ...grpc.Ca
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type SSE_OrderEventsClient = grpc.ServerStreamingClient[OrderEventResp]
+type OrderEvent_SubClient = grpc.ServerStreamingClient[OrderEventResp]
 
-// SSEServer is the server API for SSE service.
-// All implementations should embed UnimplementedSSEServer
+// OrderEventServer is the server API for OrderEvent service.
+// All implementations should embed UnimplementedOrderEventServer
 // for forward compatibility.
 //
-// SSE —— web3 自动付款机制(裁决 #10)。
-//
-// 架构:PC 端跑 hidid-pc,通过 SSE 与 hidid 后台保持长连接(hidid-pc 无公网 IP)。
-// 流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 Notify → hidid 后端把通知转发给
-//
-//	对应的 hidid-pc → ③hidid-pc 按用户在软件里设置的地址**去拉订单** → ④付款 →
-//	⑤付款结果通过用户设置的地址回传。
-//
-// 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
-//
-//	hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
-//
-// hidid-pc 订阅端(用户主体,token):长连接接收订单事件。
-type SSEServer interface {
-	OrderEvents(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error
+// 订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
+type OrderEventServer interface {
+	Sub(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error
 }
 
-// UnimplementedSSEServer should be embedded to have
+// UnimplementedOrderEventServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedSSEServer struct{}
+type UnimplementedOrderEventServer struct{}
 
-func (UnimplementedSSEServer) OrderEvents(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error {
-	return status.Error(codes.Unimplemented, "method OrderEvents not implemented")
+func (UnimplementedOrderEventServer) Sub(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error {
+	return status.Error(codes.Unimplemented, "method Sub not implemented")
 }
-func (UnimplementedSSEServer) testEmbeddedByValue() {}
+func (UnimplementedOrderEventServer) testEmbeddedByValue() {}
 
-// UnsafeSSEServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to SSEServer will
+// UnsafeOrderEventServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OrderEventServer will
 // result in compilation errors.
-type UnsafeSSEServer interface {
-	mustEmbedUnimplementedSSEServer()
+type UnsafeOrderEventServer interface {
+	mustEmbedUnimplementedOrderEventServer()
 }
 
-func RegisterSSEServer(s grpc.ServiceRegistrar, srv SSEServer) {
-	// If the following call panics, it indicates UnimplementedSSEServer was
+func RegisterOrderEventServer(s grpc.ServiceRegistrar, srv OrderEventServer) {
+	// If the following call panics, it indicates UnimplementedOrderEventServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&SSE_ServiceDesc, srv)
+	s.RegisterService(&OrderEvent_ServiceDesc, srv)
 }
 
-func _SSE_OrderEvents_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _OrderEvent_Sub_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(hi.DID)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(SSEServer).OrderEvents(m, &grpc.GenericServerStream[hi.DID, OrderEventResp]{ServerStream: stream})
+	return srv.(OrderEventServer).Sub(m, &grpc.GenericServerStream[hi.DID, OrderEventResp]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type SSE_OrderEventsServer = grpc.ServerStreamingServer[OrderEventResp]
+type OrderEvent_SubServer = grpc.ServerStreamingServer[OrderEventResp]
 
-// SSE_ServiceDesc is the grpc.ServiceDesc for SSE service.
+// OrderEvent_ServiceDesc is the grpc.ServiceDesc for OrderEvent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var SSE_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.SSE",
-	HandlerType: (*SSEServer)(nil),
+var OrderEvent_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.OrderEvent",
+	HandlerType: (*OrderEventServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "OrderEvents",
-			Handler:       _SSE_OrderEvents_Handler,
+			StreamName:    "Sub",
+			Handler:       _OrderEvent_Sub_Handler,
 			ServerStreams: true,
 		},
 	},
@@ -866,107 +842,107 @@ var SSE_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	PayNotify_Notify_FullMethodName = "/hi.did.PayNotify/Notify"
+	OrderNotify_Send_FullMethodName = "/hi.did.OrderNotify/Send"
 )
 
-// PayNotifyClient is the client API for PayNotify service.
+// OrderNotifyClient is the client API for OrderNotify service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 商户触发端(公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
+// 订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
 // 公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
-// 从 SSE 拆出:与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token)。
-type PayNotifyClient interface {
-	Notify(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+// 与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
+type OrderNotifyClient interface {
+	Send(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type payNotifyClient struct {
+type orderNotifyClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPayNotifyClient(cc grpc.ClientConnInterface) PayNotifyClient {
-	return &payNotifyClient{cc}
+func NewOrderNotifyClient(cc grpc.ClientConnInterface) OrderNotifyClient {
+	return &orderNotifyClient{cc}
 }
 
-func (c *payNotifyClient) Notify(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderNotifyClient) Send(ctx context.Context, in *MerchantNotifyReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, PayNotify_Notify_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, OrderNotify_Send_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PayNotifyServer is the server API for PayNotify service.
-// All implementations should embed UnimplementedPayNotifyServer
+// OrderNotifyServer is the server API for OrderNotify service.
+// All implementations should embed UnimplementedOrderNotifyServer
 // for forward compatibility.
 //
-// 商户触发端(公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
+// 订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
 // 公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
-// 从 SSE 拆出:与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token)。
-type PayNotifyServer interface {
-	Notify(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error)
+// 与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
+type OrderNotifyServer interface {
+	Send(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error)
 }
 
-// UnimplementedPayNotifyServer should be embedded to have
+// UnimplementedOrderNotifyServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedPayNotifyServer struct{}
+type UnimplementedOrderNotifyServer struct{}
 
-func (UnimplementedPayNotifyServer) Notify(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Notify not implemented")
+func (UnimplementedOrderNotifyServer) Send(context.Context, *MerchantNotifyReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Send not implemented")
 }
-func (UnimplementedPayNotifyServer) testEmbeddedByValue() {}
+func (UnimplementedOrderNotifyServer) testEmbeddedByValue() {}
 
-// UnsafePayNotifyServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PayNotifyServer will
+// UnsafeOrderNotifyServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OrderNotifyServer will
 // result in compilation errors.
-type UnsafePayNotifyServer interface {
-	mustEmbedUnimplementedPayNotifyServer()
+type UnsafeOrderNotifyServer interface {
+	mustEmbedUnimplementedOrderNotifyServer()
 }
 
-func RegisterPayNotifyServer(s grpc.ServiceRegistrar, srv PayNotifyServer) {
-	// If the following call panics, it indicates UnimplementedPayNotifyServer was
+func RegisterOrderNotifyServer(s grpc.ServiceRegistrar, srv OrderNotifyServer) {
+	// If the following call panics, it indicates UnimplementedOrderNotifyServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&PayNotify_ServiceDesc, srv)
+	s.RegisterService(&OrderNotify_ServiceDesc, srv)
 }
 
-func _PayNotify_Notify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrderNotify_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MerchantNotifyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PayNotifyServer).Notify(ctx, in)
+		return srv.(OrderNotifyServer).Send(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PayNotify_Notify_FullMethodName,
+		FullMethod: OrderNotify_Send_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PayNotifyServer).Notify(ctx, req.(*MerchantNotifyReq))
+		return srv.(OrderNotifyServer).Send(ctx, req.(*MerchantNotifyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// PayNotify_ServiceDesc is the grpc.ServiceDesc for PayNotify service.
+// OrderNotify_ServiceDesc is the grpc.ServiceDesc for OrderNotify service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var PayNotify_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.PayNotify",
-	HandlerType: (*PayNotifyServer)(nil),
+var OrderNotify_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.OrderNotify",
+	HandlerType: (*OrderNotifyServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Notify",
-			Handler:    _PayNotify_Notify_Handler,
+			MethodName: "Send",
+			Handler:    _OrderNotify_Send_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

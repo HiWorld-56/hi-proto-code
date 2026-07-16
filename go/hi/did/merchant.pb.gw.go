@@ -438,7 +438,7 @@ func local_request_MerchantExDB_Refresh_0(ctx context.Context, marshaler runtime
 	return msg, metadata, err
 }
 
-func request_SSE_OrderEvents_0(ctx context.Context, marshaler runtime.Marshaler, client SSEClient, req *http.Request, pathParams map[string]string) (SSE_OrderEventsClient, runtime.ServerMetadata, error) {
+func request_OrderEvent_Sub_0(ctx context.Context, marshaler runtime.Marshaler, client OrderEventClient, req *http.Request, pathParams map[string]string) (OrderEvent_SubClient, runtime.ServerMetadata, error) {
 	var (
 		protoReq hi.DID
 		metadata runtime.ServerMetadata
@@ -449,7 +449,7 @@ func request_SSE_OrderEvents_0(ctx context.Context, marshaler runtime.Marshaler,
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	stream, err := client.OrderEvents(ctx, &protoReq)
+	stream, err := client.Sub(ctx, &protoReq)
 	if err != nil {
 		return nil, metadata, err
 	}
@@ -461,7 +461,7 @@ func request_SSE_OrderEvents_0(ctx context.Context, marshaler runtime.Marshaler,
 	return stream, metadata, nil
 }
 
-func request_PayNotify_Notify_0(ctx context.Context, marshaler runtime.Marshaler, client PayNotifyClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_OrderNotify_Send_0(ctx context.Context, marshaler runtime.Marshaler, client OrderNotifyClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq MerchantNotifyReq
 		metadata runtime.ServerMetadata
@@ -472,11 +472,11 @@ func request_PayNotify_Notify_0(ctx context.Context, marshaler runtime.Marshaler
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.Notify(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Send(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_PayNotify_Notify_0(ctx context.Context, marshaler runtime.Marshaler, server PayNotifyServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_OrderNotify_Send_0(ctx context.Context, marshaler runtime.Marshaler, server OrderNotifyServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq MerchantNotifyReq
 		metadata runtime.ServerMetadata
@@ -484,7 +484,7 @@ func local_request_PayNotify_Notify_0(ctx context.Context, marshaler runtime.Mar
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.Notify(ctx, &protoReq)
+	msg, err := server.Send(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -808,13 +808,13 @@ func RegisterMerchantExDBHandlerServer(ctx context.Context, mux *runtime.ServeMu
 	return nil
 }
 
-// RegisterSSEHandlerServer registers the http handlers for service SSE to "mux".
-// UnaryRPC     :call SSEServer directly.
+// RegisterOrderEventHandlerServer registers the http handlers for service OrderEvent to "mux".
+// UnaryRPC     :call OrderEventServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterSSEHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterOrderEventHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterSSEHandlerServer(ctx context.Context, mux *runtime.ServeMux, server SSEServer) error {
-	mux.Handle(http.MethodPost, pattern_SSE_OrderEvents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterOrderEventHandlerServer(ctx context.Context, mux *runtime.ServeMux, server OrderEventServer) error {
+	mux.Handle(http.MethodPost, pattern_OrderEvent_Sub_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
 		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -824,31 +824,31 @@ func RegisterSSEHandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 	return nil
 }
 
-// RegisterPayNotifyHandlerServer registers the http handlers for service PayNotify to "mux".
-// UnaryRPC     :call PayNotifyServer directly.
+// RegisterOrderNotifyHandlerServer registers the http handlers for service OrderNotify to "mux".
+// UnaryRPC     :call OrderNotifyServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterPayNotifyHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterOrderNotifyHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterPayNotifyHandlerServer(ctx context.Context, mux *runtime.ServeMux, server PayNotifyServer) error {
-	mux.Handle(http.MethodPost, pattern_PayNotify_Notify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterOrderNotifyHandlerServer(ctx context.Context, mux *runtime.ServeMux, server OrderNotifyServer) error {
+	mux.Handle(http.MethodPost, pattern_OrderNotify_Send_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.PayNotify/Notify", runtime.WithHTTPPathPattern("/hi.did.PayNotify/Notify"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.OrderNotify/Send", runtime.WithHTTPPathPattern("/hi.did.OrderNotify/Send"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PayNotify_Notify_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_OrderNotify_Send_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_PayNotify_Notify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OrderNotify_Send_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -1229,9 +1229,9 @@ var (
 	forward_MerchantExDB_Refresh_0 = runtime.ForwardResponseMessage
 )
 
-// RegisterSSEHandlerFromEndpoint is same as RegisterSSEHandler but
+// RegisterOrderEventHandlerFromEndpoint is same as RegisterOrderEventHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterSSEHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterOrderEventHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -1250,52 +1250,52 @@ func RegisterSSEHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, 
 			}
 		}()
 	}()
-	return RegisterSSEHandler(ctx, mux, conn)
+	return RegisterOrderEventHandler(ctx, mux, conn)
 }
 
-// RegisterSSEHandler registers the http handlers for service SSE to "mux".
+// RegisterOrderEventHandler registers the http handlers for service OrderEvent to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterSSEHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterSSEHandlerClient(ctx, mux, NewSSEClient(conn))
+func RegisterOrderEventHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterOrderEventHandlerClient(ctx, mux, NewOrderEventClient(conn))
 }
 
-// RegisterSSEHandlerClient registers the http handlers for service SSE
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "SSEClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "SSEClient"
+// RegisterOrderEventHandlerClient registers the http handlers for service OrderEvent
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "OrderEventClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "OrderEventClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "SSEClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterSSEHandlerClient(ctx context.Context, mux *runtime.ServeMux, client SSEClient) error {
-	mux.Handle(http.MethodPost, pattern_SSE_OrderEvents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "OrderEventClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterOrderEventHandlerClient(ctx context.Context, mux *runtime.ServeMux, client OrderEventClient) error {
+	mux.Handle(http.MethodPost, pattern_OrderEvent_Sub_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.SSE/OrderEvents", runtime.WithHTTPPathPattern("/hi.did.SSE/OrderEvents"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.OrderEvent/Sub", runtime.WithHTTPPathPattern("/hi.did.OrderEvent/Sub"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_SSE_OrderEvents_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_OrderEvent_Sub_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_SSE_OrderEvents_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+		forward_OrderEvent_Sub_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_SSE_OrderEvents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.SSE", "OrderEvents"}, ""))
+	pattern_OrderEvent_Sub_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.OrderEvent", "Sub"}, ""))
 )
 
 var (
-	forward_SSE_OrderEvents_0 = runtime.ForwardResponseStream
+	forward_OrderEvent_Sub_0 = runtime.ForwardResponseStream
 )
 
-// RegisterPayNotifyHandlerFromEndpoint is same as RegisterPayNotifyHandler but
+// RegisterOrderNotifyHandlerFromEndpoint is same as RegisterOrderNotifyHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterPayNotifyHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterOrderNotifyHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -1314,45 +1314,45 @@ func RegisterPayNotifyHandlerFromEndpoint(ctx context.Context, mux *runtime.Serv
 			}
 		}()
 	}()
-	return RegisterPayNotifyHandler(ctx, mux, conn)
+	return RegisterOrderNotifyHandler(ctx, mux, conn)
 }
 
-// RegisterPayNotifyHandler registers the http handlers for service PayNotify to "mux".
+// RegisterOrderNotifyHandler registers the http handlers for service OrderNotify to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterPayNotifyHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterPayNotifyHandlerClient(ctx, mux, NewPayNotifyClient(conn))
+func RegisterOrderNotifyHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterOrderNotifyHandlerClient(ctx, mux, NewOrderNotifyClient(conn))
 }
 
-// RegisterPayNotifyHandlerClient registers the http handlers for service PayNotify
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "PayNotifyClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "PayNotifyClient"
+// RegisterOrderNotifyHandlerClient registers the http handlers for service OrderNotify
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "OrderNotifyClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "OrderNotifyClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "PayNotifyClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterPayNotifyHandlerClient(ctx context.Context, mux *runtime.ServeMux, client PayNotifyClient) error {
-	mux.Handle(http.MethodPost, pattern_PayNotify_Notify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "OrderNotifyClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterOrderNotifyHandlerClient(ctx context.Context, mux *runtime.ServeMux, client OrderNotifyClient) error {
+	mux.Handle(http.MethodPost, pattern_OrderNotify_Send_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.PayNotify/Notify", runtime.WithHTTPPathPattern("/hi.did.PayNotify/Notify"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.OrderNotify/Send", runtime.WithHTTPPathPattern("/hi.did.OrderNotify/Send"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PayNotify_Notify_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_OrderNotify_Send_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_PayNotify_Notify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OrderNotify_Send_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_PayNotify_Notify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.PayNotify", "Notify"}, ""))
+	pattern_OrderNotify_Send_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.OrderNotify", "Send"}, ""))
 )
 
 var (
-	forward_PayNotify_Notify_0 = runtime.ForwardResponseMessage
+	forward_OrderNotify_Send_0 = runtime.ForwardResponseMessage
 )
