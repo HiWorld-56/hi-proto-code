@@ -15,15 +15,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $0;
 import 'base.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 class MerchantInfo extends $pb.GeneratedMessage {
   factory MerchantInfo({
-    $2.Entity? master,
-    $2.Entity? server,
+    $0.Entity? master,
+    $0.Entity? server,
     $core.String? name,
     $core.String? logo,
     $core.Iterable<$3.Coin>? publicCoins,
@@ -60,10 +60,10 @@ class MerchantInfo extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'MerchantInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(2, _omitFieldNames ? '' : 'server',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'master',
+        subBuilder: $0.Entity.create)
+    ..aOM<$0.Entity>(2, _omitFieldNames ? '' : 'server',
+        subBuilder: $0.Entity.create)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'logo')
     ..pPM<$3.Coin>(5, _omitFieldNames ? '' : 'publicCoins',
@@ -96,26 +96,26 @@ class MerchantInfo extends $pb.GeneratedMessage {
   static MerchantInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get master => $_getN(0);
+  $0.Entity get master => $_getN(0);
   @$pb.TagNumber(1)
-  set master($2.Entity value) => $_setField(1, value);
+  set master($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMaster() => $_has(0);
   @$pb.TagNumber(1)
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureMaster() => $_ensure(0);
+  $0.Entity ensureMaster() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $2.Entity get server => $_getN(1);
+  $0.Entity get server => $_getN(1);
   @$pb.TagNumber(2)
-  set server($2.Entity value) => $_setField(2, value);
+  set server($0.Entity value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasServer() => $_has(1);
   @$pb.TagNumber(2)
   void clearServer() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Entity ensureServer() => $_ensure(1);
+  $0.Entity ensureServer() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $core.String get name => $_getSZ(2);
@@ -524,7 +524,7 @@ class UserExtensionInfo extends $pb.GeneratedMessage {
 
 class UserExtensionUnit extends $pb.GeneratedMessage {
   factory UserExtensionUnit({
-    $2.Entity? user,
+    $0.Entity? user,
     UserExtensionInfo? info,
   }) {
     final result = create();
@@ -546,8 +546,8 @@ class UserExtensionUnit extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UserExtensionUnit',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'user',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'user',
+        subBuilder: $0.Entity.create)
     ..aOM<UserExtensionInfo>(2, _omitFieldNames ? '' : 'info',
         subBuilder: UserExtensionInfo.create)
     ..hasRequiredFields = false;
@@ -572,15 +572,15 @@ class UserExtensionUnit extends $pb.GeneratedMessage {
   static UserExtensionUnit? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get user => $_getN(0);
+  $0.Entity get user => $_getN(0);
   @$pb.TagNumber(1)
-  set user($2.Entity value) => $_setField(1, value);
+  set user($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
   void clearUser() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureUser() => $_ensure(0);
+  $0.Entity ensureUser() => $_ensure(0);
 
   @$pb.TagNumber(2)
   UserExtensionInfo get info => $_getN(1);
@@ -664,7 +664,7 @@ class GrantReq extends $pb.GeneratedMessage {
 
 class GrantUnit extends $pb.GeneratedMessage {
   factory GrantUnit({
-    $2.Entity? grantee,
+    $0.Entity? grantee,
     $core.String? note,
     $fixnum.Int64? createdAt,
   }) {
@@ -688,8 +688,8 @@ class GrantUnit extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GrantUnit',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'grantee',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'grantee',
+        subBuilder: $0.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'note')
     ..aInt64(3, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false;
@@ -713,15 +713,15 @@ class GrantUnit extends $pb.GeneratedMessage {
   static GrantUnit? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get grantee => $_getN(0);
+  $0.Entity get grantee => $_getN(0);
   @$pb.TagNumber(1)
-  set grantee($2.Entity value) => $_setField(1, value);
+  set grantee($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasGrantee() => $_has(0);
   @$pb.TagNumber(1)
   void clearGrantee() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureGrantee() => $_ensure(0);
+  $0.Entity ensureGrantee() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get note => $_getSZ(1);
@@ -863,7 +863,7 @@ class ListUsersReq extends $pb.GeneratedMessage {
   factory ListUsersReq({
     $core.String? merchant,
     $core.String? user,
-    $2.Pagination? pagination,
+    $0.Pagination? pagination,
   }) {
     final result = create();
     if (merchant != null) result.merchant = merchant;
@@ -887,8 +887,8 @@ class ListUsersReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'merchant')
     ..aOS(2, _omitFieldNames ? '' : 'user')
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$0.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $0.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -929,15 +929,15 @@ class ListUsersReq extends $pb.GeneratedMessage {
   void clearUser() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $2.Pagination get pagination => $_getN(2);
+  $0.Pagination get pagination => $_getN(2);
   @$pb.TagNumber(3)
-  set pagination($2.Pagination value) => $_setField(3, value);
+  set pagination($0.Pagination value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasPagination() => $_has(2);
   @$pb.TagNumber(3)
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Pagination ensurePagination() => $_ensure(2);
+  $0.Pagination ensurePagination() => $_ensure(2);
 }
 
 class ListUsersResp extends $pb.GeneratedMessage {
