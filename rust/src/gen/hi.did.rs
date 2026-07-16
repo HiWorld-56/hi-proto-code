@@ -672,6 +672,13 @@ pub struct ReqStatusResp {
     #[prost(message, optional, tag = "4")]
     pub mqtt: ::core::option::Option<super::MqttCredentials>,
 }
+/// web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LogoutReq {
+    #[prost(message, optional, tag = "1")]
+    pub did: ::core::option::Option<super::Did>,
+}
 /// Generated client implementations.
 pub mod auth_client {
     #![allow(
