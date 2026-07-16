@@ -672,11 +672,6 @@ pub struct ReqStatusResp {
     #[prost(message, optional, tag = "4")]
     pub mqtt: ::core::option::Option<super::MqttCredentials>,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LogoutReq {
-    #[prost(message, optional, tag = "1")]
-    pub did: ::core::option::Option<super::Did>,
-}
 /// Generated client implementations.
 pub mod auth_client {
     #![allow(

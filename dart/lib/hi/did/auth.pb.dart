@@ -434,61 +434,6 @@ class ReqStatusResp extends $pb.GeneratedMessage {
   $1.MqttCredentials ensureMqtt() => $_ensure(3);
 }
 
-class LogoutReq extends $pb.GeneratedMessage {
-  factory LogoutReq({
-    $1.DID? did,
-  }) {
-    final result = create();
-    if (did != null) result.did = did;
-    return result;
-  }
-
-  LogoutReq._();
-
-  factory LogoutReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory LogoutReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'LogoutReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
-      createEmptyInstance: create)
-    ..aOM<$1.DID>(1, _omitFieldNames ? '' : 'did', subBuilder: $1.DID.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LogoutReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LogoutReq copyWith(void Function(LogoutReq) updates) =>
-      super.copyWith((message) => updates(message as LogoutReq)) as LogoutReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static LogoutReq create() => LogoutReq._();
-  @$core.override
-  LogoutReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static LogoutReq getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LogoutReq>(create);
-  static LogoutReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $1.DID get did => $_getN(0);
-  @$pb.TagNumber(1)
-  set did($1.DID value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $1.DID ensureDid() => $_ensure(0);
-}
-
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =
