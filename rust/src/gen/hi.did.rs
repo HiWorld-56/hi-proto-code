@@ -1508,6 +1508,15 @@ pub struct RemoveUsersReq {
     #[prost(string, repeated, tag = "1")]
     pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// 列某用户所属的所有商户(某商户查:这个用户挂在哪些商户下)。不返回扩展数据本身。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListMerchantsReq {
+    /// 用户 did(注意:不是商户 did)
+    #[prost(string, tag = "1")]
+    pub user_did: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetUserMqttReq {
     /// 用户 did
@@ -1731,6 +1740,30 @@ pub mod merchant_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "ListUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_merchants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListMerchantsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/ListMerchants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "ListMerchants"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_users(
@@ -3665,135 +3698,6 @@ pub mod merchant_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.MerchantManage", "Edit"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// 列某用户所属的商户。主体是**用户** —— 读作 "UserExtension.ListMerchants":
-/// 列出这个用户在哪些商户下有扩展(=属于哪些商户)。不返回扩展数据本身。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListMerchantsReq {
-    /// 用户 did(注意:不是商户 did)
-    #[prost(string, tag = "1")]
-    pub user_did: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
-/// Generated client implementations.
-pub mod user_extension_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// 归位后 UserExtension 只剩 ListMerchants —— 扩展数据的读写全归 Merchant(商户主体),
-    /// 用户不能读自己的扩展。这里只回答"某用户属于哪些商户"(不含扩展内容)。
-    #[derive(Debug, Clone)]
-    pub struct UserExtensionClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl UserExtensionClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> UserExtensionClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> UserExtensionClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            UserExtensionClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn list_merchants(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListMerchantsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::MerchantListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.UserExtension/ListMerchants",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.UserExtension", "ListMerchants"));
             self.inner.unary(req, path, codec).await
         }
     }

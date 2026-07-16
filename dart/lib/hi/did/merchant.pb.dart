@@ -1145,6 +1145,76 @@ class RemoveUsersReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get users => $_getList(0);
 }
 
+/// 列某用户所属的所有商户(某商户查:这个用户挂在哪些商户下)。不返回扩展数据本身。
+class ListMerchantsReq extends $pb.GeneratedMessage {
+  factory ListMerchantsReq({
+    $core.String? userDid,
+    $0.Pagination? pagination,
+  }) {
+    final result = create();
+    if (userDid != null) result.userDid = userDid;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListMerchantsReq._();
+
+  factory ListMerchantsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListMerchantsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListMerchantsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'userDid')
+    ..aOM<$0.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $0.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMerchantsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMerchantsReq copyWith(void Function(ListMerchantsReq) updates) =>
+      super.copyWith((message) => updates(message as ListMerchantsReq))
+          as ListMerchantsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListMerchantsReq create() => ListMerchantsReq._();
+  @$core.override
+  ListMerchantsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListMerchantsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListMerchantsReq>(create);
+  static ListMerchantsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get userDid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set userDid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUserDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $0.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($0.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.Pagination ensurePagination() => $_ensure(1);
+}
+
 class GetUserMqttReq extends $pb.GeneratedMessage {
   factory GetUserMqttReq({
     $core.String? user,
