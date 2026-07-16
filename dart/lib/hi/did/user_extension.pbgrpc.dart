@@ -22,7 +22,7 @@ import 'user_extension.pb.dart' as $1;
 
 export 'user_extension.pb.dart';
 
-/// 用户自己的扩展配置:extoken + 对应的扩展数据表(裁决 #7)。
+/// 用户自己的扩展配置:extoken + 对应的扩展数据表(裁决 #7)。主体=用户本人(Token)。
 /// resp.token = 当前 extoken;resp.table = 扩展数据标配(表名/结构)。
 @$pb.GrpcServiceName('hi.did.UserExtensionSettings')
 class UserExtensionSettingsClient extends $grpc.Client {
@@ -44,7 +44,6 @@ class UserExtensionSettingsClient extends $grpc.Client {
     return $createUnaryCall(_$get, request, options: options);
   }
 
-  /// 裁决 #7:原名 Update 词不达意 —— 它是重新生成 extoken(入参 Empty 也印证没有要更新的内容),改名 Refresh。
   $grpc.ResponseFuture<$1.UserExtensionSettingResp> refresh(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -104,6 +103,8 @@ abstract class UserExtensionSettingsServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.Empty request);
 }
 
+/// 归位后 UserExtension 只剩 ListMerchants —— 扩展数据的读写全归 Merchant(商户主体),
+/// 用户不能读自己的扩展。这里只回答"某用户属于哪些商户"(不含扩展内容)。
 @$pb.GrpcServiceName('hi.did.UserExtension')
 class UserExtensionClient extends $grpc.Client {
   /// The hostname for this service.
@@ -116,29 +117,6 @@ class UserExtensionClient extends $grpc.Client {
 
   UserExtensionClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.Empty> update(
-    $1.UserExtensionUpdateReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$update, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> delete(
-    $1.UserExtensionDeleteReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$delete, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.UserExtensionGetResp> get(
-    $1.UserExtensionGetReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$get, request, options: options);
-  }
-
-  /// 列某用户所属的商户。原 Merchant.List(hi.DID) 搬来:主体是用户,归 UserExtension 才准确;
-  /// 裸 hi.DID 入参也换成正经 Req —— "这是用户 did 不是商户 did"写进类型,而非靠注释。
   $grpc.ResponseFuture<$2.MerchantListResp> listMerchants(
     $1.ListMerchantsReq request, {
     $grpc.CallOptions? options,
@@ -148,21 +126,6 @@ class UserExtensionClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$update =
-      $grpc.ClientMethod<$1.UserExtensionUpdateReq, $0.Empty>(
-          '/hi.did.UserExtension/Update',
-          ($1.UserExtensionUpdateReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$delete =
-      $grpc.ClientMethod<$1.UserExtensionDeleteReq, $0.Empty>(
-          '/hi.did.UserExtension/Delete',
-          ($1.UserExtensionDeleteReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$get =
-      $grpc.ClientMethod<$1.UserExtensionGetReq, $1.UserExtensionGetResp>(
-          '/hi.did.UserExtension/Get',
-          ($1.UserExtensionGetReq value) => value.writeToBuffer(),
-          $1.UserExtensionGetResp.fromBuffer);
   static final _$listMerchants =
       $grpc.ClientMethod<$1.ListMerchantsReq, $2.MerchantListResp>(
           '/hi.did.UserExtension/ListMerchants',
@@ -175,31 +138,6 @@ abstract class UserExtensionServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.UserExtension';
 
   UserExtensionServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.UserExtensionUpdateReq, $0.Empty>(
-        'Update',
-        update_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.UserExtensionUpdateReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.UserExtensionDeleteReq, $0.Empty>(
-        'Delete',
-        delete_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.UserExtensionDeleteReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$1.UserExtensionGetReq, $1.UserExtensionGetResp>(
-            'Get',
-            get_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $1.UserExtensionGetReq.fromBuffer(value),
-            ($1.UserExtensionGetResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListMerchantsReq, $2.MerchantListResp>(
         'ListMerchants',
         listMerchants_Pre,
@@ -208,30 +146,6 @@ abstract class UserExtensionServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $1.ListMerchantsReq.fromBuffer(value),
         ($2.MerchantListResp value) => value.writeToBuffer()));
   }
-
-  $async.Future<$0.Empty> update_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.UserExtensionUpdateReq> $request) async {
-    return update($call, await $request);
-  }
-
-  $async.Future<$0.Empty> update(
-      $grpc.ServiceCall call, $1.UserExtensionUpdateReq request);
-
-  $async.Future<$0.Empty> delete_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.UserExtensionDeleteReq> $request) async {
-    return delete($call, await $request);
-  }
-
-  $async.Future<$0.Empty> delete(
-      $grpc.ServiceCall call, $1.UserExtensionDeleteReq request);
-
-  $async.Future<$1.UserExtensionGetResp> get_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.UserExtensionGetReq> $request) async {
-    return get($call, await $request);
-  }
-
-  $async.Future<$1.UserExtensionGetResp> get(
-      $grpc.ServiceCall call, $1.UserExtensionGetReq request);
 
   $async.Future<$2.MerchantListResp> listMerchants_Pre($grpc.ServiceCall $call,
       $async.Future<$1.ListMerchantsReq> $request) async {

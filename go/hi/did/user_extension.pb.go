@@ -76,239 +76,8 @@ func (x *UserExtensionSettingResp) GetTable() string {
 	return ""
 }
 
-type Button struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	BgColor       string                 `protobuf:"bytes,1,opt,name=bg_color,json=bgColor,proto3" json:"bg_color,omitempty"` // 背景色
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                    // 按钮文字
-	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                      // url类型: url, scheme
-	Url           string                 `protobuf:"bytes,4,opt,name=url,proto3" json:"url,omitempty"`                        //
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Button) Reset() {
-	*x = Button{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Button) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Button) ProtoMessage() {}
-
-func (x *Button) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Button.ProtoReflect.Descriptor instead.
-func (*Button) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *Button) GetBgColor() string {
-	if x != nil {
-		return x.BgColor
-	}
-	return ""
-}
-
-func (x *Button) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *Button) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-func (x *Button) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
-type Card struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"` // 标题
-	Text          string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`   // 文本
-	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`   // logo
-	Left          *Button                `protobuf:"bytes,4,opt,name=left,proto3" json:"left,omitempty"`   // 左按钮
-	Right         *Button                `protobuf:"bytes,5,opt,name=right,proto3" json:"right,omitempty"` // 右按钮
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Card) Reset() {
-	*x = Card{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Card) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Card) ProtoMessage() {}
-
-func (x *Card) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Card.ProtoReflect.Descriptor instead.
-func (*Card) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *Card) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *Card) GetText() string {
-	if x != nil {
-		return x.Text
-	}
-	return ""
-}
-
-func (x *Card) GetLogo() string {
-	if x != nil {
-		return x.Logo
-	}
-	return ""
-}
-
-func (x *Card) GetLeft() *Button {
-	if x != nil {
-		return x.Left
-	}
-	return nil
-}
-
-func (x *Card) GetRight() *Button {
-	if x != nil {
-		return x.Right
-	}
-	return nil
-}
-
-type UserExtensionUpdateReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Units         []*UserExtensionUnit   `protobuf:"bytes,1,rep,name=units,proto3" json:"units,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserExtensionUpdateReq) Reset() {
-	*x = UserExtensionUpdateReq{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserExtensionUpdateReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserExtensionUpdateReq) ProtoMessage() {}
-
-func (x *UserExtensionUpdateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserExtensionUpdateReq.ProtoReflect.Descriptor instead.
-func (*UserExtensionUpdateReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *UserExtensionUpdateReq) GetUnits() []*UserExtensionUnit {
-	if x != nil {
-		return x.Units
-	}
-	return nil
-}
-
-type UserExtensionDeleteReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Users         []string               `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"` // 用户did列表
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserExtensionDeleteReq) Reset() {
-	*x = UserExtensionDeleteReq{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserExtensionDeleteReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserExtensionDeleteReq) ProtoMessage() {}
-
-func (x *UserExtensionDeleteReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserExtensionDeleteReq.ProtoReflect.Descriptor instead.
-func (*UserExtensionDeleteReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *UserExtensionDeleteReq) GetUsers() []string {
-	if x != nil {
-		return x.Users
-	}
-	return nil
-}
-
-// 列某用户所属的商户。主体是**用户** —— 故归 UserExtension(用户扩展)而非 Merchant。
+// 列某用户所属的商户。主体是**用户** —— 读作 "UserExtension.ListMerchants":
+// 列出这个用户在哪些商户下有扩展(=属于哪些商户)。不返回扩展数据本身。
 type ListMerchantsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserDid       string                 `protobuf:"bytes,1,opt,name=user_did,json=userDid,proto3" json:"user_did,omitempty"` // 用户 did(注意:不是商户 did)
@@ -319,7 +88,7 @@ type ListMerchantsReq struct {
 
 func (x *ListMerchantsReq) Reset() {
 	*x = ListMerchantsReq{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[5]
+	mi := &file_hi_did_user_extension_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -331,7 +100,7 @@ func (x *ListMerchantsReq) String() string {
 func (*ListMerchantsReq) ProtoMessage() {}
 
 func (x *ListMerchantsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[5]
+	mi := &file_hi_did_user_extension_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -344,7 +113,7 @@ func (x *ListMerchantsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMerchantsReq.ProtoReflect.Descriptor instead.
 func (*ListMerchantsReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{5}
+	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ListMerchantsReq) GetUserDid() string {
@@ -361,142 +130,23 @@ func (x *ListMerchantsReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-type UserExtensionGetReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Merchant      string                 `protobuf:"bytes,1,opt,name=merchant,proto3" json:"merchant,omitempty"`
-	User          string                 `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserExtensionGetReq) Reset() {
-	*x = UserExtensionGetReq{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserExtensionGetReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserExtensionGetReq) ProtoMessage() {}
-
-func (x *UserExtensionGetReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserExtensionGetReq.ProtoReflect.Descriptor instead.
-func (*UserExtensionGetReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *UserExtensionGetReq) GetMerchant() string {
-	if x != nil {
-		return x.Merchant
-	}
-	return ""
-}
-
-func (x *UserExtensionGetReq) GetUser() string {
-	if x != nil {
-		return x.User
-	}
-	return ""
-}
-
-type UserExtensionGetResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Unit          *UserExtensionUnit     `protobuf:"bytes,1,opt,name=unit,proto3" json:"unit,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserExtensionGetResp) Reset() {
-	*x = UserExtensionGetResp{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserExtensionGetResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserExtensionGetResp) ProtoMessage() {}
-
-func (x *UserExtensionGetResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserExtensionGetResp.ProtoReflect.Descriptor instead.
-func (*UserExtensionGetResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *UserExtensionGetResp) GetUnit() *UserExtensionUnit {
-	if x != nil {
-		return x.Unit
-	}
-	return nil
-}
-
 var File_hi_did_user_extension_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_extension_proto_rawDesc = "" +
 	"\n" +
-	"\x1bhi/did/user_extension.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/merchant.proto\"F\n" +
+	"\x1bhi/did/user_extension.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\x1a\x15hi/did/merchant.proto\"F\n" +
 	"\x18UserExtensionSettingResp\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x14\n" +
-	"\x05table\x18\x02 \x01(\tR\x05table\"_\n" +
-	"\x06Button\x12\x19\n" +
-	"\bbg_color\x18\x01 \x01(\tR\abgColor\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\x12\x10\n" +
-	"\x03url\x18\x04 \x01(\tR\x03url\"\x8e\x01\n" +
-	"\x04Card\x12\x14\n" +
-	"\x05title\x18\x01 \x01(\tR\x05title\x12\x12\n" +
-	"\x04text\x18\x02 \x01(\tR\x04text\x12\x12\n" +
-	"\x04logo\x18\x03 \x01(\tR\x04logo\x12\"\n" +
-	"\x04left\x18\x04 \x01(\v2\x0e.hi.did.ButtonR\x04left\x12$\n" +
-	"\x05right\x18\x05 \x01(\v2\x0e.hi.did.ButtonR\x05right\"I\n" +
-	"\x16UserExtensionUpdateReq\x12/\n" +
-	"\x05units\x18\x01 \x03(\v2\x19.hi.did.UserExtensionUnitR\x05units\".\n" +
-	"\x16UserExtensionDeleteReq\x12\x14\n" +
-	"\x05users\x18\x01 \x03(\tR\x05users\"k\n" +
+	"\x05table\x18\x02 \x01(\tR\x05table\"k\n" +
 	"\x10ListMerchantsReq\x12'\n" +
 	"\buser_did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\auserDid\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"E\n" +
-	"\x13UserExtensionGetReq\x12\x1a\n" +
-	"\bmerchant\x18\x01 \x01(\tR\bmerchant\x12\x12\n" +
-	"\x04user\x18\x02 \x01(\tR\x04user\"E\n" +
-	"\x14UserExtensionGetResp\x12-\n" +
-	"\x04unit\x18\x01 \x01(\v2\x19.hi.did.UserExtensionUnitR\x04unit2\xa9\x01\n" +
+	"pagination2\xa9\x01\n" +
 	"\x15UserExtensionSettings\x12E\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x02\x12I\n" +
-	"\aRefresh\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x022\xb2\x02\n" +
-	"\rUserExtension\x12F\n" +
-	"\x06Update\x12\x1e.hi.did.UserExtensionUpdateReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12F\n" +
-	"\x06Delete\x12\x1e.hi.did.UserExtensionDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12F\n" +
-	"\x03Get\x12\x1b.hi.did.UserExtensionGetReq\x1a\x1c.hi.did.UserExtensionGetResp\"\x04\x88\xb5\x18\x03\x12I\n" +
+	"\aRefresh\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x022Z\n" +
+	"\rUserExtension\x12I\n" +
 	"\rListMerchants\x12\x18.hi.did.ListMerchantsReq\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x03B\x83\x01\n" +
 	"\n" +
 	"com.hi.didB\x12UserExtensionProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -513,44 +163,27 @@ func file_hi_did_user_extension_proto_rawDescGZIP() []byte {
 	return file_hi_did_user_extension_proto_rawDescData
 }
 
-var file_hi_did_user_extension_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_did_user_extension_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_did_user_extension_proto_goTypes = []any{
 	(*UserExtensionSettingResp)(nil), // 0: hi.did.UserExtensionSettingResp
-	(*Button)(nil),                   // 1: hi.did.Button
-	(*Card)(nil),                     // 2: hi.did.Card
-	(*UserExtensionUpdateReq)(nil),   // 3: hi.did.UserExtensionUpdateReq
-	(*UserExtensionDeleteReq)(nil),   // 4: hi.did.UserExtensionDeleteReq
-	(*ListMerchantsReq)(nil),         // 5: hi.did.ListMerchantsReq
-	(*UserExtensionGetReq)(nil),      // 6: hi.did.UserExtensionGetReq
-	(*UserExtensionGetResp)(nil),     // 7: hi.did.UserExtensionGetResp
-	(*UserExtensionUnit)(nil),        // 8: hi.did.UserExtensionUnit
-	(*hi.Pagination)(nil),            // 9: hi.Pagination
-	(*emptypb.Empty)(nil),            // 10: google.protobuf.Empty
-	(*MerchantListResp)(nil),         // 11: hi.did.MerchantListResp
+	(*ListMerchantsReq)(nil),         // 1: hi.did.ListMerchantsReq
+	(*hi.Pagination)(nil),            // 2: hi.Pagination
+	(*emptypb.Empty)(nil),            // 3: google.protobuf.Empty
+	(*MerchantListResp)(nil),         // 4: hi.did.MerchantListResp
 }
 var file_hi_did_user_extension_proto_depIdxs = []int32{
-	1,  // 0: hi.did.Card.left:type_name -> hi.did.Button
-	1,  // 1: hi.did.Card.right:type_name -> hi.did.Button
-	8,  // 2: hi.did.UserExtensionUpdateReq.units:type_name -> hi.did.UserExtensionUnit
-	9,  // 3: hi.did.ListMerchantsReq.pagination:type_name -> hi.Pagination
-	8,  // 4: hi.did.UserExtensionGetResp.unit:type_name -> hi.did.UserExtensionUnit
-	10, // 5: hi.did.UserExtensionSettings.Get:input_type -> google.protobuf.Empty
-	10, // 6: hi.did.UserExtensionSettings.Refresh:input_type -> google.protobuf.Empty
-	3,  // 7: hi.did.UserExtension.Update:input_type -> hi.did.UserExtensionUpdateReq
-	4,  // 8: hi.did.UserExtension.Delete:input_type -> hi.did.UserExtensionDeleteReq
-	6,  // 9: hi.did.UserExtension.Get:input_type -> hi.did.UserExtensionGetReq
-	5,  // 10: hi.did.UserExtension.ListMerchants:input_type -> hi.did.ListMerchantsReq
-	0,  // 11: hi.did.UserExtensionSettings.Get:output_type -> hi.did.UserExtensionSettingResp
-	0,  // 12: hi.did.UserExtensionSettings.Refresh:output_type -> hi.did.UserExtensionSettingResp
-	10, // 13: hi.did.UserExtension.Update:output_type -> google.protobuf.Empty
-	10, // 14: hi.did.UserExtension.Delete:output_type -> google.protobuf.Empty
-	7,  // 15: hi.did.UserExtension.Get:output_type -> hi.did.UserExtensionGetResp
-	11, // 16: hi.did.UserExtension.ListMerchants:output_type -> hi.did.MerchantListResp
-	11, // [11:17] is the sub-list for method output_type
-	5,  // [5:11] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	2, // 0: hi.did.ListMerchantsReq.pagination:type_name -> hi.Pagination
+	3, // 1: hi.did.UserExtensionSettings.Get:input_type -> google.protobuf.Empty
+	3, // 2: hi.did.UserExtensionSettings.Refresh:input_type -> google.protobuf.Empty
+	1, // 3: hi.did.UserExtension.ListMerchants:input_type -> hi.did.ListMerchantsReq
+	0, // 4: hi.did.UserExtensionSettings.Get:output_type -> hi.did.UserExtensionSettingResp
+	0, // 5: hi.did.UserExtensionSettings.Refresh:output_type -> hi.did.UserExtensionSettingResp
+	4, // 6: hi.did.UserExtension.ListMerchants:output_type -> hi.did.MerchantListResp
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_user_extension_proto_init() }
@@ -558,7 +191,6 @@ func file_hi_did_user_extension_proto_init() {
 	if File_hi_did_user_extension_proto != nil {
 		return
 	}
-	file_hi_did_base_proto_init()
 	file_hi_did_merchant_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -566,7 +198,7 @@ func file_hi_did_user_extension_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_user_extension_proto_rawDesc), len(file_hi_did_user_extension_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

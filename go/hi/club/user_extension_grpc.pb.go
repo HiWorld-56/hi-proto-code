@@ -26,11 +26,14 @@ const (
 // UserExtensionClient is the client API for UserExtension service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ⚠️ 待 club 阶段复核主体:此方法是**用户**(token)读某商户下某(他人)用户的扩展数据用于渲染
+//
+//	(如金标标记)。但 did 侧已定"扩展是商户地盘、读扩展是商户主体(Merchant.GetExUser)"。
+//	club 这个 user-token 的读扩展是否合理、如何对齐,留 club 阶段处理。本轮仅跟随 did 的类型改名。
 type UserExtensionClient interface {
-	// 取某商户下某用户的扩展数据(如金标标记)。club 的节点渲染只需要这一个:
-	// 用户选一个自己所在的商户节点 -> 按 (merchant, user) 取字段 -> 渲染。
-	// 跨商户读由 did 侧的 requireGrant 把关(该商户须先授权 club)。
-	Get(ctx context.Context, in *did.UserExtensionGetReq, opts ...grpc.CallOption) (*did.UserExtensionGetResp, error)
+	// 取某商户下某用户的扩展数据。转发到 did 的 Merchant.GetExUser。
+	Get(ctx context.Context, in *did.GetExUserReq, opts ...grpc.CallOption) (*did.UserExtensionUnit, error)
 }
 
 type userExtensionClient struct {
@@ -41,9 +44,9 @@ func NewUserExtensionClient(cc grpc.ClientConnInterface) UserExtensionClient {
 	return &userExtensionClient{cc}
 }
 
-func (c *userExtensionClient) Get(ctx context.Context, in *did.UserExtensionGetReq, opts ...grpc.CallOption) (*did.UserExtensionGetResp, error) {
+func (c *userExtensionClient) Get(ctx context.Context, in *did.GetExUserReq, opts ...grpc.CallOption) (*did.UserExtensionUnit, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.UserExtensionGetResp)
+	out := new(did.UserExtensionUnit)
 	err := c.cc.Invoke(ctx, UserExtension_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -54,11 +57,14 @@ func (c *userExtensionClient) Get(ctx context.Context, in *did.UserExtensionGetR
 // UserExtensionServer is the server API for UserExtension service.
 // All implementations should embed UnimplementedUserExtensionServer
 // for forward compatibility.
+//
+// ⚠️ 待 club 阶段复核主体:此方法是**用户**(token)读某商户下某(他人)用户的扩展数据用于渲染
+//
+//	(如金标标记)。但 did 侧已定"扩展是商户地盘、读扩展是商户主体(Merchant.GetExUser)"。
+//	club 这个 user-token 的读扩展是否合理、如何对齐,留 club 阶段处理。本轮仅跟随 did 的类型改名。
 type UserExtensionServer interface {
-	// 取某商户下某用户的扩展数据(如金标标记)。club 的节点渲染只需要这一个:
-	// 用户选一个自己所在的商户节点 -> 按 (merchant, user) 取字段 -> 渲染。
-	// 跨商户读由 did 侧的 requireGrant 把关(该商户须先授权 club)。
-	Get(context.Context, *did.UserExtensionGetReq) (*did.UserExtensionGetResp, error)
+	// 取某商户下某用户的扩展数据。转发到 did 的 Merchant.GetExUser。
+	Get(context.Context, *did.GetExUserReq) (*did.UserExtensionUnit, error)
 }
 
 // UnimplementedUserExtensionServer should be embedded to have
@@ -68,7 +74,7 @@ type UserExtensionServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserExtensionServer struct{}
 
-func (UnimplementedUserExtensionServer) Get(context.Context, *did.UserExtensionGetReq) (*did.UserExtensionGetResp, error) {
+func (UnimplementedUserExtensionServer) Get(context.Context, *did.GetExUserReq) (*did.UserExtensionUnit, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedUserExtensionServer) testEmbeddedByValue() {}
@@ -92,7 +98,7 @@ func RegisterUserExtensionServer(s grpc.ServiceRegistrar, srv UserExtensionServe
 }
 
 func _UserExtension_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.UserExtensionGetReq)
+	in := new(did.GetExUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -104,7 +110,7 @@ func _UserExtension_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: UserExtension_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserExtensionServer).Get(ctx, req.(*did.UserExtensionGetReq))
+		return srv.(UserExtensionServer).Get(ctx, req.(*did.GetExUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

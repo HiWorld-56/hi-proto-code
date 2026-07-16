@@ -291,134 +291,6 @@ func (x *ListSuperAdminUsersResp) GetList() []string {
 	return nil
 }
 
-type UserExtensionInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Logo          *string                `protobuf:"bytes,1,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
-	Level         *int32                 `protobuf:"varint,2,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	Card          *string                `protobuf:"bytes,3,opt,name=card,proto3,oneof" json:"card,omitempty"`
-	Extend        *string                `protobuf:"bytes,4,opt,name=extend,proto3,oneof" json:"extend,omitempty"`
-	Note          *string                `protobuf:"bytes,5,opt,name=note,proto3,oneof" json:"note,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserExtensionInfo) Reset() {
-	*x = UserExtensionInfo{}
-	mi := &file_hi_did_base_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserExtensionInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserExtensionInfo) ProtoMessage() {}
-
-func (x *UserExtensionInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserExtensionInfo.ProtoReflect.Descriptor instead.
-func (*UserExtensionInfo) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *UserExtensionInfo) GetLogo() string {
-	if x != nil && x.Logo != nil {
-		return *x.Logo
-	}
-	return ""
-}
-
-func (x *UserExtensionInfo) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
-	}
-	return 0
-}
-
-func (x *UserExtensionInfo) GetCard() string {
-	if x != nil && x.Card != nil {
-		return *x.Card
-	}
-	return ""
-}
-
-func (x *UserExtensionInfo) GetExtend() string {
-	if x != nil && x.Extend != nil {
-		return *x.Extend
-	}
-	return ""
-}
-
-func (x *UserExtensionInfo) GetNote() string {
-	if x != nil && x.Note != nil {
-		return *x.Note
-	}
-	return ""
-}
-
-type UserExtensionUnit struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *hi.Entity             `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	Info          *UserExtensionInfo     `protobuf:"bytes,2,opt,name=info,proto3" json:"info,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserExtensionUnit) Reset() {
-	*x = UserExtensionUnit{}
-	mi := &file_hi_did_base_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserExtensionUnit) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserExtensionUnit) ProtoMessage() {}
-
-func (x *UserExtensionUnit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserExtensionUnit.ProtoReflect.Descriptor instead.
-func (*UserExtensionUnit) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *UserExtensionUnit) GetUser() *hi.Entity {
-	if x != nil {
-		return x.User
-	}
-	return nil
-}
-
-func (x *UserExtensionUnit) GetInfo() *UserExtensionInfo {
-	if x != nil {
-		return x.Info
-	}
-	return nil
-}
-
 var File_hi_did_base_proto protoreflect.FileDescriptor
 
 const file_hi_did_base_proto_rawDesc = "" +
@@ -439,22 +311,7 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\achanges\x18\x04 \x03(\tR\achanges\x12!\n" +
 	"\frelease_time\x18\x05 \x01(\x03R\vreleaseTime\"-\n" +
 	"\x17ListSuperAdminUsersResp\x12\x12\n" +
-	"\x04list\x18\x01 \x03(\tR\x04list\"\xc6\x01\n" +
-	"\x11UserExtensionInfo\x12\x17\n" +
-	"\x04logo\x18\x01 \x01(\tH\x00R\x04logo\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x02 \x01(\x05H\x01R\x05level\x88\x01\x01\x12\x17\n" +
-	"\x04card\x18\x03 \x01(\tH\x02R\x04card\x88\x01\x01\x12\x1b\n" +
-	"\x06extend\x18\x04 \x01(\tH\x03R\x06extend\x88\x01\x01\x12\x17\n" +
-	"\x04note\x18\x05 \x01(\tH\x04R\x04note\x88\x01\x01B\a\n" +
-	"\x05_logoB\b\n" +
-	"\x06_levelB\a\n" +
-	"\x05_cardB\t\n" +
-	"\a_extendB\a\n" +
-	"\x05_note\"b\n" +
-	"\x11UserExtensionUnit\x12\x1e\n" +
-	"\x04user\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04user\x12-\n" +
-	"\x04info\x18\x02 \x01(\v2\x19.hi.did.UserExtensionInfoR\x04info2\xda\x01\n" +
+	"\x04list\x18\x01 \x03(\tR\x04list2\xda\x01\n" +
 	"\x04Base\x12@\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x04\x88\xb5\x18\x01\x12J\n" +
 	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x04\x88\xb5\x18\x01\x12D\n" +
@@ -481,42 +338,37 @@ func file_hi_did_base_proto_rawDescGZIP() []byte {
 	return file_hi_did_base_proto_rawDescData
 }
 
-var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_did_base_proto_goTypes = []any{
 	(*Coin)(nil),                    // 0: hi.did.Coin
 	(*ListCoinsResp)(nil),           // 1: hi.did.ListCoinsResp
 	(*LatestVersionReq)(nil),        // 2: hi.did.LatestVersionReq
 	(*LatestVersionResp)(nil),       // 3: hi.did.LatestVersionResp
 	(*ListSuperAdminUsersResp)(nil), // 4: hi.did.ListSuperAdminUsersResp
-	(*UserExtensionInfo)(nil),       // 5: hi.did.UserExtensionInfo
-	(*UserExtensionUnit)(nil),       // 6: hi.did.UserExtensionUnit
-	(*hi.Entity)(nil),               // 7: hi.Entity
-	(*emptypb.Empty)(nil),           // 8: google.protobuf.Empty
-	(*hi.SignedData)(nil),           // 9: hi.SignedData
-	(*hi.ServerVersionResp)(nil),    // 10: hi.ServerVersionResp
-	(*hi.DID)(nil),                  // 11: hi.DID
+	(*emptypb.Empty)(nil),           // 5: google.protobuf.Empty
+	(*hi.SignedData)(nil),           // 6: hi.SignedData
+	(*hi.ServerVersionResp)(nil),    // 7: hi.ServerVersionResp
+	(*hi.DID)(nil),                  // 8: hi.DID
 }
 var file_hi_did_base_proto_depIdxs = []int32{
-	0,  // 0: hi.did.ListCoinsResp.list:type_name -> hi.did.Coin
-	7,  // 1: hi.did.UserExtensionUnit.user:type_name -> hi.Entity
-	5,  // 2: hi.did.UserExtensionUnit.info:type_name -> hi.did.UserExtensionInfo
-	8,  // 3: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
-	2,  // 4: hi.did.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
-	8,  // 5: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
-	8,  // 6: hi.did.SuperAdminView.ListSuperAdminUsers:input_type -> google.protobuf.Empty
-	9,  // 7: hi.did.Assist.VerifySignature:input_type -> hi.SignedData
-	8,  // 8: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
-	1,  // 9: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	3,  // 10: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	10, // 11: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	4,  // 12: hi.did.SuperAdminView.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
-	11, // 13: hi.did.Assist.VerifySignature:output_type -> hi.DID
-	4,  // 14: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
-	9,  // [9:15] is the sub-list for method output_type
-	3,  // [3:9] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	0, // 0: hi.did.ListCoinsResp.list:type_name -> hi.did.Coin
+	5, // 1: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
+	2, // 2: hi.did.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
+	5, // 3: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
+	5, // 4: hi.did.SuperAdminView.ListSuperAdminUsers:input_type -> google.protobuf.Empty
+	6, // 5: hi.did.Assist.VerifySignature:input_type -> hi.SignedData
+	5, // 6: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
+	1, // 7: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	3, // 8: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
+	7, // 9: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	4, // 10: hi.did.SuperAdminView.ListSuperAdminUsers:output_type -> hi.did.ListSuperAdminUsersResp
+	8, // 11: hi.did.Assist.VerifySignature:output_type -> hi.DID
+	4, // 12: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
+	7, // [7:13] is the sub-list for method output_type
+	1, // [1:7] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_base_proto_init() }
@@ -524,14 +376,13 @@ func file_hi_did_base_proto_init() {
 	if File_hi_did_base_proto != nil {
 		return
 	}
-	file_hi_did_base_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_base_proto_rawDesc), len(file_hi_did_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   4,
 		},

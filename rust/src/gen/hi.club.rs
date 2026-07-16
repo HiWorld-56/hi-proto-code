@@ -1095,6 +1095,9 @@ pub mod user_extension_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// ⚠️ 待 club 阶段复核主体:此方法是**用户**(token)读某商户下某(他人)用户的扩展数据用于渲染
+    /// (如金标标记)。但 did 侧已定"扩展是商户地盘、读扩展是商户主体(Merchant.GetExUser)"。
+    /// club 这个 user-token 的读扩展是否合理、如何对齐,留 club 阶段处理。本轮仅跟随 did 的类型改名。
     #[derive(Debug, Clone)]
     pub struct UserExtensionClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1175,14 +1178,12 @@ pub mod user_extension_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 取某商户下某用户的扩展数据(如金标标记)。club 的节点渲染只需要这一个:
-        /// 用户选一个自己所在的商户节点 -> 按 (merchant, user) 取字段 -> 渲染。
-        /// 跨商户读由 did 侧的 requireGrant 把关(该商户须先授权 club)。
+        /// 取某商户下某用户的扩展数据。转发到 did 的 Merchant.GetExUser。
         pub async fn get(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::did::UserExtensionGetReq>,
+            request: impl tonic::IntoRequest<super::super::did::GetExUserReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::did::UserExtensionGetResp>,
+            tonic::Response<super::super::did::UserExtensionUnit>,
             tonic::Status,
         > {
             self.inner

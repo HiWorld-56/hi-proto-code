@@ -38,7 +38,7 @@ var (
 
 func request_UserExtension_Get_0(ctx context.Context, marshaler runtime.Marshaler, client UserExtensionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq did.UserExtensionGetReq
+		protoReq did.GetExUserReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -53,7 +53,7 @@ func request_UserExtension_Get_0(ctx context.Context, marshaler runtime.Marshale
 
 func local_request_UserExtension_Get_0(ctx context.Context, marshaler runtime.Marshaler, server UserExtensionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq did.UserExtensionGetReq
+		protoReq did.GetExUserReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

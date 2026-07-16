@@ -22,8 +22,7 @@ import 'merchant.pb.dart' as $1;
 
 export 'merchant.pb.dart';
 
-/// 用户绑定的商户节点(用户主体)。裁决 #3:从 Merchant 拆出 —— 主体是"用户"(用户token),
-/// 与下面 Merchant(商户主体,ExtendToken)分开。
+/// 用户绑定的商户节点(用户主体,用户 token)。裁决 #3:与 Merchant(商户主体)分开。
 @$pb.GrpcServiceName('hi.did.UserMerchant')
 class UserMerchantClient extends $grpc.Client {
   /// The hostname for this service.
@@ -100,13 +99,11 @@ abstract class UserMerchantServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.MerchantSetReq request);
 }
 
-/// 商户操作(商户主体,ExtendToken)。
-///
-/// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在缺授权校验 —— club 就走
-///    GetUserProfile 读用户档案。TODO(后端):加互授权校验,无授权不得取他人商户的用户信息。
+/// 商户(主体=商户,ExtendToken)。按主体归位:所有"商户对用户扩展数据"的读写都在这;
+/// 用户不能读自己的扩展(扩展是商户的地盘)。
 ///
 /// 授权机制(裁决 #4,定稿):商户 X 操作商户 A 的数据时 —— 从 X 的 ExtendToken 解出 didx,
-///    若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
+///   若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
 @$pb.GrpcServiceName('hi.did.Merchant')
 class MerchantClient extends $grpc.Client {
   /// The hostname for this service.
@@ -119,20 +116,53 @@ class MerchantClient extends $grpc.Client {
 
   MerchantClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.GetUserProfileResp> getUserProfile(
-    $2.DID request, {
+  /// ── 商户管理其用户的扩展信息 ──
+  /// GetExUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+  /// GetExUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
+  $grpc.ResponseFuture<$1.UserExtensionUnit> getExUser(
+    $1.GetExUserReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getUserProfile, request, options: options);
+    return $createUnaryCall(_$getExUser, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> setUserProfile(
-    $1.SetUserProfileReq request, {
+  $grpc.ResponseFuture<$1.ListUsersResp> listUsers(
+    $1.ListUsersReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$setUserProfile, request, options: options);
+    return $createUnaryCall(_$listUsers, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Empty> setUsers(
+    $1.SetUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setUsers, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> addUsers(
+    $1.AddUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$addUsers, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> removeUsers(
+    $1.RemoveUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$removeUsers, request, options: options);
+  }
+
+  /// ── 用户 mqtt 凭证(基础信息,商户可见)──
+  $grpc.ResponseFuture<$1.GetUserMqttResp> getUserMqtt(
+    $1.GetUserMqttReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getUserMqtt, request, options: options);
+  }
+
+  /// ── 商户身份与授权 ──
   $grpc.ResponseFuture<$1.MerchantGetResp> getMerchant(
     $2.DID request, {
     $grpc.CallOptions? options,
@@ -140,8 +170,6 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$getMerchant, request, options: options);
   }
 
-  /// ── 商户互授权 ──────────────────────────────────────────────
-  /// 商户之间平级,跨商户读数据必须显式授权。授权方 = ExtendToken 认出的商户(不在入参里)。
   $grpc.ResponseFuture<$1.ListGrantsResp> listGrants(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -163,43 +191,35 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$removeGrant, request, options: options);
   }
 
-  /// 列商户下的用户。merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权)。
-  /// 合并原 UserExtension.List(商户从 token)+ ListByMerchantDid(商户从参数)——
-  /// 二者查的是同一张 extend_table、同一份数据,此前因信任模型不同不能合;
-  /// requireGrant 落地后,参数来的 merchant 必过授权校验,已无此顾虑。
-  $grpc.ResponseFuture<$1.MerchantUsersListResp> listUsers(
-    $1.MerchantUsersListReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listUsers, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> saveUsers(
-    $1.MerchantUsersSaveReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$saveUsers, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> deleteUsers(
-    $1.MerchantUsersDeleteReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$deleteUsers, request, options: options);
-  }
-
   // method descriptors
 
-  static final _$getUserProfile =
-      $grpc.ClientMethod<$2.DID, $1.GetUserProfileResp>(
-          '/hi.did.Merchant/GetUserProfile',
-          ($2.DID value) => value.writeToBuffer(),
-          $1.GetUserProfileResp.fromBuffer);
-  static final _$setUserProfile =
-      $grpc.ClientMethod<$1.SetUserProfileReq, $0.Empty>(
-          '/hi.did.Merchant/SetUserProfile',
-          ($1.SetUserProfileReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
+  static final _$getExUser =
+      $grpc.ClientMethod<$1.GetExUserReq, $1.UserExtensionUnit>(
+          '/hi.did.Merchant/GetExUser',
+          ($1.GetExUserReq value) => value.writeToBuffer(),
+          $1.UserExtensionUnit.fromBuffer);
+  static final _$listUsers =
+      $grpc.ClientMethod<$1.ListUsersReq, $1.ListUsersResp>(
+          '/hi.did.Merchant/ListUsers',
+          ($1.ListUsersReq value) => value.writeToBuffer(),
+          $1.ListUsersResp.fromBuffer);
+  static final _$setUsers = $grpc.ClientMethod<$1.SetUsersReq, $0.Empty>(
+      '/hi.did.Merchant/SetUsers',
+      ($1.SetUsersReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$addUsers = $grpc.ClientMethod<$1.AddUsersReq, $0.Empty>(
+      '/hi.did.Merchant/AddUsers',
+      ($1.AddUsersReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$removeUsers = $grpc.ClientMethod<$1.RemoveUsersReq, $0.Empty>(
+      '/hi.did.Merchant/RemoveUsers',
+      ($1.RemoveUsersReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$getUserMqtt =
+      $grpc.ClientMethod<$1.GetUserMqttReq, $1.GetUserMqttResp>(
+          '/hi.did.Merchant/GetUserMqtt',
+          ($1.GetUserMqttReq value) => value.writeToBuffer(),
+          $1.GetUserMqttResp.fromBuffer);
   static final _$getMerchant = $grpc.ClientMethod<$2.DID, $1.MerchantGetResp>(
       '/hi.did.Merchant/GetMerchant',
       ($2.DID value) => value.writeToBuffer(),
@@ -216,21 +236,6 @@ class MerchantClient extends $grpc.Client {
       '/hi.did.Merchant/RemoveGrant',
       ($1.GrantReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$listUsers =
-      $grpc.ClientMethod<$1.MerchantUsersListReq, $1.MerchantUsersListResp>(
-          '/hi.did.Merchant/ListUsers',
-          ($1.MerchantUsersListReq value) => value.writeToBuffer(),
-          $1.MerchantUsersListResp.fromBuffer);
-  static final _$saveUsers =
-      $grpc.ClientMethod<$1.MerchantUsersSaveReq, $0.Empty>(
-          '/hi.did.Merchant/SaveUsers',
-          ($1.MerchantUsersSaveReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$deleteUsers =
-      $grpc.ClientMethod<$1.MerchantUsersDeleteReq, $0.Empty>(
-          '/hi.did.Merchant/DeleteUsers',
-          ($1.MerchantUsersDeleteReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.Merchant')
@@ -238,20 +243,48 @@ abstract class MerchantServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.Merchant';
 
   MerchantServiceBase() {
-    $addMethod($grpc.ServiceMethod<$2.DID, $1.GetUserProfileResp>(
-        'GetUserProfile',
-        getUserProfile_Pre,
+    $addMethod($grpc.ServiceMethod<$1.GetExUserReq, $1.UserExtensionUnit>(
+        'GetExUser',
+        getExUser_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.DID.fromBuffer(value),
-        ($1.GetUserProfileResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SetUserProfileReq, $0.Empty>(
-        'SetUserProfile',
-        setUserProfile_Pre,
+        ($core.List<$core.int> value) => $1.GetExUserReq.fromBuffer(value),
+        ($1.UserExtensionUnit value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListUsersReq, $1.ListUsersResp>(
+        'ListUsers',
+        listUsers_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.SetUserProfileReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.ListUsersReq.fromBuffer(value),
+        ($1.ListUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetUsersReq, $0.Empty>(
+        'SetUsers',
+        setUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.SetUsersReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.AddUsersReq, $0.Empty>(
+        'AddUsers',
+        addUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.AddUsersReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.RemoveUsersReq, $0.Empty>(
+        'RemoveUsers',
+        removeUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.RemoveUsersReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GetUserMqttReq, $1.GetUserMqttResp>(
+        'GetUserMqtt',
+        getUserMqtt_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.GetUserMqttReq.fromBuffer(value),
+        ($1.GetUserMqttResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.DID, $1.MerchantGetResp>(
         'GetMerchant',
         getMerchant_Pre,
@@ -280,48 +313,55 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.GrantReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$1.MerchantUsersListReq, $1.MerchantUsersListResp>(
-            'ListUsers',
-            listUsers_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $1.MerchantUsersListReq.fromBuffer(value),
-            ($1.MerchantUsersListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.MerchantUsersSaveReq, $0.Empty>(
-        'SaveUsers',
-        saveUsers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.MerchantUsersSaveReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.MerchantUsersDeleteReq, $0.Empty>(
-        'DeleteUsers',
-        deleteUsers_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.MerchantUsersDeleteReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.GetUserProfileResp> getUserProfile_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.DID> $request) async {
-    return getUserProfile($call, await $request);
+  $async.Future<$1.UserExtensionUnit> getExUser_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GetExUserReq> $request) async {
+    return getExUser($call, await $request);
   }
 
-  $async.Future<$1.GetUserProfileResp> getUserProfile(
-      $grpc.ServiceCall call, $2.DID request);
+  $async.Future<$1.UserExtensionUnit> getExUser(
+      $grpc.ServiceCall call, $1.GetExUserReq request);
 
-  $async.Future<$0.Empty> setUserProfile_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.SetUserProfileReq> $request) async {
-    return setUserProfile($call, await $request);
+  $async.Future<$1.ListUsersResp> listUsers_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.ListUsersReq> $request) async {
+    return listUsers($call, await $request);
   }
 
-  $async.Future<$0.Empty> setUserProfile(
-      $grpc.ServiceCall call, $1.SetUserProfileReq request);
+  $async.Future<$1.ListUsersResp> listUsers(
+      $grpc.ServiceCall call, $1.ListUsersReq request);
+
+  $async.Future<$0.Empty> setUsers_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SetUsersReq> $request) async {
+    return setUsers($call, await $request);
+  }
+
+  $async.Future<$0.Empty> setUsers(
+      $grpc.ServiceCall call, $1.SetUsersReq request);
+
+  $async.Future<$0.Empty> addUsers_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.AddUsersReq> $request) async {
+    return addUsers($call, await $request);
+  }
+
+  $async.Future<$0.Empty> addUsers(
+      $grpc.ServiceCall call, $1.AddUsersReq request);
+
+  $async.Future<$0.Empty> removeUsers_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.RemoveUsersReq> $request) async {
+    return removeUsers($call, await $request);
+  }
+
+  $async.Future<$0.Empty> removeUsers(
+      $grpc.ServiceCall call, $1.RemoveUsersReq request);
+
+  $async.Future<$1.GetUserMqttResp> getUserMqtt_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.GetUserMqttReq> $request) async {
+    return getUserMqtt($call, await $request);
+  }
+
+  $async.Future<$1.GetUserMqttResp> getUserMqtt(
+      $grpc.ServiceCall call, $1.GetUserMqttReq request);
 
   $async.Future<$1.MerchantGetResp> getMerchant_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.DID> $request) async {
@@ -353,30 +393,6 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> removeGrant(
       $grpc.ServiceCall call, $1.GrantReq request);
-
-  $async.Future<$1.MerchantUsersListResp> listUsers_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.MerchantUsersListReq> $request) async {
-    return listUsers($call, await $request);
-  }
-
-  $async.Future<$1.MerchantUsersListResp> listUsers(
-      $grpc.ServiceCall call, $1.MerchantUsersListReq request);
-
-  $async.Future<$0.Empty> saveUsers_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.MerchantUsersSaveReq> $request) async {
-    return saveUsers($call, await $request);
-  }
-
-  $async.Future<$0.Empty> saveUsers(
-      $grpc.ServiceCall call, $1.MerchantUsersSaveReq request);
-
-  $async.Future<$0.Empty> deleteUsers_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.MerchantUsersDeleteReq> $request) async {
-    return deleteUsers($call, await $request);
-  }
-
-  $async.Future<$0.Empty> deleteUsers(
-      $grpc.ServiceCall call, $1.MerchantUsersDeleteReq request);
 }
 
 /// SSE —— web3 自动付款机制(裁决 #10)。
