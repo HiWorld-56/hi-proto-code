@@ -30,6 +30,9 @@ const (
 // BaseClient is the client API for Base service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// Base —— 杂物袋:公开的版本/币种查询 + 一个需登录的超管名单查询。
+// TODO(一致性):ListCoins/LatestVersion/ServerVersion 是真公开,可挪进 Health,让 Base 归于一致。
 type BaseClient interface {
 	ListCoins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCoinsResp, error)
 	LatestVersion(ctx context.Context, in *LatestVersionReq, opts ...grpc.CallOption) (*LatestVersionResp, error)
@@ -91,6 +94,9 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 // BaseServer is the server API for Base service.
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
+//
+// Base —— 杂物袋:公开的版本/币种查询 + 一个需登录的超管名单查询。
+// TODO(一致性):ListCoins/LatestVersion/ServerVersion 是真公开,可挪进 Health,让 Base 归于一致。
 type BaseServer interface {
 	ListCoins(context.Context, *emptypb.Empty) (*ListCoinsResp, error)
 	LatestVersion(context.Context, *LatestVersionReq) (*LatestVersionResp, error)

@@ -21,6 +21,7 @@ import '../common.pb.dart' as $0;
 
 export 'payment.pb.dart';
 
+/// Pay —— 支付握手。与 SSE 的 web3 自动付款配套。
 @$pb.GrpcServiceName('hi.did.Pay')
 class PayClient extends $grpc.Client {
   /// The hostname for this service.

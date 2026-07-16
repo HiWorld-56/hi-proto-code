@@ -22,6 +22,14 @@ import 'merchant.pb.dart' as $1;
 
 export 'merchant.pb.dart';
 
+/// ⚠️ 裁决 #3:这个 service 混了两个主体 —— Get/Set 是**用户**查/设自己绑的商户节点(用户token),
+///    其余全是**商户**操作(ExtendToken)。TODO:把 Get/Set 拆去用户面 service。
+///
+/// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在没有授权校验 ——
+///    club 就走 GetUserProfile 读用户档案。TODO:加互授权校验,无授权不得取他人商户的用户信息。
+///
+/// 授权机制(裁决 #4,定稿):商户 X 操作商户 A 的数据时 —— 从 X 的 ExtendToken 解出 didx,
+///    若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
 @$pb.GrpcServiceName('hi.did.Merchant')
 class MerchantClient extends $grpc.Client {
   /// The hostname for this service.
@@ -34,6 +42,7 @@ class MerchantClient extends $grpc.Client {
 
   MerchantClient(super.channel, {super.options, super.interceptors});
 
+  /// ── 用户主体(TODO 拆走)──
   $grpc.ResponseFuture<$1.MerchantGetResp> get(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -48,6 +57,7 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$set, request, options: options);
   }
 
+  /// ── 商户主体 ──
   $grpc.ResponseFuture<$1.GetUserProfileResp> getUserProfile(
     $2.DID request, {
     $grpc.CallOptions? options,
@@ -346,6 +356,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.MerchantUsersDeleteReq request);
 }
 
+/// SSE —— web3 自动付款机制(裁决 #10)。
+///
+/// 架构:PC 端跑 hidid-pc,通过 SSE 与 hidid 后台保持长连接(hidid-pc 无公网 IP)。
+/// 流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 Notify → hidid 后端把通知转发给
+///       对应的 hidid-pc → ③hidid-pc 按用户在软件里设置的地址**去拉订单** → ④付款 →
+///       ⑤付款结果通过用户设置的地址回传。
+/// 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
+///       hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
 @$pb.GrpcServiceName('hi.did.SSE')
 class SSEClient extends $grpc.Client {
   /// The hostname for this service.

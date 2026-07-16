@@ -27,6 +27,8 @@ const (
 // TransferClient is the client API for Transfer service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 转账/交易查询。History、TxStatus 是链上公开数据(无隐藏性,故公开)。
 type TransferClient interface {
 	History(ctx context.Context, in *HistoryReq, opts ...grpc.CallOption) (*HistoryResp, error)
 	TxStatus(ctx context.Context, in *TxStatusReq, opts ...grpc.CallOption) (*TxStatusResp, error)
@@ -74,6 +76,8 @@ func (c *transferClient) VerifyTransaction(ctx context.Context, in *VerifyTransa
 // TransferServer is the server API for Transfer service.
 // All implementations should embed UnimplementedTransferServer
 // for forward compatibility.
+//
+// 转账/交易查询。History、TxStatus 是链上公开数据(无隐藏性,故公开)。
 type TransferServer interface {
 	History(context.Context, *HistoryReq) (*HistoryResp, error)
 	TxStatus(context.Context, *TxStatusReq) (*TxStatusResp, error)

@@ -22,6 +22,8 @@ import 'auth.pb.dart' as $0;
 
 export 'auth.pb.dart';
 
+/// Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
+/// 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 @$pb.GrpcServiceName('hi.did.Auth')
 class AuthClient extends $grpc.Client {
   /// The hostname for this service.

@@ -22,6 +22,10 @@ import 'admin.pb.dart' as $1;
 
 export 'admin.pb.dart';
 
+/// 邀请码。前 4 个是超管管理邀请码,Verify 是待注册用户验码换 token —— 主体不同。
+///
+/// TODO 裁决:① Create/Edit/List/Delete 标 AUTH_SUPERADMIN(handler 已有超管校验,现 proto 标错成 TOKEN)
+///            ② Verify 拆到独立 service(主体是"还没注册的人",与超管无关)
 @$pb.GrpcServiceName('hi.did.InviteCode')
 class InviteCodeClient extends $grpc.Client {
   /// The hostname for this service.
@@ -192,6 +196,7 @@ class DAppClient extends $grpc.Client {
 
   DAppClient(super.channel, {super.options, super.interceptors});
 
+  /// ── app 面(读):普通登录用户浏览首页 DApp ──
   $grpc.ResponseFuture<$1.DAppListByClassResp> listByClass(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -213,6 +218,7 @@ class DAppClient extends $grpc.Client {
     return $createUnaryCall(_$getTop, request, options: options);
   }
 
+  /// ── 超管面(写):维护 DApp 目录。handler 已有超管校验,proto 标错成 TOKEN,待拆去 DAppAdmin ──
   $grpc.ResponseFuture<$0.Empty> updateTop(
     $1.DAppUpdateTopReq request, {
     $grpc.CallOptions? options,
@@ -412,6 +418,10 @@ abstract class DAppServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.DAppDeleteReq request);
 }
 
+/// 商户管理(超管面)。
+///
+/// ⚠️ 漏洞(裁决 #11):Delete/Edit 现标 AUTH_TOKEN 且 handler 零校验 ——
+///    **任何登录用户都能删改商户**。三个方法都要收紧为 AUTH_SUPERADMIN。
 @$pb.GrpcServiceName('hi.did.MerchantManage')
 class MerchantManageClient extends $grpc.Client {
   /// The hostname for this service.

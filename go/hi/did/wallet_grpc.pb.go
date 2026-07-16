@@ -34,6 +34,8 @@ const (
 // WalletClient is the client API for Wallet service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 钱包:链上地址与资产。资产类查询多为链上公开数据(无隐藏性)。
 type WalletClient interface {
 	UpdateAddresses(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateAssets(ctx context.Context, in *UpdateAssetsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -41,7 +43,12 @@ type WalletClient interface {
 	ListAddresses(ctx context.Context, in *ListAddressesReq, opts ...grpc.CallOption) (*ListAddressesResp, error)
 	TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error)
 	ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error)
+	// 裁决 #5:GetUserAssets 应改公开(链上数据无隐藏性,与 TotalAssets/ListUsersAssets 同类)。
+	//
+	//	TODO 改 AUTH_NONE。这也解决"同一份资产数据三种档位"的不一致
+	//	(club.Assets.GetUserAssets 已是公开)。
 	GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error)
+	// 裁决 #8:GetUserByAddress 应删 —— hidid 用户体系里 did 是唯一标识,不需要按地址反查用户。TODO 删除。
 	GetUserByAddress(ctx context.Context, in *GetUserByAddressReq, opts ...grpc.CallOption) (*GetUserByAddressResp, error)
 }
 
@@ -136,6 +143,8 @@ func (c *walletClient) GetUserByAddress(ctx context.Context, in *GetUserByAddres
 // WalletServer is the server API for Wallet service.
 // All implementations should embed UnimplementedWalletServer
 // for forward compatibility.
+//
+// 钱包:链上地址与资产。资产类查询多为链上公开数据(无隐藏性)。
 type WalletServer interface {
 	UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 	UpdateAssets(context.Context, *UpdateAssetsReq) (*emptypb.Empty, error)
@@ -143,7 +152,12 @@ type WalletServer interface {
 	ListAddresses(context.Context, *ListAddressesReq) (*ListAddressesResp, error)
 	TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error)
 	ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error)
+	// 裁决 #5:GetUserAssets 应改公开(链上数据无隐藏性,与 TotalAssets/ListUsersAssets 同类)。
+	//
+	//	TODO 改 AUTH_NONE。这也解决"同一份资产数据三种档位"的不一致
+	//	(club.Assets.GetUserAssets 已是公开)。
 	GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error)
+	// 裁决 #8:GetUserByAddress 应删 —— hidid 用户体系里 did 是唯一标识,不需要按地址反查用户。TODO 删除。
 	GetUserByAddress(context.Context, *GetUserByAddressReq) (*GetUserByAddressResp, error)
 }
 

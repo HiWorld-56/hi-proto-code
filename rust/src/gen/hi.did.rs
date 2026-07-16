@@ -69,6 +69,8 @@ pub mod base_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// Base —— 杂物袋:公开的版本/币种查询 + 一个需登录的超管名单查询。
+    /// TODO(一致性):ListCoins/LatestVersion/ServerVersion 是真公开,可挪进 Health,让 Base 归于一致。
     #[derive(Debug, Clone)]
     pub struct BaseClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -596,6 +598,7 @@ pub mod transfer_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 转账/交易查询。History、TxStatus 是链上公开数据(无隐藏性,故公开)。
     #[derive(Debug, Clone)]
     pub struct TransferClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -800,6 +803,8 @@ pub mod auth_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
+    /// 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
     #[derive(Debug, Clone)]
     pub struct AuthClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1093,6 +1098,10 @@ pub mod api_key_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// ⚠️ 裁决 #6:apikey 机制**不该在 did**。它是 hiclub 的东西 —— hiclub 给每个用户
+    /// (人/软bot/硬bot)设 apikey,供外部**以该用户身份**调用 hiclub 的**受限方法子集**。
+    /// 与 token 的区别:apikey 能调的方法有限。
+    /// TODO:整个 service 迁出 did,搬到 hiclub。当前 club 是转发到这里来用的。
     #[derive(Debug, Clone)]
     pub struct ApiKeyClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1421,6 +1430,14 @@ pub mod merchant_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// ⚠️ 裁决 #3:这个 service 混了两个主体 —— Get/Set 是**用户**查/设自己绑的商户节点(用户token),
+    /// 其余全是**商户**操作(ExtendToken)。TODO:把 Get/Set 拆去用户面 service。
+    ///
+    /// ⚠️ 裁决 #13:GetUserProfile/SetUserProfile/GetMerchant 现在没有授权校验 ——
+    /// club 就走 GetUserProfile 读用户档案。TODO:加互授权校验,无授权不得取他人商户的用户信息。
+    ///
+    /// 授权机制(裁决 #4,定稿):商户 X 操作商户 A 的数据时 —— 从 X 的 ExtendToken 解出 didx,
+    /// 若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
     #[derive(Debug, Clone)]
     pub struct MerchantClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1501,6 +1518,7 @@ pub mod merchant_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// ── 用户主体(TODO 拆走)──
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -1540,6 +1558,7 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Set"));
             self.inner.unary(req, path, codec).await
         }
+        /// ── 商户主体 ──
         pub async fn get_user_profile(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Did>,
@@ -1752,6 +1771,14 @@ pub mod sse_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// SSE —— web3 自动付款机制(裁决 #10)。
+    ///
+    /// 架构:PC 端跑 hidid-pc,通过 SSE 与 hidid 后台保持长连接(hidid-pc 无公网 IP)。
+    /// 流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 Notify → hidid 后端把通知转发给
+    /// 对应的 hidid-pc → ③hidid-pc 按用户在软件里设置的地址**去拉订单** → ④付款 →
+    /// ⑤付款结果通过用户设置的地址回传。
+    /// 关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
+    /// hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
     #[derive(Debug, Clone)]
     pub struct SseClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1955,6 +1982,8 @@ pub mod user_extension_settings_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 用户自己的扩展配置:extoken + 对应的扩展数据表(裁决 #7)。
+    /// resp.token = 当前 extoken;resp.table = 扩展数据标配(表名/结构)。
     #[derive(Debug, Clone)]
     pub struct UserExtensionSettingsClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -2035,30 +2064,6 @@ pub mod user_extension_settings_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn update(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::UserExtensionSettingResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.UserExtensionSettings/Update",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.UserExtensionSettings", "Update"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -2081,6 +2086,32 @@ pub mod user_extension_settings_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.UserExtensionSettings", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ⚠️ 裁决 #7:此方法实为"刷新/重新生成"(重签 extoken 那套),不是"更新"。
+        /// 入参 Empty 也印证 —— 没有要更新的内容。TODO 改名 Refresh/Regenerate。
+        pub async fn update(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::UserExtensionSettingResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.UserExtensionSettings/Update",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.UserExtensionSettings", "Update"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -2599,6 +2630,7 @@ pub mod wallet_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 钱包:链上地址与资产。资产类查询多为链上公开数据(无隐藏性)。
     #[derive(Debug, Clone)]
     pub struct WalletClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -2810,6 +2842,9 @@ pub mod wallet_client {
                 .insert(GrpcMethod::new("hi.did.Wallet", "ListUsersAssets"));
             self.inner.unary(req, path, codec).await
         }
+        /// 裁决 #5:GetUserAssets 应改公开(链上数据无隐藏性,与 TotalAssets/ListUsersAssets 同类)。
+        /// TODO 改 AUTH_NONE。这也解决"同一份资产数据三种档位"的不一致
+        /// (club.Assets.GetUserAssets 已是公开)。
         pub async fn get_user_assets(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUserAssetsReq>,
@@ -2834,6 +2869,7 @@ pub mod wallet_client {
                 .insert(GrpcMethod::new("hi.did.Wallet", "GetUserAssets"));
             self.inner.unary(req, path, codec).await
         }
+        /// 裁决 #8:GetUserByAddress 应删 —— hidid 用户体系里 did 是唯一标识,不需要按地址反查用户。TODO 删除。
         pub async fn get_user_by_address(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUserByAddressReq>,
@@ -3334,6 +3370,10 @@ pub mod invite_code_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 邀请码。前 4 个是超管管理邀请码,Verify 是待注册用户验码换 token —— 主体不同。
+    ///
+    /// TODO 裁决:① Create/Edit/List/Delete 标 AUTH_SUPERADMIN(handler 已有超管校验,现 proto 标错成 TOKEN)
+    /// ② Verify 拆到独立 service(主体是"还没注册的人",与超管无关)
     #[derive(Debug, Clone)]
     pub struct InviteCodeClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3606,6 +3646,7 @@ pub mod d_app_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// ── app 面(读):普通登录用户浏览首页 DApp ──
         pub async fn list_by_class(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -3663,6 +3704,7 @@ pub mod d_app_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.DApp", "GetTop"));
             self.inner.unary(req, path, codec).await
         }
+        /// ── 超管面(写):维护 DApp 目录。handler 已有超管校验,proto 标错成 TOKEN,待拆去 DAppAdmin ──
         pub async fn update_top(
             &mut self,
             request: impl tonic::IntoRequest<super::DAppUpdateTopReq>,
@@ -3766,6 +3808,10 @@ pub mod merchant_manage_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 商户管理(超管面)。
+    ///
+    /// ⚠️ 漏洞(裁决 #11):Delete/Edit 现标 AUTH_TOKEN 且 handler 零校验 ——
+    /// **任何登录用户都能删改商户**。三个方法都要收紧为 AUTH_SUPERADMIN。
     #[derive(Debug, Clone)]
     pub struct MerchantManageClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -4210,6 +4256,7 @@ pub mod pay_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// Pay —— 支付握手。与 SSE 的 web3 自动付款配套。
     #[derive(Debug, Clone)]
     pub struct PayClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -4531,6 +4578,8 @@ pub mod login_callback_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 三方app/web登录回调
+    /// 回调契约:did 只定义,由**三方业务(club 等)实现并注册到自己的服务里**。
+    /// did 侧无 handler 是正常的 —— 它是被 club 实现的。web3 验签:did 反向回调时载荷带签名。
     #[derive(Debug, Clone)]
     pub struct LoginCallbackClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -4646,6 +4695,7 @@ pub mod pay_callback_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 三方app/web支付回调
+    /// 回调契约:同 LoginCallback,由 club 实现。
     #[derive(Debug, Clone)]
     pub struct PayCallbackClient<T> {
         inner: tonic::client::Grpc<T>,

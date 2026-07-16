@@ -22,6 +22,8 @@ import 'base.pb.dart' as $1;
 
 export 'base.pb.dart';
 
+/// Base —— 杂物袋:公开的版本/币种查询 + 一个需登录的超管名单查询。
+/// TODO(一致性):ListCoins/LatestVersion/ServerVersion 是真公开,可挪进 Health,让 Base 归于一致。
 @$pb.GrpcServiceName('hi.did.Base')
 class BaseClient extends $grpc.Client {
   /// The hostname for this service.

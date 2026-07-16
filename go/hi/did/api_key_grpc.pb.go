@@ -30,6 +30,12 @@ const (
 // ApiKeyClient is the client API for ApiKey service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ⚠️ 裁决 #6:apikey 机制**不该在 did**。它是 hiclub 的东西 —— hiclub 给每个用户
+//
+//	(人/软bot/硬bot)设 apikey,供外部**以该用户身份**调用 hiclub 的**受限方法子集**。
+//	与 token 的区别:apikey 能调的方法有限。
+//	TODO:整个 service 迁出 did,搬到 hiclub。当前 club 是转发到这里来用的。
 type ApiKeyClient interface {
 	Create(ctx context.Context, in *CreateApiKeyReq, opts ...grpc.CallOption) (*CreateApiKeyResp, error)
 	Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
@@ -99,6 +105,12 @@ func (c *apiKeyClient) Get(ctx context.Context, in *GetApiKeyReq, opts ...grpc.C
 // ApiKeyServer is the server API for ApiKey service.
 // All implementations should embed UnimplementedApiKeyServer
 // for forward compatibility.
+//
+// ⚠️ 裁决 #6:apikey 机制**不该在 did**。它是 hiclub 的东西 —— hiclub 给每个用户
+//
+//	(人/软bot/硬bot)设 apikey,供外部**以该用户身份**调用 hiclub 的**受限方法子集**。
+//	与 token 的区别:apikey 能调的方法有限。
+//	TODO:整个 service 迁出 did,搬到 hiclub。当前 club 是转发到这里来用的。
 type ApiKeyServer interface {
 	Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error)
 	Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error)

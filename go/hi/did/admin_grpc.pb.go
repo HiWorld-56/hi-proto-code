@@ -31,6 +31,12 @@ const (
 // InviteCodeClient is the client API for InviteCode service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 邀请码。前 4 个是超管管理邀请码,Verify 是待注册用户验码换 token —— 主体不同。
+//
+// TODO 裁决:① Create/Edit/List/Delete 标 AUTH_SUPERADMIN(handler 已有超管校验,现 proto 标错成 TOKEN)
+//
+//	② Verify 拆到独立 service(主体是"还没注册的人",与超管无关)
 type InviteCodeClient interface {
 	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InviteCodeCreateResp, error)
 	Edit(ctx context.Context, in *InviteCodeEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -100,6 +106,12 @@ func (c *inviteCodeClient) Verify(ctx context.Context, in *InviteCodeVerifyReq, 
 // InviteCodeServer is the server API for InviteCode service.
 // All implementations should embed UnimplementedInviteCodeServer
 // for forward compatibility.
+//
+// 邀请码。前 4 个是超管管理邀请码,Verify 是待注册用户验码换 token —— 主体不同。
+//
+// TODO 裁决:① Create/Edit/List/Delete 标 AUTH_SUPERADMIN(handler 已有超管校验,现 proto 标错成 TOKEN)
+//
+//	② Verify 拆到独立 service(主体是"还没注册的人",与超管无关)
 type InviteCodeServer interface {
 	Create(context.Context, *emptypb.Empty) (*InviteCodeCreateResp, error)
 	Edit(context.Context, *InviteCodeEditReq) (*emptypb.Empty, error)
@@ -287,9 +299,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DAppClient interface {
+	// ── app 面(读):普通登录用户浏览首页 DApp ──
 	ListByClass(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DAppListByClassResp, error)
 	GetRWA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DAppGetRWAResp, error)
 	GetTop(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DAppInfo, error)
+	// ── 超管面(写):维护 DApp 目录。handler 已有超管校验,proto 标错成 TOKEN,待拆去 DAppAdmin ──
 	UpdateTop(ctx context.Context, in *DAppUpdateTopReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Create(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *DAppInfo, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -389,9 +403,11 @@ func (c *dAppClient) Delete(ctx context.Context, in *DAppDeleteReq, opts ...grpc
 // All implementations should embed UnimplementedDAppServer
 // for forward compatibility.
 type DAppServer interface {
+	// ── app 面(读):普通登录用户浏览首页 DApp ──
 	ListByClass(context.Context, *emptypb.Empty) (*DAppListByClassResp, error)
 	GetRWA(context.Context, *emptypb.Empty) (*DAppGetRWAResp, error)
 	GetTop(context.Context, *emptypb.Empty) (*DAppInfo, error)
+	// ── 超管面(写):维护 DApp 目录。handler 已有超管校验,proto 标错成 TOKEN,待拆去 DAppAdmin ──
 	UpdateTop(context.Context, *DAppUpdateTopReq) (*emptypb.Empty, error)
 	Create(context.Context, *DAppInfo) (*emptypb.Empty, error)
 	Edit(context.Context, *DAppInfo) (*emptypb.Empty, error)
@@ -647,6 +663,12 @@ const (
 // MerchantManageClient is the client API for MerchantManage service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 商户管理(超管面)。
+//
+// ⚠️ 漏洞(裁决 #11):Delete/Edit 现标 AUTH_TOKEN 且 handler 零校验 ——
+//
+//	**任何登录用户都能删改商户**。三个方法都要收紧为 AUTH_SUPERADMIN。
 type MerchantManageClient interface {
 	List(ctx context.Context, in *MerchantManageListReq, opts ...grpc.CallOption) (*MerchantManageListResp, error)
 	Delete(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -694,6 +716,12 @@ func (c *merchantManageClient) Edit(ctx context.Context, in *MerchantManageEditR
 // MerchantManageServer is the server API for MerchantManage service.
 // All implementations should embed UnimplementedMerchantManageServer
 // for forward compatibility.
+//
+// 商户管理(超管面)。
+//
+// ⚠️ 漏洞(裁决 #11):Delete/Edit 现标 AUTH_TOKEN 且 handler 零校验 ——
+//
+//	**任何登录用户都能删改商户**。三个方法都要收紧为 AUTH_SUPERADMIN。
 type MerchantManageServer interface {
 	List(context.Context, *MerchantManageListReq) (*MerchantManageListResp, error)
 	Delete(context.Context, *hi.DID) (*emptypb.Empty, error)

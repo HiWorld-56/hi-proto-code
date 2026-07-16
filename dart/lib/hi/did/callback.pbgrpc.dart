@@ -22,6 +22,8 @@ import '../common.pb.dart' as $0;
 export 'callback.pb.dart';
 
 /// 三方app/web登录回调
+/// 回调契约:did 只定义,由**三方业务(club 等)实现并注册到自己的服务里**。
+/// did 侧无 handler 是正常的 —— 它是被 club 实现的。web3 验签:did 反向回调时载荷带签名。
 @$pb.GrpcServiceName('hi.did.LoginCallback')
 class LoginCallbackClient extends $grpc.Client {
   /// The hostname for this service.
@@ -72,6 +74,7 @@ abstract class LoginCallbackServiceBase extends $grpc.Service {
 }
 
 /// 三方app/web支付回调
+/// 回调契约:同 LoginCallback,由 club 实现。
 @$pb.GrpcServiceName('hi.did.PayCallback')
 class PayCallbackClient extends $grpc.Client {
   /// The hostname for this service.

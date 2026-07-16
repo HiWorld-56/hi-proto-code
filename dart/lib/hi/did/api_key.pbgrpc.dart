@@ -21,6 +21,10 @@ import 'api_key.pb.dart' as $0;
 
 export 'api_key.pb.dart';
 
+/// ⚠️ 裁决 #6:apikey 机制**不该在 did**。它是 hiclub 的东西 —— hiclub 给每个用户
+///    (人/软bot/硬bot)设 apikey,供外部**以该用户身份**调用 hiclub 的**受限方法子集**。
+///    与 token 的区别:apikey 能调的方法有限。
+///    TODO:整个 service 迁出 did,搬到 hiclub。当前 club 是转发到这里来用的。
 @$pb.GrpcServiceName('hi.did.ApiKey')
 class ApiKeyClient extends $grpc.Client {
   /// The hostname for this service.

@@ -20,16 +20,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserExtensionSettings_Update_FullMethodName = "/hi.did.UserExtensionSettings/Update"
 	UserExtensionSettings_Get_FullMethodName    = "/hi.did.UserExtensionSettings/Get"
+	UserExtensionSettings_Update_FullMethodName = "/hi.did.UserExtensionSettings/Update"
 )
 
 // UserExtensionSettingsClient is the client API for UserExtensionSettings service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 用户自己的扩展配置:extoken + 对应的扩展数据表(裁决 #7)。
+// resp.token = 当前 extoken;resp.table = 扩展数据标配(表名/结构)。
 type UserExtensionSettingsClient interface {
-	Update(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error)
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error)
+	// ⚠️ 裁决 #7:此方法实为"刷新/重新生成"(重签 extoken 那套),不是"更新"。
+	//
+	//	入参 Empty 也印证 —— 没有要更新的内容。TODO 改名 Refresh/Regenerate。
+	Update(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error)
 }
 
 type userExtensionSettingsClient struct {
@@ -38,16 +44,6 @@ type userExtensionSettingsClient struct {
 
 func NewUserExtensionSettingsClient(cc grpc.ClientConnInterface) UserExtensionSettingsClient {
 	return &userExtensionSettingsClient{cc}
-}
-
-func (c *userExtensionSettingsClient) Update(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserExtensionSettingResp)
-	err := c.cc.Invoke(ctx, UserExtensionSettings_Update_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *userExtensionSettingsClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error) {
@@ -60,12 +56,28 @@ func (c *userExtensionSettingsClient) Get(ctx context.Context, in *emptypb.Empty
 	return out, nil
 }
 
+func (c *userExtensionSettingsClient) Update(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserExtensionSettingResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserExtensionSettingResp)
+	err := c.cc.Invoke(ctx, UserExtensionSettings_Update_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserExtensionSettingsServer is the server API for UserExtensionSettings service.
 // All implementations should embed UnimplementedUserExtensionSettingsServer
 // for forward compatibility.
+//
+// 用户自己的扩展配置:extoken + 对应的扩展数据表(裁决 #7)。
+// resp.token = 当前 extoken;resp.table = 扩展数据标配(表名/结构)。
 type UserExtensionSettingsServer interface {
-	Update(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error)
 	Get(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error)
+	// ⚠️ 裁决 #7:此方法实为"刷新/重新生成"(重签 extoken 那套),不是"更新"。
+	//
+	//	入参 Empty 也印证 —— 没有要更新的内容。TODO 改名 Refresh/Regenerate。
+	Update(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error)
 }
 
 // UnimplementedUserExtensionSettingsServer should be embedded to have
@@ -75,11 +87,11 @@ type UserExtensionSettingsServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserExtensionSettingsServer struct{}
 
-func (UnimplementedUserExtensionSettingsServer) Update(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
-}
 func (UnimplementedUserExtensionSettingsServer) Get(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedUserExtensionSettingsServer) Update(context.Context, *emptypb.Empty) (*UserExtensionSettingResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedUserExtensionSettingsServer) testEmbeddedByValue() {}
 
@@ -101,24 +113,6 @@ func RegisterUserExtensionSettingsServer(s grpc.ServiceRegistrar, srv UserExtens
 	s.RegisterService(&UserExtensionSettings_ServiceDesc, srv)
 }
 
-func _UserExtensionSettings_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserExtensionSettingsServer).Update(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserExtensionSettings_Update_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserExtensionSettingsServer).Update(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserExtensionSettings_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -137,6 +131,24 @@ func _UserExtensionSettings_Get_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserExtensionSettings_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserExtensionSettingsServer).Update(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserExtensionSettings_Update_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserExtensionSettingsServer).Update(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserExtensionSettings_ServiceDesc is the grpc.ServiceDesc for UserExtensionSettings service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -145,12 +157,12 @@ var UserExtensionSettings_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserExtensionSettingsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Update",
-			Handler:    _UserExtensionSettings_Update_Handler,
-		},
-		{
 			MethodName: "Get",
 			Handler:    _UserExtensionSettings_Get_Handler,
+		},
+		{
+			MethodName: "Update",
+			Handler:    _UserExtensionSettings_Update_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

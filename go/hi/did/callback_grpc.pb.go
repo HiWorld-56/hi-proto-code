@@ -29,6 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 三方app/web登录回调
+// 回调契约:did 只定义,由**三方业务(club 等)实现并注册到自己的服务里**。
+// did 侧无 handler 是正常的 —— 它是被 club 实现的。web3 验签:did 反向回调时载荷带签名。
 type LoginCallbackClient interface {
 	Login(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -56,6 +58,8 @@ func (c *loginCallbackClient) Login(ctx context.Context, in *hi.SignedData, opts
 // for forward compatibility.
 //
 // 三方app/web登录回调
+// 回调契约:did 只定义,由**三方业务(club 等)实现并注册到自己的服务里**。
+// did 侧无 handler 是正常的 —— 它是被 club 实现的。web3 验签:did 反向回调时载荷带签名。
 type LoginCallbackServer interface {
 	Login(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }
@@ -133,6 +137,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 三方app/web支付回调
+// 回调契约:同 LoginCallback,由 club 实现。
 type PayCallbackClient interface {
 	Pay(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -160,6 +165,7 @@ func (c *payCallbackClient) Pay(ctx context.Context, in *hi.SignedData, opts ...
 // for forward compatibility.
 //
 // 三方app/web支付回调
+// 回调契约:同 LoginCallback,由 club 实现。
 type PayCallbackServer interface {
 	Pay(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }

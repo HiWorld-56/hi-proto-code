@@ -22,6 +22,8 @@ import 'user_extension.pb.dart' as $1;
 
 export 'user_extension.pb.dart';
 
+/// 用户自己的扩展配置:extoken + 对应的扩展数据表(裁决 #7)。
+/// resp.token = 当前 extoken;resp.table = 扩展数据标配(表名/结构)。
 @$pb.GrpcServiceName('hi.did.UserExtensionSettings')
 class UserExtensionSettingsClient extends $grpc.Client {
   /// The hostname for this service.
@@ -35,13 +37,6 @@ class UserExtensionSettingsClient extends $grpc.Client {
   UserExtensionSettingsClient(super.channel,
       {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.UserExtensionSettingResp> update(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$update, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.UserExtensionSettingResp> get(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -49,16 +44,25 @@ class UserExtensionSettingsClient extends $grpc.Client {
     return $createUnaryCall(_$get, request, options: options);
   }
 
+  /// ⚠️ 裁决 #7:此方法实为"刷新/重新生成"(重签 extoken 那套),不是"更新"。
+  ///    入参 Empty 也印证 —— 没有要更新的内容。TODO 改名 Refresh/Regenerate。
+  $grpc.ResponseFuture<$1.UserExtensionSettingResp> update(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$update, request, options: options);
+  }
+
   // method descriptors
 
-  static final _$update =
-      $grpc.ClientMethod<$0.Empty, $1.UserExtensionSettingResp>(
-          '/hi.did.UserExtensionSettings/Update',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.UserExtensionSettingResp.fromBuffer);
   static final _$get =
       $grpc.ClientMethod<$0.Empty, $1.UserExtensionSettingResp>(
           '/hi.did.UserExtensionSettings/Get',
+          ($0.Empty value) => value.writeToBuffer(),
+          $1.UserExtensionSettingResp.fromBuffer);
+  static final _$update =
+      $grpc.ClientMethod<$0.Empty, $1.UserExtensionSettingResp>(
+          '/hi.did.UserExtensionSettings/Update',
           ($0.Empty value) => value.writeToBuffer(),
           $1.UserExtensionSettingResp.fromBuffer);
 }
@@ -69,28 +73,20 @@ abstract class UserExtensionSettingsServiceBase extends $grpc.Service {
 
   UserExtensionSettingsServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.UserExtensionSettingResp>(
-        'Update',
-        update_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.UserExtensionSettingResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.UserExtensionSettingResp>(
         'Get',
         get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.UserExtensionSettingResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.UserExtensionSettingResp>(
+        'Update',
+        update_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.UserExtensionSettingResp value) => value.writeToBuffer()));
   }
-
-  $async.Future<$1.UserExtensionSettingResp> update_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return update($call, await $request);
-  }
-
-  $async.Future<$1.UserExtensionSettingResp> update(
-      $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.UserExtensionSettingResp> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
@@ -98,6 +94,14 @@ abstract class UserExtensionSettingsServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.UserExtensionSettingResp> get(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$1.UserExtensionSettingResp> update_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return update($call, await $request);
+  }
+
+  $async.Future<$1.UserExtensionSettingResp> update(
       $grpc.ServiceCall call, $0.Empty request);
 }
 

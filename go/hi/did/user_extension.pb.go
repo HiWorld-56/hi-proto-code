@@ -490,9 +490,9 @@ const file_hi_did_user_extension_proto_rawDesc = "" +
 	"\x04user\x18\x02 \x01(\tR\x04user\"E\n" +
 	"\x14UserExtensionGetResp\x12-\n" +
 	"\x04unit\x18\x01 \x01(\v2\x19.hi.did.UserExtensionUnitR\x04unit2\xa8\x01\n" +
-	"\x15UserExtensionSettings\x12H\n" +
-	"\x06Update\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x02\x12E\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x022\xb2\x02\n" +
+	"\x15UserExtensionSettings\x12E\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x02\x12H\n" +
+	"\x06Update\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x022\xb2\x02\n" +
 	"\rUserExtension\x12F\n" +
 	"\x06Update\x12\x1e.hi.did.UserExtensionUpdateReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12F\n" +
 	"\x06Delete\x12\x1e.hi.did.UserExtensionDeleteReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12F\n" +
@@ -534,14 +534,14 @@ var file_hi_did_user_extension_proto_depIdxs = []int32{
 	8,  // 2: hi.did.UserExtensionUpdateReq.units:type_name -> hi.did.UserExtensionUnit
 	9,  // 3: hi.did.ListMerchantsReq.pagination:type_name -> hi.Pagination
 	8,  // 4: hi.did.UserExtensionGetResp.unit:type_name -> hi.did.UserExtensionUnit
-	10, // 5: hi.did.UserExtensionSettings.Update:input_type -> google.protobuf.Empty
-	10, // 6: hi.did.UserExtensionSettings.Get:input_type -> google.protobuf.Empty
+	10, // 5: hi.did.UserExtensionSettings.Get:input_type -> google.protobuf.Empty
+	10, // 6: hi.did.UserExtensionSettings.Update:input_type -> google.protobuf.Empty
 	3,  // 7: hi.did.UserExtension.Update:input_type -> hi.did.UserExtensionUpdateReq
 	4,  // 8: hi.did.UserExtension.Delete:input_type -> hi.did.UserExtensionDeleteReq
 	6,  // 9: hi.did.UserExtension.Get:input_type -> hi.did.UserExtensionGetReq
 	5,  // 10: hi.did.UserExtension.ListMerchants:input_type -> hi.did.ListMerchantsReq
-	0,  // 11: hi.did.UserExtensionSettings.Update:output_type -> hi.did.UserExtensionSettingResp
-	0,  // 12: hi.did.UserExtensionSettings.Get:output_type -> hi.did.UserExtensionSettingResp
+	0,  // 11: hi.did.UserExtensionSettings.Get:output_type -> hi.did.UserExtensionSettingResp
+	0,  // 12: hi.did.UserExtensionSettings.Update:output_type -> hi.did.UserExtensionSettingResp
 	10, // 13: hi.did.UserExtension.Update:output_type -> google.protobuf.Empty
 	10, // 14: hi.did.UserExtension.Delete:output_type -> google.protobuf.Empty
 	7,  // 15: hi.did.UserExtension.Get:output_type -> hi.did.UserExtensionGetResp

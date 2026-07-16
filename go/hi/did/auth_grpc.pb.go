@@ -33,6 +33,9 @@ const (
 // AuthClient is the client API for Auth service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
+// 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 type AuthClient interface {
 	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 	Verify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
@@ -124,6 +127,9 @@ func (c *authClient) Logout(ctx context.Context, in *hi.SignedData, opts ...grpc
 // AuthServer is the server API for Auth service.
 // All implementations should embed UnimplementedAuthServer
 // for forward compatibility.
+//
+// Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
+// 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 type AuthServer interface {
 	RefreshToken(context.Context, *RefreshTokenReq) (*hi.AuthToken, error)
 	Verify(context.Context, *hi.SignedData) (*LoginResp, error)

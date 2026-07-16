@@ -20,6 +20,7 @@ import 'transfer.pb.dart' as $0;
 
 export 'transfer.pb.dart';
 
+/// 转账/交易查询。History、TxStatus 是链上公开数据(无隐藏性,故公开)。
 @$pb.GrpcServiceName('hi.did.Transfer')
 class TransferClient extends $grpc.Client {
   /// The hostname for this service.
