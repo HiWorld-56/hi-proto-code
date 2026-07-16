@@ -15,21 +15,6 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use userExtensionSettingRespDescriptor instead')
-const UserExtensionSettingResp$json = {
-  '1': 'UserExtensionSettingResp',
-  '2': [
-    {'1': 'token', '3': 1, '4': 1, '5': 9, '10': 'token'},
-    {'1': 'table', '3': 2, '4': 1, '5': 9, '10': 'table'},
-  ],
-};
-
-/// Descriptor for `UserExtensionSettingResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List userExtensionSettingRespDescriptor =
-    $convert.base64Decode(
-        'ChhVc2VyRXh0ZW5zaW9uU2V0dGluZ1Jlc3ASFAoFdG9rZW4YASABKAlSBXRva2VuEhQKBXRhYm'
-        'xlGAIgASgJUgV0YWJsZQ==');
-
 @$core.Deprecated('Use listMerchantsReqDescriptor instead')
 const ListMerchantsReq$json = {
   '1': 'ListMerchantsReq',

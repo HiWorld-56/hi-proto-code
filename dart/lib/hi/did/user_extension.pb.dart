@@ -14,83 +14,16 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $3;
+import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
-
-class UserExtensionSettingResp extends $pb.GeneratedMessage {
-  factory UserExtensionSettingResp({
-    $core.String? token,
-    $core.String? table,
-  }) {
-    final result = create();
-    if (token != null) result.token = token;
-    if (table != null) result.table = table;
-    return result;
-  }
-
-  UserExtensionSettingResp._();
-
-  factory UserExtensionSettingResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UserExtensionSettingResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UserExtensionSettingResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'token')
-    ..aOS(2, _omitFieldNames ? '' : 'table')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserExtensionSettingResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserExtensionSettingResp copyWith(
-          void Function(UserExtensionSettingResp) updates) =>
-      super.copyWith((message) => updates(message as UserExtensionSettingResp))
-          as UserExtensionSettingResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UserExtensionSettingResp create() => UserExtensionSettingResp._();
-  @$core.override
-  UserExtensionSettingResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UserExtensionSettingResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UserExtensionSettingResp>(create);
-  static UserExtensionSettingResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get token => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set token($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasToken() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearToken() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get table => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set table($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasTable() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearTable() => $_clearField(2);
-}
 
 /// 列某用户所属的商户。主体是**用户** —— 读作 "UserExtension.ListMerchants":
 /// 列出这个用户在哪些商户下有扩展(=属于哪些商户)。不返回扩展数据本身。
 class ListMerchantsReq extends $pb.GeneratedMessage {
   factory ListMerchantsReq({
     $core.String? userDid,
-    $3.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (userDid != null) result.userDid = userDid;
@@ -112,8 +45,8 @@ class ListMerchantsReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'userDid')
-    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -145,15 +78,15 @@ class ListMerchantsReq extends $pb.GeneratedMessage {
   void clearUserDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $3.Pagination get pagination => $_getN(1);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($3.Pagination value) => $_setField(2, value);
+  set pagination($2.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Pagination ensurePagination() => $_ensure(1);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 const $core.bool _omitFieldNames =

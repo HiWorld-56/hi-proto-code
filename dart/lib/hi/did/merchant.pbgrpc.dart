@@ -350,6 +350,88 @@ abstract class MerchantServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.GrantReq request);
 }
 
+/// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
+/// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
+///
+/// ⚠️ 为什么单独一个 service、且是 AUTH_TOKEN:ExtendToken 是从这里**拿到**的,
+///    所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
+///    与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
+@$pb.GrpcServiceName('hi.did.MerchantExDB')
+class MerchantExDBClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  MerchantExDBClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.MerchantExDBResp> get(
+    $2.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$get, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.MerchantExDBResp> refresh(
+    $2.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$refresh, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$get = $grpc.ClientMethod<$2.Empty, $1.MerchantExDBResp>(
+      '/hi.did.MerchantExDB/Get',
+      ($2.Empty value) => value.writeToBuffer(),
+      $1.MerchantExDBResp.fromBuffer);
+  static final _$refresh = $grpc.ClientMethod<$2.Empty, $1.MerchantExDBResp>(
+      '/hi.did.MerchantExDB/Refresh',
+      ($2.Empty value) => value.writeToBuffer(),
+      $1.MerchantExDBResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.MerchantExDB')
+abstract class MerchantExDBServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.MerchantExDB';
+
+  MerchantExDBServiceBase() {
+    $addMethod($grpc.ServiceMethod<$2.Empty, $1.MerchantExDBResp>(
+        'Get',
+        get_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
+        ($1.MerchantExDBResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.Empty, $1.MerchantExDBResp>(
+        'Refresh',
+        refresh_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
+        ($1.MerchantExDBResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.MerchantExDBResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
+    return get($call, await $request);
+  }
+
+  $async.Future<$1.MerchantExDBResp> get(
+      $grpc.ServiceCall call, $2.Empty request);
+
+  $async.Future<$1.MerchantExDBResp> refresh_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
+    return refresh($call, await $request);
+  }
+
+  $async.Future<$1.MerchantExDBResp> refresh(
+      $grpc.ServiceCall call, $2.Empty request);
+}
+
 /// SSE —— web3 自动付款机制(裁决 #10)。
 ///
 /// 架构:PC 端跑 hidid-pc,通过 SSE 与 hidid 后台保持长连接(hidid-pc 无公网 IP)。

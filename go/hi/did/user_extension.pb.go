@@ -11,7 +11,7 @@ import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	_ "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -23,58 +23,6 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
-
-type UserExtensionSettingResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	Table         string                 `protobuf:"bytes,2,opt,name=table,proto3" json:"table,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserExtensionSettingResp) Reset() {
-	*x = UserExtensionSettingResp{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserExtensionSettingResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserExtensionSettingResp) ProtoMessage() {}
-
-func (x *UserExtensionSettingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserExtensionSettingResp.ProtoReflect.Descriptor instead.
-func (*UserExtensionSettingResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *UserExtensionSettingResp) GetToken() string {
-	if x != nil {
-		return x.Token
-	}
-	return ""
-}
-
-func (x *UserExtensionSettingResp) GetTable() string {
-	if x != nil {
-		return x.Table
-	}
-	return ""
-}
 
 // 列某用户所属的商户。主体是**用户** —— 读作 "UserExtension.ListMerchants":
 // 列出这个用户在哪些商户下有扩展(=属于哪些商户)。不返回扩展数据本身。
@@ -88,7 +36,7 @@ type ListMerchantsReq struct {
 
 func (x *ListMerchantsReq) Reset() {
 	*x = ListMerchantsReq{}
-	mi := &file_hi_did_user_extension_proto_msgTypes[1]
+	mi := &file_hi_did_user_extension_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -100,7 +48,7 @@ func (x *ListMerchantsReq) String() string {
 func (*ListMerchantsReq) ProtoMessage() {}
 
 func (x *ListMerchantsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_user_extension_proto_msgTypes[1]
+	mi := &file_hi_did_user_extension_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -113,7 +61,7 @@ func (x *ListMerchantsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMerchantsReq.ProtoReflect.Descriptor instead.
 func (*ListMerchantsReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{1}
+	return file_hi_did_user_extension_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *ListMerchantsReq) GetUserDid() string {
@@ -134,18 +82,12 @@ var File_hi_did_user_extension_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_extension_proto_rawDesc = "" +
 	"\n" +
-	"\x1bhi/did/user_extension.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\x1a\x15hi/did/merchant.proto\"F\n" +
-	"\x18UserExtensionSettingResp\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\x12\x14\n" +
-	"\x05table\x18\x02 \x01(\tR\x05table\"k\n" +
+	"\x1bhi/did/user_extension.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\x1a\x15hi/did/merchant.proto\"k\n" +
 	"\x10ListMerchantsReq\x12'\n" +
 	"\buser_did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\auserDid\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination2\xa9\x01\n" +
-	"\x15UserExtensionSettings\x12E\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x02\x12I\n" +
-	"\aRefresh\x12\x16.google.protobuf.Empty\x1a .hi.did.UserExtensionSettingResp\"\x04\x88\xb5\x18\x022Z\n" +
+	"pagination2Z\n" +
 	"\rUserExtension\x12I\n" +
 	"\rListMerchants\x12\x18.hi.did.ListMerchantsReq\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x03B\x83\x01\n" +
 	"\n" +
@@ -163,24 +105,18 @@ func file_hi_did_user_extension_proto_rawDescGZIP() []byte {
 	return file_hi_did_user_extension_proto_rawDescData
 }
 
-var file_hi_did_user_extension_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_hi_did_user_extension_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_hi_did_user_extension_proto_goTypes = []any{
-	(*UserExtensionSettingResp)(nil), // 0: hi.did.UserExtensionSettingResp
-	(*ListMerchantsReq)(nil),         // 1: hi.did.ListMerchantsReq
-	(*hi.Pagination)(nil),            // 2: hi.Pagination
-	(*emptypb.Empty)(nil),            // 3: google.protobuf.Empty
-	(*MerchantListResp)(nil),         // 4: hi.did.MerchantListResp
+	(*ListMerchantsReq)(nil), // 0: hi.did.ListMerchantsReq
+	(*hi.Pagination)(nil),    // 1: hi.Pagination
+	(*MerchantListResp)(nil), // 2: hi.did.MerchantListResp
 }
 var file_hi_did_user_extension_proto_depIdxs = []int32{
-	2, // 0: hi.did.ListMerchantsReq.pagination:type_name -> hi.Pagination
-	3, // 1: hi.did.UserExtensionSettings.Get:input_type -> google.protobuf.Empty
-	3, // 2: hi.did.UserExtensionSettings.Refresh:input_type -> google.protobuf.Empty
-	1, // 3: hi.did.UserExtension.ListMerchants:input_type -> hi.did.ListMerchantsReq
-	0, // 4: hi.did.UserExtensionSettings.Get:output_type -> hi.did.UserExtensionSettingResp
-	0, // 5: hi.did.UserExtensionSettings.Refresh:output_type -> hi.did.UserExtensionSettingResp
-	4, // 6: hi.did.UserExtension.ListMerchants:output_type -> hi.did.MerchantListResp
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	1, // 0: hi.did.ListMerchantsReq.pagination:type_name -> hi.Pagination
+	0, // 1: hi.did.UserExtension.ListMerchants:input_type -> hi.did.ListMerchantsReq
+	2, // 2: hi.did.UserExtension.ListMerchants:output_type -> hi.did.MerchantListResp
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -198,9 +134,9 @@ func file_hi_did_user_extension_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_user_extension_proto_rawDesc), len(file_hi_did_user_extension_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   1,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   1,
 		},
 		GoTypes:           file_hi_did_user_extension_proto_goTypes,
 		DependencyIndexes: file_hi_did_user_extension_proto_depIdxs,

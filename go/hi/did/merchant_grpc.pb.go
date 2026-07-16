@@ -543,6 +543,160 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	MerchantExDB_Get_FullMethodName     = "/hi.did.MerchantExDB/Get"
+	MerchantExDB_Refresh_FullMethodName = "/hi.did.MerchantExDB/Refresh"
+)
+
+// MerchantExDBClient is the client API for MerchantExDB service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
+// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
+//
+// ⚠️ 为什么单独一个 service、且是 AUTH_TOKEN:ExtendToken 是从这里**拿到**的,
+//
+//	所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
+//	与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
+type MerchantExDBClient interface {
+	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error)
+	Refresh(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error)
+}
+
+type merchantExDBClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMerchantExDBClient(cc grpc.ClientConnInterface) MerchantExDBClient {
+	return &merchantExDBClient{cc}
+}
+
+func (c *merchantExDBClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantExDBResp)
+	err := c.cc.Invoke(ctx, MerchantExDB_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchantExDBClient) Refresh(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantExDBResp)
+	err := c.cc.Invoke(ctx, MerchantExDB_Refresh_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MerchantExDBServer is the server API for MerchantExDB service.
+// All implementations should embed UnimplementedMerchantExDBServer
+// for forward compatibility.
+//
+// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
+// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
+//
+// ⚠️ 为什么单独一个 service、且是 AUTH_TOKEN:ExtendToken 是从这里**拿到**的,
+//
+//	所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
+//	与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
+type MerchantExDBServer interface {
+	Get(context.Context, *emptypb.Empty) (*MerchantExDBResp, error)
+	Refresh(context.Context, *emptypb.Empty) (*MerchantExDBResp, error)
+}
+
+// UnimplementedMerchantExDBServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedMerchantExDBServer struct{}
+
+func (UnimplementedMerchantExDBServer) Get(context.Context, *emptypb.Empty) (*MerchantExDBResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedMerchantExDBServer) Refresh(context.Context, *emptypb.Empty) (*MerchantExDBResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Refresh not implemented")
+}
+func (UnimplementedMerchantExDBServer) testEmbeddedByValue() {}
+
+// UnsafeMerchantExDBServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MerchantExDBServer will
+// result in compilation errors.
+type UnsafeMerchantExDBServer interface {
+	mustEmbedUnimplementedMerchantExDBServer()
+}
+
+func RegisterMerchantExDBServer(s grpc.ServiceRegistrar, srv MerchantExDBServer) {
+	// If the following call panics, it indicates UnimplementedMerchantExDBServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&MerchantExDB_ServiceDesc, srv)
+}
+
+func _MerchantExDB_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantExDBServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantExDB_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantExDBServer).Get(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MerchantExDB_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantExDBServer).Refresh(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantExDB_Refresh_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantExDBServer).Refresh(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// MerchantExDB_ServiceDesc is the grpc.ServiceDesc for MerchantExDB service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var MerchantExDB_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.MerchantExDB",
+	HandlerType: (*MerchantExDBServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Get",
+			Handler:    _MerchantExDB_Get_Handler,
+		},
+		{
+			MethodName: "Refresh",
+			Handler:    _MerchantExDB_Refresh_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/merchant.proto",
+}
+
+const (
 	SSE_OrderEvents_FullMethodName = "/hi.did.SSE/OrderEvents"
 	SSE_Notify_FullMethodName      = "/hi.did.SSE/Notify"
 )

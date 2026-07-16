@@ -1267,6 +1267,73 @@ class GetUserMqttResp extends $pb.GeneratedMessage {
   void clearPassword() => $_clearField(2);
 }
 
+/// 商户的扩展库访问凭证:extoken(=ExtendToken,商户的 API 凭证)+ extend 表名。
+class MerchantExDBResp extends $pb.GeneratedMessage {
+  factory MerchantExDBResp({
+    $core.String? token,
+    $core.String? table,
+  }) {
+    final result = create();
+    if (token != null) result.token = token;
+    if (table != null) result.table = table;
+    return result;
+  }
+
+  MerchantExDBResp._();
+
+  factory MerchantExDBResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantExDBResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantExDBResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'token')
+    ..aOS(2, _omitFieldNames ? '' : 'table')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantExDBResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantExDBResp copyWith(void Function(MerchantExDBResp) updates) =>
+      super.copyWith((message) => updates(message as MerchantExDBResp))
+          as MerchantExDBResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantExDBResp create() => MerchantExDBResp._();
+  @$core.override
+  MerchantExDBResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantExDBResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantExDBResp>(create);
+  static MerchantExDBResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get token => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set token($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasToken() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearToken() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get table => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set table($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTable() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTable() => $_clearField(2);
+}
+
 class MerchantNotifyReq extends $pb.GeneratedMessage {
   factory MerchantNotifyReq({
     $core.String? did,
