@@ -72,6 +72,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListPluginResp> listVersions(
+    $0.ListVersionsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listVersions, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> delete(
     $0.DeletePluginReq request, {
     $grpc.CallOptions? options,
@@ -93,11 +100,11 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$setActiveVersion, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetExDataResp> getExData(
-    $0.GetExDataReq request, {
+  $grpc.ResponseFuture<$0.GetParamsResp> getParams(
+    $0.GetParamsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getExData, request, options: options);
+    return $createUnaryCall(_$getParams, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.PluginSwitchResp> setSwitches(
@@ -125,6 +132,11 @@ class PluginClient extends $grpc.Client {
       '/hi.club.Plugin/List',
       ($0.ListPluginReq value) => value.writeToBuffer(),
       $0.ListPluginResp.fromBuffer);
+  static final _$listVersions =
+      $grpc.ClientMethod<$0.ListVersionsReq, $0.ListPluginResp>(
+          '/hi.club.Plugin/ListVersions',
+          ($0.ListVersionsReq value) => value.writeToBuffer(),
+          $0.ListPluginResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$0.DeletePluginReq, $1.Empty>(
       '/hi.club.Plugin/Delete',
       ($0.DeletePluginReq value) => value.writeToBuffer(),
@@ -139,11 +151,11 @@ class PluginClient extends $grpc.Client {
           '/hi.club.Plugin/SetActiveVersion',
           ($0.SetActiveVersionReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$getExData =
-      $grpc.ClientMethod<$0.GetExDataReq, $0.GetExDataResp>(
-          '/hi.club.Plugin/GetExData',
-          ($0.GetExDataReq value) => value.writeToBuffer(),
-          $0.GetExDataResp.fromBuffer);
+  static final _$getParams =
+      $grpc.ClientMethod<$0.GetParamsReq, $0.GetParamsResp>(
+          '/hi.club.Plugin/GetParams',
+          ($0.GetParamsReq value) => value.writeToBuffer(),
+          $0.GetParamsResp.fromBuffer);
   static final _$setSwitches =
       $grpc.ClientMethod<$0.PluginSwitchReq, $0.PluginSwitchResp>(
           '/hi.club.Plugin/SetSwitches',
@@ -184,6 +196,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ListPluginReq.fromBuffer(value),
         ($0.ListPluginResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListVersionsReq, $0.ListPluginResp>(
+        'ListVersions',
+        listVersions_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ListVersionsReq.fromBuffer(value),
+        ($0.ListPluginResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeletePluginReq, $1.Empty>(
         'Delete',
         delete_Pre,
@@ -207,13 +226,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.SetActiveVersionReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetExDataReq, $0.GetExDataResp>(
-        'GetExData',
-        getExData_Pre,
+    $addMethod($grpc.ServiceMethod<$0.GetParamsReq, $0.GetParamsResp>(
+        'GetParams',
+        getParams_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GetExDataReq.fromBuffer(value),
-        ($0.GetExDataResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.GetParamsReq.fromBuffer(value),
+        ($0.GetParamsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.PluginSwitchReq, $0.PluginSwitchResp>(
         'SetSwitches',
         setSwitches_Pre,
@@ -255,6 +274,14 @@ abstract class PluginServiceBase extends $grpc.Service {
   $async.Future<$0.ListPluginResp> list(
       $grpc.ServiceCall call, $0.ListPluginReq request);
 
+  $async.Future<$0.ListPluginResp> listVersions_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListVersionsReq> $request) async {
+    return listVersions($call, await $request);
+  }
+
+  $async.Future<$0.ListPluginResp> listVersions(
+      $grpc.ServiceCall call, $0.ListVersionsReq request);
+
   $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeletePluginReq> $request) async {
     return delete($call, await $request);
@@ -279,13 +306,13 @@ abstract class PluginServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> setActiveVersion(
       $grpc.ServiceCall call, $0.SetActiveVersionReq request);
 
-  $async.Future<$0.GetExDataResp> getExData_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.GetExDataReq> $request) async {
-    return getExData($call, await $request);
+  $async.Future<$0.GetParamsResp> getParams_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetParamsReq> $request) async {
+    return getParams($call, await $request);
   }
 
-  $async.Future<$0.GetExDataResp> getExData(
-      $grpc.ServiceCall call, $0.GetExDataReq request);
+  $async.Future<$0.GetParamsResp> getParams(
+      $grpc.ServiceCall call, $0.GetParamsReq request);
 
   $async.Future<$0.PluginSwitchResp> setSwitches_Pre($grpc.ServiceCall $call,
       $async.Future<$0.PluginSwitchReq> $request) async {

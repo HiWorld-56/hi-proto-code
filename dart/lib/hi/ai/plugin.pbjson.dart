@@ -84,6 +84,7 @@ const CreateReq$json = {
       '6': '.google.protobuf.Struct',
       '10': 'exData'
     },
+    {'1': 'uuid', '3': 8, '4': 1, '5': 9, '10': 'uuid'},
   ],
 };
 
@@ -94,7 +95,7 @@ final $typed_data.Uint8List createReqDescriptor = $convert.base64Decode(
     'W2EtekEtWjAtOV0kUgRuYW1lEiAKC2Rlc2NyaXB0aW9uGAQgASgJUgtkZXNjcmlwdGlvbhImCg'
     'd2ZXJzaW9uGAUgASgJQgy6SAlyBzIFXlxTKyRSB3ZlcnNpb24SHAoKZXhfYXBpX2tleRgGIAEo'
     'CVIIZXhBcGlLZXkSMAoHZXhfZGF0YRgHIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RSBm'
-    'V4RGF0YQ==');
+    'V4RGF0YRISCgR1dWlkGAggASgJUgR1dWlk');
 
 @$core.Deprecated('Use createRespDescriptor instead')
 const CreateResp$json = {
@@ -113,10 +114,9 @@ const ListPluginReq$json = {
   '1': 'ListPluginReq',
   '2': [
     {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     {
       '1': 'pagination',
-      '3': 3,
+      '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.Pagination',
@@ -127,8 +127,29 @@ const ListPluginReq$json = {
 
 /// Descriptor for `ListPluginReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listPluginReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0UGx1Z2luUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBISCgRuYW1lGAIgASgJUgRuYW'
-    '1lEi4KCnBhZ2luYXRpb24YAyABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+    'Cg1MaXN0UGx1Z2luUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBIuCgpwYWdpbmF0aW9uGAIgAS'
+    'gLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+
+@$core.Deprecated('Use listVersionsReqDescriptor instead')
+const ListVersionsReq$json = {
+  '1': 'ListVersionsReq',
+  '2': [
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListVersionsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listVersionsReqDescriptor = $convert.base64Decode(
+    'Cg9MaXN0VmVyc2lvbnNSZXESEgoEdXVpZBgBIAEoCVIEdXVpZBIuCgpwYWdpbmF0aW9uGAIgAS'
+    'gLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
 
 @$core.Deprecated('Use listPluginRespDescriptor instead')
 const ListPluginResp$json = {
@@ -156,12 +177,14 @@ const DeletePluginReq$json = {
   '1': 'DeletePluginReq',
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'version', '3': 2, '4': 1, '5': 9, '10': 'version'},
   ],
 };
 
 /// Descriptor for `DeletePluginReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deletePluginReqDescriptor = $convert
-    .base64Decode('Cg9EZWxldGVQbHVnaW5SZXESEgoEdXVpZBgBIAEoCVIEdXVpZA==');
+final $typed_data.Uint8List deletePluginReqDescriptor = $convert.base64Decode(
+    'Cg9EZWxldGVQbHVnaW5SZXESEgoEdXVpZBgBIAEoCVIEdXVpZBIYCgd2ZXJzaW9uGAIgASgJUg'
+    'd2ZXJzaW9u');
 
 @$core.Deprecated('Use deletePluginByDidsReqDescriptor instead')
 const DeletePluginByDidsReq$json = {
@@ -212,24 +235,28 @@ const SetActiveVersionReq$json = {
   '1': 'SetActiveVersionReq',
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'version', '3': 2, '4': 1, '5': 9, '10': 'version'},
   ],
 };
 
 /// Descriptor for `SetActiveVersionReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List setActiveVersionReqDescriptor = $convert
-    .base64Decode('ChNTZXRBY3RpdmVWZXJzaW9uUmVxEhIKBHV1aWQYASABKAlSBHV1aWQ=');
+final $typed_data.Uint8List setActiveVersionReqDescriptor = $convert.base64Decode(
+    'ChNTZXRBY3RpdmVWZXJzaW9uUmVxEhIKBHV1aWQYASABKAlSBHV1aWQSGAoHdmVyc2lvbhgCIA'
+    'EoCVIHdmVyc2lvbg==');
 
 @$core.Deprecated('Use getPluginReqDescriptor instead')
 const GetPluginReq$json = {
   '1': 'GetPluginReq',
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'version', '3': 2, '4': 1, '5': 9, '10': 'version'},
   ],
 };
 
 /// Descriptor for `GetPluginReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getPluginReqDescriptor =
-    $convert.base64Decode('CgxHZXRQbHVnaW5SZXESEgoEdXVpZBgBIAEoCVIEdXVpZA==');
+final $typed_data.Uint8List getPluginReqDescriptor = $convert.base64Decode(
+    'CgxHZXRQbHVnaW5SZXESEgoEdXVpZBgBIAEoCVIEdXVpZBIYCgd2ZXJzaW9uGAIgASgJUgd2ZX'
+    'JzaW9u');
 
 @$core.Deprecated('Use getPluginRespDescriptor instead')
 const GetPluginResp$json = {
@@ -250,37 +277,39 @@ const GetPluginResp$json = {
 final $typed_data.Uint8List getPluginRespDescriptor = $convert.base64Decode(
     'Cg1HZXRQbHVnaW5SZXNwEiUKBGl0ZW0YASABKAsyES5oaS5haS5QbHVnaW5JdGVtUgRpdGVt');
 
-@$core.Deprecated('Use getExDataReqDescriptor instead')
-const GetExDataReq$json = {
-  '1': 'GetExDataReq',
+@$core.Deprecated('Use getParamsReqDescriptor instead')
+const GetParamsReq$json = {
+  '1': 'GetParamsReq',
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'version', '3': 2, '4': 1, '5': 9, '10': 'version'},
   ],
 };
 
-/// Descriptor for `GetExDataReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getExDataReqDescriptor =
-    $convert.base64Decode('CgxHZXRFeERhdGFSZXESEgoEdXVpZBgBIAEoCVIEdXVpZA==');
+/// Descriptor for `GetParamsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getParamsReqDescriptor = $convert.base64Decode(
+    'CgxHZXRQYXJhbXNSZXESEgoEdXVpZBgBIAEoCVIEdXVpZBIYCgd2ZXJzaW9uGAIgASgJUgd2ZX'
+    'JzaW9u');
 
-@$core.Deprecated('Use getExDataRespDescriptor instead')
-const GetExDataResp$json = {
-  '1': 'GetExDataResp',
+@$core.Deprecated('Use getParamsRespDescriptor instead')
+const GetParamsResp$json = {
+  '1': 'GetParamsResp',
   '2': [
     {
-      '1': 'ex_data',
+      '1': 'params',
       '3': 1,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Struct',
-      '10': 'exData'
+      '10': 'params'
     },
   ],
 };
 
-/// Descriptor for `GetExDataResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getExDataRespDescriptor = $convert.base64Decode(
-    'Cg1HZXRFeERhdGFSZXNwEjAKB2V4X2RhdGEYASABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydW'
-    'N0UgZleERhdGE=');
+/// Descriptor for `GetParamsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getParamsRespDescriptor = $convert.base64Decode(
+    'Cg1HZXRQYXJhbXNSZXNwEi8KBnBhcmFtcxgBIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3'
+    'RSBnBhcmFtcw==');
 
 @$core.Deprecated('Use runReqDescriptor instead')
 const RunReq$json = {

@@ -1131,30 +1131,31 @@ pub mod chat_client {
         }
     }
 }
+/// 一个脚本版本。**身份是两层:`uuid`(脚本)+ `version`(版本)**。
+/// 同一个脚本的多个版本**共享同一个 uuid**,靠 version 区分,只有一个 active。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginItem {
-    /// 插件id
+    /// **脚本 id**:跨版本稳定 —— 同脚本的所有版本共用它
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
     /// 智能体did
     #[prost(string, tag = "2")]
     pub agent: ::prost::alloc::string::String,
-    /// 插件名字
+    /// 脚本名字
     #[prost(string, tag = "3")]
     pub name: ::prost::alloc::string::String,
-    /// 主脚本包(zip)url
+    /// 主脚本包(zip)url:内含 main.py + requirement.txt
     #[prost(string, tag = "4")]
     pub url: ::prost::alloc::string::String,
-    /// 插件描述
+    /// 脚本描述
     #[prost(string, tag = "5")]
     pub description: ::prost::alloc::string::String,
-    /// 版本号
+    /// 版本号(用户上传时自填)
     #[prost(string, tag = "6")]
     pub version: ::prost::alloc::string::String,
-    /// 是否为该插件当前供 function call 调用的版本
+    /// 本版本是否供 function call 调用(同 uuid 下只有一个为 true)
     #[prost(bool, tag = "7")]
     pub active: bool,
-    /// 创建时间
     #[prost(int64, tag = "8")]
     pub created_at: i64,
 }
@@ -1177,6 +1178,9 @@ pub struct PluginSwitchResp {
 }
 /// 上传/新建一个插件版本。
 /// 后台按 (agent, name, version) 判断:该版本已存在则**覆盖**,否则**新建**。
+/// 上传一个脚本版本。
+/// `uuid` 空 = 新脚本(后台生成 uuid);非空 = **给已有脚本加一个版本**。
+/// 后台按 (uuid, version) 判断:该版本已存在则**覆盖**,否则**新建**。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateReq {
     /// 智能体did
@@ -1200,6 +1204,9 @@ pub struct CreateReq {
     /// 预置数据,调用时注入执行环境
     #[prost(message, optional, tag = "7")]
     pub ex_data: ::core::option::Option<::pbjson_types::Struct>,
+    /// **脚本 id**:空=新脚本;非空=给该脚本加版本
+    #[prost(string, tag = "8")]
+    pub uuid: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateResp {
@@ -1207,14 +1214,22 @@ pub struct CreateResp {
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
 }
+/// 一级页:列某 agent 的脚本(每个 uuid 一行,返回其**激活版本**)。
+/// ⚠️ 按 **uuid** 识别脚本,不是 name —— name 可重复,不能当身份。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListPluginReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 可选:按插件名过滤(同名多版本)
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "3")]
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// 二级页:列某脚本的**所有版本**(版本管理页)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListVersionsReq {
+    /// 脚本 id
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1226,9 +1241,12 @@ pub struct ListPluginResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginReq {
-    /// 删单个版本
+    /// 脚本 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
+    /// 版本;**留空 = 删整个脚本(所有版本)**
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginByDidsReq {
@@ -1247,32 +1265,51 @@ pub struct EditPluginReq {
     #[prost(message, optional, tag = "4")]
     pub ex_data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 选定某插件的哪个版本供 function call 调用(同插件多版本共存,只能激活一个)。
+/// 选定某脚本的哪个版本供 function call 调用(同脚本多版本共存,只能激活一个)。
+/// **必须 uuid + version** —— 单靠 uuid 定位不到具体版本。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveVersionReq {
-    /// 要激活的那个版本的插件id
+    /// 脚本 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
+    /// 要激活的版本
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPluginReq {
+    /// 脚本 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
+    /// 版本;**留空 = 取激活版本**
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPluginResp {
     #[prost(message, optional, tag = "1")]
     pub item: ::core::option::Option<PluginItem>,
 }
+/// ⚠️ **参数文件 ≠ ExData,别再合并**(我曾把 GetPythonParams 改名成 GetExData,是错的):
+///
+/// * **参数文件(params)**:function call 的**参数 schema**,告诉 LLM 这个脚本怎么调,
+///   形如 {"type":"object","properties":{"city":{...}},"required":\["city"\]};网页上配置后自动生成。
+/// * **ExData**:用户**预先上传给脚本用的数据**,运行期以 py 字典注入执行环境。
+///   两者完全是两回事。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetExDataReq {
+pub struct GetParamsReq {
+    /// 脚本 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
+    /// 版本;留空=激活版本
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetExDataResp {
+pub struct GetParamsResp {
+    /// function call 的参数 schema
     #[prost(message, optional, tag = "1")]
-    pub ex_data: ::core::option::Option<::pbjson_types::Struct>,
+    pub params: ::core::option::Option<::pbjson_types::Struct>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReq {
@@ -1472,6 +1509,26 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "List"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn list_versions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListVersionsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListPluginResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/ListVersions",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "ListVersions"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn delete(
             &mut self,
             request: impl tonic::IntoRequest<super::DeletePluginReq>,
@@ -1531,10 +1588,10 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.ai.Plugin", "SetActiveVersion"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get_ex_data(
+        pub async fn get_params(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetExDataReq>,
-        ) -> std::result::Result<tonic::Response<super::GetExDataResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::GetParamsReq>,
+        ) -> std::result::Result<tonic::Response<super::GetParamsResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1544,9 +1601,9 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/GetExData");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/GetParams");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "GetExData"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "GetParams"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_switches(

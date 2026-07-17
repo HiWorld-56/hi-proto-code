@@ -24,10 +24,11 @@ const (
 	Plugin_Edit_FullMethodName             = "/hi.ai.Plugin/Edit"
 	Plugin_Get_FullMethodName              = "/hi.ai.Plugin/Get"
 	Plugin_List_FullMethodName             = "/hi.ai.Plugin/List"
+	Plugin_ListVersions_FullMethodName     = "/hi.ai.Plugin/ListVersions"
 	Plugin_Delete_FullMethodName           = "/hi.ai.Plugin/Delete"
 	Plugin_DeleteByDids_FullMethodName     = "/hi.ai.Plugin/DeleteByDids"
 	Plugin_SetActiveVersion_FullMethodName = "/hi.ai.Plugin/SetActiveVersion"
-	Plugin_GetExData_FullMethodName        = "/hi.ai.Plugin/GetExData"
+	Plugin_GetParams_FullMethodName        = "/hi.ai.Plugin/GetParams"
 	Plugin_SetSwitches_FullMethodName      = "/hi.ai.Plugin/SetSwitches"
 )
 
@@ -46,10 +47,11 @@ type PluginClient interface {
 	Edit(ctx context.Context, in *EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetPluginReq, opts ...grpc.CallOption) (*GetPluginResp, error)
 	List(ctx context.Context, in *ListPluginReq, opts ...grpc.CallOption) (*ListPluginResp, error)
+	ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListPluginResp, error)
 	Delete(ctx context.Context, in *DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByDids(ctx context.Context, in *DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActiveVersion(ctx context.Context, in *SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetExData(ctx context.Context, in *GetExDataReq, opts ...grpc.CallOption) (*GetExDataResp, error)
+	GetParams(ctx context.Context, in *GetParamsReq, opts ...grpc.CallOption) (*GetParamsResp, error)
 	SetSwitches(ctx context.Context, in *PluginSwitchReq, opts ...grpc.CallOption) (*PluginSwitchResp, error)
 }
 
@@ -101,6 +103,16 @@ func (c *pluginClient) List(ctx context.Context, in *ListPluginReq, opts ...grpc
 	return out, nil
 }
 
+func (c *pluginClient) ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListPluginResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPluginResp)
+	err := c.cc.Invoke(ctx, Plugin_ListVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) Delete(ctx context.Context, in *DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -131,10 +143,10 @@ func (c *pluginClient) SetActiveVersion(ctx context.Context, in *SetActiveVersio
 	return out, nil
 }
 
-func (c *pluginClient) GetExData(ctx context.Context, in *GetExDataReq, opts ...grpc.CallOption) (*GetExDataResp, error) {
+func (c *pluginClient) GetParams(ctx context.Context, in *GetParamsReq, opts ...grpc.CallOption) (*GetParamsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetExDataResp)
-	err := c.cc.Invoke(ctx, Plugin_GetExData_FullMethodName, in, out, cOpts...)
+	out := new(GetParamsResp)
+	err := c.cc.Invoke(ctx, Plugin_GetParams_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -166,10 +178,11 @@ type PluginServer interface {
 	Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetPluginReq) (*GetPluginResp, error)
 	List(context.Context, *ListPluginReq) (*ListPluginResp, error)
+	ListVersions(context.Context, *ListVersionsReq) (*ListPluginResp, error)
 	Delete(context.Context, *DeletePluginReq) (*emptypb.Empty, error)
 	DeleteByDids(context.Context, *DeletePluginByDidsReq) (*emptypb.Empty, error)
 	SetActiveVersion(context.Context, *SetActiveVersionReq) (*emptypb.Empty, error)
-	GetExData(context.Context, *GetExDataReq) (*GetExDataResp, error)
+	GetParams(context.Context, *GetParamsReq) (*GetParamsResp, error)
 	SetSwitches(context.Context, *PluginSwitchReq) (*PluginSwitchResp, error)
 }
 
@@ -192,6 +205,9 @@ func (UnimplementedPluginServer) Get(context.Context, *GetPluginReq) (*GetPlugin
 func (UnimplementedPluginServer) List(context.Context, *ListPluginReq) (*ListPluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
+func (UnimplementedPluginServer) ListVersions(context.Context, *ListVersionsReq) (*ListPluginResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListVersions not implemented")
+}
 func (UnimplementedPluginServer) Delete(context.Context, *DeletePluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
@@ -201,8 +217,8 @@ func (UnimplementedPluginServer) DeleteByDids(context.Context, *DeletePluginByDi
 func (UnimplementedPluginServer) SetActiveVersion(context.Context, *SetActiveVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetActiveVersion not implemented")
 }
-func (UnimplementedPluginServer) GetExData(context.Context, *GetExDataReq) (*GetExDataResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetExData not implemented")
+func (UnimplementedPluginServer) GetParams(context.Context, *GetParamsReq) (*GetParamsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetParams not implemented")
 }
 func (UnimplementedPluginServer) SetSwitches(context.Context, *PluginSwitchReq) (*PluginSwitchResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetSwitches not implemented")
@@ -299,6 +315,24 @@ func _Plugin_List_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_ListVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListVersionsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).ListVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_ListVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).ListVersions(ctx, req.(*ListVersionsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeletePluginReq)
 	if err := dec(in); err != nil {
@@ -353,20 +387,20 @@ func _Plugin_SetActiveVersion_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_GetExData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetExDataReq)
+func _Plugin_GetParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetParamsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).GetExData(ctx, in)
+		return srv.(PluginServer).GetParams(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_GetExData_FullMethodName,
+		FullMethod: Plugin_GetParams_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).GetExData(ctx, req.(*GetExDataReq))
+		return srv.(PluginServer).GetParams(ctx, req.(*GetParamsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -413,6 +447,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_List_Handler,
 		},
 		{
+			MethodName: "ListVersions",
+			Handler:    _Plugin_ListVersions_Handler,
+		},
+		{
 			MethodName: "Delete",
 			Handler:    _Plugin_Delete_Handler,
 		},
@@ -425,8 +463,8 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_SetActiveVersion_Handler,
 		},
 		{
-			MethodName: "GetExData",
-			Handler:    _Plugin_GetExData_Handler,
+			MethodName: "GetParams",
+			Handler:    _Plugin_GetParams_Handler,
 		},
 		{
 			MethodName: "SetSwitches",
