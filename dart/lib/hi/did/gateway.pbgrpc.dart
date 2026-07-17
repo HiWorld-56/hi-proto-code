@@ -21,14 +21,11 @@ import 'gateway.pb.dart' as $1;
 
 export 'gateway.pb.dart';
 
-/// 网关配置(区块链节点 url + api_key)。这是**给前端用的配置**:hidid app 的 hidid-core、
-/// 以及 hiclub(内嵌 hidid-core)都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**
-/// (非用户私密),前端连节点必须带。故:
-///   - List:开放给 token(app 用户)或 ExtendToken(hiclub 商户)——前端读配置。
-///   - Set :只有超管能写。
-/// ⚠️ 后端(开发/生产)不要走这个 RPC 取配置 —— 生产与开发/前端环境不同,后端应从自己的配置文件引入。
-@$pb.GrpcServiceName('hi.did.GatewayConfig')
-class GatewayConfigClient extends $grpc.Client {
+/// 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
+/// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
+/// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
+@$pb.GrpcServiceName('hi.did.Gateway')
+class GatewayClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -37,9 +34,8 @@ class GatewayConfigClient extends $grpc.Client {
     '',
   ];
 
-  GatewayConfigClient(super.channel, {super.options, super.interceptors});
+  GatewayClient(super.channel, {super.options, super.interceptors});
 
-  /// 列出网关配置(前端读)。token 或 ExtendToken 均可。
   $grpc.ResponseFuture<$1.GatewayConfigListResp> list(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -47,31 +43,19 @@ class GatewayConfigClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  /// 写网关配置。仅超管。
-  $grpc.ResponseFuture<$0.Empty> set(
-    $1.GatewayConfigSetReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$set, request, options: options);
-  }
-
   // method descriptors
 
   static final _$list = $grpc.ClientMethod<$0.Empty, $1.GatewayConfigListResp>(
-      '/hi.did.GatewayConfig/List',
+      '/hi.did.Gateway/List',
       ($0.Empty value) => value.writeToBuffer(),
       $1.GatewayConfigListResp.fromBuffer);
-  static final _$set = $grpc.ClientMethod<$1.GatewayConfigSetReq, $0.Empty>(
-      '/hi.did.GatewayConfig/Set',
-      ($1.GatewayConfigSetReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.did.GatewayConfig')
-abstract class GatewayConfigServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.did.GatewayConfig';
+@$pb.GrpcServiceName('hi.did.Gateway')
+abstract class GatewayServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.Gateway';
 
-  GatewayConfigServiceBase() {
+  GatewayServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.GatewayConfigListResp>(
         'List',
         list_Pre,
@@ -79,14 +63,6 @@ abstract class GatewayConfigServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.GatewayConfigListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GatewayConfigSetReq, $0.Empty>(
-        'Set',
-        set_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.GatewayConfigSetReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.GatewayConfigListResp> list_Pre(
@@ -96,6 +72,50 @@ abstract class GatewayConfigServiceBase extends $grpc.Service {
 
   $async.Future<$1.GatewayConfigListResp> list(
       $grpc.ServiceCall call, $0.Empty request);
+}
+
+/// 网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。
+@$pb.GrpcServiceName('hi.did.GatewayAdmin')
+class GatewayAdminClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  GatewayAdminClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$0.Empty> set(
+    $1.GatewayConfigSetReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$set, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$set = $grpc.ClientMethod<$1.GatewayConfigSetReq, $0.Empty>(
+      '/hi.did.GatewayAdmin/Set',
+      ($1.GatewayConfigSetReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.GatewayAdmin')
+abstract class GatewayAdminServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.GatewayAdmin';
+
+  GatewayAdminServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.GatewayConfigSetReq, $0.Empty>(
+        'Set',
+        set_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.GatewayConfigSetReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+  }
 
   $async.Future<$0.Empty> set_Pre($grpc.ServiceCall $call,
       $async.Future<$1.GatewayConfigSetReq> $request) async {

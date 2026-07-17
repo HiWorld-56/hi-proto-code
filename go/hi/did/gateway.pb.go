@@ -183,9 +183,10 @@ const file_hi_did_gateway_proto_rawDesc = "" +
 	"\x15GatewayConfigListResp\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list\"D\n" +
 	"\x13GatewayConfigSetReq\x12-\n" +
-	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2\x96\x01\n" +
-	"\rGatewayConfig\x12C\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x04\x88\xb5\x18\a\x12@\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2N\n" +
+	"\aGateway\x12C\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x04\x88\xb5\x18\a2P\n" +
+	"\fGatewayAdmin\x12@\n" +
 	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05B}\n" +
 	"\n" +
 	"com.hi.didB\fGatewayProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -212,10 +213,10 @@ var file_hi_did_gateway_proto_goTypes = []any{
 var file_hi_did_gateway_proto_depIdxs = []int32{
 	0, // 0: hi.did.GatewayConfigListResp.list:type_name -> hi.did.GatewayConfigUnit
 	0, // 1: hi.did.GatewayConfigSetReq.list:type_name -> hi.did.GatewayConfigUnit
-	3, // 2: hi.did.GatewayConfig.List:input_type -> google.protobuf.Empty
-	2, // 3: hi.did.GatewayConfig.Set:input_type -> hi.did.GatewayConfigSetReq
-	1, // 4: hi.did.GatewayConfig.List:output_type -> hi.did.GatewayConfigListResp
-	3, // 5: hi.did.GatewayConfig.Set:output_type -> google.protobuf.Empty
+	3, // 2: hi.did.Gateway.List:input_type -> google.protobuf.Empty
+	2, // 3: hi.did.GatewayAdmin.Set:input_type -> hi.did.GatewayConfigSetReq
+	1, // 4: hi.did.Gateway.List:output_type -> hi.did.GatewayConfigListResp
+	3, // 5: hi.did.GatewayAdmin.Set:output_type -> google.protobuf.Empty
 	4, // [4:6] is the sub-list for method output_type
 	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -236,7 +237,7 @@ func file_hi_did_gateway_proto_init() {
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_did_gateway_proto_goTypes,
 		DependencyIndexes: file_hi_did_gateway_proto_depIdxs,

@@ -20,157 +20,211 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	GatewayConfig_List_FullMethodName = "/hi.did.GatewayConfig/List"
-	GatewayConfig_Set_FullMethodName  = "/hi.did.GatewayConfig/Set"
+	Gateway_List_FullMethodName = "/hi.did.Gateway/List"
 )
 
-// GatewayConfigClient is the client API for GatewayConfig service.
+// GatewayClient is the client API for Gateway service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 网关配置(区块链节点 url + api_key)。这是**给前端用的配置**:hidid app 的 hidid-core、
-// 以及 hiclub(内嵌 hidid-core)都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**
-// (非用户私密),前端连节点必须带。故:
-//   - List:开放给 token(app 用户)或 ExtendToken(hiclub 商户)——前端读配置。
-//   - Set :只有超管能写。
-//
-// ⚠️ 后端(开发/生产)不要走这个 RPC 取配置 —— 生产与开发/前端环境不同,后端应从自己的配置文件引入。
-type GatewayConfigClient interface {
-	// 列出网关配置(前端读)。token 或 ExtendToken 均可。
+// 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
+// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
+// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
+type GatewayClient interface {
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error)
-	// 写网关配置。仅超管。
-	Set(ctx context.Context, in *GatewayConfigSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type gatewayConfigClient struct {
+type gatewayClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGatewayConfigClient(cc grpc.ClientConnInterface) GatewayConfigClient {
-	return &gatewayConfigClient{cc}
+func NewGatewayClient(cc grpc.ClientConnInterface) GatewayClient {
+	return &gatewayClient{cc}
 }
 
-func (c *gatewayConfigClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error) {
+func (c *gatewayClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GatewayConfigListResp)
-	err := c.cc.Invoke(ctx, GatewayConfig_List_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Gateway_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gatewayConfigClient) Set(ctx context.Context, in *GatewayConfigSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, GatewayConfig_Set_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// GatewayConfigServer is the server API for GatewayConfig service.
-// All implementations should embed UnimplementedGatewayConfigServer
+// GatewayServer is the server API for Gateway service.
+// All implementations should embed UnimplementedGatewayServer
 // for forward compatibility.
 //
-// 网关配置(区块链节点 url + api_key)。这是**给前端用的配置**:hidid app 的 hidid-core、
-// 以及 hiclub(内嵌 hidid-core)都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**
-// (非用户私密),前端连节点必须带。故:
-//   - List:开放给 token(app 用户)或 ExtendToken(hiclub 商户)——前端读配置。
-//   - Set :只有超管能写。
-//
-// ⚠️ 后端(开发/生产)不要走这个 RPC 取配置 —— 生产与开发/前端环境不同,后端应从自己的配置文件引入。
-type GatewayConfigServer interface {
-	// 列出网关配置(前端读)。token 或 ExtendToken 均可。
+// 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
+// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
+// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
+type GatewayServer interface {
 	List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error)
-	// 写网关配置。仅超管。
-	Set(context.Context, *GatewayConfigSetReq) (*emptypb.Empty, error)
 }
 
-// UnimplementedGatewayConfigServer should be embedded to have
+// UnimplementedGatewayServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedGatewayConfigServer struct{}
+type UnimplementedGatewayServer struct{}
 
-func (UnimplementedGatewayConfigServer) List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error) {
+func (UnimplementedGatewayServer) List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedGatewayConfigServer) Set(context.Context, *GatewayConfigSetReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Set not implemented")
-}
-func (UnimplementedGatewayConfigServer) testEmbeddedByValue() {}
+func (UnimplementedGatewayServer) testEmbeddedByValue() {}
 
-// UnsafeGatewayConfigServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GatewayConfigServer will
+// UnsafeGatewayServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GatewayServer will
 // result in compilation errors.
-type UnsafeGatewayConfigServer interface {
-	mustEmbedUnimplementedGatewayConfigServer()
+type UnsafeGatewayServer interface {
+	mustEmbedUnimplementedGatewayServer()
 }
 
-func RegisterGatewayConfigServer(s grpc.ServiceRegistrar, srv GatewayConfigServer) {
-	// If the following call panics, it indicates UnimplementedGatewayConfigServer was
+func RegisterGatewayServer(s grpc.ServiceRegistrar, srv GatewayServer) {
+	// If the following call panics, it indicates UnimplementedGatewayServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&GatewayConfig_ServiceDesc, srv)
+	s.RegisterService(&Gateway_ServiceDesc, srv)
 }
 
-func _GatewayConfig_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Gateway_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GatewayConfigServer).List(ctx, in)
+		return srv.(GatewayServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GatewayConfig_List_FullMethodName,
+		FullMethod: Gateway_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayConfigServer).List(ctx, req.(*emptypb.Empty))
+		return srv.(GatewayServer).List(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GatewayConfig_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+// Gateway_ServiceDesc is the grpc.ServiceDesc for Gateway service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Gateway_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.Gateway",
+	HandlerType: (*GatewayServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _Gateway_List_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/gateway.proto",
+}
+
+const (
+	GatewayAdmin_Set_FullMethodName = "/hi.did.GatewayAdmin/Set"
+)
+
+// GatewayAdminClient is the client API for GatewayAdmin service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。
+type GatewayAdminClient interface {
+	Set(ctx context.Context, in *GatewayConfigSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type gatewayAdminClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGatewayAdminClient(cc grpc.ClientConnInterface) GatewayAdminClient {
+	return &gatewayAdminClient{cc}
+}
+
+func (c *gatewayAdminClient) Set(ctx context.Context, in *GatewayConfigSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, GatewayAdmin_Set_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GatewayAdminServer is the server API for GatewayAdmin service.
+// All implementations should embed UnimplementedGatewayAdminServer
+// for forward compatibility.
+//
+// 网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。
+type GatewayAdminServer interface {
+	Set(context.Context, *GatewayConfigSetReq) (*emptypb.Empty, error)
+}
+
+// UnimplementedGatewayAdminServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGatewayAdminServer struct{}
+
+func (UnimplementedGatewayAdminServer) Set(context.Context, *GatewayConfigSetReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Set not implemented")
+}
+func (UnimplementedGatewayAdminServer) testEmbeddedByValue() {}
+
+// UnsafeGatewayAdminServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GatewayAdminServer will
+// result in compilation errors.
+type UnsafeGatewayAdminServer interface {
+	mustEmbedUnimplementedGatewayAdminServer()
+}
+
+func RegisterGatewayAdminServer(s grpc.ServiceRegistrar, srv GatewayAdminServer) {
+	// If the following call panics, it indicates UnimplementedGatewayAdminServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GatewayAdmin_ServiceDesc, srv)
+}
+
+func _GatewayAdmin_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GatewayConfigSetReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GatewayConfigServer).Set(ctx, in)
+		return srv.(GatewayAdminServer).Set(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GatewayConfig_Set_FullMethodName,
+		FullMethod: GatewayAdmin_Set_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayConfigServer).Set(ctx, req.(*GatewayConfigSetReq))
+		return srv.(GatewayAdminServer).Set(ctx, req.(*GatewayConfigSetReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// GatewayConfig_ServiceDesc is the grpc.ServiceDesc for GatewayConfig service.
+// GatewayAdmin_ServiceDesc is the grpc.ServiceDesc for GatewayAdmin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var GatewayConfig_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.GatewayConfig",
-	HandlerType: (*GatewayConfigServer)(nil),
+var GatewayAdmin_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.GatewayAdmin",
+	HandlerType: (*GatewayAdminServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "List",
-			Handler:    _GatewayConfig_List_Handler,
-		},
-		{
 			MethodName: "Set",
-			Handler:    _GatewayConfig_Set_Handler,
+			Handler:    _GatewayAdmin_Set_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

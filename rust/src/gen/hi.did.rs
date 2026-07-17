@@ -4130,7 +4130,7 @@ pub struct GatewayConfigSetReq {
     pub list: ::prost::alloc::vec::Vec<GatewayConfigUnit>,
 }
 /// Generated client implementations.
-pub mod gateway_config_client {
+pub mod gateway_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -4140,18 +4140,14 @@ pub mod gateway_config_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 网关配置(区块链节点 url + api_key)。这是**给前端用的配置**:hidid app 的 hidid-core、
-    /// 以及 hiclub(内嵌 hidid-core)都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**
-    /// (非用户私密),前端连节点必须带。故:
-    ///
-    /// * List:开放给 token(app 用户)或 ExtendToken(hiclub 商户)——前端读配置。
-    /// * Set :只有超管能写。
-    ///  ⚠️ 后端(开发/生产)不要走这个 RPC 取配置 —— 生产与开发/前端环境不同,后端应从自己的配置文件引入。
+    /// 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
+    /// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
+    /// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
     #[derive(Debug, Clone)]
-    pub struct GatewayConfigClient<T> {
+    pub struct GatewayClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl GatewayConfigClient<tonic::transport::Channel> {
+    impl GatewayClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -4162,7 +4158,7 @@ pub mod gateway_config_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> GatewayConfigClient<T>
+    impl<T> GatewayClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -4180,7 +4176,7 @@ pub mod gateway_config_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> GatewayConfigClient<InterceptedService<T, F>>
+        ) -> GatewayClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -4194,7 +4190,7 @@ pub mod gateway_config_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            GatewayConfigClient::new(InterceptedService::new(inner, interceptor))
+            GatewayClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -4227,7 +4223,6 @@ pub mod gateway_config_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 列出网关配置(前端读)。token 或 ExtendToken 均可。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -4244,14 +4239,105 @@ pub mod gateway_config_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.GatewayConfig/List",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Gateway/List");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayConfig", "List"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Gateway", "List"));
             self.inner.unary(req, path, codec).await
         }
-        /// 写网关配置。仅超管。
+    }
+}
+/// Generated client implementations.
+pub mod gateway_admin_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。
+    #[derive(Debug, Clone)]
+    pub struct GatewayAdminClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl GatewayAdminClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> GatewayAdminClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> GatewayAdminClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            GatewayAdminClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         pub async fn set(
             &mut self,
             request: impl tonic::IntoRequest<super::GatewayConfigSetReq>,
@@ -4265,9 +4351,9 @@ pub mod gateway_config_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.GatewayConfig/Set");
+            let path = http::uri::PathAndQuery::from_static("/hi.did.GatewayAdmin/Set");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayConfig", "Set"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayAdmin", "Set"));
             self.inner.unary(req, path, codec).await
         }
     }
