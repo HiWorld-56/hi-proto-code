@@ -19,16 +19,25 @@ import 'dart:typed_data' as $typed_data;
 const SettingInfo$json = {
   '1': 'SettingInfo',
   '2': [
-    {'1': 'proxy_url', '3': 1, '4': 1, '5': 9, '10': 'proxyUrl'},
-    {'1': 'enable', '3': 2, '4': 1, '5': 8, '10': 'enable'},
-    {'1': 'endpoint', '3': 3, '4': 1, '5': 9, '10': 'endpoint'},
+    {'1': 'proxy_endpoint', '3': 1, '4': 1, '5': 9, '10': 'proxyEndpoint'},
+    {'1': 'proxy_enable', '3': 2, '4': 1, '5': 8, '10': 'proxyEnable'},
+    {'1': 'openai_endpoint', '3': 3, '4': 1, '5': 9, '10': 'openaiEndpoint'},
+    {
+      '1': 'openai_endpoint_enable',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '10': 'openaiEndpointEnable'
+    },
   ],
 };
 
 /// Descriptor for `SettingInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List settingInfoDescriptor = $convert.base64Decode(
-    'CgtTZXR0aW5nSW5mbxIbCglwcm94eV91cmwYASABKAlSCHByb3h5VXJsEhYKBmVuYWJsZRgCIA'
-    'EoCFIGZW5hYmxlEhoKCGVuZHBvaW50GAMgASgJUghlbmRwb2ludA==');
+    'CgtTZXR0aW5nSW5mbxIlCg5wcm94eV9lbmRwb2ludBgBIAEoCVINcHJveHlFbmRwb2ludBIhCg'
+    'xwcm94eV9lbmFibGUYAiABKAhSC3Byb3h5RW5hYmxlEicKD29wZW5haV9lbmRwb2ludBgDIAEo'
+    'CVIOb3BlbmFpRW5kcG9pbnQSNAoWb3BlbmFpX2VuZHBvaW50X2VuYWJsZRgEIAEoCFIUb3Blbm'
+    'FpRW5kcG9pbnRFbmFibGU=');
 
 @$core.Deprecated('Use settingEditReqDescriptor instead')
 const SettingEditReq$json = {

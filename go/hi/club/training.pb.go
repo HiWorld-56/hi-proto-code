@@ -27,70 +27,71 @@ var File_hi_club_training_proto protoreflect.FileDescriptor
 
 const file_hi_club_training_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto\x1a\x10hi/options.proto2\xb1\a\n" +
-	"\bTraining\x12F\n" +
-	"\rTrainingAgent\x12\x17.hi.ai.TrainingAgentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12K\n" +
-	"\x0eTrainingStatus\x12\x18.hi.ai.TrainingStatusReq\x1a\x19.hi.ai.TrainingStatusResp\"\x04\x88\xb5\x18\x02\x12F\n" +
-	"\rTrainingClear\x12\x17.hi.ai.TrainingClearReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12@\n" +
+	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto\x1a\x10hi/options.proto2\xd6\x06\n" +
+	"\bTraining\x127\n" +
+	"\x05Start\x12\x0f.hi.ai.StartReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
+	"\x06Status\x12\x10.hi.ai.StatusReq\x1a\x11.hi.ai.StatusResp\"\x05\x8a\xb5\x18\x01\x02\x127\n" +
+	"\x05Clear\x12\x0f.hi.ai.ClearReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
 	"\n" +
-	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12I\n" +
-	"\x0eListAgentFiles\x12\x17.hi.ai.ListAgentFileReq\x1a\x18.hi.ai.ListAgentFileResp\"\x04\x88\xb5\x18\x02\x12J\n" +
-	"\x0fDeleteAgentFile\x12\x19.hi.ai.DeleteAgentFileReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12L\n" +
-	"\x10DeleteAgentFiles\x12\x1a.hi.ai.DeleteAgentFilesReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12E\n" +
-	"\fGetAgentFile\x12\x16.hi.ai.GetAgentFileReq\x1a\x17.hi.ai.GetAgentFileResp\"\x04\x88\xb5\x18\x02\x12F\n" +
-	"\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12H\n" +
-	"\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\"\x04\x88\xb5\x18\x02\x12@\n" +
+	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\tListFiles\x12\x13.hi.ai.ListFilesReq\x1a\x14.hi.ai.ListFilesResp\"\x05\x8a\xb5\x18\x01\x02\x127\n" +
+	"\aGetFile\x12\x11.hi.ai.GetFileReq\x1a\x12.hi.ai.GetFileResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
 	"\n" +
-	"EditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12B\n" +
-	"\vSetMemModel\x12\x15.hi.ai.SetMemModelReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12B\n" +
-	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelResp\"\x04\x88\xb5\x18\x02B\x84\x01\n" +
+	"DeleteFile\x12\x14.hi.ai.DeleteFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\vDeleteFiles\x12\x15.hi.ai.DeleteFilesReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
+	"\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
+	"\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
+	"\n" +
+	"EditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\vSetMemModel\x12\x15.hi.ai.SetMemModelReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelResp\"\x05\x8a\xb5\x18\x01\x02B\x84\x01\n" +
 	"\vcom.hi.clubB\rTrainingProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_training_proto_goTypes = []any{
-	(*ai.TrainingAgentReq)(nil),    // 0: hi.ai.TrainingAgentReq
-	(*ai.TrainingStatusReq)(nil),   // 1: hi.ai.TrainingStatusReq
-	(*ai.TrainingClearReq)(nil),    // 2: hi.ai.TrainingClearReq
-	(*ai.UploadFileReq)(nil),       // 3: hi.ai.UploadFileReq
-	(*ai.ListAgentFileReq)(nil),    // 4: hi.ai.ListAgentFileReq
-	(*ai.DeleteAgentFileReq)(nil),  // 5: hi.ai.DeleteAgentFileReq
-	(*ai.DeleteAgentFilesReq)(nil), // 6: hi.ai.DeleteAgentFilesReq
-	(*ai.GetAgentFileReq)(nil),     // 7: hi.ai.GetAgentFileReq
-	(*ai.UpdateContentReq)(nil),    // 8: hi.ai.UpdateContentReq
-	(*ai.CreateContentReq)(nil),    // 9: hi.ai.CreateContentReq
-	(*ai.EditDigestReq)(nil),       // 10: hi.ai.EditDigestReq
-	(*ai.SetMemModelReq)(nil),      // 11: hi.ai.SetMemModelReq
-	(*ai.GetMemModelReq)(nil),      // 12: hi.ai.GetMemModelReq
-	(*emptypb.Empty)(nil),          // 13: google.protobuf.Empty
-	(*ai.TrainingStatusResp)(nil),  // 14: hi.ai.TrainingStatusResp
-	(*ai.ListAgentFileResp)(nil),   // 15: hi.ai.ListAgentFileResp
-	(*ai.GetAgentFileResp)(nil),    // 16: hi.ai.GetAgentFileResp
-	(*ai.CreateContentResp)(nil),   // 17: hi.ai.CreateContentResp
-	(*ai.GetMemModelResp)(nil),     // 18: hi.ai.GetMemModelResp
+	(*ai.StartReq)(nil),          // 0: hi.ai.StartReq
+	(*ai.StatusReq)(nil),         // 1: hi.ai.StatusReq
+	(*ai.ClearReq)(nil),          // 2: hi.ai.ClearReq
+	(*ai.UploadFileReq)(nil),     // 3: hi.ai.UploadFileReq
+	(*ai.ListFilesReq)(nil),      // 4: hi.ai.ListFilesReq
+	(*ai.GetFileReq)(nil),        // 5: hi.ai.GetFileReq
+	(*ai.DeleteFileReq)(nil),     // 6: hi.ai.DeleteFileReq
+	(*ai.DeleteFilesReq)(nil),    // 7: hi.ai.DeleteFilesReq
+	(*ai.CreateContentReq)(nil),  // 8: hi.ai.CreateContentReq
+	(*ai.UpdateContentReq)(nil),  // 9: hi.ai.UpdateContentReq
+	(*ai.EditDigestReq)(nil),     // 10: hi.ai.EditDigestReq
+	(*ai.SetMemModelReq)(nil),    // 11: hi.ai.SetMemModelReq
+	(*ai.GetMemModelReq)(nil),    // 12: hi.ai.GetMemModelReq
+	(*emptypb.Empty)(nil),        // 13: google.protobuf.Empty
+	(*ai.StatusResp)(nil),        // 14: hi.ai.StatusResp
+	(*ai.ListFilesResp)(nil),     // 15: hi.ai.ListFilesResp
+	(*ai.GetFileResp)(nil),       // 16: hi.ai.GetFileResp
+	(*ai.CreateContentResp)(nil), // 17: hi.ai.CreateContentResp
+	(*ai.GetMemModelResp)(nil),   // 18: hi.ai.GetMemModelResp
 }
 var file_hi_club_training_proto_depIdxs = []int32{
-	0,  // 0: hi.club.Training.TrainingAgent:input_type -> hi.ai.TrainingAgentReq
-	1,  // 1: hi.club.Training.TrainingStatus:input_type -> hi.ai.TrainingStatusReq
-	2,  // 2: hi.club.Training.TrainingClear:input_type -> hi.ai.TrainingClearReq
+	0,  // 0: hi.club.Training.Start:input_type -> hi.ai.StartReq
+	1,  // 1: hi.club.Training.Status:input_type -> hi.ai.StatusReq
+	2,  // 2: hi.club.Training.Clear:input_type -> hi.ai.ClearReq
 	3,  // 3: hi.club.Training.UploadFile:input_type -> hi.ai.UploadFileReq
-	4,  // 4: hi.club.Training.ListAgentFiles:input_type -> hi.ai.ListAgentFileReq
-	5,  // 5: hi.club.Training.DeleteAgentFile:input_type -> hi.ai.DeleteAgentFileReq
-	6,  // 6: hi.club.Training.DeleteAgentFiles:input_type -> hi.ai.DeleteAgentFilesReq
-	7,  // 7: hi.club.Training.GetAgentFile:input_type -> hi.ai.GetAgentFileReq
-	8,  // 8: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
-	9,  // 9: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
+	4,  // 4: hi.club.Training.ListFiles:input_type -> hi.ai.ListFilesReq
+	5,  // 5: hi.club.Training.GetFile:input_type -> hi.ai.GetFileReq
+	6,  // 6: hi.club.Training.DeleteFile:input_type -> hi.ai.DeleteFileReq
+	7,  // 7: hi.club.Training.DeleteFiles:input_type -> hi.ai.DeleteFilesReq
+	8,  // 8: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
+	9,  // 9: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
 	10, // 10: hi.club.Training.EditDigest:input_type -> hi.ai.EditDigestReq
 	11, // 11: hi.club.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
 	12, // 12: hi.club.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
-	13, // 13: hi.club.Training.TrainingAgent:output_type -> google.protobuf.Empty
-	14, // 14: hi.club.Training.TrainingStatus:output_type -> hi.ai.TrainingStatusResp
-	13, // 15: hi.club.Training.TrainingClear:output_type -> google.protobuf.Empty
+	13, // 13: hi.club.Training.Start:output_type -> google.protobuf.Empty
+	14, // 14: hi.club.Training.Status:output_type -> hi.ai.StatusResp
+	13, // 15: hi.club.Training.Clear:output_type -> google.protobuf.Empty
 	13, // 16: hi.club.Training.UploadFile:output_type -> google.protobuf.Empty
-	15, // 17: hi.club.Training.ListAgentFiles:output_type -> hi.ai.ListAgentFileResp
-	13, // 18: hi.club.Training.DeleteAgentFile:output_type -> google.protobuf.Empty
-	13, // 19: hi.club.Training.DeleteAgentFiles:output_type -> google.protobuf.Empty
-	16, // 20: hi.club.Training.GetAgentFile:output_type -> hi.ai.GetAgentFileResp
-	13, // 21: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
-	17, // 22: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
+	15, // 17: hi.club.Training.ListFiles:output_type -> hi.ai.ListFilesResp
+	16, // 18: hi.club.Training.GetFile:output_type -> hi.ai.GetFileResp
+	13, // 19: hi.club.Training.DeleteFile:output_type -> google.protobuf.Empty
+	13, // 20: hi.club.Training.DeleteFiles:output_type -> google.protobuf.Empty
+	17, // 21: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
+	13, // 22: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
 	13, // 23: hi.club.Training.EditDigest:output_type -> google.protobuf.Empty
 	13, // 24: hi.club.Training.SetMemModel:output_type -> google.protobuf.Empty
 	18, // 25: hi.club.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp

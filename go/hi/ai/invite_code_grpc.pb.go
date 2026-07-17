@@ -26,20 +26,20 @@ const (
 	InviteCode_Edit_FullMethodName   = "/hi.ai.InviteCode/Edit"
 	InviteCode_List_FullMethodName   = "/hi.ai.InviteCode/List"
 	InviteCode_Delete_FullMethodName = "/hi.ai.InviteCode/Delete"
-	InviteCode_Verify_FullMethodName = "/hi.ai.InviteCode/Verify"
 )
 
 // InviteCodeClient is the client API for InviteCode service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 邀请码
+// 邀请码管理(超管)。原先 Create/Edit/List/Delete 在 handler 里自己查超管、proto 却标 TOKEN,
+// 且和公开的 Verify 混在同一个 service —— 混档。现在:管理归超管、注册拆去 Register。
+// 超管名单穿透 hidid `SuperAdmin.List`(ai 不得自建超管表)。
 type InviteCodeClient interface {
 	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.InviteCodeCreateResp, error)
 	Edit(ctx context.Context, in *did.InviteCodeEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.InviteCodeListResp, error)
 	Delete(ctx context.Context, in *did.InviteCodeDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Verify(ctx context.Context, in *did.InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 }
 
 type inviteCodeClient struct {
@@ -90,27 +90,18 @@ func (c *inviteCodeClient) Delete(ctx context.Context, in *did.InviteCodeDeleteR
 	return out, nil
 }
 
-func (c *inviteCodeClient) Verify(ctx context.Context, in *did.InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.AuthToken)
-	err := c.cc.Invoke(ctx, InviteCode_Verify_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // InviteCodeServer is the server API for InviteCode service.
 // All implementations should embed UnimplementedInviteCodeServer
 // for forward compatibility.
 //
-// 邀请码
+// 邀请码管理(超管)。原先 Create/Edit/List/Delete 在 handler 里自己查超管、proto 却标 TOKEN,
+// 且和公开的 Verify 混在同一个 service —— 混档。现在:管理归超管、注册拆去 Register。
+// 超管名单穿透 hidid `SuperAdmin.List`(ai 不得自建超管表)。
 type InviteCodeServer interface {
 	Create(context.Context, *emptypb.Empty) (*did.InviteCodeCreateResp, error)
 	Edit(context.Context, *did.InviteCodeEditReq) (*emptypb.Empty, error)
 	List(context.Context, *hi.Pagination) (*did.InviteCodeListResp, error)
 	Delete(context.Context, *did.InviteCodeDeleteReq) (*emptypb.Empty, error)
-	Verify(context.Context, *did.InviteCodeVerifyReq) (*hi.AuthToken, error)
 }
 
 // UnimplementedInviteCodeServer should be embedded to have
@@ -131,9 +122,6 @@ func (UnimplementedInviteCodeServer) List(context.Context, *hi.Pagination) (*did
 }
 func (UnimplementedInviteCodeServer) Delete(context.Context, *did.InviteCodeDeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
-}
-func (UnimplementedInviteCodeServer) Verify(context.Context, *did.InviteCodeVerifyReq) (*hi.AuthToken, error) {
-	return nil, status.Error(codes.Unimplemented, "method Verify not implemented")
 }
 func (UnimplementedInviteCodeServer) testEmbeddedByValue() {}
 
@@ -227,24 +215,6 @@ func _InviteCode_Delete_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _InviteCode_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.InviteCodeVerifyReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(InviteCodeServer).Verify(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: InviteCode_Verify_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InviteCodeServer).Verify(ctx, req.(*did.InviteCodeVerifyReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // InviteCode_ServiceDesc is the grpc.ServiceDesc for InviteCode service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -268,9 +238,111 @@ var InviteCode_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "Delete",
 			Handler:    _InviteCode_Delete_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/ai/invite_code.proto",
+}
+
+const (
+	Register_Verify_FullMethodName = "/hi.ai.Register/Verify"
+)
+
+// RegisterClient is the client API for Register service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 注册(公开)。验邀请码(72h 内有效)→ 用户不存在则建 → 标记邀请码已用 → 签发 token。
+// 从 InviteCode 拆出:主体不同(注册者 vs 超管),档位不同。与 hi.did.Register.Verify 同形对齐。
+type RegisterClient interface {
+	Verify(ctx context.Context, in *did.InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
+}
+
+type registerClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewRegisterClient(cc grpc.ClientConnInterface) RegisterClient {
+	return &registerClient{cc}
+}
+
+func (c *registerClient) Verify(ctx context.Context, in *did.InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.AuthToken)
+	err := c.cc.Invoke(ctx, Register_Verify_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// RegisterServer is the server API for Register service.
+// All implementations should embed UnimplementedRegisterServer
+// for forward compatibility.
+//
+// 注册(公开)。验邀请码(72h 内有效)→ 用户不存在则建 → 标记邀请码已用 → 签发 token。
+// 从 InviteCode 拆出:主体不同(注册者 vs 超管),档位不同。与 hi.did.Register.Verify 同形对齐。
+type RegisterServer interface {
+	Verify(context.Context, *did.InviteCodeVerifyReq) (*hi.AuthToken, error)
+}
+
+// UnimplementedRegisterServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedRegisterServer struct{}
+
+func (UnimplementedRegisterServer) Verify(context.Context, *did.InviteCodeVerifyReq) (*hi.AuthToken, error) {
+	return nil, status.Error(codes.Unimplemented, "method Verify not implemented")
+}
+func (UnimplementedRegisterServer) testEmbeddedByValue() {}
+
+// UnsafeRegisterServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RegisterServer will
+// result in compilation errors.
+type UnsafeRegisterServer interface {
+	mustEmbedUnimplementedRegisterServer()
+}
+
+func RegisterRegisterServer(s grpc.ServiceRegistrar, srv RegisterServer) {
+	// If the following call panics, it indicates UnimplementedRegisterServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&Register_ServiceDesc, srv)
+}
+
+func _Register_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(did.InviteCodeVerifyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RegisterServer).Verify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Register_Verify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RegisterServer).Verify(ctx, req.(*did.InviteCodeVerifyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Register_ServiceDesc is the grpc.ServiceDesc for Register service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Register_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.ai.Register",
+	HandlerType: (*RegisterServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Verify",
-			Handler:    _InviteCode_Verify_Handler,
+			Handler:    _Register_Verify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

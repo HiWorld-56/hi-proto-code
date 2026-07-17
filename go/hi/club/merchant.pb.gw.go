@@ -64,7 +64,7 @@ func local_request_Merchant_List_0(ctx context.Context, marshaler runtime.Marsha
 	return msg, metadata, err
 }
 
-func request_Merchant_ListAll_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MerchantManage_List_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq hi.Pagination
 		metadata runtime.ServerMetadata
@@ -75,11 +75,11 @@ func request_Merchant_ListAll_0(ctx context.Context, marshaler runtime.Marshaler
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.ListAll(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.List(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_Merchant_ListAll_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MerchantManage_List_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq hi.Pagination
 		metadata runtime.ServerMetadata
@@ -87,7 +87,7 @@ func local_request_Merchant_ListAll_0(ctx context.Context, marshaler runtime.Mar
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.ListAll(ctx, &protoReq)
+	msg, err := server.List(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -117,25 +117,35 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		}
 		forward_Merchant_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Merchant_ListAll_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+
+	return nil
+}
+
+// RegisterMerchantManageHandlerServer registers the http handlers for service MerchantManage to "mux".
+// UnaryRPC     :call MerchantManageServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMerchantManageHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
+func RegisterMerchantManageHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MerchantManageServer) error {
+	mux.Handle(http.MethodPost, pattern_MerchantManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Merchant/ListAll", runtime.WithHTTPPathPattern("/hi.club.Merchant/ListAll"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.MerchantManage/List", runtime.WithHTTPPathPattern("/hi.club.MerchantManage/List"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Merchant_ListAll_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MerchantManage_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Merchant_ListAll_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MerchantManage_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -194,32 +204,77 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		}
 		forward_Merchant_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Merchant_ListAll_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	return nil
+}
+
+var (
+	pattern_Merchant_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Merchant", "List"}, ""))
+)
+
+var (
+	forward_Merchant_List_0 = runtime.ForwardResponseMessage
+)
+
+// RegisterMerchantManageHandlerFromEndpoint is same as RegisterMerchantManageHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterMerchantManageHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.NewClient(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+	return RegisterMerchantManageHandler(ctx, mux, conn)
+}
+
+// RegisterMerchantManageHandler registers the http handlers for service MerchantManage to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterMerchantManageHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterMerchantManageHandlerClient(ctx, mux, NewMerchantManageClient(conn))
+}
+
+// RegisterMerchantManageHandlerClient registers the http handlers for service MerchantManage
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MerchantManageClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MerchantManageClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "MerchantManageClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterMerchantManageHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MerchantManageClient) error {
+	mux.Handle(http.MethodPost, pattern_MerchantManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Merchant/ListAll", runtime.WithHTTPPathPattern("/hi.club.Merchant/ListAll"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.MerchantManage/List", runtime.WithHTTPPathPattern("/hi.club.MerchantManage/List"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Merchant_ListAll_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MerchantManage_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Merchant_ListAll_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MerchantManage_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_Merchant_List_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Merchant", "List"}, ""))
-	pattern_Merchant_ListAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Merchant", "ListAll"}, ""))
+	pattern_MerchantManage_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.MerchantManage", "List"}, ""))
 )
 
 var (
-	forward_Merchant_List_0    = runtime.ForwardResponseMessage
-	forward_Merchant_ListAll_0 = runtime.ForwardResponseMessage
+	forward_MerchantManage_List_0 = runtime.ForwardResponseMessage
 )

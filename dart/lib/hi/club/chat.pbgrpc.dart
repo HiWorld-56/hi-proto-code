@@ -15,14 +15,16 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
 import '../ai/chat.pb.dart' as $1;
-import 'chat.pb.dart' as $0;
+import 'chat.pb.dart' as $2;
 
 export 'chat.pb.dart';
 
-/// Token鉴权
+/// 对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
+///
+/// (原 Simple 已删 —— ai 侧同步删掉了:那是给前端**无身份**直连 llm 推理的便捷方法,有安全隐患。)
 @$pb.GrpcServiceName('hi.club.Chat')
 class ChatClient extends $grpc.Client {
   /// The hostname for this service.
@@ -35,173 +37,138 @@ class ChatClient extends $grpc.Client {
 
   ChatClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.DialogResp> simple(
-    $0.SimpleReq request, {
+  /// ── 会话管理 ──
+  $grpc.ResponseFuture<$1.NewSessionResp> newSession(
+    $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$simple, request, options: options);
+    return $createUnaryCall(_$newSession, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.GenerateCidResp> generateCid(
-    $2.Empty request, {
+  $grpc.ResponseFuture<$1.SendResp> send(
+    $2.SendReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$generateCid, request, options: options);
+    return $createUnaryCall(_$send, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.DialogResp> dialog(
-    $0.DialogReq request, {
+  $grpc.ResponseStream<$1.StreamResp> stream(
+    $2.SendReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$dialog, request, options: options);
-  }
-
-  $grpc.ResponseStream<$1.DialogStreamResp> dialogStream(
-    $0.DialogReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createStreamingCall(
-        _$dialogStream, $async.Stream.fromIterable([request]),
+    return $createStreamingCall(_$stream, $async.Stream.fromIterable([request]),
         options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> clearContext(
-    $1.ClearContextReq request, {
+  $grpc.ResponseFuture<$2.GetHistoryResp> getHistory(
+    $1.GetHistoryReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$clearContext, request, options: options);
+    return $createUnaryCall(_$getHistory, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetContextResp> getContext(
-    $1.GetContextReq request, {
+  $grpc.ResponseFuture<$0.Empty> clearHistory(
+    $1.ClearHistoryReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getContext, request, options: options);
+    return $createUnaryCall(_$clearHistory, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.SimpleTextToSpeechResp> simpleTextToSpeech(
-    $1.SimpleTextToSpeechReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$simpleTextToSpeech, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.SimpleSpeechToTextResp> simpleSpeechToText(
-    $1.SimpleSpeechToTextReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$simpleSpeechToText, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.ChatResp> speechToSpeech(
-    $0.SpeechToSpeechReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$speechToSpeech, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.ChatResp> speechToSpeech2(
-    $0.ToolCallResultsReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$speechToSpeech2, request, options: options);
-  }
-
+  /// ── 多模态对话(带工具调用);Resume = 交回工具结果续跑(原 xxx2)──
   $grpc.ResponseFuture<$1.ChatResp> textToText(
-    $0.TextToTextReq request, {
+    $2.TextToTextReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$textToText, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ChatResp> textToText2(
-    $0.ToolCallResultsReq request, {
+  $grpc.ResponseFuture<$1.ChatResp> textToTextResume(
+    $2.ToolCallResultsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$textToText2, request, options: options);
+    return $createUnaryCall(_$textToTextResume, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.ChatResp> speechToText(
-    $0.SpeechToTextReq request, {
+    $2.SpeechToTextReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$speechToText, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ChatResp> speechToText2(
-    $0.ToolCallResultsReq request, {
+  $grpc.ResponseFuture<$1.ChatResp> speechToTextResume(
+    $2.ToolCallResultsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$speechToText2, request, options: options);
+    return $createUnaryCall(_$speechToTextResume, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ChatResp> speechToSpeech(
+    $2.SpeechToSpeechReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$speechToSpeech, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ChatResp> speechToSpeechResume(
+    $2.ToolCallResultsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$speechToSpeechResume, request, options: options);
   }
 
   // method descriptors
 
-  static final _$simple = $grpc.ClientMethod<$0.SimpleReq, $1.DialogResp>(
-      '/hi.club.Chat/Simple',
-      ($0.SimpleReq value) => value.writeToBuffer(),
-      $1.DialogResp.fromBuffer);
-  static final _$generateCid = $grpc.ClientMethod<$2.Empty, $1.GenerateCidResp>(
-      '/hi.club.Chat/GenerateCid',
-      ($2.Empty value) => value.writeToBuffer(),
-      $1.GenerateCidResp.fromBuffer);
-  static final _$dialog = $grpc.ClientMethod<$0.DialogReq, $1.DialogResp>(
-      '/hi.club.Chat/Dialog',
-      ($0.DialogReq value) => value.writeToBuffer(),
-      $1.DialogResp.fromBuffer);
-  static final _$dialogStream =
-      $grpc.ClientMethod<$0.DialogReq, $1.DialogStreamResp>(
-          '/hi.club.Chat/DialogStream',
-          ($0.DialogReq value) => value.writeToBuffer(),
-          $1.DialogStreamResp.fromBuffer);
-  static final _$clearContext =
-      $grpc.ClientMethod<$1.ClearContextReq, $2.Empty>(
-          '/hi.club.Chat/ClearContext',
-          ($1.ClearContextReq value) => value.writeToBuffer(),
-          $2.Empty.fromBuffer);
-  static final _$getContext =
-      $grpc.ClientMethod<$1.GetContextReq, $0.GetContextResp>(
-          '/hi.club.Chat/GetContext',
-          ($1.GetContextReq value) => value.writeToBuffer(),
-          $0.GetContextResp.fromBuffer);
-  static final _$simpleTextToSpeech =
-      $grpc.ClientMethod<$1.SimpleTextToSpeechReq, $1.SimpleTextToSpeechResp>(
-          '/hi.club.Chat/SimpleTextToSpeech',
-          ($1.SimpleTextToSpeechReq value) => value.writeToBuffer(),
-          $1.SimpleTextToSpeechResp.fromBuffer);
-  static final _$simpleSpeechToText =
-      $grpc.ClientMethod<$1.SimpleSpeechToTextReq, $1.SimpleSpeechToTextResp>(
-          '/hi.club.Chat/SimpleSpeechToText',
-          ($1.SimpleSpeechToTextReq value) => value.writeToBuffer(),
-          $1.SimpleSpeechToTextResp.fromBuffer);
-  static final _$speechToSpeech =
-      $grpc.ClientMethod<$0.SpeechToSpeechReq, $1.ChatResp>(
-          '/hi.club.Chat/SpeechToSpeech',
-          ($0.SpeechToSpeechReq value) => value.writeToBuffer(),
-          $1.ChatResp.fromBuffer);
-  static final _$speechToSpeech2 =
-      $grpc.ClientMethod<$0.ToolCallResultsReq, $1.ChatResp>(
-          '/hi.club.Chat/SpeechToSpeech2',
-          ($0.ToolCallResultsReq value) => value.writeToBuffer(),
-          $1.ChatResp.fromBuffer);
-  static final _$textToText = $grpc.ClientMethod<$0.TextToTextReq, $1.ChatResp>(
+  static final _$newSession = $grpc.ClientMethod<$0.Empty, $1.NewSessionResp>(
+      '/hi.club.Chat/NewSession',
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.NewSessionResp.fromBuffer);
+  static final _$send = $grpc.ClientMethod<$2.SendReq, $1.SendResp>(
+      '/hi.club.Chat/Send',
+      ($2.SendReq value) => value.writeToBuffer(),
+      $1.SendResp.fromBuffer);
+  static final _$stream = $grpc.ClientMethod<$2.SendReq, $1.StreamResp>(
+      '/hi.club.Chat/Stream',
+      ($2.SendReq value) => value.writeToBuffer(),
+      $1.StreamResp.fromBuffer);
+  static final _$getHistory =
+      $grpc.ClientMethod<$1.GetHistoryReq, $2.GetHistoryResp>(
+          '/hi.club.Chat/GetHistory',
+          ($1.GetHistoryReq value) => value.writeToBuffer(),
+          $2.GetHistoryResp.fromBuffer);
+  static final _$clearHistory =
+      $grpc.ClientMethod<$1.ClearHistoryReq, $0.Empty>(
+          '/hi.club.Chat/ClearHistory',
+          ($1.ClearHistoryReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
+  static final _$textToText = $grpc.ClientMethod<$2.TextToTextReq, $1.ChatResp>(
       '/hi.club.Chat/TextToText',
-      ($0.TextToTextReq value) => value.writeToBuffer(),
+      ($2.TextToTextReq value) => value.writeToBuffer(),
       $1.ChatResp.fromBuffer);
-  static final _$textToText2 =
-      $grpc.ClientMethod<$0.ToolCallResultsReq, $1.ChatResp>(
-          '/hi.club.Chat/TextToText2',
-          ($0.ToolCallResultsReq value) => value.writeToBuffer(),
+  static final _$textToTextResume =
+      $grpc.ClientMethod<$2.ToolCallResultsReq, $1.ChatResp>(
+          '/hi.club.Chat/TextToTextResume',
+          ($2.ToolCallResultsReq value) => value.writeToBuffer(),
           $1.ChatResp.fromBuffer);
   static final _$speechToText =
-      $grpc.ClientMethod<$0.SpeechToTextReq, $1.ChatResp>(
+      $grpc.ClientMethod<$2.SpeechToTextReq, $1.ChatResp>(
           '/hi.club.Chat/SpeechToText',
-          ($0.SpeechToTextReq value) => value.writeToBuffer(),
+          ($2.SpeechToTextReq value) => value.writeToBuffer(),
           $1.ChatResp.fromBuffer);
-  static final _$speechToText2 =
-      $grpc.ClientMethod<$0.ToolCallResultsReq, $1.ChatResp>(
-          '/hi.club.Chat/SpeechToText2',
-          ($0.ToolCallResultsReq value) => value.writeToBuffer(),
+  static final _$speechToTextResume =
+      $grpc.ClientMethod<$2.ToolCallResultsReq, $1.ChatResp>(
+          '/hi.club.Chat/SpeechToTextResume',
+          ($2.ToolCallResultsReq value) => value.writeToBuffer(),
+          $1.ChatResp.fromBuffer);
+  static final _$speechToSpeech =
+      $grpc.ClientMethod<$2.SpeechToSpeechReq, $1.ChatResp>(
+          '/hi.club.Chat/SpeechToSpeech',
+          ($2.SpeechToSpeechReq value) => value.writeToBuffer(),
+          $1.ChatResp.fromBuffer);
+  static final _$speechToSpeechResume =
+      $grpc.ClientMethod<$2.ToolCallResultsReq, $1.ChatResp>(
+          '/hi.club.Chat/SpeechToSpeechResume',
+          ($2.ToolCallResultsReq value) => value.writeToBuffer(),
           $1.ChatResp.fromBuffer);
 }
 
@@ -210,224 +177,172 @@ abstract class ChatServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Chat';
 
   ChatServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.SimpleReq, $1.DialogResp>(
-        'Simple',
-        simple_Pre,
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.NewSessionResp>(
+        'NewSession',
+        newSession_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.SimpleReq.fromBuffer(value),
-        ($1.DialogResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Empty, $1.GenerateCidResp>(
-        'GenerateCid',
-        generateCid_Pre,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.NewSessionResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.SendReq, $1.SendResp>(
+        'Send',
+        send_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
-        ($1.GenerateCidResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DialogReq, $1.DialogResp>(
-        'Dialog',
-        dialog_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.DialogReq.fromBuffer(value),
-        ($1.DialogResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DialogReq, $1.DialogStreamResp>(
-        'DialogStream',
-        dialogStream_Pre,
+        ($core.List<$core.int> value) => $2.SendReq.fromBuffer(value),
+        ($1.SendResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.SendReq, $1.StreamResp>(
+        'Stream',
+        stream_Pre,
         false,
         true,
-        ($core.List<$core.int> value) => $0.DialogReq.fromBuffer(value),
-        ($1.DialogStreamResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ClearContextReq, $2.Empty>(
-        'ClearContext',
-        clearContext_Pre,
+        ($core.List<$core.int> value) => $2.SendReq.fromBuffer(value),
+        ($1.StreamResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GetHistoryReq, $2.GetHistoryResp>(
+        'GetHistory',
+        getHistory_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.ClearContextReq.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GetContextReq, $0.GetContextResp>(
-        'GetContext',
-        getContext_Pre,
+        ($core.List<$core.int> value) => $1.GetHistoryReq.fromBuffer(value),
+        ($2.GetHistoryResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ClearHistoryReq, $0.Empty>(
+        'ClearHistory',
+        clearHistory_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.GetContextReq.fromBuffer(value),
-        ($0.GetContextResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SimpleTextToSpeechReq,
-            $1.SimpleTextToSpeechResp>(
-        'SimpleTextToSpeech',
-        simpleTextToSpeech_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.SimpleTextToSpeechReq.fromBuffer(value),
-        ($1.SimpleTextToSpeechResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SimpleSpeechToTextReq,
-            $1.SimpleSpeechToTextResp>(
-        'SimpleSpeechToText',
-        simpleSpeechToText_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.SimpleSpeechToTextReq.fromBuffer(value),
-        ($1.SimpleSpeechToTextResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SpeechToSpeechReq, $1.ChatResp>(
-        'SpeechToSpeech',
-        speechToSpeech_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.SpeechToSpeechReq.fromBuffer(value),
-        ($1.ChatResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ToolCallResultsReq, $1.ChatResp>(
-        'SpeechToSpeech2',
-        speechToSpeech2_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.ToolCallResultsReq.fromBuffer(value),
-        ($1.ChatResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.TextToTextReq, $1.ChatResp>(
+        ($core.List<$core.int> value) => $1.ClearHistoryReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.TextToTextReq, $1.ChatResp>(
         'TextToText',
         textToText_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.TextToTextReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.TextToTextReq.fromBuffer(value),
         ($1.ChatResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ToolCallResultsReq, $1.ChatResp>(
-        'TextToText2',
-        textToText2_Pre,
+    $addMethod($grpc.ServiceMethod<$2.ToolCallResultsReq, $1.ChatResp>(
+        'TextToTextResume',
+        textToTextResume_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ToolCallResultsReq.fromBuffer(value),
+            $2.ToolCallResultsReq.fromBuffer(value),
         ($1.ChatResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SpeechToTextReq, $1.ChatResp>(
+    $addMethod($grpc.ServiceMethod<$2.SpeechToTextReq, $1.ChatResp>(
         'SpeechToText',
         speechToText_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.SpeechToTextReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.SpeechToTextReq.fromBuffer(value),
         ($1.ChatResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ToolCallResultsReq, $1.ChatResp>(
-        'SpeechToText2',
-        speechToText2_Pre,
+    $addMethod($grpc.ServiceMethod<$2.ToolCallResultsReq, $1.ChatResp>(
+        'SpeechToTextResume',
+        speechToTextResume_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ToolCallResultsReq.fromBuffer(value),
+            $2.ToolCallResultsReq.fromBuffer(value),
+        ($1.ChatResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.SpeechToSpeechReq, $1.ChatResp>(
+        'SpeechToSpeech',
+        speechToSpeech_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.SpeechToSpeechReq.fromBuffer(value),
+        ($1.ChatResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.ToolCallResultsReq, $1.ChatResp>(
+        'SpeechToSpeechResume',
+        speechToSpeechResume_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $2.ToolCallResultsReq.fromBuffer(value),
         ($1.ChatResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.DialogResp> simple_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.SimpleReq> $request) async {
-    return simple($call, await $request);
+  $async.Future<$1.NewSessionResp> newSession_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return newSession($call, await $request);
   }
 
-  $async.Future<$1.DialogResp> simple(
-      $grpc.ServiceCall call, $0.SimpleReq request);
+  $async.Future<$1.NewSessionResp> newSession(
+      $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$1.GenerateCidResp> generateCid_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
-    return generateCid($call, await $request);
+  $async.Future<$1.SendResp> send_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.SendReq> $request) async {
+    return send($call, await $request);
   }
 
-  $async.Future<$1.GenerateCidResp> generateCid(
-      $grpc.ServiceCall call, $2.Empty request);
+  $async.Future<$1.SendResp> send($grpc.ServiceCall call, $2.SendReq request);
 
-  $async.Future<$1.DialogResp> dialog_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.DialogReq> $request) async {
-    return dialog($call, await $request);
+  $async.Stream<$1.StreamResp> stream_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.SendReq> $request) async* {
+    yield* stream($call, await $request);
   }
 
-  $async.Future<$1.DialogResp> dialog(
-      $grpc.ServiceCall call, $0.DialogReq request);
+  $async.Stream<$1.StreamResp> stream(
+      $grpc.ServiceCall call, $2.SendReq request);
 
-  $async.Stream<$1.DialogStreamResp> dialogStream_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.DialogReq> $request) async* {
-    yield* dialogStream($call, await $request);
+  $async.Future<$2.GetHistoryResp> getHistory_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GetHistoryReq> $request) async {
+    return getHistory($call, await $request);
   }
 
-  $async.Stream<$1.DialogStreamResp> dialogStream(
-      $grpc.ServiceCall call, $0.DialogReq request);
+  $async.Future<$2.GetHistoryResp> getHistory(
+      $grpc.ServiceCall call, $1.GetHistoryReq request);
 
-  $async.Future<$2.Empty> clearContext_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.ClearContextReq> $request) async {
-    return clearContext($call, await $request);
+  $async.Future<$0.Empty> clearHistory_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ClearHistoryReq> $request) async {
+    return clearHistory($call, await $request);
   }
 
-  $async.Future<$2.Empty> clearContext(
-      $grpc.ServiceCall call, $1.ClearContextReq request);
-
-  $async.Future<$0.GetContextResp> getContext_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GetContextReq> $request) async {
-    return getContext($call, await $request);
-  }
-
-  $async.Future<$0.GetContextResp> getContext(
-      $grpc.ServiceCall call, $1.GetContextReq request);
-
-  $async.Future<$1.SimpleTextToSpeechResp> simpleTextToSpeech_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.SimpleTextToSpeechReq> $request) async {
-    return simpleTextToSpeech($call, await $request);
-  }
-
-  $async.Future<$1.SimpleTextToSpeechResp> simpleTextToSpeech(
-      $grpc.ServiceCall call, $1.SimpleTextToSpeechReq request);
-
-  $async.Future<$1.SimpleSpeechToTextResp> simpleSpeechToText_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.SimpleSpeechToTextReq> $request) async {
-    return simpleSpeechToText($call, await $request);
-  }
-
-  $async.Future<$1.SimpleSpeechToTextResp> simpleSpeechToText(
-      $grpc.ServiceCall call, $1.SimpleSpeechToTextReq request);
-
-  $async.Future<$1.ChatResp> speechToSpeech_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.SpeechToSpeechReq> $request) async {
-    return speechToSpeech($call, await $request);
-  }
-
-  $async.Future<$1.ChatResp> speechToSpeech(
-      $grpc.ServiceCall call, $0.SpeechToSpeechReq request);
-
-  $async.Future<$1.ChatResp> speechToSpeech2_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ToolCallResultsReq> $request) async {
-    return speechToSpeech2($call, await $request);
-  }
-
-  $async.Future<$1.ChatResp> speechToSpeech2(
-      $grpc.ServiceCall call, $0.ToolCallResultsReq request);
+  $async.Future<$0.Empty> clearHistory(
+      $grpc.ServiceCall call, $1.ClearHistoryReq request);
 
   $async.Future<$1.ChatResp> textToText_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.TextToTextReq> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$2.TextToTextReq> $request) async {
     return textToText($call, await $request);
   }
 
   $async.Future<$1.ChatResp> textToText(
-      $grpc.ServiceCall call, $0.TextToTextReq request);
+      $grpc.ServiceCall call, $2.TextToTextReq request);
 
-  $async.Future<$1.ChatResp> textToText2_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ToolCallResultsReq> $request) async {
-    return textToText2($call, await $request);
+  $async.Future<$1.ChatResp> textToTextResume_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ToolCallResultsReq> $request) async {
+    return textToTextResume($call, await $request);
   }
 
-  $async.Future<$1.ChatResp> textToText2(
-      $grpc.ServiceCall call, $0.ToolCallResultsReq request);
+  $async.Future<$1.ChatResp> textToTextResume(
+      $grpc.ServiceCall call, $2.ToolCallResultsReq request);
 
   $async.Future<$1.ChatResp> speechToText_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.SpeechToTextReq> $request) async {
+      $async.Future<$2.SpeechToTextReq> $request) async {
     return speechToText($call, await $request);
   }
 
   $async.Future<$1.ChatResp> speechToText(
-      $grpc.ServiceCall call, $0.SpeechToTextReq request);
+      $grpc.ServiceCall call, $2.SpeechToTextReq request);
 
-  $async.Future<$1.ChatResp> speechToText2_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ToolCallResultsReq> $request) async {
-    return speechToText2($call, await $request);
+  $async.Future<$1.ChatResp> speechToTextResume_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ToolCallResultsReq> $request) async {
+    return speechToTextResume($call, await $request);
   }
 
-  $async.Future<$1.ChatResp> speechToText2(
-      $grpc.ServiceCall call, $0.ToolCallResultsReq request);
+  $async.Future<$1.ChatResp> speechToTextResume(
+      $grpc.ServiceCall call, $2.ToolCallResultsReq request);
+
+  $async.Future<$1.ChatResp> speechToSpeech_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.SpeechToSpeechReq> $request) async {
+    return speechToSpeech($call, await $request);
+  }
+
+  $async.Future<$1.ChatResp> speechToSpeech(
+      $grpc.ServiceCall call, $2.SpeechToSpeechReq request);
+
+  $async.Future<$1.ChatResp> speechToSpeechResume_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ToolCallResultsReq> $request) async {
+    return speechToSpeechResume($call, await $request);
+  }
+
+  $async.Future<$1.ChatResp> speechToSpeechResume(
+      $grpc.ServiceCall call, $2.ToolCallResultsReq request);
 }

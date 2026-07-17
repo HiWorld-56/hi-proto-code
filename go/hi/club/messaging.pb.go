@@ -891,9 +891,9 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
 	"PublishReq\x12\x14\n" +
 	"\x05topic\x18\x01 \x01(\tR\x05topic\x12)\n" +
-	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayload2I\n" +
-	"\tPublisher\x12<\n" +
-	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x85\x01\n" +
+	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayload2J\n" +
+	"\tPublisher\x12=\n" +
+	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x85\x01\n" +
 	"\vcom.hi.clubB\x0eMessagingProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

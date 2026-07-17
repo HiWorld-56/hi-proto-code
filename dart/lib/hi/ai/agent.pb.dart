@@ -85,8 +85,10 @@ class Prompt extends $pb.GeneratedMessage {
   void clearUser() => $_clearField(2);
 }
 
-class Model extends $pb.GeneratedMessage {
-  factory Model({
+/// 一个 agent 选用的一组模型。原名 Model —— 与模型目录 service Model 同包重名,
+/// 且它本就不是"一个模型"而是一套选择,故改名 ModelSet。
+class ModelSet extends $pb.GeneratedMessage {
+  factory ModelSet({
     $core.String? llm,
     $core.String? stt,
     $core.String? tts,
@@ -100,17 +102,17 @@ class Model extends $pb.GeneratedMessage {
     return result;
   }
 
-  Model._();
+  ModelSet._();
 
-  factory Model.fromBuffer($core.List<$core.int> data,
+  factory ModelSet.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory Model.fromJson($core.String json,
+  factory ModelSet.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Model',
+      _omitMessageNames ? '' : 'ModelSet',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'llm')
@@ -120,22 +122,22 @@ class Model extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Model clone() => deepCopy();
+  ModelSet clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Model copyWith(void Function(Model) updates) =>
-      super.copyWith((message) => updates(message as Model)) as Model;
+  ModelSet copyWith(void Function(ModelSet) updates) =>
+      super.copyWith((message) => updates(message as ModelSet)) as ModelSet;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static Model create() => Model._();
+  static ModelSet create() => ModelSet._();
   @$core.override
-  Model createEmptyInstance() => create();
+  ModelSet createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static Model getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Model>(create);
-  static Model? _defaultInstance;
+  static ModelSet getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ModelSet>(create);
+  static ModelSet? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get llm => $_getSZ(0);
@@ -174,17 +176,17 @@ class Model extends $pb.GeneratedMessage {
   void clearEmbedding() => $_clearField(4);
 }
 
-/// 智能体配置
+/// 智能体配置。
+/// 注:插件只剩 py 脚本一种(网搜/画图已砍 —— 那两类完全可以封进 py 脚本做,
+/// 且局限太大,连传入用户数据都不方便),故只保留 use_plugin 一个开关。
 class AgentConfig extends $pb.GeneratedMessage {
   factory AgentConfig({
     Prompt? prompt,
     $core.double? freedom,
-    Model? model,
+    ModelSet? model,
     $core.int? qaNum,
     $core.bool? useMem,
-    $core.bool? usePluginSearch,
-    $core.bool? usePluginPython,
-    $core.bool? usePluginDraw,
+    $core.bool? usePlugin,
   }) {
     final result = create();
     if (prompt != null) result.prompt = prompt;
@@ -192,9 +194,7 @@ class AgentConfig extends $pb.GeneratedMessage {
     if (model != null) result.model = model;
     if (qaNum != null) result.qaNum = qaNum;
     if (useMem != null) result.useMem = useMem;
-    if (usePluginSearch != null) result.usePluginSearch = usePluginSearch;
-    if (usePluginPython != null) result.usePluginPython = usePluginPython;
-    if (usePluginDraw != null) result.usePluginDraw = usePluginDraw;
+    if (usePlugin != null) result.usePlugin = usePlugin;
     return result;
   }
 
@@ -213,12 +213,11 @@ class AgentConfig extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<Prompt>(1, _omitFieldNames ? '' : 'prompt', subBuilder: Prompt.create)
     ..aD(2, _omitFieldNames ? '' : 'freedom', fieldType: $pb.PbFieldType.OF)
-    ..aOM<Model>(3, _omitFieldNames ? '' : 'model', subBuilder: Model.create)
+    ..aOM<ModelSet>(3, _omitFieldNames ? '' : 'model',
+        subBuilder: ModelSet.create)
     ..aI(4, _omitFieldNames ? '' : 'qaNum')
-    ..aOB(11, _omitFieldNames ? '' : 'useMem')
-    ..aOB(12, _omitFieldNames ? '' : 'usePluginSearch')
-    ..aOB(13, _omitFieldNames ? '' : 'usePluginPython')
-    ..aOB(14, _omitFieldNames ? '' : 'usePluginDraw')
+    ..aOB(5, _omitFieldNames ? '' : 'useMem')
+    ..aOB(6, _omitFieldNames ? '' : 'usePlugin')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -261,15 +260,15 @@ class AgentConfig extends $pb.GeneratedMessage {
   void clearFreedom() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  Model get model => $_getN(2);
+  ModelSet get model => $_getN(2);
   @$pb.TagNumber(3)
-  set model(Model value) => $_setField(3, value);
+  set model(ModelSet value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasModel() => $_has(2);
   @$pb.TagNumber(3)
   void clearModel() => $_clearField(3);
   @$pb.TagNumber(3)
-  Model ensureModel() => $_ensure(2);
+  ModelSet ensureModel() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $core.int get qaNum => $_getIZ(3);
@@ -280,41 +279,23 @@ class AgentConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearQaNum() => $_clearField(4);
 
-  @$pb.TagNumber(11)
+  @$pb.TagNumber(5)
   $core.bool get useMem => $_getBF(4);
-  @$pb.TagNumber(11)
+  @$pb.TagNumber(5)
   set useMem($core.bool value) => $_setBool(4, value);
-  @$pb.TagNumber(11)
+  @$pb.TagNumber(5)
   $core.bool hasUseMem() => $_has(4);
-  @$pb.TagNumber(11)
-  void clearUseMem() => $_clearField(11);
+  @$pb.TagNumber(5)
+  void clearUseMem() => $_clearField(5);
 
-  @$pb.TagNumber(12)
-  $core.bool get usePluginSearch => $_getBF(5);
-  @$pb.TagNumber(12)
-  set usePluginSearch($core.bool value) => $_setBool(5, value);
-  @$pb.TagNumber(12)
-  $core.bool hasUsePluginSearch() => $_has(5);
-  @$pb.TagNumber(12)
-  void clearUsePluginSearch() => $_clearField(12);
-
-  @$pb.TagNumber(13)
-  $core.bool get usePluginPython => $_getBF(6);
-  @$pb.TagNumber(13)
-  set usePluginPython($core.bool value) => $_setBool(6, value);
-  @$pb.TagNumber(13)
-  $core.bool hasUsePluginPython() => $_has(6);
-  @$pb.TagNumber(13)
-  void clearUsePluginPython() => $_clearField(13);
-
-  @$pb.TagNumber(14)
-  $core.bool get usePluginDraw => $_getBF(7);
-  @$pb.TagNumber(14)
-  set usePluginDraw($core.bool value) => $_setBool(7, value);
-  @$pb.TagNumber(14)
-  $core.bool hasUsePluginDraw() => $_has(7);
-  @$pb.TagNumber(14)
-  void clearUsePluginDraw() => $_clearField(14);
+  @$pb.TagNumber(6)
+  $core.bool get usePlugin => $_getBF(5);
+  @$pb.TagNumber(6)
+  set usePlugin($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasUsePlugin() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearUsePlugin() => $_clearField(6);
 }
 
 class TokenUsage extends $pb.GeneratedMessage {
@@ -402,7 +383,7 @@ class AgentInfo extends $pb.GeneratedMessage {
     $core.String? note,
     TokenUsage? token,
     $fixnum.Int64? createdAt,
-    $core.bool? favorited,
+    $core.bool? marked,
   }) {
     final result = create();
     if (base != null) result.base = base;
@@ -411,7 +392,7 @@ class AgentInfo extends $pb.GeneratedMessage {
     if (note != null) result.note = note;
     if (token != null) result.token = token;
     if (createdAt != null) result.createdAt = createdAt;
-    if (favorited != null) result.favorited = favorited;
+    if (marked != null) result.marked = marked;
     return result;
   }
 
@@ -437,7 +418,7 @@ class AgentInfo extends $pb.GeneratedMessage {
     ..aOM<TokenUsage>(5, _omitFieldNames ? '' : 'token',
         subBuilder: TokenUsage.create)
     ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
-    ..aOB(7, _omitFieldNames ? '' : 'favorited')
+    ..aOB(7, _omitFieldNames ? '' : 'marked')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -519,17 +500,17 @@ class AgentInfo extends $pb.GeneratedMessage {
   void clearCreatedAt() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  $core.bool get favorited => $_getBF(6);
+  $core.bool get marked => $_getBF(6);
   @$pb.TagNumber(7)
-  set favorited($core.bool value) => $_setBool(6, value);
+  set marked($core.bool value) => $_setBool(6, value);
   @$pb.TagNumber(7)
-  $core.bool hasFavorited() => $_has(6);
+  $core.bool hasMarked() => $_has(6);
   @$pb.TagNumber(7)
-  void clearFavorited() => $_clearField(7);
+  void clearMarked() => $_clearField(7);
 }
 
-class AgentConfigResp extends $pb.GeneratedMessage {
-  factory AgentConfigResp({
+class DefaultConfigResp extends $pb.GeneratedMessage {
+  factory DefaultConfigResp({
     AgentConfig? config,
   }) {
     final result = create();
@@ -537,17 +518,17 @@ class AgentConfigResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  AgentConfigResp._();
+  DefaultConfigResp._();
 
-  factory AgentConfigResp.fromBuffer($core.List<$core.int> data,
+  factory DefaultConfigResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory AgentConfigResp.fromJson($core.String json,
+  factory DefaultConfigResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AgentConfigResp',
+      _omitMessageNames ? '' : 'DefaultConfigResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOM<AgentConfig>(1, _omitFieldNames ? '' : 'config',
@@ -555,23 +536,23 @@ class AgentConfigResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentConfigResp clone() => deepCopy();
+  DefaultConfigResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentConfigResp copyWith(void Function(AgentConfigResp) updates) =>
-      super.copyWith((message) => updates(message as AgentConfigResp))
-          as AgentConfigResp;
+  DefaultConfigResp copyWith(void Function(DefaultConfigResp) updates) =>
+      super.copyWith((message) => updates(message as DefaultConfigResp))
+          as DefaultConfigResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static AgentConfigResp create() => AgentConfigResp._();
+  static DefaultConfigResp create() => DefaultConfigResp._();
   @$core.override
-  AgentConfigResp createEmptyInstance() => create();
+  DefaultConfigResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static AgentConfigResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AgentConfigResp>(create);
-  static AgentConfigResp? _defaultInstance;
+  static DefaultConfigResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DefaultConfigResp>(create);
+  static DefaultConfigResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   AgentConfig get config => $_getN(0);
@@ -583,204 +564,6 @@ class AgentConfigResp extends $pb.GeneratedMessage {
   void clearConfig() => $_clearField(1);
   @$pb.TagNumber(1)
   AgentConfig ensureConfig() => $_ensure(0);
-}
-
-class ListLLMResp extends $pb.GeneratedMessage {
-  factory ListLLMResp({
-    $core.Iterable<$core.String>? models,
-  }) {
-    final result = create();
-    if (models != null) result.models.addAll(models);
-    return result;
-  }
-
-  ListLLMResp._();
-
-  factory ListLLMResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListLLMResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListLLMResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'models')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListLLMResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListLLMResp copyWith(void Function(ListLLMResp) updates) =>
-      super.copyWith((message) => updates(message as ListLLMResp))
-          as ListLLMResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListLLMResp create() => ListLLMResp._();
-  @$core.override
-  ListLLMResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListLLMResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListLLMResp>(create);
-  static ListLLMResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get models => $_getList(0);
-}
-
-class ListEmbeddingResp extends $pb.GeneratedMessage {
-  factory ListEmbeddingResp({
-    $core.Iterable<$core.String>? models,
-  }) {
-    final result = create();
-    if (models != null) result.models.addAll(models);
-    return result;
-  }
-
-  ListEmbeddingResp._();
-
-  factory ListEmbeddingResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListEmbeddingResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListEmbeddingResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'models')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListEmbeddingResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListEmbeddingResp copyWith(void Function(ListEmbeddingResp) updates) =>
-      super.copyWith((message) => updates(message as ListEmbeddingResp))
-          as ListEmbeddingResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListEmbeddingResp create() => ListEmbeddingResp._();
-  @$core.override
-  ListEmbeddingResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListEmbeddingResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListEmbeddingResp>(create);
-  static ListEmbeddingResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get models => $_getList(0);
-}
-
-class ListSTTResp extends $pb.GeneratedMessage {
-  factory ListSTTResp({
-    $core.Iterable<$core.String>? models,
-    $core.Iterable<$core.String>? langs,
-  }) {
-    final result = create();
-    if (models != null) result.models.addAll(models);
-    if (langs != null) result.langs.addAll(langs);
-    return result;
-  }
-
-  ListSTTResp._();
-
-  factory ListSTTResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListSTTResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListSTTResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'models')
-    ..pPS(2, _omitFieldNames ? '' : 'langs')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListSTTResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListSTTResp copyWith(void Function(ListSTTResp) updates) =>
-      super.copyWith((message) => updates(message as ListSTTResp))
-          as ListSTTResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListSTTResp create() => ListSTTResp._();
-  @$core.override
-  ListSTTResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListSTTResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListSTTResp>(create);
-  static ListSTTResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get models => $_getList(0);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<$core.String> get langs => $_getList(1);
-}
-
-class ListTTSResp extends $pb.GeneratedMessage {
-  factory ListTTSResp({
-    $core.Iterable<$core.String>? models,
-  }) {
-    final result = create();
-    if (models != null) result.models.addAll(models);
-    return result;
-  }
-
-  ListTTSResp._();
-
-  factory ListTTSResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListTTSResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListTTSResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'models')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTTSResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTTSResp copyWith(void Function(ListTTSResp) updates) =>
-      super.copyWith((message) => updates(message as ListTTSResp))
-          as ListTTSResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListTTSResp create() => ListTTSResp._();
-  @$core.override
-  ListTTSResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListTTSResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListTTSResp>(create);
-  static ListTTSResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get models => $_getList(0);
 }
 
 class CreateAgentReq extends $pb.GeneratedMessage {
@@ -1072,7 +855,7 @@ class ListAgentResp extends $pb.GeneratedMessage {
   $pb.PbList<AgentInfo> get infos => $_getList(1);
 }
 
-/// Agent 列表入参(公开,免鉴权):合并原 ListAgent(全量)+ ListAgentByDids。
+/// Agent 列表入参:dids 空=列调用者自己的;非空=按 did 列。
 class ListAgentReq extends $pb.GeneratedMessage {
   factory ListAgentReq({
     $core.Iterable<$core.String>? dids,
@@ -1136,11 +919,9 @@ class ListAgentReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
-/// 收藏列表入参(需鉴权:查的是**调用者**收藏的,必须有身份)。
-/// 合并原 ListFavoriteAgents + FavoriteAgentListByDIDs。
-/// 注:favorite 不能做成 ListAgentReq 的 filter —— List 免鉴权、拿不到调用者身份。
-class ListFavoriteReq extends $pb.GeneratedMessage {
-  factory ListFavoriteReq({
+/// 标记列表入参:查的是**调用者**打过标记的,必须有身份。
+class ListMarksReq extends $pb.GeneratedMessage {
+  factory ListMarksReq({
     $core.Iterable<$core.String>? dids,
     $2.Pagination? pagination,
   }) {
@@ -1150,17 +931,17 @@ class ListFavoriteReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListFavoriteReq._();
+  ListMarksReq._();
 
-  factory ListFavoriteReq.fromBuffer($core.List<$core.int> data,
+  factory ListMarksReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListFavoriteReq.fromJson($core.String json,
+  factory ListMarksReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListFavoriteReq',
+      _omitMessageNames ? '' : 'ListMarksReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'dids')
@@ -1169,23 +950,23 @@ class ListFavoriteReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteReq clone() => deepCopy();
+  ListMarksReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListFavoriteReq copyWith(void Function(ListFavoriteReq) updates) =>
-      super.copyWith((message) => updates(message as ListFavoriteReq))
-          as ListFavoriteReq;
+  ListMarksReq copyWith(void Function(ListMarksReq) updates) =>
+      super.copyWith((message) => updates(message as ListMarksReq))
+          as ListMarksReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListFavoriteReq create() => ListFavoriteReq._();
+  static ListMarksReq create() => ListMarksReq._();
   @$core.override
-  ListFavoriteReq createEmptyInstance() => create();
+  ListMarksReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListFavoriteReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListFavoriteReq>(create);
-  static ListFavoriteReq? _defaultInstance;
+  static ListMarksReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListMarksReq>(create);
+  static ListMarksReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get dids => $_getList(0);
@@ -1256,8 +1037,8 @@ class DeleteAgentReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 }
 
-class FindAgentReq extends $pb.GeneratedMessage {
-  factory FindAgentReq({
+class GetAgentReq extends $pb.GeneratedMessage {
+  factory GetAgentReq({
     $core.String? did,
   }) {
     final result = create();
@@ -1265,40 +1046,40 @@ class FindAgentReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  FindAgentReq._();
+  GetAgentReq._();
 
-  factory FindAgentReq.fromBuffer($core.List<$core.int> data,
+  factory GetAgentReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FindAgentReq.fromJson($core.String json,
+  factory GetAgentReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FindAgentReq',
+      _omitMessageNames ? '' : 'GetAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentReq clone() => deepCopy();
+  GetAgentReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentReq copyWith(void Function(FindAgentReq) updates) =>
-      super.copyWith((message) => updates(message as FindAgentReq))
-          as FindAgentReq;
+  GetAgentReq copyWith(void Function(GetAgentReq) updates) =>
+      super.copyWith((message) => updates(message as GetAgentReq))
+          as GetAgentReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FindAgentReq create() => FindAgentReq._();
+  static GetAgentReq create() => GetAgentReq._();
   @$core.override
-  FindAgentReq createEmptyInstance() => create();
+  GetAgentReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FindAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FindAgentReq>(create);
-  static FindAgentReq? _defaultInstance;
+  static GetAgentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetAgentReq>(create);
+  static GetAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
@@ -1310,8 +1091,8 @@ class FindAgentReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 }
 
-class FindAgentResp extends $pb.GeneratedMessage {
-  factory FindAgentResp({
+class GetAgentResp extends $pb.GeneratedMessage {
+  factory GetAgentResp({
     AgentInfo? info,
   }) {
     final result = create();
@@ -1319,17 +1100,17 @@ class FindAgentResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  FindAgentResp._();
+  GetAgentResp._();
 
-  factory FindAgentResp.fromBuffer($core.List<$core.int> data,
+  factory GetAgentResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FindAgentResp.fromJson($core.String json,
+  factory GetAgentResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FindAgentResp',
+      _omitMessageNames ? '' : 'GetAgentResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOM<AgentInfo>(1, _omitFieldNames ? '' : 'info',
@@ -1337,23 +1118,23 @@ class FindAgentResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentResp clone() => deepCopy();
+  GetAgentResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentResp copyWith(void Function(FindAgentResp) updates) =>
-      super.copyWith((message) => updates(message as FindAgentResp))
-          as FindAgentResp;
+  GetAgentResp copyWith(void Function(GetAgentResp) updates) =>
+      super.copyWith((message) => updates(message as GetAgentResp))
+          as GetAgentResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FindAgentResp create() => FindAgentResp._();
+  static GetAgentResp create() => GetAgentResp._();
   @$core.override
-  FindAgentResp createEmptyInstance() => create();
+  GetAgentResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FindAgentResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FindAgentResp>(create);
-  static FindAgentResp? _defaultInstance;
+  static GetAgentResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetAgentResp>(create);
+  static GetAgentResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   AgentInfo get info => $_getN(0);
@@ -1367,8 +1148,8 @@ class FindAgentResp extends $pb.GeneratedMessage {
   AgentInfo ensureInfo() => $_ensure(0);
 }
 
-class FindAgentCountReq extends $pb.GeneratedMessage {
-  factory FindAgentCountReq({
+class AgentUsageReq extends $pb.GeneratedMessage {
+  factory AgentUsageReq({
     $core.String? did,
   }) {
     final result = create();
@@ -1376,40 +1157,40 @@ class FindAgentCountReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  FindAgentCountReq._();
+  AgentUsageReq._();
 
-  factory FindAgentCountReq.fromBuffer($core.List<$core.int> data,
+  factory AgentUsageReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FindAgentCountReq.fromJson($core.String json,
+  factory AgentUsageReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FindAgentCountReq',
+      _omitMessageNames ? '' : 'AgentUsageReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentCountReq clone() => deepCopy();
+  AgentUsageReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentCountReq copyWith(void Function(FindAgentCountReq) updates) =>
-      super.copyWith((message) => updates(message as FindAgentCountReq))
-          as FindAgentCountReq;
+  AgentUsageReq copyWith(void Function(AgentUsageReq) updates) =>
+      super.copyWith((message) => updates(message as AgentUsageReq))
+          as AgentUsageReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FindAgentCountReq create() => FindAgentCountReq._();
+  static AgentUsageReq create() => AgentUsageReq._();
   @$core.override
-  FindAgentCountReq createEmptyInstance() => create();
+  AgentUsageReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FindAgentCountReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FindAgentCountReq>(create);
-  static FindAgentCountReq? _defaultInstance;
+  static AgentUsageReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AgentUsageReq>(create);
+  static AgentUsageReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
@@ -1421,8 +1202,9 @@ class FindAgentCountReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 }
 
-class FindAgentCountResp extends $pb.GeneratedMessage {
-  factory FindAgentCountResp({
+/// 机器人用量。原 FindAgentCountResp —— 它不是"count",而是消息数 + token 三件套。
+class AgentUsageResp extends $pb.GeneratedMessage {
+  factory AgentUsageResp({
     $core.int? messageCount,
     TokenUsage? token,
   }) {
@@ -1432,17 +1214,17 @@ class FindAgentCountResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  FindAgentCountResp._();
+  AgentUsageResp._();
 
-  factory FindAgentCountResp.fromBuffer($core.List<$core.int> data,
+  factory AgentUsageResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FindAgentCountResp.fromJson($core.String json,
+  factory AgentUsageResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FindAgentCountResp',
+      _omitMessageNames ? '' : 'AgentUsageResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'messageCount')
@@ -1451,23 +1233,23 @@ class FindAgentCountResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentCountResp clone() => deepCopy();
+  AgentUsageResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindAgentCountResp copyWith(void Function(FindAgentCountResp) updates) =>
-      super.copyWith((message) => updates(message as FindAgentCountResp))
-          as FindAgentCountResp;
+  AgentUsageResp copyWith(void Function(AgentUsageResp) updates) =>
+      super.copyWith((message) => updates(message as AgentUsageResp))
+          as AgentUsageResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FindAgentCountResp create() => FindAgentCountResp._();
+  static AgentUsageResp create() => AgentUsageResp._();
   @$core.override
-  FindAgentCountResp createEmptyInstance() => create();
+  AgentUsageResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FindAgentCountResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FindAgentCountResp>(create);
-  static FindAgentCountResp? _defaultInstance;
+  static AgentUsageResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AgentUsageResp>(create);
+  static AgentUsageResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get messageCount => $_getIZ(0);
@@ -1490,74 +1272,8 @@ class FindAgentCountResp extends $pb.GeneratedMessage {
   TokenUsage ensureToken() => $_ensure(1);
 }
 
-class TransferReq extends $pb.GeneratedMessage {
-  factory TransferReq({
-    $core.String? agent,
-    $core.String? to,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (to != null) result.to = to;
-    return result;
-  }
-
-  TransferReq._();
-
-  factory TransferReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory TransferReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'TransferReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'to')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TransferReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TransferReq copyWith(void Function(TransferReq) updates) =>
-      super.copyWith((message) => updates(message as TransferReq))
-          as TransferReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static TransferReq create() => TransferReq._();
-  @$core.override
-  TransferReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static TransferReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TransferReq>(create);
-  static TransferReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get to => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set to($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasTo() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearTo() => $_clearField(2);
-}
-
-class UpdatesToDefaultReq extends $pb.GeneratedMessage {
-  factory UpdatesToDefaultReq({
+class ResetToDefaultReq extends $pb.GeneratedMessage {
+  factory ResetToDefaultReq({
     $core.Iterable<$core.String>? dids,
   }) {
     final result = create();
@@ -1565,47 +1281,48 @@ class UpdatesToDefaultReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  UpdatesToDefaultReq._();
+  ResetToDefaultReq._();
 
-  factory UpdatesToDefaultReq.fromBuffer($core.List<$core.int> data,
+  factory ResetToDefaultReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory UpdatesToDefaultReq.fromJson($core.String json,
+  factory ResetToDefaultReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdatesToDefaultReq',
+      _omitMessageNames ? '' : 'ResetToDefaultReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'dids')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdatesToDefaultReq clone() => deepCopy();
+  ResetToDefaultReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdatesToDefaultReq copyWith(void Function(UpdatesToDefaultReq) updates) =>
-      super.copyWith((message) => updates(message as UpdatesToDefaultReq))
-          as UpdatesToDefaultReq;
+  ResetToDefaultReq copyWith(void Function(ResetToDefaultReq) updates) =>
+      super.copyWith((message) => updates(message as ResetToDefaultReq))
+          as ResetToDefaultReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static UpdatesToDefaultReq create() => UpdatesToDefaultReq._();
+  static ResetToDefaultReq create() => ResetToDefaultReq._();
   @$core.override
-  UpdatesToDefaultReq createEmptyInstance() => create();
+  ResetToDefaultReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static UpdatesToDefaultReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdatesToDefaultReq>(create);
-  static UpdatesToDefaultReq? _defaultInstance;
+  static ResetToDefaultReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ResetToDefaultReq>(create);
+  static ResetToDefaultReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get dids => $_getList(0);
 }
 
-class FavoriteAgentReq extends $pb.GeneratedMessage {
-  factory FavoriteAgentReq({
+/// 给机器人打/取消标记。**不是收藏** —— 带标记的机器人在显示时靠前。
+class MarkAgentReq extends $pb.GeneratedMessage {
+  factory MarkAgentReq({
     $core.String? did,
     $core.String? opt,
   }) {
@@ -1615,17 +1332,17 @@ class FavoriteAgentReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  FavoriteAgentReq._();
+  MarkAgentReq._();
 
-  factory FavoriteAgentReq.fromBuffer($core.List<$core.int> data,
+  factory MarkAgentReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FavoriteAgentReq.fromJson($core.String json,
+  factory MarkAgentReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FavoriteAgentReq',
+      _omitMessageNames ? '' : 'MarkAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
@@ -1633,23 +1350,23 @@ class FavoriteAgentReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FavoriteAgentReq clone() => deepCopy();
+  MarkAgentReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FavoriteAgentReq copyWith(void Function(FavoriteAgentReq) updates) =>
-      super.copyWith((message) => updates(message as FavoriteAgentReq))
-          as FavoriteAgentReq;
+  MarkAgentReq copyWith(void Function(MarkAgentReq) updates) =>
+      super.copyWith((message) => updates(message as MarkAgentReq))
+          as MarkAgentReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FavoriteAgentReq create() => FavoriteAgentReq._();
+  static MarkAgentReq create() => MarkAgentReq._();
   @$core.override
-  FavoriteAgentReq createEmptyInstance() => create();
+  MarkAgentReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FavoriteAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FavoriteAgentReq>(create);
-  static FavoriteAgentReq? _defaultInstance;
+  static MarkAgentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarkAgentReq>(create);
+  static MarkAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);

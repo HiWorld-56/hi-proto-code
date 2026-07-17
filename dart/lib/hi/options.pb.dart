@@ -21,12 +21,12 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 export 'options.pbenum.dart';
 
 class Options {
-  static final auth = $pb.Extension<Auth>(
+  static final auth = $pb.Extension<Auth>.repeated(
       _omitMessageNames ? '' : 'google.protobuf.MethodOptions',
       _omitFieldNames ? '' : 'auth',
       50001,
-      $pb.PbFieldType.OE,
-      defaultOrMaker: Auth.AUTH_UNSPECIFIED,
+      $pb.PbFieldType.KE,
+      check: $pb.getCheckFunction($pb.PbFieldType.KE),
       valueOf: Auth.valueOf,
       enumValues: Auth.values);
   static void registerAllExtensions($pb.ExtensionRegistry registry) {

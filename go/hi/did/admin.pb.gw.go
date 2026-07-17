@@ -457,7 +457,7 @@ func RegisterInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/invitecode/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/invite_code/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -477,7 +477,7 @@ func RegisterInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/invitecode/edit"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/invite_code/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -497,7 +497,7 @@ func RegisterInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invitecode/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invite_code/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -517,7 +517,7 @@ func RegisterInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/invitecode/delete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.InviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/invite_code/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -547,7 +547,7 @@ func RegisterRegisterHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/invitecode/verify"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/register/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -577,7 +577,7 @@ func RegisterDAppHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DApp/ListByClass", runtime.WithHTTPPathPattern("/api/v1/dapp/list_by_class"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DApp/ListByClass", runtime.WithHTTPPathPattern("/api/v1/d_app/list_by_class"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -597,7 +597,7 @@ func RegisterDAppHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DApp/GetRWA", runtime.WithHTTPPathPattern("/api/v1/dapp/get_rwa"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DApp/GetRWA", runtime.WithHTTPPathPattern("/api/v1/d_app/get_rwa"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -617,7 +617,7 @@ func RegisterDAppHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DApp/GetTop", runtime.WithHTTPPathPattern("/api/v1/dapp/list_top"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DApp/GetTop", runtime.WithHTTPPathPattern("/api/v1/d_app/get_top"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -647,7 +647,7 @@ func RegisterDAppAdminHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/Create", runtime.WithHTTPPathPattern("/api/v1/dapp/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/Create", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -667,7 +667,7 @@ func RegisterDAppAdminHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/Edit", runtime.WithHTTPPathPattern("/api/v1/dapp/edit"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/Edit", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -687,7 +687,7 @@ func RegisterDAppAdminHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/Delete", runtime.WithHTTPPathPattern("/api/v1/dapp/delete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/Delete", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -707,7 +707,7 @@ func RegisterDAppAdminHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateOrder", runtime.WithHTTPPathPattern("/api/v1/dapp/update_order"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateOrder", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/update_order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -727,7 +727,7 @@ func RegisterDAppAdminHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateTop", runtime.WithHTTPPathPattern("/api/v1/dapp/update_top"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateTop", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/update_top"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -855,7 +855,7 @@ func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/invitecode/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/invite_code/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -872,7 +872,7 @@ func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/invitecode/edit"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/invite_code/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -889,7 +889,7 @@ func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invitecode/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invite_code/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -906,7 +906,7 @@ func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/invitecode/delete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.InviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/invite_code/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -923,10 +923,10 @@ func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_InviteCode_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "create"}, ""))
-	pattern_InviteCode_Edit_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "edit"}, ""))
-	pattern_InviteCode_List_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "list"}, ""))
-	pattern_InviteCode_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "delete"}, ""))
+	pattern_InviteCode_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "create"}, ""))
+	pattern_InviteCode_Edit_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "edit"}, ""))
+	pattern_InviteCode_List_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "list"}, ""))
+	pattern_InviteCode_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "delete"}, ""))
 )
 
 var (
@@ -976,7 +976,7 @@ func RegisterRegisterHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/invitecode/verify"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/register/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -993,7 +993,7 @@ func RegisterRegisterHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 }
 
 var (
-	pattern_Register_Verify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invitecode", "verify"}, ""))
+	pattern_Register_Verify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "register", "verify"}, ""))
 )
 
 var (
@@ -1040,7 +1040,7 @@ func RegisterDAppHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DApp/ListByClass", runtime.WithHTTPPathPattern("/api/v1/dapp/list_by_class"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DApp/ListByClass", runtime.WithHTTPPathPattern("/api/v1/d_app/list_by_class"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1057,7 +1057,7 @@ func RegisterDAppHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DApp/GetRWA", runtime.WithHTTPPathPattern("/api/v1/dapp/get_rwa"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DApp/GetRWA", runtime.WithHTTPPathPattern("/api/v1/d_app/get_rwa"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1074,7 +1074,7 @@ func RegisterDAppHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DApp/GetTop", runtime.WithHTTPPathPattern("/api/v1/dapp/list_top"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DApp/GetTop", runtime.WithHTTPPathPattern("/api/v1/d_app/get_top"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1091,9 +1091,9 @@ func RegisterDAppHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 }
 
 var (
-	pattern_DApp_ListByClass_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "list_by_class"}, ""))
-	pattern_DApp_GetRWA_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "get_rwa"}, ""))
-	pattern_DApp_GetTop_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "list_top"}, ""))
+	pattern_DApp_ListByClass_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app", "list_by_class"}, ""))
+	pattern_DApp_GetRWA_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app", "get_rwa"}, ""))
+	pattern_DApp_GetTop_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app", "get_top"}, ""))
 )
 
 var (
@@ -1142,7 +1142,7 @@ func RegisterDAppAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/Create", runtime.WithHTTPPathPattern("/api/v1/dapp/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/Create", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1159,7 +1159,7 @@ func RegisterDAppAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/Edit", runtime.WithHTTPPathPattern("/api/v1/dapp/edit"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/Edit", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1176,7 +1176,7 @@ func RegisterDAppAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/Delete", runtime.WithHTTPPathPattern("/api/v1/dapp/delete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/Delete", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1193,7 +1193,7 @@ func RegisterDAppAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateOrder", runtime.WithHTTPPathPattern("/api/v1/dapp/update_order"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateOrder", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/update_order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1210,7 +1210,7 @@ func RegisterDAppAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateTop", runtime.WithHTTPPathPattern("/api/v1/dapp/update_top"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.DAppAdmin/UpdateTop", runtime.WithHTTPPathPattern("/api/v1/d_app_admin/update_top"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1227,11 +1227,11 @@ func RegisterDAppAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 }
 
 var (
-	pattern_DAppAdmin_Create_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "create"}, ""))
-	pattern_DAppAdmin_Edit_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "edit"}, ""))
-	pattern_DAppAdmin_Delete_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "delete"}, ""))
-	pattern_DAppAdmin_UpdateOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "update_order"}, ""))
-	pattern_DAppAdmin_UpdateTop_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "dapp", "update_top"}, ""))
+	pattern_DAppAdmin_Create_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app_admin", "create"}, ""))
+	pattern_DAppAdmin_Edit_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app_admin", "edit"}, ""))
+	pattern_DAppAdmin_Delete_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app_admin", "delete"}, ""))
+	pattern_DAppAdmin_UpdateOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app_admin", "update_order"}, ""))
+	pattern_DAppAdmin_UpdateTop_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "d_app_admin", "update_top"}, ""))
 )
 
 var (

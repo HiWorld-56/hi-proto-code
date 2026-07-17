@@ -20,44 +20,39 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_ListLlmModels_FullMethodName    = "/hi.ai.Agent/ListLlmModels"
-	Agent_ListEmbeddings_FullMethodName   = "/hi.ai.Agent/ListEmbeddings"
-	Agent_ListSttModels_FullMethodName    = "/hi.ai.Agent/ListSttModels"
-	Agent_ListTtsModels_FullMethodName    = "/hi.ai.Agent/ListTtsModels"
-	Agent_AgentConfig_FullMethodName      = "/hi.ai.Agent/AgentConfig"
-	Agent_CreateAgent_FullMethodName      = "/hi.ai.Agent/CreateAgent"
-	Agent_EditAgent_FullMethodName        = "/hi.ai.Agent/EditAgent"
-	Agent_List_FullMethodName             = "/hi.ai.Agent/List"
-	Agent_ListFavorites_FullMethodName    = "/hi.ai.Agent/ListFavorites"
-	Agent_DeleteAgent_FullMethodName      = "/hi.ai.Agent/DeleteAgent"
-	Agent_FindAgent_FullMethodName        = "/hi.ai.Agent/FindAgent"
-	Agent_FindAgentCount_FullMethodName   = "/hi.ai.Agent/FindAgentCount"
-	Agent_Transfer_FullMethodName         = "/hi.ai.Agent/Transfer"
-	Agent_UpdatesToDefault_FullMethodName = "/hi.ai.Agent/UpdatesToDefault"
-	Agent_FavoriteAgent_FullMethodName    = "/hi.ai.Agent/FavoriteAgent"
+	Agent_Create_FullMethodName         = "/hi.ai.Agent/Create"
+	Agent_Edit_FullMethodName           = "/hi.ai.Agent/Edit"
+	Agent_Delete_FullMethodName         = "/hi.ai.Agent/Delete"
+	Agent_Get_FullMethodName            = "/hi.ai.Agent/Get"
+	Agent_List_FullMethodName           = "/hi.ai.Agent/List"
+	Agent_Mark_FullMethodName           = "/hi.ai.Agent/Mark"
+	Agent_ListMarks_FullMethodName      = "/hi.ai.Agent/ListMarks"
+	Agent_GetUsage_FullMethodName       = "/hi.ai.Agent/GetUsage"
+	Agent_DefaultConfig_FullMethodName  = "/hi.ai.Agent/DefaultConfig"
+	Agent_ResetToDefault_FullMethodName = "/hi.ai.Agent/ResetToDefault"
 )
 
 // AgentClient is the client API for Agent service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// apiKey鉴权
+// 智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
+// 两者解出同一个商户 did。
+//
+// (原 Transfer 已删 —— 它自称"转让 apikey+bot"但只改了 creator,还会顺带把目标非超级用户的
+//
+//	bot 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
 type AgentClient interface {
-	ListLlmModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListLLMResp, error)
-	ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListEmbeddingResp, error)
-	ListSttModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSTTResp, error)
-	ListTtsModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTTSResp, error)
-	AgentConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AgentConfigResp, error)
-	CreateAgent(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
-	EditAgent(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Create(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
+	Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
 	List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error)
-	ListFavorites(ctx context.Context, in *ListFavoriteReq, opts ...grpc.CallOption) (*ListAgentResp, error)
-	DeleteAgent(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	FindAgent(ctx context.Context, in *FindAgentReq, opts ...grpc.CallOption) (*FindAgentResp, error)
-	FindAgentCount(ctx context.Context, in *FindAgentCountReq, opts ...grpc.CallOption) (*FindAgentCountResp, error)
-	Transfer(ctx context.Context, in *TransferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdatesToDefault(ctx context.Context, in *UpdatesToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	FavoriteAgent(ctx context.Context, in *FavoriteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error)
+	DefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error)
+	ResetToDefault(ctx context.Context, in *ResetToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type agentClient struct {
@@ -68,70 +63,40 @@ func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
 }
 
-func (c *agentClient) ListLlmModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListLLMResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListLLMResp)
-	err := c.cc.Invoke(ctx, Agent_ListLlmModels_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListEmbeddingResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListEmbeddingResp)
-	err := c.cc.Invoke(ctx, Agent_ListEmbeddings_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) ListSttModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSTTResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListSTTResp)
-	err := c.cc.Invoke(ctx, Agent_ListSttModels_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) ListTtsModels(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTTSResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListTTSResp)
-	err := c.cc.Invoke(ctx, Agent_ListTtsModels_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AgentConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AgentConfigResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AgentConfigResp)
-	err := c.cc.Invoke(ctx, Agent_AgentConfig_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) CreateAgent(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error) {
+func (c *agentClient) Create(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateAgentResp)
-	err := c.cc.Invoke(ctx, Agent_CreateAgent_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentClient) EditAgent(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *agentClient) Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_EditAgent_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_Edit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Agent_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAgentResp)
+	err := c.cc.Invoke(ctx, Agent_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -148,70 +113,50 @@ func (c *agentClient) List(ctx context.Context, in *ListAgentReq, opts ...grpc.C
 	return out, nil
 }
 
-func (c *agentClient) ListFavorites(ctx context.Context, in *ListFavoriteReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentClient) Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Agent_Mark_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListFavorites_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_ListMarks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentClient) DeleteAgent(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *agentClient) GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AgentUsageResp)
+	err := c.cc.Invoke(ctx, Agent_GetUsage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) DefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DefaultConfigResp)
+	err := c.cc.Invoke(ctx, Agent_DefaultConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ResetToDefault(ctx context.Context, in *ResetToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_DeleteAgent_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) FindAgent(ctx context.Context, in *FindAgentReq, opts ...grpc.CallOption) (*FindAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FindAgentResp)
-	err := c.cc.Invoke(ctx, Agent_FindAgent_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) FindAgentCount(ctx context.Context, in *FindAgentCountReq, opts ...grpc.CallOption) (*FindAgentCountResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FindAgentCountResp)
-	err := c.cc.Invoke(ctx, Agent_FindAgentCount_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) Transfer(ctx context.Context, in *TransferReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_Transfer_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) UpdatesToDefault(ctx context.Context, in *UpdatesToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_UpdatesToDefault_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) FavoriteAgent(ctx context.Context, in *FavoriteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_FavoriteAgent_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_ResetToDefault_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -222,23 +167,23 @@ func (c *agentClient) FavoriteAgent(ctx context.Context, in *FavoriteAgentReq, o
 // All implementations should embed UnimplementedAgentServer
 // for forward compatibility.
 //
-// apiKey鉴权
+// 智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
+// 两者解出同一个商户 did。
+//
+// (原 Transfer 已删 —— 它自称"转让 apikey+bot"但只改了 creator,还会顺带把目标非超级用户的
+//
+//	bot 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
 type AgentServer interface {
-	ListLlmModels(context.Context, *emptypb.Empty) (*ListLLMResp, error)
-	ListEmbeddings(context.Context, *emptypb.Empty) (*ListEmbeddingResp, error)
-	ListSttModels(context.Context, *emptypb.Empty) (*ListSTTResp, error)
-	ListTtsModels(context.Context, *emptypb.Empty) (*ListTTSResp, error)
-	AgentConfig(context.Context, *emptypb.Empty) (*AgentConfigResp, error)
-	CreateAgent(context.Context, *CreateAgentReq) (*CreateAgentResp, error)
-	EditAgent(context.Context, *EditAgentReq) (*emptypb.Empty, error)
+	Create(context.Context, *CreateAgentReq) (*CreateAgentResp, error)
+	Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error)
+	Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
+	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
 	List(context.Context, *ListAgentReq) (*ListAgentResp, error)
-	ListFavorites(context.Context, *ListFavoriteReq) (*ListAgentResp, error)
-	DeleteAgent(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
-	FindAgent(context.Context, *FindAgentReq) (*FindAgentResp, error)
-	FindAgentCount(context.Context, *FindAgentCountReq) (*FindAgentCountResp, error)
-	Transfer(context.Context, *TransferReq) (*emptypb.Empty, error)
-	UpdatesToDefault(context.Context, *UpdatesToDefaultReq) (*emptypb.Empty, error)
-	FavoriteAgent(context.Context, *FavoriteAgentReq) (*emptypb.Empty, error)
+	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
+	ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error)
+	GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error)
+	DefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error)
+	ResetToDefault(context.Context, *ResetToDefaultReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedAgentServer should be embedded to have
@@ -248,50 +193,35 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
-func (UnimplementedAgentServer) ListLlmModels(context.Context, *emptypb.Empty) (*ListLLMResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListLlmModels not implemented")
+func (UnimplementedAgentServer) Create(context.Context, *CreateAgentReq) (*CreateAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedAgentServer) ListEmbeddings(context.Context, *emptypb.Empty) (*ListEmbeddingResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListEmbeddings not implemented")
+func (UnimplementedAgentServer) Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
-func (UnimplementedAgentServer) ListSttModels(context.Context, *emptypb.Empty) (*ListSTTResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSttModels not implemented")
+func (UnimplementedAgentServer) Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedAgentServer) ListTtsModels(context.Context, *emptypb.Empty) (*ListTTSResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListTtsModels not implemented")
-}
-func (UnimplementedAgentServer) AgentConfig(context.Context, *emptypb.Empty) (*AgentConfigResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AgentConfig not implemented")
-}
-func (UnimplementedAgentServer) CreateAgent(context.Context, *CreateAgentReq) (*CreateAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateAgent not implemented")
-}
-func (UnimplementedAgentServer) EditAgent(context.Context, *EditAgentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method EditAgent not implemented")
+func (UnimplementedAgentServer) Get(context.Context, *GetAgentReq) (*GetAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedAgentServer) List(context.Context, *ListAgentReq) (*ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedAgentServer) ListFavorites(context.Context, *ListFavoriteReq) (*ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListFavorites not implemented")
+func (UnimplementedAgentServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
 }
-func (UnimplementedAgentServer) DeleteAgent(context.Context, *DeleteAgentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteAgent not implemented")
+func (UnimplementedAgentServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
-func (UnimplementedAgentServer) FindAgent(context.Context, *FindAgentReq) (*FindAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method FindAgent not implemented")
+func (UnimplementedAgentServer) GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUsage not implemented")
 }
-func (UnimplementedAgentServer) FindAgentCount(context.Context, *FindAgentCountReq) (*FindAgentCountResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method FindAgentCount not implemented")
+func (UnimplementedAgentServer) DefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DefaultConfig not implemented")
 }
-func (UnimplementedAgentServer) Transfer(context.Context, *TransferReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Transfer not implemented")
-}
-func (UnimplementedAgentServer) UpdatesToDefault(context.Context, *UpdatesToDefaultReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdatesToDefault not implemented")
-}
-func (UnimplementedAgentServer) FavoriteAgent(context.Context, *FavoriteAgentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method FavoriteAgent not implemented")
+func (UnimplementedAgentServer) ResetToDefault(context.Context, *ResetToDefaultReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ResetToDefault not implemented")
 }
 func (UnimplementedAgentServer) testEmbeddedByValue() {}
 
@@ -313,128 +243,74 @@ func RegisterAgentServer(s grpc.ServiceRegistrar, srv AgentServer) {
 	s.RegisterService(&Agent_ServiceDesc, srv)
 }
 
-func _Agent_ListLlmModels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListLlmModels(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListLlmModels_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListLlmModels(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListEmbeddings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListEmbeddings(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListEmbeddings_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListEmbeddings(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListSttModels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListSttModels(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListSttModels_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListSttModels(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListTtsModels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListTtsModels(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListTtsModels_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListTtsModels(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AgentConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AgentConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AgentConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AgentConfig(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_CreateAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Agent_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).CreateAgent(ctx, in)
+		return srv.(AgentServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_CreateAgent_FullMethodName,
+		FullMethod: Agent_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).CreateAgent(ctx, req.(*CreateAgentReq))
+		return srv.(AgentServer).Create(ctx, req.(*CreateAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_EditAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Agent_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EditAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).EditAgent(ctx, in)
+		return srv.(AgentServer).Edit(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_EditAgent_FullMethodName,
+		FullMethod: Agent_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).EditAgent(ctx, req.(*EditAgentReq))
+		return srv.(AgentServer).Edit(ctx, req.(*EditAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).Delete(ctx, req.(*DeleteAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).Get(ctx, req.(*GetAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -457,128 +333,92 @@ func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListFavorites_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFavoriteReq)
+func _Agent_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).ListFavorites(ctx, in)
+		return srv.(AgentServer).Mark(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_ListFavorites_FullMethodName,
+		FullMethod: Agent_Mark_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListFavorites(ctx, req.(*ListFavoriteReq))
+		return srv.(AgentServer).Mark(ctx, req.(*MarkAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_DeleteAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAgentReq)
+func _Agent_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMarksReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).DeleteAgent(ctx, in)
+		return srv.(AgentServer).ListMarks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_DeleteAgent_FullMethodName,
+		FullMethod: Agent_ListMarks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).DeleteAgent(ctx, req.(*DeleteAgentReq))
+		return srv.(AgentServer).ListMarks(ctx, req.(*ListMarksReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_FindAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FindAgentReq)
+func _Agent_GetUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AgentUsageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).FindAgent(ctx, in)
+		return srv.(AgentServer).GetUsage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_FindAgent_FullMethodName,
+		FullMethod: Agent_GetUsage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).FindAgent(ctx, req.(*FindAgentReq))
+		return srv.(AgentServer).GetUsage(ctx, req.(*AgentUsageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_FindAgentCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FindAgentCountReq)
+func _Agent_DefaultConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).FindAgentCount(ctx, in)
+		return srv.(AgentServer).DefaultConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_FindAgentCount_FullMethodName,
+		FullMethod: Agent_DefaultConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).FindAgentCount(ctx, req.(*FindAgentCountReq))
+		return srv.(AgentServer).DefaultConfig(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TransferReq)
+func _Agent_ResetToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetToDefaultReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).Transfer(ctx, in)
+		return srv.(AgentServer).ResetToDefault(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_Transfer_FullMethodName,
+		FullMethod: Agent_ResetToDefault_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).Transfer(ctx, req.(*TransferReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_UpdatesToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatesToDefaultReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).UpdatesToDefault(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_UpdatesToDefault_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).UpdatesToDefault(ctx, req.(*UpdatesToDefaultReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_FavoriteAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FavoriteAgentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).FavoriteAgent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_FavoriteAgent_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).FavoriteAgent(ctx, req.(*FavoriteAgentReq))
+		return srv.(AgentServer).ResetToDefault(ctx, req.(*ResetToDefaultReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -591,64 +431,44 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AgentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListLlmModels",
-			Handler:    _Agent_ListLlmModels_Handler,
+			MethodName: "Create",
+			Handler:    _Agent_Create_Handler,
 		},
 		{
-			MethodName: "ListEmbeddings",
-			Handler:    _Agent_ListEmbeddings_Handler,
+			MethodName: "Edit",
+			Handler:    _Agent_Edit_Handler,
 		},
 		{
-			MethodName: "ListSttModels",
-			Handler:    _Agent_ListSttModels_Handler,
+			MethodName: "Delete",
+			Handler:    _Agent_Delete_Handler,
 		},
 		{
-			MethodName: "ListTtsModels",
-			Handler:    _Agent_ListTtsModels_Handler,
-		},
-		{
-			MethodName: "AgentConfig",
-			Handler:    _Agent_AgentConfig_Handler,
-		},
-		{
-			MethodName: "CreateAgent",
-			Handler:    _Agent_CreateAgent_Handler,
-		},
-		{
-			MethodName: "EditAgent",
-			Handler:    _Agent_EditAgent_Handler,
+			MethodName: "Get",
+			Handler:    _Agent_Get_Handler,
 		},
 		{
 			MethodName: "List",
 			Handler:    _Agent_List_Handler,
 		},
 		{
-			MethodName: "ListFavorites",
-			Handler:    _Agent_ListFavorites_Handler,
+			MethodName: "Mark",
+			Handler:    _Agent_Mark_Handler,
 		},
 		{
-			MethodName: "DeleteAgent",
-			Handler:    _Agent_DeleteAgent_Handler,
+			MethodName: "ListMarks",
+			Handler:    _Agent_ListMarks_Handler,
 		},
 		{
-			MethodName: "FindAgent",
-			Handler:    _Agent_FindAgent_Handler,
+			MethodName: "GetUsage",
+			Handler:    _Agent_GetUsage_Handler,
 		},
 		{
-			MethodName: "FindAgentCount",
-			Handler:    _Agent_FindAgentCount_Handler,
+			MethodName: "DefaultConfig",
+			Handler:    _Agent_DefaultConfig_Handler,
 		},
 		{
-			MethodName: "Transfer",
-			Handler:    _Agent_Transfer_Handler,
-		},
-		{
-			MethodName: "UpdatesToDefault",
-			Handler:    _Agent_UpdatesToDefault_Handler,
-		},
-		{
-			MethodName: "FavoriteAgent",
-			Handler:    _Agent_FavoriteAgent_Handler,
+			MethodName: "ResetToDefault",
+			Handler:    _Agent_ResetToDefault_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -22,7 +22,14 @@ import 'api_key.pb.dart' as $1;
 
 export 'api_key.pb.dart';
 
-/// 使用token鉴权
+/// 商户的 apikey 管理(主体=apikey)。商户档。
+///
+/// 商户在 hiai web 后台(token)签发 apikey 给自己的后台服务用;但**商户后台调用时没有登录态**,
+/// 直接带 apikey 鉴权 —— 那种情况就用 apikey 反查商户 did(与 token 反查 did 对称)。
+/// 故 token 与 apikey 都要收。
+///
+/// ⚠️ 后端接线必修:Edit/Delete 现在按 req.api_key 直接操作、**不校验归属** → 任何登录者
+///    可改/删他人 apikey。须校验 apikey.did == 当前商户 did。
 @$pb.GrpcServiceName('hi.ai.ApiKey')
 class ApiKeyClient extends $grpc.Client {
   /// The hostname for this service.

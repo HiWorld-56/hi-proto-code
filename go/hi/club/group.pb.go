@@ -1354,25 +1354,25 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x04role\x18\x01 \x01(\tR\x04role\":\n" +
 	"\fMuteGroupReq\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12\x14\n" +
-	"\x05muted\x18\x02 \x01(\bR\x05muted2\xfb\b\n" +
-	"\x05Group\x125\n" +
-	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x12.hi.club.GroupBase\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x04\x88\xb5\x18\x02\x12B\n" +
-	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\"\x04\x88\xb5\x18\x02\x12:\n" +
-	"\x06Update\x12\x12.hi.club.GroupBase\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12D\n" +
-	"\vListMembers\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\"\x04\x88\xb5\x18\x02\x12O\n" +
-	"\x12ListQ3GroupMembers\x12\x1d.hi.club.ListQ3GroupMemberReq\x1a\x14.hi.club.Q3GroupInfo\"\x04\x88\xb5\x18\x02\x12Y\n" +
-	"\x0eGetMemberTotal\x12\x1f.hi.club.GetGroupMemberTotalReq\x1a .hi.club.GetGroupMemberTotalResp\"\x04\x88\xb5\x18\x02\x12?\n" +
-	"\x06Invite\x12\x17.hi.club.InviteGroupReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04Join\x12\x15.hi.club.JoinGroupReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04Quit\x12\x15.hi.club.QuitGroupReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12?\n" +
-	"\x06Remove\x12\x17.hi.club.RemoveGroupReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12Q\n" +
-	"\fListMessages\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\"\x04\x88\xb5\x18\x02\x12A\n" +
-	"\x0eUpdateLastUUID\x12\x11.hi.club.LastUUID\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12C\n" +
-	"\rCheckLastUUID\x12\x15.hi.club.ListLastUUID\x1a\x15.hi.club.ListLastUUID\"\x04\x88\xb5\x18\x02\x12<\n" +
-	"\aSetRole\x12\x13.hi.club.SetRoleReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12:\n" +
-	"\aGetRole\x12\x13.hi.club.GetRoleReq\x1a\x14.hi.club.GetRoleResp\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04Mute\x12\x15.hi.club.MuteGroupReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x81\x01\n" +
+	"\x05muted\x18\x02 \x01(\bR\x05muted2\x8c\t\n" +
+	"\x05Group\x126\n" +
+	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
+	"\x06Update\x12\x12.hi.club.GroupBase\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
+	"\vListMembers\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12P\n" +
+	"\x12ListQ3GroupMembers\x12\x1d.hi.club.ListQ3GroupMemberReq\x1a\x14.hi.club.Q3GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
+	"\x0eGetMemberTotal\x12\x1f.hi.club.GetGroupMemberTotalReq\x1a .hi.club.GetGroupMemberTotalResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
+	"\x06Invite\x12\x17.hi.club.InviteGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x04Join\x12\x15.hi.club.JoinGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x04Quit\x12\x15.hi.club.QuitGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
+	"\x06Remove\x12\x17.hi.club.RemoveGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12R\n" +
+	"\fListMessages\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
+	"\x0eUpdateLastUUID\x12\x11.hi.club.LastUUID\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12D\n" +
+	"\rCheckLastUUID\x12\x15.hi.club.ListLastUUID\x1a\x15.hi.club.ListLastUUID\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\aSetRole\x12\x13.hi.club.SetRoleReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
+	"\aGetRole\x12\x13.hi.club.GetRoleReq\x1a\x14.hi.club.GetRoleResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x04Mute\x12\x15.hi.club.MuteGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"GroupProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 

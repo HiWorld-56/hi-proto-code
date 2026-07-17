@@ -16,6 +16,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// ⚠️ 临时接口的载荷 —— 见下方 TempConfig。
 class GetConfigReq extends $pb.GeneratedMessage {
   factory GetConfigReq({
     $core.String? name,

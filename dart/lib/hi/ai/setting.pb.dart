@@ -16,16 +16,22 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// hiai 服务级全局配置。
+/// 字段正名:原 proxy_url / enable / endpoint 三个名字逻辑混乱 —— enable 其实指"代理开不开",
+/// endpoint 其实是 OpenAI 端点。且 OpenAI 端点也该有开关(关掉即用官方端点)。
 class SettingInfo extends $pb.GeneratedMessage {
   factory SettingInfo({
-    $core.String? proxyUrl,
-    $core.bool? enable,
-    $core.String? endpoint,
+    $core.String? proxyEndpoint,
+    $core.bool? proxyEnable,
+    $core.String? openaiEndpoint,
+    $core.bool? openaiEndpointEnable,
   }) {
     final result = create();
-    if (proxyUrl != null) result.proxyUrl = proxyUrl;
-    if (enable != null) result.enable = enable;
-    if (endpoint != null) result.endpoint = endpoint;
+    if (proxyEndpoint != null) result.proxyEndpoint = proxyEndpoint;
+    if (proxyEnable != null) result.proxyEnable = proxyEnable;
+    if (openaiEndpoint != null) result.openaiEndpoint = openaiEndpoint;
+    if (openaiEndpointEnable != null)
+      result.openaiEndpointEnable = openaiEndpointEnable;
     return result;
   }
 
@@ -42,9 +48,10 @@ class SettingInfo extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'SettingInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'proxyUrl')
-    ..aOB(2, _omitFieldNames ? '' : 'enable')
-    ..aOS(3, _omitFieldNames ? '' : 'endpoint')
+    ..aOS(1, _omitFieldNames ? '' : 'proxyEndpoint')
+    ..aOB(2, _omitFieldNames ? '' : 'proxyEnable')
+    ..aOS(3, _omitFieldNames ? '' : 'openaiEndpoint')
+    ..aOB(4, _omitFieldNames ? '' : 'openaiEndpointEnable')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -67,31 +74,40 @@ class SettingInfo extends $pb.GeneratedMessage {
   static SettingInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get proxyUrl => $_getSZ(0);
+  $core.String get proxyEndpoint => $_getSZ(0);
   @$pb.TagNumber(1)
-  set proxyUrl($core.String value) => $_setString(0, value);
+  set proxyEndpoint($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasProxyUrl() => $_has(0);
+  $core.bool hasProxyEndpoint() => $_has(0);
   @$pb.TagNumber(1)
-  void clearProxyUrl() => $_clearField(1);
+  void clearProxyEndpoint() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.bool get enable => $_getBF(1);
+  $core.bool get proxyEnable => $_getBF(1);
   @$pb.TagNumber(2)
-  set enable($core.bool value) => $_setBool(1, value);
+  set proxyEnable($core.bool value) => $_setBool(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasEnable() => $_has(1);
+  $core.bool hasProxyEnable() => $_has(1);
   @$pb.TagNumber(2)
-  void clearEnable() => $_clearField(2);
+  void clearProxyEnable() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get endpoint => $_getSZ(2);
+  $core.String get openaiEndpoint => $_getSZ(2);
   @$pb.TagNumber(3)
-  set endpoint($core.String value) => $_setString(2, value);
+  set openaiEndpoint($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasEndpoint() => $_has(2);
+  $core.bool hasOpenaiEndpoint() => $_has(2);
   @$pb.TagNumber(3)
-  void clearEndpoint() => $_clearField(3);
+  void clearOpenaiEndpoint() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get openaiEndpointEnable => $_getBF(3);
+  @$pb.TagNumber(4)
+  set openaiEndpointEnable($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOpenaiEndpointEnable() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOpenaiEndpointEnable() => $_clearField(4);
 }
 
 class SettingEditReq extends $pb.GeneratedMessage {

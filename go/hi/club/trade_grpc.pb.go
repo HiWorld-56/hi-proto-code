@@ -25,7 +25,6 @@ const (
 	Trade_AddTrade_FullMethodName        = "/hi.club.Trade/AddTrade"
 	Trade_UpdateTransHash_FullMethodName = "/hi.club.Trade/UpdateTransHash"
 	Trade_List_FullMethodName            = "/hi.club.Trade/List"
-	Trade_ListAll_FullMethodName         = "/hi.club.Trade/ListAll"
 )
 
 // TradeClient is the client API for Trade service.
@@ -36,12 +35,8 @@ type TradeClient interface {
 	GetTrade(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error)
 	AddTrade(ctx context.Context, in *AddTradeReq, opts ...grpc.CallOption) (*AddTradeResp, error)
 	UpdateTransHash(ctx context.Context, in *UpdateTransHashReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 查自己的交易(did 必填)。普通用户可调。
+	// 查自己的交易(did 必填)。
 	List(ctx context.Context, in *ListTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error)
-	// 交易统计:全量/按 id 查(id 为空=全量)。**内部使用**,仅超管可调。
-	// 不与 List 合并:二者鉴权级别不同,而档位是按方法挂的 —— 合并会导致
-	// "did 留空即拿到全部人的交易",把 filter 值变成越权入口。
-	ListAll(ctx context.Context, in *ListAllTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error)
 }
 
 type tradeClient struct {
@@ -102,16 +97,6 @@ func (c *tradeClient) List(ctx context.Context, in *ListTradeReq, opts ...grpc.C
 	return out, nil
 }
 
-func (c *tradeClient) ListAll(ctx context.Context, in *ListAllTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListTradeResp)
-	err := c.cc.Invoke(ctx, Trade_ListAll_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // TradeServer is the server API for Trade service.
 // All implementations should embed UnimplementedTradeServer
 // for forward compatibility.
@@ -120,12 +105,8 @@ type TradeServer interface {
 	GetTrade(context.Context, *GetTradeReq) (*GetTradeResp, error)
 	AddTrade(context.Context, *AddTradeReq) (*AddTradeResp, error)
 	UpdateTransHash(context.Context, *UpdateTransHashReq) (*emptypb.Empty, error)
-	// 查自己的交易(did 必填)。普通用户可调。
+	// 查自己的交易(did 必填)。
 	List(context.Context, *ListTradeReq) (*ListTradeResp, error)
-	// 交易统计:全量/按 id 查(id 为空=全量)。**内部使用**,仅超管可调。
-	// 不与 List 合并:二者鉴权级别不同,而档位是按方法挂的 —— 合并会导致
-	// "did 留空即拿到全部人的交易",把 filter 值变成越权入口。
-	ListAll(context.Context, *ListAllTradeReq) (*ListTradeResp, error)
 }
 
 // UnimplementedTradeServer should be embedded to have
@@ -149,9 +130,6 @@ func (UnimplementedTradeServer) UpdateTransHash(context.Context, *UpdateTransHas
 }
 func (UnimplementedTradeServer) List(context.Context, *ListTradeReq) (*ListTradeResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
-func (UnimplementedTradeServer) ListAll(context.Context, *ListAllTradeReq) (*ListTradeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAll not implemented")
 }
 func (UnimplementedTradeServer) testEmbeddedByValue() {}
 
@@ -263,24 +241,6 @@ func _Trade_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Trade_ListAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAllTradeReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TradeServer).ListAll(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Trade_ListAll_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TradeServer).ListAll(ctx, req.(*ListAllTradeReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Trade_ServiceDesc is the grpc.ServiceDesc for Trade service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -308,9 +268,121 @@ var Trade_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "List",
 			Handler:    _Trade_List_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/trade.proto",
+}
+
+const (
+	TradeManage_List_FullMethodName = "/hi.club.TradeManage/List"
+)
+
+// TradeManageClient is the client API for TradeManage service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
+// 照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+//
+// ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
+//
+//	二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",
+//	**把 filter 值变成越权入口**。拆成两个 service 后,这个坑物理上不存在了。
+type TradeManageClient interface {
+	List(ctx context.Context, in *ListAllTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error)
+}
+
+type tradeManageClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewTradeManageClient(cc grpc.ClientConnInterface) TradeManageClient {
+	return &tradeManageClient{cc}
+}
+
+func (c *tradeManageClient) List(ctx context.Context, in *ListAllTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListTradeResp)
+	err := c.cc.Invoke(ctx, TradeManage_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TradeManageServer is the server API for TradeManage service.
+// All implementations should embed UnimplementedTradeManageServer
+// for forward compatibility.
+//
+// 交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
+// 照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+//
+// ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
+//
+//	二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",
+//	**把 filter 值变成越权入口**。拆成两个 service 后,这个坑物理上不存在了。
+type TradeManageServer interface {
+	List(context.Context, *ListAllTradeReq) (*ListTradeResp, error)
+}
+
+// UnimplementedTradeManageServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedTradeManageServer struct{}
+
+func (UnimplementedTradeManageServer) List(context.Context, *ListAllTradeReq) (*ListTradeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedTradeManageServer) testEmbeddedByValue() {}
+
+// UnsafeTradeManageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TradeManageServer will
+// result in compilation errors.
+type UnsafeTradeManageServer interface {
+	mustEmbedUnimplementedTradeManageServer()
+}
+
+func RegisterTradeManageServer(s grpc.ServiceRegistrar, srv TradeManageServer) {
+	// If the following call panics, it indicates UnimplementedTradeManageServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&TradeManage_ServiceDesc, srv)
+}
+
+func _TradeManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAllTradeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TradeManageServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TradeManage_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TradeManageServer).List(ctx, req.(*ListAllTradeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TradeManage_ServiceDesc is the grpc.ServiceDesc for TradeManage service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var TradeManage_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.TradeManage",
+	HandlerType: (*TradeManageServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListAll",
-			Handler:    _Trade_ListAll_Handler,
+			MethodName: "List",
+			Handler:    _TradeManage_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

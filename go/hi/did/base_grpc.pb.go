@@ -255,7 +255,8 @@ const (
 //
 // List 是**身份无关的读**(不管谁调返回都一样):前端登录用户拿它显隐"内部使用"菜单,
 // 兄弟服务(club/ai)穿透过来判档。两类调用方凭证不同(token / ExtendToken),
-// 故用 AUTH_TOKEN_OR_EXTEND 一个方法通吃(原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)。
+// 故一个方法通吃:同时标 AUTH_USER + AUTH_MERCHANT(任一通过即放行)。
+// (原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)
 // 注意:不能标 AUTH_SUPERADMIN,否则变成"先是超管才能知道自己是不是超管"。
 type SuperAdminClient interface {
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListSuperAdminUsersResp, error)
@@ -290,7 +291,8 @@ func (c *superAdminClient) List(ctx context.Context, in *emptypb.Empty, opts ...
 //
 // List 是**身份无关的读**(不管谁调返回都一样):前端登录用户拿它显隐"内部使用"菜单,
 // 兄弟服务(club/ai)穿透过来判档。两类调用方凭证不同(token / ExtendToken),
-// 故用 AUTH_TOKEN_OR_EXTEND 一个方法通吃(原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)。
+// 故一个方法通吃:同时标 AUTH_USER + AUTH_MERCHANT(任一通过即放行)。
+// (原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)
 // 注意:不能标 AUTH_SUPERADMIN,否则变成"先是超管才能知道自己是不是超管"。
 type SuperAdminServer interface {
 	List(context.Context, *emptypb.Empty) (*ListSuperAdminUsersResp, error)

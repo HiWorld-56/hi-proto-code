@@ -369,12 +369,12 @@ const file_hi_ai_api_key_proto_rawDesc = "" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12'\n" +
 	"\x05infos\x18\x02 \x03(\v2\x11.hi.ai.ApiKeyInfoR\x05infos\"*\n" +
 	"\x0fDeleteApiKeyReq\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\xf9\x01\n" +
-	"\x06ApiKey\x12?\n" +
-	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\"\x04\x88\xb5\x18\x02\x129\n" +
-	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\"\x04\x88\xb5\x18\x02\x123\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x15.hi.ai.ListApiKeyResp\"\x04\x88\xb5\x18\x02\x12>\n" +
-	"\x06Delete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02Bv\n" +
+	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\xfd\x01\n" +
+	"\x06ApiKey\x12@\n" +
+	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
+	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x124\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x15.hi.ai.ListApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\x06Delete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03Bv\n" +
 	"\tcom.hi.aiB\vApiKeyProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (

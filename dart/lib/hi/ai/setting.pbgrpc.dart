@@ -15,13 +15,17 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
-import 'setting.pb.dart' as $0;
+import 'setting.pb.dart' as $1;
 
 export 'setting.pb.dart';
 
-/// Token鉴权
+/// hiai 服务级全局配置(主体=服务自身设置)。**超管档**。
+///
+/// 代理与 OpenAI 端点都是 **hiai 服务内部自用**的:整个服务对外连 OpenAI 就一套,
+/// 不是每个商户各配一份(原实现读的也确实是全局、忽略 ctx did),故归超管而非商户档。
+/// 超管名单穿透 hidid `SuperAdmin.List`。
 @$pb.GrpcServiceName('hi.ai.Setting')
 class SettingClient extends $grpc.Client {
   /// The hostname for this service.
@@ -34,30 +38,30 @@ class SettingClient extends $grpc.Client {
 
   SettingClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.Empty> edit(
-    $0.SettingEditReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$edit, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.SettingGetResp> get(
-    $1.Empty request, {
+  $grpc.ResponseFuture<$1.SettingGetResp> get(
+    $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Empty> edit(
+    $1.SettingEditReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$edit, request, options: options);
+  }
+
   // method descriptors
 
-  static final _$edit = $grpc.ClientMethod<$0.SettingEditReq, $1.Empty>(
-      '/hi.ai.Setting/Edit',
-      ($0.SettingEditReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$get = $grpc.ClientMethod<$1.Empty, $0.SettingGetResp>(
+  static final _$get = $grpc.ClientMethod<$0.Empty, $1.SettingGetResp>(
       '/hi.ai.Setting/Get',
-      ($1.Empty value) => value.writeToBuffer(),
-      $0.SettingGetResp.fromBuffer);
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.SettingGetResp.fromBuffer);
+  static final _$edit = $grpc.ClientMethod<$1.SettingEditReq, $0.Empty>(
+      '/hi.ai.Setting/Edit',
+      ($1.SettingEditReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Setting')
@@ -65,35 +69,35 @@ abstract class SettingServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.Setting';
 
   SettingServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.SettingEditReq, $1.Empty>(
-        'Edit',
-        edit_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.SettingEditReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Empty, $0.SettingGetResp>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.SettingGetResp>(
         'Get',
         get_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
-        ($0.SettingGetResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.SettingGetResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SettingEditReq, $0.Empty>(
+        'Edit',
+        edit_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.SettingEditReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.Empty> edit_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.SettingEditReq> $request) async {
-    return edit($call, await $request);
-  }
-
-  $async.Future<$1.Empty> edit(
-      $grpc.ServiceCall call, $0.SettingEditReq request);
-
-  $async.Future<$0.SettingGetResp> get_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+  $async.Future<$1.SettingGetResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$0.SettingGetResp> get(
-      $grpc.ServiceCall call, $1.Empty request);
+  $async.Future<$1.SettingGetResp> get(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$0.Empty> edit_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SettingEditReq> $request) async {
+    return edit($call, await $request);
+  }
+
+  $async.Future<$0.Empty> edit(
+      $grpc.ServiceCall call, $1.SettingEditReq request);
 }

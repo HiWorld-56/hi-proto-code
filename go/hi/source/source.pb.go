@@ -530,14 +530,14 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x11DownloadStreamReq\x12\x1e\n" +
 	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\x12\x1f\n" +
 	"\x06offset\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x06offset\x12\x1d\n" +
-	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit2\xa8\x02\n" +
-	"\x04File\x12;\n" +
-	"\x06Upload\x12\x14.hi.source.UploadReq\x1a\x15.hi.source.UploadResp\"\x04\x88\xb5\x18\x01\x12A\n" +
-	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\"\x04\x88\xb5\x18\x01\x12I\n" +
-	"\fUploadStream\x12\x1a.hi.source.UploadStreamReq\x1a\x15.hi.source.UploadResp\"\x04\x88\xb5\x18\x01(\x01\x12U\n" +
-	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x04\x88\xb5\x18\x010\x012L\n" +
-	"\x04Base\x12D\n" +
-	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x01B\x8e\x01\n" +
+	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit2\xac\x02\n" +
+	"\x04File\x12<\n" +
+	"\x06Upload\x12\x14.hi.source.UploadReq\x1a\x15.hi.source.UploadResp\"\x05\x8a\xb5\x18\x01\x01\x12B\n" +
+	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\"\x05\x8a\xb5\x18\x01\x01\x12J\n" +
+	"\fUploadStream\x12\x1a.hi.source.UploadStreamReq\x1a\x15.hi.source.UploadResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12V\n" +
+	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x05\x8a\xb5\x18\x01\x010\x012M\n" +
+	"\x04Base\x12E\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01B\x8e\x01\n" +
 	"\rcom.hi.sourceB\vSourceProtoP\x01Z+github.com/HiWorld-56/hi-proto/go/hi/source\xa2\x02\x03HSX\xaa\x02\tHi.Source\xca\x02\tHi\\Source\xe2\x02\x15Hi\\Source\\GPBMetadata\xea\x02\n" +
 	"Hi::Sourceb\x06proto3"
 

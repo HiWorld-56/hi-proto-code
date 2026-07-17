@@ -21,17 +21,15 @@ const Auth$json = {
   '2': [
     {'1': 'AUTH_UNSPECIFIED', '2': 0},
     {'1': 'AUTH_NONE', '2': 1},
-    {'1': 'AUTH_TOKEN', '2': 2},
-    {'1': 'AUTH_EXTEND_TOKEN', '2': 3},
-    {'1': 'AUTH_API_KEY', '2': 4},
-    {'1': 'AUTH_SUPERADMIN', '2': 5},
-    {'1': 'AUTH_WEB3', '2': 6},
-    {'1': 'AUTH_TOKEN_OR_EXTEND', '2': 7},
+    {'1': 'AUTH_USER', '2': 2},
+    {'1': 'AUTH_MERCHANT', '2': 3},
+    {'1': 'AUTH_SUPERADMIN', '2': 4},
+    {'1': 'AUTH_WEB3', '2': 5},
   ],
 };
 
 /// Descriptor for `Auth`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List authDescriptor = $convert.base64Decode(
-    'CgRBdXRoEhQKEEFVVEhfVU5TUEVDSUZJRUQQABINCglBVVRIX05PTkUQARIOCgpBVVRIX1RPS0'
-    'VOEAISFQoRQVVUSF9FWFRFTkRfVE9LRU4QAxIQCgxBVVRIX0FQSV9LRVkQBBITCg9BVVRIX1NV'
-    'UEVSQURNSU4QBRINCglBVVRIX1dFQjMQBhIYChRBVVRIX1RPS0VOX09SX0VYVEVORBAH');
+    'CgRBdXRoEhQKEEFVVEhfVU5TUEVDSUZJRUQQABINCglBVVRIX05PTkUQARINCglBVVRIX1VTRV'
+    'IQAhIRCg1BVVRIX01FUkNIQU5UEAMSEwoPQVVUSF9TVVBFUkFETUlOEAQSDQoJQVVUSF9XRUIz'
+    'EAU=');

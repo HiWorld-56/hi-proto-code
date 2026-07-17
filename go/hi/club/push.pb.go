@@ -128,11 +128,11 @@ const file_hi_club_push_proto_rawDesc = "" +
 	"\x04node\x18\x01 \x01(\v2\x0e.hi.ClientInfoR\x04node\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\")\n" +
 	"\x11PushUnregisterReq\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token2\x99\x01\n" +
-	"\vPushManager\x12B\n" +
-	"\bRegister\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12F\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token2\x9b\x01\n" +
+	"\vPushManager\x12C\n" +
+	"\bRegister\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
 	"\n" +
-	"Unregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B\x80\x01\n" +
+	"Unregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
 	"\vcom.hi.clubB\tPushProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

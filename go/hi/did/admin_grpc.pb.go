@@ -794,7 +794,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_TOKEN 且 handler 零校验
+// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_USER 且 handler 零校验
 // (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
 // ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
 type MerchantManageClient interface {
@@ -845,7 +845,7 @@ func (c *merchantManageClient) Edit(ctx context.Context, in *MerchantManageEditR
 // All implementations should embed UnimplementedMerchantManageServer
 // for forward compatibility.
 //
-// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_TOKEN 且 handler 零校验
+// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_USER 且 handler 零校验
 // (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
 // ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
 type MerchantManageServer interface {

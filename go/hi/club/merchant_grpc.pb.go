@@ -22,17 +22,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Merchant_List_FullMethodName    = "/hi.club.Merchant/List"
-	Merchant_ListAll_FullMethodName = "/hi.club.Merchant/ListAll"
+	Merchant_List_FullMethodName = "/hi.club.Merchant/List"
 )
 
 // MerchantClient is the client API for Merchant service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 商户(用户档)。**club 侧目前没有商户的概念** —— 本 service 只是**转发 hidid 的商户方法**。
 type MerchantClient interface {
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.MerchantListResp, error)
-	// 查询所有商户列表。**内部使用**(转发 did 的管理面 MerchantManage.List),仅超管可调。
-	ListAll(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.MerchantListResp, error)
 }
 
 type merchantClient struct {
@@ -53,23 +52,13 @@ func (c *merchantClient) List(ctx context.Context, in *emptypb.Empty, opts ...gr
 	return out, nil
 }
 
-func (c *merchantClient) ListAll(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.MerchantListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.MerchantListResp)
-	err := c.cc.Invoke(ctx, Merchant_ListAll_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MerchantServer is the server API for Merchant service.
 // All implementations should embed UnimplementedMerchantServer
 // for forward compatibility.
+//
+// 商户(用户档)。**club 侧目前没有商户的概念** —— 本 service 只是**转发 hidid 的商户方法**。
 type MerchantServer interface {
 	List(context.Context, *emptypb.Empty) (*did.MerchantListResp, error)
-	// 查询所有商户列表。**内部使用**(转发 did 的管理面 MerchantManage.List),仅超管可调。
-	ListAll(context.Context, *hi.Pagination) (*did.MerchantListResp, error)
 }
 
 // UnimplementedMerchantServer should be embedded to have
@@ -81,9 +70,6 @@ type UnimplementedMerchantServer struct{}
 
 func (UnimplementedMerchantServer) List(context.Context, *emptypb.Empty) (*did.MerchantListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
-func (UnimplementedMerchantServer) ListAll(context.Context, *hi.Pagination) (*did.MerchantListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAll not implemented")
 }
 func (UnimplementedMerchantServer) testEmbeddedByValue() {}
 
@@ -123,24 +109,6 @@ func _Merchant_List_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Merchant_ListAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.Pagination)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MerchantServer).ListAll(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Merchant_ListAll_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).ListAll(ctx, req.(*hi.Pagination))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Merchant_ServiceDesc is the grpc.ServiceDesc for Merchant service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,9 +120,113 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "List",
 			Handler:    _Merchant_List_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/merchant.proto",
+}
+
+const (
+	MerchantManage_List_FullMethodName = "/hi.club.MerchantManage/List"
+)
+
+// MerchantManageClient is the client API for MerchantManage service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 商户管理(超管)。原 `Merchant.ListAll` —— 超管方法蹲在用户面 service 里(混档),
+// 照 did 的 Merchant / MerchantManage 范式拆出来;拆出后 `ListAll` 改回 `List`
+// (主体已由 service 名表达,再叫 ListAll 是冗余)。转发 did.MerchantManage.List。
+type MerchantManageClient interface {
+	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.MerchantListResp, error)
+}
+
+type merchantManageClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMerchantManageClient(cc grpc.ClientConnInterface) MerchantManageClient {
+	return &merchantManageClient{cc}
+}
+
+func (c *merchantManageClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*did.MerchantListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(did.MerchantListResp)
+	err := c.cc.Invoke(ctx, MerchantManage_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MerchantManageServer is the server API for MerchantManage service.
+// All implementations should embed UnimplementedMerchantManageServer
+// for forward compatibility.
+//
+// 商户管理(超管)。原 `Merchant.ListAll` —— 超管方法蹲在用户面 service 里(混档),
+// 照 did 的 Merchant / MerchantManage 范式拆出来;拆出后 `ListAll` 改回 `List`
+// (主体已由 service 名表达,再叫 ListAll 是冗余)。转发 did.MerchantManage.List。
+type MerchantManageServer interface {
+	List(context.Context, *hi.Pagination) (*did.MerchantListResp, error)
+}
+
+// UnimplementedMerchantManageServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedMerchantManageServer struct{}
+
+func (UnimplementedMerchantManageServer) List(context.Context, *hi.Pagination) (*did.MerchantListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedMerchantManageServer) testEmbeddedByValue() {}
+
+// UnsafeMerchantManageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MerchantManageServer will
+// result in compilation errors.
+type UnsafeMerchantManageServer interface {
+	mustEmbedUnimplementedMerchantManageServer()
+}
+
+func RegisterMerchantManageServer(s grpc.ServiceRegistrar, srv MerchantManageServer) {
+	// If the following call panics, it indicates UnimplementedMerchantManageServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&MerchantManage_ServiceDesc, srv)
+}
+
+func _MerchantManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.Pagination)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantManageServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantManage_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantManageServer).List(ctx, req.(*hi.Pagination))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// MerchantManage_ServiceDesc is the grpc.ServiceDesc for MerchantManage service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var MerchantManage_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.MerchantManage",
+	HandlerType: (*MerchantManageServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListAll",
-			Handler:    _Merchant_ListAll_Handler,
+			MethodName: "List",
+			Handler:    _MerchantManage_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

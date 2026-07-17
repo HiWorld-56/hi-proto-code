@@ -238,7 +238,8 @@ pub mod super_admin_client {
     ///
     /// List 是**身份无关的读**(不管谁调返回都一样):前端登录用户拿它显隐"内部使用"菜单,
     /// 兄弟服务(club/ai)穿透过来判档。两类调用方凭证不同(token / ExtendToken),
-    /// 故用 AUTH_TOKEN_OR_EXTEND 一个方法通吃(原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)。
+    /// 故一个方法通吃:同时标 AUTH_USER + AUTH_MERCHANT(任一通过即放行)。
+    /// (原 SuperAdmin.List + SuperAdminView.ListSuperAdminUsers 合并)
     /// 注意:不能标 AUTH_SUPERADMIN,否则变成"先是超管才能知道自己是不是超管"。
     #[derive(Debug, Clone)]
     pub struct SuperAdminClient<T> {
@@ -1882,7 +1883,7 @@ pub mod merchant_ex_db_client {
     /// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
     /// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
     ///
-    /// ⚠️ 为什么单独一个 service、且是 AUTH_TOKEN:ExtendToken 是从这里**拿到**的,
+    /// ⚠️ 为什么单独一个 service、且是 AUTH_USER:ExtendToken 是从这里**拿到**的,
     /// 所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
     /// 与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
     #[derive(Debug, Clone)]
@@ -3690,7 +3691,7 @@ pub mod merchant_manage_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_TOKEN 且 handler 零校验
+    /// 商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_USER 且 handler 零校验
     /// (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
     /// ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
     #[derive(Debug, Clone)]
@@ -3837,117 +3838,6 @@ pub mod merchant_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.MerchantManage", "Edit"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod health_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct HealthClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl HealthClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> HealthClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> HealthClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            HealthClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn check(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Health/Check");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Health", "Check"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -4286,8 +4176,8 @@ pub mod gateway_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
-    /// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
-    /// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
+    /// app 用户(AUTH_USER)、hiclub 商户(AUTH_MERCHANT);超管运维页也走这个读(它是用户)。
+    /// 本方法**不依赖"我是谁"**,故两个主体都收 —— 标两行,任一通过即放行。
     #[derive(Debug, Clone)]
     pub struct GatewayClient<T> {
         inner: tonic::client::Grpc<T>,

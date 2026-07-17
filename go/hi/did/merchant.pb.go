@@ -1373,31 +1373,31 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"@\n" +
 	"\x0eOrderEventResp\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\tR\apayload2\x9b\x06\n" +
-	"\bMerchant\x12<\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x04\x88\xb5\x18\x03\x12>\n" +
-	"\x06Update\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12>\n" +
-	"\aGetUser\x12\x12.hi.did.GetUserReq\x1a\x19.hi.did.UserExtensionUnit\"\x04\x88\xb5\x18\x03\x12>\n" +
-	"\tListUsers\x12\x14.hi.did.ListUsersReq\x1a\x15.hi.did.ListUsersResp\"\x04\x88\xb5\x18\x03\x12I\n" +
-	"\rListMerchants\x12\x18.hi.did.ListMerchantsReq\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x03\x12=\n" +
-	"\bSetUsers\x12\x13.hi.did.SetUsersReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12=\n" +
-	"\bAddUsers\x12\x13.hi.did.AddUsersReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12C\n" +
-	"\vRemoveUsers\x12\x16.hi.did.RemoveUsersReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12D\n" +
-	"\vGetUserMqtt\x12\x16.hi.did.GetUserMqttReq\x1a\x17.hi.did.GetUserMqttResp\"\x04\x88\xb5\x18\x03\x12B\n" +
+	"\apayload\x18\x02 \x01(\tR\apayload2\xa7\x06\n" +
+	"\bMerchant\x12=\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\x06Update\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\aGetUser\x12\x12.hi.did.GetUserReq\x1a\x19.hi.did.UserExtensionUnit\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\tListUsers\x12\x14.hi.did.ListUsersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x03\x12J\n" +
+	"\rListMerchants\x12\x18.hi.did.ListMerchantsReq\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
+	"\bSetUsers\x12\x13.hi.did.SetUsersReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
+	"\bAddUsers\x12\x13.hi.did.AddUsersReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12D\n" +
+	"\vRemoveUsers\x12\x16.hi.did.RemoveUsersReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
+	"\vGetUserMqtt\x12\x16.hi.did.GetUserMqttReq\x1a\x17.hi.did.GetUserMqttResp\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
 	"\n" +
-	"ListGrants\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.ListGrantsResp\"\x04\x88\xb5\x18\x03\x12:\n" +
-	"\bAddGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x12=\n" +
-	"\vRemoveGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x032E\n" +
-	"\vMerchantPub\x126\n" +
-	"\x06Scheme\x12\a.hi.DID\x1a\x1d.hi.did.MerchantPubSchemeResp\"\x04\x88\xb5\x18\x012\x90\x01\n" +
-	"\fMerchantExDB\x12=\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x04\x88\xb5\x18\x02\x12A\n" +
-	"\aRefresh\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x04\x88\xb5\x18\x022<\n" +
+	"ListGrants\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.ListGrantsResp\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
+	"\bAddGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
+	"\vRemoveGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032F\n" +
+	"\vMerchantPub\x127\n" +
+	"\x06Scheme\x12\a.hi.DID\x1a\x1d.hi.did.MerchantPubSchemeResp\"\x05\x8a\xb5\x18\x01\x012\x92\x01\n" +
+	"\fMerchantExDB\x12>\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
+	"\aRefresh\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x05\x8a\xb5\x18\x01\x022=\n" +
 	"\n" +
-	"OrderEvent\x12.\n" +
-	"\x03Sub\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp\"\x04\x88\xb5\x18\x020\x012N\n" +
-	"\vOrderNotify\x12?\n" +
-	"\x04Send\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x01B~\n" +
+	"OrderEvent\x12/\n" +
+	"\x03Sub\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp\"\x05\x8a\xb5\x18\x01\x020\x012O\n" +
+	"\vOrderNotify\x12@\n" +
+	"\x04Send\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01B~\n" +
 	"\n" +
 	"com.hi.didB\rMerchantProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

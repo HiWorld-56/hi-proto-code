@@ -17,12 +17,16 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
-import '../common.pb.dart' as $3;
+import '../common.pb.dart' as $2;
 import '../did/base.pb.dart' as $1;
-import 'base.pb.dart' as $2;
+import 'base.pb.dart' as $3;
 
 export 'base.pb.dart';
 
+/// 基础数据(公开)。全档一致 —— 与 did 的 Base 对齐。
+///
+/// ListCoins 原标 AUTH_TOKEN 但注释写着"不鉴权",而 did 的 Base.ListCoins 本就是公开的
+/// —— 注释与档位对不上,按 did 统一为公开。
 @$pb.GrpcServiceName('hi.club.Base')
 class BaseClient extends $grpc.Client {
   /// The hostname for this service.
@@ -49,14 +53,7 @@ class BaseClient extends $grpc.Client {
     return $createUnaryCall(_$latestVersion, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.GetConfigResp> getConfig(
-    $2.GetConfigReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$getConfig, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$3.ServerVersionResp> serverVersion(
+  $grpc.ResponseFuture<$2.ServerVersionResp> serverVersion(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
@@ -74,16 +71,11 @@ class BaseClient extends $grpc.Client {
           '/hi.club.Base/LatestVersion',
           ($1.LatestVersionReq value) => value.writeToBuffer(),
           $1.LatestVersionResp.fromBuffer);
-  static final _$getConfig =
-      $grpc.ClientMethod<$2.GetConfigReq, $2.GetConfigResp>(
-          '/hi.club.Base/GetConfig',
-          ($2.GetConfigReq value) => value.writeToBuffer(),
-          $2.GetConfigResp.fromBuffer);
   static final _$serverVersion =
-      $grpc.ClientMethod<$0.Empty, $3.ServerVersionResp>(
+      $grpc.ClientMethod<$0.Empty, $2.ServerVersionResp>(
           '/hi.club.Base/ServerVersion',
           ($0.Empty value) => value.writeToBuffer(),
-          $3.ServerVersionResp.fromBuffer);
+          $2.ServerVersionResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Base')
@@ -105,20 +97,13 @@ abstract class BaseServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.LatestVersionReq.fromBuffer(value),
         ($1.LatestVersionResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.GetConfigReq, $2.GetConfigResp>(
-        'GetConfig',
-        getConfig_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $2.GetConfigReq.fromBuffer(value),
-        ($2.GetConfigResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $3.ServerVersionResp>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $2.ServerVersionResp>(
         'ServerVersion',
         serverVersion_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($3.ServerVersionResp value) => value.writeToBuffer()));
+        ($2.ServerVersionResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.ListCoinsResp> listCoins_Pre(
@@ -137,19 +122,75 @@ abstract class BaseServiceBase extends $grpc.Service {
   $async.Future<$1.LatestVersionResp> latestVersion(
       $grpc.ServiceCall call, $1.LatestVersionReq request);
 
-  $async.Future<$2.GetConfigResp> getConfig_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.GetConfigReq> $request) async {
-    return getConfig($call, await $request);
-  }
-
-  $async.Future<$2.GetConfigResp> getConfig(
-      $grpc.ServiceCall call, $2.GetConfigReq request);
-
-  $async.Future<$3.ServerVersionResp> serverVersion_Pre(
+  $async.Future<$2.ServerVersionResp> serverVersion_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return serverVersion($call, await $request);
   }
 
-  $async.Future<$3.ServerVersionResp> serverVersion(
+  $async.Future<$2.ServerVersionResp> serverVersion(
       $grpc.ServiceCall call, $0.Empty request);
+}
+
+/// ⚠️ **临时接口 —— 用完即删。**
+///
+/// 它是个通用的 `name → value` 字符串查询(表 hi_club.hi_config),**后端完全不消费**,
+/// name 全由前端传、handler 只做透传。dev 上**只有一条数据**:
+///     webview → http://47.96.113.121/hiworldtest
+/// 指向一个**临时业务**,直接 webview 封装的。
+///
+/// **单独成 service 就是为了将来一行删掉,不牵动 Base。** 别往里加长期设施。
+///
+/// 档位:内容无私密性,token 或公开都行 —— 取 AUTH_USER 维持现状(零行为变更,不平白扩大暴露面)。
+///
+/// ⚠️ 后端遗留:model 里 `Name string \`gorm:"column:did"\`` 映射到**不存在的 did 列**。
+///    gorm 生成 SELECT * 故不报错、Value 正常填充(**已实测,接口是好的**),但 Name 永远是空
+///    —— 无人读,是颗埋着的雷。修:column:did → column:name。
+@$pb.GrpcServiceName('hi.club.TempConfig')
+class TempConfigClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  TempConfigClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$3.GetConfigResp> get(
+    $3.GetConfigReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$get, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$get = $grpc.ClientMethod<$3.GetConfigReq, $3.GetConfigResp>(
+      '/hi.club.TempConfig/Get',
+      ($3.GetConfigReq value) => value.writeToBuffer(),
+      $3.GetConfigResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.club.TempConfig')
+abstract class TempConfigServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.club.TempConfig';
+
+  TempConfigServiceBase() {
+    $addMethod($grpc.ServiceMethod<$3.GetConfigReq, $3.GetConfigResp>(
+        'Get',
+        get_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $3.GetConfigReq.fromBuffer(value),
+        ($3.GetConfigResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$3.GetConfigResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$3.GetConfigReq> $request) async {
+    return get($call, await $request);
+  }
+
+  $async.Future<$3.GetConfigResp> get(
+      $grpc.ServiceCall call, $3.GetConfigReq request);
 }

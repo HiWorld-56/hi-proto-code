@@ -14,60 +14,66 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-/// 方法鉴权档位。
+/// 方法鉴权:**按主体声明,可组合**。
 ///
-/// 设计要点:**规则长在方法身上**,后端拦截器读 descriptor 判断,不再维护 Go 里的字符串表。
+/// 设计要点一:**规则长在方法身上**,后端拦截器读 descriptor 判断,不再维护 Go 里的字符串表。
 ///   - 改名时选项跟着方法走 → 物理上不可能错位(历史上曾因改名导致 15 处鉴权静默漂移)
 ///   - 删方法时规则一并消失 → 不会留下悬空条目
-///   - 未标注 = AUTH_UNSPECIFIED(0)= **fail-closed,拦截器直接拒绝**
+///   - **未标注 = 空列表 = fail-closed,拦截器直接拒绝**
 ///     (旧的表驱动方式是 fail-open:不在表里就掉进某个默认档,did 那个默认档还更宽松)
 ///
-/// CI 校验:每个 rpc 必须显式标注;标注与后端实现不一致即构建失败。
+/// 设计要点二:**枚举的是「谁能调」(主体),不是「拿什么凭证」**。
+///   凭证是**各服务拦截器的实现细节**,proto 不关心 —— 同一个 AUTH_MERCHANT,
+///   did 用 ExtendToken 或商户主人的登录 token 解,ai 用 apikey 或 token 解。
+///
+///   ⚠️ 历史教训:本 enum 原先按**凭证**命名(AUTH_TOKEN/AUTH_EXTEND_TOKEN/AUTH_API_KEY),
+///      于是"同一主体多种凭证"只能靠 `_OR_` 打补丁,补丁还会无限增殖 ——
+///      曾出现 AUTH_TOKEN_OR_EXTEND、AUTH_API_KEY_OR_TOKEN 两个,第三个(商户主人 token 调
+///      Merchant.*)眼看又要来。按主体命名后,这类补丁**永远不需要再加**:
+///      主体多一种凭证 → 只改那个服务的拦截器,proto 一个字不动。
+///
+/// 设计要点三:**多档用组合,不要造新枚举值**。
+///   需要"用户或商户都能调"时,写两行 option,而不是发明 AUTH_USER_OR_MERCHANT。
+///
+/// CI 校验(codegen/check_auth.py):每个 rpc 必须显式标注;同一 service 内**档位集合必须一致**
+/// (不一致 = 主体归类错了,该拆 service —— 参见 DApp/DAppAdmin、Gateway/GatewayAdmin 范式)。
 class Auth extends $pb.ProtobufEnum {
   static const Auth AUTH_UNSPECIFIED =
       Auth._(0, _omitEnumNames ? '' : 'AUTH_UNSPECIFIED');
   static const Auth AUTH_NONE = Auth._(1, _omitEnumNames ? '' : 'AUTH_NONE');
-  static const Auth AUTH_TOKEN = Auth._(2, _omitEnumNames ? '' : 'AUTH_TOKEN');
-  static const Auth AUTH_EXTEND_TOKEN =
-      Auth._(3, _omitEnumNames ? '' : 'AUTH_EXTEND_TOKEN');
-  static const Auth AUTH_API_KEY =
-      Auth._(4, _omitEnumNames ? '' : 'AUTH_API_KEY');
+  static const Auth AUTH_USER = Auth._(2, _omitEnumNames ? '' : 'AUTH_USER');
+  static const Auth AUTH_MERCHANT =
+      Auth._(3, _omitEnumNames ? '' : 'AUTH_MERCHANT');
+
+  /// (hisrv_merchant 以主人的用户 did 为键,故两种凭证解出同一个 did,handler 无需区分)
   static const Auth AUTH_SUPERADMIN =
-      Auth._(5, _omitEnumNames ? '' : 'AUTH_SUPERADMIN');
+      Auth._(4, _omitEnumNames ? '' : 'AUTH_SUPERADMIN');
 
   /// ⚠️ AUTH_WEB3:传输层不鉴权,**鉴权在载荷里** —— 入参是 hi.SignedData,由 handler
   /// 自行验签(见 didapi.VerifySignature / VerifyOffline)确认调用者身份。
   ///
   /// 用于两类:
   ///   1. 登录握手(还没有 token,身份只能靠签名证明)
-  ///   2. **回调**:三方业务实现契约、由 hidid/hiai 反向调用通知标准信息。
+  ///   2. **回调**:三方业务实现契约、由 hidid 反向调用通知标准信息。
   ///      调用方是 hidid,它手里没有对方的用户 token,传输层无从鉴权;
-  ///      但数据是 web3 签名的,伪造不了。
+  ///      但数据是 web3 签名的(签名来自持私钥的 hidid app),伪造不了。
   ///
-  /// 不要"加固"成 AUTH_TOKEN —— 那会直接打断 hidid 的回调与登录握手。
+  /// 不要"加固"成 AUTH_USER —— 那会直接打断 hidid 的回调与登录握手。
   /// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
   /// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
-  static const Auth AUTH_WEB3 = Auth._(6, _omitEnumNames ? '' : 'AUTH_WEB3');
-
-  /// token 或 ExtendToken 均可 —— 拦截器先试 token、再试 ExtendToken,任一通过即放行。
-  /// 仅用于**身份无关的读**:不管调用者是用户(token)还是商户服务(ExtendToken),
-  /// 返回都一样(如超管名单)。**别滥用**:凡是操作依赖"我是谁"的,不能用这档。
-  static const Auth AUTH_TOKEN_OR_EXTEND =
-      Auth._(7, _omitEnumNames ? '' : 'AUTH_TOKEN_OR_EXTEND');
+  static const Auth AUTH_WEB3 = Auth._(5, _omitEnumNames ? '' : 'AUTH_WEB3');
 
   static const $core.List<Auth> values = <Auth>[
     AUTH_UNSPECIFIED,
     AUTH_NONE,
-    AUTH_TOKEN,
-    AUTH_EXTEND_TOKEN,
-    AUTH_API_KEY,
+    AUTH_USER,
+    AUTH_MERCHANT,
     AUTH_SUPERADMIN,
     AUTH_WEB3,
-    AUTH_TOKEN_OR_EXTEND,
   ];
 
   static final $core.List<Auth?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 7);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static Auth? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

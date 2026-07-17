@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../ai/agent.pb.dart' as $1;
+import '../ai/agent.pb.dart' as $0;
 import '../common.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -262,6 +262,77 @@ class BindStatusResp extends $pb.GeneratedMessage {
   $3.Entity ensureMaster() => $_ensure(0);
 }
 
+/// 转让机器人 = **换 master**。club 侧不存在"机器人创建者"的概念。
+///
+/// ⚠️ 不再转发 ai.Agent.Transfer —— 那个已从 ai 删除(它自称"转 apikey+bot",实际只改 creator,
+///    还会把目标非超级用户的 bot 模型顺手降级)。这个概念本就该在 club 实现,故用 club 自己的类型。
+/// 它与 BindMaster/UnbindMaster 是同一件事(换绑主人),故同处 Agent。
+class TransferReq extends $pb.GeneratedMessage {
+  factory TransferReq({
+    $core.String? agent,
+    $core.String? to,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (to != null) result.to = to;
+    return result;
+  }
+
+  TransferReq._();
+
+  factory TransferReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TransferReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TransferReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'to')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TransferReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TransferReq copyWith(void Function(TransferReq) updates) =>
+      super.copyWith((message) => updates(message as TransferReq))
+          as TransferReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TransferReq create() => TransferReq._();
+  @$core.override
+  TransferReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static TransferReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TransferReq>(create);
+  static TransferReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get to => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set to($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTo() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTo() => $_clearField(2);
+}
+
 /// 在线 agent 列表(club 本地 presence,非转发 ai)。合并原 ListOnlineAgent(按用户)+ ListAllOnlineAgent(全量)。
 class ListOnlineReq extends $pb.GeneratedMessage {
   factory ListOnlineReq({
@@ -335,7 +406,7 @@ class ListOnlineReq extends $pb.GeneratedMessage {
 class ListOnlineResp extends $pb.GeneratedMessage {
   factory ListOnlineResp({
     $core.int? total,
-    $core.Iterable<$1.AgentInfo>? infos,
+    $core.Iterable<$0.AgentInfo>? infos,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -357,8 +428,8 @@ class ListOnlineResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$1.AgentInfo>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: $1.AgentInfo.create)
+    ..pPM<$0.AgentInfo>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: $0.AgentInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -390,7 +461,7 @@ class ListOnlineResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$1.AgentInfo> get infos => $_getList(1);
+  $pb.PbList<$0.AgentInfo> get infos => $_getList(1);
 }
 
 class GetAgentMasterReq extends $pb.GeneratedMessage {

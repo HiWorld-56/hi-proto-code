@@ -21,7 +21,10 @@ import '../ai/training.pb.dart' as $0;
 
 export 'training.pb.dart';
 
-/// Token鉴权
+/// 训练/记忆(主体=训练)。**hi.ai.Training 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
+///
+/// 去 stutter(跟 ai 定稿):TrainingAgent/TrainingStatus/TrainingClear → Start/Status/Clear;
+/// 文件类方法的 "Agent" 是入参不是主体 → ListAgentFiles → ListFiles 等。
 @$pb.GrpcServiceName('hi.club.Training')
 class TrainingClient extends $grpc.Client {
   /// The hostname for this service.
@@ -34,27 +37,29 @@ class TrainingClient extends $grpc.Client {
 
   TrainingClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.Empty> trainingAgent(
-    $0.TrainingAgentReq request, {
+  /// ── 训练任务 ──
+  $grpc.ResponseFuture<$1.Empty> start(
+    $0.StartReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$trainingAgent, request, options: options);
+    return $createUnaryCall(_$start, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.TrainingStatusResp> trainingStatus(
-    $0.TrainingStatusReq request, {
+  $grpc.ResponseFuture<$0.StatusResp> status(
+    $0.StatusReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$trainingStatus, request, options: options);
+    return $createUnaryCall(_$status, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> trainingClear(
-    $0.TrainingClearReq request, {
+  $grpc.ResponseFuture<$1.Empty> clear(
+    $0.ClearReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$trainingClear, request, options: options);
+    return $createUnaryCall(_$clear, request, options: options);
   }
 
+  /// ── 训练文件 ──
   $grpc.ResponseFuture<$1.Empty> uploadFile(
     $0.UploadFileReq request, {
     $grpc.CallOptions? options,
@@ -62,32 +67,40 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$uploadFile, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListAgentFileResp> listAgentFiles(
-    $0.ListAgentFileReq request, {
+  $grpc.ResponseFuture<$0.ListFilesResp> listFiles(
+    $0.ListFilesReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listAgentFiles, request, options: options);
+    return $createUnaryCall(_$listFiles, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> deleteAgentFile(
-    $0.DeleteAgentFileReq request, {
+  $grpc.ResponseFuture<$0.GetFileResp> getFile(
+    $0.GetFileReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$deleteAgentFile, request, options: options);
+    return $createUnaryCall(_$getFile, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> deleteAgentFiles(
-    $0.DeleteAgentFilesReq request, {
+  $grpc.ResponseFuture<$1.Empty> deleteFile(
+    $0.DeleteFileReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$deleteAgentFiles, request, options: options);
+    return $createUnaryCall(_$deleteFile, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetAgentFileResp> getAgentFile(
-    $0.GetAgentFileReq request, {
+  $grpc.ResponseFuture<$1.Empty> deleteFiles(
+    $0.DeleteFilesReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getAgentFile, request, options: options);
+    return $createUnaryCall(_$deleteFiles, request, options: options);
+  }
+
+  /// ── 文本记忆条目 ──
+  $grpc.ResponseFuture<$0.CreateContentResp> createContent(
+    $0.CreateContentReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createContent, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> updateContent(
@@ -97,13 +110,6 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$updateContent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.CreateContentResp> createContent(
-    $0.CreateContentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$createContent, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> editDigest(
     $0.EditDigestReq request, {
     $grpc.CallOptions? options,
@@ -111,6 +117,7 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$editDigest, request, options: options);
   }
 
+  /// ── 记忆模型 ──
   $grpc.ResponseFuture<$1.Empty> setMemModel(
     $0.SetMemModelReq request, {
     $grpc.CallOptions? options,
@@ -127,55 +134,49 @@ class TrainingClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$trainingAgent =
-      $grpc.ClientMethod<$0.TrainingAgentReq, $1.Empty>(
-          '/hi.club.Training/TrainingAgent',
-          ($0.TrainingAgentReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
-  static final _$trainingStatus =
-      $grpc.ClientMethod<$0.TrainingStatusReq, $0.TrainingStatusResp>(
-          '/hi.club.Training/TrainingStatus',
-          ($0.TrainingStatusReq value) => value.writeToBuffer(),
-          $0.TrainingStatusResp.fromBuffer);
-  static final _$trainingClear =
-      $grpc.ClientMethod<$0.TrainingClearReq, $1.Empty>(
-          '/hi.club.Training/TrainingClear',
-          ($0.TrainingClearReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
+  static final _$start = $grpc.ClientMethod<$0.StartReq, $1.Empty>(
+      '/hi.club.Training/Start',
+      ($0.StartReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$status = $grpc.ClientMethod<$0.StatusReq, $0.StatusResp>(
+      '/hi.club.Training/Status',
+      ($0.StatusReq value) => value.writeToBuffer(),
+      $0.StatusResp.fromBuffer);
+  static final _$clear = $grpc.ClientMethod<$0.ClearReq, $1.Empty>(
+      '/hi.club.Training/Clear',
+      ($0.ClearReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$uploadFile = $grpc.ClientMethod<$0.UploadFileReq, $1.Empty>(
       '/hi.club.Training/UploadFile',
       ($0.UploadFileReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
-  static final _$listAgentFiles =
-      $grpc.ClientMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
-          '/hi.club.Training/ListAgentFiles',
-          ($0.ListAgentFileReq value) => value.writeToBuffer(),
-          $0.ListAgentFileResp.fromBuffer);
-  static final _$deleteAgentFile =
-      $grpc.ClientMethod<$0.DeleteAgentFileReq, $1.Empty>(
-          '/hi.club.Training/DeleteAgentFile',
-          ($0.DeleteAgentFileReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
-  static final _$deleteAgentFiles =
-      $grpc.ClientMethod<$0.DeleteAgentFilesReq, $1.Empty>(
-          '/hi.club.Training/DeleteAgentFiles',
-          ($0.DeleteAgentFilesReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
-  static final _$getAgentFile =
-      $grpc.ClientMethod<$0.GetAgentFileReq, $0.GetAgentFileResp>(
-          '/hi.club.Training/GetAgentFile',
-          ($0.GetAgentFileReq value) => value.writeToBuffer(),
-          $0.GetAgentFileResp.fromBuffer);
-  static final _$updateContent =
-      $grpc.ClientMethod<$0.UpdateContentReq, $1.Empty>(
-          '/hi.club.Training/UpdateContent',
-          ($0.UpdateContentReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
+  static final _$listFiles =
+      $grpc.ClientMethod<$0.ListFilesReq, $0.ListFilesResp>(
+          '/hi.club.Training/ListFiles',
+          ($0.ListFilesReq value) => value.writeToBuffer(),
+          $0.ListFilesResp.fromBuffer);
+  static final _$getFile = $grpc.ClientMethod<$0.GetFileReq, $0.GetFileResp>(
+      '/hi.club.Training/GetFile',
+      ($0.GetFileReq value) => value.writeToBuffer(),
+      $0.GetFileResp.fromBuffer);
+  static final _$deleteFile = $grpc.ClientMethod<$0.DeleteFileReq, $1.Empty>(
+      '/hi.club.Training/DeleteFile',
+      ($0.DeleteFileReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$deleteFiles = $grpc.ClientMethod<$0.DeleteFilesReq, $1.Empty>(
+      '/hi.club.Training/DeleteFiles',
+      ($0.DeleteFilesReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$createContent =
       $grpc.ClientMethod<$0.CreateContentReq, $0.CreateContentResp>(
           '/hi.club.Training/CreateContent',
           ($0.CreateContentReq value) => value.writeToBuffer(),
           $0.CreateContentResp.fromBuffer);
+  static final _$updateContent =
+      $grpc.ClientMethod<$0.UpdateContentReq, $1.Empty>(
+          '/hi.club.Training/UpdateContent',
+          ($0.UpdateContentReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
   static final _$editDigest = $grpc.ClientMethod<$0.EditDigestReq, $1.Empty>(
       '/hi.club.Training/EditDigest',
       ($0.EditDigestReq value) => value.writeToBuffer(),
@@ -196,26 +197,26 @@ abstract class TrainingServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Training';
 
   TrainingServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.TrainingAgentReq, $1.Empty>(
-        'TrainingAgent',
-        trainingAgent_Pre,
+    $addMethod($grpc.ServiceMethod<$0.StartReq, $1.Empty>(
+        'Start',
+        start_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.TrainingAgentReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.StartReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.TrainingStatusReq, $0.TrainingStatusResp>(
-        'TrainingStatus',
-        trainingStatus_Pre,
+    $addMethod($grpc.ServiceMethod<$0.StatusReq, $0.StatusResp>(
+        'Status',
+        status_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.TrainingStatusReq.fromBuffer(value),
-        ($0.TrainingStatusResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.TrainingClearReq, $1.Empty>(
-        'TrainingClear',
-        trainingClear_Pre,
+        ($core.List<$core.int> value) => $0.StatusReq.fromBuffer(value),
+        ($0.StatusResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ClearReq, $1.Empty>(
+        'Clear',
+        clear_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.TrainingClearReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.ClearReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadFileReq, $1.Empty>(
         'UploadFile',
@@ -224,42 +225,33 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UploadFileReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListAgentFileReq, $0.ListAgentFileResp>(
-        'ListAgentFiles',
-        listAgentFiles_Pre,
+    $addMethod($grpc.ServiceMethod<$0.ListFilesReq, $0.ListFilesResp>(
+        'ListFiles',
+        listFiles_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListAgentFileReq.fromBuffer(value),
-        ($0.ListAgentFileResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteAgentFileReq, $1.Empty>(
-        'DeleteAgentFile',
-        deleteAgentFile_Pre,
+        ($core.List<$core.int> value) => $0.ListFilesReq.fromBuffer(value),
+        ($0.ListFilesResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetFileReq, $0.GetFileResp>(
+        'GetFile',
+        getFile_Pre,
         false,
         false,
-        ($core.List<$core.int> value) =>
-            $0.DeleteAgentFileReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.GetFileReq.fromBuffer(value),
+        ($0.GetFileResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteFileReq, $1.Empty>(
+        'DeleteFile',
+        deleteFile_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DeleteFileReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteAgentFilesReq, $1.Empty>(
-        'DeleteAgentFiles',
-        deleteAgentFiles_Pre,
+    $addMethod($grpc.ServiceMethod<$0.DeleteFilesReq, $1.Empty>(
+        'DeleteFiles',
+        deleteFiles_Pre,
         false,
         false,
-        ($core.List<$core.int> value) =>
-            $0.DeleteAgentFilesReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetAgentFileReq, $0.GetAgentFileResp>(
-        'GetAgentFile',
-        getAgentFile_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.GetAgentFileReq.fromBuffer(value),
-        ($0.GetAgentFileResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UpdateContentReq, $1.Empty>(
-        'UpdateContent',
-        updateContent_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.UpdateContentReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.DeleteFilesReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.CreateContentReq, $0.CreateContentResp>(
         'CreateContent',
@@ -268,6 +260,13 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CreateContentReq.fromBuffer(value),
         ($0.CreateContentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UpdateContentReq, $1.Empty>(
+        'UpdateContent',
+        updateContent_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UpdateContentReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditDigestReq, $1.Empty>(
         'EditDigest',
         editDigest_Pre,
@@ -291,30 +290,27 @@ abstract class TrainingServiceBase extends $grpc.Service {
         ($0.GetMemModelResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.Empty> trainingAgent_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.TrainingAgentReq> $request) async {
-    return trainingAgent($call, await $request);
+  $async.Future<$1.Empty> start_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.StartReq> $request) async {
+    return start($call, await $request);
   }
 
-  $async.Future<$1.Empty> trainingAgent(
-      $grpc.ServiceCall call, $0.TrainingAgentReq request);
+  $async.Future<$1.Empty> start($grpc.ServiceCall call, $0.StartReq request);
 
-  $async.Future<$0.TrainingStatusResp> trainingStatus_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.TrainingStatusReq> $request) async {
-    return trainingStatus($call, await $request);
+  $async.Future<$0.StatusResp> status_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.StatusReq> $request) async {
+    return status($call, await $request);
   }
 
-  $async.Future<$0.TrainingStatusResp> trainingStatus(
-      $grpc.ServiceCall call, $0.TrainingStatusReq request);
+  $async.Future<$0.StatusResp> status(
+      $grpc.ServiceCall call, $0.StatusReq request);
 
-  $async.Future<$1.Empty> trainingClear_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.TrainingClearReq> $request) async {
-    return trainingClear($call, await $request);
+  $async.Future<$1.Empty> clear_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ClearReq> $request) async {
+    return clear($call, await $request);
   }
 
-  $async.Future<$1.Empty> trainingClear(
-      $grpc.ServiceCall call, $0.TrainingClearReq request);
+  $async.Future<$1.Empty> clear($grpc.ServiceCall call, $0.ClearReq request);
 
   $async.Future<$1.Empty> uploadFile_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadFileReq> $request) async {
@@ -324,46 +320,37 @@ abstract class TrainingServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> uploadFile(
       $grpc.ServiceCall call, $0.UploadFileReq request);
 
-  $async.Future<$0.ListAgentFileResp> listAgentFiles_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.ListAgentFileReq> $request) async {
-    return listAgentFiles($call, await $request);
+  $async.Future<$0.ListFilesResp> listFiles_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListFilesReq> $request) async {
+    return listFiles($call, await $request);
   }
 
-  $async.Future<$0.ListAgentFileResp> listAgentFiles(
-      $grpc.ServiceCall call, $0.ListAgentFileReq request);
+  $async.Future<$0.ListFilesResp> listFiles(
+      $grpc.ServiceCall call, $0.ListFilesReq request);
 
-  $async.Future<$1.Empty> deleteAgentFile_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeleteAgentFileReq> $request) async {
-    return deleteAgentFile($call, await $request);
+  $async.Future<$0.GetFileResp> getFile_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetFileReq> $request) async {
+    return getFile($call, await $request);
   }
 
-  $async.Future<$1.Empty> deleteAgentFile(
-      $grpc.ServiceCall call, $0.DeleteAgentFileReq request);
+  $async.Future<$0.GetFileResp> getFile(
+      $grpc.ServiceCall call, $0.GetFileReq request);
 
-  $async.Future<$1.Empty> deleteAgentFiles_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeleteAgentFilesReq> $request) async {
-    return deleteAgentFiles($call, await $request);
+  $async.Future<$1.Empty> deleteFile_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.DeleteFileReq> $request) async {
+    return deleteFile($call, await $request);
   }
 
-  $async.Future<$1.Empty> deleteAgentFiles(
-      $grpc.ServiceCall call, $0.DeleteAgentFilesReq request);
+  $async.Future<$1.Empty> deleteFile(
+      $grpc.ServiceCall call, $0.DeleteFileReq request);
 
-  $async.Future<$0.GetAgentFileResp> getAgentFile_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.GetAgentFileReq> $request) async {
-    return getAgentFile($call, await $request);
+  $async.Future<$1.Empty> deleteFiles_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeleteFilesReq> $request) async {
+    return deleteFiles($call, await $request);
   }
 
-  $async.Future<$0.GetAgentFileResp> getAgentFile(
-      $grpc.ServiceCall call, $0.GetAgentFileReq request);
-
-  $async.Future<$1.Empty> updateContent_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.UpdateContentReq> $request) async {
-    return updateContent($call, await $request);
-  }
-
-  $async.Future<$1.Empty> updateContent(
-      $grpc.ServiceCall call, $0.UpdateContentReq request);
+  $async.Future<$1.Empty> deleteFiles(
+      $grpc.ServiceCall call, $0.DeleteFilesReq request);
 
   $async.Future<$0.CreateContentResp> createContent_Pre($grpc.ServiceCall $call,
       $async.Future<$0.CreateContentReq> $request) async {
@@ -372,6 +359,14 @@ abstract class TrainingServiceBase extends $grpc.Service {
 
   $async.Future<$0.CreateContentResp> createContent(
       $grpc.ServiceCall call, $0.CreateContentReq request);
+
+  $async.Future<$1.Empty> updateContent_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.UpdateContentReq> $request) async {
+    return updateContent($call, await $request);
+  }
+
+  $async.Future<$1.Empty> updateContent(
+      $grpc.ServiceCall call, $0.UpdateContentReq request);
 
   $async.Future<$1.Empty> editDigest_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditDigestReq> $request) async {

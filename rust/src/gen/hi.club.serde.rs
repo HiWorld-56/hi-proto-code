@@ -1320,219 +1320,6 @@ impl<'de> serde::Deserialize<'de> for DeleteSystemMessageReq {
         deserializer.deserialize_struct("hi.club.DeleteSystemMessageReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DialogReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
-        if !self.cid.is_empty() {
-            len += 1;
-        }
-        if !self.conts.is_empty() {
-            len += 1;
-        }
-        if !self.state.is_empty() {
-            len += 1;
-        }
-        if !self.custom.is_empty() {
-            len += 1;
-        }
-        if self.return_plugin_use {
-            len += 1;
-        }
-        if self.return_training_data {
-            len += 1;
-        }
-        if self.return_context {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.DialogReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
-        if !self.cid.is_empty() {
-            struct_ser.serialize_field("cid", &self.cid)?;
-        }
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
-        }
-        if !self.state.is_empty() {
-            struct_ser.serialize_field("state", &self.state)?;
-        }
-        if !self.custom.is_empty() {
-            struct_ser.serialize_field("custom", &self.custom)?;
-        }
-        if self.return_plugin_use {
-            struct_ser.serialize_field("returnPluginUse", &self.return_plugin_use)?;
-        }
-        if self.return_training_data {
-            struct_ser.serialize_field("returnTrainingData", &self.return_training_data)?;
-        }
-        if self.return_context {
-            struct_ser.serialize_field("returnContext", &self.return_context)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for DialogReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "did",
-            "cid",
-            "conts",
-            "state",
-            "custom",
-            "return_plugin_use",
-            "returnPluginUse",
-            "return_training_data",
-            "returnTrainingData",
-            "return_context",
-            "returnContext",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Did,
-            Cid,
-            Conts,
-            State,
-            Custom,
-            ReturnPluginUse,
-            ReturnTrainingData,
-            ReturnContext,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "cid" => Ok(GeneratedField::Cid),
-                            "conts" => Ok(GeneratedField::Conts),
-                            "state" => Ok(GeneratedField::State),
-                            "custom" => Ok(GeneratedField::Custom),
-                            "returnPluginUse" | "return_plugin_use" => Ok(GeneratedField::ReturnPluginUse),
-                            "returnTrainingData" | "return_training_data" => Ok(GeneratedField::ReturnTrainingData),
-                            "returnContext" | "return_context" => Ok(GeneratedField::ReturnContext),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DialogReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.DialogReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DialogReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut did__ = None;
-                let mut cid__ = None;
-                let mut conts__ = None;
-                let mut state__ = None;
-                let mut custom__ = None;
-                let mut return_plugin_use__ = None;
-                let mut return_training_data__ = None;
-                let mut return_context__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
-                            }
-                            did__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Cid => {
-                            if cid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("cid"));
-                            }
-                            cid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Custom => {
-                            if custom__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("custom"));
-                            }
-                            custom__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnPluginUse => {
-                            if return_plugin_use__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnPluginUse"));
-                            }
-                            return_plugin_use__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnTrainingData => {
-                            if return_training_data__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnTrainingData"));
-                            }
-                            return_training_data__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnContext => {
-                            if return_context__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnContext"));
-                            }
-                            return_context__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(DialogReq {
-                    did: did__.unwrap_or_default(),
-                    cid: cid__.unwrap_or_default(),
-                    conts: conts__.unwrap_or_default(),
-                    state: state__.unwrap_or_default(),
-                    custom: custom__.unwrap_or_default(),
-                    return_plugin_use: return_plugin_use__.unwrap_or_default(),
-                    return_training_data: return_training_data__.unwrap_or_default(),
-                    return_context: return_context__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.club.DialogReq", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for FriendRequestStatus {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -1974,97 +1761,6 @@ impl<'de> serde::Deserialize<'de> for GetConfigResp {
         deserializer.deserialize_struct("hi.club.GetConfigResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetContextResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.list.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.GetContextResp", len)?;
-        if !self.list.is_empty() {
-            struct_ser.serialize_field("list", &self.list)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetContextResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "list",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            List,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "list" => Ok(GeneratedField::List),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetContextResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.GetContextResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetContextResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut list__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::List => {
-                            if list__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("list"));
-                            }
-                            list__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(GetContextResp {
-                    list: list__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.club.GetContextResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for GetGroupMemberTotalReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2338,6 +2034,97 @@ impl<'de> serde::Deserialize<'de> for GetGroupReq {
             }
         }
         deserializer.deserialize_struct("hi.club.GetGroupReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetHistoryResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.list.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.GetHistoryResp", len)?;
+        if !self.list.is_empty() {
+            struct_ser.serialize_field("list", &self.list)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetHistoryResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "list",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            List,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "list" => Ok(GeneratedField::List),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetHistoryResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.GetHistoryResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetHistoryResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut list__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::List => {
+                            if list__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("list"));
+                            }
+                            list__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(GetHistoryResp {
+                    list: list__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.GetHistoryResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetNotPulledPcOrdersResp {
@@ -9415,6 +9202,219 @@ impl<'de> serde::Deserialize<'de> for RemoveGroupReq {
         deserializer.deserialize_struct("hi.club.RemoveGroupReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for SendReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if !self.cid.is_empty() {
+            len += 1;
+        }
+        if !self.conts.is_empty() {
+            len += 1;
+        }
+        if !self.state.is_empty() {
+            len += 1;
+        }
+        if !self.custom.is_empty() {
+            len += 1;
+        }
+        if self.return_plugin_use {
+            len += 1;
+        }
+        if self.return_training_data {
+            len += 1;
+        }
+        if self.return_context {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.SendReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if !self.cid.is_empty() {
+            struct_ser.serialize_field("cid", &self.cid)?;
+        }
+        if !self.conts.is_empty() {
+            struct_ser.serialize_field("conts", &self.conts)?;
+        }
+        if !self.state.is_empty() {
+            struct_ser.serialize_field("state", &self.state)?;
+        }
+        if !self.custom.is_empty() {
+            struct_ser.serialize_field("custom", &self.custom)?;
+        }
+        if self.return_plugin_use {
+            struct_ser.serialize_field("returnPluginUse", &self.return_plugin_use)?;
+        }
+        if self.return_training_data {
+            struct_ser.serialize_field("returnTrainingData", &self.return_training_data)?;
+        }
+        if self.return_context {
+            struct_ser.serialize_field("returnContext", &self.return_context)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SendReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "cid",
+            "conts",
+            "state",
+            "custom",
+            "return_plugin_use",
+            "returnPluginUse",
+            "return_training_data",
+            "returnTrainingData",
+            "return_context",
+            "returnContext",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Cid,
+            Conts,
+            State,
+            Custom,
+            ReturnPluginUse,
+            ReturnTrainingData,
+            ReturnContext,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "cid" => Ok(GeneratedField::Cid),
+                            "conts" => Ok(GeneratedField::Conts),
+                            "state" => Ok(GeneratedField::State),
+                            "custom" => Ok(GeneratedField::Custom),
+                            "returnPluginUse" | "return_plugin_use" => Ok(GeneratedField::ReturnPluginUse),
+                            "returnTrainingData" | "return_training_data" => Ok(GeneratedField::ReturnTrainingData),
+                            "returnContext" | "return_context" => Ok(GeneratedField::ReturnContext),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SendReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.SendReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SendReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut cid__ = None;
+                let mut conts__ = None;
+                let mut state__ = None;
+                let mut custom__ = None;
+                let mut return_plugin_use__ = None;
+                let mut return_training_data__ = None;
+                let mut return_context__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Cid => {
+                            if cid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cid"));
+                            }
+                            cid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Conts => {
+                            if conts__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("conts"));
+                            }
+                            conts__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Custom => {
+                            if custom__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("custom"));
+                            }
+                            custom__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ReturnPluginUse => {
+                            if return_plugin_use__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("returnPluginUse"));
+                            }
+                            return_plugin_use__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ReturnTrainingData => {
+                            if return_training_data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("returnTrainingData"));
+                            }
+                            return_training_data__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ReturnContext => {
+                            if return_context__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("returnContext"));
+                            }
+                            return_context__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(SendReq {
+                    did: did__.unwrap_or_default(),
+                    cid: cid__.unwrap_or_default(),
+                    conts: conts__.unwrap_or_default(),
+                    state: state__.unwrap_or_default(),
+                    custom: custom__.unwrap_or_default(),
+                    return_plugin_use: return_plugin_use__.unwrap_or_default(),
+                    return_training_data: return_training_data__.unwrap_or_default(),
+                    return_context: return_context__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.SendReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for SetRemarkReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -9646,97 +9646,6 @@ impl<'de> serde::Deserialize<'de> for SetRoleReq {
             }
         }
         deserializer.deserialize_struct("hi.club.SetRoleReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SimpleReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.conts.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.SimpleReq", len)?;
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SimpleReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "conts",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Conts,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "conts" => Ok(GeneratedField::Conts),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SimpleReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.SimpleReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SimpleReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut conts__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(SimpleReq {
-                    conts: conts__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.club.SimpleReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for SpeechToSpeechReq {
@@ -11313,6 +11222,114 @@ impl<'de> serde::Deserialize<'de> for TradeUnit {
             }
         }
         deserializer.deserialize_struct("hi.club.TradeUnit", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TransferReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
+        if !self.to.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.TransferReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
+        if !self.to.is_empty() {
+            struct_ser.serialize_field("to", &self.to)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TransferReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+            "to",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+            To,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            "to" => Ok(GeneratedField::To),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TransferReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.TransferReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TransferReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                let mut to__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::To => {
+                            if to__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("to"));
+                            }
+                            to__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(TransferReq {
+                    agent: agent__.unwrap_or_default(),
+                    to: to__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.TransferReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for UnbindMasterReq {

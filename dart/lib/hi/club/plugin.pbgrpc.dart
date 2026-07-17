@@ -15,13 +15,23 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
-import '../ai/plugin.pb.dart' as $1;
+import '../ai/plugin.pb.dart' as $0;
 
 export 'plugin.pb.dart';
 
-/// Token鉴权
+/// 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
+///
+/// 插件只剩 **py 脚本一种** —— 网搜(search)/画图(draw)已随 ai 整体砍掉:
+/// 那两类完全可以封装进 py 脚本里执行,且局限性太大(比如不好传入用户数据)。
+/// 故 DrawConfig / SearchCreate / DrawCreate / GetDraw 一并删除。
+///
+/// ⚠️ club 侧的实际代码活(不只是改名):
+///   1. **上传脚本工程(Create)时,自动把该机器人的 ExAPIKey 塞进去** —— 这是根除
+///      "运行期回调三方要 apikey"那套机制的落地点(ai 的 UserCallback 已删)。
+///   2. apikey **挂机器人名下、不挂用户**,以便机器人换持有者后脚本照常跑。
+///   3. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
 @$pb.GrpcServiceName('hi.club.Plugin')
 class PluginClient extends $grpc.Client {
   /// The hostname for this service.
@@ -34,147 +44,111 @@ class PluginClient extends $grpc.Client {
 
   PluginClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.DrawConfigResp> drawConfig(
-    $0.Empty request, {
+  $grpc.ResponseFuture<$0.CreateResp> create(
+    $0.CreateReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$drawConfig, request, options: options);
+    return $createUnaryCall(_$create, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.PluginSwitchResp> pluginSwitch(
-    $1.PluginSwitchReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$pluginSwitch, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> searchCreate(
-    $1.SearchCreateReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$searchCreate, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.PythonCreateResp> pythonCreate(
-    $1.PythonCreateReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$pythonCreate, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.DrawCreateResp> drawCreate(
-    $1.DrawCreateReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$drawCreate, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.ListPluginResp> list(
-    $1.ListPluginReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$list, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> delete(
-    $1.DeletePluginReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$delete, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> deleteByDids(
-    $1.DeletePluginByDidsReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$deleteByDids, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> edit(
-    $1.EditPluginReq request, {
+  $grpc.ResponseFuture<$1.Empty> edit(
+    $0.EditPluginReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.GetDrawResp> getDraw(
-    $1.GetDrawReq request, {
+  $grpc.ResponseFuture<$0.GetPluginResp> get(
+    $0.GetPluginReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getDraw, request, options: options);
+    return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> pythonParamsSet(
-    $1.PythonParamsSetReq request, {
+  $grpc.ResponseFuture<$0.ListPluginResp> list(
+    $0.ListPluginReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$pythonParamsSet, request, options: options);
+    return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.GetPythonParamsResp> getPythonParams(
-    $1.GetPythonParamsReq request, {
+  $grpc.ResponseFuture<$1.Empty> delete(
+    $0.DeletePluginReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getPythonParams, request, options: options);
+    return $createUnaryCall(_$delete, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> deleteByDids(
+    $0.DeletePluginByDidsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteByDids, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> setActiveVersion(
+    $0.SetActiveVersionReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setActiveVersion, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.GetExDataResp> getExData(
+    $0.GetExDataReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getExData, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.PluginSwitchResp> setSwitches(
+    $0.PluginSwitchReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setSwitches, request, options: options);
   }
 
   // method descriptors
 
-  static final _$drawConfig = $grpc.ClientMethod<$0.Empty, $1.DrawConfigResp>(
-      '/hi.club.Plugin/DrawConfig',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.DrawConfigResp.fromBuffer);
-  static final _$pluginSwitch =
-      $grpc.ClientMethod<$1.PluginSwitchReq, $1.PluginSwitchResp>(
-          '/hi.club.Plugin/PluginSwitch',
-          ($1.PluginSwitchReq value) => value.writeToBuffer(),
-          $1.PluginSwitchResp.fromBuffer);
-  static final _$searchCreate =
-      $grpc.ClientMethod<$1.SearchCreateReq, $0.Empty>(
-          '/hi.club.Plugin/SearchCreate',
-          ($1.SearchCreateReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$pythonCreate =
-      $grpc.ClientMethod<$1.PythonCreateReq, $1.PythonCreateResp>(
-          '/hi.club.Plugin/PythonCreate',
-          ($1.PythonCreateReq value) => value.writeToBuffer(),
-          $1.PythonCreateResp.fromBuffer);
-  static final _$drawCreate =
-      $grpc.ClientMethod<$1.DrawCreateReq, $1.DrawCreateResp>(
-          '/hi.club.Plugin/DrawCreate',
-          ($1.DrawCreateReq value) => value.writeToBuffer(),
-          $1.DrawCreateResp.fromBuffer);
-  static final _$list = $grpc.ClientMethod<$1.ListPluginReq, $1.ListPluginResp>(
-      '/hi.club.Plugin/List',
-      ($1.ListPluginReq value) => value.writeToBuffer(),
-      $1.ListPluginResp.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$1.DeletePluginReq, $0.Empty>(
-      '/hi.club.Plugin/Delete',
-      ($1.DeletePluginReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$deleteByDids =
-      $grpc.ClientMethod<$1.DeletePluginByDidsReq, $0.Empty>(
-          '/hi.club.Plugin/DeleteByDids',
-          ($1.DeletePluginByDidsReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$1.EditPluginReq, $0.Empty>(
+  static final _$create = $grpc.ClientMethod<$0.CreateReq, $0.CreateResp>(
+      '/hi.club.Plugin/Create',
+      ($0.CreateReq value) => value.writeToBuffer(),
+      $0.CreateResp.fromBuffer);
+  static final _$edit = $grpc.ClientMethod<$0.EditPluginReq, $1.Empty>(
       '/hi.club.Plugin/Edit',
-      ($1.EditPluginReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$getDraw = $grpc.ClientMethod<$1.GetDrawReq, $1.GetDrawResp>(
-      '/hi.club.Plugin/GetDraw',
-      ($1.GetDrawReq value) => value.writeToBuffer(),
-      $1.GetDrawResp.fromBuffer);
-  static final _$pythonParamsSet =
-      $grpc.ClientMethod<$1.PythonParamsSetReq, $0.Empty>(
-          '/hi.club.Plugin/PythonParamsSet',
-          ($1.PythonParamsSetReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$getPythonParams =
-      $grpc.ClientMethod<$1.GetPythonParamsReq, $1.GetPythonParamsResp>(
-          '/hi.club.Plugin/GetPythonParams',
-          ($1.GetPythonParamsReq value) => value.writeToBuffer(),
-          $1.GetPythonParamsResp.fromBuffer);
+      ($0.EditPluginReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$get = $grpc.ClientMethod<$0.GetPluginReq, $0.GetPluginResp>(
+      '/hi.club.Plugin/Get',
+      ($0.GetPluginReq value) => value.writeToBuffer(),
+      $0.GetPluginResp.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$0.ListPluginReq, $0.ListPluginResp>(
+      '/hi.club.Plugin/List',
+      ($0.ListPluginReq value) => value.writeToBuffer(),
+      $0.ListPluginResp.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.DeletePluginReq, $1.Empty>(
+      '/hi.club.Plugin/Delete',
+      ($0.DeletePluginReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$deleteByDids =
+      $grpc.ClientMethod<$0.DeletePluginByDidsReq, $1.Empty>(
+          '/hi.club.Plugin/DeleteByDids',
+          ($0.DeletePluginByDidsReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
+  static final _$setActiveVersion =
+      $grpc.ClientMethod<$0.SetActiveVersionReq, $1.Empty>(
+          '/hi.club.Plugin/SetActiveVersion',
+          ($0.SetActiveVersionReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
+  static final _$getExData =
+      $grpc.ClientMethod<$0.GetExDataReq, $0.GetExDataResp>(
+          '/hi.club.Plugin/GetExData',
+          ($0.GetExDataReq value) => value.writeToBuffer(),
+          $0.GetExDataResp.fromBuffer);
+  static final _$setSwitches =
+      $grpc.ClientMethod<$0.PluginSwitchReq, $0.PluginSwitchResp>(
+          '/hi.club.Plugin/SetSwitches',
+          ($0.PluginSwitchReq value) => value.writeToBuffer(),
+          $0.PluginSwitchResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Plugin')
@@ -182,190 +156,142 @@ abstract class PluginServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Plugin';
 
   PluginServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.DrawConfigResp>(
-        'DrawConfig',
-        drawConfig_Pre,
+    $addMethod($grpc.ServiceMethod<$0.CreateReq, $0.CreateResp>(
+        'Create',
+        create_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.DrawConfigResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.PluginSwitchReq, $1.PluginSwitchResp>(
-        'PluginSwitch',
-        pluginSwitch_Pre,
+        ($core.List<$core.int> value) => $0.CreateReq.fromBuffer(value),
+        ($0.CreateResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EditPluginReq, $1.Empty>(
+        'Edit',
+        edit_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.PluginSwitchReq.fromBuffer(value),
-        ($1.PluginSwitchResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SearchCreateReq, $0.Empty>(
-        'SearchCreate',
-        searchCreate_Pre,
+        ($core.List<$core.int> value) => $0.EditPluginReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetPluginReq, $0.GetPluginResp>(
+        'Get',
+        get_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.SearchCreateReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.PythonCreateReq, $1.PythonCreateResp>(
-        'PythonCreate',
-        pythonCreate_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.PythonCreateReq.fromBuffer(value),
-        ($1.PythonCreateResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DrawCreateReq, $1.DrawCreateResp>(
-        'DrawCreate',
-        drawCreate_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.DrawCreateReq.fromBuffer(value),
-        ($1.DrawCreateResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ListPluginReq, $1.ListPluginResp>(
+        ($core.List<$core.int> value) => $0.GetPluginReq.fromBuffer(value),
+        ($0.GetPluginResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListPluginReq, $0.ListPluginResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.ListPluginReq.fromBuffer(value),
-        ($1.ListPluginResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DeletePluginReq, $0.Empty>(
+        ($core.List<$core.int> value) => $0.ListPluginReq.fromBuffer(value),
+        ($0.ListPluginResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeletePluginReq, $1.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.DeletePluginReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DeletePluginByDidsReq, $0.Empty>(
+        ($core.List<$core.int> value) => $0.DeletePluginReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeletePluginByDidsReq, $1.Empty>(
         'DeleteByDids',
         deleteByDids_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $1.DeletePluginByDidsReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EditPluginReq, $0.Empty>(
-        'Edit',
-        edit_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.EditPluginReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GetDrawReq, $1.GetDrawResp>(
-        'GetDraw',
-        getDraw_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.GetDrawReq.fromBuffer(value),
-        ($1.GetDrawResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.PythonParamsSetReq, $0.Empty>(
-        'PythonParamsSet',
-        pythonParamsSet_Pre,
+            $0.DeletePluginByDidsReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SetActiveVersionReq, $1.Empty>(
+        'SetActiveVersion',
+        setActiveVersion_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $1.PythonParamsSetReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$1.GetPythonParamsReq, $1.GetPythonParamsResp>(
-            'GetPythonParams',
-            getPythonParams_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $1.GetPythonParamsReq.fromBuffer(value),
-            ($1.GetPythonParamsResp value) => value.writeToBuffer()));
+            $0.SetActiveVersionReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetExDataReq, $0.GetExDataResp>(
+        'GetExData',
+        getExData_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetExDataReq.fromBuffer(value),
+        ($0.GetExDataResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PluginSwitchReq, $0.PluginSwitchResp>(
+        'SetSwitches',
+        setSwitches_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PluginSwitchReq.fromBuffer(value),
+        ($0.PluginSwitchResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.DrawConfigResp> drawConfig_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return drawConfig($call, await $request);
+  $async.Future<$0.CreateResp> create_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.CreateReq> $request) async {
+    return create($call, await $request);
   }
 
-  $async.Future<$1.DrawConfigResp> drawConfig(
-      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.CreateResp> create(
+      $grpc.ServiceCall call, $0.CreateReq request);
 
-  $async.Future<$1.PluginSwitchResp> pluginSwitch_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.PluginSwitchReq> $request) async {
-    return pluginSwitch($call, await $request);
-  }
-
-  $async.Future<$1.PluginSwitchResp> pluginSwitch(
-      $grpc.ServiceCall call, $1.PluginSwitchReq request);
-
-  $async.Future<$0.Empty> searchCreate_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.SearchCreateReq> $request) async {
-    return searchCreate($call, await $request);
-  }
-
-  $async.Future<$0.Empty> searchCreate(
-      $grpc.ServiceCall call, $1.SearchCreateReq request);
-
-  $async.Future<$1.PythonCreateResp> pythonCreate_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.PythonCreateReq> $request) async {
-    return pythonCreate($call, await $request);
-  }
-
-  $async.Future<$1.PythonCreateResp> pythonCreate(
-      $grpc.ServiceCall call, $1.PythonCreateReq request);
-
-  $async.Future<$1.DrawCreateResp> drawCreate_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.DrawCreateReq> $request) async {
-    return drawCreate($call, await $request);
-  }
-
-  $async.Future<$1.DrawCreateResp> drawCreate(
-      $grpc.ServiceCall call, $1.DrawCreateReq request);
-
-  $async.Future<$1.ListPluginResp> list_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.ListPluginReq> $request) async {
-    return list($call, await $request);
-  }
-
-  $async.Future<$1.ListPluginResp> list(
-      $grpc.ServiceCall call, $1.ListPluginReq request);
-
-  $async.Future<$0.Empty> delete_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.DeletePluginReq> $request) async {
-    return delete($call, await $request);
-  }
-
-  $async.Future<$0.Empty> delete(
-      $grpc.ServiceCall call, $1.DeletePluginReq request);
-
-  $async.Future<$0.Empty> deleteByDids_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.DeletePluginByDidsReq> $request) async {
-    return deleteByDids($call, await $request);
-  }
-
-  $async.Future<$0.Empty> deleteByDids(
-      $grpc.ServiceCall call, $1.DeletePluginByDidsReq request);
-
-  $async.Future<$0.Empty> edit_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.EditPluginReq> $request) async {
+  $async.Future<$1.Empty> edit_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.EditPluginReq> $request) async {
     return edit($call, await $request);
   }
 
-  $async.Future<$0.Empty> edit(
-      $grpc.ServiceCall call, $1.EditPluginReq request);
+  $async.Future<$1.Empty> edit(
+      $grpc.ServiceCall call, $0.EditPluginReq request);
 
-  $async.Future<$1.GetDrawResp> getDraw_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GetDrawReq> $request) async {
-    return getDraw($call, await $request);
+  $async.Future<$0.GetPluginResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetPluginReq> $request) async {
+    return get($call, await $request);
   }
 
-  $async.Future<$1.GetDrawResp> getDraw(
-      $grpc.ServiceCall call, $1.GetDrawReq request);
+  $async.Future<$0.GetPluginResp> get(
+      $grpc.ServiceCall call, $0.GetPluginReq request);
 
-  $async.Future<$0.Empty> pythonParamsSet_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.PythonParamsSetReq> $request) async {
-    return pythonParamsSet($call, await $request);
+  $async.Future<$0.ListPluginResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListPluginReq> $request) async {
+    return list($call, await $request);
   }
 
-  $async.Future<$0.Empty> pythonParamsSet(
-      $grpc.ServiceCall call, $1.PythonParamsSetReq request);
+  $async.Future<$0.ListPluginResp> list(
+      $grpc.ServiceCall call, $0.ListPluginReq request);
 
-  $async.Future<$1.GetPythonParamsResp> getPythonParams_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.GetPythonParamsReq> $request) async {
-    return getPythonParams($call, await $request);
+  $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeletePluginReq> $request) async {
+    return delete($call, await $request);
   }
 
-  $async.Future<$1.GetPythonParamsResp> getPythonParams(
-      $grpc.ServiceCall call, $1.GetPythonParamsReq request);
+  $async.Future<$1.Empty> delete(
+      $grpc.ServiceCall call, $0.DeletePluginReq request);
+
+  $async.Future<$1.Empty> deleteByDids_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeletePluginByDidsReq> $request) async {
+    return deleteByDids($call, await $request);
+  }
+
+  $async.Future<$1.Empty> deleteByDids(
+      $grpc.ServiceCall call, $0.DeletePluginByDidsReq request);
+
+  $async.Future<$1.Empty> setActiveVersion_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.SetActiveVersionReq> $request) async {
+    return setActiveVersion($call, await $request);
+  }
+
+  $async.Future<$1.Empty> setActiveVersion(
+      $grpc.ServiceCall call, $0.SetActiveVersionReq request);
+
+  $async.Future<$0.GetExDataResp> getExData_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetExDataReq> $request) async {
+    return getExData($call, await $request);
+  }
+
+  $async.Future<$0.GetExDataResp> getExData(
+      $grpc.ServiceCall call, $0.GetExDataReq request);
+
+  $async.Future<$0.PluginSwitchResp> setSwitches_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PluginSwitchReq> $request) async {
+    return setSwitches($call, await $request);
+  }
+
+  $async.Future<$0.PluginSwitchResp> setSwitches(
+      $grpc.ServiceCall call, $0.PluginSwitchReq request);
 }

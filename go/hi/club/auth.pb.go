@@ -102,12 +102,12 @@ const file_hi_club_auth_proto_rawDesc = "" +
 	"\x05token\x18\x02 \x01(\v2\r.hi.AuthTokenR\x05token\x12'\n" +
 	"\x04mqtt\x18\x03 \x01(\v2\x13.hi.MqttCredentialsR\x04mqtt\x12\"\n" +
 	"\x06master\x18\x04 \x01(\v2\n" +
-	".hi.EntityR\x06master2\xf4\x01\n" +
-	"\x04Auth\x12<\n" +
-	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x04\x88\xb5\x18\x01\x12>\n" +
-	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x04\x88\xb5\x18\x01\x12:\n" +
-	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x04\x88\xb5\x18\x01\x122\n" +
-	"\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginResp\"\x04\x88\xb5\x18\x06B\x80\x01\n" +
+	".hi.EntityR\x06master2\xf8\x01\n" +
+	"\x04Auth\x12=\n" +
+	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12?\n" +
+	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
+	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x123\n" +
+	"\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginResp\"\x05\x8a\xb5\x18\x01\x05B\x80\x01\n" +
 	"\vcom.hi.clubB\tAuthProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

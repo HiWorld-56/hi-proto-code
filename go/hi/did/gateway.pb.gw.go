@@ -96,7 +96,7 @@ func RegisterGatewayHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Gateway/List", runtime.WithHTTPPathPattern("/api/v1/gateway_config/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Gateway/List", runtime.WithHTTPPathPattern("/api/v1/gateway/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -126,7 +126,7 @@ func RegisterGatewayAdminHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.GatewayAdmin/Set", runtime.WithHTTPPathPattern("/api/v1/gateway_config/set"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.GatewayAdmin/Set", runtime.WithHTTPPathPattern("/api/v1/gateway_admin/set"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -184,7 +184,7 @@ func RegisterGatewayHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Gateway/List", runtime.WithHTTPPathPattern("/api/v1/gateway_config/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Gateway/List", runtime.WithHTTPPathPattern("/api/v1/gateway/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -201,7 +201,7 @@ func RegisterGatewayHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 }
 
 var (
-	pattern_Gateway_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gateway_config", "list"}, ""))
+	pattern_Gateway_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gateway", "list"}, ""))
 )
 
 var (
@@ -248,7 +248,7 @@ func RegisterGatewayAdminHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.GatewayAdmin/Set", runtime.WithHTTPPathPattern("/api/v1/gateway_config/set"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.GatewayAdmin/Set", runtime.WithHTTPPathPattern("/api/v1/gateway_admin/set"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -265,7 +265,7 @@ func RegisterGatewayAdminHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_GatewayAdmin_Set_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gateway_config", "set"}, ""))
+	pattern_GatewayAdmin_Set_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gateway_admin", "set"}, ""))
 )
 
 var (

@@ -12,11 +12,8 @@
 
 import 'dart:core' as $core;
 
-import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
-
-import '../common.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -85,56 +82,8 @@ class Content extends $pb.GeneratedMessage {
   void clearContent() => $_clearField(2);
 }
 
-class SimpleReq extends $pb.GeneratedMessage {
-  factory SimpleReq({
-    $core.Iterable<Content>? conts,
-  }) {
-    final result = create();
-    if (conts != null) result.conts.addAll(conts);
-    return result;
-  }
-
-  SimpleReq._();
-
-  factory SimpleReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SimpleReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SimpleReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPM<Content>(1, _omitFieldNames ? '' : 'conts',
-        subBuilder: Content.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleReq copyWith(void Function(SimpleReq) updates) =>
-      super.copyWith((message) => updates(message as SimpleReq)) as SimpleReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SimpleReq create() => SimpleReq._();
-  @$core.override
-  SimpleReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SimpleReq getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SimpleReq>(create);
-  static SimpleReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<Content> get conts => $_getList(0);
-}
-
-class GenerateCidResp extends $pb.GeneratedMessage {
-  factory GenerateCidResp({
+class NewSessionResp extends $pb.GeneratedMessage {
+  factory NewSessionResp({
     $core.String? cid,
   }) {
     final result = create();
@@ -142,40 +91,40 @@ class GenerateCidResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  GenerateCidResp._();
+  NewSessionResp._();
 
-  factory GenerateCidResp.fromBuffer($core.List<$core.int> data,
+  factory NewSessionResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GenerateCidResp.fromJson($core.String json,
+  factory NewSessionResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GenerateCidResp',
+      _omitMessageNames ? '' : 'NewSessionResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'cid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GenerateCidResp clone() => deepCopy();
+  NewSessionResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GenerateCidResp copyWith(void Function(GenerateCidResp) updates) =>
-      super.copyWith((message) => updates(message as GenerateCidResp))
-          as GenerateCidResp;
+  NewSessionResp copyWith(void Function(NewSessionResp) updates) =>
+      super.copyWith((message) => updates(message as NewSessionResp))
+          as NewSessionResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GenerateCidResp create() => GenerateCidResp._();
+  static NewSessionResp create() => NewSessionResp._();
   @$core.override
-  GenerateCidResp createEmptyInstance() => create();
+  NewSessionResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GenerateCidResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GenerateCidResp>(create);
-  static GenerateCidResp? _defaultInstance;
+  static NewSessionResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<NewSessionResp>(create);
+  static NewSessionResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get cid => $_getSZ(0);
@@ -187,8 +136,8 @@ class GenerateCidResp extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(1);
 }
 
-class DialogReq extends $pb.GeneratedMessage {
-  factory DialogReq({
+class SendReq extends $pb.GeneratedMessage {
+  factory SendReq({
     $core.String? did,
     $core.String? cid,
     $core.Iterable<Content>? conts,
@@ -211,17 +160,17 @@ class DialogReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DialogReq._();
+  SendReq._();
 
-  factory DialogReq.fromBuffer($core.List<$core.int> data,
+  factory SendReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DialogReq.fromJson($core.String json,
+  factory SendReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DialogReq',
+      _omitMessageNames ? '' : 'SendReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
@@ -236,22 +185,22 @@ class DialogReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogReq clone() => deepCopy();
+  SendReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogReq copyWith(void Function(DialogReq) updates) =>
-      super.copyWith((message) => updates(message as DialogReq)) as DialogReq;
+  SendReq copyWith(void Function(SendReq) updates) =>
+      super.copyWith((message) => updates(message as SendReq)) as SendReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DialogReq create() => DialogReq._();
+  static SendReq create() => SendReq._();
   @$core.override
-  DialogReq createEmptyInstance() => create();
+  SendReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DialogReq getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DialogReq>(create);
-  static DialogReq? _defaultInstance;
+  static SendReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SendReq>(create);
+  static SendReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
@@ -320,8 +269,8 @@ class DialogReq extends $pb.GeneratedMessage {
   void clearReturnContext() => $_clearField(8);
 }
 
-class DialogResp extends $pb.GeneratedMessage {
-  factory DialogResp({
+class SendResp extends $pb.GeneratedMessage {
+  factory SendResp({
     $core.String? reply,
   }) {
     final result = create();
@@ -329,39 +278,39 @@ class DialogResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  DialogResp._();
+  SendResp._();
 
-  factory DialogResp.fromBuffer($core.List<$core.int> data,
+  factory SendResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DialogResp.fromJson($core.String json,
+  factory SendResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DialogResp',
+      _omitMessageNames ? '' : 'SendResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'reply')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogResp clone() => deepCopy();
+  SendResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogResp copyWith(void Function(DialogResp) updates) =>
-      super.copyWith((message) => updates(message as DialogResp)) as DialogResp;
+  SendResp copyWith(void Function(SendResp) updates) =>
+      super.copyWith((message) => updates(message as SendResp)) as SendResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DialogResp create() => DialogResp._();
+  static SendResp create() => SendResp._();
   @$core.override
-  DialogResp createEmptyInstance() => create();
+  SendResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DialogResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DialogResp>(create);
-  static DialogResp? _defaultInstance;
+  static SendResp getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SendResp>(create);
+  static SendResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get reply => $_getSZ(0);
@@ -373,8 +322,8 @@ class DialogResp extends $pb.GeneratedMessage {
   void clearReply() => $_clearField(1);
 }
 
-class DialogStreamResp extends $pb.GeneratedMessage {
-  factory DialogStreamResp({
+class StreamResp extends $pb.GeneratedMessage {
+  factory StreamResp({
     $core.int? code,
     $core.String? type,
     $core.String? message,
@@ -386,17 +335,17 @@ class DialogStreamResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  DialogStreamResp._();
+  StreamResp._();
 
-  factory DialogStreamResp.fromBuffer($core.List<$core.int> data,
+  factory StreamResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DialogStreamResp.fromJson($core.String json,
+  factory StreamResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DialogStreamResp',
+      _omitMessageNames ? '' : 'StreamResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'code')
@@ -405,23 +354,22 @@ class DialogStreamResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogStreamResp clone() => deepCopy();
+  StreamResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogStreamResp copyWith(void Function(DialogStreamResp) updates) =>
-      super.copyWith((message) => updates(message as DialogStreamResp))
-          as DialogStreamResp;
+  StreamResp copyWith(void Function(StreamResp) updates) =>
+      super.copyWith((message) => updates(message as StreamResp)) as StreamResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DialogStreamResp create() => DialogStreamResp._();
+  static StreamResp create() => StreamResp._();
   @$core.override
-  DialogStreamResp createEmptyInstance() => create();
+  StreamResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DialogStreamResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DialogStreamResp>(create);
-  static DialogStreamResp? _defaultInstance;
+  static StreamResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StreamResp>(create);
+  static StreamResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get code => $_getIZ(0);
@@ -451,8 +399,8 @@ class DialogStreamResp extends $pb.GeneratedMessage {
   void clearMessage() => $_clearField(3);
 }
 
-class ClearContextReq extends $pb.GeneratedMessage {
-  factory ClearContextReq({
+class ClearHistoryReq extends $pb.GeneratedMessage {
+  factory ClearHistoryReq({
     $core.String? cid,
   }) {
     final result = create();
@@ -460,40 +408,40 @@ class ClearContextReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ClearContextReq._();
+  ClearHistoryReq._();
 
-  factory ClearContextReq.fromBuffer($core.List<$core.int> data,
+  factory ClearHistoryReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ClearContextReq.fromJson($core.String json,
+  factory ClearHistoryReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ClearContextReq',
+      _omitMessageNames ? '' : 'ClearHistoryReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'cid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ClearContextReq clone() => deepCopy();
+  ClearHistoryReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ClearContextReq copyWith(void Function(ClearContextReq) updates) =>
-      super.copyWith((message) => updates(message as ClearContextReq))
-          as ClearContextReq;
+  ClearHistoryReq copyWith(void Function(ClearHistoryReq) updates) =>
+      super.copyWith((message) => updates(message as ClearHistoryReq))
+          as ClearHistoryReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ClearContextReq create() => ClearContextReq._();
+  static ClearHistoryReq create() => ClearHistoryReq._();
   @$core.override
-  ClearContextReq createEmptyInstance() => create();
+  ClearHistoryReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ClearContextReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ClearContextReq>(create);
-  static ClearContextReq? _defaultInstance;
+  static ClearHistoryReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClearHistoryReq>(create);
+  static ClearHistoryReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get cid => $_getSZ(0);
@@ -505,8 +453,8 @@ class ClearContextReq extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(1);
 }
 
-class GetContextReq extends $pb.GeneratedMessage {
-  factory GetContextReq({
+class GetHistoryReq extends $pb.GeneratedMessage {
+  factory GetHistoryReq({
     $core.String? cid,
     $core.String? agent,
   }) {
@@ -516,17 +464,17 @@ class GetContextReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetContextReq._();
+  GetHistoryReq._();
 
-  factory GetContextReq.fromBuffer($core.List<$core.int> data,
+  factory GetHistoryReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetContextReq.fromJson($core.String json,
+  factory GetHistoryReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetContextReq',
+      _omitMessageNames ? '' : 'GetHistoryReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'cid')
@@ -534,23 +482,23 @@ class GetContextReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetContextReq clone() => deepCopy();
+  GetHistoryReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetContextReq copyWith(void Function(GetContextReq) updates) =>
-      super.copyWith((message) => updates(message as GetContextReq))
-          as GetContextReq;
+  GetHistoryReq copyWith(void Function(GetHistoryReq) updates) =>
+      super.copyWith((message) => updates(message as GetHistoryReq))
+          as GetHistoryReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetContextReq create() => GetContextReq._();
+  static GetHistoryReq create() => GetHistoryReq._();
   @$core.override
-  GetContextReq createEmptyInstance() => create();
+  GetHistoryReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetContextReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetContextReq>(create);
-  static GetContextReq? _defaultInstance;
+  static GetHistoryReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetHistoryReq>(create);
+  static GetHistoryReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get cid => $_getSZ(0);
@@ -630,8 +578,8 @@ class QA extends $pb.GeneratedMessage {
   $pb.PbList<Content> get q => $_getList(1);
 }
 
-class GetContextResp extends $pb.GeneratedMessage {
-  factory GetContextResp({
+class GetHistoryResp extends $pb.GeneratedMessage {
+  factory GetHistoryResp({
     $core.Iterable<QA>? list,
   }) {
     final result = create();
@@ -639,313 +587,48 @@ class GetContextResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetContextResp._();
+  GetHistoryResp._();
 
-  factory GetContextResp.fromBuffer($core.List<$core.int> data,
+  factory GetHistoryResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetContextResp.fromJson($core.String json,
+  factory GetHistoryResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetContextResp',
+      _omitMessageNames ? '' : 'GetHistoryResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPM<QA>(1, _omitFieldNames ? '' : 'list', subBuilder: QA.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetContextResp clone() => deepCopy();
+  GetHistoryResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetContextResp copyWith(void Function(GetContextResp) updates) =>
-      super.copyWith((message) => updates(message as GetContextResp))
-          as GetContextResp;
+  GetHistoryResp copyWith(void Function(GetHistoryResp) updates) =>
+      super.copyWith((message) => updates(message as GetHistoryResp))
+          as GetHistoryResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetContextResp create() => GetContextResp._();
+  static GetHistoryResp create() => GetHistoryResp._();
   @$core.override
-  GetContextResp createEmptyInstance() => create();
+  GetHistoryResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetContextResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetContextResp>(create);
-  static GetContextResp? _defaultInstance;
+  static GetHistoryResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetHistoryResp>(create);
+  static GetHistoryResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<QA> get list => $_getList(0);
 }
 
-class SimpleTextToSpeechReq extends $pb.GeneratedMessage {
-  factory SimpleTextToSpeechReq({
-    $core.String? text,
-    $core.String? model,
-    $core.String? style,
-  }) {
-    final result = create();
-    if (text != null) result.text = text;
-    if (model != null) result.model = model;
-    if (style != null) result.style = style;
-    return result;
-  }
-
-  SimpleTextToSpeechReq._();
-
-  factory SimpleTextToSpeechReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SimpleTextToSpeechReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SimpleTextToSpeechReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'text')
-    ..aOS(2, _omitFieldNames ? '' : 'model')
-    ..aOS(3, _omitFieldNames ? '' : 'style')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleTextToSpeechReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleTextToSpeechReq copyWith(
-          void Function(SimpleTextToSpeechReq) updates) =>
-      super.copyWith((message) => updates(message as SimpleTextToSpeechReq))
-          as SimpleTextToSpeechReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SimpleTextToSpeechReq create() => SimpleTextToSpeechReq._();
-  @$core.override
-  SimpleTextToSpeechReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SimpleTextToSpeechReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SimpleTextToSpeechReq>(create);
-  static SimpleTextToSpeechReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get text => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set text($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasText() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearText() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get model => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set model($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasModel() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearModel() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get style => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set style($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasStyle() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearStyle() => $_clearField(3);
-}
-
-class SimpleTextToSpeechResp extends $pb.GeneratedMessage {
-  factory SimpleTextToSpeechResp({
-    $core.String? url,
-  }) {
-    final result = create();
-    if (url != null) result.url = url;
-    return result;
-  }
-
-  SimpleTextToSpeechResp._();
-
-  factory SimpleTextToSpeechResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SimpleTextToSpeechResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SimpleTextToSpeechResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'url')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleTextToSpeechResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleTextToSpeechResp copyWith(
-          void Function(SimpleTextToSpeechResp) updates) =>
-      super.copyWith((message) => updates(message as SimpleTextToSpeechResp))
-          as SimpleTextToSpeechResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SimpleTextToSpeechResp create() => SimpleTextToSpeechResp._();
-  @$core.override
-  SimpleTextToSpeechResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SimpleTextToSpeechResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SimpleTextToSpeechResp>(create);
-  static SimpleTextToSpeechResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get url => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set url($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasUrl() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUrl() => $_clearField(1);
-}
-
-class SimpleSpeechToTextReq extends $pb.GeneratedMessage {
-  factory SimpleSpeechToTextReq({
-    $core.String? url,
-    $core.String? model,
-    $core.String? lang,
-  }) {
-    final result = create();
-    if (url != null) result.url = url;
-    if (model != null) result.model = model;
-    if (lang != null) result.lang = lang;
-    return result;
-  }
-
-  SimpleSpeechToTextReq._();
-
-  factory SimpleSpeechToTextReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SimpleSpeechToTextReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SimpleSpeechToTextReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'url')
-    ..aOS(2, _omitFieldNames ? '' : 'model')
-    ..aOS(3, _omitFieldNames ? '' : 'lang')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleSpeechToTextReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleSpeechToTextReq copyWith(
-          void Function(SimpleSpeechToTextReq) updates) =>
-      super.copyWith((message) => updates(message as SimpleSpeechToTextReq))
-          as SimpleSpeechToTextReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SimpleSpeechToTextReq create() => SimpleSpeechToTextReq._();
-  @$core.override
-  SimpleSpeechToTextReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SimpleSpeechToTextReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SimpleSpeechToTextReq>(create);
-  static SimpleSpeechToTextReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get url => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set url($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasUrl() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUrl() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get model => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set model($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasModel() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearModel() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get lang => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set lang($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasLang() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearLang() => $_clearField(3);
-}
-
-class SimpleSpeechToTextResp extends $pb.GeneratedMessage {
-  factory SimpleSpeechToTextResp({
-    $core.String? text,
-  }) {
-    final result = create();
-    if (text != null) result.text = text;
-    return result;
-  }
-
-  SimpleSpeechToTextResp._();
-
-  factory SimpleSpeechToTextResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SimpleSpeechToTextResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SimpleSpeechToTextResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'text')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleSpeechToTextResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleSpeechToTextResp copyWith(
-          void Function(SimpleSpeechToTextResp) updates) =>
-      super.copyWith((message) => updates(message as SimpleSpeechToTextResp))
-          as SimpleSpeechToTextResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SimpleSpeechToTextResp create() => SimpleSpeechToTextResp._();
-  @$core.override
-  SimpleSpeechToTextResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SimpleSpeechToTextResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SimpleSpeechToTextResp>(create);
-  static SimpleSpeechToTextResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get text => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set text($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasText() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearText() => $_clearField(1);
-}
-
+/// ── 多模态对话入参 ────────────────────────────────────────────────────
+/// 命名读作「<输入模态>To<输出模态>」,描述的是一轮 agent 对话的模态组合(带工具调用),
+/// **不是字面的格式转换** —— 真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
 class SpeechToSpeechReq extends $pb.GeneratedMessage {
   factory SpeechToSpeechReq({
     $core.String? did,
@@ -1190,6 +873,122 @@ class TextToTextReq extends $pb.GeneratedMessage {
   void clearState() => $_clearField(7);
 }
 
+class SpeechToTextReq extends $pb.GeneratedMessage {
+  factory SpeechToTextReq({
+    $core.String? did,
+    $core.String? cid,
+    $core.Iterable<Content>? conts,
+    $core.Iterable<ToolSupply>? tools,
+    $core.String? toolChoice,
+    $core.String? custom,
+    $core.String? state,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    if (cid != null) result.cid = cid;
+    if (conts != null) result.conts.addAll(conts);
+    if (tools != null) result.tools.addAll(tools);
+    if (toolChoice != null) result.toolChoice = toolChoice;
+    if (custom != null) result.custom = custom;
+    if (state != null) result.state = state;
+    return result;
+  }
+
+  SpeechToTextReq._();
+
+  factory SpeechToTextReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SpeechToTextReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SpeechToTextReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(2, _omitFieldNames ? '' : 'cid')
+    ..pPM<Content>(3, _omitFieldNames ? '' : 'conts',
+        subBuilder: Content.create)
+    ..pPM<ToolSupply>(4, _omitFieldNames ? '' : 'tools',
+        subBuilder: ToolSupply.create)
+    ..aOS(5, _omitFieldNames ? '' : 'toolChoice')
+    ..aOS(6, _omitFieldNames ? '' : 'custom')
+    ..aOS(7, _omitFieldNames ? '' : 'state')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SpeechToTextReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SpeechToTextReq copyWith(void Function(SpeechToTextReq) updates) =>
+      super.copyWith((message) => updates(message as SpeechToTextReq))
+          as SpeechToTextReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SpeechToTextReq create() => SpeechToTextReq._();
+  @$core.override
+  SpeechToTextReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SpeechToTextReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SpeechToTextReq>(create);
+  static SpeechToTextReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get did => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set did($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get cid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set cid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<Content> get conts => $_getList(2);
+
+  @$pb.TagNumber(4)
+  $pb.PbList<ToolSupply> get tools => $_getList(3);
+
+  @$pb.TagNumber(5)
+  $core.String get toolChoice => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set toolChoice($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasToolChoice() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearToolChoice() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get custom => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set custom($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCustom() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCustom() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get state => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set state($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasState() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearState() => $_clearField(7);
+}
+
 class ToolCallResult extends $pb.GeneratedMessage {
   factory ToolCallResult({
     $core.String? id,
@@ -1251,6 +1050,7 @@ class ToolCallResult extends $pb.GeneratedMessage {
   $pb.PbList<Content> get conts => $_getList(1);
 }
 
+/// 工具结果续跑入参(Resume 系列):客户端执行完工具后把结果交回来,接着跑。
 class ToolCallResultsReq extends $pb.GeneratedMessage {
   factory ToolCallResultsReq({
     $core.String? id,
@@ -1683,556 +1483,6 @@ class ChatResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(3)
   $pb.PbList<ToolCall> get tools => $_getList(2);
-}
-
-class ListAgentDelayReq extends $pb.GeneratedMessage {
-  factory ListAgentDelayReq({
-    $core.String? agent,
-    $core.String? type,
-    $3.Pagination? pagination,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (type != null) result.type = type;
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListAgentDelayReq._();
-
-  factory ListAgentDelayReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListAgentDelayReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentDelayReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOM<$3.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayReq copyWith(void Function(ListAgentDelayReq) updates) =>
-      super.copyWith((message) => updates(message as ListAgentDelayReq))
-          as ListAgentDelayReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListAgentDelayReq create() => ListAgentDelayReq._();
-  @$core.override
-  ListAgentDelayReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListAgentDelayReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentDelayReq>(create);
-  static ListAgentDelayReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasType() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearType() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $3.Pagination get pagination => $_getN(2);
-  @$pb.TagNumber(3)
-  set pagination($3.Pagination value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasPagination() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearPagination() => $_clearField(3);
-  @$pb.TagNumber(3)
-  $3.Pagination ensurePagination() => $_ensure(2);
-}
-
-class AgentDelayUnit extends $pb.GeneratedMessage {
-  factory AgentDelayUnit({
-    $core.String? agent,
-    $core.String? uuid,
-    $core.String? type,
-    $core.int? llm,
-    $core.int? llm2,
-    $core.int? stt,
-    $core.int? tts,
-    $core.int? functionCall,
-    $fixnum.Int64? testTime,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (uuid != null) result.uuid = uuid;
-    if (type != null) result.type = type;
-    if (llm != null) result.llm = llm;
-    if (llm2 != null) result.llm2 = llm2;
-    if (stt != null) result.stt = stt;
-    if (tts != null) result.tts = tts;
-    if (functionCall != null) result.functionCall = functionCall;
-    if (testTime != null) result.testTime = testTime;
-    return result;
-  }
-
-  AgentDelayUnit._();
-
-  factory AgentDelayUnit.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AgentDelayUnit.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AgentDelayUnit',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'uuid')
-    ..aOS(3, _omitFieldNames ? '' : 'type')
-    ..aI(4, _omitFieldNames ? '' : 'llm')
-    ..aI(5, _omitFieldNames ? '' : 'llm2')
-    ..aI(6, _omitFieldNames ? '' : 'stt')
-    ..aI(7, _omitFieldNames ? '' : 'tts')
-    ..aI(8, _omitFieldNames ? '' : 'functionCall')
-    ..aInt64(9, _omitFieldNames ? '' : 'testTime')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentDelayUnit clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentDelayUnit copyWith(void Function(AgentDelayUnit) updates) =>
-      super.copyWith((message) => updates(message as AgentDelayUnit))
-          as AgentDelayUnit;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AgentDelayUnit create() => AgentDelayUnit._();
-  @$core.override
-  AgentDelayUnit createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static AgentDelayUnit getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AgentDelayUnit>(create);
-  static AgentDelayUnit? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get uuid => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set uuid($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasUuid() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearUuid() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get type => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set type($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasType() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearType() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.int get llm => $_getIZ(3);
-  @$pb.TagNumber(4)
-  set llm($core.int value) => $_setSignedInt32(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasLlm() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearLlm() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.int get llm2 => $_getIZ(4);
-  @$pb.TagNumber(5)
-  set llm2($core.int value) => $_setSignedInt32(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasLlm2() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearLlm2() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.int get stt => $_getIZ(5);
-  @$pb.TagNumber(6)
-  set stt($core.int value) => $_setSignedInt32(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasStt() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearStt() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.int get tts => $_getIZ(6);
-  @$pb.TagNumber(7)
-  set tts($core.int value) => $_setSignedInt32(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasTts() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearTts() => $_clearField(7);
-
-  @$pb.TagNumber(8)
-  $core.int get functionCall => $_getIZ(7);
-  @$pb.TagNumber(8)
-  set functionCall($core.int value) => $_setSignedInt32(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasFunctionCall() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearFunctionCall() => $_clearField(8);
-
-  @$pb.TagNumber(9)
-  $fixnum.Int64 get testTime => $_getI64(8);
-  @$pb.TagNumber(9)
-  set testTime($fixnum.Int64 value) => $_setInt64(8, value);
-  @$pb.TagNumber(9)
-  $core.bool hasTestTime() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearTestTime() => $_clearField(9);
-}
-
-class ListAgentDelayResp extends $pb.GeneratedMessage {
-  factory ListAgentDelayResp({
-    $core.int? total,
-    $core.Iterable<AgentDelayUnit>? units,
-  }) {
-    final result = create();
-    if (total != null) result.total = total;
-    if (units != null) result.units.addAll(units);
-    return result;
-  }
-
-  ListAgentDelayResp._();
-
-  factory ListAgentDelayResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListAgentDelayResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentDelayResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentDelayUnit>(2, _omitFieldNames ? '' : 'units',
-        subBuilder: AgentDelayUnit.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayResp copyWith(void Function(ListAgentDelayResp) updates) =>
-      super.copyWith((message) => updates(message as ListAgentDelayResp))
-          as ListAgentDelayResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListAgentDelayResp create() => ListAgentDelayResp._();
-  @$core.override
-  ListAgentDelayResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListAgentDelayResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentDelayResp>(create);
-  static ListAgentDelayResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get total => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set total($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTotal() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTotal() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<AgentDelayUnit> get units => $_getList(1);
-}
-
-class GetAgentDelayReq extends $pb.GeneratedMessage {
-  factory GetAgentDelayReq({
-    $core.String? agent,
-    $core.String? type,
-    $3.Pagination? pagination,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (type != null) result.type = type;
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  GetAgentDelayReq._();
-
-  factory GetAgentDelayReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory GetAgentDelayReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentDelayReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOM<$3.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentDelayReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentDelayReq copyWith(void Function(GetAgentDelayReq) updates) =>
-      super.copyWith((message) => updates(message as GetAgentDelayReq))
-          as GetAgentDelayReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetAgentDelayReq create() => GetAgentDelayReq._();
-  @$core.override
-  GetAgentDelayReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static GetAgentDelayReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentDelayReq>(create);
-  static GetAgentDelayReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasType() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearType() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $3.Pagination get pagination => $_getN(2);
-  @$pb.TagNumber(3)
-  set pagination($3.Pagination value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasPagination() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearPagination() => $_clearField(3);
-  @$pb.TagNumber(3)
-  $3.Pagination ensurePagination() => $_ensure(2);
-}
-
-class GetAgentDelayResp extends $pb.GeneratedMessage {
-  factory GetAgentDelayResp({
-    $core.int? total,
-    $core.Iterable<AgentDelayUnit>? units,
-  }) {
-    final result = create();
-    if (total != null) result.total = total;
-    if (units != null) result.units.addAll(units);
-    return result;
-  }
-
-  GetAgentDelayResp._();
-
-  factory GetAgentDelayResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory GetAgentDelayResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentDelayResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentDelayUnit>(2, _omitFieldNames ? '' : 'units',
-        subBuilder: AgentDelayUnit.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentDelayResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentDelayResp copyWith(void Function(GetAgentDelayResp) updates) =>
-      super.copyWith((message) => updates(message as GetAgentDelayResp))
-          as GetAgentDelayResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetAgentDelayResp create() => GetAgentDelayResp._();
-  @$core.override
-  GetAgentDelayResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static GetAgentDelayResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentDelayResp>(create);
-  static GetAgentDelayResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get total => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set total($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTotal() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTotal() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<AgentDelayUnit> get units => $_getList(1);
-}
-
-class SpeechToTextReq extends $pb.GeneratedMessage {
-  factory SpeechToTextReq({
-    $core.String? did,
-    $core.String? cid,
-    $core.Iterable<Content>? conts,
-    $core.Iterable<ToolSupply>? tools,
-    $core.String? toolChoice,
-    $core.String? custom,
-    $core.String? state,
-  }) {
-    final result = create();
-    if (did != null) result.did = did;
-    if (cid != null) result.cid = cid;
-    if (conts != null) result.conts.addAll(conts);
-    if (tools != null) result.tools.addAll(tools);
-    if (toolChoice != null) result.toolChoice = toolChoice;
-    if (custom != null) result.custom = custom;
-    if (state != null) result.state = state;
-    return result;
-  }
-
-  SpeechToTextReq._();
-
-  factory SpeechToTextReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SpeechToTextReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SpeechToTextReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'cid')
-    ..pPM<Content>(3, _omitFieldNames ? '' : 'conts',
-        subBuilder: Content.create)
-    ..pPM<ToolSupply>(4, _omitFieldNames ? '' : 'tools',
-        subBuilder: ToolSupply.create)
-    ..aOS(5, _omitFieldNames ? '' : 'toolChoice')
-    ..aOS(6, _omitFieldNames ? '' : 'custom')
-    ..aOS(7, _omitFieldNames ? '' : 'state')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SpeechToTextReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SpeechToTextReq copyWith(void Function(SpeechToTextReq) updates) =>
-      super.copyWith((message) => updates(message as SpeechToTextReq))
-          as SpeechToTextReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SpeechToTextReq create() => SpeechToTextReq._();
-  @$core.override
-  SpeechToTextReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SpeechToTextReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SpeechToTextReq>(create);
-  static SpeechToTextReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get cid => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set cid($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasCid() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCid() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $pb.PbList<Content> get conts => $_getList(2);
-
-  @$pb.TagNumber(4)
-  $pb.PbList<ToolSupply> get tools => $_getList(3);
-
-  @$pb.TagNumber(5)
-  $core.String get toolChoice => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set toolChoice($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasToolChoice() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearToolChoice() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.String get custom => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set custom($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasCustom() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearCustom() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.String get state => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set state($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasState() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearState() => $_clearField(7);
 }
 
 const $core.bool _omitFieldNames =

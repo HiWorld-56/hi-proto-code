@@ -27,10 +27,11 @@ var File_hi_club_merchant_proto protoreflect.FileDescriptor
 
 const file_hi_club_merchant_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/club/merchant.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto2\x85\x01\n" +
-	"\bMerchant\x12>\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x02\x129\n" +
-	"\aListAll\x12\x0e.hi.Pagination\x1a\x18.hi.did.MerchantListResp\"\x04\x88\xb5\x18\x05B\x84\x01\n" +
+	"\x16hi/club/merchant.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto2K\n" +
+	"\bMerchant\x12?\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x022I\n" +
+	"\x0eMerchantManage\x127\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04B\x84\x01\n" +
 	"\vcom.hi.clubB\rMerchantProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_merchant_proto_goTypes = []any{
@@ -40,9 +41,9 @@ var file_hi_club_merchant_proto_goTypes = []any{
 }
 var file_hi_club_merchant_proto_depIdxs = []int32{
 	0, // 0: hi.club.Merchant.List:input_type -> google.protobuf.Empty
-	1, // 1: hi.club.Merchant.ListAll:input_type -> hi.Pagination
+	1, // 1: hi.club.MerchantManage.List:input_type -> hi.Pagination
 	2, // 2: hi.club.Merchant.List:output_type -> hi.did.MerchantListResp
-	2, // 3: hi.club.Merchant.ListAll:output_type -> hi.did.MerchantListResp
+	2, // 3: hi.club.MerchantManage.List:output_type -> hi.did.MerchantListResp
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -63,7 +64,7 @@ func file_hi_club_merchant_proto_init() {
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_club_merchant_proto_goTypes,
 		DependencyIndexes: file_hi_club_merchant_proto_depIdxs,

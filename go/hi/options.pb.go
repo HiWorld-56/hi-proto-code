@@ -22,41 +22,53 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 方法鉴权档位。
+// 方法鉴权:**按主体声明,可组合**。
 //
-// 设计要点:**规则长在方法身上**,后端拦截器读 descriptor 判断,不再维护 Go 里的字符串表。
+// 设计要点一:**规则长在方法身上**,后端拦截器读 descriptor 判断,不再维护 Go 里的字符串表。
 //   - 改名时选项跟着方法走 → 物理上不可能错位(历史上曾因改名导致 15 处鉴权静默漂移)
 //   - 删方法时规则一并消失 → 不会留下悬空条目
-//   - 未标注 = AUTH_UNSPECIFIED(0)= **fail-closed,拦截器直接拒绝**
+//   - **未标注 = 空列表 = fail-closed,拦截器直接拒绝**
 //     (旧的表驱动方式是 fail-open:不在表里就掉进某个默认档,did 那个默认档还更宽松)
 //
-// CI 校验:每个 rpc 必须显式标注;标注与后端实现不一致即构建失败。
+// 设计要点二:**枚举的是「谁能调」(主体),不是「拿什么凭证」**。
+//
+//	凭证是**各服务拦截器的实现细节**,proto 不关心 —— 同一个 AUTH_MERCHANT,
+//	did 用 ExtendToken 或商户主人的登录 token 解,ai 用 apikey 或 token 解。
+//
+//	⚠️ 历史教训:本 enum 原先按**凭证**命名(AUTH_TOKEN/AUTH_EXTEND_TOKEN/AUTH_API_KEY),
+//	   于是"同一主体多种凭证"只能靠 `_OR_` 打补丁,补丁还会无限增殖 ——
+//	   曾出现 AUTH_TOKEN_OR_EXTEND、AUTH_API_KEY_OR_TOKEN 两个,第三个(商户主人 token 调
+//	   Merchant.*)眼看又要来。按主体命名后,这类补丁**永远不需要再加**:
+//	   主体多一种凭证 → 只改那个服务的拦截器,proto 一个字不动。
+//
+// 设计要点三:**多档用组合,不要造新枚举值**。
+//
+//	需要"用户或商户都能调"时,写两行 option,而不是发明 AUTH_USER_OR_MERCHANT。
+//
+// CI 校验(codegen/check_auth.py):每个 rpc 必须显式标注;同一 service 内**档位集合必须一致**
+// (不一致 = 主体归类错了,该拆 service —— 参见 DApp/DAppAdmin、Gateway/GatewayAdmin 范式)。
 type Auth int32
 
 const (
-	Auth_AUTH_UNSPECIFIED  Auth = 0 // 未标注 —— 拦截器拒绝(fail-closed);仅作为漏标的哨兵,不要主动使用
-	Auth_AUTH_NONE         Auth = 1 // 免鉴权:真·公开接口(健康检查、版本、给三方查在线机器人等)
-	Auth_AUTH_TOKEN        Auth = 2 // 用户 token(JWT):普通登录用户
-	Auth_AUTH_EXTEND_TOKEN Auth = 3 // 商户 ExtendToken:hisrv 商户身份,ctx 内含 merchant_did / extend_table
-	Auth_AUTH_API_KEY      Auth = 4 // apiKey:三方程序化调用
-	Auth_AUTH_SUPERADMIN   Auth = 5 // 超管 = **二级验证**:先按 AUTH_TOKEN 验 token,再多一层
+	Auth_AUTH_UNSPECIFIED Auth = 0 // 占位:proto3 要求首值为 0。**不要主动使用** —— 漏标的语义是"空列表",不是这个值。
+	Auth_AUTH_NONE        Auth = 1 // 公开:真·免鉴权(版本、公开目录、给三方查在线机器人等)
+	Auth_AUTH_USER        Auth = 2 // 用户:登录 token 认出的自然人
+	Auth_AUTH_MERCHANT    Auth = 3 // 商户:did 用 ExtendToken 或**商户主人的登录 token** 解;ai 用 apikey 或 token 解
+	// (hisrv_merchant 以主人的用户 did 为键,故两种凭证解出同一个 did,handler 无需区分)
+	Auth_AUTH_SUPERADMIN Auth = 4 // 超管 = **二级验证**:先认出人,再查超管名单。内部后门,与业务无关。
 	// ⚠️ AUTH_WEB3:传输层不鉴权,**鉴权在载荷里** —— 入参是 hi.SignedData,由 handler
 	// 自行验签(见 didapi.VerifySignature / VerifyOffline)确认调用者身份。
 	//
 	// 用于两类:
 	//  1. 登录握手(还没有 token,身份只能靠签名证明)
-	//  2. **回调**:三方业务实现契约、由 hidid/hiai 反向调用通知标准信息。
+	//  2. **回调**:三方业务实现契约、由 hidid 反向调用通知标准信息。
 	//     调用方是 hidid,它手里没有对方的用户 token,传输层无从鉴权;
-	//     但数据是 web3 签名的,伪造不了。
+	//     但数据是 web3 签名的(签名来自持私钥的 hidid app),伪造不了。
 	//
-	// 不要"加固"成 AUTH_TOKEN —— 那会直接打断 hidid 的回调与登录握手。
+	// 不要"加固"成 AUTH_USER —— 那会直接打断 hidid 的回调与登录握手。
 	// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
 	// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
-	Auth_AUTH_WEB3 Auth = 6
-	// token 或 ExtendToken 均可 —— 拦截器先试 token、再试 ExtendToken,任一通过即放行。
-	// 仅用于**身份无关的读**:不管调用者是用户(token)还是商户服务(ExtendToken),
-	// 返回都一样(如超管名单)。**别滥用**:凡是操作依赖"我是谁"的,不能用这档。
-	Auth_AUTH_TOKEN_OR_EXTEND Auth = 7
+	Auth_AUTH_WEB3 Auth = 5
 )
 
 // Enum value maps for Auth.
@@ -64,22 +76,18 @@ var (
 	Auth_name = map[int32]string{
 		0: "AUTH_UNSPECIFIED",
 		1: "AUTH_NONE",
-		2: "AUTH_TOKEN",
-		3: "AUTH_EXTEND_TOKEN",
-		4: "AUTH_API_KEY",
-		5: "AUTH_SUPERADMIN",
-		6: "AUTH_WEB3",
-		7: "AUTH_TOKEN_OR_EXTEND",
+		2: "AUTH_USER",
+		3: "AUTH_MERCHANT",
+		4: "AUTH_SUPERADMIN",
+		5: "AUTH_WEB3",
 	}
 	Auth_value = map[string]int32{
-		"AUTH_UNSPECIFIED":     0,
-		"AUTH_NONE":            1,
-		"AUTH_TOKEN":           2,
-		"AUTH_EXTEND_TOKEN":    3,
-		"AUTH_API_KEY":         4,
-		"AUTH_SUPERADMIN":      5,
-		"AUTH_WEB3":            6,
-		"AUTH_TOKEN_OR_EXTEND": 7,
+		"AUTH_UNSPECIFIED": 0,
+		"AUTH_NONE":        1,
+		"AUTH_USER":        2,
+		"AUTH_MERCHANT":    3,
+		"AUTH_SUPERADMIN":  4,
+		"AUTH_WEB3":        5,
 	}
 )
 
@@ -113,19 +121,28 @@ func (Auth) EnumDescriptor() ([]byte, []int) {
 var file_hi_options_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*descriptorpb.MethodOptions)(nil),
-		ExtensionType: (*Auth)(nil),
+		ExtensionType: ([]Auth)(nil),
 		Field:         50001,
 		Name:          "hi.auth",
-		Tag:           "varint,50001,opt,name=auth,enum=hi.Auth",
+		Tag:           "varint,50001,rep,packed,name=auth,enum=hi.Auth",
 		Filename:      "hi/options.proto",
 	},
 }
 
 // Extension fields to descriptorpb.MethodOptions.
 var (
-	// 该方法要求的鉴权档位。**每个 rpc 都必须标注**,不标注即 fail-closed。
+	// 该方法允许哪些主体调用。**每个 rpc 都必须标注。**
 	//
-	// optional hi.Auth auth = 50001;
+	//   - **多个 = 任一通过即放行(OR)**,写多行:
+	//     rpc Foo (Req) returns (Resp) {
+	//     option (hi.auth) = AUTH_USER;
+	//     option (hi.auth) = AUTH_MERCHANT;
+	//     }
+	//   - **空(漏标)= fail-closed**,拦截器直接拒绝。
+	//
+	// 不要为"某某或某某"发明新的枚举值 —— 那正是本 enum 曾经的病(见上方设计要点二/三)。
+	//
+	// repeated hi.Auth auth = 50001;
 	E_Auth = &file_hi_options_proto_extTypes[0]
 )
 
@@ -133,18 +150,15 @@ var File_hi_options_proto protoreflect.FileDescriptor
 
 const file_hi_options_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*\xa2\x01\n" +
+	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*q\n" +
 	"\x04Auth\x12\x14\n" +
 	"\x10AUTH_UNSPECIFIED\x10\x00\x12\r\n" +
-	"\tAUTH_NONE\x10\x01\x12\x0e\n" +
-	"\n" +
-	"AUTH_TOKEN\x10\x02\x12\x15\n" +
-	"\x11AUTH_EXTEND_TOKEN\x10\x03\x12\x10\n" +
-	"\fAUTH_API_KEY\x10\x04\x12\x13\n" +
-	"\x0fAUTH_SUPERADMIN\x10\x05\x12\r\n" +
-	"\tAUTH_WEB3\x10\x06\x12\x18\n" +
-	"\x14AUTH_TOKEN_OR_EXTEND\x10\a:>\n" +
-	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x01(\x0e2\b.hi.AuthR\x04authBd\n" +
+	"\tAUTH_NONE\x10\x01\x12\r\n" +
+	"\tAUTH_USER\x10\x02\x12\x11\n" +
+	"\rAUTH_MERCHANT\x10\x03\x12\x13\n" +
+	"\x0fAUTH_SUPERADMIN\x10\x04\x12\r\n" +
+	"\tAUTH_WEB3\x10\x05:>\n" +
+	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x03(\x0e2\b.hi.AuthR\x04authBd\n" +
 	"\x06com.hiB\fOptionsProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (

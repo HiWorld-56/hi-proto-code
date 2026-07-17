@@ -24,6 +24,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// ⚠️ 临时接口的载荷 —— 见下方 TempConfig。
 type GetConfigReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -120,12 +121,14 @@ const file_hi_club_base_proto_rawDesc = "" +
 	"\fGetConfigReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"%\n" +
 	"\rGetConfigResp\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\tR\x05value2\x9c\x02\n" +
-	"\x04Base\x12@\n" +
-	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x04\x88\xb5\x18\x02\x12J\n" +
-	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x04\x88\xb5\x18\x01\x12@\n" +
-	"\tGetConfig\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigResp\"\x04\x88\xb5\x18\x02\x12D\n" +
-	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x04\x88\xb5\x18\x01B\x80\x01\n" +
+	"\x05value\x18\x01 \x01(\tR\x05value2\xdd\x01\n" +
+	"\x04Base\x12A\n" +
+	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
+	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x012I\n" +
+	"\n" +
+	"TempConfig\x12;\n" +
+	"\x03Get\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
 	"\vcom.hi.clubB\tBaseProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -153,12 +156,12 @@ var file_hi_club_base_proto_goTypes = []any{
 var file_hi_club_base_proto_depIdxs = []int32{
 	2, // 0: hi.club.Base.ListCoins:input_type -> google.protobuf.Empty
 	3, // 1: hi.club.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
-	0, // 2: hi.club.Base.GetConfig:input_type -> hi.club.GetConfigReq
-	2, // 3: hi.club.Base.ServerVersion:input_type -> google.protobuf.Empty
+	2, // 2: hi.club.Base.ServerVersion:input_type -> google.protobuf.Empty
+	0, // 3: hi.club.TempConfig.Get:input_type -> hi.club.GetConfigReq
 	4, // 4: hi.club.Base.ListCoins:output_type -> hi.did.ListCoinsResp
 	5, // 5: hi.club.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	1, // 6: hi.club.Base.GetConfig:output_type -> hi.club.GetConfigResp
-	6, // 7: hi.club.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	6, // 6: hi.club.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	1, // 7: hi.club.TempConfig.Get:output_type -> hi.club.GetConfigResp
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -179,7 +182,7 @@ func file_hi_club_base_proto_init() {
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_club_base_proto_goTypes,
 		DependencyIndexes: file_hi_club_base_proto_depIdxs,

@@ -24,17 +24,20 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Base_ListCoins_FullMethodName     = "/hi.club.Base/ListCoins"
 	Base_LatestVersion_FullMethodName = "/hi.club.Base/LatestVersion"
-	Base_GetConfig_FullMethodName     = "/hi.club.Base/GetConfig"
 	Base_ServerVersion_FullMethodName = "/hi.club.Base/ServerVersion"
 )
 
 // BaseClient is the client API for Base service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 基础数据(公开)。全档一致 —— 与 did 的 Base 对齐。
+//
+// ListCoins 原标 AUTH_TOKEN 但注释写着"不鉴权",而 did 的 Base.ListCoins 本就是公开的
+// —— 注释与档位对不上,按 did 统一为公开。
 type BaseClient interface {
 	ListCoins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListCoinsResp, error)
 	LatestVersion(ctx context.Context, in *did.LatestVersionReq, opts ...grpc.CallOption) (*did.LatestVersionResp, error)
-	GetConfig(ctx context.Context, in *GetConfigReq, opts ...grpc.CallOption) (*GetConfigResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 }
 
@@ -66,16 +69,6 @@ func (c *baseClient) LatestVersion(ctx context.Context, in *did.LatestVersionReq
 	return out, nil
 }
 
-func (c *baseClient) GetConfig(ctx context.Context, in *GetConfigReq, opts ...grpc.CallOption) (*GetConfigResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetConfigResp)
-	err := c.cc.Invoke(ctx, Base_GetConfig_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.ServerVersionResp)
@@ -89,10 +82,14 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 // BaseServer is the server API for Base service.
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
+//
+// 基础数据(公开)。全档一致 —— 与 did 的 Base 对齐。
+//
+// ListCoins 原标 AUTH_TOKEN 但注释写着"不鉴权",而 did 的 Base.ListCoins 本就是公开的
+// —— 注释与档位对不上,按 did 统一为公开。
 type BaseServer interface {
 	ListCoins(context.Context, *emptypb.Empty) (*did.ListCoinsResp, error)
 	LatestVersion(context.Context, *did.LatestVersionReq) (*did.LatestVersionResp, error)
-	GetConfig(context.Context, *GetConfigReq) (*GetConfigResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 }
 
@@ -108,9 +105,6 @@ func (UnimplementedBaseServer) ListCoins(context.Context, *emptypb.Empty) (*did.
 }
 func (UnimplementedBaseServer) LatestVersion(context.Context, *did.LatestVersionReq) (*did.LatestVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method LatestVersion not implemented")
-}
-func (UnimplementedBaseServer) GetConfig(context.Context, *GetConfigReq) (*GetConfigResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetConfig not implemented")
 }
 func (UnimplementedBaseServer) ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ServerVersion not implemented")
@@ -171,24 +165,6 @@ func _Base_LatestVersion_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_GetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetConfigReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).GetConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_GetConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).GetConfig(ctx, req.(*GetConfigReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Base_ServerVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -223,12 +199,144 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Base_LatestVersion_Handler,
 		},
 		{
-			MethodName: "GetConfig",
-			Handler:    _Base_GetConfig_Handler,
-		},
-		{
 			MethodName: "ServerVersion",
 			Handler:    _Base_ServerVersion_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/base.proto",
+}
+
+const (
+	TempConfig_Get_FullMethodName = "/hi.club.TempConfig/Get"
+)
+
+// TempConfigClient is the client API for TempConfig service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ⚠️ **临时接口 —— 用完即删。**
+//
+// 它是个通用的 `name → value` 字符串查询(表 hi_club.hi_config),**后端完全不消费**,
+// name 全由前端传、handler 只做透传。dev 上**只有一条数据**:
+//
+//	webview → http://47.96.113.121/hiworldtest
+//
+// 指向一个**临时业务**,直接 webview 封装的。
+//
+// **单独成 service 就是为了将来一行删掉,不牵动 Base。** 别往里加长期设施。
+//
+// 档位:内容无私密性,token 或公开都行 —— 取 AUTH_USER 维持现状(零行为变更,不平白扩大暴露面)。
+//
+// ⚠️ 后端遗留:model 里 `Name string \`gorm:"column:did"\“ 映射到**不存在的 did 列**。
+//
+//	gorm 生成 SELECT * 故不报错、Value 正常填充(**已实测,接口是好的**),但 Name 永远是空
+//	—— 无人读,是颗埋着的雷。修:column:did → column:name。
+type TempConfigClient interface {
+	Get(ctx context.Context, in *GetConfigReq, opts ...grpc.CallOption) (*GetConfigResp, error)
+}
+
+type tempConfigClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewTempConfigClient(cc grpc.ClientConnInterface) TempConfigClient {
+	return &tempConfigClient{cc}
+}
+
+func (c *tempConfigClient) Get(ctx context.Context, in *GetConfigReq, opts ...grpc.CallOption) (*GetConfigResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetConfigResp)
+	err := c.cc.Invoke(ctx, TempConfig_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TempConfigServer is the server API for TempConfig service.
+// All implementations should embed UnimplementedTempConfigServer
+// for forward compatibility.
+//
+// ⚠️ **临时接口 —— 用完即删。**
+//
+// 它是个通用的 `name → value` 字符串查询(表 hi_club.hi_config),**后端完全不消费**,
+// name 全由前端传、handler 只做透传。dev 上**只有一条数据**:
+//
+//	webview → http://47.96.113.121/hiworldtest
+//
+// 指向一个**临时业务**,直接 webview 封装的。
+//
+// **单独成 service 就是为了将来一行删掉,不牵动 Base。** 别往里加长期设施。
+//
+// 档位:内容无私密性,token 或公开都行 —— 取 AUTH_USER 维持现状(零行为变更,不平白扩大暴露面)。
+//
+// ⚠️ 后端遗留:model 里 `Name string \`gorm:"column:did"\“ 映射到**不存在的 did 列**。
+//
+//	gorm 生成 SELECT * 故不报错、Value 正常填充(**已实测,接口是好的**),但 Name 永远是空
+//	—— 无人读,是颗埋着的雷。修:column:did → column:name。
+type TempConfigServer interface {
+	Get(context.Context, *GetConfigReq) (*GetConfigResp, error)
+}
+
+// UnimplementedTempConfigServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedTempConfigServer struct{}
+
+func (UnimplementedTempConfigServer) Get(context.Context, *GetConfigReq) (*GetConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedTempConfigServer) testEmbeddedByValue() {}
+
+// UnsafeTempConfigServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TempConfigServer will
+// result in compilation errors.
+type UnsafeTempConfigServer interface {
+	mustEmbedUnimplementedTempConfigServer()
+}
+
+func RegisterTempConfigServer(s grpc.ServiceRegistrar, srv TempConfigServer) {
+	// If the following call panics, it indicates UnimplementedTempConfigServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&TempConfig_ServiceDesc, srv)
+}
+
+func _TempConfig_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetConfigReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TempConfigServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TempConfig_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TempConfigServer).Get(ctx, req.(*GetConfigReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TempConfig_ServiceDesc is the grpc.ServiceDesc for TempConfig service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var TempConfig_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.TempConfig",
+	HandlerType: (*TempConfigServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Get",
+			Handler:    _TempConfig_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

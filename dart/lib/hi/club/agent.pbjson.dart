@@ -67,6 +67,19 @@ const BindStatusResp$json = {
 final $typed_data.Uint8List bindStatusRespDescriptor = $convert.base64Decode(
     'Cg5CaW5kU3RhdHVzUmVzcBIiCgZtYXN0ZXIYASABKAsyCi5oaS5FbnRpdHlSBm1hc3Rlcg==');
 
+@$core.Deprecated('Use transferReqDescriptor instead')
+const TransferReq$json = {
+  '1': 'TransferReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
+    {'1': 'to', '3': 2, '4': 1, '5': 9, '10': 'to'},
+  ],
+};
+
+/// Descriptor for `TransferReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List transferReqDescriptor = $convert.base64Decode(
+    'CgtUcmFuc2ZlclJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSDgoCdG8YAiABKAlSAnRv');
+
 @$core.Deprecated('Use listOnlineReqDescriptor instead')
 const ListOnlineReq$json = {
   '1': 'ListOnlineReq',

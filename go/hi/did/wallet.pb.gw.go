@@ -307,7 +307,7 @@ func RegisterAssetsHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/total_assets"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/assets/total_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -327,7 +327,7 @@ func RegisterAssetsHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/list_user_assets"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/assets/list_users_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -347,7 +347,7 @@ func RegisterAssetsHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/get_user_assets"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Assets/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/assets/get_user_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -527,7 +527,7 @@ func RegisterAssetsHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/total_assets"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/TotalAssets", runtime.WithHTTPPathPattern("/api/v1/assets/total_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -544,7 +544,7 @@ func RegisterAssetsHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/list_user_assets"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/ListUsersAssets", runtime.WithHTTPPathPattern("/api/v1/assets/list_users_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -561,7 +561,7 @@ func RegisterAssetsHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/wallet/get_user_assets"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Assets/GetUserAssets", runtime.WithHTTPPathPattern("/api/v1/assets/get_user_assets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -595,9 +595,9 @@ func RegisterAssetsHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
-	pattern_Assets_TotalAssets_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "total_assets"}, ""))
-	pattern_Assets_ListUsersAssets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "list_user_assets"}, ""))
-	pattern_Assets_GetUserAssets_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "wallet", "get_user_assets"}, ""))
+	pattern_Assets_TotalAssets_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "assets", "total_assets"}, ""))
+	pattern_Assets_ListUsersAssets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "assets", "list_users_assets"}, ""))
+	pattern_Assets_GetUserAssets_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "assets", "get_user_assets"}, ""))
 	pattern_Assets_UpdateAddresses_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Assets", "UpdateAddresses"}, ""))
 )
 

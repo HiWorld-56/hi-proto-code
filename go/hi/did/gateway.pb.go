@@ -183,11 +183,11 @@ const file_hi_did_gateway_proto_rawDesc = "" +
 	"\x15GatewayConfigListResp\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list\"D\n" +
 	"\x13GatewayConfigSetReq\x12-\n" +
-	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2N\n" +
-	"\aGateway\x12C\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x04\x88\xb5\x18\a2P\n" +
-	"\fGatewayAdmin\x12@\n" +
-	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05B}\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2P\n" +
+	"\aGateway\x12E\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x06\x8a\xb5\x18\x02\x02\x032Q\n" +
+	"\fGatewayAdmin\x12A\n" +
+	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B}\n" +
 	"\n" +
 	"com.hi.didB\fGatewayProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

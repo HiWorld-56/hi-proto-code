@@ -26,9 +26,9 @@ var File_hi_club_user_extension_proto protoreflect.FileDescriptor
 
 const file_hi_club_user_extension_proto_rawDesc = "" +
 	"\n" +
-	"\x1chi/club/user_extension.proto\x12\ahi.club\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto2K\n" +
-	"\rUserExtension\x12:\n" +
-	"\x03Get\x12\x12.hi.did.GetUserReq\x1a\x19.hi.did.UserExtensionUnit\"\x04\x88\xb5\x18\x02B\x89\x01\n" +
+	"\x1chi/club/user_extension.proto\x12\ahi.club\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto2L\n" +
+	"\rUserExtension\x12;\n" +
+	"\x03Get\x12\x12.hi.did.GetUserReq\x1a\x19.hi.did.UserExtensionUnit\"\x05\x8a\xb5\x18\x01\x02B\x89\x01\n" +
 	"\vcom.hi.clubB\x12UserExtensionProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_user_extension_proto_goTypes = []any{

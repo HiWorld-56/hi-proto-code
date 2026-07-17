@@ -656,13 +656,13 @@ const file_hi_club_q3_proto_rawDesc = "" +
 	"\x05agent\x18\x02 \x01(\v2\n" +
 	".hi.EntityR\x05agent\"5\n" +
 	"\x0eQ3GetInfosResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.Q3InfoR\x04list2\xd3\x02\n" +
-	"\x02Q3\x12A\n" +
-	"\bGetInfos\x12\x16.hi.club.Q3GetInfosReq\x1a\x17.hi.club.Q3GetInfosResp\"\x04\x88\xb5\x18\x02\x12E\n" +
-	"\x06Create\x12\x19.hi.club.Q3GroupCreateReq\x1a\x1a.hi.club.Q3GroupCreateResp\"\x04\x88\xb5\x18\x02\x12?\n" +
-	"\x05Event\x12\x18.hi.club.Q3GroupEventReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12B\n" +
-	"\x05Ready\x12\x18.hi.club.Q3GroupReadyReq\x1a\x19.hi.club.Q3GroupReadyResp\"\x04\x88\xb5\x18\x02\x12>\n" +
-	"\aHosting\x12\x15.hi.club.Q3HostingReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02B~\n" +
+	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.Q3InfoR\x04list2\xd8\x02\n" +
+	"\x02Q3\x12B\n" +
+	"\bGetInfos\x12\x16.hi.club.Q3GetInfosReq\x1a\x17.hi.club.Q3GetInfosResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
+	"\x06Create\x12\x19.hi.club.Q3GroupCreateReq\x1a\x1a.hi.club.Q3GroupCreateResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
+	"\x05Event\x12\x18.hi.club.Q3GroupEventReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\x05Ready\x12\x18.hi.club.Q3GroupReadyReq\x1a\x19.hi.club.Q3GroupReadyResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
+	"\aHosting\x12\x15.hi.club.Q3HostingReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B~\n" +
 	"\vcom.hi.clubB\aQ3ProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (

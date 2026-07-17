@@ -21,38 +21,45 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Training_TrainingAgent_FullMethodName    = "/hi.club.Training/TrainingAgent"
-	Training_TrainingStatus_FullMethodName   = "/hi.club.Training/TrainingStatus"
-	Training_TrainingClear_FullMethodName    = "/hi.club.Training/TrainingClear"
-	Training_UploadFile_FullMethodName       = "/hi.club.Training/UploadFile"
-	Training_ListAgentFiles_FullMethodName   = "/hi.club.Training/ListAgentFiles"
-	Training_DeleteAgentFile_FullMethodName  = "/hi.club.Training/DeleteAgentFile"
-	Training_DeleteAgentFiles_FullMethodName = "/hi.club.Training/DeleteAgentFiles"
-	Training_GetAgentFile_FullMethodName     = "/hi.club.Training/GetAgentFile"
-	Training_UpdateContent_FullMethodName    = "/hi.club.Training/UpdateContent"
-	Training_CreateContent_FullMethodName    = "/hi.club.Training/CreateContent"
-	Training_EditDigest_FullMethodName       = "/hi.club.Training/EditDigest"
-	Training_SetMemModel_FullMethodName      = "/hi.club.Training/SetMemModel"
-	Training_GetMemModel_FullMethodName      = "/hi.club.Training/GetMemModel"
+	Training_Start_FullMethodName         = "/hi.club.Training/Start"
+	Training_Status_FullMethodName        = "/hi.club.Training/Status"
+	Training_Clear_FullMethodName         = "/hi.club.Training/Clear"
+	Training_UploadFile_FullMethodName    = "/hi.club.Training/UploadFile"
+	Training_ListFiles_FullMethodName     = "/hi.club.Training/ListFiles"
+	Training_GetFile_FullMethodName       = "/hi.club.Training/GetFile"
+	Training_DeleteFile_FullMethodName    = "/hi.club.Training/DeleteFile"
+	Training_DeleteFiles_FullMethodName   = "/hi.club.Training/DeleteFiles"
+	Training_CreateContent_FullMethodName = "/hi.club.Training/CreateContent"
+	Training_UpdateContent_FullMethodName = "/hi.club.Training/UpdateContent"
+	Training_EditDigest_FullMethodName    = "/hi.club.Training/EditDigest"
+	Training_SetMemModel_FullMethodName   = "/hi.club.Training/SetMemModel"
+	Training_GetMemModel_FullMethodName   = "/hi.club.Training/GetMemModel"
 )
 
 // TrainingClient is the client API for Training service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Token鉴权
+// 训练/记忆(主体=训练)。**hi.ai.Training 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
+//
+// 去 stutter(跟 ai 定稿):TrainingAgent/TrainingStatus/TrainingClear → Start/Status/Clear;
+// 文件类方法的 "Agent" 是入参不是主体 → ListAgentFiles → ListFiles 等。
 type TrainingClient interface {
-	TrainingAgent(ctx context.Context, in *ai.TrainingAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	TrainingStatus(ctx context.Context, in *ai.TrainingStatusReq, opts ...grpc.CallOption) (*ai.TrainingStatusResp, error)
-	TrainingClear(ctx context.Context, in *ai.TrainingClearReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── 训练任务 ──
+	Start(ctx context.Context, in *ai.StartReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Status(ctx context.Context, in *ai.StatusReq, opts ...grpc.CallOption) (*ai.StatusResp, error)
+	Clear(ctx context.Context, in *ai.ClearReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── 训练文件 ──
 	UploadFile(ctx context.Context, in *ai.UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListAgentFiles(ctx context.Context, in *ai.ListAgentFileReq, opts ...grpc.CallOption) (*ai.ListAgentFileResp, error)
-	DeleteAgentFile(ctx context.Context, in *ai.DeleteAgentFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DeleteAgentFiles(ctx context.Context, in *ai.DeleteAgentFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetAgentFile(ctx context.Context, in *ai.GetAgentFileReq, opts ...grpc.CallOption) (*ai.GetAgentFileResp, error)
-	UpdateContent(ctx context.Context, in *ai.UpdateContentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListFiles(ctx context.Context, in *ai.ListFilesReq, opts ...grpc.CallOption) (*ai.ListFilesResp, error)
+	GetFile(ctx context.Context, in *ai.GetFileReq, opts ...grpc.CallOption) (*ai.GetFileResp, error)
+	DeleteFile(ctx context.Context, in *ai.DeleteFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteFiles(ctx context.Context, in *ai.DeleteFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── 文本记忆条目 ──
 	CreateContent(ctx context.Context, in *ai.CreateContentReq, opts ...grpc.CallOption) (*ai.CreateContentResp, error)
+	UpdateContent(ctx context.Context, in *ai.UpdateContentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditDigest(ctx context.Context, in *ai.EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── 记忆模型 ──
 	SetMemModel(ctx context.Context, in *ai.SetMemModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetMemModel(ctx context.Context, in *ai.GetMemModelReq, opts ...grpc.CallOption) (*ai.GetMemModelResp, error)
 }
@@ -65,30 +72,30 @@ func NewTrainingClient(cc grpc.ClientConnInterface) TrainingClient {
 	return &trainingClient{cc}
 }
 
-func (c *trainingClient) TrainingAgent(ctx context.Context, in *ai.TrainingAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *trainingClient) Start(ctx context.Context, in *ai.StartReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_TrainingAgent_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Training_Start_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *trainingClient) TrainingStatus(ctx context.Context, in *ai.TrainingStatusReq, opts ...grpc.CallOption) (*ai.TrainingStatusResp, error) {
+func (c *trainingClient) Status(ctx context.Context, in *ai.StatusReq, opts ...grpc.CallOption) (*ai.StatusResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.TrainingStatusResp)
-	err := c.cc.Invoke(ctx, Training_TrainingStatus_FullMethodName, in, out, cOpts...)
+	out := new(ai.StatusResp)
+	err := c.cc.Invoke(ctx, Training_Status_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *trainingClient) TrainingClear(ctx context.Context, in *ai.TrainingClearReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *trainingClient) Clear(ctx context.Context, in *ai.ClearReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_TrainingClear_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Training_Clear_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -105,50 +112,40 @@ func (c *trainingClient) UploadFile(ctx context.Context, in *ai.UploadFileReq, o
 	return out, nil
 }
 
-func (c *trainingClient) ListAgentFiles(ctx context.Context, in *ai.ListAgentFileReq, opts ...grpc.CallOption) (*ai.ListAgentFileResp, error) {
+func (c *trainingClient) ListFiles(ctx context.Context, in *ai.ListFilesReq, opts ...grpc.CallOption) (*ai.ListFilesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListAgentFileResp)
-	err := c.cc.Invoke(ctx, Training_ListAgentFiles_FullMethodName, in, out, cOpts...)
+	out := new(ai.ListFilesResp)
+	err := c.cc.Invoke(ctx, Training_ListFiles_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *trainingClient) DeleteAgentFile(ctx context.Context, in *ai.DeleteAgentFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *trainingClient) GetFile(ctx context.Context, in *ai.GetFileReq, opts ...grpc.CallOption) (*ai.GetFileResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ai.GetFileResp)
+	err := c.cc.Invoke(ctx, Training_GetFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *trainingClient) DeleteFile(ctx context.Context, in *ai.DeleteFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_DeleteAgentFile_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Training_DeleteFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *trainingClient) DeleteAgentFiles(ctx context.Context, in *ai.DeleteAgentFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *trainingClient) DeleteFiles(ctx context.Context, in *ai.DeleteFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_DeleteAgentFiles_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *trainingClient) GetAgentFile(ctx context.Context, in *ai.GetAgentFileReq, opts ...grpc.CallOption) (*ai.GetAgentFileResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.GetAgentFileResp)
-	err := c.cc.Invoke(ctx, Training_GetAgentFile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *trainingClient) UpdateContent(ctx context.Context, in *ai.UpdateContentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_UpdateContent_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Training_DeleteFiles_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -159,6 +156,16 @@ func (c *trainingClient) CreateContent(ctx context.Context, in *ai.CreateContent
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.CreateContentResp)
 	err := c.cc.Invoke(ctx, Training_CreateContent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *trainingClient) UpdateContent(ctx context.Context, in *ai.UpdateContentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Training_UpdateContent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -199,19 +206,26 @@ func (c *trainingClient) GetMemModel(ctx context.Context, in *ai.GetMemModelReq,
 // All implementations should embed UnimplementedTrainingServer
 // for forward compatibility.
 //
-// Token鉴权
+// 训练/记忆(主体=训练)。**hi.ai.Training 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
+//
+// 去 stutter(跟 ai 定稿):TrainingAgent/TrainingStatus/TrainingClear → Start/Status/Clear;
+// 文件类方法的 "Agent" 是入参不是主体 → ListAgentFiles → ListFiles 等。
 type TrainingServer interface {
-	TrainingAgent(context.Context, *ai.TrainingAgentReq) (*emptypb.Empty, error)
-	TrainingStatus(context.Context, *ai.TrainingStatusReq) (*ai.TrainingStatusResp, error)
-	TrainingClear(context.Context, *ai.TrainingClearReq) (*emptypb.Empty, error)
+	// ── 训练任务 ──
+	Start(context.Context, *ai.StartReq) (*emptypb.Empty, error)
+	Status(context.Context, *ai.StatusReq) (*ai.StatusResp, error)
+	Clear(context.Context, *ai.ClearReq) (*emptypb.Empty, error)
+	// ── 训练文件 ──
 	UploadFile(context.Context, *ai.UploadFileReq) (*emptypb.Empty, error)
-	ListAgentFiles(context.Context, *ai.ListAgentFileReq) (*ai.ListAgentFileResp, error)
-	DeleteAgentFile(context.Context, *ai.DeleteAgentFileReq) (*emptypb.Empty, error)
-	DeleteAgentFiles(context.Context, *ai.DeleteAgentFilesReq) (*emptypb.Empty, error)
-	GetAgentFile(context.Context, *ai.GetAgentFileReq) (*ai.GetAgentFileResp, error)
-	UpdateContent(context.Context, *ai.UpdateContentReq) (*emptypb.Empty, error)
+	ListFiles(context.Context, *ai.ListFilesReq) (*ai.ListFilesResp, error)
+	GetFile(context.Context, *ai.GetFileReq) (*ai.GetFileResp, error)
+	DeleteFile(context.Context, *ai.DeleteFileReq) (*emptypb.Empty, error)
+	DeleteFiles(context.Context, *ai.DeleteFilesReq) (*emptypb.Empty, error)
+	// ── 文本记忆条目 ──
 	CreateContent(context.Context, *ai.CreateContentReq) (*ai.CreateContentResp, error)
+	UpdateContent(context.Context, *ai.UpdateContentReq) (*emptypb.Empty, error)
 	EditDigest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error)
+	// ── 记忆模型 ──
 	SetMemModel(context.Context, *ai.SetMemModelReq) (*emptypb.Empty, error)
 	GetMemModel(context.Context, *ai.GetMemModelReq) (*ai.GetMemModelResp, error)
 }
@@ -223,35 +237,35 @@ type TrainingServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTrainingServer struct{}
 
-func (UnimplementedTrainingServer) TrainingAgent(context.Context, *ai.TrainingAgentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method TrainingAgent not implemented")
+func (UnimplementedTrainingServer) Start(context.Context, *ai.StartReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Start not implemented")
 }
-func (UnimplementedTrainingServer) TrainingStatus(context.Context, *ai.TrainingStatusReq) (*ai.TrainingStatusResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method TrainingStatus not implemented")
+func (UnimplementedTrainingServer) Status(context.Context, *ai.StatusReq) (*ai.StatusResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Status not implemented")
 }
-func (UnimplementedTrainingServer) TrainingClear(context.Context, *ai.TrainingClearReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method TrainingClear not implemented")
+func (UnimplementedTrainingServer) Clear(context.Context, *ai.ClearReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Clear not implemented")
 }
 func (UnimplementedTrainingServer) UploadFile(context.Context, *ai.UploadFileReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadFile not implemented")
 }
-func (UnimplementedTrainingServer) ListAgentFiles(context.Context, *ai.ListAgentFileReq) (*ai.ListAgentFileResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListAgentFiles not implemented")
+func (UnimplementedTrainingServer) ListFiles(context.Context, *ai.ListFilesReq) (*ai.ListFilesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFiles not implemented")
 }
-func (UnimplementedTrainingServer) DeleteAgentFile(context.Context, *ai.DeleteAgentFileReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteAgentFile not implemented")
+func (UnimplementedTrainingServer) GetFile(context.Context, *ai.GetFileReq) (*ai.GetFileResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFile not implemented")
 }
-func (UnimplementedTrainingServer) DeleteAgentFiles(context.Context, *ai.DeleteAgentFilesReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteAgentFiles not implemented")
+func (UnimplementedTrainingServer) DeleteFile(context.Context, *ai.DeleteFileReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteFile not implemented")
 }
-func (UnimplementedTrainingServer) GetAgentFile(context.Context, *ai.GetAgentFileReq) (*ai.GetAgentFileResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAgentFile not implemented")
-}
-func (UnimplementedTrainingServer) UpdateContent(context.Context, *ai.UpdateContentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateContent not implemented")
+func (UnimplementedTrainingServer) DeleteFiles(context.Context, *ai.DeleteFilesReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteFiles not implemented")
 }
 func (UnimplementedTrainingServer) CreateContent(context.Context, *ai.CreateContentReq) (*ai.CreateContentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateContent not implemented")
+}
+func (UnimplementedTrainingServer) UpdateContent(context.Context, *ai.UpdateContentReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateContent not implemented")
 }
 func (UnimplementedTrainingServer) EditDigest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditDigest not implemented")
@@ -282,56 +296,56 @@ func RegisterTrainingServer(s grpc.ServiceRegistrar, srv TrainingServer) {
 	s.RegisterService(&Training_ServiceDesc, srv)
 }
 
-func _Training_TrainingAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.TrainingAgentReq)
+func _Training_Start_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.StartReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TrainingServer).TrainingAgent(ctx, in)
+		return srv.(TrainingServer).Start(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Training_TrainingAgent_FullMethodName,
+		FullMethod: Training_Start_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).TrainingAgent(ctx, req.(*ai.TrainingAgentReq))
+		return srv.(TrainingServer).Start(ctx, req.(*ai.StartReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_TrainingStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.TrainingStatusReq)
+func _Training_Status_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.StatusReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TrainingServer).TrainingStatus(ctx, in)
+		return srv.(TrainingServer).Status(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Training_TrainingStatus_FullMethodName,
+		FullMethod: Training_Status_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).TrainingStatus(ctx, req.(*ai.TrainingStatusReq))
+		return srv.(TrainingServer).Status(ctx, req.(*ai.StatusReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_TrainingClear_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.TrainingClearReq)
+func _Training_Clear_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.ClearReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TrainingServer).TrainingClear(ctx, in)
+		return srv.(TrainingServer).Clear(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Training_TrainingClear_FullMethodName,
+		FullMethod: Training_Clear_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).TrainingClear(ctx, req.(*ai.TrainingClearReq))
+		return srv.(TrainingServer).Clear(ctx, req.(*ai.ClearReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -354,92 +368,74 @@ func _Training_UploadFile_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_ListAgentFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ListAgentFileReq)
+func _Training_ListFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.ListFilesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TrainingServer).ListAgentFiles(ctx, in)
+		return srv.(TrainingServer).ListFiles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Training_ListAgentFiles_FullMethodName,
+		FullMethod: Training_ListFiles_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).ListAgentFiles(ctx, req.(*ai.ListAgentFileReq))
+		return srv.(TrainingServer).ListFiles(ctx, req.(*ai.ListFilesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_DeleteAgentFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.DeleteAgentFileReq)
+func _Training_GetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.GetFileReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TrainingServer).DeleteAgentFile(ctx, in)
+		return srv.(TrainingServer).GetFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Training_DeleteAgentFile_FullMethodName,
+		FullMethod: Training_GetFile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).DeleteAgentFile(ctx, req.(*ai.DeleteAgentFileReq))
+		return srv.(TrainingServer).GetFile(ctx, req.(*ai.GetFileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_DeleteAgentFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.DeleteAgentFilesReq)
+func _Training_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.DeleteFileReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TrainingServer).DeleteAgentFiles(ctx, in)
+		return srv.(TrainingServer).DeleteFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Training_DeleteAgentFiles_FullMethodName,
+		FullMethod: Training_DeleteFile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).DeleteAgentFiles(ctx, req.(*ai.DeleteAgentFilesReq))
+		return srv.(TrainingServer).DeleteFile(ctx, req.(*ai.DeleteFileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_GetAgentFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.GetAgentFileReq)
+func _Training_DeleteFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.DeleteFilesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TrainingServer).GetAgentFile(ctx, in)
+		return srv.(TrainingServer).DeleteFiles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Training_GetAgentFile_FullMethodName,
+		FullMethod: Training_DeleteFiles_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).GetAgentFile(ctx, req.(*ai.GetAgentFileReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Training_UpdateContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.UpdateContentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TrainingServer).UpdateContent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Training_UpdateContent_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).UpdateContent(ctx, req.(*ai.UpdateContentReq))
+		return srv.(TrainingServer).DeleteFiles(ctx, req.(*ai.DeleteFilesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -458,6 +454,24 @@ func _Training_CreateContent_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TrainingServer).CreateContent(ctx, req.(*ai.CreateContentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Training_UpdateContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.UpdateContentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TrainingServer).UpdateContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Training_UpdateContent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TrainingServer).UpdateContent(ctx, req.(*ai.UpdateContentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -524,44 +538,44 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TrainingServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "TrainingAgent",
-			Handler:    _Training_TrainingAgent_Handler,
+			MethodName: "Start",
+			Handler:    _Training_Start_Handler,
 		},
 		{
-			MethodName: "TrainingStatus",
-			Handler:    _Training_TrainingStatus_Handler,
+			MethodName: "Status",
+			Handler:    _Training_Status_Handler,
 		},
 		{
-			MethodName: "TrainingClear",
-			Handler:    _Training_TrainingClear_Handler,
+			MethodName: "Clear",
+			Handler:    _Training_Clear_Handler,
 		},
 		{
 			MethodName: "UploadFile",
 			Handler:    _Training_UploadFile_Handler,
 		},
 		{
-			MethodName: "ListAgentFiles",
-			Handler:    _Training_ListAgentFiles_Handler,
+			MethodName: "ListFiles",
+			Handler:    _Training_ListFiles_Handler,
 		},
 		{
-			MethodName: "DeleteAgentFile",
-			Handler:    _Training_DeleteAgentFile_Handler,
+			MethodName: "GetFile",
+			Handler:    _Training_GetFile_Handler,
 		},
 		{
-			MethodName: "DeleteAgentFiles",
-			Handler:    _Training_DeleteAgentFiles_Handler,
+			MethodName: "DeleteFile",
+			Handler:    _Training_DeleteFile_Handler,
 		},
 		{
-			MethodName: "GetAgentFile",
-			Handler:    _Training_GetAgentFile_Handler,
-		},
-		{
-			MethodName: "UpdateContent",
-			Handler:    _Training_UpdateContent_Handler,
+			MethodName: "DeleteFiles",
+			Handler:    _Training_DeleteFiles_Handler,
 		},
 		{
 			MethodName: "CreateContent",
 			Handler:    _Training_CreateContent_Handler,
+		},
+		{
+			MethodName: "UpdateContent",
+			Handler:    _Training_UpdateContent_Handler,
 		},
 		{
 			MethodName: "EditDigest",

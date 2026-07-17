@@ -28,8 +28,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
-// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
-// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
+// app 用户(AUTH_USER)、hiclub 商户(AUTH_MERCHANT);超管运维页也走这个读(它是用户)。
+// 本方法**不依赖"我是谁"**,故两个主体都收 —— 标两行,任一通过即放行。
 type GatewayClient interface {
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error)
 }
@@ -57,8 +57,8 @@ func (c *gatewayClient) List(ctx context.Context, in *emptypb.Empty, opts ...grp
 // for forward compatibility.
 //
 // 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
-// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
-// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
+// app 用户(AUTH_USER)、hiclub 商户(AUTH_MERCHANT);超管运维页也走这个读(它是用户)。
+// 本方法**不依赖"我是谁"**,故两个主体都收 —— 标两行,任一通过即放行。
 type GatewayServer interface {
 	List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error)
 }

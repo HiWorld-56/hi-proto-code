@@ -21,38 +21,42 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Plugin_DrawConfig_FullMethodName      = "/hi.club.Plugin/DrawConfig"
-	Plugin_PluginSwitch_FullMethodName    = "/hi.club.Plugin/PluginSwitch"
-	Plugin_SearchCreate_FullMethodName    = "/hi.club.Plugin/SearchCreate"
-	Plugin_PythonCreate_FullMethodName    = "/hi.club.Plugin/PythonCreate"
-	Plugin_DrawCreate_FullMethodName      = "/hi.club.Plugin/DrawCreate"
-	Plugin_List_FullMethodName            = "/hi.club.Plugin/List"
-	Plugin_Delete_FullMethodName          = "/hi.club.Plugin/Delete"
-	Plugin_DeleteByDids_FullMethodName    = "/hi.club.Plugin/DeleteByDids"
-	Plugin_Edit_FullMethodName            = "/hi.club.Plugin/Edit"
-	Plugin_GetDraw_FullMethodName         = "/hi.club.Plugin/GetDraw"
-	Plugin_PythonParamsSet_FullMethodName = "/hi.club.Plugin/PythonParamsSet"
-	Plugin_GetPythonParams_FullMethodName = "/hi.club.Plugin/GetPythonParams"
+	Plugin_Create_FullMethodName           = "/hi.club.Plugin/Create"
+	Plugin_Edit_FullMethodName             = "/hi.club.Plugin/Edit"
+	Plugin_Get_FullMethodName              = "/hi.club.Plugin/Get"
+	Plugin_List_FullMethodName             = "/hi.club.Plugin/List"
+	Plugin_Delete_FullMethodName           = "/hi.club.Plugin/Delete"
+	Plugin_DeleteByDids_FullMethodName     = "/hi.club.Plugin/DeleteByDids"
+	Plugin_SetActiveVersion_FullMethodName = "/hi.club.Plugin/SetActiveVersion"
+	Plugin_GetExData_FullMethodName        = "/hi.club.Plugin/GetExData"
+	Plugin_SetSwitches_FullMethodName      = "/hi.club.Plugin/SetSwitches"
 )
 
 // PluginClient is the client API for Plugin service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Token鉴权
+// 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
+//
+// 插件只剩 **py 脚本一种** —— 网搜(search)/画图(draw)已随 ai 整体砍掉:
+// 那两类完全可以封装进 py 脚本里执行,且局限性太大(比如不好传入用户数据)。
+// 故 DrawConfig / SearchCreate / DrawCreate / GetDraw 一并删除。
+//
+// ⚠️ club 侧的实际代码活(不只是改名):
+//  1. **上传脚本工程(Create)时,自动把该机器人的 ExAPIKey 塞进去** —— 这是根除
+//     "运行期回调三方要 apikey"那套机制的落地点(ai 的 UserCallback 已删)。
+//  2. apikey **挂机器人名下、不挂用户**,以便机器人换持有者后脚本照常跑。
+//  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
 type PluginClient interface {
-	DrawConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DrawConfigResp, error)
-	PluginSwitch(ctx context.Context, in *ai.PluginSwitchReq, opts ...grpc.CallOption) (*ai.PluginSwitchResp, error)
-	SearchCreate(ctx context.Context, in *ai.SearchCreateReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	PythonCreate(ctx context.Context, in *ai.PythonCreateReq, opts ...grpc.CallOption) (*ai.PythonCreateResp, error)
-	DrawCreate(ctx context.Context, in *ai.DrawCreateReq, opts ...grpc.CallOption) (*ai.DrawCreateResp, error)
+	Create(ctx context.Context, in *ai.CreateReq, opts ...grpc.CallOption) (*ai.CreateResp, error)
+	Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Get(ctx context.Context, in *ai.GetPluginReq, opts ...grpc.CallOption) (*ai.GetPluginResp, error)
 	List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
 	Delete(ctx context.Context, in *ai.DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByDids(ctx context.Context, in *ai.DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetDraw(ctx context.Context, in *ai.GetDrawReq, opts ...grpc.CallOption) (*ai.GetDrawResp, error)
-	PythonParamsSet(ctx context.Context, in *ai.PythonParamsSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetPythonParams(ctx context.Context, in *ai.GetPythonParamsReq, opts ...grpc.CallOption) (*ai.GetPythonParamsResp, error)
+	SetActiveVersion(ctx context.Context, in *ai.SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetExData(ctx context.Context, in *ai.GetExDataReq, opts ...grpc.CallOption) (*ai.GetExDataResp, error)
+	SetSwitches(ctx context.Context, in *ai.PluginSwitchReq, opts ...grpc.CallOption) (*ai.PluginSwitchResp, error)
 }
 
 type pluginClient struct {
@@ -63,50 +67,30 @@ func NewPluginClient(cc grpc.ClientConnInterface) PluginClient {
 	return &pluginClient{cc}
 }
 
-func (c *pluginClient) DrawConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DrawConfigResp, error) {
+func (c *pluginClient) Create(ctx context.Context, in *ai.CreateReq, opts ...grpc.CallOption) (*ai.CreateResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.DrawConfigResp)
-	err := c.cc.Invoke(ctx, Plugin_DrawConfig_FullMethodName, in, out, cOpts...)
+	out := new(ai.CreateResp)
+	err := c.cc.Invoke(ctx, Plugin_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pluginClient) PluginSwitch(ctx context.Context, in *ai.PluginSwitchReq, opts ...grpc.CallOption) (*ai.PluginSwitchResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.PluginSwitchResp)
-	err := c.cc.Invoke(ctx, Plugin_PluginSwitch_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *pluginClient) SearchCreate(ctx context.Context, in *ai.SearchCreateReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_SearchCreate_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Plugin_Edit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pluginClient) PythonCreate(ctx context.Context, in *ai.PythonCreateReq, opts ...grpc.CallOption) (*ai.PythonCreateResp, error) {
+func (c *pluginClient) Get(ctx context.Context, in *ai.GetPluginReq, opts ...grpc.CallOption) (*ai.GetPluginResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.PythonCreateResp)
-	err := c.cc.Invoke(ctx, Plugin_PythonCreate_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *pluginClient) DrawCreate(ctx context.Context, in *ai.DrawCreateReq, opts ...grpc.CallOption) (*ai.DrawCreateResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.DrawCreateResp)
-	err := c.cc.Invoke(ctx, Plugin_DrawCreate_FullMethodName, in, out, cOpts...)
+	out := new(ai.GetPluginResp)
+	err := c.cc.Invoke(ctx, Plugin_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -143,40 +127,30 @@ func (c *pluginClient) DeleteByDids(ctx context.Context, in *ai.DeletePluginByDi
 	return out, nil
 }
 
-func (c *pluginClient) Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) SetActiveVersion(ctx context.Context, in *ai.SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_Edit_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Plugin_SetActiveVersion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pluginClient) GetDraw(ctx context.Context, in *ai.GetDrawReq, opts ...grpc.CallOption) (*ai.GetDrawResp, error) {
+func (c *pluginClient) GetExData(ctx context.Context, in *ai.GetExDataReq, opts ...grpc.CallOption) (*ai.GetExDataResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.GetDrawResp)
-	err := c.cc.Invoke(ctx, Plugin_GetDraw_FullMethodName, in, out, cOpts...)
+	out := new(ai.GetExDataResp)
+	err := c.cc.Invoke(ctx, Plugin_GetExData_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pluginClient) PythonParamsSet(ctx context.Context, in *ai.PythonParamsSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) SetSwitches(ctx context.Context, in *ai.PluginSwitchReq, opts ...grpc.CallOption) (*ai.PluginSwitchResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_PythonParamsSet_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *pluginClient) GetPythonParams(ctx context.Context, in *ai.GetPythonParamsReq, opts ...grpc.CallOption) (*ai.GetPythonParamsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.GetPythonParamsResp)
-	err := c.cc.Invoke(ctx, Plugin_GetPythonParams_FullMethodName, in, out, cOpts...)
+	out := new(ai.PluginSwitchResp)
+	err := c.cc.Invoke(ctx, Plugin_SetSwitches_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -187,20 +161,27 @@ func (c *pluginClient) GetPythonParams(ctx context.Context, in *ai.GetPythonPara
 // All implementations should embed UnimplementedPluginServer
 // for forward compatibility.
 //
-// Token鉴权
+// 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
+//
+// 插件只剩 **py 脚本一种** —— 网搜(search)/画图(draw)已随 ai 整体砍掉:
+// 那两类完全可以封装进 py 脚本里执行,且局限性太大(比如不好传入用户数据)。
+// 故 DrawConfig / SearchCreate / DrawCreate / GetDraw 一并删除。
+//
+// ⚠️ club 侧的实际代码活(不只是改名):
+//  1. **上传脚本工程(Create)时,自动把该机器人的 ExAPIKey 塞进去** —— 这是根除
+//     "运行期回调三方要 apikey"那套机制的落地点(ai 的 UserCallback 已删)。
+//  2. apikey **挂机器人名下、不挂用户**,以便机器人换持有者后脚本照常跑。
+//  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
 type PluginServer interface {
-	DrawConfig(context.Context, *emptypb.Empty) (*ai.DrawConfigResp, error)
-	PluginSwitch(context.Context, *ai.PluginSwitchReq) (*ai.PluginSwitchResp, error)
-	SearchCreate(context.Context, *ai.SearchCreateReq) (*emptypb.Empty, error)
-	PythonCreate(context.Context, *ai.PythonCreateReq) (*ai.PythonCreateResp, error)
-	DrawCreate(context.Context, *ai.DrawCreateReq) (*ai.DrawCreateResp, error)
+	Create(context.Context, *ai.CreateReq) (*ai.CreateResp, error)
+	Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error)
+	Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error)
 	List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error)
 	Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error)
 	DeleteByDids(context.Context, *ai.DeletePluginByDidsReq) (*emptypb.Empty, error)
-	Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error)
-	GetDraw(context.Context, *ai.GetDrawReq) (*ai.GetDrawResp, error)
-	PythonParamsSet(context.Context, *ai.PythonParamsSetReq) (*emptypb.Empty, error)
-	GetPythonParams(context.Context, *ai.GetPythonParamsReq) (*ai.GetPythonParamsResp, error)
+	SetActiveVersion(context.Context, *ai.SetActiveVersionReq) (*emptypb.Empty, error)
+	GetExData(context.Context, *ai.GetExDataReq) (*ai.GetExDataResp, error)
+	SetSwitches(context.Context, *ai.PluginSwitchReq) (*ai.PluginSwitchResp, error)
 }
 
 // UnimplementedPluginServer should be embedded to have
@@ -210,20 +191,14 @@ type PluginServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPluginServer struct{}
 
-func (UnimplementedPluginServer) DrawConfig(context.Context, *emptypb.Empty) (*ai.DrawConfigResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method DrawConfig not implemented")
+func (UnimplementedPluginServer) Create(context.Context, *ai.CreateReq) (*ai.CreateResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedPluginServer) PluginSwitch(context.Context, *ai.PluginSwitchReq) (*ai.PluginSwitchResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method PluginSwitch not implemented")
+func (UnimplementedPluginServer) Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
-func (UnimplementedPluginServer) SearchCreate(context.Context, *ai.SearchCreateReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method SearchCreate not implemented")
-}
-func (UnimplementedPluginServer) PythonCreate(context.Context, *ai.PythonCreateReq) (*ai.PythonCreateResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method PythonCreate not implemented")
-}
-func (UnimplementedPluginServer) DrawCreate(context.Context, *ai.DrawCreateReq) (*ai.DrawCreateResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method DrawCreate not implemented")
+func (UnimplementedPluginServer) Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedPluginServer) List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -234,17 +209,14 @@ func (UnimplementedPluginServer) Delete(context.Context, *ai.DeletePluginReq) (*
 func (UnimplementedPluginServer) DeleteByDids(context.Context, *ai.DeletePluginByDidsReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteByDids not implemented")
 }
-func (UnimplementedPluginServer) Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+func (UnimplementedPluginServer) SetActiveVersion(context.Context, *ai.SetActiveVersionReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetActiveVersion not implemented")
 }
-func (UnimplementedPluginServer) GetDraw(context.Context, *ai.GetDrawReq) (*ai.GetDrawResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetDraw not implemented")
+func (UnimplementedPluginServer) GetExData(context.Context, *ai.GetExDataReq) (*ai.GetExDataResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetExData not implemented")
 }
-func (UnimplementedPluginServer) PythonParamsSet(context.Context, *ai.PythonParamsSetReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method PythonParamsSet not implemented")
-}
-func (UnimplementedPluginServer) GetPythonParams(context.Context, *ai.GetPythonParamsReq) (*ai.GetPythonParamsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetPythonParams not implemented")
+func (UnimplementedPluginServer) SetSwitches(context.Context, *ai.PluginSwitchReq) (*ai.PluginSwitchResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetSwitches not implemented")
 }
 func (UnimplementedPluginServer) testEmbeddedByValue() {}
 
@@ -266,92 +238,56 @@ func RegisterPluginServer(s grpc.ServiceRegistrar, srv PluginServer) {
 	s.RegisterService(&Plugin_ServiceDesc, srv)
 }
 
-func _Plugin_DrawConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.CreateReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).DrawConfig(ctx, in)
+		return srv.(PluginServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_DrawConfig_FullMethodName,
+		FullMethod: Plugin_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).DrawConfig(ctx, req.(*emptypb.Empty))
+		return srv.(PluginServer).Create(ctx, req.(*ai.CreateReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_PluginSwitch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PluginSwitchReq)
+func _Plugin_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.EditPluginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).PluginSwitch(ctx, in)
+		return srv.(PluginServer).Edit(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_PluginSwitch_FullMethodName,
+		FullMethod: Plugin_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).PluginSwitch(ctx, req.(*ai.PluginSwitchReq))
+		return srv.(PluginServer).Edit(ctx, req.(*ai.EditPluginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_SearchCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.SearchCreateReq)
+func _Plugin_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.GetPluginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).SearchCreate(ctx, in)
+		return srv.(PluginServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_SearchCreate_FullMethodName,
+		FullMethod: Plugin_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).SearchCreate(ctx, req.(*ai.SearchCreateReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Plugin_PythonCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PythonCreateReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).PythonCreate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_PythonCreate_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).PythonCreate(ctx, req.(*ai.PythonCreateReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Plugin_DrawCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.DrawCreateReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).DrawCreate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_DrawCreate_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).DrawCreate(ctx, req.(*ai.DrawCreateReq))
+		return srv.(PluginServer).Get(ctx, req.(*ai.GetPluginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -410,74 +346,56 @@ func _Plugin_DeleteByDids_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.EditPluginReq)
+func _Plugin_SetActiveVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.SetActiveVersionReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).Edit(ctx, in)
+		return srv.(PluginServer).SetActiveVersion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_Edit_FullMethodName,
+		FullMethod: Plugin_SetActiveVersion_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).Edit(ctx, req.(*ai.EditPluginReq))
+		return srv.(PluginServer).SetActiveVersion(ctx, req.(*ai.SetActiveVersionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_GetDraw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.GetDrawReq)
+func _Plugin_GetExData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.GetExDataReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).GetDraw(ctx, in)
+		return srv.(PluginServer).GetExData(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_GetDraw_FullMethodName,
+		FullMethod: Plugin_GetExData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).GetDraw(ctx, req.(*ai.GetDrawReq))
+		return srv.(PluginServer).GetExData(ctx, req.(*ai.GetExDataReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_PythonParamsSet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PythonParamsSetReq)
+func _Plugin_SetSwitches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.PluginSwitchReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).PythonParamsSet(ctx, in)
+		return srv.(PluginServer).SetSwitches(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_PythonParamsSet_FullMethodName,
+		FullMethod: Plugin_SetSwitches_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).PythonParamsSet(ctx, req.(*ai.PythonParamsSetReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Plugin_GetPythonParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.GetPythonParamsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).GetPythonParams(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_GetPythonParams_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).GetPythonParams(ctx, req.(*ai.GetPythonParamsReq))
+		return srv.(PluginServer).SetSwitches(ctx, req.(*ai.PluginSwitchReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -490,24 +408,16 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PluginServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "DrawConfig",
-			Handler:    _Plugin_DrawConfig_Handler,
+			MethodName: "Create",
+			Handler:    _Plugin_Create_Handler,
 		},
 		{
-			MethodName: "PluginSwitch",
-			Handler:    _Plugin_PluginSwitch_Handler,
+			MethodName: "Edit",
+			Handler:    _Plugin_Edit_Handler,
 		},
 		{
-			MethodName: "SearchCreate",
-			Handler:    _Plugin_SearchCreate_Handler,
-		},
-		{
-			MethodName: "PythonCreate",
-			Handler:    _Plugin_PythonCreate_Handler,
-		},
-		{
-			MethodName: "DrawCreate",
-			Handler:    _Plugin_DrawCreate_Handler,
+			MethodName: "Get",
+			Handler:    _Plugin_Get_Handler,
 		},
 		{
 			MethodName: "List",
@@ -522,20 +432,16 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_DeleteByDids_Handler,
 		},
 		{
-			MethodName: "Edit",
-			Handler:    _Plugin_Edit_Handler,
+			MethodName: "SetActiveVersion",
+			Handler:    _Plugin_SetActiveVersion_Handler,
 		},
 		{
-			MethodName: "GetDraw",
-			Handler:    _Plugin_GetDraw_Handler,
+			MethodName: "GetExData",
+			Handler:    _Plugin_GetExData_Handler,
 		},
 		{
-			MethodName: "PythonParamsSet",
-			Handler:    _Plugin_PythonParamsSet_Handler,
-		},
-		{
-			MethodName: "GetPythonParams",
-			Handler:    _Plugin_GetPythonParams_Handler,
+			MethodName: "SetSwitches",
+			Handler:    _Plugin_SetSwitches_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -19,8 +19,8 @@ import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class TrainingAgentReq extends $pb.GeneratedMessage {
-  factory TrainingAgentReq({
+class StartReq extends $pb.GeneratedMessage {
+  factory StartReq({
     $core.Iterable<$core.int>? ids,
     $core.String? agent,
   }) {
@@ -30,17 +30,17 @@ class TrainingAgentReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  TrainingAgentReq._();
+  StartReq._();
 
-  factory TrainingAgentReq.fromBuffer($core.List<$core.int> data,
+  factory StartReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory TrainingAgentReq.fromJson($core.String json,
+  factory StartReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'TrainingAgentReq',
+      _omitMessageNames ? '' : 'StartReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..p<$core.int>(1, _omitFieldNames ? '' : 'ids', $pb.PbFieldType.K3)
@@ -48,23 +48,22 @@ class TrainingAgentReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingAgentReq clone() => deepCopy();
+  StartReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingAgentReq copyWith(void Function(TrainingAgentReq) updates) =>
-      super.copyWith((message) => updates(message as TrainingAgentReq))
-          as TrainingAgentReq;
+  StartReq copyWith(void Function(StartReq) updates) =>
+      super.copyWith((message) => updates(message as StartReq)) as StartReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static TrainingAgentReq create() => TrainingAgentReq._();
+  static StartReq create() => StartReq._();
   @$core.override
-  TrainingAgentReq createEmptyInstance() => create();
+  StartReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static TrainingAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TrainingAgentReq>(create);
-  static TrainingAgentReq? _defaultInstance;
+  static StartReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StartReq>(create);
+  static StartReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.int> get ids => $_getList(0);
@@ -79,8 +78,8 @@ class TrainingAgentReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(2);
 }
 
-class TrainingStatusReq extends $pb.GeneratedMessage {
-  factory TrainingStatusReq({
+class StatusReq extends $pb.GeneratedMessage {
+  factory StatusReq({
     $core.String? agent,
   }) {
     final result = create();
@@ -88,40 +87,39 @@ class TrainingStatusReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  TrainingStatusReq._();
+  StatusReq._();
 
-  factory TrainingStatusReq.fromBuffer($core.List<$core.int> data,
+  factory StatusReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory TrainingStatusReq.fromJson($core.String json,
+  factory StatusReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'TrainingStatusReq',
+      _omitMessageNames ? '' : 'StatusReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingStatusReq clone() => deepCopy();
+  StatusReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingStatusReq copyWith(void Function(TrainingStatusReq) updates) =>
-      super.copyWith((message) => updates(message as TrainingStatusReq))
-          as TrainingStatusReq;
+  StatusReq copyWith(void Function(StatusReq) updates) =>
+      super.copyWith((message) => updates(message as StatusReq)) as StatusReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static TrainingStatusReq create() => TrainingStatusReq._();
+  static StatusReq create() => StatusReq._();
   @$core.override
-  TrainingStatusReq createEmptyInstance() => create();
+  StatusReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static TrainingStatusReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TrainingStatusReq>(create);
-  static TrainingStatusReq? _defaultInstance;
+  static StatusReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StatusReq>(create);
+  static StatusReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -133,8 +131,8 @@ class TrainingStatusReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 }
 
-class TrainingStatusResp extends $pb.GeneratedMessage {
-  factory TrainingStatusResp({
+class StatusResp extends $pb.GeneratedMessage {
+  factory StatusResp({
     $core.String? status,
     $core.int? memCount,
     $core.int? sliceCount,
@@ -148,17 +146,17 @@ class TrainingStatusResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  TrainingStatusResp._();
+  StatusResp._();
 
-  factory TrainingStatusResp.fromBuffer($core.List<$core.int> data,
+  factory StatusResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory TrainingStatusResp.fromJson($core.String json,
+  factory StatusResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'TrainingStatusResp',
+      _omitMessageNames ? '' : 'StatusResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'status')
@@ -168,23 +166,22 @@ class TrainingStatusResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingStatusResp clone() => deepCopy();
+  StatusResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingStatusResp copyWith(void Function(TrainingStatusResp) updates) =>
-      super.copyWith((message) => updates(message as TrainingStatusResp))
-          as TrainingStatusResp;
+  StatusResp copyWith(void Function(StatusResp) updates) =>
+      super.copyWith((message) => updates(message as StatusResp)) as StatusResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static TrainingStatusResp create() => TrainingStatusResp._();
+  static StatusResp create() => StatusResp._();
   @$core.override
-  TrainingStatusResp createEmptyInstance() => create();
+  StatusResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static TrainingStatusResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TrainingStatusResp>(create);
-  static TrainingStatusResp? _defaultInstance;
+  static StatusResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StatusResp>(create);
+  static StatusResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get status => $_getSZ(0);
@@ -223,8 +220,8 @@ class TrainingStatusResp extends $pb.GeneratedMessage {
   void clearMessage() => $_clearField(4);
 }
 
-class TrainingClearReq extends $pb.GeneratedMessage {
-  factory TrainingClearReq({
+class ClearReq extends $pb.GeneratedMessage {
+  factory ClearReq({
     $core.String? agent,
   }) {
     final result = create();
@@ -232,40 +229,39 @@ class TrainingClearReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  TrainingClearReq._();
+  ClearReq._();
 
-  factory TrainingClearReq.fromBuffer($core.List<$core.int> data,
+  factory ClearReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory TrainingClearReq.fromJson($core.String json,
+  factory ClearReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'TrainingClearReq',
+      _omitMessageNames ? '' : 'ClearReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingClearReq clone() => deepCopy();
+  ClearReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TrainingClearReq copyWith(void Function(TrainingClearReq) updates) =>
-      super.copyWith((message) => updates(message as TrainingClearReq))
-          as TrainingClearReq;
+  ClearReq copyWith(void Function(ClearReq) updates) =>
+      super.copyWith((message) => updates(message as ClearReq)) as ClearReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static TrainingClearReq create() => TrainingClearReq._();
+  static ClearReq create() => ClearReq._();
   @$core.override
-  TrainingClearReq createEmptyInstance() => create();
+  ClearReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static TrainingClearReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TrainingClearReq>(create);
-  static TrainingClearReq? _defaultInstance;
+  static ClearReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ClearReq>(create);
+  static ClearReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -356,8 +352,8 @@ class UploadFileReq extends $pb.GeneratedMessage {
   void clearContent() => $_clearField(3);
 }
 
-class AgentTrainingFile extends $pb.GeneratedMessage {
-  factory AgentTrainingFile({
+class TrainingFile extends $pb.GeneratedMessage {
+  factory TrainingFile({
     $core.int? id,
     $core.String? content,
     $core.String? agent,
@@ -385,17 +381,17 @@ class AgentTrainingFile extends $pb.GeneratedMessage {
     return result;
   }
 
-  AgentTrainingFile._();
+  TrainingFile._();
 
-  factory AgentTrainingFile.fromBuffer($core.List<$core.int> data,
+  factory TrainingFile.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory AgentTrainingFile.fromJson($core.String json,
+  factory TrainingFile.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AgentTrainingFile',
+      _omitMessageNames ? '' : 'TrainingFile',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'id')
@@ -412,23 +408,23 @@ class AgentTrainingFile extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentTrainingFile clone() => deepCopy();
+  TrainingFile clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentTrainingFile copyWith(void Function(AgentTrainingFile) updates) =>
-      super.copyWith((message) => updates(message as AgentTrainingFile))
-          as AgentTrainingFile;
+  TrainingFile copyWith(void Function(TrainingFile) updates) =>
+      super.copyWith((message) => updates(message as TrainingFile))
+          as TrainingFile;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static AgentTrainingFile create() => AgentTrainingFile._();
+  static TrainingFile create() => TrainingFile._();
   @$core.override
-  AgentTrainingFile createEmptyInstance() => create();
+  TrainingFile createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static AgentTrainingFile getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AgentTrainingFile>(create);
-  static AgentTrainingFile? _defaultInstance;
+  static TrainingFile getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TrainingFile>(create);
+  static TrainingFile? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get id => $_getIZ(0);
@@ -530,8 +526,8 @@ class AgentTrainingFile extends $pb.GeneratedMessage {
   void clearUpdatedAt() => $_clearField(11);
 }
 
-class ListAgentFileReq extends $pb.GeneratedMessage {
-  factory ListAgentFileReq({
+class ListFilesReq extends $pb.GeneratedMessage {
+  factory ListFilesReq({
     $core.String? agent,
     $core.bool? use,
     $2.Pagination? pagination,
@@ -543,17 +539,17 @@ class ListAgentFileReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListAgentFileReq._();
+  ListFilesReq._();
 
-  factory ListAgentFileReq.fromBuffer($core.List<$core.int> data,
+  factory ListFilesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAgentFileReq.fromJson($core.String json,
+  factory ListFilesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentFileReq',
+      _omitMessageNames ? '' : 'ListFilesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
@@ -563,23 +559,23 @@ class ListAgentFileReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentFileReq clone() => deepCopy();
+  ListFilesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentFileReq copyWith(void Function(ListAgentFileReq) updates) =>
-      super.copyWith((message) => updates(message as ListAgentFileReq))
-          as ListAgentFileReq;
+  ListFilesReq copyWith(void Function(ListFilesReq) updates) =>
+      super.copyWith((message) => updates(message as ListFilesReq))
+          as ListFilesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAgentFileReq create() => ListAgentFileReq._();
+  static ListFilesReq create() => ListFilesReq._();
   @$core.override
-  ListAgentFileReq createEmptyInstance() => create();
+  ListFilesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAgentFileReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentFileReq>(create);
-  static ListAgentFileReq? _defaultInstance;
+  static ListFilesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFilesReq>(create);
+  static ListFilesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -611,10 +607,10 @@ class ListAgentFileReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(2);
 }
 
-class ListAgentFileResp extends $pb.GeneratedMessage {
-  factory ListAgentFileResp({
+class ListFilesResp extends $pb.GeneratedMessage {
+  factory ListFilesResp({
     $core.int? total,
-    $core.Iterable<AgentTrainingFile>? list,
+    $core.Iterable<TrainingFile>? list,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -622,42 +618,42 @@ class ListAgentFileResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListAgentFileResp._();
+  ListFilesResp._();
 
-  factory ListAgentFileResp.fromBuffer($core.List<$core.int> data,
+  factory ListFilesResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAgentFileResp.fromJson($core.String json,
+  factory ListFilesResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentFileResp',
+      _omitMessageNames ? '' : 'ListFilesResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentTrainingFile>(2, _omitFieldNames ? '' : 'list',
-        subBuilder: AgentTrainingFile.create)
+    ..pPM<TrainingFile>(2, _omitFieldNames ? '' : 'list',
+        subBuilder: TrainingFile.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentFileResp clone() => deepCopy();
+  ListFilesResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentFileResp copyWith(void Function(ListAgentFileResp) updates) =>
-      super.copyWith((message) => updates(message as ListAgentFileResp))
-          as ListAgentFileResp;
+  ListFilesResp copyWith(void Function(ListFilesResp) updates) =>
+      super.copyWith((message) => updates(message as ListFilesResp))
+          as ListFilesResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAgentFileResp create() => ListAgentFileResp._();
+  static ListFilesResp create() => ListFilesResp._();
   @$core.override
-  ListAgentFileResp createEmptyInstance() => create();
+  ListFilesResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAgentFileResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentFileResp>(create);
-  static ListAgentFileResp? _defaultInstance;
+  static ListFilesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFilesResp>(create);
+  static ListFilesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);
@@ -669,11 +665,11 @@ class ListAgentFileResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<AgentTrainingFile> get list => $_getList(1);
+  $pb.PbList<TrainingFile> get list => $_getList(1);
 }
 
-class DeleteAgentFileReq extends $pb.GeneratedMessage {
-  factory DeleteAgentFileReq({
+class DeleteFileReq extends $pb.GeneratedMessage {
+  factory DeleteFileReq({
     $core.int? id,
   }) {
     final result = create();
@@ -681,40 +677,40 @@ class DeleteAgentFileReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DeleteAgentFileReq._();
+  DeleteFileReq._();
 
-  factory DeleteAgentFileReq.fromBuffer($core.List<$core.int> data,
+  factory DeleteFileReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteAgentFileReq.fromJson($core.String json,
+  factory DeleteFileReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteAgentFileReq',
+      _omitMessageNames ? '' : 'DeleteFileReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'id')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAgentFileReq clone() => deepCopy();
+  DeleteFileReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAgentFileReq copyWith(void Function(DeleteAgentFileReq) updates) =>
-      super.copyWith((message) => updates(message as DeleteAgentFileReq))
-          as DeleteAgentFileReq;
+  DeleteFileReq copyWith(void Function(DeleteFileReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteFileReq))
+          as DeleteFileReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteAgentFileReq create() => DeleteAgentFileReq._();
+  static DeleteFileReq create() => DeleteFileReq._();
   @$core.override
-  DeleteAgentFileReq createEmptyInstance() => create();
+  DeleteFileReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteAgentFileReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteAgentFileReq>(create);
-  static DeleteAgentFileReq? _defaultInstance;
+  static DeleteFileReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteFileReq>(create);
+  static DeleteFileReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get id => $_getIZ(0);
@@ -726,8 +722,8 @@ class DeleteAgentFileReq extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 }
 
-class DeleteAgentFilesReq extends $pb.GeneratedMessage {
-  factory DeleteAgentFilesReq({
+class DeleteFilesReq extends $pb.GeneratedMessage {
+  factory DeleteFilesReq({
     $core.String? agent,
     $core.Iterable<$core.int>? ids,
   }) {
@@ -737,17 +733,17 @@ class DeleteAgentFilesReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DeleteAgentFilesReq._();
+  DeleteFilesReq._();
 
-  factory DeleteAgentFilesReq.fromBuffer($core.List<$core.int> data,
+  factory DeleteFilesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteAgentFilesReq.fromJson($core.String json,
+  factory DeleteFilesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteAgentFilesReq',
+      _omitMessageNames ? '' : 'DeleteFilesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
@@ -755,23 +751,23 @@ class DeleteAgentFilesReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAgentFilesReq clone() => deepCopy();
+  DeleteFilesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAgentFilesReq copyWith(void Function(DeleteAgentFilesReq) updates) =>
-      super.copyWith((message) => updates(message as DeleteAgentFilesReq))
-          as DeleteAgentFilesReq;
+  DeleteFilesReq copyWith(void Function(DeleteFilesReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteFilesReq))
+          as DeleteFilesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteAgentFilesReq create() => DeleteAgentFilesReq._();
+  static DeleteFilesReq create() => DeleteFilesReq._();
   @$core.override
-  DeleteAgentFilesReq createEmptyInstance() => create();
+  DeleteFilesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteAgentFilesReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteAgentFilesReq>(create);
-  static DeleteAgentFilesReq? _defaultInstance;
+  static DeleteFilesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteFilesReq>(create);
+  static DeleteFilesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -786,8 +782,8 @@ class DeleteAgentFilesReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.int> get ids => $_getList(1);
 }
 
-class DeleteAgentFilesByDidReq extends $pb.GeneratedMessage {
-  factory DeleteAgentFilesByDidReq({
+class DeleteFilesByAgentsReq extends $pb.GeneratedMessage {
+  factory DeleteFilesByAgentsReq({
     $core.Iterable<$core.String>? agents,
   }) {
     final result = create();
@@ -795,48 +791,48 @@ class DeleteAgentFilesByDidReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DeleteAgentFilesByDidReq._();
+  DeleteFilesByAgentsReq._();
 
-  factory DeleteAgentFilesByDidReq.fromBuffer($core.List<$core.int> data,
+  factory DeleteFilesByAgentsReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteAgentFilesByDidReq.fromJson($core.String json,
+  factory DeleteFilesByAgentsReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteAgentFilesByDidReq',
+      _omitMessageNames ? '' : 'DeleteFilesByAgentsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'agents')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAgentFilesByDidReq clone() => deepCopy();
+  DeleteFilesByAgentsReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAgentFilesByDidReq copyWith(
-          void Function(DeleteAgentFilesByDidReq) updates) =>
-      super.copyWith((message) => updates(message as DeleteAgentFilesByDidReq))
-          as DeleteAgentFilesByDidReq;
+  DeleteFilesByAgentsReq copyWith(
+          void Function(DeleteFilesByAgentsReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteFilesByAgentsReq))
+          as DeleteFilesByAgentsReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteAgentFilesByDidReq create() => DeleteAgentFilesByDidReq._();
+  static DeleteFilesByAgentsReq create() => DeleteFilesByAgentsReq._();
   @$core.override
-  DeleteAgentFilesByDidReq createEmptyInstance() => create();
+  DeleteFilesByAgentsReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteAgentFilesByDidReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteAgentFilesByDidReq>(create);
-  static DeleteAgentFilesByDidReq? _defaultInstance;
+  static DeleteFilesByAgentsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteFilesByAgentsReq>(create);
+  static DeleteFilesByAgentsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get agents => $_getList(0);
 }
 
-class GetAgentFileReq extends $pb.GeneratedMessage {
-  factory GetAgentFileReq({
+class GetFileReq extends $pb.GeneratedMessage {
+  factory GetFileReq({
     $core.int? id,
   }) {
     final result = create();
@@ -844,40 +840,39 @@ class GetAgentFileReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetAgentFileReq._();
+  GetFileReq._();
 
-  factory GetAgentFileReq.fromBuffer($core.List<$core.int> data,
+  factory GetFileReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetAgentFileReq.fromJson($core.String json,
+  factory GetFileReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentFileReq',
+      _omitMessageNames ? '' : 'GetFileReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'id')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentFileReq clone() => deepCopy();
+  GetFileReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentFileReq copyWith(void Function(GetAgentFileReq) updates) =>
-      super.copyWith((message) => updates(message as GetAgentFileReq))
-          as GetAgentFileReq;
+  GetFileReq copyWith(void Function(GetFileReq) updates) =>
+      super.copyWith((message) => updates(message as GetFileReq)) as GetFileReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetAgentFileReq create() => GetAgentFileReq._();
+  static GetFileReq create() => GetFileReq._();
   @$core.override
-  GetAgentFileReq createEmptyInstance() => create();
+  GetFileReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetAgentFileReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentFileReq>(create);
-  static GetAgentFileReq? _defaultInstance;
+  static GetFileReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetFileReq>(create);
+  static GetFileReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get id => $_getIZ(0);
@@ -889,61 +884,61 @@ class GetAgentFileReq extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 }
 
-class GetAgentFileResp extends $pb.GeneratedMessage {
-  factory GetAgentFileResp({
-    AgentTrainingFile? file,
+class GetFileResp extends $pb.GeneratedMessage {
+  factory GetFileResp({
+    TrainingFile? file,
   }) {
     final result = create();
     if (file != null) result.file = file;
     return result;
   }
 
-  GetAgentFileResp._();
+  GetFileResp._();
 
-  factory GetAgentFileResp.fromBuffer($core.List<$core.int> data,
+  factory GetFileResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetAgentFileResp.fromJson($core.String json,
+  factory GetFileResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentFileResp',
+      _omitMessageNames ? '' : 'GetFileResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOM<AgentTrainingFile>(1, _omitFieldNames ? '' : 'file',
-        subBuilder: AgentTrainingFile.create)
+    ..aOM<TrainingFile>(1, _omitFieldNames ? '' : 'file',
+        subBuilder: TrainingFile.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentFileResp clone() => deepCopy();
+  GetFileResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentFileResp copyWith(void Function(GetAgentFileResp) updates) =>
-      super.copyWith((message) => updates(message as GetAgentFileResp))
-          as GetAgentFileResp;
+  GetFileResp copyWith(void Function(GetFileResp) updates) =>
+      super.copyWith((message) => updates(message as GetFileResp))
+          as GetFileResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetAgentFileResp create() => GetAgentFileResp._();
+  static GetFileResp create() => GetFileResp._();
   @$core.override
-  GetAgentFileResp createEmptyInstance() => create();
+  GetFileResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetAgentFileResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentFileResp>(create);
-  static GetAgentFileResp? _defaultInstance;
+  static GetFileResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetFileResp>(create);
+  static GetFileResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  AgentTrainingFile get file => $_getN(0);
+  TrainingFile get file => $_getN(0);
   @$pb.TagNumber(1)
-  set file(AgentTrainingFile value) => $_setField(1, value);
+  set file(TrainingFile value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasFile() => $_has(0);
   @$pb.TagNumber(1)
   void clearFile() => $_clearField(1);
   @$pb.TagNumber(1)
-  AgentTrainingFile ensureFile() => $_ensure(0);
+  TrainingFile ensureFile() => $_ensure(0);
 }
 
 class UpdateContentReq extends $pb.GeneratedMessage {
@@ -1092,7 +1087,7 @@ class CreateContentReq extends $pb.GeneratedMessage {
 
 class CreateContentResp extends $pb.GeneratedMessage {
   factory CreateContentResp({
-    AgentTrainingFile? file,
+    TrainingFile? file,
   }) {
     final result = create();
     if (file != null) result.file = file;
@@ -1112,8 +1107,8 @@ class CreateContentResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'CreateContentResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOM<AgentTrainingFile>(1, _omitFieldNames ? '' : 'file',
-        subBuilder: AgentTrainingFile.create)
+    ..aOM<TrainingFile>(1, _omitFieldNames ? '' : 'file',
+        subBuilder: TrainingFile.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1136,15 +1131,15 @@ class CreateContentResp extends $pb.GeneratedMessage {
   static CreateContentResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  AgentTrainingFile get file => $_getN(0);
+  TrainingFile get file => $_getN(0);
   @$pb.TagNumber(1)
-  set file(AgentTrainingFile value) => $_setField(1, value);
+  set file(TrainingFile value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasFile() => $_has(0);
   @$pb.TagNumber(1)
   void clearFile() => $_clearField(1);
   @$pb.TagNumber(1)
-  AgentTrainingFile ensureFile() => $_ensure(0);
+  TrainingFile ensureFile() => $_ensure(0);
 }
 
 class EditDigestReq extends $pb.GeneratedMessage {

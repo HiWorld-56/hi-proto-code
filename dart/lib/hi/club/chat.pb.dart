@@ -19,56 +19,8 @@ import 'messaging.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class SimpleReq extends $pb.GeneratedMessage {
-  factory SimpleReq({
-    $core.Iterable<$3.Content>? conts,
-  }) {
-    final result = create();
-    if (conts != null) result.conts.addAll(conts);
-    return result;
-  }
-
-  SimpleReq._();
-
-  factory SimpleReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SimpleReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SimpleReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..pPM<$3.Content>(1, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SimpleReq copyWith(void Function(SimpleReq) updates) =>
-      super.copyWith((message) => updates(message as SimpleReq)) as SimpleReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SimpleReq create() => SimpleReq._();
-  @$core.override
-  SimpleReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SimpleReq getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SimpleReq>(create);
-  static SimpleReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$3.Content> get conts => $_getList(0);
-}
-
-class DialogReq extends $pb.GeneratedMessage {
-  factory DialogReq({
+class SendReq extends $pb.GeneratedMessage {
+  factory SendReq({
     $core.String? did,
     $core.String? cid,
     $core.Iterable<$3.Content>? conts,
@@ -91,17 +43,17 @@ class DialogReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DialogReq._();
+  SendReq._();
 
-  factory DialogReq.fromBuffer($core.List<$core.int> data,
+  factory SendReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DialogReq.fromJson($core.String json,
+  factory SendReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DialogReq',
+      _omitMessageNames ? '' : 'SendReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
@@ -116,22 +68,22 @@ class DialogReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogReq clone() => deepCopy();
+  SendReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DialogReq copyWith(void Function(DialogReq) updates) =>
-      super.copyWith((message) => updates(message as DialogReq)) as DialogReq;
+  SendReq copyWith(void Function(SendReq) updates) =>
+      super.copyWith((message) => updates(message as SendReq)) as SendReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DialogReq create() => DialogReq._();
+  static SendReq create() => SendReq._();
   @$core.override
-  DialogReq createEmptyInstance() => create();
+  SendReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DialogReq getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DialogReq>(create);
-  static DialogReq? _defaultInstance;
+  static SendReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SendReq>(create);
+  static SendReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
@@ -260,8 +212,8 @@ class QA extends $pb.GeneratedMessage {
   void clearA() => $_clearField(2);
 }
 
-class GetContextResp extends $pb.GeneratedMessage {
-  factory GetContextResp({
+class GetHistoryResp extends $pb.GeneratedMessage {
+  factory GetHistoryResp({
     $core.Iterable<QA>? list,
   }) {
     final result = create();
@@ -269,40 +221,40 @@ class GetContextResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetContextResp._();
+  GetHistoryResp._();
 
-  factory GetContextResp.fromBuffer($core.List<$core.int> data,
+  factory GetHistoryResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetContextResp.fromJson($core.String json,
+  factory GetHistoryResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetContextResp',
+      _omitMessageNames ? '' : 'GetHistoryResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPM<QA>(1, _omitFieldNames ? '' : 'list', subBuilder: QA.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetContextResp clone() => deepCopy();
+  GetHistoryResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetContextResp copyWith(void Function(GetContextResp) updates) =>
-      super.copyWith((message) => updates(message as GetContextResp))
-          as GetContextResp;
+  GetHistoryResp copyWith(void Function(GetHistoryResp) updates) =>
+      super.copyWith((message) => updates(message as GetHistoryResp))
+          as GetHistoryResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetContextResp create() => GetContextResp._();
+  static GetHistoryResp create() => GetHistoryResp._();
   @$core.override
-  GetContextResp createEmptyInstance() => create();
+  GetHistoryResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetContextResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetContextResp>(create);
-  static GetContextResp? _defaultInstance;
+  static GetHistoryResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetHistoryResp>(create);
+  static GetHistoryResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<QA> get list => $_getList(0);
@@ -552,128 +504,6 @@ class TextToTextReq extends $pb.GeneratedMessage {
   void clearState() => $_clearField(7);
 }
 
-class ToolCallResult extends $pb.GeneratedMessage {
-  factory ToolCallResult({
-    $core.String? id,
-    $core.Iterable<$3.Content>? conts,
-  }) {
-    final result = create();
-    if (id != null) result.id = id;
-    if (conts != null) result.conts.addAll(conts);
-    return result;
-  }
-
-  ToolCallResult._();
-
-  factory ToolCallResult.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ToolCallResult.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ToolCallResult',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'id')
-    ..pPM<$3.Content>(2, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ToolCallResult clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ToolCallResult copyWith(void Function(ToolCallResult) updates) =>
-      super.copyWith((message) => updates(message as ToolCallResult))
-          as ToolCallResult;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ToolCallResult create() => ToolCallResult._();
-  @$core.override
-  ToolCallResult createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ToolCallResult getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ToolCallResult>(create);
-  static ToolCallResult? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set id($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<$3.Content> get conts => $_getList(1);
-}
-
-class ToolCallResultsReq extends $pb.GeneratedMessage {
-  factory ToolCallResultsReq({
-    $core.String? id,
-    $core.Iterable<ToolCallResult>? list,
-  }) {
-    final result = create();
-    if (id != null) result.id = id;
-    if (list != null) result.list.addAll(list);
-    return result;
-  }
-
-  ToolCallResultsReq._();
-
-  factory ToolCallResultsReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ToolCallResultsReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ToolCallResultsReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'id')
-    ..pPM<ToolCallResult>(2, _omitFieldNames ? '' : 'list',
-        subBuilder: ToolCallResult.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ToolCallResultsReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ToolCallResultsReq copyWith(void Function(ToolCallResultsReq) updates) =>
-      super.copyWith((message) => updates(message as ToolCallResultsReq))
-          as ToolCallResultsReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ToolCallResultsReq create() => ToolCallResultsReq._();
-  @$core.override
-  ToolCallResultsReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ToolCallResultsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ToolCallResultsReq>(create);
-  static ToolCallResultsReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set id($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<ToolCallResult> get list => $_getList(1);
-}
-
 class SpeechToTextReq extends $pb.GeneratedMessage {
   factory SpeechToTextReq({
     $core.String? did,
@@ -788,6 +618,129 @@ class SpeechToTextReq extends $pb.GeneratedMessage {
   $core.bool hasState() => $_has(6);
   @$pb.TagNumber(7)
   void clearState() => $_clearField(7);
+}
+
+class ToolCallResult extends $pb.GeneratedMessage {
+  factory ToolCallResult({
+    $core.String? id,
+    $core.Iterable<$3.Content>? conts,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (conts != null) result.conts.addAll(conts);
+    return result;
+  }
+
+  ToolCallResult._();
+
+  factory ToolCallResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ToolCallResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ToolCallResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..pPM<$3.Content>(2, _omitFieldNames ? '' : 'conts',
+        subBuilder: $3.Content.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ToolCallResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ToolCallResult copyWith(void Function(ToolCallResult) updates) =>
+      super.copyWith((message) => updates(message as ToolCallResult))
+          as ToolCallResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ToolCallResult create() => ToolCallResult._();
+  @$core.override
+  ToolCallResult createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ToolCallResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ToolCallResult>(create);
+  static ToolCallResult? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$3.Content> get conts => $_getList(1);
+}
+
+/// 工具结果续跑入参(Resume 系列):客户端执行完工具后把结果交回来,接着跑。
+class ToolCallResultsReq extends $pb.GeneratedMessage {
+  factory ToolCallResultsReq({
+    $core.String? id,
+    $core.Iterable<ToolCallResult>? list,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ToolCallResultsReq._();
+
+  factory ToolCallResultsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ToolCallResultsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ToolCallResultsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..pPM<ToolCallResult>(2, _omitFieldNames ? '' : 'list',
+        subBuilder: ToolCallResult.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ToolCallResultsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ToolCallResultsReq copyWith(void Function(ToolCallResultsReq) updates) =>
+      super.copyWith((message) => updates(message as ToolCallResultsReq))
+          as ToolCallResultsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ToolCallResultsReq create() => ToolCallResultsReq._();
+  @$core.override
+  ToolCallResultsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ToolCallResultsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ToolCallResultsReq>(create);
+  static ToolCallResultsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<ToolCallResult> get list => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =

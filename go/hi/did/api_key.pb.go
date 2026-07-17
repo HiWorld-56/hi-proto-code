@@ -545,13 +545,13 @@ const file_hi_did_api_key_proto_rawDesc = "" +
 	"\fGetApiKeyReq\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\"7\n" +
 	"\rGetApiKeyResp\x12&\n" +
-	"\x04info\x18\x01 \x01(\v2\x12.hi.did.ApiKeyInfoR\x04info2\xc0\x02\n" +
-	"\x06ApiKey\x12A\n" +
-	"\x06Create\x12\x17.hi.did.CreateApiKeyReq\x1a\x18.hi.did.CreateApiKeyResp\"\x04\x88\xb5\x18\x03\x12;\n" +
-	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\"\x04\x88\xb5\x18\x03\x12;\n" +
-	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\"\x04\x88\xb5\x18\x03\x12?\n" +
-	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x03\x128\n" +
-	"\x03Get\x12\x14.hi.did.GetApiKeyReq\x1a\x15.hi.did.GetApiKeyResp\"\x04\x88\xb5\x18\x03B|\n" +
+	"\x04info\x18\x01 \x01(\v2\x12.hi.did.ApiKeyInfoR\x04info2\xc5\x02\n" +
+	"\x06ApiKey\x12B\n" +
+	"\x06Create\x12\x17.hi.did.CreateApiKeyReq\x1a\x18.hi.did.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12<\n" +
+	"\x04Edit\x12\x15.hi.did.EditApiKeyReq\x1a\x16.hi.did.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12<\n" +
+	"\x04List\x12\x15.hi.did.ListApiKeyReq\x1a\x16.hi.did.ListApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
+	"\x06Delete\x12\x17.hi.did.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x129\n" +
+	"\x03Get\x12\x14.hi.did.GetApiKeyReq\x1a\x15.hi.did.GetApiKeyResp\"\x05\x8a\xb5\x18\x01\x03B|\n" +
 	"\n" +
 	"com.hi.didB\vApiKeyProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

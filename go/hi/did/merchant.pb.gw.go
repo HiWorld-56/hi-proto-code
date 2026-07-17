@@ -247,33 +247,6 @@ func local_request_Merchant_RemoveUsers_0(ctx context.Context, marshaler runtime
 	return msg, metadata, err
 }
 
-func request_Merchant_RemoveUsers_1(ctx context.Context, marshaler runtime.Marshaler, client MerchantClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq RemoveUsersReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.RemoveUsers(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Merchant_RemoveUsers_1(ctx context.Context, marshaler runtime.Marshaler, server MerchantServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq RemoveUsersReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.RemoveUsers(ctx, &protoReq)
-	return msg, metadata, err
-}
-
 func request_Merchant_GetUserMqtt_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetUserMqttReq
@@ -533,7 +506,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/Update", runtime.WithHTTPPathPattern("/api/v1/merchant/set"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/Update", runtime.WithHTTPPathPattern("/api/v1/merchant/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -573,7 +546,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/ListUsers", runtime.WithHTTPPathPattern("/api/v1/user_extension/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/ListUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/list_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -593,7 +566,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant/list_merchants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -613,7 +586,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/SetUsers", runtime.WithHTTPPathPattern("/api/v1/user_extension/update"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/SetUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/set_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -633,7 +606,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/AddUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/save_uesrs"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/AddUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/add_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -653,7 +626,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/RemoveUsers", runtime.WithHTTPPathPattern("/api/v1/user_extension/delete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/RemoveUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/remove_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -666,26 +639,6 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 			return
 		}
 		forward_Merchant_RemoveUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Merchant_RemoveUsers_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/RemoveUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/delete_uesrs"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Merchant_RemoveUsers_1(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Merchant_RemoveUsers_1(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Merchant_GetUserMqtt_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -813,7 +766,7 @@ func RegisterMerchantExDBHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantExDB/Get", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/get"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantExDB/Get", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -833,7 +786,7 @@ func RegisterMerchantExDBHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantExDB/Refresh", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/update"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantExDB/Refresh", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/refresh"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -954,7 +907,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/Update", runtime.WithHTTPPathPattern("/api/v1/merchant/set"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/Update", runtime.WithHTTPPathPattern("/api/v1/merchant/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -988,7 +941,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/ListUsers", runtime.WithHTTPPathPattern("/api/v1/user_extension/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/ListUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/list_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1005,7 +958,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant/list_merchants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1022,7 +975,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/SetUsers", runtime.WithHTTPPathPattern("/api/v1/user_extension/update"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/SetUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/set_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1039,7 +992,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/AddUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/save_uesrs"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/AddUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/add_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1056,7 +1009,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/RemoveUsers", runtime.WithHTTPPathPattern("/api/v1/user_extension/delete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/RemoveUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/remove_users"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1068,23 +1021,6 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 			return
 		}
 		forward_Merchant_RemoveUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Merchant_RemoveUsers_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/RemoveUsers", runtime.WithHTTPPathPattern("/api/v1/merchant/delete_uesrs"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Merchant_RemoveUsers_1(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Merchant_RemoveUsers_1(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Merchant_GetUserMqtt_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -1159,14 +1095,13 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 
 var (
 	pattern_Merchant_Get_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "get"}, ""))
-	pattern_Merchant_Update_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "set"}, ""))
+	pattern_Merchant_Update_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "update"}, ""))
 	pattern_Merchant_GetUser_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "GetUser"}, ""))
-	pattern_Merchant_ListUsers_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension", "list"}, ""))
-	pattern_Merchant_ListMerchants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list"}, ""))
-	pattern_Merchant_SetUsers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension", "update"}, ""))
-	pattern_Merchant_AddUsers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "save_uesrs"}, ""))
-	pattern_Merchant_RemoveUsers_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension", "delete"}, ""))
-	pattern_Merchant_RemoveUsers_1   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "delete_uesrs"}, ""))
+	pattern_Merchant_ListUsers_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list_users"}, ""))
+	pattern_Merchant_ListMerchants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list_merchants"}, ""))
+	pattern_Merchant_SetUsers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "set_users"}, ""))
+	pattern_Merchant_AddUsers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "add_users"}, ""))
+	pattern_Merchant_RemoveUsers_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "remove_users"}, ""))
 	pattern_Merchant_GetUserMqtt_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "GetUserMqtt"}, ""))
 	pattern_Merchant_ListGrants_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "ListGrants"}, ""))
 	pattern_Merchant_AddGrant_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "AddGrant"}, ""))
@@ -1182,7 +1117,6 @@ var (
 	forward_Merchant_SetUsers_0      = runtime.ForwardResponseMessage
 	forward_Merchant_AddUsers_0      = runtime.ForwardResponseMessage
 	forward_Merchant_RemoveUsers_0   = runtime.ForwardResponseMessage
-	forward_Merchant_RemoveUsers_1   = runtime.ForwardResponseMessage
 	forward_Merchant_GetUserMqtt_0   = runtime.ForwardResponseMessage
 	forward_Merchant_ListGrants_0    = runtime.ForwardResponseMessage
 	forward_Merchant_AddGrant_0      = runtime.ForwardResponseMessage
@@ -1293,7 +1227,7 @@ func RegisterMerchantExDBHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantExDB/Get", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/get"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantExDB/Get", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1310,7 +1244,7 @@ func RegisterMerchantExDBHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantExDB/Refresh", runtime.WithHTTPPathPattern("/api/v1/user_extension_settings/update"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantExDB/Refresh", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/refresh"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1327,8 +1261,8 @@ func RegisterMerchantExDBHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_MerchantExDB_Get_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension_settings", "get"}, ""))
-	pattern_MerchantExDB_Refresh_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user_extension_settings", "update"}, ""))
+	pattern_MerchantExDB_Get_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_ex_db", "get"}, ""))
+	pattern_MerchantExDB_Refresh_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_ex_db", "refresh"}, ""))
 )
 
 var (

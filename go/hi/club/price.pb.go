@@ -26,9 +26,9 @@ var File_hi_club_price_proto protoreflect.FileDescriptor
 
 const file_hi_club_price_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/price.proto\x12\ahi.club\x1a\x12hi/did/price.proto\x1a\x10hi/options.proto2D\n" +
-	"\x05Price\x12;\n" +
-	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x04\x88\xb5\x18\x01B\x81\x01\n" +
+	"\x13hi/club/price.proto\x12\ahi.club\x1a\x12hi/did/price.proto\x1a\x10hi/options.proto2E\n" +
+	"\x05Price\x12<\n" +
+	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x05\x8a\xb5\x18\x01\x01B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"PriceProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 

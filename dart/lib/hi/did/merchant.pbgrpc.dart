@@ -443,7 +443,7 @@ abstract class MerchantPubServiceBase extends $grpc.Service {
 /// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
 /// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
 ///
-/// ⚠️ 为什么单独一个 service、且是 AUTH_TOKEN:ExtendToken 是从这里**拿到**的,
+/// ⚠️ 为什么单独一个 service、且是 AUTH_USER:ExtendToken 是从这里**拿到**的,
 ///    所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
 ///    与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
 @$pb.GrpcServiceName('hi.did.MerchantExDB')

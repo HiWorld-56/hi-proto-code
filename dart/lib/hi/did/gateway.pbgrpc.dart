@@ -22,8 +22,8 @@ import 'gateway.pb.dart' as $1;
 export 'gateway.pb.dart';
 
 /// 网关配置(客户端读)。主体=网关配置这份数据,谁登录了都要读:
-/// app 用户带 token、hiclub 商户带 ExtendToken;超管运维页也走这个读(它有 token)。
-/// 本方法不依赖"我是谁",故可用 AUTH_TOKEN_OR_EXTEND。
+/// app 用户(AUTH_USER)、hiclub 商户(AUTH_MERCHANT);超管运维页也走这个读(它是用户)。
+/// 本方法**不依赖"我是谁"**,故两个主体都收 —— 标两行,任一通过即放行。
 @$pb.GrpcServiceName('hi.did.Gateway')
 class GatewayClient extends $grpc.Client {
   /// The hostname for this service.

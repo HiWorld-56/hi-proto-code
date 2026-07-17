@@ -21,42 +21,40 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Chat_Simple_FullMethodName             = "/hi.club.Chat/Simple"
-	Chat_GenerateCid_FullMethodName        = "/hi.club.Chat/GenerateCid"
-	Chat_Dialog_FullMethodName             = "/hi.club.Chat/Dialog"
-	Chat_DialogStream_FullMethodName       = "/hi.club.Chat/DialogStream"
-	Chat_ClearContext_FullMethodName       = "/hi.club.Chat/ClearContext"
-	Chat_GetContext_FullMethodName         = "/hi.club.Chat/GetContext"
-	Chat_SimpleTextToSpeech_FullMethodName = "/hi.club.Chat/SimpleTextToSpeech"
-	Chat_SimpleSpeechToText_FullMethodName = "/hi.club.Chat/SimpleSpeechToText"
-	Chat_SpeechToSpeech_FullMethodName     = "/hi.club.Chat/SpeechToSpeech"
-	Chat_SpeechToSpeech2_FullMethodName    = "/hi.club.Chat/SpeechToSpeech2"
-	Chat_TextToText_FullMethodName         = "/hi.club.Chat/TextToText"
-	Chat_TextToText2_FullMethodName        = "/hi.club.Chat/TextToText2"
-	Chat_SpeechToText_FullMethodName       = "/hi.club.Chat/SpeechToText"
-	Chat_SpeechToText2_FullMethodName      = "/hi.club.Chat/SpeechToText2"
+	Chat_NewSession_FullMethodName           = "/hi.club.Chat/NewSession"
+	Chat_Send_FullMethodName                 = "/hi.club.Chat/Send"
+	Chat_Stream_FullMethodName               = "/hi.club.Chat/Stream"
+	Chat_GetHistory_FullMethodName           = "/hi.club.Chat/GetHistory"
+	Chat_ClearHistory_FullMethodName         = "/hi.club.Chat/ClearHistory"
+	Chat_TextToText_FullMethodName           = "/hi.club.Chat/TextToText"
+	Chat_TextToTextResume_FullMethodName     = "/hi.club.Chat/TextToTextResume"
+	Chat_SpeechToText_FullMethodName         = "/hi.club.Chat/SpeechToText"
+	Chat_SpeechToTextResume_FullMethodName   = "/hi.club.Chat/SpeechToTextResume"
+	Chat_SpeechToSpeech_FullMethodName       = "/hi.club.Chat/SpeechToSpeech"
+	Chat_SpeechToSpeechResume_FullMethodName = "/hi.club.Chat/SpeechToSpeechResume"
 )
 
 // ChatClient is the client API for Chat service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Token鉴权
+// 对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
+//
+// (原 Simple 已删 —— ai 侧同步删掉了:那是给前端**无身份**直连 llm 推理的便捷方法,有安全隐患。)
 type ChatClient interface {
-	Simple(ctx context.Context, in *SimpleReq, opts ...grpc.CallOption) (*ai.DialogResp, error)
-	GenerateCid(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.GenerateCidResp, error)
-	Dialog(ctx context.Context, in *DialogReq, opts ...grpc.CallOption) (*ai.DialogResp, error)
-	DialogStream(ctx context.Context, in *DialogReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.DialogStreamResp], error)
-	ClearContext(ctx context.Context, in *ai.ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetContext(ctx context.Context, in *ai.GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error)
-	SimpleTextToSpeech(ctx context.Context, in *ai.SimpleTextToSpeechReq, opts ...grpc.CallOption) (*ai.SimpleTextToSpeechResp, error)
-	SimpleSpeechToText(ctx context.Context, in *ai.SimpleSpeechToTextReq, opts ...grpc.CallOption) (*ai.SimpleSpeechToTextResp, error)
-	SpeechToSpeech(ctx context.Context, in *SpeechToSpeechReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
-	SpeechToSpeech2(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
+	// ── 会话管理 ──
+	NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.NewSessionResp, error)
+	Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*ai.SendResp, error)
+	Stream(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.StreamResp], error)
+	GetHistory(ctx context.Context, in *ai.GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error)
+	ClearHistory(ctx context.Context, in *ai.ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── 多模态对话(带工具调用);Resume = 交回工具结果续跑(原 xxx2)──
 	TextToText(ctx context.Context, in *TextToTextReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
-	TextToText2(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
+	TextToTextResume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
 	SpeechToText(ctx context.Context, in *SpeechToTextReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
-	SpeechToText2(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
+	SpeechToTextResume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
+	SpeechToSpeech(ctx context.Context, in *SpeechToSpeechReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
+	SpeechToSpeechResume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
 }
 
 type chatClient struct {
@@ -67,43 +65,33 @@ func NewChatClient(cc grpc.ClientConnInterface) ChatClient {
 	return &chatClient{cc}
 }
 
-func (c *chatClient) Simple(ctx context.Context, in *SimpleReq, opts ...grpc.CallOption) (*ai.DialogResp, error) {
+func (c *chatClient) NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.NewSessionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.DialogResp)
-	err := c.cc.Invoke(ctx, Chat_Simple_FullMethodName, in, out, cOpts...)
+	out := new(ai.NewSessionResp)
+	err := c.cc.Invoke(ctx, Chat_NewSession_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatClient) GenerateCid(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.GenerateCidResp, error) {
+func (c *chatClient) Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*ai.SendResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.GenerateCidResp)
-	err := c.cc.Invoke(ctx, Chat_GenerateCid_FullMethodName, in, out, cOpts...)
+	out := new(ai.SendResp)
+	err := c.cc.Invoke(ctx, Chat_Send_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatClient) Dialog(ctx context.Context, in *DialogReq, opts ...grpc.CallOption) (*ai.DialogResp, error) {
+func (c *chatClient) Stream(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.StreamResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.DialogResp)
-	err := c.cc.Invoke(ctx, Chat_Dialog_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_Stream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
-}
-
-func (c *chatClient) DialogStream(ctx context.Context, in *DialogReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.DialogStreamResp], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_DialogStream_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[DialogReq, ai.DialogStreamResp]{ClientStream: stream}
+	x := &grpc.GenericClientStream[SendReq, ai.StreamResp]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -114,62 +102,22 @@ func (c *chatClient) DialogStream(ctx context.Context, in *DialogReq, opts ...gr
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Chat_DialogStreamClient = grpc.ServerStreamingClient[ai.DialogStreamResp]
+type Chat_StreamClient = grpc.ServerStreamingClient[ai.StreamResp]
 
-func (c *chatClient) ClearContext(ctx context.Context, in *ai.ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *chatClient) GetHistory(ctx context.Context, in *ai.GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetHistoryResp)
+	err := c.cc.Invoke(ctx, Chat_GetHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatClient) ClearHistory(ctx context.Context, in *ai.ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Chat_ClearContext_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chatClient) GetContext(ctx context.Context, in *ai.GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetContextResp)
-	err := c.cc.Invoke(ctx, Chat_GetContext_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chatClient) SimpleTextToSpeech(ctx context.Context, in *ai.SimpleTextToSpeechReq, opts ...grpc.CallOption) (*ai.SimpleTextToSpeechResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.SimpleTextToSpeechResp)
-	err := c.cc.Invoke(ctx, Chat_SimpleTextToSpeech_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chatClient) SimpleSpeechToText(ctx context.Context, in *ai.SimpleSpeechToTextReq, opts ...grpc.CallOption) (*ai.SimpleSpeechToTextResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.SimpleSpeechToTextResp)
-	err := c.cc.Invoke(ctx, Chat_SimpleSpeechToText_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chatClient) SpeechToSpeech(ctx context.Context, in *SpeechToSpeechReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ChatResp)
-	err := c.cc.Invoke(ctx, Chat_SpeechToSpeech_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chatClient) SpeechToSpeech2(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ChatResp)
-	err := c.cc.Invoke(ctx, Chat_SpeechToSpeech2_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Chat_ClearHistory_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -186,10 +134,10 @@ func (c *chatClient) TextToText(ctx context.Context, in *TextToTextReq, opts ...
 	return out, nil
 }
 
-func (c *chatClient) TextToText2(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
+func (c *chatClient) TextToTextResume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.ChatResp)
-	err := c.cc.Invoke(ctx, Chat_TextToText2_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Chat_TextToTextResume_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -206,10 +154,30 @@ func (c *chatClient) SpeechToText(ctx context.Context, in *SpeechToTextReq, opts
 	return out, nil
 }
 
-func (c *chatClient) SpeechToText2(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
+func (c *chatClient) SpeechToTextResume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.ChatResp)
-	err := c.cc.Invoke(ctx, Chat_SpeechToText2_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Chat_SpeechToTextResume_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatClient) SpeechToSpeech(ctx context.Context, in *SpeechToSpeechReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ai.ChatResp)
+	err := c.cc.Invoke(ctx, Chat_SpeechToSpeech_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatClient) SpeechToSpeechResume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ai.ChatResp)
+	err := c.cc.Invoke(ctx, Chat_SpeechToSpeechResume_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -220,22 +188,23 @@ func (c *chatClient) SpeechToText2(ctx context.Context, in *ToolCallResultsReq, 
 // All implementations should embed UnimplementedChatServer
 // for forward compatibility.
 //
-// Token鉴权
+// 对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
+//
+// (原 Simple 已删 —— ai 侧同步删掉了:那是给前端**无身份**直连 llm 推理的便捷方法,有安全隐患。)
 type ChatServer interface {
-	Simple(context.Context, *SimpleReq) (*ai.DialogResp, error)
-	GenerateCid(context.Context, *emptypb.Empty) (*ai.GenerateCidResp, error)
-	Dialog(context.Context, *DialogReq) (*ai.DialogResp, error)
-	DialogStream(*DialogReq, grpc.ServerStreamingServer[ai.DialogStreamResp]) error
-	ClearContext(context.Context, *ai.ClearContextReq) (*emptypb.Empty, error)
-	GetContext(context.Context, *ai.GetContextReq) (*GetContextResp, error)
-	SimpleTextToSpeech(context.Context, *ai.SimpleTextToSpeechReq) (*ai.SimpleTextToSpeechResp, error)
-	SimpleSpeechToText(context.Context, *ai.SimpleSpeechToTextReq) (*ai.SimpleSpeechToTextResp, error)
-	SpeechToSpeech(context.Context, *SpeechToSpeechReq) (*ai.ChatResp, error)
-	SpeechToSpeech2(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
+	// ── 会话管理 ──
+	NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error)
+	Send(context.Context, *SendReq) (*ai.SendResp, error)
+	Stream(*SendReq, grpc.ServerStreamingServer[ai.StreamResp]) error
+	GetHistory(context.Context, *ai.GetHistoryReq) (*GetHistoryResp, error)
+	ClearHistory(context.Context, *ai.ClearHistoryReq) (*emptypb.Empty, error)
+	// ── 多模态对话(带工具调用);Resume = 交回工具结果续跑(原 xxx2)──
 	TextToText(context.Context, *TextToTextReq) (*ai.ChatResp, error)
-	TextToText2(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
+	TextToTextResume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
 	SpeechToText(context.Context, *SpeechToTextReq) (*ai.ChatResp, error)
-	SpeechToText2(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
+	SpeechToTextResume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
+	SpeechToSpeech(context.Context, *SpeechToSpeechReq) (*ai.ChatResp, error)
+	SpeechToSpeechResume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
 }
 
 // UnimplementedChatServer should be embedded to have
@@ -245,47 +214,38 @@ type ChatServer interface {
 // pointer dereference when methods are called.
 type UnimplementedChatServer struct{}
 
-func (UnimplementedChatServer) Simple(context.Context, *SimpleReq) (*ai.DialogResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Simple not implemented")
+func (UnimplementedChatServer) NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method NewSession not implemented")
 }
-func (UnimplementedChatServer) GenerateCid(context.Context, *emptypb.Empty) (*ai.GenerateCidResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GenerateCid not implemented")
+func (UnimplementedChatServer) Send(context.Context, *SendReq) (*ai.SendResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Send not implemented")
 }
-func (UnimplementedChatServer) Dialog(context.Context, *DialogReq) (*ai.DialogResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Dialog not implemented")
+func (UnimplementedChatServer) Stream(*SendReq, grpc.ServerStreamingServer[ai.StreamResp]) error {
+	return status.Error(codes.Unimplemented, "method Stream not implemented")
 }
-func (UnimplementedChatServer) DialogStream(*DialogReq, grpc.ServerStreamingServer[ai.DialogStreamResp]) error {
-	return status.Error(codes.Unimplemented, "method DialogStream not implemented")
+func (UnimplementedChatServer) GetHistory(context.Context, *ai.GetHistoryReq) (*GetHistoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetHistory not implemented")
 }
-func (UnimplementedChatServer) ClearContext(context.Context, *ai.ClearContextReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method ClearContext not implemented")
-}
-func (UnimplementedChatServer) GetContext(context.Context, *ai.GetContextReq) (*GetContextResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetContext not implemented")
-}
-func (UnimplementedChatServer) SimpleTextToSpeech(context.Context, *ai.SimpleTextToSpeechReq) (*ai.SimpleTextToSpeechResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SimpleTextToSpeech not implemented")
-}
-func (UnimplementedChatServer) SimpleSpeechToText(context.Context, *ai.SimpleSpeechToTextReq) (*ai.SimpleSpeechToTextResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SimpleSpeechToText not implemented")
-}
-func (UnimplementedChatServer) SpeechToSpeech(context.Context, *SpeechToSpeechReq) (*ai.ChatResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SpeechToSpeech not implemented")
-}
-func (UnimplementedChatServer) SpeechToSpeech2(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SpeechToSpeech2 not implemented")
+func (UnimplementedChatServer) ClearHistory(context.Context, *ai.ClearHistoryReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearHistory not implemented")
 }
 func (UnimplementedChatServer) TextToText(context.Context, *TextToTextReq) (*ai.ChatResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method TextToText not implemented")
 }
-func (UnimplementedChatServer) TextToText2(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method TextToText2 not implemented")
+func (UnimplementedChatServer) TextToTextResume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method TextToTextResume not implemented")
 }
 func (UnimplementedChatServer) SpeechToText(context.Context, *SpeechToTextReq) (*ai.ChatResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SpeechToText not implemented")
 }
-func (UnimplementedChatServer) SpeechToText2(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SpeechToText2 not implemented")
+func (UnimplementedChatServer) SpeechToTextResume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SpeechToTextResume not implemented")
+}
+func (UnimplementedChatServer) SpeechToSpeech(context.Context, *SpeechToSpeechReq) (*ai.ChatResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SpeechToSpeech not implemented")
+}
+func (UnimplementedChatServer) SpeechToSpeechResume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SpeechToSpeechResume not implemented")
 }
 func (UnimplementedChatServer) testEmbeddedByValue() {}
 
@@ -307,175 +267,85 @@ func RegisterChatServer(s grpc.ServiceRegistrar, srv ChatServer) {
 	s.RegisterService(&Chat_ServiceDesc, srv)
 }
 
-func _Chat_Simple_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SimpleReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).Simple(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_Simple_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).Simple(ctx, req.(*SimpleReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Chat_GenerateCid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Chat_NewSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).GenerateCid(ctx, in)
+		return srv.(ChatServer).NewSession(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_GenerateCid_FullMethodName,
+		FullMethod: Chat_NewSession_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).GenerateCid(ctx, req.(*emptypb.Empty))
+		return srv.(ChatServer).NewSession(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_Dialog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DialogReq)
+func _Chat_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).Dialog(ctx, in)
+		return srv.(ChatServer).Send(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_Dialog_FullMethodName,
+		FullMethod: Chat_Send_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).Dialog(ctx, req.(*DialogReq))
+		return srv.(ChatServer).Send(ctx, req.(*SendReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_DialogStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(DialogReq)
+func _Chat_Stream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SendReq)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ChatServer).DialogStream(m, &grpc.GenericServerStream[DialogReq, ai.DialogStreamResp]{ServerStream: stream})
+	return srv.(ChatServer).Stream(m, &grpc.GenericServerStream[SendReq, ai.StreamResp]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Chat_DialogStreamServer = grpc.ServerStreamingServer[ai.DialogStreamResp]
+type Chat_StreamServer = grpc.ServerStreamingServer[ai.StreamResp]
 
-func _Chat_ClearContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ClearContextReq)
+func _Chat_GetHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.GetHistoryReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).ClearContext(ctx, in)
+		return srv.(ChatServer).GetHistory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_ClearContext_FullMethodName,
+		FullMethod: Chat_GetHistory_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).ClearContext(ctx, req.(*ai.ClearContextReq))
+		return srv.(ChatServer).GetHistory(ctx, req.(*ai.GetHistoryReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_GetContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.GetContextReq)
+func _Chat_ClearHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.ClearHistoryReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).GetContext(ctx, in)
+		return srv.(ChatServer).ClearHistory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_GetContext_FullMethodName,
+		FullMethod: Chat_ClearHistory_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).GetContext(ctx, req.(*ai.GetContextReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Chat_SimpleTextToSpeech_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.SimpleTextToSpeechReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).SimpleTextToSpeech(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_SimpleTextToSpeech_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).SimpleTextToSpeech(ctx, req.(*ai.SimpleTextToSpeechReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Chat_SimpleSpeechToText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.SimpleSpeechToTextReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).SimpleSpeechToText(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_SimpleSpeechToText_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).SimpleSpeechToText(ctx, req.(*ai.SimpleSpeechToTextReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Chat_SpeechToSpeech_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SpeechToSpeechReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).SpeechToSpeech(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_SpeechToSpeech_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).SpeechToSpeech(ctx, req.(*SpeechToSpeechReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Chat_SpeechToSpeech2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ToolCallResultsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).SpeechToSpeech2(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_SpeechToSpeech2_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).SpeechToSpeech2(ctx, req.(*ToolCallResultsReq))
+		return srv.(ChatServer).ClearHistory(ctx, req.(*ai.ClearHistoryReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -498,20 +368,20 @@ func _Chat_TextToText_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_TextToText2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Chat_TextToTextResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ToolCallResultsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).TextToText2(ctx, in)
+		return srv.(ChatServer).TextToTextResume(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_TextToText2_FullMethodName,
+		FullMethod: Chat_TextToTextResume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).TextToText2(ctx, req.(*ToolCallResultsReq))
+		return srv.(ChatServer).TextToTextResume(ctx, req.(*ToolCallResultsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -534,20 +404,56 @@ func _Chat_SpeechToText_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_SpeechToText2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Chat_SpeechToTextResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ToolCallResultsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).SpeechToText2(ctx, in)
+		return srv.(ChatServer).SpeechToTextResume(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_SpeechToText2_FullMethodName,
+		FullMethod: Chat_SpeechToTextResume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).SpeechToText2(ctx, req.(*ToolCallResultsReq))
+		return srv.(ChatServer).SpeechToTextResume(ctx, req.(*ToolCallResultsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Chat_SpeechToSpeech_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SpeechToSpeechReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServer).SpeechToSpeech(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chat_SpeechToSpeech_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServer).SpeechToSpeech(ctx, req.(*SpeechToSpeechReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Chat_SpeechToSpeechResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ToolCallResultsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServer).SpeechToSpeechResume(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chat_SpeechToSpeechResume_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServer).SpeechToSpeechResume(ctx, req.(*ToolCallResultsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -560,62 +466,50 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ChatServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Simple",
-			Handler:    _Chat_Simple_Handler,
+			MethodName: "NewSession",
+			Handler:    _Chat_NewSession_Handler,
 		},
 		{
-			MethodName: "GenerateCid",
-			Handler:    _Chat_GenerateCid_Handler,
+			MethodName: "Send",
+			Handler:    _Chat_Send_Handler,
 		},
 		{
-			MethodName: "Dialog",
-			Handler:    _Chat_Dialog_Handler,
+			MethodName: "GetHistory",
+			Handler:    _Chat_GetHistory_Handler,
 		},
 		{
-			MethodName: "ClearContext",
-			Handler:    _Chat_ClearContext_Handler,
-		},
-		{
-			MethodName: "GetContext",
-			Handler:    _Chat_GetContext_Handler,
-		},
-		{
-			MethodName: "SimpleTextToSpeech",
-			Handler:    _Chat_SimpleTextToSpeech_Handler,
-		},
-		{
-			MethodName: "SimpleSpeechToText",
-			Handler:    _Chat_SimpleSpeechToText_Handler,
-		},
-		{
-			MethodName: "SpeechToSpeech",
-			Handler:    _Chat_SpeechToSpeech_Handler,
-		},
-		{
-			MethodName: "SpeechToSpeech2",
-			Handler:    _Chat_SpeechToSpeech2_Handler,
+			MethodName: "ClearHistory",
+			Handler:    _Chat_ClearHistory_Handler,
 		},
 		{
 			MethodName: "TextToText",
 			Handler:    _Chat_TextToText_Handler,
 		},
 		{
-			MethodName: "TextToText2",
-			Handler:    _Chat_TextToText2_Handler,
+			MethodName: "TextToTextResume",
+			Handler:    _Chat_TextToTextResume_Handler,
 		},
 		{
 			MethodName: "SpeechToText",
 			Handler:    _Chat_SpeechToText_Handler,
 		},
 		{
-			MethodName: "SpeechToText2",
-			Handler:    _Chat_SpeechToText2_Handler,
+			MethodName: "SpeechToTextResume",
+			Handler:    _Chat_SpeechToTextResume_Handler,
+		},
+		{
+			MethodName: "SpeechToSpeech",
+			Handler:    _Chat_SpeechToSpeech_Handler,
+		},
+		{
+			MethodName: "SpeechToSpeechResume",
+			Handler:    _Chat_SpeechToSpeechResume_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "DialogStream",
-			Handler:       _Chat_DialogStream_Handler,
+			StreamName:    "Stream",
+			Handler:       _Chat_Stream_Handler,
 			ServerStreams: true,
 		},
 	},

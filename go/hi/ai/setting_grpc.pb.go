@@ -20,18 +20,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Setting_Edit_FullMethodName = "/hi.ai.Setting/Edit"
 	Setting_Get_FullMethodName  = "/hi.ai.Setting/Get"
+	Setting_Edit_FullMethodName = "/hi.ai.Setting/Edit"
 )
 
 // SettingClient is the client API for Setting service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Token鉴权
+// hiai 服务级全局配置(主体=服务自身设置)。**超管档**。
+//
+// 代理与 OpenAI 端点都是 **hiai 服务内部自用**的:整个服务对外连 OpenAI 就一套,
+// 不是每个商户各配一份(原实现读的也确实是全局、忽略 ctx did),故归超管而非商户档。
+// 超管名单穿透 hidid `SuperAdmin.List`。
 type SettingClient interface {
-	Edit(ctx context.Context, in *SettingEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SettingGetResp, error)
+	Edit(ctx context.Context, in *SettingEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type settingClient struct {
@@ -40,16 +44,6 @@ type settingClient struct {
 
 func NewSettingClient(cc grpc.ClientConnInterface) SettingClient {
 	return &settingClient{cc}
-}
-
-func (c *settingClient) Edit(ctx context.Context, in *SettingEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Setting_Edit_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *settingClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SettingGetResp, error) {
@@ -62,14 +56,28 @@ func (c *settingClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc
 	return out, nil
 }
 
+func (c *settingClient) Edit(ctx context.Context, in *SettingEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Setting_Edit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SettingServer is the server API for Setting service.
 // All implementations should embed UnimplementedSettingServer
 // for forward compatibility.
 //
-// Token鉴权
+// hiai 服务级全局配置(主体=服务自身设置)。**超管档**。
+//
+// 代理与 OpenAI 端点都是 **hiai 服务内部自用**的:整个服务对外连 OpenAI 就一套,
+// 不是每个商户各配一份(原实现读的也确实是全局、忽略 ctx did),故归超管而非商户档。
+// 超管名单穿透 hidid `SuperAdmin.List`。
 type SettingServer interface {
-	Edit(context.Context, *SettingEditReq) (*emptypb.Empty, error)
 	Get(context.Context, *emptypb.Empty) (*SettingGetResp, error)
+	Edit(context.Context, *SettingEditReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedSettingServer should be embedded to have
@@ -79,11 +87,11 @@ type SettingServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSettingServer struct{}
 
-func (UnimplementedSettingServer) Edit(context.Context, *SettingEditReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
-}
 func (UnimplementedSettingServer) Get(context.Context, *emptypb.Empty) (*SettingGetResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedSettingServer) Edit(context.Context, *SettingEditReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedSettingServer) testEmbeddedByValue() {}
 
@@ -105,24 +113,6 @@ func RegisterSettingServer(s grpc.ServiceRegistrar, srv SettingServer) {
 	s.RegisterService(&Setting_ServiceDesc, srv)
 }
 
-func _Setting_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SettingEditReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SettingServer).Edit(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Setting_Edit_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SettingServer).Edit(ctx, req.(*SettingEditReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Setting_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -141,6 +131,24 @@ func _Setting_Get_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Setting_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SettingEditReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingServer).Edit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Setting_Edit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingServer).Edit(ctx, req.(*SettingEditReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Setting_ServiceDesc is the grpc.ServiceDesc for Setting service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -149,12 +157,12 @@ var Setting_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*SettingServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Edit",
-			Handler:    _Setting_Edit_Handler,
-		},
-		{
 			MethodName: "Get",
 			Handler:    _Setting_Get_Handler,
+		},
+		{
+			MethodName: "Edit",
+			Handler:    _Setting_Edit_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

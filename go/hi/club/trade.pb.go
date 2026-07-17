@@ -863,14 +863,15 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"pagination\"O\n" +
 	"\rListTradeResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12(\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\x9b\x03\n" +
-	"\x05Trade\x12F\n" +
-	"\vGetTradeFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x04\x88\xb5\x18\x02\x12=\n" +
-	"\bGetTrade\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x04\x88\xb5\x18\x02\x12=\n" +
-	"\bAddTrade\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x04\x88\xb5\x18\x02\x12L\n" +
-	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x02\x12;\n" +
-	"\x04List\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeResp\"\x04\x88\xb5\x18\x02\x12A\n" +
-	"\aListAll\x12\x18.hi.club.ListAllTradeReq\x1a\x16.hi.club.ListTradeResp\"\x04\x88\xb5\x18\x05B\x81\x01\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\xdd\x02\n" +
+	"\x05Trade\x12G\n" +
+	"\vGetTradeFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\bGetTrade\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\bAddTrade\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x05\x8a\xb5\x18\x01\x02\x12M\n" +
+	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x04List\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeResp\"\x05\x8a\xb5\x18\x01\x022N\n" +
+	"\vTradeManage\x12?\n" +
+	"\x04List\x12\x18.hi.club.ListAllTradeReq\x1a\x16.hi.club.ListTradeResp\"\x05\x8a\xb5\x18\x01\x04B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"TradeProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
@@ -930,13 +931,13 @@ var file_hi_club_trade_proto_depIdxs = []int32{
 	8,  // 17: hi.club.Trade.AddTrade:input_type -> hi.club.AddTradeReq
 	10, // 18: hi.club.Trade.UpdateTransHash:input_type -> hi.club.UpdateTransHashReq
 	11, // 19: hi.club.Trade.List:input_type -> hi.club.ListTradeReq
-	12, // 20: hi.club.Trade.ListAll:input_type -> hi.club.ListAllTradeReq
+	12, // 20: hi.club.TradeManage.List:input_type -> hi.club.ListAllTradeReq
 	3,  // 21: hi.club.Trade.GetTradeFee:output_type -> hi.club.GetTradeFeeResp
 	7,  // 22: hi.club.Trade.GetTrade:output_type -> hi.club.GetTradeResp
 	9,  // 23: hi.club.Trade.AddTrade:output_type -> hi.club.AddTradeResp
 	19, // 24: hi.club.Trade.UpdateTransHash:output_type -> google.protobuf.Empty
 	13, // 25: hi.club.Trade.List:output_type -> hi.club.ListTradeResp
-	13, // 26: hi.club.Trade.ListAll:output_type -> hi.club.ListTradeResp
+	13, // 26: hi.club.TradeManage.List:output_type -> hi.club.ListTradeResp
 	21, // [21:27] is the sub-list for method output_type
 	15, // [15:21] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name
@@ -957,7 +958,7 @@ func file_hi_club_trade_proto_init() {
 			NumEnums:      0,
 			NumMessages:   15,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_club_trade_proto_goTypes,
 		DependencyIndexes: file_hi_club_trade_proto_depIdxs,

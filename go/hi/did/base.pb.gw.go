@@ -239,7 +239,7 @@ func RegisterBaseHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Base/UserTotal", runtime.WithHTTPPathPattern("/api/v1/user/total"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Base/UserTotal", runtime.WithHTTPPathPattern("/api/v1/base/user_total"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -269,7 +269,7 @@ func RegisterSuperAdminHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.SuperAdmin/List", runtime.WithHTTPPathPattern("/api/v1/base/list_superadminusers"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.SuperAdmin/List", runtime.WithHTTPPathPattern("/api/v1/super_admin/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -378,7 +378,7 @@ func RegisterBaseHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Base/UserTotal", runtime.WithHTTPPathPattern("/api/v1/user/total"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Base/UserTotal", runtime.WithHTTPPathPattern("/api/v1/base/user_total"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -398,7 +398,7 @@ var (
 	pattern_Base_ListCoins_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Base", "ListCoins"}, ""))
 	pattern_Base_LatestVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "base", "latest_version"}, ""))
 	pattern_Base_ServerVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Base", "ServerVersion"}, ""))
-	pattern_Base_UserTotal_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "user", "total"}, ""))
+	pattern_Base_UserTotal_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "base", "user_total"}, ""))
 )
 
 var (
@@ -448,7 +448,7 @@ func RegisterSuperAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.SuperAdmin/List", runtime.WithHTTPPathPattern("/api/v1/base/list_superadminusers"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.SuperAdmin/List", runtime.WithHTTPPathPattern("/api/v1/super_admin/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -465,7 +465,7 @@ func RegisterSuperAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_SuperAdmin_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "base", "list_superadminusers"}, ""))
+	pattern_SuperAdmin_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "super_admin", "list"}, ""))
 )
 
 var (

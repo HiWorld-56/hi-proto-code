@@ -606,12 +606,12 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x10confirmed_blocks\x18\x04 \x01(\x03R\x0fconfirmedBlocks\x12\x1c\n" +
 	"\ttimestamp\x18\x05 \x01(\x03R\ttimestamp\x12\x1f\n" +
 	"\vquery_count\x18\x06 \x01(\rR\n" +
-	"queryCount2\x8b\x02\n" +
-	"\bTransfer\x128\n" +
-	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\"\x04\x88\xb5\x18\x01\x12;\n" +
-	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusResp\"\x04\x88\xb5\x18\x01\x12V\n" +
-	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x04\x88\xb5\x18\x01\x120\n" +
-	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x04\x88\xb5\x18\x06B~\n" +
+	"queryCount2\x8f\x02\n" +
+	"\bTransfer\x129\n" +
+	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\"\x05\x8a\xb5\x18\x01\x01\x12<\n" +
+	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12W\n" +
+	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x05\x8a\xb5\x18\x01\x01\x121\n" +
+	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x05\x8a\xb5\x18\x01\x05B~\n" +
 	"\n" +
 	"com.hi.didB\rTransferProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 

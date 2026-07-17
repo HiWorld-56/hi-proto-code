@@ -182,9 +182,9 @@ const file_hi_did_price_proto_rawDesc = "" +
 	"\bexchange\x18\x02 \x01(\tR\bexchange\x1a>\n" +
 	"\x04Unit\x12\x14\n" +
 	"\x05price\x18\x01 \x01(\tR\x05price\x12 \n" +
-	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinR\x04coin2D\n" +
-	"\x05Price\x12;\n" +
-	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x04\x88\xb5\x18\x01B{\n" +
+	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinR\x04coin2E\n" +
+	"\x05Price\x12<\n" +
+	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x05\x8a\xb5\x18\x01\x01B{\n" +
 	"\n" +
 	"com.hi.didB\n" +
 	"PriceProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"

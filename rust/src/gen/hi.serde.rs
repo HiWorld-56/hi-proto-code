@@ -7,12 +7,10 @@ impl serde::Serialize for Auth {
         let variant = match self {
             Self::Unspecified => "AUTH_UNSPECIFIED",
             Self::None => "AUTH_NONE",
-            Self::Token => "AUTH_TOKEN",
-            Self::ExtendToken => "AUTH_EXTEND_TOKEN",
-            Self::ApiKey => "AUTH_API_KEY",
+            Self::User => "AUTH_USER",
+            Self::Merchant => "AUTH_MERCHANT",
             Self::Superadmin => "AUTH_SUPERADMIN",
             Self::Web3 => "AUTH_WEB3",
-            Self::TokenOrExtend => "AUTH_TOKEN_OR_EXTEND",
         };
         serializer.serialize_str(variant)
     }
@@ -26,12 +24,10 @@ impl<'de> serde::Deserialize<'de> for Auth {
         const FIELDS: &[&str] = &[
             "AUTH_UNSPECIFIED",
             "AUTH_NONE",
-            "AUTH_TOKEN",
-            "AUTH_EXTEND_TOKEN",
-            "AUTH_API_KEY",
+            "AUTH_USER",
+            "AUTH_MERCHANT",
             "AUTH_SUPERADMIN",
             "AUTH_WEB3",
-            "AUTH_TOKEN_OR_EXTEND",
         ];
 
         struct GeneratedVisitor;
@@ -74,12 +70,10 @@ impl<'de> serde::Deserialize<'de> for Auth {
                 match value {
                     "AUTH_UNSPECIFIED" => Ok(Auth::Unspecified),
                     "AUTH_NONE" => Ok(Auth::None),
-                    "AUTH_TOKEN" => Ok(Auth::Token),
-                    "AUTH_EXTEND_TOKEN" => Ok(Auth::ExtendToken),
-                    "AUTH_API_KEY" => Ok(Auth::ApiKey),
+                    "AUTH_USER" => Ok(Auth::User),
+                    "AUTH_MERCHANT" => Ok(Auth::Merchant),
                     "AUTH_SUPERADMIN" => Ok(Auth::Superadmin),
                     "AUTH_WEB3" => Ok(Auth::Web3),
-                    "AUTH_TOKEN_OR_EXTEND" => Ok(Auth::TokenOrExtend),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

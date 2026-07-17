@@ -26,9 +26,9 @@ var File_hi_club_assets_proto protoreflect.FileDescriptor
 
 const file_hi_club_assets_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/assets.proto\x12\ahi.club\x1a\x13hi/did/wallet.proto\x1a\x10hi/options.proto2T\n" +
-	"\x06Assets\x12J\n" +
-	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x04\x88\xb5\x18\x01B\x82\x01\n" +
+	"\x14hi/club/assets.proto\x12\ahi.club\x1a\x13hi/did/wallet.proto\x1a\x10hi/options.proto2U\n" +
+	"\x06Assets\x12K\n" +
+	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x05\x8a\xb5\x18\x01\x01B\x82\x01\n" +
 	"\vcom.hi.clubB\vAssetsProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_assets_proto_goTypes = []any{

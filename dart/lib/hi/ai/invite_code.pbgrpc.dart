@@ -22,7 +22,9 @@ import '../did/admin.pb.dart' as $1;
 
 export 'invite_code.pb.dart';
 
-/// 邀请码
+/// 邀请码管理(超管)。原先 Create/Edit/List/Delete 在 handler 里自己查超管、proto 却标 TOKEN,
+/// 且和公开的 Verify 混在同一个 service —— 混档。现在:管理归超管、注册拆去 Register。
+/// 超管名单穿透 hidid `SuperAdmin.List`(ai 不得自建超管表)。
 @$pb.GrpcServiceName('hi.ai.InviteCode')
 class InviteCodeClient extends $grpc.Client {
   /// The hostname for this service.
@@ -63,13 +65,6 @@ class InviteCodeClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.AuthToken> verify(
-    $1.InviteCodeVerifyReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$verify, request, options: options);
-  }
-
   // method descriptors
 
   static final _$create = $grpc.ClientMethod<$0.Empty, $1.InviteCodeCreateResp>(
@@ -89,11 +84,6 @@ class InviteCodeClient extends $grpc.Client {
       '/hi.ai.InviteCode/Delete',
       ($1.InviteCodeDeleteReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$verify =
-      $grpc.ClientMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
-          '/hi.ai.InviteCode/Verify',
-          ($1.InviteCodeVerifyReq value) => value.writeToBuffer(),
-          $2.AuthToken.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.InviteCode')
@@ -130,14 +120,6 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.InviteCodeDeleteReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
-        'Verify',
-        verify_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.InviteCodeVerifyReq.fromBuffer(value),
-        ($2.AuthToken value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.InviteCodeCreateResp> create_Pre(
@@ -171,6 +153,52 @@ abstract class InviteCodeServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> delete(
       $grpc.ServiceCall call, $1.InviteCodeDeleteReq request);
+}
+
+/// 注册(公开)。验邀请码(72h 内有效)→ 用户不存在则建 → 标记邀请码已用 → 签发 token。
+/// 从 InviteCode 拆出:主体不同(注册者 vs 超管),档位不同。与 hi.did.Register.Verify 同形对齐。
+@$pb.GrpcServiceName('hi.ai.Register')
+class RegisterClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  RegisterClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$2.AuthToken> verify(
+    $1.InviteCodeVerifyReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$verify, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$verify =
+      $grpc.ClientMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
+          '/hi.ai.Register/Verify',
+          ($1.InviteCodeVerifyReq value) => value.writeToBuffer(),
+          $2.AuthToken.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.ai.Register')
+abstract class RegisterServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.ai.Register';
+
+  RegisterServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
+        'Verify',
+        verify_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.InviteCodeVerifyReq.fromBuffer(value),
+        ($2.AuthToken value) => value.writeToBuffer()));
+  }
 
   $async.Future<$2.AuthToken> verify_Pre($grpc.ServiceCall $call,
       $async.Future<$1.InviteCodeVerifyReq> $request) async {

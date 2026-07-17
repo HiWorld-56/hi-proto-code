@@ -15,13 +15,17 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
-import 'agent.pb.dart' as $1;
+import 'agent.pb.dart' as $0;
 
 export 'agent.pb.dart';
 
-/// apiKey鉴权
+/// 智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
+/// 两者解出同一个商户 did。
+///
+/// (原 Transfer 已删 —— 它自称"转让 apikey+bot"但只改了 creator,还会顺带把目标非超级用户的
+///  bot 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
 @$pb.GrpcServiceName('hi.ai.Agent')
 class AgentClient extends $grpc.Client {
   /// The hostname for this service.
@@ -34,180 +38,123 @@ class AgentClient extends $grpc.Client {
 
   AgentClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.ListLLMResp> listLlmModels(
-    $0.Empty request, {
+  $grpc.ResponseFuture<$0.CreateAgentResp> create(
+    $0.CreateAgentReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listLlmModels, request, options: options);
+    return $createUnaryCall(_$create, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListEmbeddingResp> listEmbeddings(
-    $0.Empty request, {
+  $grpc.ResponseFuture<$1.Empty> edit(
+    $0.EditAgentReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listEmbeddings, request, options: options);
+    return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListSTTResp> listSttModels(
-    $0.Empty request, {
+  $grpc.ResponseFuture<$1.Empty> delete(
+    $0.DeleteAgentReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listSttModels, request, options: options);
+    return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListTTSResp> listTtsModels(
-    $0.Empty request, {
+  $grpc.ResponseFuture<$0.GetAgentResp> get(
+    $0.GetAgentReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listTtsModels, request, options: options);
+    return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.AgentConfigResp> agentConfig(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$agentConfig, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.CreateAgentResp> createAgent(
-    $1.CreateAgentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$createAgent, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> editAgent(
-    $1.EditAgentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$editAgent, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.ListAgentResp> list(
-    $1.ListAgentReq request, {
+  $grpc.ResponseFuture<$0.ListAgentResp> list(
+    $0.ListAgentReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListAgentResp> listFavorites(
-    $1.ListFavoriteReq request, {
+  $grpc.ResponseFuture<$1.Empty> mark(
+    $0.MarkAgentReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listFavorites, request, options: options);
+    return $createUnaryCall(_$mark, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> deleteAgent(
-    $1.DeleteAgentReq request, {
+  $grpc.ResponseFuture<$0.ListAgentResp> listMarks(
+    $0.ListMarksReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$deleteAgent, request, options: options);
+    return $createUnaryCall(_$listMarks, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.FindAgentResp> findAgent(
-    $1.FindAgentReq request, {
+  $grpc.ResponseFuture<$0.AgentUsageResp> getUsage(
+    $0.AgentUsageReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$findAgent, request, options: options);
+    return $createUnaryCall(_$getUsage, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.FindAgentCountResp> findAgentCount(
-    $1.FindAgentCountReq request, {
+  $grpc.ResponseFuture<$0.DefaultConfigResp> defaultConfig(
+    $1.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$findAgentCount, request, options: options);
+    return $createUnaryCall(_$defaultConfig, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> transfer(
-    $1.TransferReq request, {
+  $grpc.ResponseFuture<$1.Empty> resetToDefault(
+    $0.ResetToDefaultReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$transfer, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> updatesToDefault(
-    $1.UpdatesToDefaultReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$updatesToDefault, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> favoriteAgent(
-    $1.FavoriteAgentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$favoriteAgent, request, options: options);
+    return $createUnaryCall(_$resetToDefault, request, options: options);
   }
 
   // method descriptors
 
-  static final _$listLlmModels = $grpc.ClientMethod<$0.Empty, $1.ListLLMResp>(
-      '/hi.ai.Agent/ListLlmModels',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.ListLLMResp.fromBuffer);
-  static final _$listEmbeddings =
-      $grpc.ClientMethod<$0.Empty, $1.ListEmbeddingResp>(
-          '/hi.ai.Agent/ListEmbeddings',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.ListEmbeddingResp.fromBuffer);
-  static final _$listSttModels = $grpc.ClientMethod<$0.Empty, $1.ListSTTResp>(
-      '/hi.ai.Agent/ListSttModels',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.ListSTTResp.fromBuffer);
-  static final _$listTtsModels = $grpc.ClientMethod<$0.Empty, $1.ListTTSResp>(
-      '/hi.ai.Agent/ListTtsModels',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.ListTTSResp.fromBuffer);
-  static final _$agentConfig = $grpc.ClientMethod<$0.Empty, $1.AgentConfigResp>(
-      '/hi.ai.Agent/AgentConfig',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.AgentConfigResp.fromBuffer);
-  static final _$createAgent =
-      $grpc.ClientMethod<$1.CreateAgentReq, $1.CreateAgentResp>(
-          '/hi.ai.Agent/CreateAgent',
-          ($1.CreateAgentReq value) => value.writeToBuffer(),
-          $1.CreateAgentResp.fromBuffer);
-  static final _$editAgent = $grpc.ClientMethod<$1.EditAgentReq, $0.Empty>(
-      '/hi.ai.Agent/EditAgent',
-      ($1.EditAgentReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$list = $grpc.ClientMethod<$1.ListAgentReq, $1.ListAgentResp>(
+  static final _$create =
+      $grpc.ClientMethod<$0.CreateAgentReq, $0.CreateAgentResp>(
+          '/hi.ai.Agent/Create',
+          ($0.CreateAgentReq value) => value.writeToBuffer(),
+          $0.CreateAgentResp.fromBuffer);
+  static final _$edit = $grpc.ClientMethod<$0.EditAgentReq, $1.Empty>(
+      '/hi.ai.Agent/Edit',
+      ($0.EditAgentReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.DeleteAgentReq, $1.Empty>(
+      '/hi.ai.Agent/Delete',
+      ($0.DeleteAgentReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$get = $grpc.ClientMethod<$0.GetAgentReq, $0.GetAgentResp>(
+      '/hi.ai.Agent/Get',
+      ($0.GetAgentReq value) => value.writeToBuffer(),
+      $0.GetAgentResp.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$0.ListAgentReq, $0.ListAgentResp>(
       '/hi.ai.Agent/List',
-      ($1.ListAgentReq value) => value.writeToBuffer(),
-      $1.ListAgentResp.fromBuffer);
-  static final _$listFavorites =
-      $grpc.ClientMethod<$1.ListFavoriteReq, $1.ListAgentResp>(
-          '/hi.ai.Agent/ListFavorites',
-          ($1.ListFavoriteReq value) => value.writeToBuffer(),
-          $1.ListAgentResp.fromBuffer);
-  static final _$deleteAgent = $grpc.ClientMethod<$1.DeleteAgentReq, $0.Empty>(
-      '/hi.ai.Agent/DeleteAgent',
-      ($1.DeleteAgentReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$findAgent =
-      $grpc.ClientMethod<$1.FindAgentReq, $1.FindAgentResp>(
-          '/hi.ai.Agent/FindAgent',
-          ($1.FindAgentReq value) => value.writeToBuffer(),
-          $1.FindAgentResp.fromBuffer);
-  static final _$findAgentCount =
-      $grpc.ClientMethod<$1.FindAgentCountReq, $1.FindAgentCountResp>(
-          '/hi.ai.Agent/FindAgentCount',
-          ($1.FindAgentCountReq value) => value.writeToBuffer(),
-          $1.FindAgentCountResp.fromBuffer);
-  static final _$transfer = $grpc.ClientMethod<$1.TransferReq, $0.Empty>(
-      '/hi.ai.Agent/Transfer',
-      ($1.TransferReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$updatesToDefault =
-      $grpc.ClientMethod<$1.UpdatesToDefaultReq, $0.Empty>(
-          '/hi.ai.Agent/UpdatesToDefault',
-          ($1.UpdatesToDefaultReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$favoriteAgent =
-      $grpc.ClientMethod<$1.FavoriteAgentReq, $0.Empty>(
-          '/hi.ai.Agent/FavoriteAgent',
-          ($1.FavoriteAgentReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
+      ($0.ListAgentReq value) => value.writeToBuffer(),
+      $0.ListAgentResp.fromBuffer);
+  static final _$mark = $grpc.ClientMethod<$0.MarkAgentReq, $1.Empty>(
+      '/hi.ai.Agent/Mark',
+      ($0.MarkAgentReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$listMarks =
+      $grpc.ClientMethod<$0.ListMarksReq, $0.ListAgentResp>(
+          '/hi.ai.Agent/ListMarks',
+          ($0.ListMarksReq value) => value.writeToBuffer(),
+          $0.ListAgentResp.fromBuffer);
+  static final _$getUsage =
+      $grpc.ClientMethod<$0.AgentUsageReq, $0.AgentUsageResp>(
+          '/hi.ai.Agent/GetUsage',
+          ($0.AgentUsageReq value) => value.writeToBuffer(),
+          $0.AgentUsageResp.fromBuffer);
+  static final _$defaultConfig =
+      $grpc.ClientMethod<$1.Empty, $0.DefaultConfigResp>(
+          '/hi.ai.Agent/DefaultConfig',
+          ($1.Empty value) => value.writeToBuffer(),
+          $0.DefaultConfigResp.fromBuffer);
+  static final _$resetToDefault =
+      $grpc.ClientMethod<$0.ResetToDefaultReq, $1.Empty>(
+          '/hi.ai.Agent/ResetToDefault',
+          ($0.ResetToDefaultReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Agent')
@@ -215,232 +162,153 @@ abstract class AgentServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.Agent';
 
   AgentServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListLLMResp>(
-        'ListLlmModels',
-        listLlmModels_Pre,
+    $addMethod($grpc.ServiceMethod<$0.CreateAgentReq, $0.CreateAgentResp>(
+        'Create',
+        create_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListLLMResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListEmbeddingResp>(
-        'ListEmbeddings',
-        listEmbeddings_Pre,
+        ($core.List<$core.int> value) => $0.CreateAgentReq.fromBuffer(value),
+        ($0.CreateAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EditAgentReq, $1.Empty>(
+        'Edit',
+        edit_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListEmbeddingResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSTTResp>(
-        'ListSttModels',
-        listSttModels_Pre,
+        ($core.List<$core.int> value) => $0.EditAgentReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteAgentReq, $1.Empty>(
+        'Delete',
+        delete_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListSTTResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListTTSResp>(
-        'ListTtsModels',
-        listTtsModels_Pre,
+        ($core.List<$core.int> value) => $0.DeleteAgentReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetAgentReq, $0.GetAgentResp>(
+        'Get',
+        get_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListTTSResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.AgentConfigResp>(
-        'AgentConfig',
-        agentConfig_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.AgentConfigResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.CreateAgentReq, $1.CreateAgentResp>(
-        'CreateAgent',
-        createAgent_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.CreateAgentReq.fromBuffer(value),
-        ($1.CreateAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EditAgentReq, $0.Empty>(
-        'EditAgent',
-        editAgent_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.EditAgentReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ListAgentReq, $1.ListAgentResp>(
+        ($core.List<$core.int> value) => $0.GetAgentReq.fromBuffer(value),
+        ($0.GetAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListAgentReq, $0.ListAgentResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.ListAgentReq.fromBuffer(value),
-        ($1.ListAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ListFavoriteReq, $1.ListAgentResp>(
-        'ListFavorites',
-        listFavorites_Pre,
+        ($core.List<$core.int> value) => $0.ListAgentReq.fromBuffer(value),
+        ($0.ListAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.MarkAgentReq, $1.Empty>(
+        'Mark',
+        mark_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.ListFavoriteReq.fromBuffer(value),
-        ($1.ListAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DeleteAgentReq, $0.Empty>(
-        'DeleteAgent',
-        deleteAgent_Pre,
+        ($core.List<$core.int> value) => $0.MarkAgentReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListMarksReq, $0.ListAgentResp>(
+        'ListMarks',
+        listMarks_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.DeleteAgentReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.FindAgentReq, $1.FindAgentResp>(
-        'FindAgent',
-        findAgent_Pre,
+        ($core.List<$core.int> value) => $0.ListMarksReq.fromBuffer(value),
+        ($0.ListAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.AgentUsageReq, $0.AgentUsageResp>(
+        'GetUsage',
+        getUsage_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.FindAgentReq.fromBuffer(value),
-        ($1.FindAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.FindAgentCountReq, $1.FindAgentCountResp>(
-        'FindAgentCount',
-        findAgentCount_Pre,
+        ($core.List<$core.int> value) => $0.AgentUsageReq.fromBuffer(value),
+        ($0.AgentUsageResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.Empty, $0.DefaultConfigResp>(
+        'DefaultConfig',
+        defaultConfig_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.FindAgentCountReq.fromBuffer(value),
-        ($1.FindAgentCountResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.TransferReq, $0.Empty>(
-        'Transfer',
-        transfer_Pre,
+        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
+        ($0.DefaultConfigResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ResetToDefaultReq, $1.Empty>(
+        'ResetToDefault',
+        resetToDefault_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.TransferReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.UpdatesToDefaultReq, $0.Empty>(
-        'UpdatesToDefault',
-        updatesToDefault_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.UpdatesToDefaultReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.FavoriteAgentReq, $0.Empty>(
-        'FavoriteAgent',
-        favoriteAgent_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.FavoriteAgentReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.ResetToDefaultReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.ListLLMResp> listLlmModels_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listLlmModels($call, await $request);
+  $async.Future<$0.CreateAgentResp> create_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateAgentReq> $request) async {
+    return create($call, await $request);
   }
 
-  $async.Future<$1.ListLLMResp> listLlmModels(
-      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.CreateAgentResp> create(
+      $grpc.ServiceCall call, $0.CreateAgentReq request);
 
-  $async.Future<$1.ListEmbeddingResp> listEmbeddings_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listEmbeddings($call, await $request);
+  $async.Future<$1.Empty> edit_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.EditAgentReq> $request) async {
+    return edit($call, await $request);
   }
 
-  $async.Future<$1.ListEmbeddingResp> listEmbeddings(
-      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$1.Empty> edit($grpc.ServiceCall call, $0.EditAgentReq request);
 
-  $async.Future<$1.ListSTTResp> listSttModels_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listSttModels($call, await $request);
+  $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeleteAgentReq> $request) async {
+    return delete($call, await $request);
   }
 
-  $async.Future<$1.ListSTTResp> listSttModels(
-      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$1.Empty> delete(
+      $grpc.ServiceCall call, $0.DeleteAgentReq request);
 
-  $async.Future<$1.ListTTSResp> listTtsModels_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listTtsModels($call, await $request);
+  $async.Future<$0.GetAgentResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetAgentReq> $request) async {
+    return get($call, await $request);
   }
 
-  $async.Future<$1.ListTTSResp> listTtsModels(
-      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.GetAgentResp> get(
+      $grpc.ServiceCall call, $0.GetAgentReq request);
 
-  $async.Future<$1.AgentConfigResp> agentConfig_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return agentConfig($call, await $request);
-  }
-
-  $async.Future<$1.AgentConfigResp> agentConfig(
-      $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$1.CreateAgentResp> createAgent_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.CreateAgentReq> $request) async {
-    return createAgent($call, await $request);
-  }
-
-  $async.Future<$1.CreateAgentResp> createAgent(
-      $grpc.ServiceCall call, $1.CreateAgentReq request);
-
-  $async.Future<$0.Empty> editAgent_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.EditAgentReq> $request) async {
-    return editAgent($call, await $request);
-  }
-
-  $async.Future<$0.Empty> editAgent(
-      $grpc.ServiceCall call, $1.EditAgentReq request);
-
-  $async.Future<$1.ListAgentResp> list_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.ListAgentReq> $request) async {
+  $async.Future<$0.ListAgentResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListAgentReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$1.ListAgentResp> list(
-      $grpc.ServiceCall call, $1.ListAgentReq request);
+  $async.Future<$0.ListAgentResp> list(
+      $grpc.ServiceCall call, $0.ListAgentReq request);
 
-  $async.Future<$1.ListAgentResp> listFavorites_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.ListFavoriteReq> $request) async {
-    return listFavorites($call, await $request);
+  $async.Future<$1.Empty> mark_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.MarkAgentReq> $request) async {
+    return mark($call, await $request);
   }
 
-  $async.Future<$1.ListAgentResp> listFavorites(
-      $grpc.ServiceCall call, $1.ListFavoriteReq request);
+  $async.Future<$1.Empty> mark($grpc.ServiceCall call, $0.MarkAgentReq request);
 
-  $async.Future<$0.Empty> deleteAgent_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.DeleteAgentReq> $request) async {
-    return deleteAgent($call, await $request);
+  $async.Future<$0.ListAgentResp> listMarks_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListMarksReq> $request) async {
+    return listMarks($call, await $request);
   }
 
-  $async.Future<$0.Empty> deleteAgent(
-      $grpc.ServiceCall call, $1.DeleteAgentReq request);
+  $async.Future<$0.ListAgentResp> listMarks(
+      $grpc.ServiceCall call, $0.ListMarksReq request);
 
-  $async.Future<$1.FindAgentResp> findAgent_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.FindAgentReq> $request) async {
-    return findAgent($call, await $request);
+  $async.Future<$0.AgentUsageResp> getUsage_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.AgentUsageReq> $request) async {
+    return getUsage($call, await $request);
   }
 
-  $async.Future<$1.FindAgentResp> findAgent(
-      $grpc.ServiceCall call, $1.FindAgentReq request);
+  $async.Future<$0.AgentUsageResp> getUsage(
+      $grpc.ServiceCall call, $0.AgentUsageReq request);
 
-  $async.Future<$1.FindAgentCountResp> findAgentCount_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$1.FindAgentCountReq> $request) async {
-    return findAgentCount($call, await $request);
+  $async.Future<$0.DefaultConfigResp> defaultConfig_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+    return defaultConfig($call, await $request);
   }
 
-  $async.Future<$1.FindAgentCountResp> findAgentCount(
-      $grpc.ServiceCall call, $1.FindAgentCountReq request);
+  $async.Future<$0.DefaultConfigResp> defaultConfig(
+      $grpc.ServiceCall call, $1.Empty request);
 
-  $async.Future<$0.Empty> transfer_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.TransferReq> $request) async {
-    return transfer($call, await $request);
+  $async.Future<$1.Empty> resetToDefault_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ResetToDefaultReq> $request) async {
+    return resetToDefault($call, await $request);
   }
 
-  $async.Future<$0.Empty> transfer(
-      $grpc.ServiceCall call, $1.TransferReq request);
-
-  $async.Future<$0.Empty> updatesToDefault_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.UpdatesToDefaultReq> $request) async {
-    return updatesToDefault($call, await $request);
-  }
-
-  $async.Future<$0.Empty> updatesToDefault(
-      $grpc.ServiceCall call, $1.UpdatesToDefaultReq request);
-
-  $async.Future<$0.Empty> favoriteAgent_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.FavoriteAgentReq> $request) async {
-    return favoriteAgent($call, await $request);
-  }
-
-  $async.Future<$0.Empty> favoriteAgent(
-      $grpc.ServiceCall call, $1.FavoriteAgentReq request);
+  $async.Future<$1.Empty> resetToDefault(
+      $grpc.ServiceCall call, $0.ResetToDefaultReq request);
 }
