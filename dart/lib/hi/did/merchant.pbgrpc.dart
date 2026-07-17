@@ -81,11 +81,11 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$listUsers, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.MerchantListResp> listMerchants(
+  $grpc.ResponseFuture<$1.MerchantListResp> list(
     $1.ListMerchantsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listMerchants, request, options: options);
+    return $createUnaryCall(_$list, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> setUsers(
@@ -159,9 +159,9 @@ class MerchantClient extends $grpc.Client {
           '/hi.did.Merchant/ListUsers',
           ($1.ListUsersReq value) => value.writeToBuffer(),
           $1.ListUsersResp.fromBuffer);
-  static final _$listMerchants =
+  static final _$list =
       $grpc.ClientMethod<$1.ListMerchantsReq, $1.MerchantListResp>(
-          '/hi.did.Merchant/ListMerchants',
+          '/hi.did.Merchant/List',
           ($1.ListMerchantsReq value) => value.writeToBuffer(),
           $1.MerchantListResp.fromBuffer);
   static final _$setUsers = $grpc.ClientMethod<$1.SetUsersReq, $0.Empty>(
@@ -229,8 +229,8 @@ abstract class MerchantServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $1.ListUsersReq.fromBuffer(value),
         ($1.ListUsersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListMerchantsReq, $1.MerchantListResp>(
-        'ListMerchants',
-        listMerchants_Pre,
+        'List',
+        list_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.ListMerchantsReq.fromBuffer(value),
@@ -318,12 +318,12 @@ abstract class MerchantServiceBase extends $grpc.Service {
   $async.Future<$1.ListUsersResp> listUsers(
       $grpc.ServiceCall call, $1.ListUsersReq request);
 
-  $async.Future<$1.MerchantListResp> listMerchants_Pre($grpc.ServiceCall $call,
+  $async.Future<$1.MerchantListResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$1.ListMerchantsReq> $request) async {
-    return listMerchants($call, await $request);
+    return list($call, await $request);
   }
 
-  $async.Future<$1.MerchantListResp> listMerchants(
+  $async.Future<$1.MerchantListResp> list(
       $grpc.ServiceCall call, $1.ListMerchantsReq request);
 
   $async.Future<$0.Empty> setUsers_Pre(

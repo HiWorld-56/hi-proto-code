@@ -170,33 +170,6 @@ func local_request_Group_ListMembers_0(ctx context.Context, marshaler runtime.Ma
 	return msg, metadata, err
 }
 
-func request_Group_ListQ3GroupMembers_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListQ3GroupMemberReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.ListQ3GroupMembers(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Group_ListQ3GroupMembers_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListQ3GroupMemberReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.ListQ3GroupMembers(ctx, &protoReq)
-	return msg, metadata, err
-}
-
 func request_Group_GetMemberTotal_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetGroupMemberTotalReq
@@ -356,60 +329,6 @@ func local_request_Group_ListMessages_0(ctx context.Context, marshaler runtime.M
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.ListMessages(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_Group_UpdateLastUUID_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq LastUUID
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.UpdateLastUUID(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Group_UpdateLastUUID_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq LastUUID
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.UpdateLastUUID(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_Group_CheckLastUUID_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListLastUUID
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.CheckLastUUID(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Group_CheckLastUUID_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListLastUUID
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.CheckLastUUID(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -600,26 +519,6 @@ func RegisterGroupHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		}
 		forward_Group_ListMembers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Group_ListQ3GroupMembers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Group/ListQ3GroupMembers", runtime.WithHTTPPathPattern("/hi.club.Group/ListQ3GroupMembers"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Group_ListQ3GroupMembers_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_ListQ3GroupMembers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Group_GetMemberTotal_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -739,46 +638,6 @@ func RegisterGroupHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 		forward_Group_ListMessages_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Group_UpdateLastUUID_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Group/UpdateLastUUID", runtime.WithHTTPPathPattern("/hi.club.Group/UpdateLastUUID"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Group_UpdateLastUUID_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_UpdateLastUUID_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Group_CheckLastUUID_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Group/CheckLastUUID", runtime.WithHTTPPathPattern("/hi.club.Group/CheckLastUUID"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Group_CheckLastUUID_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_CheckLastUUID_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Group_SetRole_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -965,23 +824,6 @@ func RegisterGroupHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		}
 		forward_Group_ListMembers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Group_ListQ3GroupMembers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Group/ListQ3GroupMembers", runtime.WithHTTPPathPattern("/hi.club.Group/ListQ3GroupMembers"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Group_ListQ3GroupMembers_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_ListQ3GroupMembers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Group_GetMemberTotal_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1084,40 +926,6 @@ func RegisterGroupHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		}
 		forward_Group_ListMessages_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Group_UpdateLastUUID_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Group/UpdateLastUUID", runtime.WithHTTPPathPattern("/hi.club.Group/UpdateLastUUID"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Group_UpdateLastUUID_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_UpdateLastUUID_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Group_CheckLastUUID_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Group/CheckLastUUID", runtime.WithHTTPPathPattern("/hi.club.Group/CheckLastUUID"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Group_CheckLastUUID_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_CheckLastUUID_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Group_SetRole_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1173,41 +981,35 @@ func RegisterGroupHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Group_Get_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Get"}, ""))
-	pattern_Group_Create_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Create"}, ""))
-	pattern_Group_CreateSingle_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "CreateSingle"}, ""))
-	pattern_Group_Update_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Update"}, ""))
-	pattern_Group_ListMembers_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMembers"}, ""))
-	pattern_Group_ListQ3GroupMembers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListQ3GroupMembers"}, ""))
-	pattern_Group_GetMemberTotal_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetMemberTotal"}, ""))
-	pattern_Group_Invite_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Invite"}, ""))
-	pattern_Group_Join_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Join"}, ""))
-	pattern_Group_Quit_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Quit"}, ""))
-	pattern_Group_Remove_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Remove"}, ""))
-	pattern_Group_ListMessages_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMessages"}, ""))
-	pattern_Group_UpdateLastUUID_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "UpdateLastUUID"}, ""))
-	pattern_Group_CheckLastUUID_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "CheckLastUUID"}, ""))
-	pattern_Group_SetRole_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "SetRole"}, ""))
-	pattern_Group_GetRole_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetRole"}, ""))
-	pattern_Group_Mute_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Mute"}, ""))
+	pattern_Group_Get_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Get"}, ""))
+	pattern_Group_Create_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Create"}, ""))
+	pattern_Group_CreateSingle_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "CreateSingle"}, ""))
+	pattern_Group_Update_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Update"}, ""))
+	pattern_Group_ListMembers_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMembers"}, ""))
+	pattern_Group_GetMemberTotal_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetMemberTotal"}, ""))
+	pattern_Group_Invite_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Invite"}, ""))
+	pattern_Group_Join_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Join"}, ""))
+	pattern_Group_Quit_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Quit"}, ""))
+	pattern_Group_Remove_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Remove"}, ""))
+	pattern_Group_ListMessages_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMessages"}, ""))
+	pattern_Group_SetRole_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "SetRole"}, ""))
+	pattern_Group_GetRole_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetRole"}, ""))
+	pattern_Group_Mute_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Mute"}, ""))
 )
 
 var (
-	forward_Group_Get_0                = runtime.ForwardResponseMessage
-	forward_Group_Create_0             = runtime.ForwardResponseMessage
-	forward_Group_CreateSingle_0       = runtime.ForwardResponseMessage
-	forward_Group_Update_0             = runtime.ForwardResponseMessage
-	forward_Group_ListMembers_0        = runtime.ForwardResponseMessage
-	forward_Group_ListQ3GroupMembers_0 = runtime.ForwardResponseMessage
-	forward_Group_GetMemberTotal_0     = runtime.ForwardResponseMessage
-	forward_Group_Invite_0             = runtime.ForwardResponseMessage
-	forward_Group_Join_0               = runtime.ForwardResponseMessage
-	forward_Group_Quit_0               = runtime.ForwardResponseMessage
-	forward_Group_Remove_0             = runtime.ForwardResponseMessage
-	forward_Group_ListMessages_0       = runtime.ForwardResponseMessage
-	forward_Group_UpdateLastUUID_0     = runtime.ForwardResponseMessage
-	forward_Group_CheckLastUUID_0      = runtime.ForwardResponseMessage
-	forward_Group_SetRole_0            = runtime.ForwardResponseMessage
-	forward_Group_GetRole_0            = runtime.ForwardResponseMessage
-	forward_Group_Mute_0               = runtime.ForwardResponseMessage
+	forward_Group_Get_0            = runtime.ForwardResponseMessage
+	forward_Group_Create_0         = runtime.ForwardResponseMessage
+	forward_Group_CreateSingle_0   = runtime.ForwardResponseMessage
+	forward_Group_Update_0         = runtime.ForwardResponseMessage
+	forward_Group_ListMembers_0    = runtime.ForwardResponseMessage
+	forward_Group_GetMemberTotal_0 = runtime.ForwardResponseMessage
+	forward_Group_Invite_0         = runtime.ForwardResponseMessage
+	forward_Group_Join_0           = runtime.ForwardResponseMessage
+	forward_Group_Quit_0           = runtime.ForwardResponseMessage
+	forward_Group_Remove_0         = runtime.ForwardResponseMessage
+	forward_Group_ListMessages_0   = runtime.ForwardResponseMessage
+	forward_Group_SetRole_0        = runtime.ForwardResponseMessage
+	forward_Group_GetRole_0        = runtime.ForwardResponseMessage
+	forward_Group_Mute_0           = runtime.ForwardResponseMessage
 )

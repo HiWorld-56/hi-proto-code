@@ -20,14 +20,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Assets_GetUserAssets_FullMethodName = "/hi.club.Assets/GetUserAssets"
+	Assets_Get_FullMethodName = "/hi.club.Assets/Get"
 )
 
 // AssetsClient is the client API for Assets service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AssetsClient interface {
-	GetUserAssets(ctx context.Context, in *did.GetUserAssetsReq, opts ...grpc.CallOption) (*did.GetUserAssetsResp, error)
+	Get(ctx context.Context, in *did.GetUserAssetsReq, opts ...grpc.CallOption) (*did.GetUserAssetsResp, error)
 }
 
 type assetsClient struct {
@@ -38,10 +38,10 @@ func NewAssetsClient(cc grpc.ClientConnInterface) AssetsClient {
 	return &assetsClient{cc}
 }
 
-func (c *assetsClient) GetUserAssets(ctx context.Context, in *did.GetUserAssetsReq, opts ...grpc.CallOption) (*did.GetUserAssetsResp, error) {
+func (c *assetsClient) Get(ctx context.Context, in *did.GetUserAssetsReq, opts ...grpc.CallOption) (*did.GetUserAssetsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(did.GetUserAssetsResp)
-	err := c.cc.Invoke(ctx, Assets_GetUserAssets_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Assets_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (c *assetsClient) GetUserAssets(ctx context.Context, in *did.GetUserAssetsR
 // All implementations should embed UnimplementedAssetsServer
 // for forward compatibility.
 type AssetsServer interface {
-	GetUserAssets(context.Context, *did.GetUserAssetsReq) (*did.GetUserAssetsResp, error)
+	Get(context.Context, *did.GetUserAssetsReq) (*did.GetUserAssetsResp, error)
 }
 
 // UnimplementedAssetsServer should be embedded to have
@@ -62,8 +62,8 @@ type AssetsServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAssetsServer struct{}
 
-func (UnimplementedAssetsServer) GetUserAssets(context.Context, *did.GetUserAssetsReq) (*did.GetUserAssetsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserAssets not implemented")
+func (UnimplementedAssetsServer) Get(context.Context, *did.GetUserAssetsReq) (*did.GetUserAssetsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedAssetsServer) testEmbeddedByValue() {}
 
@@ -85,20 +85,20 @@ func RegisterAssetsServer(s grpc.ServiceRegistrar, srv AssetsServer) {
 	s.RegisterService(&Assets_ServiceDesc, srv)
 }
 
-func _Assets_GetUserAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Assets_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(did.GetUserAssetsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AssetsServer).GetUserAssets(ctx, in)
+		return srv.(AssetsServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Assets_GetUserAssets_FullMethodName,
+		FullMethod: Assets_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AssetsServer).GetUserAssets(ctx, req.(*did.GetUserAssetsReq))
+		return srv.(AssetsServer).Get(ctx, req.(*did.GetUserAssetsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -111,8 +111,8 @@ var Assets_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AssetsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetUserAssets",
-			Handler:    _Assets_GetUserAssets_Handler,
+			MethodName: "Get",
+			Handler:    _Assets_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

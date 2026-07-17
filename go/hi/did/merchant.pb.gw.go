@@ -139,7 +139,7 @@ func local_request_Merchant_ListUsers_0(ctx context.Context, marshaler runtime.M
 	return msg, metadata, err
 }
 
-func request_Merchant_ListMerchants_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Merchant_List_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListMerchantsReq
 		metadata runtime.ServerMetadata
@@ -150,11 +150,11 @@ func request_Merchant_ListMerchants_0(ctx context.Context, marshaler runtime.Mar
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.ListMerchants(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.List(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_Merchant_ListMerchants_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Merchant_List_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListMerchantsReq
 		metadata runtime.ServerMetadata
@@ -162,7 +162,7 @@ func local_request_Merchant_ListMerchants_0(ctx context.Context, marshaler runti
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.ListMerchants(ctx, &protoReq)
+	msg, err := server.List(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -560,25 +560,25 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		}
 		forward_Merchant_ListUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Merchant_ListMerchants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Merchant_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant/list_merchants"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/List", runtime.WithHTTPPathPattern("/api/v1/merchant/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Merchant_ListMerchants_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Merchant_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Merchant_ListMerchants_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Merchant_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Merchant_SetUsers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -954,22 +954,22 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		}
 		forward_Merchant_ListUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Merchant_ListMerchants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Merchant_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/ListMerchants", runtime.WithHTTPPathPattern("/api/v1/merchant/list_merchants"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/List", runtime.WithHTTPPathPattern("/api/v1/merchant/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Merchant_ListMerchants_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Merchant_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Merchant_ListMerchants_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Merchant_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Merchant_SetUsers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -1094,33 +1094,33 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 }
 
 var (
-	pattern_Merchant_Get_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "get"}, ""))
-	pattern_Merchant_Update_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "update"}, ""))
-	pattern_Merchant_GetUser_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "GetUser"}, ""))
-	pattern_Merchant_ListUsers_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list_users"}, ""))
-	pattern_Merchant_ListMerchants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list_merchants"}, ""))
-	pattern_Merchant_SetUsers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "set_users"}, ""))
-	pattern_Merchant_AddUsers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "add_users"}, ""))
-	pattern_Merchant_RemoveUsers_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "remove_users"}, ""))
-	pattern_Merchant_GetUserMqtt_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "GetUserMqtt"}, ""))
-	pattern_Merchant_ListGrants_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "ListGrants"}, ""))
-	pattern_Merchant_AddGrant_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "AddGrant"}, ""))
-	pattern_Merchant_RemoveGrant_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "RemoveGrant"}, ""))
+	pattern_Merchant_Get_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "get"}, ""))
+	pattern_Merchant_Update_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "update"}, ""))
+	pattern_Merchant_GetUser_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "GetUser"}, ""))
+	pattern_Merchant_ListUsers_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list_users"}, ""))
+	pattern_Merchant_List_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list"}, ""))
+	pattern_Merchant_SetUsers_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "set_users"}, ""))
+	pattern_Merchant_AddUsers_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "add_users"}, ""))
+	pattern_Merchant_RemoveUsers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "remove_users"}, ""))
+	pattern_Merchant_GetUserMqtt_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "GetUserMqtt"}, ""))
+	pattern_Merchant_ListGrants_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "ListGrants"}, ""))
+	pattern_Merchant_AddGrant_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "AddGrant"}, ""))
+	pattern_Merchant_RemoveGrant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "RemoveGrant"}, ""))
 )
 
 var (
-	forward_Merchant_Get_0           = runtime.ForwardResponseMessage
-	forward_Merchant_Update_0        = runtime.ForwardResponseMessage
-	forward_Merchant_GetUser_0       = runtime.ForwardResponseMessage
-	forward_Merchant_ListUsers_0     = runtime.ForwardResponseMessage
-	forward_Merchant_ListMerchants_0 = runtime.ForwardResponseMessage
-	forward_Merchant_SetUsers_0      = runtime.ForwardResponseMessage
-	forward_Merchant_AddUsers_0      = runtime.ForwardResponseMessage
-	forward_Merchant_RemoveUsers_0   = runtime.ForwardResponseMessage
-	forward_Merchant_GetUserMqtt_0   = runtime.ForwardResponseMessage
-	forward_Merchant_ListGrants_0    = runtime.ForwardResponseMessage
-	forward_Merchant_AddGrant_0      = runtime.ForwardResponseMessage
-	forward_Merchant_RemoveGrant_0   = runtime.ForwardResponseMessage
+	forward_Merchant_Get_0         = runtime.ForwardResponseMessage
+	forward_Merchant_Update_0      = runtime.ForwardResponseMessage
+	forward_Merchant_GetUser_0     = runtime.ForwardResponseMessage
+	forward_Merchant_ListUsers_0   = runtime.ForwardResponseMessage
+	forward_Merchant_List_0        = runtime.ForwardResponseMessage
+	forward_Merchant_SetUsers_0    = runtime.ForwardResponseMessage
+	forward_Merchant_AddUsers_0    = runtime.ForwardResponseMessage
+	forward_Merchant_RemoveUsers_0 = runtime.ForwardResponseMessage
+	forward_Merchant_GetUserMqtt_0 = runtime.ForwardResponseMessage
+	forward_Merchant_ListGrants_0  = runtime.ForwardResponseMessage
+	forward_Merchant_AddGrant_0    = runtime.ForwardResponseMessage
+	forward_Merchant_RemoveGrant_0 = runtime.ForwardResponseMessage
 )
 
 // RegisterMerchantPubHandlerFromEndpoint is same as RegisterMerchantPubHandler but

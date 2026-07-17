@@ -182,9 +182,9 @@ const file_hi_did_price_proto_rawDesc = "" +
 	"\bexchange\x18\x02 \x01(\tR\bexchange\x1a>\n" +
 	"\x04Unit\x12\x14\n" +
 	"\x05price\x18\x01 \x01(\tR\x05price\x12 \n" +
-	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinR\x04coin2E\n" +
-	"\x05Price\x12<\n" +
-	"\bGetPrice\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x05\x8a\xb5\x18\x01\x01B{\n" +
+	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinR\x04coin2@\n" +
+	"\x05Price\x127\n" +
+	"\x03Get\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x05\x8a\xb5\x18\x01\x01B{\n" +
 	"\n" +
 	"com.hi.didB\n" +
 	"PriceProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -211,8 +211,8 @@ var file_hi_did_price_proto_goTypes = []any{
 var file_hi_did_price_proto_depIdxs = []int32{
 	2, // 0: hi.did.GetPriceResp.list:type_name -> hi.did.GetPriceResp.Unit
 	3, // 1: hi.did.GetPriceResp.Unit.coin:type_name -> hi.did.Coin
-	0, // 2: hi.did.Price.GetPrice:input_type -> hi.did.GetPriceReq
-	1, // 3: hi.did.Price.GetPrice:output_type -> hi.did.GetPriceResp
+	0, // 2: hi.did.Price.Get:input_type -> hi.did.GetPriceReq
+	1, // 3: hi.did.Price.Get:output_type -> hi.did.GetPriceResp
 	3, // [3:4] is the sub-list for method output_type
 	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Wallet_UpdateAssets_FullMethodName  = "/hi.did.Wallet/UpdateAssets"
-	Wallet_GetWallet_FullMethodName     = "/hi.did.Wallet/GetWallet"
+	Wallet_Get_FullMethodName           = "/hi.did.Wallet/Get"
 	Wallet_ListAddresses_FullMethodName = "/hi.did.Wallet/ListAddresses"
 )
 
@@ -33,7 +33,7 @@ const (
 // 用户自己的钱包(用户主体,token)。UpdateAddresses 需签名证明地址归属,故 web3 —— 已拆去 Assets。
 type WalletClient interface {
 	UpdateAssets(ctx context.Context, in *UpdateAssetsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetWallet(ctx context.Context, in *GetWalletReq, opts ...grpc.CallOption) (*GetWalletResp, error)
+	Get(ctx context.Context, in *GetWalletReq, opts ...grpc.CallOption) (*GetWalletResp, error)
 	ListAddresses(ctx context.Context, in *ListAddressesReq, opts ...grpc.CallOption) (*ListAddressesResp, error)
 }
 
@@ -55,10 +55,10 @@ func (c *walletClient) UpdateAssets(ctx context.Context, in *UpdateAssetsReq, op
 	return out, nil
 }
 
-func (c *walletClient) GetWallet(ctx context.Context, in *GetWalletReq, opts ...grpc.CallOption) (*GetWalletResp, error) {
+func (c *walletClient) Get(ctx context.Context, in *GetWalletReq, opts ...grpc.CallOption) (*GetWalletResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetWalletResp)
-	err := c.cc.Invoke(ctx, Wallet_GetWallet_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Wallet_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (c *walletClient) ListAddresses(ctx context.Context, in *ListAddressesReq, 
 // 用户自己的钱包(用户主体,token)。UpdateAddresses 需签名证明地址归属,故 web3 —— 已拆去 Assets。
 type WalletServer interface {
 	UpdateAssets(context.Context, *UpdateAssetsReq) (*emptypb.Empty, error)
-	GetWallet(context.Context, *GetWalletReq) (*GetWalletResp, error)
+	Get(context.Context, *GetWalletReq) (*GetWalletResp, error)
 	ListAddresses(context.Context, *ListAddressesReq) (*ListAddressesResp, error)
 }
 
@@ -96,8 +96,8 @@ type UnimplementedWalletServer struct{}
 func (UnimplementedWalletServer) UpdateAssets(context.Context, *UpdateAssetsReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateAssets not implemented")
 }
-func (UnimplementedWalletServer) GetWallet(context.Context, *GetWalletReq) (*GetWalletResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetWallet not implemented")
+func (UnimplementedWalletServer) Get(context.Context, *GetWalletReq) (*GetWalletResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedWalletServer) ListAddresses(context.Context, *ListAddressesReq) (*ListAddressesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAddresses not implemented")
@@ -140,20 +140,20 @@ func _Wallet_UpdateAssets_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Wallet_GetWallet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Wallet_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetWalletReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WalletServer).GetWallet(ctx, in)
+		return srv.(WalletServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Wallet_GetWallet_FullMethodName,
+		FullMethod: Wallet_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServer).GetWallet(ctx, req.(*GetWalletReq))
+		return srv.(WalletServer).Get(ctx, req.(*GetWalletReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -188,8 +188,8 @@ var Wallet_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Wallet_UpdateAssets_Handler,
 		},
 		{
-			MethodName: "GetWallet",
-			Handler:    _Wallet_GetWallet_Handler,
+			MethodName: "Get",
+			Handler:    _Wallet_Get_Handler,
 		},
 		{
 			MethodName: "ListAddresses",
@@ -201,9 +201,9 @@ var Wallet_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Assets_TotalAssets_FullMethodName     = "/hi.did.Assets/TotalAssets"
-	Assets_ListUsersAssets_FullMethodName = "/hi.did.Assets/ListUsersAssets"
-	Assets_GetUserAssets_FullMethodName   = "/hi.did.Assets/GetUserAssets"
+	Assets_Total_FullMethodName           = "/hi.did.Assets/Total"
+	Assets_List_FullMethodName            = "/hi.did.Assets/List"
+	Assets_Get_FullMethodName             = "/hi.did.Assets/Get"
 	Assets_UpdateAddresses_FullMethodName = "/hi.did.Assets/UpdateAddresses"
 )
 
@@ -214,9 +214,9 @@ const (
 // 资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
 // UpdateAddresses 用签名自证地址归属(不依赖登录 token),故归此。
 type AssetsClient interface {
-	TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error)
-	ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error)
-	GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error)
+	Total(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error)
+	List(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error)
+	Get(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error)
 	UpdateAddresses(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -228,30 +228,30 @@ func NewAssetsClient(cc grpc.ClientConnInterface) AssetsClient {
 	return &assetsClient{cc}
 }
 
-func (c *assetsClient) TotalAssets(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error) {
+func (c *assetsClient) Total(ctx context.Context, in *TotalAssetsReq, opts ...grpc.CallOption) (*TotalAssetsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TotalAssetsResp)
-	err := c.cc.Invoke(ctx, Assets_TotalAssets_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Assets_Total_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *assetsClient) ListUsersAssets(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error) {
+func (c *assetsClient) List(ctx context.Context, in *ListUsersAssetsReq, opts ...grpc.CallOption) (*ListUsersAssetsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListUsersAssetsResp)
-	err := c.cc.Invoke(ctx, Assets_ListUsersAssets_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Assets_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *assetsClient) GetUserAssets(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error) {
+func (c *assetsClient) Get(ctx context.Context, in *GetUserAssetsReq, opts ...grpc.CallOption) (*GetUserAssetsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserAssetsResp)
-	err := c.cc.Invoke(ctx, Assets_GetUserAssets_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Assets_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -275,9 +275,9 @@ func (c *assetsClient) UpdateAddresses(ctx context.Context, in *hi.SignedData, o
 // 资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
 // UpdateAddresses 用签名自证地址归属(不依赖登录 token),故归此。
 type AssetsServer interface {
-	TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error)
-	ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error)
-	GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error)
+	Total(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error)
+	List(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error)
+	Get(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error)
 	UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }
 
@@ -288,14 +288,14 @@ type AssetsServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAssetsServer struct{}
 
-func (UnimplementedAssetsServer) TotalAssets(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method TotalAssets not implemented")
+func (UnimplementedAssetsServer) Total(context.Context, *TotalAssetsReq) (*TotalAssetsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Total not implemented")
 }
-func (UnimplementedAssetsServer) ListUsersAssets(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListUsersAssets not implemented")
+func (UnimplementedAssetsServer) List(context.Context, *ListUsersAssetsReq) (*ListUsersAssetsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedAssetsServer) GetUserAssets(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserAssets not implemented")
+func (UnimplementedAssetsServer) Get(context.Context, *GetUserAssetsReq) (*GetUserAssetsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedAssetsServer) UpdateAddresses(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateAddresses not implemented")
@@ -320,56 +320,56 @@ func RegisterAssetsServer(s grpc.ServiceRegistrar, srv AssetsServer) {
 	s.RegisterService(&Assets_ServiceDesc, srv)
 }
 
-func _Assets_TotalAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Assets_Total_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TotalAssetsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AssetsServer).TotalAssets(ctx, in)
+		return srv.(AssetsServer).Total(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Assets_TotalAssets_FullMethodName,
+		FullMethod: Assets_Total_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AssetsServer).TotalAssets(ctx, req.(*TotalAssetsReq))
+		return srv.(AssetsServer).Total(ctx, req.(*TotalAssetsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Assets_ListUsersAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Assets_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListUsersAssetsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AssetsServer).ListUsersAssets(ctx, in)
+		return srv.(AssetsServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Assets_ListUsersAssets_FullMethodName,
+		FullMethod: Assets_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AssetsServer).ListUsersAssets(ctx, req.(*ListUsersAssetsReq))
+		return srv.(AssetsServer).List(ctx, req.(*ListUsersAssetsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Assets_GetUserAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Assets_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserAssetsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AssetsServer).GetUserAssets(ctx, in)
+		return srv.(AssetsServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Assets_GetUserAssets_FullMethodName,
+		FullMethod: Assets_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AssetsServer).GetUserAssets(ctx, req.(*GetUserAssetsReq))
+		return srv.(AssetsServer).Get(ctx, req.(*GetUserAssetsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -400,16 +400,16 @@ var Assets_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AssetsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "TotalAssets",
-			Handler:    _Assets_TotalAssets_Handler,
+			MethodName: "Total",
+			Handler:    _Assets_Total_Handler,
 		},
 		{
-			MethodName: "ListUsersAssets",
-			Handler:    _Assets_ListUsersAssets_Handler,
+			MethodName: "List",
+			Handler:    _Assets_List_Handler,
 		},
 		{
-			MethodName: "GetUserAssets",
-			Handler:    _Assets_GetUserAssets_Handler,
+			MethodName: "Get",
+			Handler:    _Assets_Get_Handler,
 		},
 		{
 			MethodName: "UpdateAddresses",

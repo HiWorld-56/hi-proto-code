@@ -21,8 +21,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_GetCurrentUser_FullMethodName         = "/hi.club.User/GetCurrentUser"
-	User_UpdateUser_FullMethodName             = "/hi.club.User/UpdateUser"
+	User_GetCurrent_FullMethodName             = "/hi.club.User/GetCurrent"
+	User_Update_FullMethodName                 = "/hi.club.User/Update"
 	User_ListSystemMessages_FullMethodName     = "/hi.club.User/ListSystemMessages"
 	User_DeleteSystemMessage_FullMethodName    = "/hi.club.User/DeleteSystemMessage"
 	User_DeleteAllSystemMessage_FullMethodName = "/hi.club.User/DeleteAllSystemMessage"
@@ -36,15 +36,15 @@ const (
 	User_GetOther_FullMethodName               = "/hi.club.User/GetOther"
 	User_UnprocessedSysMsgCount_FullMethodName = "/hi.club.User/UnprocessedSysMsgCount"
 	User_SetRemark_FullMethodName              = "/hi.club.User/SetRemark"
-	User_ListOnlineUsers_FullMethodName        = "/hi.club.User/ListOnlineUsers"
+	User_ListOnline_FullMethodName             = "/hi.club.User/ListOnline"
 )
 
 // UserClient is the client API for User service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
-	GetCurrentUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
-	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
+	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListSystemMessages(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error)
 	DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -58,7 +58,7 @@ type UserClient interface {
 	GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*hi.Entity, error)
 	UnprocessedSysMsgCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(ctx context.Context, in *SetRemarkReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListOnlineUsers(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error)
+	ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error)
 }
 
 type userClient struct {
@@ -69,20 +69,20 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 	return &userClient{cc}
 }
 
-func (c *userClient) GetCurrentUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error) {
+func (c *userClient) GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserInfo)
-	err := c.cc.Invoke(ctx, User_GetCurrentUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, User_GetCurrent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, User_UpdateUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, User_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -219,10 +219,10 @@ func (c *userClient) SetRemark(ctx context.Context, in *SetRemarkReq, opts ...gr
 	return out, nil
 }
 
-func (c *userClient) ListOnlineUsers(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error) {
+func (c *userClient) ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListOnlineUserResp)
-	err := c.cc.Invoke(ctx, User_ListOnlineUsers_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, User_ListOnline_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -233,8 +233,8 @@ func (c *userClient) ListOnlineUsers(ctx context.Context, in *ListOnlineUserReq,
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
 type UserServer interface {
-	GetCurrentUser(context.Context, *emptypb.Empty) (*UserInfo, error)
-	UpdateUser(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
+	GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error)
+	Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
 	ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error)
 	DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
@@ -248,7 +248,7 @@ type UserServer interface {
 	GetOther(context.Context, *GetUserReq) (*hi.Entity, error)
 	UnprocessedSysMsgCount(context.Context, *emptypb.Empty) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error)
-	ListOnlineUsers(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error)
+	ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error)
 }
 
 // UnimplementedUserServer should be embedded to have
@@ -258,11 +258,11 @@ type UserServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServer struct{}
 
-func (UnimplementedUserServer) GetCurrentUser(context.Context, *emptypb.Empty) (*UserInfo, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetCurrentUser not implemented")
+func (UnimplementedUserServer) GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCurrent not implemented")
 }
-func (UnimplementedUserServer) UpdateUser(context.Context, *UpdateUserReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateUser not implemented")
+func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedUserServer) ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSystemMessages not implemented")
@@ -303,8 +303,8 @@ func (UnimplementedUserServer) UnprocessedSysMsgCount(context.Context, *emptypb.
 func (UnimplementedUserServer) SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetRemark not implemented")
 }
-func (UnimplementedUserServer) ListOnlineUsers(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListOnlineUsers not implemented")
+func (UnimplementedUserServer) ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListOnline not implemented")
 }
 func (UnimplementedUserServer) testEmbeddedByValue() {}
 
@@ -326,38 +326,38 @@ func RegisterUserServer(s grpc.ServiceRegistrar, srv UserServer) {
 	s.RegisterService(&User_ServiceDesc, srv)
 }
 
-func _User_GetCurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_GetCurrent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).GetCurrentUser(ctx, in)
+		return srv.(UserServer).GetCurrent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_GetCurrentUser_FullMethodName,
+		FullMethod: User_GetCurrent_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetCurrentUser(ctx, req.(*emptypb.Empty))
+		return srv.(UserServer).GetCurrent(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).UpdateUser(ctx, in)
+		return srv.(UserServer).Update(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_UpdateUser_FullMethodName,
+		FullMethod: User_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UpdateUser(ctx, req.(*UpdateUserReq))
+		return srv.(UserServer).Update(ctx, req.(*UpdateUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -596,20 +596,20 @@ func _User_SetRemark_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_ListOnlineUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_ListOnline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListOnlineUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).ListOnlineUsers(ctx, in)
+		return srv.(UserServer).ListOnline(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_ListOnlineUsers_FullMethodName,
+		FullMethod: User_ListOnline_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListOnlineUsers(ctx, req.(*ListOnlineUserReq))
+		return srv.(UserServer).ListOnline(ctx, req.(*ListOnlineUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -622,12 +622,12 @@ var User_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetCurrentUser",
-			Handler:    _User_GetCurrentUser_Handler,
+			MethodName: "GetCurrent",
+			Handler:    _User_GetCurrent_Handler,
 		},
 		{
-			MethodName: "UpdateUser",
-			Handler:    _User_UpdateUser_Handler,
+			MethodName: "Update",
+			Handler:    _User_Update_Handler,
 		},
 		{
 			MethodName: "ListSystemMessages",
@@ -682,8 +682,8 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_SetRemark_Handler,
 		},
 		{
-			MethodName: "ListOnlineUsers",
-			Handler:    _User_ListOnlineUsers_Handler,
+			MethodName: "ListOnline",
+			Handler:    _User_ListOnline_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

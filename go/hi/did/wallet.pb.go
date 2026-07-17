@@ -1138,15 +1138,15 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\bwhds_apt\x18> \x01(\tR\awhdsApt\x12\x19\n" +
 	"\bhwhd_apt\x18? \x01(\tR\ahwhdApt\x12\x19\n" +
 	"\bslkj_apt\x18@ \x01(\tR\aslkjApt\x12\x17\n" +
-	"\awsm_apt\x18A \x01(\tR\x06wsmApt2\xde\x01\n" +
+	"\awsm_apt\x18A \x01(\tR\x06wsmApt2\xd8\x01\n" +
 	"\x06Wallet\x12F\n" +
-	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
-	"\tGetWallet\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
-	"\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x05\x8a\xb5\x18\x01\x022\xb1\x02\n" +
-	"\x06Assets\x12E\n" +
-	"\vTotalAssets\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12Q\n" +
-	"\x0fListUsersAssets\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
-	"\rGetUserAssets\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n" +
+	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
+	"\x03Get\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
+	"\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x05\x8a\xb5\x18\x01\x022\x96\x02\n" +
+	"\x06Assets\x12?\n" +
+	"\x05Total\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12F\n" +
+	"\x04List\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
+	"\x03Get\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n" +
 	"\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B|\n" +
 	"\n" +
 	"com.hi.didB\vWalletProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -1196,18 +1196,18 @@ var file_hi_did_wallet_proto_depIdxs = []int32{
 	16, // 5: hi.did.GetUserAssetsResp.unit:type_name -> hi.did.GetUserAssetsResp.Unit
 	18, // 6: hi.did.GetUserAssetsResp.Unit.coin:type_name -> hi.did.Coin
 	11, // 7: hi.did.Wallet.UpdateAssets:input_type -> hi.did.UpdateAssetsReq
-	1,  // 8: hi.did.Wallet.GetWallet:input_type -> hi.did.GetWalletReq
+	1,  // 8: hi.did.Wallet.Get:input_type -> hi.did.GetWalletReq
 	3,  // 9: hi.did.Wallet.ListAddresses:input_type -> hi.did.ListAddressesReq
-	5,  // 10: hi.did.Assets.TotalAssets:input_type -> hi.did.TotalAssetsReq
-	7,  // 11: hi.did.Assets.ListUsersAssets:input_type -> hi.did.ListUsersAssetsReq
-	9,  // 12: hi.did.Assets.GetUserAssets:input_type -> hi.did.GetUserAssetsReq
+	5,  // 10: hi.did.Assets.Total:input_type -> hi.did.TotalAssetsReq
+	7,  // 11: hi.did.Assets.List:input_type -> hi.did.ListUsersAssetsReq
+	9,  // 12: hi.did.Assets.Get:input_type -> hi.did.GetUserAssetsReq
 	19, // 13: hi.did.Assets.UpdateAddresses:input_type -> hi.SignedData
 	20, // 14: hi.did.Wallet.UpdateAssets:output_type -> google.protobuf.Empty
-	2,  // 15: hi.did.Wallet.GetWallet:output_type -> hi.did.GetWalletResp
+	2,  // 15: hi.did.Wallet.Get:output_type -> hi.did.GetWalletResp
 	4,  // 16: hi.did.Wallet.ListAddresses:output_type -> hi.did.ListAddressesResp
-	6,  // 17: hi.did.Assets.TotalAssets:output_type -> hi.did.TotalAssetsResp
-	8,  // 18: hi.did.Assets.ListUsersAssets:output_type -> hi.did.ListUsersAssetsResp
-	10, // 19: hi.did.Assets.GetUserAssets:output_type -> hi.did.GetUserAssetsResp
+	6,  // 17: hi.did.Assets.Total:output_type -> hi.did.TotalAssetsResp
+	8,  // 18: hi.did.Assets.List:output_type -> hi.did.ListUsersAssetsResp
+	10, // 19: hi.did.Assets.Get:output_type -> hi.did.GetUserAssetsResp
 	20, // 20: hi.did.Assets.UpdateAddresses:output_type -> google.protobuf.Empty
 	14, // [14:21] is the sub-list for method output_type
 	7,  // [7:14] is the sub-list for method input_type

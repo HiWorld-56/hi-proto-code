@@ -1050,11 +1050,11 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"!FRIEND_REQUEST_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eFRIEND_REQUEST_STATUS_REJECTED\x10\x01\x12\x1e\n" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
-	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xbc\t\n" +
-	"\x04User\x12B\n" +
-	"\x0eGetCurrentUser\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xaf\t\n" +
+	"\x04User\x12>\n" +
 	"\n" +
-	"UpdateUser\x12\x16.hi.club.UpdateUserReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12S\n" +
+	"GetCurrent\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
+	"\x06Update\x12\x16.hi.club.UpdateUserReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12S\n" +
 	"\x12ListSystemMessages\x12\x1d.hi.club.ListSystemMessageReq\x1a\x17.hi.club.SystemMessages\"\x05\x8a\xb5\x18\x01\x02\x12U\n" +
 	"\x13DeleteSystemMessage\x12\x1f.hi.club.DeleteSystemMessageReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
 	"\x16DeleteAllSystemMessage\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12U\n" +
@@ -1069,8 +1069,9 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\bGetOther\x12\x13.hi.club.GetUserReq\x1a\n" +
 	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12\\\n" +
 	"\x16UnprocessedSysMsgCount\x12\x16.google.protobuf.Empty\x1a#.hi.club.UnprocessedSysMsgCountResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
-	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12Q\n" +
-	"\x0fListOnlineUsers\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
+	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12L\n" +
+	"\n" +
+	"ListOnline\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
 	"\vcom.hi.clubB\tUserProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -1125,8 +1126,8 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	22, // 8: hi.club.ListGroupResp.list:type_name -> hi.club.GroupBase
 	19, // 9: hi.club.UpdateUserReq.user:type_name -> hi.Entity
 	19, // 10: hi.club.ListOnlineUserResp.list:type_name -> hi.Entity
-	23, // 11: hi.club.User.GetCurrentUser:input_type -> google.protobuf.Empty
-	15, // 12: hi.club.User.UpdateUser:input_type -> hi.club.UpdateUserReq
+	23, // 11: hi.club.User.GetCurrent:input_type -> google.protobuf.Empty
+	15, // 12: hi.club.User.Update:input_type -> hi.club.UpdateUserReq
 	2,  // 13: hi.club.User.ListSystemMessages:input_type -> hi.club.ListSystemMessageReq
 	4,  // 14: hi.club.User.DeleteSystemMessage:input_type -> hi.club.DeleteSystemMessageReq
 	23, // 15: hi.club.User.DeleteAllSystemMessage:input_type -> google.protobuf.Empty
@@ -1140,9 +1141,9 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	13, // 23: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
 	23, // 24: hi.club.User.UnprocessedSysMsgCount:input_type -> google.protobuf.Empty
 	16, // 25: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
-	17, // 26: hi.club.User.ListOnlineUsers:input_type -> hi.club.ListOnlineUserReq
-	1,  // 27: hi.club.User.GetCurrentUser:output_type -> hi.club.UserInfo
-	23, // 28: hi.club.User.UpdateUser:output_type -> google.protobuf.Empty
+	17, // 26: hi.club.User.ListOnline:input_type -> hi.club.ListOnlineUserReq
+	1,  // 27: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
+	23, // 28: hi.club.User.Update:output_type -> google.protobuf.Empty
 	3,  // 29: hi.club.User.ListSystemMessages:output_type -> hi.club.SystemMessages
 	23, // 30: hi.club.User.DeleteSystemMessage:output_type -> google.protobuf.Empty
 	23, // 31: hi.club.User.DeleteAllSystemMessage:output_type -> google.protobuf.Empty
@@ -1156,7 +1157,7 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	19, // 39: hi.club.User.GetOther:output_type -> hi.Entity
 	14, // 40: hi.club.User.UnprocessedSysMsgCount:output_type -> hi.club.UnprocessedSysMsgCountResp
 	23, // 41: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
-	18, // 42: hi.club.User.ListOnlineUsers:output_type -> hi.club.ListOnlineUserResp
+	18, // 42: hi.club.User.ListOnline:output_type -> hi.club.ListOnlineUserResp
 	27, // [27:43] is the sub-list for method output_type
 	11, // [11:27] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name

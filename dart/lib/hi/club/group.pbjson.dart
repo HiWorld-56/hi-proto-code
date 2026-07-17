@@ -50,27 +50,6 @@ final $typed_data.Uint8List groupMemberDescriptor = $convert.base64Decode(
     'CgtHcm91cE1lbWJlchIeCgRiYXNlGAEgASgLMgouaGkuRW50aXR5UgRiYXNlEhIKBHJvbGUYAi'
     'ABKAlSBHJvbGU=');
 
-@$core.Deprecated('Use q3GroupMemberDescriptor instead')
-const Q3GroupMember$json = {
-  '1': 'Q3GroupMember',
-  '2': [
-    {
-      '1': 'member',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.GroupMember',
-      '10': 'member'
-    },
-    {'1': 'ghost', '3': 2, '4': 1, '5': 9, '10': 'ghost'},
-  ],
-};
-
-/// Descriptor for `Q3GroupMember`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List q3GroupMemberDescriptor = $convert.base64Decode(
-    'Cg1RM0dyb3VwTWVtYmVyEiwKBm1lbWJlchgBIAEoCzIULmhpLmNsdWIuR3JvdXBNZW1iZXJSBm'
-    '1lbWJlchIUCgVnaG9zdBgCIAEoCVIFZ2hvc3Q=');
-
 @$core.Deprecated('Use groupInfoDescriptor instead')
 const GroupInfo$json = {
   '1': 'GroupInfo',
@@ -141,14 +120,13 @@ const ListGroupMessageReq$json = {
   '2': [
     {'1': 'last_uuid', '3': 1, '4': 1, '5': 9, '10': 'lastUuid'},
     {'1': 'code', '3': 2, '4': 1, '5': 9, '10': 'code'},
-    {'1': 'type', '3': 3, '4': 1, '5': 9, '10': 'type'},
   ],
 };
 
 /// Descriptor for `ListGroupMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGroupMessageReqDescriptor = $convert.base64Decode(
     'ChNMaXN0R3JvdXBNZXNzYWdlUmVxEhsKCWxhc3RfdXVpZBgBIAEoCVIIbGFzdFV1aWQSEgoEY2'
-    '9kZRgCIAEoCVIEY29kZRISCgR0eXBlGAMgASgJUgR0eXBl');
+    '9kZRgCIAEoCVIEY29kZQ==');
 
 @$core.Deprecated('Use listGroupMessageRespDescriptor instead')
 const ListGroupMessageResp$json = {
@@ -175,7 +153,6 @@ const ListGroupMemberReq$json = {
   '1': 'ListGroupMemberReq',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
     {
       '1': 'pagination',
       '3': 3,
@@ -189,8 +166,8 @@ const ListGroupMemberReq$json = {
 
 /// Descriptor for `ListGroupMemberReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGroupMemberReqDescriptor = $convert.base64Decode(
-    'ChJMaXN0R3JvdXBNZW1iZXJSZXESEgoEY29kZRgBIAEoCVIEY29kZRISCgR0eXBlGAIgASgJUg'
-    'R0eXBlEi4KCnBhZ2luYXRpb24YAyABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+    'ChJMaXN0R3JvdXBNZW1iZXJSZXESEgoEY29kZRgBIAEoCVIEY29kZRIuCgpwYWdpbmF0aW9uGA'
+    'MgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
 
 @$core.Deprecated('Use getGroupMemberTotalReqDescriptor instead')
 const GetGroupMemberTotalReq$json = {
@@ -204,56 +181,6 @@ const GetGroupMemberTotalReq$json = {
 final $typed_data.Uint8List getGroupMemberTotalReqDescriptor =
     $convert.base64Decode(
         'ChZHZXRHcm91cE1lbWJlclRvdGFsUmVxEhQKBWdyb3VwGAEgASgJUgVncm91cA==');
-
-@$core.Deprecated('Use listQ3GroupMemberReqDescriptor instead')
-const ListQ3GroupMemberReq$json = {
-  '1': 'ListQ3GroupMemberReq',
-  '2': [
-    {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
-    {
-      '1': 'pagination',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
-    },
-  ],
-};
-
-/// Descriptor for `ListQ3GroupMemberReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listQ3GroupMemberReqDescriptor = $convert.base64Decode(
-    'ChRMaXN0UTNHcm91cE1lbWJlclJlcRISCgRjb2RlGAEgASgJUgRjb2RlEhIKBHR5cGUYAiABKA'
-    'lSBHR5cGUSLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
-
-@$core.Deprecated('Use q3GroupInfoDescriptor instead')
-const Q3GroupInfo$json = {
-  '1': 'Q3GroupInfo',
-  '2': [
-    {
-      '1': 'base',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.GroupBase',
-      '10': 'base'
-    },
-    {
-      '1': 'list',
-      '3': 2,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.club.Q3GroupMember',
-      '10': 'list'
-    },
-  ],
-};
-
-/// Descriptor for `Q3GroupInfo`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List q3GroupInfoDescriptor = $convert.base64Decode(
-    'CgtRM0dyb3VwSW5mbxImCgRiYXNlGAEgASgLMhIuaGkuY2x1Yi5Hcm91cEJhc2VSBGJhc2USKg'
-    'oEbGlzdBgCIAMoCzIWLmhpLmNsdWIuUTNHcm91cE1lbWJlclIEbGlzdA==');
 
 @$core.Deprecated('Use getGroupMemberTotalRespDescriptor instead')
 const GetGroupMemberTotalResp$json = {
@@ -319,40 +246,6 @@ const RemoveGroupReq$json = {
 final $typed_data.Uint8List removeGroupReqDescriptor = $convert.base64Decode(
     'Cg5SZW1vdmVHcm91cFJlcRIUCgVncm91cBgBIAEoCVIFZ3JvdXASGAoHbWVtYmVycxgCIAMoCV'
     'IHbWVtYmVycw==');
-
-@$core.Deprecated('Use lastUUIDDescriptor instead')
-const LastUUID$json = {
-  '1': 'LastUUID',
-  '2': [
-    {'1': 'last_uuid', '3': 1, '4': 1, '5': 9, '10': 'lastUuid'},
-    {'1': 'code', '3': 2, '4': 1, '5': 9, '10': 'code'},
-    {'1': 'type', '3': 3, '4': 1, '5': 9, '10': 'type'},
-  ],
-};
-
-/// Descriptor for `LastUUID`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List lastUUIDDescriptor = $convert.base64Decode(
-    'CghMYXN0VVVJRBIbCglsYXN0X3V1aWQYASABKAlSCGxhc3RVdWlkEhIKBGNvZGUYAiABKAlSBG'
-    'NvZGUSEgoEdHlwZRgDIAEoCVIEdHlwZQ==');
-
-@$core.Deprecated('Use listLastUUIDDescriptor instead')
-const ListLastUUID$json = {
-  '1': 'ListLastUUID',
-  '2': [
-    {
-      '1': 'list',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.club.LastUUID',
-      '10': 'list'
-    },
-  ],
-};
-
-/// Descriptor for `ListLastUUID`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listLastUUIDDescriptor = $convert.base64Decode(
-    'CgxMaXN0TGFzdFVVSUQSJQoEbGlzdBgBIAMoCzIRLmhpLmNsdWIuTGFzdFVVSURSBGxpc3Q=');
 
 @$core.Deprecated('Use setRoleReqDescriptor instead')
 const SetRoleReq$json = {

@@ -42,11 +42,11 @@ class WalletClient extends $grpc.Client {
     return $createUnaryCall(_$updateAssets, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetWalletResp> getWallet(
+  $grpc.ResponseFuture<$0.GetWalletResp> get(
     $0.GetWalletReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getWallet, request, options: options);
+    return $createUnaryCall(_$get, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.ListAddressesResp> listAddresses(
@@ -63,11 +63,10 @@ class WalletClient extends $grpc.Client {
           '/hi.did.Wallet/UpdateAssets',
           ($0.UpdateAssetsReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$getWallet =
-      $grpc.ClientMethod<$0.GetWalletReq, $0.GetWalletResp>(
-          '/hi.did.Wallet/GetWallet',
-          ($0.GetWalletReq value) => value.writeToBuffer(),
-          $0.GetWalletResp.fromBuffer);
+  static final _$get = $grpc.ClientMethod<$0.GetWalletReq, $0.GetWalletResp>(
+      '/hi.did.Wallet/Get',
+      ($0.GetWalletReq value) => value.writeToBuffer(),
+      $0.GetWalletResp.fromBuffer);
   static final _$listAddresses =
       $grpc.ClientMethod<$0.ListAddressesReq, $0.ListAddressesResp>(
           '/hi.did.Wallet/ListAddresses',
@@ -88,8 +87,8 @@ abstract class WalletServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.UpdateAssetsReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetWalletReq, $0.GetWalletResp>(
-        'GetWallet',
-        getWallet_Pre,
+        'Get',
+        get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetWalletReq.fromBuffer(value),
@@ -111,12 +110,12 @@ abstract class WalletServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> updateAssets(
       $grpc.ServiceCall call, $0.UpdateAssetsReq request);
 
-  $async.Future<$0.GetWalletResp> getWallet_Pre(
+  $async.Future<$0.GetWalletResp> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.GetWalletReq> $request) async {
-    return getWallet($call, await $request);
+    return get($call, await $request);
   }
 
-  $async.Future<$0.GetWalletResp> getWallet(
+  $async.Future<$0.GetWalletResp> get(
       $grpc.ServiceCall call, $0.GetWalletReq request);
 
   $async.Future<$0.ListAddressesResp> listAddresses_Pre($grpc.ServiceCall $call,
@@ -142,25 +141,25 @@ class AssetsClient extends $grpc.Client {
 
   AssetsClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.TotalAssetsResp> totalAssets(
+  $grpc.ResponseFuture<$0.TotalAssetsResp> total(
     $0.TotalAssetsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$totalAssets, request, options: options);
+    return $createUnaryCall(_$total, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListUsersAssetsResp> listUsersAssets(
+  $grpc.ResponseFuture<$0.ListUsersAssetsResp> list(
     $0.ListUsersAssetsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listUsersAssets, request, options: options);
+    return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetUserAssetsResp> getUserAssets(
+  $grpc.ResponseFuture<$0.GetUserAssetsResp> get(
     $0.GetUserAssetsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getUserAssets, request, options: options);
+    return $createUnaryCall(_$get, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> updateAddresses(
@@ -172,19 +171,19 @@ class AssetsClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$totalAssets =
+  static final _$total =
       $grpc.ClientMethod<$0.TotalAssetsReq, $0.TotalAssetsResp>(
-          '/hi.did.Assets/TotalAssets',
+          '/hi.did.Assets/Total',
           ($0.TotalAssetsReq value) => value.writeToBuffer(),
           $0.TotalAssetsResp.fromBuffer);
-  static final _$listUsersAssets =
+  static final _$list =
       $grpc.ClientMethod<$0.ListUsersAssetsReq, $0.ListUsersAssetsResp>(
-          '/hi.did.Assets/ListUsersAssets',
+          '/hi.did.Assets/List',
           ($0.ListUsersAssetsReq value) => value.writeToBuffer(),
           $0.ListUsersAssetsResp.fromBuffer);
-  static final _$getUserAssets =
+  static final _$get =
       $grpc.ClientMethod<$0.GetUserAssetsReq, $0.GetUserAssetsResp>(
-          '/hi.did.Assets/GetUserAssets',
+          '/hi.did.Assets/Get',
           ($0.GetUserAssetsReq value) => value.writeToBuffer(),
           $0.GetUserAssetsResp.fromBuffer);
   static final _$updateAddresses = $grpc.ClientMethod<$2.SignedData, $1.Empty>(
@@ -199,24 +198,24 @@ abstract class AssetsServiceBase extends $grpc.Service {
 
   AssetsServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.TotalAssetsReq, $0.TotalAssetsResp>(
-        'TotalAssets',
-        totalAssets_Pre,
+        'Total',
+        total_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.TotalAssetsReq.fromBuffer(value),
         ($0.TotalAssetsResp value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$0.ListUsersAssetsReq, $0.ListUsersAssetsResp>(
-            'ListUsersAssets',
-            listUsersAssets_Pre,
+            'List',
+            list_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
                 $0.ListUsersAssetsReq.fromBuffer(value),
             ($0.ListUsersAssetsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetUserAssetsReq, $0.GetUserAssetsResp>(
-        'GetUserAssets',
-        getUserAssets_Pre,
+        'Get',
+        get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetUserAssetsReq.fromBuffer(value),
@@ -230,29 +229,28 @@ abstract class AssetsServiceBase extends $grpc.Service {
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.TotalAssetsResp> totalAssets_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.TotalAssetsResp> total_Pre($grpc.ServiceCall $call,
       $async.Future<$0.TotalAssetsReq> $request) async {
-    return totalAssets($call, await $request);
+    return total($call, await $request);
   }
 
-  $async.Future<$0.TotalAssetsResp> totalAssets(
+  $async.Future<$0.TotalAssetsResp> total(
       $grpc.ServiceCall call, $0.TotalAssetsReq request);
 
-  $async.Future<$0.ListUsersAssetsResp> listUsersAssets_Pre(
-      $grpc.ServiceCall $call,
+  $async.Future<$0.ListUsersAssetsResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListUsersAssetsReq> $request) async {
-    return listUsersAssets($call, await $request);
+    return list($call, await $request);
   }
 
-  $async.Future<$0.ListUsersAssetsResp> listUsersAssets(
+  $async.Future<$0.ListUsersAssetsResp> list(
       $grpc.ServiceCall call, $0.ListUsersAssetsReq request);
 
-  $async.Future<$0.GetUserAssetsResp> getUserAssets_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.GetUserAssetsResp> get_Pre($grpc.ServiceCall $call,
       $async.Future<$0.GetUserAssetsReq> $request) async {
-    return getUserAssets($call, await $request);
+    return get($call, await $request);
   }
 
-  $async.Future<$0.GetUserAssetsResp> getUserAssets(
+  $async.Future<$0.GetUserAssetsResp> get(
       $grpc.ServiceCall call, $0.GetUserAssetsReq request);
 
   $async.Future<$1.Empty> updateAddresses_Pre(

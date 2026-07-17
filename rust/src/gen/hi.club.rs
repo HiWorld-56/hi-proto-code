@@ -204,7 +204,7 @@ pub mod trade_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_trade_fee(
+        pub async fn get_fee(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTradeFeeReq>,
         ) -> std::result::Result<
@@ -220,14 +220,12 @@ pub mod trade_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Trade/GetTradeFee",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Trade/GetFee");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "GetTradeFee"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "GetFee"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get_trade(
+        pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTradeReq>,
         ) -> std::result::Result<tonic::Response<super::GetTradeResp>, tonic::Status> {
@@ -240,12 +238,12 @@ pub mod trade_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Trade/GetTrade");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Trade/Get");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "GetTrade"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "Get"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn add_trade(
+        pub async fn add(
             &mut self,
             request: impl tonic::IntoRequest<super::AddTradeReq>,
         ) -> std::result::Result<tonic::Response<super::AddTradeResp>, tonic::Status> {
@@ -258,9 +256,9 @@ pub mod trade_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Trade/AddTrade");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Trade/Add");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "AddTrade"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Trade", "Add"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn update_trans_hash(
@@ -1247,279 +1245,6 @@ pub mod speech_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3User {
-    #[prost(message, optional, tag = "1")]
-    pub user: ::core::option::Option<super::Entity>,
-    #[prost(message, optional, tag = "2")]
-    pub agent: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "3")]
-    pub custom: ::prost::alloc::string::String,
-    #[prost(bool, tag = "4")]
-    pub creator: bool,
-    #[prost(bool, tag = "5")]
-    pub topic: bool,
-    #[prost(bool, tag = "6")]
-    pub ready: bool,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3GroupCreateReq {
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3GroupCreateResp {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3GroupEventReq {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
-    pub user: ::core::option::Option<Q3User>,
-    #[prost(string, tag = "3")]
-    pub to: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3GroupReadyReq {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
-    pub user: ::core::option::Option<Q3User>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3GroupReadyResp {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(bool, tag = "2")]
-    pub ready: bool,
-    #[prost(message, optional, tag = "3")]
-    pub group: ::core::option::Option<super::Entity>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3HostingReq {
-    #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
-    #[prost(bool, tag = "2")]
-    pub hosting: bool,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3GetInfosReq {
-    #[prost(string, repeated, tag = "1")]
-    pub groups: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Q3Info {
-    #[prost(message, optional, tag = "1")]
-    pub group: ::core::option::Option<super::Entity>,
-    #[prost(message, repeated, tag = "2")]
-    pub list: ::prost::alloc::vec::Vec<q3_info::Unit>,
-}
-/// Nested message and enum types in `Q3Info`.
-pub mod q3_info {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-    pub struct Unit {
-        #[prost(message, optional, tag = "1")]
-        pub ghost: ::core::option::Option<super::super::Entity>,
-        #[prost(message, optional, tag = "2")]
-        pub agent: ::core::option::Option<super::super::Entity>,
-    }
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Q3GetInfosResp {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<Q3Info>,
-}
-/// Generated client implementations.
-pub mod q3_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct Q3Client<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl Q3Client<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> Q3Client<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> Q3Client<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            Q3Client::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get_infos(
-            &mut self,
-            request: impl tonic::IntoRequest<super::Q3GetInfosReq>,
-        ) -> std::result::Result<tonic::Response<super::Q3GetInfosResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Q3/GetInfos");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Q3", "GetInfos"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn create(
-            &mut self,
-            request: impl tonic::IntoRequest<super::Q3GroupCreateReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::Q3GroupCreateResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Q3/Create");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Q3", "Create"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::Q3GroupEventReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Q3/Event");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Q3", "Event"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn ready(
-            &mut self,
-            request: impl tonic::IntoRequest<super::Q3GroupReadyReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::Q3GroupReadyResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Q3/Ready");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Q3", "Ready"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn hosting(
-            &mut self,
-            request: impl tonic::IntoRequest<super::Q3HostingReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Q3/Hosting");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Q3", "Hosting"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BindMasterReq {
     #[prost(string, tag = "1")]
     pub master: ::prost::alloc::string::String,
@@ -2173,7 +1898,7 @@ pub mod price_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_price(
+        pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::super::did::GetPriceReq>,
         ) -> std::result::Result<
@@ -2189,9 +1914,9 @@ pub mod price_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Price/GetPrice");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Price/Get");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Price", "GetPrice"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Price", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -3037,7 +2762,6 @@ pub mod packet {
 /// group-invite          收到入群邀请（自动 accept）              / hi.club.Member
 /// group-invite-reject   我邀请他人入群已被对方拒绝（无需响应）
 /// group-kick            我已被踢出群聊                          / hi.club.MemberExit
-/// q3-sync               Q3 数据同步
 /// hwbot-bind            hwbot 绑定完成
 /// hwbot-unbind          hwbot 解绑完成
 /// hwbot-update          hwbot 资料更新                        / hi.Entity
@@ -3333,13 +3057,6 @@ pub struct GroupMember {
     #[prost(string, tag = "2")]
     pub role: ::prost::alloc::string::String,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Q3GroupMember {
-    #[prost(message, optional, tag = "1")]
-    pub member: ::core::option::Option<GroupMember>,
-    #[prost(string, tag = "2")]
-    pub ghost: ::prost::alloc::string::String,
-}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupInfo {
     #[prost(message, optional, tag = "1")]
@@ -3369,10 +3086,9 @@ pub struct CreateSingleReq {
 pub struct ListGroupMessageReq {
     #[prost(string, tag = "1")]
     pub last_uuid: ::prost::alloc::string::String,
+    /// 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type,不再由客户端传
     #[prost(string, tag = "2")]
     pub code: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub r#type: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGroupMessageResp {
@@ -3381,10 +3097,9 @@ pub struct ListGroupMessageResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupMemberReq {
+    /// 群类型由后端按 code 反查,不再由客户端传 type
     #[prost(string, tag = "1")]
     pub code: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -3392,22 +3107,6 @@ pub struct ListGroupMemberReq {
 pub struct GetGroupMemberTotalReq {
     #[prost(string, tag = "1")]
     pub group: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListQ3GroupMemberReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "3")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Q3GroupInfo {
-    #[prost(message, optional, tag = "1")]
-    pub base: ::core::option::Option<GroupBase>,
-    #[prost(message, repeated, tag = "2")]
-    pub list: ::prost::alloc::vec::Vec<Q3GroupMember>,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupMemberTotalResp {
@@ -3437,20 +3136,6 @@ pub struct RemoveGroupReq {
     pub group: ::prost::alloc::string::String,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LastUuid {
-    #[prost(string, tag = "1")]
-    pub last_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub code: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub r#type: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLastUuid {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<LastUuid>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetRoleReq {
@@ -3664,27 +3349,6 @@ pub mod group_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "ListMembers"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_q3_group_members(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListQ3GroupMemberReq>,
-        ) -> std::result::Result<tonic::Response<super::Q3GroupInfo>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Group/ListQ3GroupMembers",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Group", "ListQ3GroupMembers"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn get_member_total(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGroupMemberTotalReq>,
@@ -3803,48 +3467,6 @@ pub mod group_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Group", "ListMessages"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn update_last_uuid(
-            &mut self,
-            request: impl tonic::IntoRequest<super::LastUuid>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Group/UpdateLastUUID",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Group", "UpdateLastUUID"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn check_last_uuid(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListLastUuid>,
-        ) -> std::result::Result<tonic::Response<super::ListLastUuid>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Group/CheckLastUUID",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Group", "CheckLastUUID"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_role(
@@ -4166,7 +3788,7 @@ pub mod user_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_current_user(
+        pub async fn get_current(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<tonic::Response<super::UserInfo>, tonic::Status> {
@@ -4179,15 +3801,12 @@ pub mod user_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/GetCurrentUser",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/GetCurrent");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "GetCurrentUser"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "GetCurrent"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn update_user(
+        pub async fn update(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateUserReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
@@ -4200,9 +3819,9 @@ pub mod user_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.User/UpdateUser");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/Update");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "UpdateUser"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "Update"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_system_messages(
@@ -4474,7 +4093,7 @@ pub mod user_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "SetRemark"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_online_users(
+        pub async fn list_online(
             &mut self,
             request: impl tonic::IntoRequest<super::ListOnlineUserReq>,
         ) -> std::result::Result<
@@ -4490,12 +4109,9 @@ pub mod user_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/ListOnlineUsers",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListOnline");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "ListOnlineUsers"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListOnline"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -5710,7 +5326,7 @@ pub mod assets_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_user_assets(
+        pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::super::did::GetUserAssetsReq>,
         ) -> std::result::Result<
@@ -5726,12 +5342,9 @@ pub mod assets_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Assets/GetUserAssets",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Assets/Get");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Assets", "GetUserAssets"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Assets", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }

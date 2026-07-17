@@ -20,23 +20,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Group_Get_FullMethodName                = "/hi.club.Group/Get"
-	Group_Create_FullMethodName             = "/hi.club.Group/Create"
-	Group_CreateSingle_FullMethodName       = "/hi.club.Group/CreateSingle"
-	Group_Update_FullMethodName             = "/hi.club.Group/Update"
-	Group_ListMembers_FullMethodName        = "/hi.club.Group/ListMembers"
-	Group_ListQ3GroupMembers_FullMethodName = "/hi.club.Group/ListQ3GroupMembers"
-	Group_GetMemberTotal_FullMethodName     = "/hi.club.Group/GetMemberTotal"
-	Group_Invite_FullMethodName             = "/hi.club.Group/Invite"
-	Group_Join_FullMethodName               = "/hi.club.Group/Join"
-	Group_Quit_FullMethodName               = "/hi.club.Group/Quit"
-	Group_Remove_FullMethodName             = "/hi.club.Group/Remove"
-	Group_ListMessages_FullMethodName       = "/hi.club.Group/ListMessages"
-	Group_UpdateLastUUID_FullMethodName     = "/hi.club.Group/UpdateLastUUID"
-	Group_CheckLastUUID_FullMethodName      = "/hi.club.Group/CheckLastUUID"
-	Group_SetRole_FullMethodName            = "/hi.club.Group/SetRole"
-	Group_GetRole_FullMethodName            = "/hi.club.Group/GetRole"
-	Group_Mute_FullMethodName               = "/hi.club.Group/Mute"
+	Group_Get_FullMethodName            = "/hi.club.Group/Get"
+	Group_Create_FullMethodName         = "/hi.club.Group/Create"
+	Group_CreateSingle_FullMethodName   = "/hi.club.Group/CreateSingle"
+	Group_Update_FullMethodName         = "/hi.club.Group/Update"
+	Group_ListMembers_FullMethodName    = "/hi.club.Group/ListMembers"
+	Group_GetMemberTotal_FullMethodName = "/hi.club.Group/GetMemberTotal"
+	Group_Invite_FullMethodName         = "/hi.club.Group/Invite"
+	Group_Join_FullMethodName           = "/hi.club.Group/Join"
+	Group_Quit_FullMethodName           = "/hi.club.Group/Quit"
+	Group_Remove_FullMethodName         = "/hi.club.Group/Remove"
+	Group_ListMessages_FullMethodName   = "/hi.club.Group/ListMessages"
+	Group_SetRole_FullMethodName        = "/hi.club.Group/SetRole"
+	Group_GetRole_FullMethodName        = "/hi.club.Group/GetRole"
+	Group_Mute_FullMethodName           = "/hi.club.Group/Mute"
 )
 
 // GroupClient is the client API for Group service.
@@ -48,15 +45,12 @@ type GroupClient interface {
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
 	Update(ctx context.Context, in *GroupBase, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMembers(ctx context.Context, in *ListGroupMemberReq, opts ...grpc.CallOption) (*GroupInfo, error)
-	ListQ3GroupMembers(ctx context.Context, in *ListQ3GroupMemberReq, opts ...grpc.CallOption) (*Q3GroupInfo, error)
 	GetMemberTotal(ctx context.Context, in *GetGroupMemberTotalReq, opts ...grpc.CallOption) (*GetGroupMemberTotalResp, error)
 	Invite(ctx context.Context, in *InviteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Join(ctx context.Context, in *JoinGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Quit(ctx context.Context, in *QuitGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Remove(ctx context.Context, in *RemoveGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMessages(ctx context.Context, in *ListGroupMessageReq, opts ...grpc.CallOption) (*ListGroupMessageResp, error)
-	UpdateLastUUID(ctx context.Context, in *LastUUID, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CheckLastUUID(ctx context.Context, in *ListLastUUID, opts ...grpc.CallOption) (*ListLastUUID, error)
 	SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*GetRoleResp, error)
 	Mute(ctx context.Context, in *MuteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -114,16 +108,6 @@ func (c *groupClient) ListMembers(ctx context.Context, in *ListGroupMemberReq, o
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GroupInfo)
 	err := c.cc.Invoke(ctx, Group_ListMembers_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *groupClient) ListQ3GroupMembers(ctx context.Context, in *ListQ3GroupMemberReq, opts ...grpc.CallOption) (*Q3GroupInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Q3GroupInfo)
-	err := c.cc.Invoke(ctx, Group_ListQ3GroupMembers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -190,26 +174,6 @@ func (c *groupClient) ListMessages(ctx context.Context, in *ListGroupMessageReq,
 	return out, nil
 }
 
-func (c *groupClient) UpdateLastUUID(ctx context.Context, in *LastUUID, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Group_UpdateLastUUID_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *groupClient) CheckLastUUID(ctx context.Context, in *ListLastUUID, opts ...grpc.CallOption) (*ListLastUUID, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListLastUUID)
-	err := c.cc.Invoke(ctx, Group_CheckLastUUID_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *groupClient) SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -249,15 +213,12 @@ type GroupServer interface {
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
 	Update(context.Context, *GroupBase) (*emptypb.Empty, error)
 	ListMembers(context.Context, *ListGroupMemberReq) (*GroupInfo, error)
-	ListQ3GroupMembers(context.Context, *ListQ3GroupMemberReq) (*Q3GroupInfo, error)
 	GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error)
 	Invite(context.Context, *InviteGroupReq) (*emptypb.Empty, error)
 	Join(context.Context, *JoinGroupReq) (*emptypb.Empty, error)
 	Quit(context.Context, *QuitGroupReq) (*emptypb.Empty, error)
 	Remove(context.Context, *RemoveGroupReq) (*emptypb.Empty, error)
 	ListMessages(context.Context, *ListGroupMessageReq) (*ListGroupMessageResp, error)
-	UpdateLastUUID(context.Context, *LastUUID) (*emptypb.Empty, error)
-	CheckLastUUID(context.Context, *ListLastUUID) (*ListLastUUID, error)
 	SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error)
 	GetRole(context.Context, *GetRoleReq) (*GetRoleResp, error)
 	Mute(context.Context, *MuteGroupReq) (*emptypb.Empty, error)
@@ -285,9 +246,6 @@ func (UnimplementedGroupServer) Update(context.Context, *GroupBase) (*emptypb.Em
 func (UnimplementedGroupServer) ListMembers(context.Context, *ListGroupMemberReq) (*GroupInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMembers not implemented")
 }
-func (UnimplementedGroupServer) ListQ3GroupMembers(context.Context, *ListQ3GroupMemberReq) (*Q3GroupInfo, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListQ3GroupMembers not implemented")
-}
 func (UnimplementedGroupServer) GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMemberTotal not implemented")
 }
@@ -305,12 +263,6 @@ func (UnimplementedGroupServer) Remove(context.Context, *RemoveGroupReq) (*empty
 }
 func (UnimplementedGroupServer) ListMessages(context.Context, *ListGroupMessageReq) (*ListGroupMessageResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMessages not implemented")
-}
-func (UnimplementedGroupServer) UpdateLastUUID(context.Context, *LastUUID) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateLastUUID not implemented")
-}
-func (UnimplementedGroupServer) CheckLastUUID(context.Context, *ListLastUUID) (*ListLastUUID, error) {
-	return nil, status.Error(codes.Unimplemented, "method CheckLastUUID not implemented")
 }
 func (UnimplementedGroupServer) SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetRole not implemented")
@@ -431,24 +383,6 @@ func _Group_ListMembers_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Group_ListQ3GroupMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListQ3GroupMemberReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GroupServer).ListQ3GroupMembers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Group_ListQ3GroupMembers_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).ListQ3GroupMembers(ctx, req.(*ListQ3GroupMemberReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Group_GetMemberTotal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetGroupMemberTotalReq)
 	if err := dec(in); err != nil {
@@ -557,42 +491,6 @@ func _Group_ListMessages_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Group_UpdateLastUUID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LastUUID)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GroupServer).UpdateLastUUID(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Group_UpdateLastUUID_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).UpdateLastUUID(ctx, req.(*LastUUID))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Group_CheckLastUUID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListLastUUID)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GroupServer).CheckLastUUID(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Group_CheckLastUUID_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).CheckLastUUID(ctx, req.(*ListLastUUID))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Group_SetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetRoleReq)
 	if err := dec(in); err != nil {
@@ -675,10 +573,6 @@ var Group_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Group_ListMembers_Handler,
 		},
 		{
-			MethodName: "ListQ3GroupMembers",
-			Handler:    _Group_ListQ3GroupMembers_Handler,
-		},
-		{
 			MethodName: "GetMemberTotal",
 			Handler:    _Group_GetMemberTotal_Handler,
 		},
@@ -701,14 +595,6 @@ var Group_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMessages",
 			Handler:    _Group_ListMessages_Handler,
-		},
-		{
-			MethodName: "UpdateLastUUID",
-			Handler:    _Group_UpdateLastUUID_Handler,
-		},
-		{
-			MethodName: "CheckLastUUID",
-			Handler:    _Group_CheckLastUUID_Handler,
 		},
 		{
 			MethodName: "SetRole",

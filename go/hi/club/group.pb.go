@@ -168,58 +168,6 @@ func (x *GroupMember) GetRole() string {
 	return ""
 }
 
-type Q3GroupMember struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Member        *GroupMember           `protobuf:"bytes,1,opt,name=member,proto3" json:"member,omitempty"`
-	Ghost         string                 `protobuf:"bytes,2,opt,name=ghost,proto3" json:"ghost,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Q3GroupMember) Reset() {
-	*x = Q3GroupMember{}
-	mi := &file_hi_club_group_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Q3GroupMember) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Q3GroupMember) ProtoMessage() {}
-
-func (x *Q3GroupMember) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Q3GroupMember.ProtoReflect.Descriptor instead.
-func (*Q3GroupMember) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *Q3GroupMember) GetMember() *GroupMember {
-	if x != nil {
-		return x.Member
-	}
-	return nil
-}
-
-func (x *Q3GroupMember) GetGhost() string {
-	if x != nil {
-		return x.Ghost
-	}
-	return ""
-}
-
 type GroupInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *GroupBase             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
@@ -230,7 +178,7 @@ type GroupInfo struct {
 
 func (x *GroupInfo) Reset() {
 	*x = GroupInfo{}
-	mi := &file_hi_club_group_proto_msgTypes[3]
+	mi := &file_hi_club_group_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -242,7 +190,7 @@ func (x *GroupInfo) String() string {
 func (*GroupInfo) ProtoMessage() {}
 
 func (x *GroupInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[3]
+	mi := &file_hi_club_group_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -255,7 +203,7 @@ func (x *GroupInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GroupInfo.ProtoReflect.Descriptor instead.
 func (*GroupInfo) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{3}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GroupInfo) GetBase() *GroupBase {
@@ -281,7 +229,7 @@ type GetGroupReq struct {
 
 func (x *GetGroupReq) Reset() {
 	*x = GetGroupReq{}
-	mi := &file_hi_club_group_proto_msgTypes[4]
+	mi := &file_hi_club_group_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -293,7 +241,7 @@ func (x *GetGroupReq) String() string {
 func (*GetGroupReq) ProtoMessage() {}
 
 func (x *GetGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[4]
+	mi := &file_hi_club_group_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -306,7 +254,7 @@ func (x *GetGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGroupReq.ProtoReflect.Descriptor instead.
 func (*GetGroupReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{4}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetGroupReq) GetCode() string {
@@ -326,7 +274,7 @@ type CreateGroupReq struct {
 
 func (x *CreateGroupReq) Reset() {
 	*x = CreateGroupReq{}
-	mi := &file_hi_club_group_proto_msgTypes[5]
+	mi := &file_hi_club_group_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -338,7 +286,7 @@ func (x *CreateGroupReq) String() string {
 func (*CreateGroupReq) ProtoMessage() {}
 
 func (x *CreateGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[5]
+	mi := &file_hi_club_group_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -351,7 +299,7 @@ func (x *CreateGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateGroupReq.ProtoReflect.Descriptor instead.
 func (*CreateGroupReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreateGroupReq) GetName() string {
@@ -371,7 +319,7 @@ type CreateSingleReq struct {
 
 func (x *CreateSingleReq) Reset() {
 	*x = CreateSingleReq{}
-	mi := &file_hi_club_group_proto_msgTypes[6]
+	mi := &file_hi_club_group_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -383,7 +331,7 @@ func (x *CreateSingleReq) String() string {
 func (*CreateSingleReq) ProtoMessage() {}
 
 func (x *CreateSingleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[6]
+	mi := &file_hi_club_group_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,7 +344,7 @@ func (x *CreateSingleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSingleReq.ProtoReflect.Descriptor instead.
 func (*CreateSingleReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *CreateSingleReq) GetDid() string {
@@ -410,15 +358,14 @@ func (x *CreateSingleReq) GetDid() string {
 type ListGroupMessageReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	LastUuid      string                 `protobuf:"bytes,1,opt,name=last_uuid,json=lastUuid,proto3" json:"last_uuid,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
-	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
+	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"` // 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type,不再由客户端传
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListGroupMessageReq) Reset() {
 	*x = ListGroupMessageReq{}
-	mi := &file_hi_club_group_proto_msgTypes[7]
+	mi := &file_hi_club_group_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -430,7 +377,7 @@ func (x *ListGroupMessageReq) String() string {
 func (*ListGroupMessageReq) ProtoMessage() {}
 
 func (x *ListGroupMessageReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[7]
+	mi := &file_hi_club_group_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -443,7 +390,7 @@ func (x *ListGroupMessageReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupMessageReq.ProtoReflect.Descriptor instead.
 func (*ListGroupMessageReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListGroupMessageReq) GetLastUuid() string {
@@ -460,13 +407,6 @@ func (x *ListGroupMessageReq) GetCode() string {
 	return ""
 }
 
-func (x *ListGroupMessageReq) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
 type ListGroupMessageResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	List          []*Packet              `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
@@ -476,7 +416,7 @@ type ListGroupMessageResp struct {
 
 func (x *ListGroupMessageResp) Reset() {
 	*x = ListGroupMessageResp{}
-	mi := &file_hi_club_group_proto_msgTypes[8]
+	mi := &file_hi_club_group_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -488,7 +428,7 @@ func (x *ListGroupMessageResp) String() string {
 func (*ListGroupMessageResp) ProtoMessage() {}
 
 func (x *ListGroupMessageResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[8]
+	mi := &file_hi_club_group_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -501,7 +441,7 @@ func (x *ListGroupMessageResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupMessageResp.ProtoReflect.Descriptor instead.
 func (*ListGroupMessageResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{8}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListGroupMessageResp) GetList() []*Packet {
@@ -513,8 +453,7 @@ func (x *ListGroupMessageResp) GetList() []*Packet {
 
 type ListGroupMemberReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"` // 群类型由后端按 code 反查,不再由客户端传 type
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -522,7 +461,7 @@ type ListGroupMemberReq struct {
 
 func (x *ListGroupMemberReq) Reset() {
 	*x = ListGroupMemberReq{}
-	mi := &file_hi_club_group_proto_msgTypes[9]
+	mi := &file_hi_club_group_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -534,7 +473,7 @@ func (x *ListGroupMemberReq) String() string {
 func (*ListGroupMemberReq) ProtoMessage() {}
 
 func (x *ListGroupMemberReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[9]
+	mi := &file_hi_club_group_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -547,19 +486,12 @@ func (x *ListGroupMemberReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupMemberReq.ProtoReflect.Descriptor instead.
 func (*ListGroupMemberReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{9}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListGroupMemberReq) GetCode() string {
 	if x != nil {
 		return x.Code
-	}
-	return ""
-}
-
-func (x *ListGroupMemberReq) GetType() string {
-	if x != nil {
-		return x.Type
 	}
 	return ""
 }
@@ -580,7 +512,7 @@ type GetGroupMemberTotalReq struct {
 
 func (x *GetGroupMemberTotalReq) Reset() {
 	*x = GetGroupMemberTotalReq{}
-	mi := &file_hi_club_group_proto_msgTypes[10]
+	mi := &file_hi_club_group_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -592,7 +524,7 @@ func (x *GetGroupMemberTotalReq) String() string {
 func (*GetGroupMemberTotalReq) ProtoMessage() {}
 
 func (x *GetGroupMemberTotalReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[10]
+	mi := &file_hi_club_group_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -605,7 +537,7 @@ func (x *GetGroupMemberTotalReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGroupMemberTotalReq.ProtoReflect.Descriptor instead.
 func (*GetGroupMemberTotalReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{10}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetGroupMemberTotalReq) GetGroup() string {
@@ -613,118 +545,6 @@ func (x *GetGroupMemberTotalReq) GetGroup() string {
 		return x.Group
 	}
 	return ""
-}
-
-type ListQ3GroupMemberReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListQ3GroupMemberReq) Reset() {
-	*x = ListQ3GroupMemberReq{}
-	mi := &file_hi_club_group_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListQ3GroupMemberReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListQ3GroupMemberReq) ProtoMessage() {}
-
-func (x *ListQ3GroupMemberReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListQ3GroupMemberReq.ProtoReflect.Descriptor instead.
-func (*ListQ3GroupMemberReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *ListQ3GroupMemberReq) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *ListQ3GroupMemberReq) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-func (x *ListQ3GroupMemberReq) GetPagination() *hi.Pagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
-type Q3GroupInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *GroupBase             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	List          []*Q3GroupMember       `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Q3GroupInfo) Reset() {
-	*x = Q3GroupInfo{}
-	mi := &file_hi_club_group_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Q3GroupInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Q3GroupInfo) ProtoMessage() {}
-
-func (x *Q3GroupInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Q3GroupInfo.ProtoReflect.Descriptor instead.
-func (*Q3GroupInfo) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *Q3GroupInfo) GetBase() *GroupBase {
-	if x != nil {
-		return x.Base
-	}
-	return nil
-}
-
-func (x *Q3GroupInfo) GetList() []*Q3GroupMember {
-	if x != nil {
-		return x.List
-	}
-	return nil
 }
 
 type GetGroupMemberTotalResp struct {
@@ -736,7 +556,7 @@ type GetGroupMemberTotalResp struct {
 
 func (x *GetGroupMemberTotalResp) Reset() {
 	*x = GetGroupMemberTotalResp{}
-	mi := &file_hi_club_group_proto_msgTypes[13]
+	mi := &file_hi_club_group_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -748,7 +568,7 @@ func (x *GetGroupMemberTotalResp) String() string {
 func (*GetGroupMemberTotalResp) ProtoMessage() {}
 
 func (x *GetGroupMemberTotalResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[13]
+	mi := &file_hi_club_group_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -761,7 +581,7 @@ func (x *GetGroupMemberTotalResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGroupMemberTotalResp.ProtoReflect.Descriptor instead.
 func (*GetGroupMemberTotalResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{13}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetGroupMemberTotalResp) GetTotal() int32 {
@@ -781,7 +601,7 @@ type InviteGroupReq struct {
 
 func (x *InviteGroupReq) Reset() {
 	*x = InviteGroupReq{}
-	mi := &file_hi_club_group_proto_msgTypes[14]
+	mi := &file_hi_club_group_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -793,7 +613,7 @@ func (x *InviteGroupReq) String() string {
 func (*InviteGroupReq) ProtoMessage() {}
 
 func (x *InviteGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[14]
+	mi := &file_hi_club_group_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -806,7 +626,7 @@ func (x *InviteGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InviteGroupReq.ProtoReflect.Descriptor instead.
 func (*InviteGroupReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{14}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *InviteGroupReq) GetGroup() string {
@@ -832,7 +652,7 @@ type JoinGroupReq struct {
 
 func (x *JoinGroupReq) Reset() {
 	*x = JoinGroupReq{}
-	mi := &file_hi_club_group_proto_msgTypes[15]
+	mi := &file_hi_club_group_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -844,7 +664,7 @@ func (x *JoinGroupReq) String() string {
 func (*JoinGroupReq) ProtoMessage() {}
 
 func (x *JoinGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[15]
+	mi := &file_hi_club_group_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -857,7 +677,7 @@ func (x *JoinGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JoinGroupReq.ProtoReflect.Descriptor instead.
 func (*JoinGroupReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{15}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *JoinGroupReq) GetGroup() string {
@@ -876,7 +696,7 @@ type QuitGroupReq struct {
 
 func (x *QuitGroupReq) Reset() {
 	*x = QuitGroupReq{}
-	mi := &file_hi_club_group_proto_msgTypes[16]
+	mi := &file_hi_club_group_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -888,7 +708,7 @@ func (x *QuitGroupReq) String() string {
 func (*QuitGroupReq) ProtoMessage() {}
 
 func (x *QuitGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[16]
+	mi := &file_hi_club_group_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -901,7 +721,7 @@ func (x *QuitGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QuitGroupReq.ProtoReflect.Descriptor instead.
 func (*QuitGroupReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{16}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *QuitGroupReq) GetGroup() string {
@@ -921,7 +741,7 @@ type RemoveGroupReq struct {
 
 func (x *RemoveGroupReq) Reset() {
 	*x = RemoveGroupReq{}
-	mi := &file_hi_club_group_proto_msgTypes[17]
+	mi := &file_hi_club_group_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -933,7 +753,7 @@ func (x *RemoveGroupReq) String() string {
 func (*RemoveGroupReq) ProtoMessage() {}
 
 func (x *RemoveGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[17]
+	mi := &file_hi_club_group_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -946,7 +766,7 @@ func (x *RemoveGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveGroupReq.ProtoReflect.Descriptor instead.
 func (*RemoveGroupReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{17}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *RemoveGroupReq) GetGroup() string {
@@ -963,110 +783,6 @@ func (x *RemoveGroupReq) GetMembers() []string {
 	return nil
 }
 
-type LastUUID struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	LastUuid      string                 `protobuf:"bytes,1,opt,name=last_uuid,json=lastUuid,proto3" json:"last_uuid,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
-	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LastUUID) Reset() {
-	*x = LastUUID{}
-	mi := &file_hi_club_group_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LastUUID) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LastUUID) ProtoMessage() {}
-
-func (x *LastUUID) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LastUUID.ProtoReflect.Descriptor instead.
-func (*LastUUID) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *LastUUID) GetLastUuid() string {
-	if x != nil {
-		return x.LastUuid
-	}
-	return ""
-}
-
-func (x *LastUUID) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *LastUUID) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-type ListLastUUID struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*LastUUID            `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListLastUUID) Reset() {
-	*x = ListLastUUID{}
-	mi := &file_hi_club_group_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListLastUUID) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListLastUUID) ProtoMessage() {}
-
-func (x *ListLastUUID) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListLastUUID.ProtoReflect.Descriptor instead.
-func (*ListLastUUID) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *ListLastUUID) GetList() []*LastUUID {
-	if x != nil {
-		return x.List
-	}
-	return nil
-}
-
 type SetRoleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Group         string                 `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"`
@@ -1078,7 +794,7 @@ type SetRoleReq struct {
 
 func (x *SetRoleReq) Reset() {
 	*x = SetRoleReq{}
-	mi := &file_hi_club_group_proto_msgTypes[20]
+	mi := &file_hi_club_group_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1090,7 +806,7 @@ func (x *SetRoleReq) String() string {
 func (*SetRoleReq) ProtoMessage() {}
 
 func (x *SetRoleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[20]
+	mi := &file_hi_club_group_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1103,7 +819,7 @@ func (x *SetRoleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetRoleReq.ProtoReflect.Descriptor instead.
 func (*SetRoleReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{20}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *SetRoleReq) GetGroup() string {
@@ -1136,7 +852,7 @@ type GetRoleReq struct {
 
 func (x *GetRoleReq) Reset() {
 	*x = GetRoleReq{}
-	mi := &file_hi_club_group_proto_msgTypes[21]
+	mi := &file_hi_club_group_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1148,7 +864,7 @@ func (x *GetRoleReq) String() string {
 func (*GetRoleReq) ProtoMessage() {}
 
 func (x *GetRoleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[21]
+	mi := &file_hi_club_group_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1161,7 +877,7 @@ func (x *GetRoleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRoleReq.ProtoReflect.Descriptor instead.
 func (*GetRoleReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{21}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetRoleReq) GetGroup() string {
@@ -1180,7 +896,7 @@ type GetRoleResp struct {
 
 func (x *GetRoleResp) Reset() {
 	*x = GetRoleResp{}
-	mi := &file_hi_club_group_proto_msgTypes[22]
+	mi := &file_hi_club_group_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1192,7 +908,7 @@ func (x *GetRoleResp) String() string {
 func (*GetRoleResp) ProtoMessage() {}
 
 func (x *GetRoleResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[22]
+	mi := &file_hi_club_group_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1205,7 +921,7 @@ func (x *GetRoleResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRoleResp.ProtoReflect.Descriptor instead.
 func (*GetRoleResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{22}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetRoleResp) GetRole() string {
@@ -1225,7 +941,7 @@ type MuteGroupReq struct {
 
 func (x *MuteGroupReq) Reset() {
 	*x = MuteGroupReq{}
-	mi := &file_hi_club_group_proto_msgTypes[23]
+	mi := &file_hi_club_group_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1237,7 +953,7 @@ func (x *MuteGroupReq) String() string {
 func (*MuteGroupReq) ProtoMessage() {}
 
 func (x *MuteGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_group_proto_msgTypes[23]
+	mi := &file_hi_club_group_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1250,7 +966,7 @@ func (x *MuteGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MuteGroupReq.ProtoReflect.Descriptor instead.
 func (*MuteGroupReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_group_proto_rawDescGZIP(), []int{23}
+	return file_hi_club_group_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *MuteGroupReq) GetGroup() string {
@@ -1288,10 +1004,7 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\vGroupMember\x12\x1e\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04base\x12\x12\n" +
-	"\x04role\x18\x02 \x01(\tR\x04role\"S\n" +
-	"\rQ3GroupMember\x12,\n" +
-	"\x06member\x18\x01 \x01(\v2\x14.hi.club.GroupMemberR\x06member\x12\x14\n" +
-	"\x05ghost\x18\x02 \x01(\tR\x05ghost\"]\n" +
+	"\x04role\x18\x02 \x01(\tR\x04role\"]\n" +
 	"\tGroupInfo\x12&\n" +
 	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseR\x04base\x12(\n" +
 	"\x04list\x18\x02 \x03(\v2\x14.hi.club.GroupMemberR\x04list\"!\n" +
@@ -1300,30 +1013,19 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x0eCreateGroupReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"#\n" +
 	"\x0fCreateSingleReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"Z\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\"F\n" +
 	"\x13ListGroupMessageReq\x12\x1b\n" +
 	"\tlast_uuid\x18\x01 \x01(\tR\blastUuid\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\";\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\";\n" +
 	"\x14ListGroupMessageResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketR\x04list\"l\n" +
+	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketR\x04list\"X\n" +
 	"\x12ListGroupMemberReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\x12.\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\".\n" +
 	"\x16GetGroupMemberTotalReq\x12\x14\n" +
-	"\x05group\x18\x01 \x01(\tR\x05group\"n\n" +
-	"\x14ListQ3GroupMemberReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\x12.\n" +
-	"\n" +
-	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"a\n" +
-	"\vQ3GroupInfo\x12&\n" +
-	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseR\x04base\x12*\n" +
-	"\x04list\x18\x02 \x03(\v2\x16.hi.club.Q3GroupMemberR\x04list\"/\n" +
+	"\x05group\x18\x01 \x01(\tR\x05group\"/\n" +
 	"\x17GetGroupMemberTotalResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\"@\n" +
 	"\x0eInviteGroupReq\x12\x14\n" +
@@ -1335,13 +1037,7 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\tR\x05group\"@\n" +
 	"\x0eRemoveGroupReq\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12\x18\n" +
-	"\amembers\x18\x02 \x03(\tR\amembers\"O\n" +
-	"\bLastUUID\x12\x1b\n" +
-	"\tlast_uuid\x18\x01 \x01(\tR\blastUuid\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\"5\n" +
-	"\fListLastUUID\x12%\n" +
-	"\x04list\x18\x01 \x03(\v2\x11.hi.club.LastUUIDR\x04list\"L\n" +
+	"\amembers\x18\x02 \x03(\tR\amembers\"L\n" +
 	"\n" +
 	"SetRoleReq\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12\x14\n" +
@@ -1354,22 +1050,19 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x04role\x18\x01 \x01(\tR\x04role\":\n" +
 	"\fMuteGroupReq\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12\x14\n" +
-	"\x05muted\x18\x02 \x01(\bR\x05muted2\x8c\t\n" +
+	"\x05muted\x18\x02 \x01(\bR\x05muted2\xb0\a\n" +
 	"\x05Group\x126\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
 	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
 	"\x06Update\x12\x12.hi.club.GroupBase\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
-	"\vListMembers\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12P\n" +
-	"\x12ListQ3GroupMembers\x12\x1d.hi.club.ListQ3GroupMemberReq\x1a\x14.hi.club.Q3GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
+	"\vListMembers\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
 	"\x0eGetMemberTotal\x12\x1f.hi.club.GetGroupMemberTotalReq\x1a .hi.club.GetGroupMemberTotalResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x06Invite\x12\x17.hi.club.InviteGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Join\x12\x15.hi.club.JoinGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Quit\x12\x15.hi.club.QuitGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x06Remove\x12\x17.hi.club.RemoveGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12R\n" +
-	"\fListMessages\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
-	"\x0eUpdateLastUUID\x12\x11.hi.club.LastUUID\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12D\n" +
-	"\rCheckLastUUID\x12\x15.hi.club.ListLastUUID\x1a\x15.hi.club.ListLastUUID\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\fListMessages\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
 	"\aSetRole\x12\x13.hi.club.SetRoleReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
 	"\aGetRole\x12\x13.hi.club.GetRoleReq\x1a\x14.hi.club.GetRoleResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Mute\x12\x15.hi.club.MuteGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x81\x01\n" +
@@ -1388,88 +1081,72 @@ func file_hi_club_group_proto_rawDescGZIP() []byte {
 	return file_hi_club_group_proto_rawDescData
 }
 
-var file_hi_club_group_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_hi_club_group_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_hi_club_group_proto_goTypes = []any{
 	(*GroupBase)(nil),               // 0: hi.club.GroupBase
 	(*GroupMember)(nil),             // 1: hi.club.GroupMember
-	(*Q3GroupMember)(nil),           // 2: hi.club.Q3GroupMember
-	(*GroupInfo)(nil),               // 3: hi.club.GroupInfo
-	(*GetGroupReq)(nil),             // 4: hi.club.GetGroupReq
-	(*CreateGroupReq)(nil),          // 5: hi.club.CreateGroupReq
-	(*CreateSingleReq)(nil),         // 6: hi.club.CreateSingleReq
-	(*ListGroupMessageReq)(nil),     // 7: hi.club.ListGroupMessageReq
-	(*ListGroupMessageResp)(nil),    // 8: hi.club.ListGroupMessageResp
-	(*ListGroupMemberReq)(nil),      // 9: hi.club.ListGroupMemberReq
-	(*GetGroupMemberTotalReq)(nil),  // 10: hi.club.GetGroupMemberTotalReq
-	(*ListQ3GroupMemberReq)(nil),    // 11: hi.club.ListQ3GroupMemberReq
-	(*Q3GroupInfo)(nil),             // 12: hi.club.Q3GroupInfo
-	(*GetGroupMemberTotalResp)(nil), // 13: hi.club.GetGroupMemberTotalResp
-	(*InviteGroupReq)(nil),          // 14: hi.club.InviteGroupReq
-	(*JoinGroupReq)(nil),            // 15: hi.club.JoinGroupReq
-	(*QuitGroupReq)(nil),            // 16: hi.club.QuitGroupReq
-	(*RemoveGroupReq)(nil),          // 17: hi.club.RemoveGroupReq
-	(*LastUUID)(nil),                // 18: hi.club.LastUUID
-	(*ListLastUUID)(nil),            // 19: hi.club.ListLastUUID
-	(*SetRoleReq)(nil),              // 20: hi.club.SetRoleReq
-	(*GetRoleReq)(nil),              // 21: hi.club.GetRoleReq
-	(*GetRoleResp)(nil),             // 22: hi.club.GetRoleResp
-	(*MuteGroupReq)(nil),            // 23: hi.club.MuteGroupReq
-	(*hi.Entity)(nil),               // 24: hi.Entity
-	(*Packet)(nil),                  // 25: hi.club.Packet
-	(*hi.Pagination)(nil),           // 26: hi.Pagination
-	(*emptypb.Empty)(nil),           // 27: google.protobuf.Empty
+	(*GroupInfo)(nil),               // 2: hi.club.GroupInfo
+	(*GetGroupReq)(nil),             // 3: hi.club.GetGroupReq
+	(*CreateGroupReq)(nil),          // 4: hi.club.CreateGroupReq
+	(*CreateSingleReq)(nil),         // 5: hi.club.CreateSingleReq
+	(*ListGroupMessageReq)(nil),     // 6: hi.club.ListGroupMessageReq
+	(*ListGroupMessageResp)(nil),    // 7: hi.club.ListGroupMessageResp
+	(*ListGroupMemberReq)(nil),      // 8: hi.club.ListGroupMemberReq
+	(*GetGroupMemberTotalReq)(nil),  // 9: hi.club.GetGroupMemberTotalReq
+	(*GetGroupMemberTotalResp)(nil), // 10: hi.club.GetGroupMemberTotalResp
+	(*InviteGroupReq)(nil),          // 11: hi.club.InviteGroupReq
+	(*JoinGroupReq)(nil),            // 12: hi.club.JoinGroupReq
+	(*QuitGroupReq)(nil),            // 13: hi.club.QuitGroupReq
+	(*RemoveGroupReq)(nil),          // 14: hi.club.RemoveGroupReq
+	(*SetRoleReq)(nil),              // 15: hi.club.SetRoleReq
+	(*GetRoleReq)(nil),              // 16: hi.club.GetRoleReq
+	(*GetRoleResp)(nil),             // 17: hi.club.GetRoleResp
+	(*MuteGroupReq)(nil),            // 18: hi.club.MuteGroupReq
+	(*hi.Entity)(nil),               // 19: hi.Entity
+	(*Packet)(nil),                  // 20: hi.club.Packet
+	(*hi.Pagination)(nil),           // 21: hi.Pagination
+	(*emptypb.Empty)(nil),           // 22: google.protobuf.Empty
 }
 var file_hi_club_group_proto_depIdxs = []int32{
-	24, // 0: hi.club.GroupBase.base:type_name -> hi.Entity
-	24, // 1: hi.club.GroupMember.base:type_name -> hi.Entity
-	1,  // 2: hi.club.Q3GroupMember.member:type_name -> hi.club.GroupMember
-	0,  // 3: hi.club.GroupInfo.base:type_name -> hi.club.GroupBase
-	1,  // 4: hi.club.GroupInfo.list:type_name -> hi.club.GroupMember
-	25, // 5: hi.club.ListGroupMessageResp.list:type_name -> hi.club.Packet
-	26, // 6: hi.club.ListGroupMemberReq.pagination:type_name -> hi.Pagination
-	26, // 7: hi.club.ListQ3GroupMemberReq.pagination:type_name -> hi.Pagination
-	0,  // 8: hi.club.Q3GroupInfo.base:type_name -> hi.club.GroupBase
-	2,  // 9: hi.club.Q3GroupInfo.list:type_name -> hi.club.Q3GroupMember
-	18, // 10: hi.club.ListLastUUID.list:type_name -> hi.club.LastUUID
-	4,  // 11: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
-	5,  // 12: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
-	6,  // 13: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
-	0,  // 14: hi.club.Group.Update:input_type -> hi.club.GroupBase
-	9,  // 15: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMemberReq
-	11, // 16: hi.club.Group.ListQ3GroupMembers:input_type -> hi.club.ListQ3GroupMemberReq
-	10, // 17: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
-	14, // 18: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
-	15, // 19: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
-	16, // 20: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
-	17, // 21: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
-	7,  // 22: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessageReq
-	18, // 23: hi.club.Group.UpdateLastUUID:input_type -> hi.club.LastUUID
-	19, // 24: hi.club.Group.CheckLastUUID:input_type -> hi.club.ListLastUUID
-	20, // 25: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
-	21, // 26: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
-	23, // 27: hi.club.Group.Mute:input_type -> hi.club.MuteGroupReq
-	0,  // 28: hi.club.Group.Get:output_type -> hi.club.GroupBase
-	0,  // 29: hi.club.Group.Create:output_type -> hi.club.GroupBase
-	0,  // 30: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
-	27, // 31: hi.club.Group.Update:output_type -> google.protobuf.Empty
-	3,  // 32: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
-	12, // 33: hi.club.Group.ListQ3GroupMembers:output_type -> hi.club.Q3GroupInfo
-	13, // 34: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
-	27, // 35: hi.club.Group.Invite:output_type -> google.protobuf.Empty
-	27, // 36: hi.club.Group.Join:output_type -> google.protobuf.Empty
-	27, // 37: hi.club.Group.Quit:output_type -> google.protobuf.Empty
-	27, // 38: hi.club.Group.Remove:output_type -> google.protobuf.Empty
-	8,  // 39: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessageResp
-	27, // 40: hi.club.Group.UpdateLastUUID:output_type -> google.protobuf.Empty
-	19, // 41: hi.club.Group.CheckLastUUID:output_type -> hi.club.ListLastUUID
-	27, // 42: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
-	22, // 43: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
-	27, // 44: hi.club.Group.Mute:output_type -> google.protobuf.Empty
-	28, // [28:45] is the sub-list for method output_type
-	11, // [11:28] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	19, // 0: hi.club.GroupBase.base:type_name -> hi.Entity
+	19, // 1: hi.club.GroupMember.base:type_name -> hi.Entity
+	0,  // 2: hi.club.GroupInfo.base:type_name -> hi.club.GroupBase
+	1,  // 3: hi.club.GroupInfo.list:type_name -> hi.club.GroupMember
+	20, // 4: hi.club.ListGroupMessageResp.list:type_name -> hi.club.Packet
+	21, // 5: hi.club.ListGroupMemberReq.pagination:type_name -> hi.Pagination
+	3,  // 6: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
+	4,  // 7: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
+	5,  // 8: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
+	0,  // 9: hi.club.Group.Update:input_type -> hi.club.GroupBase
+	8,  // 10: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMemberReq
+	9,  // 11: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
+	11, // 12: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
+	12, // 13: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
+	13, // 14: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
+	14, // 15: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
+	6,  // 16: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessageReq
+	15, // 17: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
+	16, // 18: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
+	18, // 19: hi.club.Group.Mute:input_type -> hi.club.MuteGroupReq
+	0,  // 20: hi.club.Group.Get:output_type -> hi.club.GroupBase
+	0,  // 21: hi.club.Group.Create:output_type -> hi.club.GroupBase
+	0,  // 22: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
+	22, // 23: hi.club.Group.Update:output_type -> google.protobuf.Empty
+	2,  // 24: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
+	10, // 25: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
+	22, // 26: hi.club.Group.Invite:output_type -> google.protobuf.Empty
+	22, // 27: hi.club.Group.Join:output_type -> google.protobuf.Empty
+	22, // 28: hi.club.Group.Quit:output_type -> google.protobuf.Empty
+	22, // 29: hi.club.Group.Remove:output_type -> google.protobuf.Empty
+	7,  // 30: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessageResp
+	22, // 31: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
+	17, // 32: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
+	22, // 33: hi.club.Group.Mute:output_type -> google.protobuf.Empty
+	20, // [20:34] is the sub-list for method output_type
+	6,  // [6:20] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_group_proto_init() }
@@ -1484,7 +1161,7 @@ func file_hi_club_group_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_group_proto_rawDesc), len(file_hi_club_group_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   24,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -863,11 +863,11 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"pagination\"O\n" +
 	"\rListTradeResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12(\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\xdd\x02\n" +
-	"\x05Trade\x12G\n" +
-	"\vGetTradeFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
-	"\bGetTrade\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
-	"\bAddTrade\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x05\x8a\xb5\x18\x01\x02\x12M\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\xce\x02\n" +
+	"\x05Trade\x12B\n" +
+	"\x06GetFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
+	"\x03Get\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
+	"\x03Add\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x05\x8a\xb5\x18\x01\x02\x12M\n" +
 	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04List\x12\x15.hi.club.ListTradeReq\x1a\x16.hi.club.ListTradeResp\"\x05\x8a\xb5\x18\x01\x022N\n" +
 	"\vTradeManage\x12?\n" +
@@ -926,15 +926,15 @@ var file_hi_club_trade_proto_depIdxs = []int32{
 	18, // 12: hi.club.ListAllTradeReq.pagination:type_name -> hi.Pagination
 	6,  // 13: hi.club.ListTradeResp.list:type_name -> hi.club.TradeDetail
 	5,  // 14: hi.club.TradeDetail.ListEntry.value:type_name -> hi.club.TradeTrans
-	2,  // 15: hi.club.Trade.GetTradeFee:input_type -> hi.club.GetTradeFeeReq
-	4,  // 16: hi.club.Trade.GetTrade:input_type -> hi.club.GetTradeReq
-	8,  // 17: hi.club.Trade.AddTrade:input_type -> hi.club.AddTradeReq
+	2,  // 15: hi.club.Trade.GetFee:input_type -> hi.club.GetTradeFeeReq
+	4,  // 16: hi.club.Trade.Get:input_type -> hi.club.GetTradeReq
+	8,  // 17: hi.club.Trade.Add:input_type -> hi.club.AddTradeReq
 	10, // 18: hi.club.Trade.UpdateTransHash:input_type -> hi.club.UpdateTransHashReq
 	11, // 19: hi.club.Trade.List:input_type -> hi.club.ListTradeReq
 	12, // 20: hi.club.TradeManage.List:input_type -> hi.club.ListAllTradeReq
-	3,  // 21: hi.club.Trade.GetTradeFee:output_type -> hi.club.GetTradeFeeResp
-	7,  // 22: hi.club.Trade.GetTrade:output_type -> hi.club.GetTradeResp
-	9,  // 23: hi.club.Trade.AddTrade:output_type -> hi.club.AddTradeResp
+	3,  // 21: hi.club.Trade.GetFee:output_type -> hi.club.GetTradeFeeResp
+	7,  // 22: hi.club.Trade.Get:output_type -> hi.club.GetTradeResp
+	9,  // 23: hi.club.Trade.Add:output_type -> hi.club.AddTradeResp
 	19, // 24: hi.club.Trade.UpdateTransHash:output_type -> google.protobuf.Empty
 	13, // 25: hi.club.Trade.List:output_type -> hi.club.ListTradeResp
 	13, // 26: hi.club.TradeManage.List:output_type -> hi.club.ListTradeResp

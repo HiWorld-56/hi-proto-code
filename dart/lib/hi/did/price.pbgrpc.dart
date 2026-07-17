@@ -32,17 +32,17 @@ class PriceClient extends $grpc.Client {
 
   PriceClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GetPriceResp> getPrice(
+  $grpc.ResponseFuture<$0.GetPriceResp> get(
     $0.GetPriceReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getPrice, request, options: options);
+    return $createUnaryCall(_$get, request, options: options);
   }
 
   // method descriptors
 
-  static final _$getPrice = $grpc.ClientMethod<$0.GetPriceReq, $0.GetPriceResp>(
-      '/hi.did.Price/GetPrice',
+  static final _$get = $grpc.ClientMethod<$0.GetPriceReq, $0.GetPriceResp>(
+      '/hi.did.Price/Get',
       ($0.GetPriceReq value) => value.writeToBuffer(),
       $0.GetPriceResp.fromBuffer);
 }
@@ -53,19 +53,19 @@ abstract class PriceServiceBase extends $grpc.Service {
 
   PriceServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.GetPriceReq, $0.GetPriceResp>(
-        'GetPrice',
-        getPrice_Pre,
+        'Get',
+        get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetPriceReq.fromBuffer(value),
         ($0.GetPriceResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GetPriceResp> getPrice_Pre(
+  $async.Future<$0.GetPriceResp> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.GetPriceReq> $request) async {
-    return getPrice($call, await $request);
+    return get($call, await $request);
   }
 
-  $async.Future<$0.GetPriceResp> getPrice(
+  $async.Future<$0.GetPriceResp> get(
       $grpc.ServiceCall call, $0.GetPriceReq request);
 }

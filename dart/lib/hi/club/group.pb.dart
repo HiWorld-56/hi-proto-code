@@ -218,75 +218,6 @@ class GroupMember extends $pb.GeneratedMessage {
   void clearRole() => $_clearField(2);
 }
 
-class Q3GroupMember extends $pb.GeneratedMessage {
-  factory Q3GroupMember({
-    GroupMember? member,
-    $core.String? ghost,
-  }) {
-    final result = create();
-    if (member != null) result.member = member;
-    if (ghost != null) result.ghost = ghost;
-    return result;
-  }
-
-  Q3GroupMember._();
-
-  factory Q3GroupMember.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Q3GroupMember.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Q3GroupMember',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOM<GroupMember>(1, _omitFieldNames ? '' : 'member',
-        subBuilder: GroupMember.create)
-    ..aOS(2, _omitFieldNames ? '' : 'ghost')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Q3GroupMember clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Q3GroupMember copyWith(void Function(Q3GroupMember) updates) =>
-      super.copyWith((message) => updates(message as Q3GroupMember))
-          as Q3GroupMember;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Q3GroupMember create() => Q3GroupMember._();
-  @$core.override
-  Q3GroupMember createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Q3GroupMember getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Q3GroupMember>(create);
-  static Q3GroupMember? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  GroupMember get member => $_getN(0);
-  @$pb.TagNumber(1)
-  set member(GroupMember value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasMember() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearMember() => $_clearField(1);
-  @$pb.TagNumber(1)
-  GroupMember ensureMember() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $core.String get ghost => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set ghost($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasGhost() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearGhost() => $_clearField(2);
-}
-
 class GroupInfo extends $pb.GeneratedMessage {
   factory GroupInfo({
     GroupBase? base,
@@ -519,12 +450,10 @@ class ListGroupMessageReq extends $pb.GeneratedMessage {
   factory ListGroupMessageReq({
     $core.String? lastUuid,
     $core.String? code,
-    $core.String? type,
   }) {
     final result = create();
     if (lastUuid != null) result.lastUuid = lastUuid;
     if (code != null) result.code = code;
-    if (type != null) result.type = type;
     return result;
   }
 
@@ -543,7 +472,6 @@ class ListGroupMessageReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'lastUuid')
     ..aOS(2, _omitFieldNames ? '' : 'code')
-    ..aOS(3, _omitFieldNames ? '' : 'type')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -582,15 +510,6 @@ class ListGroupMessageReq extends $pb.GeneratedMessage {
   $core.bool hasCode() => $_has(1);
   @$pb.TagNumber(2)
   void clearCode() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get type => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set type($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasType() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearType() => $_clearField(3);
 }
 
 class ListGroupMessageResp extends $pb.GeneratedMessage {
@@ -645,12 +564,10 @@ class ListGroupMessageResp extends $pb.GeneratedMessage {
 class ListGroupMemberReq extends $pb.GeneratedMessage {
   factory ListGroupMemberReq({
     $core.String? code,
-    $core.String? type,
     $2.Pagination? pagination,
   }) {
     final result = create();
     if (code != null) result.code = code;
-    if (type != null) result.type = type;
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -669,7 +586,6 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
     ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
@@ -702,25 +618,16 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearCode() => $_clearField(1);
 
-  @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasType() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearType() => $_clearField(2);
-
   @$pb.TagNumber(3)
-  $2.Pagination get pagination => $_getN(2);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(3)
   set pagination($2.Pagination value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasPagination() => $_has(2);
+  $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(3)
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Pagination ensurePagination() => $_ensure(2);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class GetGroupMemberTotalReq extends $pb.GeneratedMessage {
@@ -776,151 +683,6 @@ class GetGroupMemberTotalReq extends $pb.GeneratedMessage {
   $core.bool hasGroup() => $_has(0);
   @$pb.TagNumber(1)
   void clearGroup() => $_clearField(1);
-}
-
-class ListQ3GroupMemberReq extends $pb.GeneratedMessage {
-  factory ListQ3GroupMemberReq({
-    $core.String? code,
-    $core.String? type,
-    $2.Pagination? pagination,
-  }) {
-    final result = create();
-    if (code != null) result.code = code;
-    if (type != null) result.type = type;
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListQ3GroupMemberReq._();
-
-  factory ListQ3GroupMemberReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListQ3GroupMemberReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListQ3GroupMemberReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'code')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListQ3GroupMemberReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListQ3GroupMemberReq copyWith(void Function(ListQ3GroupMemberReq) updates) =>
-      super.copyWith((message) => updates(message as ListQ3GroupMemberReq))
-          as ListQ3GroupMemberReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListQ3GroupMemberReq create() => ListQ3GroupMemberReq._();
-  @$core.override
-  ListQ3GroupMemberReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListQ3GroupMemberReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListQ3GroupMemberReq>(create);
-  static ListQ3GroupMemberReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get code => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set code($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasCode() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearCode() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasType() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearType() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $2.Pagination get pagination => $_getN(2);
-  @$pb.TagNumber(3)
-  set pagination($2.Pagination value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasPagination() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearPagination() => $_clearField(3);
-  @$pb.TagNumber(3)
-  $2.Pagination ensurePagination() => $_ensure(2);
-}
-
-class Q3GroupInfo extends $pb.GeneratedMessage {
-  factory Q3GroupInfo({
-    GroupBase? base,
-    $core.Iterable<Q3GroupMember>? list,
-  }) {
-    final result = create();
-    if (base != null) result.base = base;
-    if (list != null) result.list.addAll(list);
-    return result;
-  }
-
-  Q3GroupInfo._();
-
-  factory Q3GroupInfo.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Q3GroupInfo.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Q3GroupInfo',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOM<GroupBase>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: GroupBase.create)
-    ..pPM<Q3GroupMember>(2, _omitFieldNames ? '' : 'list',
-        subBuilder: Q3GroupMember.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Q3GroupInfo clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Q3GroupInfo copyWith(void Function(Q3GroupInfo) updates) =>
-      super.copyWith((message) => updates(message as Q3GroupInfo))
-          as Q3GroupInfo;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Q3GroupInfo create() => Q3GroupInfo._();
-  @$core.override
-  Q3GroupInfo createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Q3GroupInfo getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Q3GroupInfo>(create);
-  static Q3GroupInfo? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  GroupBase get base => $_getN(0);
-  @$pb.TagNumber(1)
-  set base(GroupBase value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasBase() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearBase() => $_clearField(1);
-  @$pb.TagNumber(1)
-  GroupBase ensureBase() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<Q3GroupMember> get list => $_getList(1);
 }
 
 class GetGroupMemberTotalResp extends $pb.GeneratedMessage {
@@ -1204,132 +966,6 @@ class RemoveGroupReq extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<$core.String> get members => $_getList(1);
-}
-
-class LastUUID extends $pb.GeneratedMessage {
-  factory LastUUID({
-    $core.String? lastUuid,
-    $core.String? code,
-    $core.String? type,
-  }) {
-    final result = create();
-    if (lastUuid != null) result.lastUuid = lastUuid;
-    if (code != null) result.code = code;
-    if (type != null) result.type = type;
-    return result;
-  }
-
-  LastUUID._();
-
-  factory LastUUID.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory LastUUID.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'LastUUID',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'lastUuid')
-    ..aOS(2, _omitFieldNames ? '' : 'code')
-    ..aOS(3, _omitFieldNames ? '' : 'type')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LastUUID clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LastUUID copyWith(void Function(LastUUID) updates) =>
-      super.copyWith((message) => updates(message as LastUUID)) as LastUUID;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static LastUUID create() => LastUUID._();
-  @$core.override
-  LastUUID createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static LastUUID getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LastUUID>(create);
-  static LastUUID? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get lastUuid => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set lastUuid($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasLastUuid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearLastUuid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get code => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set code($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasCode() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCode() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get type => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set type($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasType() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearType() => $_clearField(3);
-}
-
-class ListLastUUID extends $pb.GeneratedMessage {
-  factory ListLastUUID({
-    $core.Iterable<LastUUID>? list,
-  }) {
-    final result = create();
-    if (list != null) result.list.addAll(list);
-    return result;
-  }
-
-  ListLastUUID._();
-
-  factory ListLastUUID.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListLastUUID.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListLastUUID',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..pPM<LastUUID>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: LastUUID.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListLastUUID clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListLastUUID copyWith(void Function(ListLastUUID) updates) =>
-      super.copyWith((message) => updates(message as ListLastUUID))
-          as ListLastUUID;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListLastUUID create() => ListLastUUID._();
-  @$core.override
-  ListLastUUID createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListLastUUID getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListLastUUID>(create);
-  static ListLastUUID? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<LastUUID> get list => $_getList(0);
 }
 
 class SetRoleReq extends $pb.GeneratedMessage {

@@ -1373,13 +1373,13 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"@\n" +
 	"\x0eOrderEventResp\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\tR\apayload2\xa7\x06\n" +
+	"\apayload\x18\x02 \x01(\tR\apayload2\x9e\x06\n" +
 	"\bMerchant\x12=\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\x06Update\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\aGetUser\x12\x12.hi.did.GetUserReq\x1a\x19.hi.did.UserExtensionUnit\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
-	"\tListUsers\x12\x14.hi.did.ListUsersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x03\x12J\n" +
-	"\rListMerchants\x12\x18.hi.did.ListMerchantsReq\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
+	"\tListUsers\x12\x14.hi.did.ListUsersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
+	"\x04List\x12\x18.hi.did.ListMerchantsReq\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
 	"\bSetUsers\x12\x13.hi.did.SetUsersReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
 	"\bAddUsers\x12\x13.hi.did.AddUsersReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12D\n" +
 	"\vRemoveUsers\x12\x16.hi.did.RemoveUsersReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
@@ -1462,7 +1462,7 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	2,  // 15: hi.did.Merchant.Update:input_type -> hi.did.MerchantSetReq
 	9,  // 16: hi.did.Merchant.GetUser:input_type -> hi.did.GetUserReq
 	10, // 17: hi.did.Merchant.ListUsers:input_type -> hi.did.ListUsersReq
-	15, // 18: hi.did.Merchant.ListMerchants:input_type -> hi.did.ListMerchantsReq
+	15, // 18: hi.did.Merchant.List:input_type -> hi.did.ListMerchantsReq
 	12, // 19: hi.did.Merchant.SetUsers:input_type -> hi.did.SetUsersReq
 	13, // 20: hi.did.Merchant.AddUsers:input_type -> hi.did.AddUsersReq
 	14, // 21: hi.did.Merchant.RemoveUsers:input_type -> hi.did.RemoveUsersReq
@@ -1479,7 +1479,7 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	25, // 32: hi.did.Merchant.Update:output_type -> google.protobuf.Empty
 	5,  // 33: hi.did.Merchant.GetUser:output_type -> hi.did.UserExtensionUnit
 	11, // 34: hi.did.Merchant.ListUsers:output_type -> hi.did.ListUsersResp
-	3,  // 35: hi.did.Merchant.ListMerchants:output_type -> hi.did.MerchantListResp
+	3,  // 35: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
 	25, // 36: hi.did.Merchant.SetUsers:output_type -> google.protobuf.Empty
 	25, // 37: hi.did.Merchant.AddUsers:output_type -> google.protobuf.Empty
 	25, // 38: hi.did.Merchant.RemoveUsers:output_type -> google.protobuf.Empty

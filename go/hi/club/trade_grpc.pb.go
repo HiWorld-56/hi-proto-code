@@ -20,9 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Trade_GetTradeFee_FullMethodName     = "/hi.club.Trade/GetTradeFee"
-	Trade_GetTrade_FullMethodName        = "/hi.club.Trade/GetTrade"
-	Trade_AddTrade_FullMethodName        = "/hi.club.Trade/AddTrade"
+	Trade_GetFee_FullMethodName          = "/hi.club.Trade/GetFee"
+	Trade_Get_FullMethodName             = "/hi.club.Trade/Get"
+	Trade_Add_FullMethodName             = "/hi.club.Trade/Add"
 	Trade_UpdateTransHash_FullMethodName = "/hi.club.Trade/UpdateTransHash"
 	Trade_List_FullMethodName            = "/hi.club.Trade/List"
 )
@@ -31,9 +31,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TradeClient interface {
-	GetTradeFee(ctx context.Context, in *GetTradeFeeReq, opts ...grpc.CallOption) (*GetTradeFeeResp, error)
-	GetTrade(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error)
-	AddTrade(ctx context.Context, in *AddTradeReq, opts ...grpc.CallOption) (*AddTradeResp, error)
+	GetFee(ctx context.Context, in *GetTradeFeeReq, opts ...grpc.CallOption) (*GetTradeFeeResp, error)
+	Get(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error)
+	Add(ctx context.Context, in *AddTradeReq, opts ...grpc.CallOption) (*AddTradeResp, error)
 	UpdateTransHash(ctx context.Context, in *UpdateTransHashReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 查自己的交易(did 必填)。
 	List(ctx context.Context, in *ListTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error)
@@ -47,30 +47,30 @@ func NewTradeClient(cc grpc.ClientConnInterface) TradeClient {
 	return &tradeClient{cc}
 }
 
-func (c *tradeClient) GetTradeFee(ctx context.Context, in *GetTradeFeeReq, opts ...grpc.CallOption) (*GetTradeFeeResp, error) {
+func (c *tradeClient) GetFee(ctx context.Context, in *GetTradeFeeReq, opts ...grpc.CallOption) (*GetTradeFeeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTradeFeeResp)
-	err := c.cc.Invoke(ctx, Trade_GetTradeFee_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Trade_GetFee_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tradeClient) GetTrade(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error) {
+func (c *tradeClient) Get(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTradeResp)
-	err := c.cc.Invoke(ctx, Trade_GetTrade_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Trade_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tradeClient) AddTrade(ctx context.Context, in *AddTradeReq, opts ...grpc.CallOption) (*AddTradeResp, error) {
+func (c *tradeClient) Add(ctx context.Context, in *AddTradeReq, opts ...grpc.CallOption) (*AddTradeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AddTradeResp)
-	err := c.cc.Invoke(ctx, Trade_AddTrade_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Trade_Add_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -101,9 +101,9 @@ func (c *tradeClient) List(ctx context.Context, in *ListTradeReq, opts ...grpc.C
 // All implementations should embed UnimplementedTradeServer
 // for forward compatibility.
 type TradeServer interface {
-	GetTradeFee(context.Context, *GetTradeFeeReq) (*GetTradeFeeResp, error)
-	GetTrade(context.Context, *GetTradeReq) (*GetTradeResp, error)
-	AddTrade(context.Context, *AddTradeReq) (*AddTradeResp, error)
+	GetFee(context.Context, *GetTradeFeeReq) (*GetTradeFeeResp, error)
+	Get(context.Context, *GetTradeReq) (*GetTradeResp, error)
+	Add(context.Context, *AddTradeReq) (*AddTradeResp, error)
 	UpdateTransHash(context.Context, *UpdateTransHashReq) (*emptypb.Empty, error)
 	// 查自己的交易(did 必填)。
 	List(context.Context, *ListTradeReq) (*ListTradeResp, error)
@@ -116,14 +116,14 @@ type TradeServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTradeServer struct{}
 
-func (UnimplementedTradeServer) GetTradeFee(context.Context, *GetTradeFeeReq) (*GetTradeFeeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetTradeFee not implemented")
+func (UnimplementedTradeServer) GetFee(context.Context, *GetTradeFeeReq) (*GetTradeFeeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFee not implemented")
 }
-func (UnimplementedTradeServer) GetTrade(context.Context, *GetTradeReq) (*GetTradeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetTrade not implemented")
+func (UnimplementedTradeServer) Get(context.Context, *GetTradeReq) (*GetTradeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedTradeServer) AddTrade(context.Context, *AddTradeReq) (*AddTradeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AddTrade not implemented")
+func (UnimplementedTradeServer) Add(context.Context, *AddTradeReq) (*AddTradeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Add not implemented")
 }
 func (UnimplementedTradeServer) UpdateTransHash(context.Context, *UpdateTransHashReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateTransHash not implemented")
@@ -151,56 +151,56 @@ func RegisterTradeServer(s grpc.ServiceRegistrar, srv TradeServer) {
 	s.RegisterService(&Trade_ServiceDesc, srv)
 }
 
-func _Trade_GetTradeFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Trade_GetFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTradeFeeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TradeServer).GetTradeFee(ctx, in)
+		return srv.(TradeServer).GetFee(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Trade_GetTradeFee_FullMethodName,
+		FullMethod: Trade_GetFee_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TradeServer).GetTradeFee(ctx, req.(*GetTradeFeeReq))
+		return srv.(TradeServer).GetFee(ctx, req.(*GetTradeFeeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Trade_GetTrade_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Trade_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTradeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TradeServer).GetTrade(ctx, in)
+		return srv.(TradeServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Trade_GetTrade_FullMethodName,
+		FullMethod: Trade_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TradeServer).GetTrade(ctx, req.(*GetTradeReq))
+		return srv.(TradeServer).Get(ctx, req.(*GetTradeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Trade_AddTrade_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Trade_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddTradeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TradeServer).AddTrade(ctx, in)
+		return srv.(TradeServer).Add(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Trade_AddTrade_FullMethodName,
+		FullMethod: Trade_Add_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TradeServer).AddTrade(ctx, req.(*AddTradeReq))
+		return srv.(TradeServer).Add(ctx, req.(*AddTradeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -249,16 +249,16 @@ var Trade_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TradeServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetTradeFee",
-			Handler:    _Trade_GetTradeFee_Handler,
+			MethodName: "GetFee",
+			Handler:    _Trade_GetFee_Handler,
 		},
 		{
-			MethodName: "GetTrade",
-			Handler:    _Trade_GetTrade_Handler,
+			MethodName: "Get",
+			Handler:    _Trade_Get_Handler,
 		},
 		{
-			MethodName: "AddTrade",
-			Handler:    _Trade_AddTrade_Handler,
+			MethodName: "Add",
+			Handler:    _Trade_Add_Handler,
 		},
 		{
 			MethodName: "UpdateTransHash",

@@ -36,7 +36,7 @@ var (
 	_ = metadata.Join
 )
 
-func request_User_GetCurrentUser_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_User_GetCurrent_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
@@ -47,11 +47,11 @@ func request_User_GetCurrentUser_0(ctx context.Context, marshaler runtime.Marsha
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.GetCurrentUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetCurrent(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_User_GetCurrentUser_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_User_GetCurrent_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
@@ -59,11 +59,11 @@ func local_request_User_GetCurrentUser_0(ctx context.Context, marshaler runtime.
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.GetCurrentUser(ctx, &protoReq)
+	msg, err := server.GetCurrent(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_User_UpdateUser_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_User_Update_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq UpdateUserReq
 		metadata runtime.ServerMetadata
@@ -74,11 +74,11 @@ func request_User_UpdateUser_0(ctx context.Context, marshaler runtime.Marshaler,
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.UpdateUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Update(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_User_UpdateUser_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_User_Update_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq UpdateUserReq
 		metadata runtime.ServerMetadata
@@ -86,7 +86,7 @@ func local_request_User_UpdateUser_0(ctx context.Context, marshaler runtime.Mars
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.UpdateUser(ctx, &protoReq)
+	msg, err := server.Update(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -441,7 +441,7 @@ func local_request_User_SetRemark_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func request_User_ListOnlineUsers_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_User_ListOnline_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListOnlineUserReq
 		metadata runtime.ServerMetadata
@@ -452,11 +452,11 @@ func request_User_ListOnlineUsers_0(ctx context.Context, marshaler runtime.Marsh
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.ListOnlineUsers(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.ListOnline(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_User_ListOnlineUsers_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_User_ListOnline_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListOnlineUserReq
 		metadata runtime.ServerMetadata
@@ -464,7 +464,7 @@ func local_request_User_ListOnlineUsers_0(ctx context.Context, marshaler runtime
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.ListOnlineUsers(ctx, &protoReq)
+	msg, err := server.ListOnline(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -474,45 +474,45 @@ func local_request_User_ListOnlineUsers_0(ctx context.Context, marshaler runtime
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterUserHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterUserHandlerServer(ctx context.Context, mux *runtime.ServeMux, server UserServer) error {
-	mux.Handle(http.MethodPost, pattern_User_GetCurrentUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_User_GetCurrent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.User/GetCurrentUser", runtime.WithHTTPPathPattern("/hi.club.User/GetCurrentUser"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.User/GetCurrent", runtime.WithHTTPPathPattern("/hi.club.User/GetCurrent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_User_GetCurrentUser_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_User_GetCurrent_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_User_GetCurrentUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_User_GetCurrent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_User_UpdateUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_User_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.User/UpdateUser", runtime.WithHTTPPathPattern("/hi.club.User/UpdateUser"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.User/Update", runtime.WithHTTPPathPattern("/hi.club.User/Update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_User_UpdateUser_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_User_Update_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_User_UpdateUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_User_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_User_ListSystemMessages_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -774,25 +774,25 @@ func RegisterUserHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 		}
 		forward_User_SetRemark_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_User_ListOnlineUsers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_User_ListOnline_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.User/ListOnlineUsers", runtime.WithHTTPPathPattern("/hi.club.User/ListOnlineUsers"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.User/ListOnline", runtime.WithHTTPPathPattern("/hi.club.User/ListOnline"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_User_ListOnlineUsers_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_User_ListOnline_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_User_ListOnlineUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_User_ListOnline_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -834,39 +834,39 @@ func RegisterUserHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "UserClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterUserHandlerClient(ctx context.Context, mux *runtime.ServeMux, client UserClient) error {
-	mux.Handle(http.MethodPost, pattern_User_GetCurrentUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_User_GetCurrent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.User/GetCurrentUser", runtime.WithHTTPPathPattern("/hi.club.User/GetCurrentUser"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.User/GetCurrent", runtime.WithHTTPPathPattern("/hi.club.User/GetCurrent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_User_GetCurrentUser_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_User_GetCurrent_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_User_GetCurrentUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_User_GetCurrent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_User_UpdateUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_User_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.User/UpdateUser", runtime.WithHTTPPathPattern("/hi.club.User/UpdateUser"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.User/Update", runtime.WithHTTPPathPattern("/hi.club.User/Update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_User_UpdateUser_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_User_Update_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_User_UpdateUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_User_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_User_ListSystemMessages_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -1089,29 +1089,29 @@ func RegisterUserHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 		}
 		forward_User_SetRemark_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_User_ListOnlineUsers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_User_ListOnline_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.User/ListOnlineUsers", runtime.WithHTTPPathPattern("/hi.club.User/ListOnlineUsers"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.User/ListOnline", runtime.WithHTTPPathPattern("/hi.club.User/ListOnline"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_User_ListOnlineUsers_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_User_ListOnline_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_User_ListOnlineUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_User_ListOnline_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_User_GetCurrentUser_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "GetCurrentUser"}, ""))
-	pattern_User_UpdateUser_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "UpdateUser"}, ""))
+	pattern_User_GetCurrent_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "GetCurrent"}, ""))
+	pattern_User_Update_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "Update"}, ""))
 	pattern_User_ListSystemMessages_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "ListSystemMessages"}, ""))
 	pattern_User_DeleteSystemMessage_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "DeleteSystemMessage"}, ""))
 	pattern_User_DeleteAllSystemMessage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "DeleteAllSystemMessage"}, ""))
@@ -1125,12 +1125,12 @@ var (
 	pattern_User_GetOther_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "GetOther"}, ""))
 	pattern_User_UnprocessedSysMsgCount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "UnprocessedSysMsgCount"}, ""))
 	pattern_User_SetRemark_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "SetRemark"}, ""))
-	pattern_User_ListOnlineUsers_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "ListOnlineUsers"}, ""))
+	pattern_User_ListOnline_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.User", "ListOnline"}, ""))
 )
 
 var (
-	forward_User_GetCurrentUser_0         = runtime.ForwardResponseMessage
-	forward_User_UpdateUser_0             = runtime.ForwardResponseMessage
+	forward_User_GetCurrent_0             = runtime.ForwardResponseMessage
+	forward_User_Update_0                 = runtime.ForwardResponseMessage
 	forward_User_ListSystemMessages_0     = runtime.ForwardResponseMessage
 	forward_User_DeleteSystemMessage_0    = runtime.ForwardResponseMessage
 	forward_User_DeleteAllSystemMessage_0 = runtime.ForwardResponseMessage
@@ -1144,5 +1144,5 @@ var (
 	forward_User_GetOther_0               = runtime.ForwardResponseMessage
 	forward_User_UnprocessedSysMsgCount_0 = runtime.ForwardResponseMessage
 	forward_User_SetRemark_0              = runtime.ForwardResponseMessage
-	forward_User_ListOnlineUsers_0        = runtime.ForwardResponseMessage
+	forward_User_ListOnline_0             = runtime.ForwardResponseMessage
 )

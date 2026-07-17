@@ -1576,7 +1576,7 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "ListUsers"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_merchants(
+        pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMerchantsReq>,
         ) -> std::result::Result<
@@ -1592,12 +1592,9 @@ pub mod merchant_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/ListMerchants",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/List");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "ListMerchants"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "List"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_users(
@@ -2355,7 +2352,7 @@ pub mod price_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_price(
+        pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetPriceReq>,
         ) -> std::result::Result<tonic::Response<super::GetPriceResp>, tonic::Status> {
@@ -2368,9 +2365,9 @@ pub mod price_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Price/GetPrice");
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Price/Get");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Price", "GetPrice"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Price", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -2664,7 +2661,7 @@ pub mod wallet_client {
                 .insert(GrpcMethod::new("hi.did.Wallet", "UpdateAssets"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get_wallet(
+        pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetWalletReq>,
         ) -> std::result::Result<tonic::Response<super::GetWalletResp>, tonic::Status> {
@@ -2677,9 +2674,9 @@ pub mod wallet_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Wallet/GetWallet");
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Wallet/Get");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Wallet", "GetWallet"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Wallet", "Get"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_addresses(
@@ -2801,7 +2798,7 @@ pub mod assets_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn total_assets(
+        pub async fn total(
             &mut self,
             request: impl tonic::IntoRequest<super::TotalAssetsReq>,
         ) -> std::result::Result<
@@ -2817,14 +2814,12 @@ pub mod assets_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Assets/TotalAssets",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Assets/Total");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Assets", "TotalAssets"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Assets", "Total"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_users_assets(
+        pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListUsersAssetsReq>,
         ) -> std::result::Result<
@@ -2840,15 +2835,12 @@ pub mod assets_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Assets/ListUsersAssets",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Assets/List");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Assets", "ListUsersAssets"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Assets", "List"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get_user_assets(
+        pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUserAssetsReq>,
         ) -> std::result::Result<
@@ -2864,12 +2856,9 @@ pub mod assets_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Assets/GetUserAssets",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Assets/Get");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Assets", "GetUserAssets"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Assets", "Get"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn update_addresses(

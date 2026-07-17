@@ -34,18 +34,18 @@ class UserClient extends $grpc.Client {
 
   UserClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.UserInfo> getCurrentUser(
+  $grpc.ResponseFuture<$1.UserInfo> getCurrent(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getCurrentUser, request, options: options);
+    return $createUnaryCall(_$getCurrent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> updateUser(
+  $grpc.ResponseFuture<$0.Empty> update(
     $1.UpdateUserReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$updateUser, request, options: options);
+    return $createUnaryCall(_$update, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.SystemMessages> listSystemMessages(
@@ -141,21 +141,21 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$setRemark, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListOnlineUserResp> listOnlineUsers(
+  $grpc.ResponseFuture<$1.ListOnlineUserResp> listOnline(
     $1.ListOnlineUserReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listOnlineUsers, request, options: options);
+    return $createUnaryCall(_$listOnline, request, options: options);
   }
 
   // method descriptors
 
-  static final _$getCurrentUser = $grpc.ClientMethod<$0.Empty, $1.UserInfo>(
-      '/hi.club.User/GetCurrentUser',
+  static final _$getCurrent = $grpc.ClientMethod<$0.Empty, $1.UserInfo>(
+      '/hi.club.User/GetCurrent',
       ($0.Empty value) => value.writeToBuffer(),
       $1.UserInfo.fromBuffer);
-  static final _$updateUser = $grpc.ClientMethod<$1.UpdateUserReq, $0.Empty>(
-      '/hi.club.User/UpdateUser',
+  static final _$update = $grpc.ClientMethod<$1.UpdateUserReq, $0.Empty>(
+      '/hi.club.User/Update',
       ($1.UpdateUserReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$listSystemMessages =
@@ -220,9 +220,9 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/SetRemark',
       ($1.SetRemarkReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$listOnlineUsers =
+  static final _$listOnline =
       $grpc.ClientMethod<$1.ListOnlineUserReq, $1.ListOnlineUserResp>(
-          '/hi.club.User/ListOnlineUsers',
+          '/hi.club.User/ListOnline',
           ($1.ListOnlineUserReq value) => value.writeToBuffer(),
           $1.ListOnlineUserResp.fromBuffer);
 }
@@ -233,15 +233,15 @@ abstract class UserServiceBase extends $grpc.Service {
 
   UserServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.UserInfo>(
-        'GetCurrentUser',
-        getCurrentUser_Pre,
+        'GetCurrent',
+        getCurrent_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.UserInfo value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.UpdateUserReq, $0.Empty>(
-        'UpdateUser',
-        updateUser_Pre,
+        'Update',
+        update_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.UpdateUserReq.fromBuffer(value),
@@ -341,28 +341,28 @@ abstract class UserServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $1.SetRemarkReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListOnlineUserReq, $1.ListOnlineUserResp>(
-        'ListOnlineUsers',
-        listOnlineUsers_Pre,
+        'ListOnline',
+        listOnline_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.ListOnlineUserReq.fromBuffer(value),
         ($1.ListOnlineUserResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.UserInfo> getCurrentUser_Pre(
+  $async.Future<$1.UserInfo> getCurrent_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return getCurrentUser($call, await $request);
+    return getCurrent($call, await $request);
   }
 
-  $async.Future<$1.UserInfo> getCurrentUser(
+  $async.Future<$1.UserInfo> getCurrent(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$0.Empty> updateUser_Pre(
+  $async.Future<$0.Empty> update_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.UpdateUserReq> $request) async {
-    return updateUser($call, await $request);
+    return update($call, await $request);
   }
 
-  $async.Future<$0.Empty> updateUser(
+  $async.Future<$0.Empty> update(
       $grpc.ServiceCall call, $1.UpdateUserReq request);
 
   $async.Future<$1.SystemMessages> listSystemMessages_Pre(
@@ -470,12 +470,11 @@ abstract class UserServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> setRemark(
       $grpc.ServiceCall call, $1.SetRemarkReq request);
 
-  $async.Future<$1.ListOnlineUserResp> listOnlineUsers_Pre(
-      $grpc.ServiceCall $call,
+  $async.Future<$1.ListOnlineUserResp> listOnline_Pre($grpc.ServiceCall $call,
       $async.Future<$1.ListOnlineUserReq> $request) async {
-    return listOnlineUsers($call, await $request);
+    return listOnline($call, await $request);
   }
 
-  $async.Future<$1.ListOnlineUserResp> listOnlineUsers(
+  $async.Future<$1.ListOnlineUserResp> listOnline(
       $grpc.ServiceCall call, $1.ListOnlineUserReq request);
 }

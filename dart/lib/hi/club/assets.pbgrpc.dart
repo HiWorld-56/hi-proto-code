@@ -32,18 +32,18 @@ class AssetsClient extends $grpc.Client {
 
   AssetsClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GetUserAssetsResp> getUserAssets(
+  $grpc.ResponseFuture<$0.GetUserAssetsResp> get(
     $0.GetUserAssetsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getUserAssets, request, options: options);
+    return $createUnaryCall(_$get, request, options: options);
   }
 
   // method descriptors
 
-  static final _$getUserAssets =
+  static final _$get =
       $grpc.ClientMethod<$0.GetUserAssetsReq, $0.GetUserAssetsResp>(
-          '/hi.club.Assets/GetUserAssets',
+          '/hi.club.Assets/Get',
           ($0.GetUserAssetsReq value) => value.writeToBuffer(),
           $0.GetUserAssetsResp.fromBuffer);
 }
@@ -54,19 +54,19 @@ abstract class AssetsServiceBase extends $grpc.Service {
 
   AssetsServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.GetUserAssetsReq, $0.GetUserAssetsResp>(
-        'GetUserAssets',
-        getUserAssets_Pre,
+        'Get',
+        get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetUserAssetsReq.fromBuffer(value),
         ($0.GetUserAssetsResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GetUserAssetsResp> getUserAssets_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.GetUserAssetsResp> get_Pre($grpc.ServiceCall $call,
       $async.Future<$0.GetUserAssetsReq> $request) async {
-    return getUserAssets($call, await $request);
+    return get($call, await $request);
   }
 
-  $async.Future<$0.GetUserAssetsResp> getUserAssets(
+  $async.Future<$0.GetUserAssetsResp> get(
       $grpc.ServiceCall call, $0.GetUserAssetsReq request);
 }

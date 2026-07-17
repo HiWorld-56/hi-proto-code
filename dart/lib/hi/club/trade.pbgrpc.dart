@@ -33,25 +33,25 @@ class TradeClient extends $grpc.Client {
 
   TradeClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GetTradeFeeResp> getTradeFee(
+  $grpc.ResponseFuture<$0.GetTradeFeeResp> getFee(
     $0.GetTradeFeeReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getTradeFee, request, options: options);
+    return $createUnaryCall(_$getFee, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetTradeResp> getTrade(
+  $grpc.ResponseFuture<$0.GetTradeResp> get(
     $0.GetTradeReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getTrade, request, options: options);
+    return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.AddTradeResp> addTrade(
+  $grpc.ResponseFuture<$0.AddTradeResp> add(
     $0.AddTradeReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$addTrade, request, options: options);
+    return $createUnaryCall(_$add, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> updateTransHash(
@@ -71,17 +71,17 @@ class TradeClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$getTradeFee =
+  static final _$getFee =
       $grpc.ClientMethod<$0.GetTradeFeeReq, $0.GetTradeFeeResp>(
-          '/hi.club.Trade/GetTradeFee',
+          '/hi.club.Trade/GetFee',
           ($0.GetTradeFeeReq value) => value.writeToBuffer(),
           $0.GetTradeFeeResp.fromBuffer);
-  static final _$getTrade = $grpc.ClientMethod<$0.GetTradeReq, $0.GetTradeResp>(
-      '/hi.club.Trade/GetTrade',
+  static final _$get = $grpc.ClientMethod<$0.GetTradeReq, $0.GetTradeResp>(
+      '/hi.club.Trade/Get',
       ($0.GetTradeReq value) => value.writeToBuffer(),
       $0.GetTradeResp.fromBuffer);
-  static final _$addTrade = $grpc.ClientMethod<$0.AddTradeReq, $0.AddTradeResp>(
-      '/hi.club.Trade/AddTrade',
+  static final _$add = $grpc.ClientMethod<$0.AddTradeReq, $0.AddTradeResp>(
+      '/hi.club.Trade/Add',
       ($0.AddTradeReq value) => value.writeToBuffer(),
       $0.AddTradeResp.fromBuffer);
   static final _$updateTransHash =
@@ -101,22 +101,22 @@ abstract class TradeServiceBase extends $grpc.Service {
 
   TradeServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.GetTradeFeeReq, $0.GetTradeFeeResp>(
-        'GetTradeFee',
-        getTradeFee_Pre,
+        'GetFee',
+        getFee_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetTradeFeeReq.fromBuffer(value),
         ($0.GetTradeFeeResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetTradeReq, $0.GetTradeResp>(
-        'GetTrade',
-        getTrade_Pre,
+        'Get',
+        get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetTradeReq.fromBuffer(value),
         ($0.GetTradeResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.AddTradeReq, $0.AddTradeResp>(
-        'AddTrade',
-        addTrade_Pre,
+        'Add',
+        add_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.AddTradeReq.fromBuffer(value),
@@ -138,28 +138,28 @@ abstract class TradeServiceBase extends $grpc.Service {
         ($0.ListTradeResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GetTradeFeeResp> getTradeFee_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.GetTradeFeeResp> getFee_Pre($grpc.ServiceCall $call,
       $async.Future<$0.GetTradeFeeReq> $request) async {
-    return getTradeFee($call, await $request);
+    return getFee($call, await $request);
   }
 
-  $async.Future<$0.GetTradeFeeResp> getTradeFee(
+  $async.Future<$0.GetTradeFeeResp> getFee(
       $grpc.ServiceCall call, $0.GetTradeFeeReq request);
 
-  $async.Future<$0.GetTradeResp> getTrade_Pre(
+  $async.Future<$0.GetTradeResp> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.GetTradeReq> $request) async {
-    return getTrade($call, await $request);
+    return get($call, await $request);
   }
 
-  $async.Future<$0.GetTradeResp> getTrade(
+  $async.Future<$0.GetTradeResp> get(
       $grpc.ServiceCall call, $0.GetTradeReq request);
 
-  $async.Future<$0.AddTradeResp> addTrade_Pre(
+  $async.Future<$0.AddTradeResp> add_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.AddTradeReq> $request) async {
-    return addTrade($call, await $request);
+    return add($call, await $request);
   }
 
-  $async.Future<$0.AddTradeResp> addTrade(
+  $async.Future<$0.AddTradeResp> add(
       $grpc.ServiceCall call, $0.AddTradeReq request);
 
   $async.Future<$1.Empty> updateTransHash_Pre($grpc.ServiceCall $call,
