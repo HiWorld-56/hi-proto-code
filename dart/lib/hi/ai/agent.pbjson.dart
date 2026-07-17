@@ -74,11 +74,20 @@ const AgentConfig$json = {
       '10': 'model'
     },
     {'1': 'qa_num', '3': 4, '4': 1, '5': 5, '9': 1, '10': 'qaNum', '17': true},
-    {'1': 'use_mem', '3': 5, '4': 1, '5': 8, '10': 'useMem'},
+    {
+      '1': 'use_mem',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '9': 2,
+      '10': 'useMem',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_freedom'},
     {'1': '_qa_num'},
+    {'1': '_use_mem'},
   ],
 };
 
@@ -86,8 +95,8 @@ const AgentConfig$json = {
 final $typed_data.Uint8List agentConfigDescriptor = $convert.base64Decode(
     'CgtBZ2VudENvbmZpZxIlCgZwcm9tcHQYASABKAsyDS5oaS5haS5Qcm9tcHRSBnByb21wdBIdCg'
     'dmcmVlZG9tGAIgASgCSABSB2ZyZWVkb22IAQESJQoFbW9kZWwYAyABKAsyDy5oaS5haS5Nb2Rl'
-    'bFNldFIFbW9kZWwSGgoGcWFfbnVtGAQgASgFSAFSBXFhTnVtiAEBEhcKB3VzZV9tZW0YBSABKA'
-    'hSBnVzZU1lbUIKCghfZnJlZWRvbUIJCgdfcWFfbnVt');
+    'bFNldFIFbW9kZWwSGgoGcWFfbnVtGAQgASgFSAFSBXFhTnVtiAEBEhwKB3VzZV9tZW0YBSABKA'
+    'hIAlIGdXNlTWVtiAEBQgoKCF9mcmVlZG9tQgkKB19xYV9udW1CCgoIX3VzZV9tZW0=');
 
 @$core.Deprecated('Use tokenUsageDescriptor instead')
 const TokenUsage$json = {

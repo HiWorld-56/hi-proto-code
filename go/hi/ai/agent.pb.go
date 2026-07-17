@@ -156,8 +156,8 @@ type AgentConfig struct {
 	Prompt        *Prompt                `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
 	Freedom       *float32               `protobuf:"fixed32,2,opt,name=freedom,proto3,oneof" json:"freedom,omitempty"` // 控制模型输出的随机性，值越大越随机
 	Model         *ModelSet              `protobuf:"bytes,3,opt,name=model,proto3" json:"model,omitempty"`
-	QaNum         *int32                 `protobuf:"varint,4,opt,name=qa_num,json=qaNum,proto3,oneof" json:"qa_num,omitempty"` // 上下文组数
-	UseMem        bool                   `protobuf:"varint,5,opt,name=use_mem,json=useMem,proto3" json:"use_mem,omitempty"`    // 启用记忆（启用训练数据）
+	QaNum         *int32                 `protobuf:"varint,4,opt,name=qa_num,json=qaNum,proto3,oneof" json:"qa_num,omitempty"`    // 上下文组数
+	UseMem        *bool                  `protobuf:"varint,5,opt,name=use_mem,json=useMem,proto3,oneof" json:"use_mem,omitempty"` // 启用记忆（启用训练数据）。optional:Edit 局部更新——不传=不动,避免只改别的字段时把记忆误关。
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -221,8 +221,8 @@ func (x *AgentConfig) GetQaNum() int32 {
 }
 
 func (x *AgentConfig) GetUseMem() bool {
-	if x != nil {
-		return x.UseMem
+	if x != nil && x.UseMem != nil {
+		return *x.UseMem
 	}
 	return false
 }
@@ -1083,16 +1083,18 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x03llm\x18\x01 \x01(\tR\x03llm\x12\x10\n" +
 	"\x03stt\x18\x02 \x01(\tR\x03stt\x12\x10\n" +
 	"\x03tts\x18\x03 \x01(\tR\x03tts\x12\x1c\n" +
-	"\tembedding\x18\x04 \x01(\tR\tembedding\"\xc6\x01\n" +
+	"\tembedding\x18\x04 \x01(\tR\tembedding\"\xd7\x01\n" +
 	"\vAgentConfig\x12%\n" +
 	"\x06prompt\x18\x01 \x01(\v2\r.hi.ai.PromptR\x06prompt\x12\x1d\n" +
 	"\afreedom\x18\x02 \x01(\x02H\x00R\afreedom\x88\x01\x01\x12%\n" +
 	"\x05model\x18\x03 \x01(\v2\x0f.hi.ai.ModelSetR\x05model\x12\x1a\n" +
-	"\x06qa_num\x18\x04 \x01(\x05H\x01R\x05qaNum\x88\x01\x01\x12\x17\n" +
-	"\ause_mem\x18\x05 \x01(\bR\x06useMemB\n" +
+	"\x06qa_num\x18\x04 \x01(\x05H\x01R\x05qaNum\x88\x01\x01\x12\x1c\n" +
+	"\ause_mem\x18\x05 \x01(\bH\x02R\x06useMem\x88\x01\x01B\n" +
 	"\n" +
 	"\b_freedomB\t\n" +
-	"\a_qa_num\"L\n" +
+	"\a_qa_numB\n" +
+	"\n" +
+	"\b_use_mem\"L\n" +
 	"\n" +
 	"TokenUsage\x12\x16\n" +
 	"\x06output\x18\x01 \x01(\x05R\x06output\x12\x14\n" +

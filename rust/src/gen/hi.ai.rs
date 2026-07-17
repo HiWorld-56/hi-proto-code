@@ -203,9 +203,9 @@ pub struct AgentConfig {
     /// 上下文组数
     #[prost(int32, optional, tag = "4")]
     pub qa_num: ::core::option::Option<i32>,
-    /// 启用记忆（启用训练数据）
-    #[prost(bool, tag = "5")]
-    pub use_mem: bool,
+    /// 启用记忆（启用训练数据）。optional:Edit 局部更新——不传=不动,避免只改别的字段时把记忆误关。
+    #[prost(bool, optional, tag = "5")]
+    pub use_mem: ::core::option::Option<bool>,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TokenUsage {

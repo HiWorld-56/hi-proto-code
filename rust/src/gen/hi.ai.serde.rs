@@ -18,7 +18,7 @@ impl serde::Serialize for AgentConfig {
         if self.qa_num.is_some() {
             len += 1;
         }
-        if self.use_mem {
+        if self.use_mem.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.AgentConfig", len)?;
@@ -34,8 +34,8 @@ impl serde::Serialize for AgentConfig {
         if let Some(v) = self.qa_num.as_ref() {
             struct_ser.serialize_field("qaNum", v)?;
         }
-        if self.use_mem {
-            struct_ser.serialize_field("useMem", &self.use_mem)?;
+        if let Some(v) = self.use_mem.as_ref() {
+            struct_ser.serialize_field("useMem", v)?;
         }
         struct_ser.end()
     }
@@ -147,7 +147,7 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                             if use_mem__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("useMem"));
                             }
-                            use_mem__ = Some(map_.next_value()?);
+                            use_mem__ = map_.next_value()?;
                         }
                     }
                 }
@@ -156,7 +156,7 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                     freedom: freedom__,
                     model: model__,
                     qa_num: qa_num__,
-                    use_mem: use_mem__.unwrap_or_default(),
+                    use_mem: use_mem__,
                 })
             }
         }
