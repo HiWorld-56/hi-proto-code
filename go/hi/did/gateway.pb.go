@@ -185,7 +185,7 @@ const file_hi_did_gateway_proto_rawDesc = "" +
 	"\x13GatewayConfigSetReq\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2\x96\x01\n" +
 	"\rGatewayConfig\x12C\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x04\x88\xb5\x18\x05\x12@\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x04\x88\xb5\x18\a\x12@\n" +
 	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x04\x88\xb5\x18\x05B}\n" +
 	"\n" +
 	"com.hi.didB\fGatewayProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"

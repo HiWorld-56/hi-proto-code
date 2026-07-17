@@ -28,14 +28,17 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 网关配置(区块链节点 url + api_key)。**纯内部运维接口**,整个 service 都只有超管能碰。
+// 网关配置(区块链节点 url + api_key)。这是**给前端用的配置**:hidid app 的 hidid-core、
+// 以及 hiclub(内嵌 hidid-core)都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**
+// (非用户私密),前端连节点必须带。故:
+//   - List:开放给 token(app 用户)或 ExtendToken(hiclub 商户)——前端读配置。
+//   - Set :只有超管能写。
 //
-// 唯一调用方是 hisrv web 的"网关配置"页,它直连 did 的 HTTP(9533)、带用户 token。
-// 该页在前端属于"内部使用"菜单组,只对超管显示 —— 但那只是菜单显隐,
-// 路由守卫只查有没有 token,敲 URL 就能进。所以真正的闸门只有这里。
+// ⚠️ 后端(开发/生产)不要走这个 RPC 取配置 —— 生产与开发/前端环境不同,后端应从自己的配置文件引入。
 type GatewayConfigClient interface {
-	// 列出网关配置。resp 里含 api_key,泄露即等于把节点凭证给出去。
+	// 列出网关配置(前端读)。token 或 ExtendToken 均可。
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GatewayConfigListResp, error)
+	// 写网关配置。仅超管。
 	Set(ctx context.Context, in *GatewayConfigSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -71,14 +74,17 @@ func (c *gatewayConfigClient) Set(ctx context.Context, in *GatewayConfigSetReq, 
 // All implementations should embed UnimplementedGatewayConfigServer
 // for forward compatibility.
 //
-// 网关配置(区块链节点 url + api_key)。**纯内部运维接口**,整个 service 都只有超管能碰。
+// 网关配置(区块链节点 url + api_key)。这是**给前端用的配置**:hidid app 的 hidid-core、
+// 以及 hiclub(内嵌 hidid-core)都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**
+// (非用户私密),前端连节点必须带。故:
+//   - List:开放给 token(app 用户)或 ExtendToken(hiclub 商户)——前端读配置。
+//   - Set :只有超管能写。
 //
-// 唯一调用方是 hisrv web 的"网关配置"页,它直连 did 的 HTTP(9533)、带用户 token。
-// 该页在前端属于"内部使用"菜单组,只对超管显示 —— 但那只是菜单显隐,
-// 路由守卫只查有没有 token,敲 URL 就能进。所以真正的闸门只有这里。
+// ⚠️ 后端(开发/生产)不要走这个 RPC 取配置 —— 生产与开发/前端环境不同,后端应从自己的配置文件引入。
 type GatewayConfigServer interface {
-	// 列出网关配置。resp 里含 api_key,泄露即等于把节点凭证给出去。
+	// 列出网关配置(前端读)。token 或 ExtendToken 均可。
 	List(context.Context, *emptypb.Empty) (*GatewayConfigListResp, error)
+	// 写网关配置。仅超管。
 	Set(context.Context, *GatewayConfigSetReq) (*emptypb.Empty, error)
 }
 
