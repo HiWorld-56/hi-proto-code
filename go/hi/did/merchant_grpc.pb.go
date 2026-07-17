@@ -52,10 +52,14 @@ const (
 //	若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
 type MerchantClient interface {
 	// ── 商户自身配置 ──
-	// Get:did 空=自己(取 ExtendToken);非空=查指定商户的节点信息(节点信息半公开,供渲染)。
+	// Get:**只能查自己**,入参为空 —— 调用者身份由 ExtendToken 解出(merchant_did)。
 	//
-	//	合并原 UserMerchant.Get(self)+ GetMerchant(param),消除重复;并去掉 GetMerchant 的 stutter。
-	Get(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantGetResp, error)
+	// ⚠️ 历史漏洞(已修):原签名是 `Get(hi.DID)`,"did 非空=查指定商户"。但 MerchantInfo 里带
+	//
+	//	**extension_token(商户 API 凭证)** —— 于是任何持有效 ExtendToken 的商户,都能传别人的
+	//	did 把别人的凭证捞走。**越权**。别再把参数加回来:身份必须只来自 token,不能来自入参。
+	//	若确需看别的商户的公开信息(name/logo/scheme 等),走 MerchantPub(只吐安全字段)。
+	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error)
 	Update(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 商户管理其用户的扩展信息 ──
 	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
@@ -82,7 +86,7 @@ func NewMerchantClient(cc grpc.ClientConnInterface) MerchantClient {
 	return &merchantClient{cc}
 }
 
-func (c *merchantClient) Get(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantGetResp, error) {
+func (c *merchantClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MerchantGetResp)
 	err := c.cc.Invoke(ctx, Merchant_Get_FullMethodName, in, out, cOpts...)
@@ -219,10 +223,14 @@ func (c *merchantClient) RemoveGrant(ctx context.Context, in *GrantReq, opts ...
 //	若 didx 在 A 的授权列表里则直接操作,**不回取 A 的 ExtendToken**。
 type MerchantServer interface {
 	// ── 商户自身配置 ──
-	// Get:did 空=自己(取 ExtendToken);非空=查指定商户的节点信息(节点信息半公开,供渲染)。
+	// Get:**只能查自己**,入参为空 —— 调用者身份由 ExtendToken 解出(merchant_did)。
 	//
-	//	合并原 UserMerchant.Get(self)+ GetMerchant(param),消除重复;并去掉 GetMerchant 的 stutter。
-	Get(context.Context, *hi.DID) (*MerchantGetResp, error)
+	// ⚠️ 历史漏洞(已修):原签名是 `Get(hi.DID)`,"did 非空=查指定商户"。但 MerchantInfo 里带
+	//
+	//	**extension_token(商户 API 凭证)** —— 于是任何持有效 ExtendToken 的商户,都能传别人的
+	//	did 把别人的凭证捞走。**越权**。别再把参数加回来:身份必须只来自 token,不能来自入参。
+	//	若确需看别的商户的公开信息(name/logo/scheme 等),走 MerchantPub(只吐安全字段)。
+	Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error)
 	Update(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
 	// ── 商户管理其用户的扩展信息 ──
 	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
@@ -248,7 +256,7 @@ type MerchantServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMerchantServer struct{}
 
-func (UnimplementedMerchantServer) Get(context.Context, *hi.DID) (*MerchantGetResp, error) {
+func (UnimplementedMerchantServer) Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedMerchantServer) Update(context.Context, *MerchantSetReq) (*emptypb.Empty, error) {
@@ -305,7 +313,7 @@ func RegisterMerchantServer(s grpc.ServiceRegistrar, srv MerchantServer) {
 }
 
 func _Merchant_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.DID)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -317,7 +325,7 @@ func _Merchant_Get_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Merchant_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).Get(ctx, req.(*hi.DID))
+		return srv.(MerchantServer).Get(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

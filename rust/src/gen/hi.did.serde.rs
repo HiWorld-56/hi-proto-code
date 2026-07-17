@@ -7308,9 +7308,6 @@ impl serde::Serialize for MerchantInfo {
         if !self.scheme.is_empty() {
             len += 1;
         }
-        if !self.extension_token.is_empty() {
-            len += 1;
-        }
         if self.created_at != 0 {
             len += 1;
         }
@@ -7339,9 +7336,6 @@ impl serde::Serialize for MerchantInfo {
         if !self.scheme.is_empty() {
             struct_ser.serialize_field("scheme", &self.scheme)?;
         }
-        if !self.extension_token.is_empty() {
-            struct_ser.serialize_field("extensionToken", &self.extension_token)?;
-        }
         if self.created_at != 0 {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
@@ -7367,8 +7361,6 @@ impl<'de> serde::Deserialize<'de> for MerchantInfo {
             "customTokens",
             "endpoint",
             "scheme",
-            "extension_token",
-            "extensionToken",
             "created_at",
             "createdAt",
         ];
@@ -7383,7 +7375,6 @@ impl<'de> serde::Deserialize<'de> for MerchantInfo {
             CustomTokens,
             Endpoint,
             Scheme,
-            ExtensionToken,
             CreatedAt,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -7414,7 +7405,6 @@ impl<'de> serde::Deserialize<'de> for MerchantInfo {
                             "customTokens" | "custom_tokens" => Ok(GeneratedField::CustomTokens),
                             "endpoint" => Ok(GeneratedField::Endpoint),
                             "scheme" => Ok(GeneratedField::Scheme),
-                            "extensionToken" | "extension_token" => Ok(GeneratedField::ExtensionToken),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -7443,7 +7433,6 @@ impl<'de> serde::Deserialize<'de> for MerchantInfo {
                 let mut custom_tokens__ = None;
                 let mut endpoint__ = None;
                 let mut scheme__ = None;
-                let mut extension_token__ = None;
                 let mut created_at__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -7495,12 +7484,6 @@ impl<'de> serde::Deserialize<'de> for MerchantInfo {
                             }
                             scheme__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::ExtensionToken => {
-                            if extension_token__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("extensionToken"));
-                            }
-                            extension_token__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::CreatedAt => {
                             if created_at__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("createdAt"));
@@ -7520,7 +7503,6 @@ impl<'de> serde::Deserialize<'de> for MerchantInfo {
                     custom_tokens: custom_tokens__.unwrap_or_default(),
                     endpoint: endpoint__.unwrap_or_default(),
                     scheme: scheme__.unwrap_or_default(),
-                    extension_token: extension_token__.unwrap_or_default(),
                     created_at: created_at__.unwrap_or_default(),
                 })
             }

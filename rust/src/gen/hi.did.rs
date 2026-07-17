@@ -1164,6 +1164,13 @@ pub mod api_key_client {
         }
     }
 }
+/// 商户节点信息。
+///
+/// ⚠️ **绝不要把 extension_token(商户 API 凭证)加回这个结构。**
+/// 原来它是字段 9,导致三条泄露路径:Merchant.Get(可传别人 did)、ListMerchants(批量返回)、
+/// MerchantManage.List —— 全靠"handler 记得别填"来保平安,而 Get 和 ListMerchants 都没记得。
+/// 商户取自己的 ExtendToken 只有一条正道:**MerchantExDB.Get**(token 档,拿票窗口)。
+/// 凭证只从那一个窄口子出,这里物理上带不出去。核实过:无任何消费方读取本字段。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantInfo {
     #[prost(message, optional, tag = "1")]
@@ -1184,8 +1191,6 @@ pub struct MerchantInfo {
     pub endpoint: ::prost::alloc::string::String,
     #[prost(string, tag = "8")]
     pub scheme: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
-    pub extension_token: ::prost::alloc::string::String,
     #[prost(int64, tag = "10")]
     pub created_at: i64,
 }
@@ -1481,11 +1486,15 @@ pub mod merchant_client {
             self
         }
         /// ── 商户自身配置 ──
-        /// Get:did 空=自己(取 ExtendToken);非空=查指定商户的节点信息(节点信息半公开,供渲染)。
-        /// 合并原 UserMerchant.Get(self)+ GetMerchant(param),消除重复;并去掉 GetMerchant 的 stutter。
+        /// Get:**只能查自己**,入参为空 —— 调用者身份由 ExtendToken 解出(merchant_did)。
+        ///
+        /// ⚠️ 历史漏洞(已修):原签名是 `Get(hi.DID)`,"did 非空=查指定商户"。但 MerchantInfo 里带
+        /// **extension_token(商户 API 凭证)** —— 于是任何持有效 ExtendToken 的商户,都能传别人的
+        /// did 把别人的凭证捞走。**越权**。别再把参数加回来:身份必须只来自 token,不能来自入参。
+        /// 若确需看别的商户的公开信息(name/logo/scheme 等),走 MerchantPub(只吐安全字段)。
         pub async fn get(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::Did>,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
             tonic::Response<super::MerchantGetResp>,
             tonic::Status,
