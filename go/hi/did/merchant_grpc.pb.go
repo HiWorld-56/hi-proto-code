@@ -581,6 +581,124 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	MerchantPub_Scheme_FullMethodName = "/hi.did.MerchantPub/Scheme"
+)
+
+// MerchantPubClient is the client API for MerchantPub service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 商户公开信息(免鉴权)。主体=商户对外可见的那部分。
+//
+// 用途:hidid app 被三方业务 app 唤起做签名认证时,按业务侧传来的**商户 did** 查回跳 scheme;
+// 签完名靠这个 scheme 跳回业务 app。
+//
+// 免鉴权的理由:整条唤起→签名→回跳的握手本身就不带 token(走 SignedData),
+// 且 scheme 是 app 在系统里注册的公开信息,本就不是秘密。
+// **安全性由返回体的窄来保证** —— 只吐 scheme,而不是靠鉴权挡。
+type MerchantPubClient interface {
+	Scheme(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantPubSchemeResp, error)
+}
+
+type merchantPubClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMerchantPubClient(cc grpc.ClientConnInterface) MerchantPubClient {
+	return &merchantPubClient{cc}
+}
+
+func (c *merchantPubClient) Scheme(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantPubSchemeResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantPubSchemeResp)
+	err := c.cc.Invoke(ctx, MerchantPub_Scheme_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MerchantPubServer is the server API for MerchantPub service.
+// All implementations should embed UnimplementedMerchantPubServer
+// for forward compatibility.
+//
+// 商户公开信息(免鉴权)。主体=商户对外可见的那部分。
+//
+// 用途:hidid app 被三方业务 app 唤起做签名认证时,按业务侧传来的**商户 did** 查回跳 scheme;
+// 签完名靠这个 scheme 跳回业务 app。
+//
+// 免鉴权的理由:整条唤起→签名→回跳的握手本身就不带 token(走 SignedData),
+// 且 scheme 是 app 在系统里注册的公开信息,本就不是秘密。
+// **安全性由返回体的窄来保证** —— 只吐 scheme,而不是靠鉴权挡。
+type MerchantPubServer interface {
+	Scheme(context.Context, *hi.DID) (*MerchantPubSchemeResp, error)
+}
+
+// UnimplementedMerchantPubServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedMerchantPubServer struct{}
+
+func (UnimplementedMerchantPubServer) Scheme(context.Context, *hi.DID) (*MerchantPubSchemeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Scheme not implemented")
+}
+func (UnimplementedMerchantPubServer) testEmbeddedByValue() {}
+
+// UnsafeMerchantPubServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MerchantPubServer will
+// result in compilation errors.
+type UnsafeMerchantPubServer interface {
+	mustEmbedUnimplementedMerchantPubServer()
+}
+
+func RegisterMerchantPubServer(s grpc.ServiceRegistrar, srv MerchantPubServer) {
+	// If the following call panics, it indicates UnimplementedMerchantPubServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&MerchantPub_ServiceDesc, srv)
+}
+
+func _MerchantPub_Scheme_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.DID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantPubServer).Scheme(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantPub_Scheme_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantPubServer).Scheme(ctx, req.(*hi.DID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// MerchantPub_ServiceDesc is the grpc.ServiceDesc for MerchantPub service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var MerchantPub_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.MerchantPub",
+	HandlerType: (*MerchantPubServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Scheme",
+			Handler:    _MerchantPub_Scheme_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/merchant.proto",
+}
+
+const (
 	MerchantExDB_Get_FullMethodName     = "/hi.did.MerchantExDB/Get"
 	MerchantExDB_Refresh_FullMethodName = "/hi.did.MerchantExDB/Refresh"
 )

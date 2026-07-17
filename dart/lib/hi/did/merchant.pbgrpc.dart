@@ -377,6 +377,64 @@ abstract class MerchantServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.GrantReq request);
 }
 
+/// 商户公开信息(免鉴权)。主体=商户对外可见的那部分。
+///
+/// 用途:hidid app 被三方业务 app 唤起做签名认证时,按业务侧传来的**商户 did** 查回跳 scheme;
+/// 签完名靠这个 scheme 跳回业务 app。
+///
+/// 免鉴权的理由:整条唤起→签名→回跳的握手本身就不带 token(走 SignedData),
+/// 且 scheme 是 app 在系统里注册的公开信息,本就不是秘密。
+/// **安全性由返回体的窄来保证** —— 只吐 scheme,而不是靠鉴权挡。
+@$pb.GrpcServiceName('hi.did.MerchantPub')
+class MerchantPubClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  MerchantPubClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.MerchantPubSchemeResp> scheme(
+    $0.DID request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$scheme, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$scheme = $grpc.ClientMethod<$0.DID, $1.MerchantPubSchemeResp>(
+      '/hi.did.MerchantPub/Scheme',
+      ($0.DID value) => value.writeToBuffer(),
+      $1.MerchantPubSchemeResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.MerchantPub')
+abstract class MerchantPubServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.MerchantPub';
+
+  MerchantPubServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.DID, $1.MerchantPubSchemeResp>(
+        'Scheme',
+        scheme_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DID.fromBuffer(value),
+        ($1.MerchantPubSchemeResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.MerchantPubSchemeResp> scheme_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.DID> $request) async {
+    return scheme($call, await $request);
+  }
+
+  $async.Future<$1.MerchantPubSchemeResp> scheme(
+      $grpc.ServiceCall call, $0.DID request);
+}
+
 /// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
 /// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
 ///

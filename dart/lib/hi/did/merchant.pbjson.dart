@@ -369,6 +369,19 @@ final $typed_data.Uint8List getUserMqttRespDescriptor = $convert.base64Decode(
     'Cg9HZXRVc2VyTXF0dFJlc3ASGgoIdXNlcm5hbWUYASABKAlSCHVzZXJuYW1lEhoKCHBhc3N3b3'
     'JkGAIgASgJUghwYXNzd29yZA==');
 
+@$core.Deprecated('Use merchantPubSchemeRespDescriptor instead')
+const MerchantPubSchemeResp$json = {
+  '1': 'MerchantPubSchemeResp',
+  '2': [
+    {'1': 'scheme', '3': 1, '4': 1, '5': 9, '10': 'scheme'},
+  ],
+};
+
+/// Descriptor for `MerchantPubSchemeResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantPubSchemeRespDescriptor =
+    $convert.base64Decode(
+        'ChVNZXJjaGFudFB1YlNjaGVtZVJlc3ASFgoGc2NoZW1lGAEgASgJUgZzY2hlbWU=');
+
 @$core.Deprecated('Use merchantExDBRespDescriptor instead')
 const MerchantExDBResp$json = {
   '1': 'MerchantExDBResp',

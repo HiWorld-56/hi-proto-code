@@ -1337,6 +1337,67 @@ class GetUserMqttResp extends $pb.GeneratedMessage {
   void clearPassword() => $_clearField(2);
 }
 
+/// ── 商户公开信息 ─────────────────────────────────────────────────────
+/// 只放**能给前端看的**商户字段。目前只有 scheme。
+///
+/// ⚠️ 为什么不能复用 Merchant.Get:它返回整个 MerchantInfo,里面有 **extension_token
+///    (商户的 API 凭证)**、master、endpoint 等 —— 一个都不能给 app。
+///    单开这个门面,以后要开放别的公开字段也有地方放,且物理上不可能带出敏感字段。
+class MerchantPubSchemeResp extends $pb.GeneratedMessage {
+  factory MerchantPubSchemeResp({
+    $core.String? scheme,
+  }) {
+    final result = create();
+    if (scheme != null) result.scheme = scheme;
+    return result;
+  }
+
+  MerchantPubSchemeResp._();
+
+  factory MerchantPubSchemeResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantPubSchemeResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantPubSchemeResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'scheme')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantPubSchemeResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantPubSchemeResp copyWith(
+          void Function(MerchantPubSchemeResp) updates) =>
+      super.copyWith((message) => updates(message as MerchantPubSchemeResp))
+          as MerchantPubSchemeResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantPubSchemeResp create() => MerchantPubSchemeResp._();
+  @$core.override
+  MerchantPubSchemeResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantPubSchemeResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantPubSchemeResp>(create);
+  static MerchantPubSchemeResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get scheme => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set scheme($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasScheme() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearScheme() => $_clearField(1);
+}
+
 /// 商户的扩展库访问凭证:extoken(=ExtendToken,商户的 API 凭证)+ extend 表名。
 class MerchantExDBResp extends $pb.GeneratedMessage {
   factory MerchantExDBResp({
