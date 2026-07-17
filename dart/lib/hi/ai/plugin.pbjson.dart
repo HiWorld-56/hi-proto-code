@@ -43,28 +43,25 @@ const PluginSwitchReq$json = {
   '2': [
     {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
     {'1': 'use_mem', '3': 2, '4': 1, '5': 8, '10': 'useMem'},
-    {'1': 'use_plugin', '3': 3, '4': 1, '5': 8, '10': 'usePlugin'},
   ],
 };
 
 /// Descriptor for `PluginSwitchReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginSwitchReqDescriptor = $convert.base64Decode(
     'Cg9QbHVnaW5Td2l0Y2hSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhcKB3VzZV9tZW0YAiABKA'
-    'hSBnVzZU1lbRIdCgp1c2VfcGx1Z2luGAMgASgIUgl1c2VQbHVnaW4=');
+    'hSBnVzZU1lbQ==');
 
 @$core.Deprecated('Use pluginSwitchRespDescriptor instead')
 const PluginSwitchResp$json = {
   '1': 'PluginSwitchResp',
   '2': [
     {'1': 'use_mem', '3': 1, '4': 1, '5': 8, '10': 'useMem'},
-    {'1': 'use_plugin', '3': 2, '4': 1, '5': 8, '10': 'usePlugin'},
   ],
 };
 
 /// Descriptor for `PluginSwitchResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginSwitchRespDescriptor = $convert.base64Decode(
-    'ChBQbHVnaW5Td2l0Y2hSZXNwEhcKB3VzZV9tZW0YASABKAhSBnVzZU1lbRIdCgp1c2VfcGx1Z2'
-    'luGAIgASgIUgl1c2VQbHVnaW4=');
+    'ChBQbHVnaW5Td2l0Y2hSZXNwEhcKB3VzZV9tZW0YASABKAhSBnVzZU1lbQ==');
 
 @$core.Deprecated('Use createReqDescriptor instead')
 const CreateReq$json = {

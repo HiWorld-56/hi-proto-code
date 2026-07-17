@@ -177,8 +177,9 @@ class ModelSet extends $pb.GeneratedMessage {
 }
 
 /// 智能体配置。
-/// 注:插件只剩 py 脚本一种(网搜/画图已砍 —— 那两类完全可以封进 py 脚本做,
-/// 且局限太大,连传入用户数据都不方便),故只保留 use_plugin 一个开关。
+///
+/// ⚠️ **插件没有总开关**:有 plugin 权限 = 插件模块就是开的;是否生效由每个脚本自己的 enabled 决定
+///    (原 use_plugin 已删)。故这里只剩 use_mem 一个总开关 —— 记忆模块待重构,重构前暂留。
 class AgentConfig extends $pb.GeneratedMessage {
   factory AgentConfig({
     Prompt? prompt,
@@ -186,7 +187,6 @@ class AgentConfig extends $pb.GeneratedMessage {
     ModelSet? model,
     $core.int? qaNum,
     $core.bool? useMem,
-    $core.bool? usePlugin,
   }) {
     final result = create();
     if (prompt != null) result.prompt = prompt;
@@ -194,7 +194,6 @@ class AgentConfig extends $pb.GeneratedMessage {
     if (model != null) result.model = model;
     if (qaNum != null) result.qaNum = qaNum;
     if (useMem != null) result.useMem = useMem;
-    if (usePlugin != null) result.usePlugin = usePlugin;
     return result;
   }
 
@@ -217,7 +216,6 @@ class AgentConfig extends $pb.GeneratedMessage {
         subBuilder: ModelSet.create)
     ..aI(4, _omitFieldNames ? '' : 'qaNum')
     ..aOB(5, _omitFieldNames ? '' : 'useMem')
-    ..aOB(6, _omitFieldNames ? '' : 'usePlugin')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -287,15 +285,6 @@ class AgentConfig extends $pb.GeneratedMessage {
   $core.bool hasUseMem() => $_has(4);
   @$pb.TagNumber(5)
   void clearUseMem() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.bool get usePlugin => $_getBF(5);
-  @$pb.TagNumber(6)
-  set usePlugin($core.bool value) => $_setBool(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasUsePlugin() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearUsePlugin() => $_clearField(6);
 }
 
 class TokenUsage extends $pb.GeneratedMessage {

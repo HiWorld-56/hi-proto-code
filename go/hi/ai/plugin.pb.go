@@ -127,12 +127,15 @@ func (x *PluginItem) GetCreatedAt() int64 {
 	return 0
 }
 
-// 智能体能力开关。网搜/画图插件砍掉后只剩:记忆、插件(py)。
+// 智能体能力开关。**现在只剩记忆(use_mem)一个总开关**:
+//   - 插件:总开关已取消(有 plugin 权限即开,脚本级由 enabled 控制);
+//   - 网搜/画图:功能已砍。
+//
+// 记忆模块待重构(现分段方式有问题),重构前暂留 use_mem。
 type PluginSwitchReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
 	UseMem        bool                   `protobuf:"varint,2,opt,name=use_mem,json=useMem,proto3" json:"use_mem,omitempty"`
-	UsePlugin     bool                   `protobuf:"varint,3,opt,name=use_plugin,json=usePlugin,proto3" json:"use_plugin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -181,17 +184,9 @@ func (x *PluginSwitchReq) GetUseMem() bool {
 	return false
 }
 
-func (x *PluginSwitchReq) GetUsePlugin() bool {
-	if x != nil {
-		return x.UsePlugin
-	}
-	return false
-}
-
 type PluginSwitchResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UseMem        bool                   `protobuf:"varint,1,opt,name=use_mem,json=useMem,proto3" json:"use_mem,omitempty"`
-	UsePlugin     bool                   `protobuf:"varint,2,opt,name=use_plugin,json=usePlugin,proto3" json:"use_plugin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -229,13 +224,6 @@ func (*PluginSwitchResp) Descriptor() ([]byte, []int) {
 func (x *PluginSwitchResp) GetUseMem() bool {
 	if x != nil {
 		return x.UseMem
-	}
-	return false
-}
-
-func (x *PluginSwitchResp) GetUsePlugin() bool {
-	if x != nil {
-		return x.UsePlugin
 	}
 	return false
 }
@@ -1153,16 +1141,12 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\aversion\x18\x06 \x01(\tR\aversion\x12\x16\n" +
 	"\x06active\x18\a \x01(\bR\x06active\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\b \x01(\x03R\tcreatedAt\"_\n" +
+	"created_at\x18\b \x01(\x03R\tcreatedAt\"@\n" +
 	"\x0fPluginSwitchReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x17\n" +
-	"\ause_mem\x18\x02 \x01(\bR\x06useMem\x12\x1d\n" +
-	"\n" +
-	"use_plugin\x18\x03 \x01(\bR\tusePlugin\"J\n" +
+	"\ause_mem\x18\x02 \x01(\bR\x06useMem\"+\n" +
 	"\x10PluginSwitchResp\x12\x17\n" +
-	"\ause_mem\x18\x01 \x01(\bR\x06useMem\x12\x1d\n" +
-	"\n" +
-	"use_plugin\x18\x02 \x01(\bR\tusePlugin\"\xaf\x02\n" +
+	"\ause_mem\x18\x01 \x01(\bR\x06useMem\"\xaf\x02\n" +
 	"\tCreateReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x1a\n" +
 	"\x03url\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x88\x01\x01R\x03url\x12B\n" +

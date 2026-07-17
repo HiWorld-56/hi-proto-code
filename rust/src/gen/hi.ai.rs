@@ -188,8 +188,9 @@ pub struct ModelSet {
     pub embedding: ::prost::alloc::string::String,
 }
 /// 智能体配置。
-/// 注:插件只剩 py 脚本一种(网搜/画图已砍 —— 那两类完全可以封进 py 脚本做,
-/// 且局限太大,连传入用户数据都不方便),故只保留 use_plugin 一个开关。
+///
+/// ⚠️ **插件没有总开关**:有 plugin 权限 = 插件模块就是开的;是否生效由每个脚本自己的 enabled 决定
+/// (原 use_plugin 已删)。故这里只剩 use_mem 一个总开关 —— 记忆模块待重构,重构前暂留。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgentConfig {
     #[prost(message, optional, tag = "1")]
@@ -205,9 +206,6 @@ pub struct AgentConfig {
     /// 启用记忆（启用训练数据）
     #[prost(bool, tag = "5")]
     pub use_mem: bool,
-    /// 启用插件(py 脚本)
-    #[prost(bool, tag = "6")]
-    pub use_plugin: bool,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TokenUsage {
@@ -1159,22 +1157,22 @@ pub struct PluginItem {
     #[prost(int64, tag = "8")]
     pub created_at: i64,
 }
-/// 智能体能力开关。网搜/画图插件砍掉后只剩:记忆、插件(py)。
+/// 智能体能力开关。**现在只剩记忆(use_mem)一个总开关**:
+///
+/// * 插件:总开关已取消(有 plugin 权限即开,脚本级由 enabled 控制);
+/// * 网搜/画图:功能已砍。
+///   记忆模块待重构(现分段方式有问题),重构前暂留 use_mem。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginSwitchReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     #[prost(bool, tag = "2")]
     pub use_mem: bool,
-    #[prost(bool, tag = "3")]
-    pub use_plugin: bool,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginSwitchResp {
     #[prost(bool, tag = "1")]
     pub use_mem: bool,
-    #[prost(bool, tag = "2")]
-    pub use_plugin: bool,
 }
 /// 上传/新建一个插件版本。
 /// 后台按 (agent, name, version) 判断:该版本已存在则**覆盖**,否则**新建**。

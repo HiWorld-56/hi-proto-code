@@ -75,7 +75,6 @@ const AgentConfig$json = {
     },
     {'1': 'qa_num', '3': 4, '4': 1, '5': 5, '9': 1, '10': 'qaNum', '17': true},
     {'1': 'use_mem', '3': 5, '4': 1, '5': 8, '10': 'useMem'},
-    {'1': 'use_plugin', '3': 6, '4': 1, '5': 8, '10': 'usePlugin'},
   ],
   '8': [
     {'1': '_freedom'},
@@ -88,8 +87,7 @@ final $typed_data.Uint8List agentConfigDescriptor = $convert.base64Decode(
     'CgtBZ2VudENvbmZpZxIlCgZwcm9tcHQYASABKAsyDS5oaS5haS5Qcm9tcHRSBnByb21wdBIdCg'
     'dmcmVlZG9tGAIgASgCSABSB2ZyZWVkb22IAQESJQoFbW9kZWwYAyABKAsyDy5oaS5haS5Nb2Rl'
     'bFNldFIFbW9kZWwSGgoGcWFfbnVtGAQgASgFSAFSBXFhTnVtiAEBEhcKB3VzZV9tZW0YBSABKA'
-    'hSBnVzZU1lbRIdCgp1c2VfcGx1Z2luGAYgASgIUgl1c2VQbHVnaW5CCgoIX2ZyZWVkb21CCQoH'
-    'X3FhX251bQ==');
+    'hSBnVzZU1lbUIKCghfZnJlZWRvbUIJCgdfcWFfbnVt');
 
 @$core.Deprecated('Use tokenUsageDescriptor instead')
 const TokenUsage$json = {

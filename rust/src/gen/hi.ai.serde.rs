@@ -21,9 +21,6 @@ impl serde::Serialize for AgentConfig {
         if self.use_mem {
             len += 1;
         }
-        if self.use_plugin {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.AgentConfig", len)?;
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
@@ -39,9 +36,6 @@ impl serde::Serialize for AgentConfig {
         }
         if self.use_mem {
             struct_ser.serialize_field("useMem", &self.use_mem)?;
-        }
-        if self.use_plugin {
-            struct_ser.serialize_field("usePlugin", &self.use_plugin)?;
         }
         struct_ser.end()
     }
@@ -60,8 +54,6 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
             "qaNum",
             "use_mem",
             "useMem",
-            "use_plugin",
-            "usePlugin",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -71,7 +63,6 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
             Model,
             QaNum,
             UseMem,
-            UsePlugin,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -98,7 +89,6 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                             "model" => Ok(GeneratedField::Model),
                             "qaNum" | "qa_num" => Ok(GeneratedField::QaNum),
                             "useMem" | "use_mem" => Ok(GeneratedField::UseMem),
-                            "usePlugin" | "use_plugin" => Ok(GeneratedField::UsePlugin),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -123,7 +113,6 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                 let mut model__ = None;
                 let mut qa_num__ = None;
                 let mut use_mem__ = None;
-                let mut use_plugin__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Prompt => {
@@ -160,12 +149,6 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                             }
                             use_mem__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::UsePlugin => {
-                            if use_plugin__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("usePlugin"));
-                            }
-                            use_plugin__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(AgentConfig {
@@ -174,7 +157,6 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                     model: model__,
                     qa_num: qa_num__,
                     use_mem: use_mem__.unwrap_or_default(),
-                    use_plugin: use_plugin__.unwrap_or_default(),
                 })
             }
         }
@@ -8217,18 +8199,12 @@ impl serde::Serialize for PluginSwitchReq {
         if self.use_mem {
             len += 1;
         }
-        if self.use_plugin {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginSwitchReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
         if self.use_mem {
             struct_ser.serialize_field("useMem", &self.use_mem)?;
-        }
-        if self.use_plugin {
-            struct_ser.serialize_field("usePlugin", &self.use_plugin)?;
         }
         struct_ser.end()
     }
@@ -8243,15 +8219,12 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchReq {
             "agent",
             "use_mem",
             "useMem",
-            "use_plugin",
-            "usePlugin",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
             UseMem,
-            UsePlugin,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8275,7 +8248,6 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchReq {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
                             "useMem" | "use_mem" => Ok(GeneratedField::UseMem),
-                            "usePlugin" | "use_plugin" => Ok(GeneratedField::UsePlugin),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8297,7 +8269,6 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchReq {
             {
                 let mut agent__ = None;
                 let mut use_mem__ = None;
-                let mut use_plugin__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -8312,18 +8283,11 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchReq {
                             }
                             use_mem__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::UsePlugin => {
-                            if use_plugin__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("usePlugin"));
-                            }
-                            use_plugin__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(PluginSwitchReq {
                     agent: agent__.unwrap_or_default(),
                     use_mem: use_mem__.unwrap_or_default(),
-                    use_plugin: use_plugin__.unwrap_or_default(),
                 })
             }
         }
@@ -8341,15 +8305,9 @@ impl serde::Serialize for PluginSwitchResp {
         if self.use_mem {
             len += 1;
         }
-        if self.use_plugin {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginSwitchResp", len)?;
         if self.use_mem {
             struct_ser.serialize_field("useMem", &self.use_mem)?;
-        }
-        if self.use_plugin {
-            struct_ser.serialize_field("usePlugin", &self.use_plugin)?;
         }
         struct_ser.end()
     }
@@ -8363,14 +8321,11 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchResp {
         const FIELDS: &[&str] = &[
             "use_mem",
             "useMem",
-            "use_plugin",
-            "usePlugin",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             UseMem,
-            UsePlugin,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8393,7 +8348,6 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchResp {
                     {
                         match value {
                             "useMem" | "use_mem" => Ok(GeneratedField::UseMem),
-                            "usePlugin" | "use_plugin" => Ok(GeneratedField::UsePlugin),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8414,7 +8368,6 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchResp {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut use_mem__ = None;
-                let mut use_plugin__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::UseMem => {
@@ -8423,17 +8376,10 @@ impl<'de> serde::Deserialize<'de> for PluginSwitchResp {
                             }
                             use_mem__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::UsePlugin => {
-                            if use_plugin__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("usePlugin"));
-                            }
-                            use_plugin__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(PluginSwitchResp {
                     use_mem: use_mem__.unwrap_or_default(),
-                    use_plugin: use_plugin__.unwrap_or_default(),
                 })
             }
         }

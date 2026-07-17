@@ -160,17 +160,18 @@ class PluginItem extends $pb.GeneratedMessage {
   void clearCreatedAt() => $_clearField(8);
 }
 
-/// 智能体能力开关。网搜/画图插件砍掉后只剩:记忆、插件(py)。
+/// 智能体能力开关。**现在只剩记忆(use_mem)一个总开关**:
+///   - 插件:总开关已取消(有 plugin 权限即开,脚本级由 enabled 控制);
+///   - 网搜/画图:功能已砍。
+/// 记忆模块待重构(现分段方式有问题),重构前暂留 use_mem。
 class PluginSwitchReq extends $pb.GeneratedMessage {
   factory PluginSwitchReq({
     $core.String? agent,
     $core.bool? useMem,
-    $core.bool? usePlugin,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (useMem != null) result.useMem = useMem;
-    if (usePlugin != null) result.usePlugin = usePlugin;
     return result;
   }
 
@@ -189,7 +190,6 @@ class PluginSwitchReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOB(2, _omitFieldNames ? '' : 'useMem')
-    ..aOB(3, _omitFieldNames ? '' : 'usePlugin')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -228,25 +228,14 @@ class PluginSwitchReq extends $pb.GeneratedMessage {
   $core.bool hasUseMem() => $_has(1);
   @$pb.TagNumber(2)
   void clearUseMem() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.bool get usePlugin => $_getBF(2);
-  @$pb.TagNumber(3)
-  set usePlugin($core.bool value) => $_setBool(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasUsePlugin() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearUsePlugin() => $_clearField(3);
 }
 
 class PluginSwitchResp extends $pb.GeneratedMessage {
   factory PluginSwitchResp({
     $core.bool? useMem,
-    $core.bool? usePlugin,
   }) {
     final result = create();
     if (useMem != null) result.useMem = useMem;
-    if (usePlugin != null) result.usePlugin = usePlugin;
     return result;
   }
 
@@ -264,7 +253,6 @@ class PluginSwitchResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'useMem')
-    ..aOB(2, _omitFieldNames ? '' : 'usePlugin')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -294,15 +282,6 @@ class PluginSwitchResp extends $pb.GeneratedMessage {
   $core.bool hasUseMem() => $_has(0);
   @$pb.TagNumber(1)
   void clearUseMem() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.bool get usePlugin => $_getBF(1);
-  @$pb.TagNumber(2)
-  set usePlugin($core.bool value) => $_setBool(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasUsePlugin() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearUsePlugin() => $_clearField(2);
 }
 
 /// 上传/新建一个插件版本。
