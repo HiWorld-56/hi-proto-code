@@ -107,11 +107,11 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$getParams, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.PluginSwitchResp> setSwitches(
-    $0.PluginSwitchReq request, {
+  $grpc.ResponseFuture<$1.Empty> setEnabled(
+    $0.SetEnabledReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$setSwitches, request, options: options);
+    return $createUnaryCall(_$setEnabled, request, options: options);
   }
 
   // method descriptors
@@ -156,11 +156,10 @@ class PluginClient extends $grpc.Client {
           '/hi.club.Plugin/GetParams',
           ($0.GetParamsReq value) => value.writeToBuffer(),
           $0.GetParamsResp.fromBuffer);
-  static final _$setSwitches =
-      $grpc.ClientMethod<$0.PluginSwitchReq, $0.PluginSwitchResp>(
-          '/hi.club.Plugin/SetSwitches',
-          ($0.PluginSwitchReq value) => value.writeToBuffer(),
-          $0.PluginSwitchResp.fromBuffer);
+  static final _$setEnabled = $grpc.ClientMethod<$0.SetEnabledReq, $1.Empty>(
+      '/hi.club.Plugin/SetEnabled',
+      ($0.SetEnabledReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Plugin')
@@ -233,13 +232,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetParamsReq.fromBuffer(value),
         ($0.GetParamsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.PluginSwitchReq, $0.PluginSwitchResp>(
-        'SetSwitches',
-        setSwitches_Pre,
+    $addMethod($grpc.ServiceMethod<$0.SetEnabledReq, $1.Empty>(
+        'SetEnabled',
+        setEnabled_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.PluginSwitchReq.fromBuffer(value),
-        ($0.PluginSwitchResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.SetEnabledReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateResp> create_Pre(
@@ -314,11 +313,11 @@ abstract class PluginServiceBase extends $grpc.Service {
   $async.Future<$0.GetParamsResp> getParams(
       $grpc.ServiceCall call, $0.GetParamsReq request);
 
-  $async.Future<$0.PluginSwitchResp> setSwitches_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.PluginSwitchReq> $request) async {
-    return setSwitches($call, await $request);
+  $async.Future<$1.Empty> setEnabled_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.SetEnabledReq> $request) async {
+    return setEnabled($call, await $request);
   }
 
-  $async.Future<$0.PluginSwitchResp> setSwitches(
-      $grpc.ServiceCall call, $0.PluginSwitchReq request);
+  $async.Future<$1.Empty> setEnabled(
+      $grpc.ServiceCall call, $0.SetEnabledReq request);
 }

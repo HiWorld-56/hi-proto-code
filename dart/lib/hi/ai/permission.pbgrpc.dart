@@ -76,8 +76,9 @@ abstract class PermissionServiceBase extends $grpc.Service {
 
 /// 权限管理(超管)。对应设计文档的"操作许可:特定用户"。
 ///
-/// ⚠️ 取消权限有**副作用**(文档):取消 mem → 清空资料与记忆;取消 plugin → 清空"增加"的数据(如 search 条目);
-///    取消 advanced → 相关配置恢复默认。club 侧还另有副作用(群人数上限回落 300 并踢人),见 hi/club/permission.proto。
+/// ⚠️ **取消权限只翻位、不清数据**(见文件头):撤 mem/plugin/advanced 都**只关权限位**,
+///    资料/记忆/插件数据一律保留,由 use-side 判权限门控。club 侧的"群人数上限回落 300 并踢人"
+///    是 club 自己的产品行为(见 hi/club/permission.proto),与 ai 无关。
 @$pb.GrpcServiceName('hi.ai.PermissionManage')
 class PermissionManageClient extends $grpc.Client {
   /// The hostname for this service.

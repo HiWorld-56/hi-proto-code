@@ -1151,28 +1151,26 @@ pub struct PluginItem {
     /// 版本号(用户上传时自填)
     #[prost(string, tag = "6")]
     pub version: ::prost::alloc::string::String,
-    /// 本版本是否供 function call 调用(同 uuid 下只有一个为 true)
+    /// **版本级**开关:本版本是否供 function call 调用(同 uuid 下只有一个为 true)
     #[prost(bool, tag = "7")]
     pub active: bool,
     #[prost(int64, tag = "8")]
     pub created_at: i64,
+    /// **脚本级**开关:本脚本是否参与推理。与 active 是两个维度:
+    #[prost(bool, tag = "9")]
+    pub enabled: bool,
 }
-/// 智能体能力开关。**现在只剩记忆(use_mem)一个总开关**:
-///
-/// * 插件:总开关已取消(有 plugin 权限即开,脚本级由 enabled 控制);
-/// * 网搜/画图:功能已砍。
-///   记忆模块待重构(现分段方式有问题),重构前暂留 use_mem。
+/// 脚本级开关:设定某脚本是否参与推理(与 SetActiveVersion 的"版本级 active"对称)。
+/// **有 plugin 权限即模块开**,单个脚本用 enabled 自行关掉;不在插件这边碰记忆开关。
+/// (记忆开关 use_mem 归 AgentConfig,经 Agent.Edit 设置 —— 不开第二条写同一位的路径。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PluginSwitchReq {
+pub struct SetEnabledReq {
+    /// 脚本 id
     #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    pub uuid: ::prost::alloc::string::String,
+    /// 是否参与推理
     #[prost(bool, tag = "2")]
-    pub use_mem: bool,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PluginSwitchResp {
-    #[prost(bool, tag = "1")]
-    pub use_mem: bool,
+    pub enabled: bool,
 }
 /// 上传/新建一个插件版本。
 /// 后台按 (agent, name, version) 判断:该版本已存在则**覆盖**,否则**新建**。
@@ -1604,13 +1602,10 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "GetParams"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn set_switches(
+        pub async fn set_enabled(
             &mut self,
-            request: impl tonic::IntoRequest<super::PluginSwitchReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::PluginSwitchResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::SetEnabledReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1620,9 +1615,9 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/SetSwitches");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/SetEnabled");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "SetSwitches"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "SetEnabled"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -2733,8 +2728,9 @@ pub mod permission_manage_client {
     use tonic::codegen::http::Uri;
     /// 权限管理(超管)。对应设计文档的"操作许可:特定用户"。
     ///
-    /// ⚠️ 取消权限有**副作用**(文档):取消 mem → 清空资料与记忆;取消 plugin → 清空"增加"的数据(如 search 条目);
-    /// 取消 advanced → 相关配置恢复默认。club 侧还另有副作用(群人数上限回落 300 并踢人),见 hi/club/permission.proto。
+    /// ⚠️ **取消权限只翻位、不清数据**(见文件头):撤 mem/plugin/advanced 都**只关权限位**,
+    /// 资料/记忆/插件数据一律保留,由 use-side 判权限门控。club 侧的"群人数上限回落 300 并踢人"
+    /// 是 club 自己的产品行为(见 hi/club/permission.proto),与 ai 无关。
     #[derive(Debug, Clone)]
     pub struct PermissionManageClient<T> {
         inner: tonic::client::Grpc<T>,

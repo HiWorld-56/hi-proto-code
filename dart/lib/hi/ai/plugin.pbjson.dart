@@ -27,6 +27,7 @@ const PluginItem$json = {
     {'1': 'version', '3': 6, '4': 1, '5': 9, '10': 'version'},
     {'1': 'active', '3': 7, '4': 1, '5': 8, '10': 'active'},
     {'1': 'created_at', '3': 8, '4': 1, '5': 3, '10': 'createdAt'},
+    {'1': 'enabled', '3': 9, '4': 1, '5': 8, '10': 'enabled'},
   ],
 };
 
@@ -35,33 +36,22 @@ final $typed_data.Uint8List pluginItemDescriptor = $convert.base64Decode(
     'CgpQbHVnaW5JdGVtEhIKBHV1aWQYASABKAlSBHV1aWQSFAoFYWdlbnQYAiABKAlSBWFnZW50Eh'
     'IKBG5hbWUYAyABKAlSBG5hbWUSEAoDdXJsGAQgASgJUgN1cmwSIAoLZGVzY3JpcHRpb24YBSAB'
     'KAlSC2Rlc2NyaXB0aW9uEhgKB3ZlcnNpb24YBiABKAlSB3ZlcnNpb24SFgoGYWN0aXZlGAcgAS'
-    'gIUgZhY3RpdmUSHQoKY3JlYXRlZF9hdBgIIAEoA1IJY3JlYXRlZEF0');
+    'gIUgZhY3RpdmUSHQoKY3JlYXRlZF9hdBgIIAEoA1IJY3JlYXRlZEF0EhgKB2VuYWJsZWQYCSAB'
+    'KAhSB2VuYWJsZWQ=');
 
-@$core.Deprecated('Use pluginSwitchReqDescriptor instead')
-const PluginSwitchReq$json = {
-  '1': 'PluginSwitchReq',
+@$core.Deprecated('Use setEnabledReqDescriptor instead')
+const SetEnabledReq$json = {
+  '1': 'SetEnabledReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'use_mem', '3': 2, '4': 1, '5': 8, '10': 'useMem'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'enabled', '3': 2, '4': 1, '5': 8, '10': 'enabled'},
   ],
 };
 
-/// Descriptor for `PluginSwitchReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pluginSwitchReqDescriptor = $convert.base64Decode(
-    'Cg9QbHVnaW5Td2l0Y2hSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhcKB3VzZV9tZW0YAiABKA'
-    'hSBnVzZU1lbQ==');
-
-@$core.Deprecated('Use pluginSwitchRespDescriptor instead')
-const PluginSwitchResp$json = {
-  '1': 'PluginSwitchResp',
-  '2': [
-    {'1': 'use_mem', '3': 1, '4': 1, '5': 8, '10': 'useMem'},
-  ],
-};
-
-/// Descriptor for `PluginSwitchResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pluginSwitchRespDescriptor = $convert.base64Decode(
-    'ChBQbHVnaW5Td2l0Y2hSZXNwEhcKB3VzZV9tZW0YASABKAhSBnVzZU1lbQ==');
+/// Descriptor for `SetEnabledReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setEnabledReqDescriptor = $convert.base64Decode(
+    'Cg1TZXRFbmFibGVkUmVxEhIKBHV1aWQYASABKAlSBHV1aWQSGAoHZW5hYmxlZBgCIAEoCFIHZW'
+    '5hYmxlZA==');
 
 @$core.Deprecated('Use createReqDescriptor instead')
 const CreateReq$json = {

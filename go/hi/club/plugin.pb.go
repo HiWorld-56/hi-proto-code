@@ -27,7 +27,7 @@ var File_hi_club_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_club_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto2\x99\x05\n" +
+	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto2\x95\x05\n" +
 	"\x06Plugin\x124\n" +
 	"\x06Create\x12\x10.hi.ai.CreateReq\x1a\x11.hi.ai.CreateResp\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
 	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x127\n" +
@@ -37,8 +37,9 @@ const file_hi_club_plugin_proto_rawDesc = "" +
 	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
 	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12M\n" +
 	"\x10SetActiveVersion\x12\x1a.hi.ai.SetActiveVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
-	"\tGetParams\x12\x13.hi.ai.GetParamsReq\x1a\x14.hi.ai.GetParamsResp\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
-	"\vSetSwitches\x12\x16.hi.ai.PluginSwitchReq\x1a\x17.hi.ai.PluginSwitchResp\"\x05\x8a\xb5\x18\x01\x02B\x82\x01\n" +
+	"\tGetParams\x12\x13.hi.ai.GetParamsReq\x1a\x14.hi.ai.GetParamsResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
+	"\n" +
+	"SetEnabled\x12\x14.hi.ai.SetEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x82\x01\n" +
 	"\vcom.hi.clubB\vPluginProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_plugin_proto_goTypes = []any{
@@ -51,13 +52,12 @@ var file_hi_club_plugin_proto_goTypes = []any{
 	(*ai.DeletePluginByDidsReq)(nil), // 6: hi.ai.DeletePluginByDidsReq
 	(*ai.SetActiveVersionReq)(nil),   // 7: hi.ai.SetActiveVersionReq
 	(*ai.GetParamsReq)(nil),          // 8: hi.ai.GetParamsReq
-	(*ai.PluginSwitchReq)(nil),       // 9: hi.ai.PluginSwitchReq
+	(*ai.SetEnabledReq)(nil),         // 9: hi.ai.SetEnabledReq
 	(*ai.CreateResp)(nil),            // 10: hi.ai.CreateResp
 	(*emptypb.Empty)(nil),            // 11: google.protobuf.Empty
 	(*ai.GetPluginResp)(nil),         // 12: hi.ai.GetPluginResp
 	(*ai.ListPluginResp)(nil),        // 13: hi.ai.ListPluginResp
 	(*ai.GetParamsResp)(nil),         // 14: hi.ai.GetParamsResp
-	(*ai.PluginSwitchResp)(nil),      // 15: hi.ai.PluginSwitchResp
 }
 var file_hi_club_plugin_proto_depIdxs = []int32{
 	0,  // 0: hi.club.Plugin.Create:input_type -> hi.ai.CreateReq
@@ -69,7 +69,7 @@ var file_hi_club_plugin_proto_depIdxs = []int32{
 	6,  // 6: hi.club.Plugin.DeleteByDids:input_type -> hi.ai.DeletePluginByDidsReq
 	7,  // 7: hi.club.Plugin.SetActiveVersion:input_type -> hi.ai.SetActiveVersionReq
 	8,  // 8: hi.club.Plugin.GetParams:input_type -> hi.ai.GetParamsReq
-	9,  // 9: hi.club.Plugin.SetSwitches:input_type -> hi.ai.PluginSwitchReq
+	9,  // 9: hi.club.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
 	10, // 10: hi.club.Plugin.Create:output_type -> hi.ai.CreateResp
 	11, // 11: hi.club.Plugin.Edit:output_type -> google.protobuf.Empty
 	12, // 12: hi.club.Plugin.Get:output_type -> hi.ai.GetPluginResp
@@ -79,7 +79,7 @@ var file_hi_club_plugin_proto_depIdxs = []int32{
 	11, // 16: hi.club.Plugin.DeleteByDids:output_type -> google.protobuf.Empty
 	11, // 17: hi.club.Plugin.SetActiveVersion:output_type -> google.protobuf.Empty
 	14, // 18: hi.club.Plugin.GetParams:output_type -> hi.ai.GetParamsResp
-	15, // 19: hi.club.Plugin.SetSwitches:output_type -> hi.ai.PluginSwitchResp
+	11, // 19: hi.club.Plugin.SetEnabled:output_type -> google.protobuf.Empty
 	10, // [10:20] is the sub-list for method output_type
 	0,  // [0:10] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name

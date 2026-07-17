@@ -30,7 +30,7 @@ const (
 	Plugin_DeleteByDids_FullMethodName     = "/hi.club.Plugin/DeleteByDids"
 	Plugin_SetActiveVersion_FullMethodName = "/hi.club.Plugin/SetActiveVersion"
 	Plugin_GetParams_FullMethodName        = "/hi.club.Plugin/GetParams"
-	Plugin_SetSwitches_FullMethodName      = "/hi.club.Plugin/SetSwitches"
+	Plugin_SetEnabled_FullMethodName       = "/hi.club.Plugin/SetEnabled"
 )
 
 // PluginClient is the client API for Plugin service.
@@ -58,7 +58,7 @@ type PluginClient interface {
 	DeleteByDids(ctx context.Context, in *ai.DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActiveVersion(ctx context.Context, in *ai.SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetParams(ctx context.Context, in *ai.GetParamsReq, opts ...grpc.CallOption) (*ai.GetParamsResp, error)
-	SetSwitches(ctx context.Context, in *ai.PluginSwitchReq, opts ...grpc.CallOption) (*ai.PluginSwitchResp, error)
+	SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type pluginClient struct {
@@ -159,10 +159,10 @@ func (c *pluginClient) GetParams(ctx context.Context, in *ai.GetParamsReq, opts 
 	return out, nil
 }
 
-func (c *pluginClient) SetSwitches(ctx context.Context, in *ai.PluginSwitchReq, opts ...grpc.CallOption) (*ai.PluginSwitchResp, error) {
+func (c *pluginClient) SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.PluginSwitchResp)
-	err := c.cc.Invoke(ctx, Plugin_SetSwitches_FullMethodName, in, out, cOpts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_SetEnabled_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +194,7 @@ type PluginServer interface {
 	DeleteByDids(context.Context, *ai.DeletePluginByDidsReq) (*emptypb.Empty, error)
 	SetActiveVersion(context.Context, *ai.SetActiveVersionReq) (*emptypb.Empty, error)
 	GetParams(context.Context, *ai.GetParamsReq) (*ai.GetParamsResp, error)
-	SetSwitches(context.Context, *ai.PluginSwitchReq) (*ai.PluginSwitchResp, error)
+	SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedPluginServer should be embedded to have
@@ -231,8 +231,8 @@ func (UnimplementedPluginServer) SetActiveVersion(context.Context, *ai.SetActive
 func (UnimplementedPluginServer) GetParams(context.Context, *ai.GetParamsReq) (*ai.GetParamsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetParams not implemented")
 }
-func (UnimplementedPluginServer) SetSwitches(context.Context, *ai.PluginSwitchReq) (*ai.PluginSwitchResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetSwitches not implemented")
+func (UnimplementedPluginServer) SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
 }
 func (UnimplementedPluginServer) testEmbeddedByValue() {}
 
@@ -416,20 +416,20 @@ func _Plugin_GetParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_SetSwitches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PluginSwitchReq)
+func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.SetEnabledReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).SetSwitches(ctx, in)
+		return srv.(PluginServer).SetEnabled(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_SetSwitches_FullMethodName,
+		FullMethod: Plugin_SetEnabled_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).SetSwitches(ctx, req.(*ai.PluginSwitchReq))
+		return srv.(PluginServer).SetEnabled(ctx, req.(*ai.SetEnabledReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -478,8 +478,8 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_GetParams_Handler,
 		},
 		{
-			MethodName: "SetSwitches",
-			Handler:    _Plugin_SetSwitches_Handler,
+			MethodName: "SetEnabled",
+			Handler:    _Plugin_SetEnabled_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

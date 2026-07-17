@@ -35,8 +35,9 @@ type PluginItem struct {
 	Url           string                 `protobuf:"bytes,4,opt,name=url,proto3" json:"url,omitempty"`                 // 主脚本包(zip)url:内含 main.py + requirement.txt
 	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"` // 脚本描述
 	Version       string                 `protobuf:"bytes,6,opt,name=version,proto3" json:"version,omitempty"`         // 版本号(用户上传时自填)
-	Active        bool                   `protobuf:"varint,7,opt,name=active,proto3" json:"active,omitempty"`          // 本版本是否供 function call 调用(同 uuid 下只有一个为 true)
+	Active        bool                   `protobuf:"varint,7,opt,name=active,proto3" json:"active,omitempty"`          // **版本级**开关:本版本是否供 function call 调用(同 uuid 下只有一个为 true)
 	CreatedAt     int64                  `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Enabled       bool                   `protobuf:"varint,9,opt,name=enabled,proto3" json:"enabled,omitempty"` // **脚本级**开关:本脚本是否参与推理。与 active 是两个维度:
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -127,85 +128,39 @@ func (x *PluginItem) GetCreatedAt() int64 {
 	return 0
 }
 
-// 智能体能力开关。**现在只剩记忆(use_mem)一个总开关**:
-//   - 插件:总开关已取消(有 plugin 权限即开,脚本级由 enabled 控制);
-//   - 网搜/画图:功能已砍。
-//
-// 记忆模块待重构(现分段方式有问题),重构前暂留 use_mem。
-type PluginSwitchReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	UseMem        bool                   `protobuf:"varint,2,opt,name=use_mem,json=useMem,proto3" json:"use_mem,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PluginSwitchReq) Reset() {
-	*x = PluginSwitchReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PluginSwitchReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PluginSwitchReq) ProtoMessage() {}
-
-func (x *PluginSwitchReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[1]
+func (x *PluginItem) GetEnabled() bool {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PluginSwitchReq.ProtoReflect.Descriptor instead.
-func (*PluginSwitchReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *PluginSwitchReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
-	}
-	return ""
-}
-
-func (x *PluginSwitchReq) GetUseMem() bool {
-	if x != nil {
-		return x.UseMem
+		return x.Enabled
 	}
 	return false
 }
 
-type PluginSwitchResp struct {
+// 脚本级开关:设定某脚本是否参与推理(与 SetActiveVersion 的"版本级 active"对称)。
+// **有 plugin 权限即模块开**,单个脚本用 enabled 自行关掉;不在插件这边碰记忆开关。
+// (记忆开关 use_mem 归 AgentConfig,经 Agent.Edit 设置 —— 不开第二条写同一位的路径。)
+type SetEnabledReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UseMem        bool                   `protobuf:"varint,1,opt,name=use_mem,json=useMem,proto3" json:"use_mem,omitempty"`
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`        // 脚本 id
+	Enabled       bool                   `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"` // 是否参与推理
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PluginSwitchResp) Reset() {
-	*x = PluginSwitchResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[2]
+func (x *SetEnabledReq) Reset() {
+	*x = SetEnabledReq{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PluginSwitchResp) String() string {
+func (x *SetEnabledReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PluginSwitchResp) ProtoMessage() {}
+func (*SetEnabledReq) ProtoMessage() {}
 
-func (x *PluginSwitchResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[2]
+func (x *SetEnabledReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -216,14 +171,21 @@ func (x *PluginSwitchResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PluginSwitchResp.ProtoReflect.Descriptor instead.
-func (*PluginSwitchResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use SetEnabledReq.ProtoReflect.Descriptor instead.
+func (*SetEnabledReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PluginSwitchResp) GetUseMem() bool {
+func (x *SetEnabledReq) GetUuid() string {
 	if x != nil {
-		return x.UseMem
+		return x.Uuid
+	}
+	return ""
+}
+
+func (x *SetEnabledReq) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
 	}
 	return false
 }
@@ -249,7 +211,7 @@ type CreateReq struct {
 
 func (x *CreateReq) Reset() {
 	*x = CreateReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[3]
+	mi := &file_hi_ai_plugin_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -261,7 +223,7 @@ func (x *CreateReq) String() string {
 func (*CreateReq) ProtoMessage() {}
 
 func (x *CreateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[3]
+	mi := &file_hi_ai_plugin_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -274,7 +236,7 @@ func (x *CreateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateReq.ProtoReflect.Descriptor instead.
 func (*CreateReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{3}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateReq) GetAgent() string {
@@ -342,7 +304,7 @@ type CreateResp struct {
 
 func (x *CreateResp) Reset() {
 	*x = CreateResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[4]
+	mi := &file_hi_ai_plugin_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -354,7 +316,7 @@ func (x *CreateResp) String() string {
 func (*CreateResp) ProtoMessage() {}
 
 func (x *CreateResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[4]
+	mi := &file_hi_ai_plugin_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -367,7 +329,7 @@ func (x *CreateResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateResp.ProtoReflect.Descriptor instead.
 func (*CreateResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{4}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreateResp) GetUuid() string {
@@ -389,7 +351,7 @@ type ListPluginReq struct {
 
 func (x *ListPluginReq) Reset() {
 	*x = ListPluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[5]
+	mi := &file_hi_ai_plugin_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -401,7 +363,7 @@ func (x *ListPluginReq) String() string {
 func (*ListPluginReq) ProtoMessage() {}
 
 func (x *ListPluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[5]
+	mi := &file_hi_ai_plugin_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -414,7 +376,7 @@ func (x *ListPluginReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPluginReq.ProtoReflect.Descriptor instead.
 func (*ListPluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{5}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListPluginReq) GetAgent() string {
@@ -442,7 +404,7 @@ type ListVersionsReq struct {
 
 func (x *ListVersionsReq) Reset() {
 	*x = ListVersionsReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[6]
+	mi := &file_hi_ai_plugin_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -454,7 +416,7 @@ func (x *ListVersionsReq) String() string {
 func (*ListVersionsReq) ProtoMessage() {}
 
 func (x *ListVersionsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[6]
+	mi := &file_hi_ai_plugin_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +429,7 @@ func (x *ListVersionsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListVersionsReq.ProtoReflect.Descriptor instead.
 func (*ListVersionsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{6}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListVersionsReq) GetUuid() string {
@@ -494,7 +456,7 @@ type ListPluginResp struct {
 
 func (x *ListPluginResp) Reset() {
 	*x = ListPluginResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[7]
+	mi := &file_hi_ai_plugin_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -506,7 +468,7 @@ func (x *ListPluginResp) String() string {
 func (*ListPluginResp) ProtoMessage() {}
 
 func (x *ListPluginResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[7]
+	mi := &file_hi_ai_plugin_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -519,7 +481,7 @@ func (x *ListPluginResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPluginResp.ProtoReflect.Descriptor instead.
 func (*ListPluginResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{7}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListPluginResp) GetTotal() int32 {
@@ -546,7 +508,7 @@ type DeletePluginReq struct {
 
 func (x *DeletePluginReq) Reset() {
 	*x = DeletePluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[8]
+	mi := &file_hi_ai_plugin_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -558,7 +520,7 @@ func (x *DeletePluginReq) String() string {
 func (*DeletePluginReq) ProtoMessage() {}
 
 func (x *DeletePluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[8]
+	mi := &file_hi_ai_plugin_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -571,7 +533,7 @@ func (x *DeletePluginReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePluginReq.ProtoReflect.Descriptor instead.
 func (*DeletePluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{8}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DeletePluginReq) GetUuid() string {
@@ -597,7 +559,7 @@ type DeletePluginByDidsReq struct {
 
 func (x *DeletePluginByDidsReq) Reset() {
 	*x = DeletePluginByDidsReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[9]
+	mi := &file_hi_ai_plugin_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -609,7 +571,7 @@ func (x *DeletePluginByDidsReq) String() string {
 func (*DeletePluginByDidsReq) ProtoMessage() {}
 
 func (x *DeletePluginByDidsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[9]
+	mi := &file_hi_ai_plugin_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -622,7 +584,7 @@ func (x *DeletePluginByDidsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePluginByDidsReq.ProtoReflect.Descriptor instead.
 func (*DeletePluginByDidsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{9}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeletePluginByDidsReq) GetAgents() []string {
@@ -645,7 +607,7 @@ type EditPluginReq struct {
 
 func (x *EditPluginReq) Reset() {
 	*x = EditPluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[10]
+	mi := &file_hi_ai_plugin_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -657,7 +619,7 @@ func (x *EditPluginReq) String() string {
 func (*EditPluginReq) ProtoMessage() {}
 
 func (x *EditPluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[10]
+	mi := &file_hi_ai_plugin_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -670,7 +632,7 @@ func (x *EditPluginReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditPluginReq.ProtoReflect.Descriptor instead.
 func (*EditPluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{10}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *EditPluginReq) GetUuid() string {
@@ -713,7 +675,7 @@ type SetActiveVersionReq struct {
 
 func (x *SetActiveVersionReq) Reset() {
 	*x = SetActiveVersionReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[11]
+	mi := &file_hi_ai_plugin_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -725,7 +687,7 @@ func (x *SetActiveVersionReq) String() string {
 func (*SetActiveVersionReq) ProtoMessage() {}
 
 func (x *SetActiveVersionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[11]
+	mi := &file_hi_ai_plugin_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -738,7 +700,7 @@ func (x *SetActiveVersionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetActiveVersionReq.ProtoReflect.Descriptor instead.
 func (*SetActiveVersionReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{11}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *SetActiveVersionReq) GetUuid() string {
@@ -765,7 +727,7 @@ type GetPluginReq struct {
 
 func (x *GetPluginReq) Reset() {
 	*x = GetPluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[12]
+	mi := &file_hi_ai_plugin_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -777,7 +739,7 @@ func (x *GetPluginReq) String() string {
 func (*GetPluginReq) ProtoMessage() {}
 
 func (x *GetPluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[12]
+	mi := &file_hi_ai_plugin_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -790,7 +752,7 @@ func (x *GetPluginReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPluginReq.ProtoReflect.Descriptor instead.
 func (*GetPluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{12}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetPluginReq) GetUuid() string {
@@ -816,7 +778,7 @@ type GetPluginResp struct {
 
 func (x *GetPluginResp) Reset() {
 	*x = GetPluginResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[13]
+	mi := &file_hi_ai_plugin_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -828,7 +790,7 @@ func (x *GetPluginResp) String() string {
 func (*GetPluginResp) ProtoMessage() {}
 
 func (x *GetPluginResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[13]
+	mi := &file_hi_ai_plugin_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -841,7 +803,7 @@ func (x *GetPluginResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPluginResp.ProtoReflect.Descriptor instead.
 func (*GetPluginResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{13}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetPluginResp) GetItem() *PluginItem {
@@ -867,7 +829,7 @@ type GetParamsReq struct {
 
 func (x *GetParamsReq) Reset() {
 	*x = GetParamsReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[14]
+	mi := &file_hi_ai_plugin_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -879,7 +841,7 @@ func (x *GetParamsReq) String() string {
 func (*GetParamsReq) ProtoMessage() {}
 
 func (x *GetParamsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[14]
+	mi := &file_hi_ai_plugin_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -892,7 +854,7 @@ func (x *GetParamsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParamsReq.ProtoReflect.Descriptor instead.
 func (*GetParamsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{14}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetParamsReq) GetUuid() string {
@@ -918,7 +880,7 @@ type GetParamsResp struct {
 
 func (x *GetParamsResp) Reset() {
 	*x = GetParamsResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[15]
+	mi := &file_hi_ai_plugin_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -930,7 +892,7 @@ func (x *GetParamsResp) String() string {
 func (*GetParamsResp) ProtoMessage() {}
 
 func (x *GetParamsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[15]
+	mi := &file_hi_ai_plugin_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -943,7 +905,7 @@ func (x *GetParamsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParamsResp.ProtoReflect.Descriptor instead.
 func (*GetParamsResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{15}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetParamsResp) GetParams() *structpb.Struct {
@@ -968,7 +930,7 @@ type RunReq struct {
 
 func (x *RunReq) Reset() {
 	*x = RunReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[16]
+	mi := &file_hi_ai_plugin_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -980,7 +942,7 @@ func (x *RunReq) String() string {
 func (*RunReq) ProtoMessage() {}
 
 func (x *RunReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[16]
+	mi := &file_hi_ai_plugin_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -993,7 +955,7 @@ func (x *RunReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunReq.ProtoReflect.Descriptor instead.
 func (*RunReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{16}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *RunReq) GetCodeArchiveUrl() string {
@@ -1047,7 +1009,7 @@ type RunResp struct {
 
 func (x *RunResp) Reset() {
 	*x = RunResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[17]
+	mi := &file_hi_ai_plugin_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1059,7 +1021,7 @@ func (x *RunResp) String() string {
 func (*RunResp) ProtoMessage() {}
 
 func (x *RunResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[17]
+	mi := &file_hi_ai_plugin_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1072,7 +1034,7 @@ func (x *RunResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunResp.ProtoReflect.Descriptor instead.
 func (*RunResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{17}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *RunResp) GetConts() []*Content {
@@ -1091,7 +1053,7 @@ type CleanupReq struct {
 
 func (x *CleanupReq) Reset() {
 	*x = CleanupReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[18]
+	mi := &file_hi_ai_plugin_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1103,7 +1065,7 @@ func (x *CleanupReq) String() string {
 func (*CleanupReq) ProtoMessage() {}
 
 func (x *CleanupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[18]
+	mi := &file_hi_ai_plugin_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1116,7 +1078,7 @@ func (x *CleanupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CleanupReq.ProtoReflect.Descriptor instead.
 func (*CleanupReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{18}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *CleanupReq) GetCodeArchiveUrl() string {
@@ -1130,7 +1092,7 @@ var File_hi_ai_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xcf\x01\n" +
+	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xe9\x01\n" +
 	"\n" +
 	"PluginItem\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
@@ -1141,12 +1103,11 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\aversion\x18\x06 \x01(\tR\aversion\x12\x16\n" +
 	"\x06active\x18\a \x01(\bR\x06active\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\b \x01(\x03R\tcreatedAt\"@\n" +
-	"\x0fPluginSwitchReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x17\n" +
-	"\ause_mem\x18\x02 \x01(\bR\x06useMem\"+\n" +
-	"\x10PluginSwitchResp\x12\x17\n" +
-	"\ause_mem\x18\x01 \x01(\bR\x06useMem\"\xaf\x02\n" +
+	"created_at\x18\b \x01(\x03R\tcreatedAt\x12\x18\n" +
+	"\aenabled\x18\t \x01(\bR\aenabled\"=\n" +
+	"\rSetEnabledReq\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
+	"\aenabled\x18\x02 \x01(\bR\aenabled\"\xaf\x02\n" +
 	"\tCreateReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x1a\n" +
 	"\x03url\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x88\x01\x01R\x03url\x12B\n" +
@@ -1210,7 +1171,7 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentR\x05conts\"6\n" +
 	"\n" +
 	"CleanupReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\x99\x05\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\x95\x05\n" +
 	"\x06Plugin\x124\n" +
 	"\x06Create\x12\x10.hi.ai.CreateReq\x1a\x11.hi.ai.CreateResp\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
 	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x127\n" +
@@ -1220,8 +1181,9 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12K\n" +
 	"\fDeleteByDids\x12\x1c.hi.ai.DeletePluginByDidsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12M\n" +
 	"\x10SetActiveVersion\x12\x1a.hi.ai.SetActiveVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12=\n" +
-	"\tGetParams\x12\x13.hi.ai.GetParamsReq\x1a\x14.hi.ai.GetParamsResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
-	"\vSetSwitches\x12\x16.hi.ai.PluginSwitchReq\x1a\x17.hi.ai.PluginSwitchResp\"\x05\x8a\xb5\x18\x01\x032t\n" +
+	"\tGetParams\x12\x13.hi.ai.GetParamsReq\x1a\x14.hi.ai.GetParamsResp\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
+	"\n" +
+	"SetEnabled\x12\x14.hi.ai.SetEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032t\n" +
 	"\bAiPlugin\x12+\n" +
 	"\x03Run\x12\r.hi.ai.RunReq\x1a\x0e.hi.ai.RunResp\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
 	"\aCleanup\x12\x11.hi.ai.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01Bv\n" +
@@ -1239,67 +1201,66 @@ func file_hi_ai_plugin_proto_rawDescGZIP() []byte {
 	return file_hi_ai_plugin_proto_rawDescData
 }
 
-var file_hi_ai_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_hi_ai_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_ai_plugin_proto_goTypes = []any{
 	(*PluginItem)(nil),            // 0: hi.ai.PluginItem
-	(*PluginSwitchReq)(nil),       // 1: hi.ai.PluginSwitchReq
-	(*PluginSwitchResp)(nil),      // 2: hi.ai.PluginSwitchResp
-	(*CreateReq)(nil),             // 3: hi.ai.CreateReq
-	(*CreateResp)(nil),            // 4: hi.ai.CreateResp
-	(*ListPluginReq)(nil),         // 5: hi.ai.ListPluginReq
-	(*ListVersionsReq)(nil),       // 6: hi.ai.ListVersionsReq
-	(*ListPluginResp)(nil),        // 7: hi.ai.ListPluginResp
-	(*DeletePluginReq)(nil),       // 8: hi.ai.DeletePluginReq
-	(*DeletePluginByDidsReq)(nil), // 9: hi.ai.DeletePluginByDidsReq
-	(*EditPluginReq)(nil),         // 10: hi.ai.EditPluginReq
-	(*SetActiveVersionReq)(nil),   // 11: hi.ai.SetActiveVersionReq
-	(*GetPluginReq)(nil),          // 12: hi.ai.GetPluginReq
-	(*GetPluginResp)(nil),         // 13: hi.ai.GetPluginResp
-	(*GetParamsReq)(nil),          // 14: hi.ai.GetParamsReq
-	(*GetParamsResp)(nil),         // 15: hi.ai.GetParamsResp
-	(*RunReq)(nil),                // 16: hi.ai.RunReq
-	(*RunResp)(nil),               // 17: hi.ai.RunResp
-	(*CleanupReq)(nil),            // 18: hi.ai.CleanupReq
-	(*structpb.Struct)(nil),       // 19: google.protobuf.Struct
-	(*hi.Pagination)(nil),         // 20: hi.Pagination
-	(*Content)(nil),               // 21: hi.ai.Content
-	(*emptypb.Empty)(nil),         // 22: google.protobuf.Empty
+	(*SetEnabledReq)(nil),         // 1: hi.ai.SetEnabledReq
+	(*CreateReq)(nil),             // 2: hi.ai.CreateReq
+	(*CreateResp)(nil),            // 3: hi.ai.CreateResp
+	(*ListPluginReq)(nil),         // 4: hi.ai.ListPluginReq
+	(*ListVersionsReq)(nil),       // 5: hi.ai.ListVersionsReq
+	(*ListPluginResp)(nil),        // 6: hi.ai.ListPluginResp
+	(*DeletePluginReq)(nil),       // 7: hi.ai.DeletePluginReq
+	(*DeletePluginByDidsReq)(nil), // 8: hi.ai.DeletePluginByDidsReq
+	(*EditPluginReq)(nil),         // 9: hi.ai.EditPluginReq
+	(*SetActiveVersionReq)(nil),   // 10: hi.ai.SetActiveVersionReq
+	(*GetPluginReq)(nil),          // 11: hi.ai.GetPluginReq
+	(*GetPluginResp)(nil),         // 12: hi.ai.GetPluginResp
+	(*GetParamsReq)(nil),          // 13: hi.ai.GetParamsReq
+	(*GetParamsResp)(nil),         // 14: hi.ai.GetParamsResp
+	(*RunReq)(nil),                // 15: hi.ai.RunReq
+	(*RunResp)(nil),               // 16: hi.ai.RunResp
+	(*CleanupReq)(nil),            // 17: hi.ai.CleanupReq
+	(*structpb.Struct)(nil),       // 18: google.protobuf.Struct
+	(*hi.Pagination)(nil),         // 19: hi.Pagination
+	(*Content)(nil),               // 20: hi.ai.Content
+	(*emptypb.Empty)(nil),         // 21: google.protobuf.Empty
 }
 var file_hi_ai_plugin_proto_depIdxs = []int32{
-	19, // 0: hi.ai.CreateReq.ex_data:type_name -> google.protobuf.Struct
-	20, // 1: hi.ai.ListPluginReq.pagination:type_name -> hi.Pagination
-	20, // 2: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
+	18, // 0: hi.ai.CreateReq.ex_data:type_name -> google.protobuf.Struct
+	19, // 1: hi.ai.ListPluginReq.pagination:type_name -> hi.Pagination
+	19, // 2: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
 	0,  // 3: hi.ai.ListPluginResp.list:type_name -> hi.ai.PluginItem
 	0,  // 4: hi.ai.EditPluginReq.item:type_name -> hi.ai.PluginItem
-	19, // 5: hi.ai.EditPluginReq.ex_data:type_name -> google.protobuf.Struct
+	18, // 5: hi.ai.EditPluginReq.ex_data:type_name -> google.protobuf.Struct
 	0,  // 6: hi.ai.GetPluginResp.item:type_name -> hi.ai.PluginItem
-	19, // 7: hi.ai.GetParamsResp.params:type_name -> google.protobuf.Struct
-	19, // 8: hi.ai.RunReq.ex_data:type_name -> google.protobuf.Struct
-	21, // 9: hi.ai.RunResp.conts:type_name -> hi.ai.Content
-	3,  // 10: hi.ai.Plugin.Create:input_type -> hi.ai.CreateReq
-	10, // 11: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	12, // 12: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	5,  // 13: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginReq
-	6,  // 14: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
-	8,  // 15: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
-	9,  // 16: hi.ai.Plugin.DeleteByDids:input_type -> hi.ai.DeletePluginByDidsReq
-	11, // 17: hi.ai.Plugin.SetActiveVersion:input_type -> hi.ai.SetActiveVersionReq
-	14, // 18: hi.ai.Plugin.GetParams:input_type -> hi.ai.GetParamsReq
-	1,  // 19: hi.ai.Plugin.SetSwitches:input_type -> hi.ai.PluginSwitchReq
-	16, // 20: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
-	18, // 21: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
-	4,  // 22: hi.ai.Plugin.Create:output_type -> hi.ai.CreateResp
-	22, // 23: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	13, // 24: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	7,  // 25: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginResp
-	7,  // 26: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginResp
-	22, // 27: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	22, // 28: hi.ai.Plugin.DeleteByDids:output_type -> google.protobuf.Empty
-	22, // 29: hi.ai.Plugin.SetActiveVersion:output_type -> google.protobuf.Empty
-	15, // 30: hi.ai.Plugin.GetParams:output_type -> hi.ai.GetParamsResp
-	2,  // 31: hi.ai.Plugin.SetSwitches:output_type -> hi.ai.PluginSwitchResp
-	17, // 32: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
-	22, // 33: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
+	18, // 7: hi.ai.GetParamsResp.params:type_name -> google.protobuf.Struct
+	18, // 8: hi.ai.RunReq.ex_data:type_name -> google.protobuf.Struct
+	20, // 9: hi.ai.RunResp.conts:type_name -> hi.ai.Content
+	2,  // 10: hi.ai.Plugin.Create:input_type -> hi.ai.CreateReq
+	9,  // 11: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	11, // 12: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
+	4,  // 13: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginReq
+	5,  // 14: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
+	7,  // 15: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
+	8,  // 16: hi.ai.Plugin.DeleteByDids:input_type -> hi.ai.DeletePluginByDidsReq
+	10, // 17: hi.ai.Plugin.SetActiveVersion:input_type -> hi.ai.SetActiveVersionReq
+	13, // 18: hi.ai.Plugin.GetParams:input_type -> hi.ai.GetParamsReq
+	1,  // 19: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	15, // 20: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
+	17, // 21: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
+	3,  // 22: hi.ai.Plugin.Create:output_type -> hi.ai.CreateResp
+	21, // 23: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	12, // 24: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	6,  // 25: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginResp
+	6,  // 26: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginResp
+	21, // 27: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	21, // 28: hi.ai.Plugin.DeleteByDids:output_type -> google.protobuf.Empty
+	21, // 29: hi.ai.Plugin.SetActiveVersion:output_type -> google.protobuf.Empty
+	14, // 30: hi.ai.Plugin.GetParams:output_type -> hi.ai.GetParamsResp
+	21, // 31: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	16, // 32: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
+	21, // 33: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
 	22, // [22:34] is the sub-list for method output_type
 	10, // [10:22] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
@@ -1319,7 +1280,7 @@ func file_hi_ai_plugin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_plugin_proto_rawDesc), len(file_hi_ai_plugin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   19,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

@@ -33,6 +33,7 @@ class PluginItem extends $pb.GeneratedMessage {
     $core.String? version,
     $core.bool? active,
     $fixnum.Int64? createdAt,
+    $core.bool? enabled,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -43,6 +44,7 @@ class PluginItem extends $pb.GeneratedMessage {
     if (version != null) result.version = version;
     if (active != null) result.active = active;
     if (createdAt != null) result.createdAt = createdAt;
+    if (enabled != null) result.enabled = enabled;
     return result;
   }
 
@@ -67,6 +69,7 @@ class PluginItem extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'version')
     ..aOB(7, _omitFieldNames ? '' : 'active')
     ..aInt64(8, _omitFieldNames ? '' : 'createdAt')
+    ..aOB(9, _omitFieldNames ? '' : 'enabled')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -158,130 +161,84 @@ class PluginItem extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(7);
   @$pb.TagNumber(8)
   void clearCreatedAt() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.bool get enabled => $_getBF(8);
+  @$pb.TagNumber(9)
+  set enabled($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasEnabled() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearEnabled() => $_clearField(9);
 }
 
-/// 智能体能力开关。**现在只剩记忆(use_mem)一个总开关**:
-///   - 插件:总开关已取消(有 plugin 权限即开,脚本级由 enabled 控制);
-///   - 网搜/画图:功能已砍。
-/// 记忆模块待重构(现分段方式有问题),重构前暂留 use_mem。
-class PluginSwitchReq extends $pb.GeneratedMessage {
-  factory PluginSwitchReq({
-    $core.String? agent,
-    $core.bool? useMem,
+/// 脚本级开关:设定某脚本是否参与推理(与 SetActiveVersion 的"版本级 active"对称)。
+/// **有 plugin 权限即模块开**,单个脚本用 enabled 自行关掉;不在插件这边碰记忆开关。
+/// (记忆开关 use_mem 归 AgentConfig,经 Agent.Edit 设置 —— 不开第二条写同一位的路径。)
+class SetEnabledReq extends $pb.GeneratedMessage {
+  factory SetEnabledReq({
+    $core.String? uuid,
+    $core.bool? enabled,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
-    if (useMem != null) result.useMem = useMem;
+    if (uuid != null) result.uuid = uuid;
+    if (enabled != null) result.enabled = enabled;
     return result;
   }
 
-  PluginSwitchReq._();
+  SetEnabledReq._();
 
-  factory PluginSwitchReq.fromBuffer($core.List<$core.int> data,
+  factory SetEnabledReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory PluginSwitchReq.fromJson($core.String json,
+  factory SetEnabledReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PluginSwitchReq',
+      _omitMessageNames ? '' : 'SetEnabledReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOB(2, _omitFieldNames ? '' : 'useMem')
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOB(2, _omitFieldNames ? '' : 'enabled')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginSwitchReq clone() => deepCopy();
+  SetEnabledReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginSwitchReq copyWith(void Function(PluginSwitchReq) updates) =>
-      super.copyWith((message) => updates(message as PluginSwitchReq))
-          as PluginSwitchReq;
+  SetEnabledReq copyWith(void Function(SetEnabledReq) updates) =>
+      super.copyWith((message) => updates(message as SetEnabledReq))
+          as SetEnabledReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static PluginSwitchReq create() => PluginSwitchReq._();
+  static SetEnabledReq create() => SetEnabledReq._();
   @$core.override
-  PluginSwitchReq createEmptyInstance() => create();
+  SetEnabledReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static PluginSwitchReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PluginSwitchReq>(create);
-  static PluginSwitchReq? _defaultInstance;
+  static SetEnabledReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetEnabledReq>(create);
+  static SetEnabledReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $core.String get uuid => $_getSZ(0);
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
+  set uuid($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
+  $core.bool hasUuid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  void clearUuid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.bool get useMem => $_getBF(1);
+  $core.bool get enabled => $_getBF(1);
   @$pb.TagNumber(2)
-  set useMem($core.bool value) => $_setBool(1, value);
+  set enabled($core.bool value) => $_setBool(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasUseMem() => $_has(1);
+  $core.bool hasEnabled() => $_has(1);
   @$pb.TagNumber(2)
-  void clearUseMem() => $_clearField(2);
-}
-
-class PluginSwitchResp extends $pb.GeneratedMessage {
-  factory PluginSwitchResp({
-    $core.bool? useMem,
-  }) {
-    final result = create();
-    if (useMem != null) result.useMem = useMem;
-    return result;
-  }
-
-  PluginSwitchResp._();
-
-  factory PluginSwitchResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory PluginSwitchResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PluginSwitchResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOB(1, _omitFieldNames ? '' : 'useMem')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginSwitchResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginSwitchResp copyWith(void Function(PluginSwitchResp) updates) =>
-      super.copyWith((message) => updates(message as PluginSwitchResp))
-          as PluginSwitchResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static PluginSwitchResp create() => PluginSwitchResp._();
-  @$core.override
-  PluginSwitchResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static PluginSwitchResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PluginSwitchResp>(create);
-  static PluginSwitchResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.bool get useMem => $_getBF(0);
-  @$pb.TagNumber(1)
-  set useMem($core.bool value) => $_setBool(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasUseMem() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUseMem() => $_clearField(1);
+  void clearEnabled() => $_clearField(2);
 }
 
 /// 上传/新建一个插件版本。

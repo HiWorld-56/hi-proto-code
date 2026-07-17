@@ -726,7 +726,7 @@ func RegisterAgentDirectoryHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.AgentDirectory/ListOnline", runtime.WithHTTPPathPattern("/hi.club.AgentDirectory/ListOnline"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.AgentDirectory/ListOnline", runtime.WithHTTPPathPattern("/api/v1/agent_directory/list_online"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -746,7 +746,7 @@ func RegisterAgentDirectoryHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.AgentDirectory/GetAgentMaster", runtime.WithHTTPPathPattern("/hi.club.AgentDirectory/GetAgentMaster"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.AgentDirectory/GetAgentMaster", runtime.WithHTTPPathPattern("/api/v1/agent_directory/get_agent_master"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1094,7 +1094,7 @@ func RegisterAgentDirectoryHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.AgentDirectory/ListOnline", runtime.WithHTTPPathPattern("/hi.club.AgentDirectory/ListOnline"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.AgentDirectory/ListOnline", runtime.WithHTTPPathPattern("/api/v1/agent_directory/list_online"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1111,7 +1111,7 @@ func RegisterAgentDirectoryHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.AgentDirectory/GetAgentMaster", runtime.WithHTTPPathPattern("/hi.club.AgentDirectory/GetAgentMaster"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.AgentDirectory/GetAgentMaster", runtime.WithHTTPPathPattern("/api/v1/agent_directory/get_agent_master"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1129,8 +1129,8 @@ func RegisterAgentDirectoryHandlerClient(ctx context.Context, mux *runtime.Serve
 
 var (
 	pattern_AgentDirectory_List_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent_directory", "list"}, ""))
-	pattern_AgentDirectory_ListOnline_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.AgentDirectory", "ListOnline"}, ""))
-	pattern_AgentDirectory_GetAgentMaster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.AgentDirectory", "GetAgentMaster"}, ""))
+	pattern_AgentDirectory_ListOnline_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent_directory", "list_online"}, ""))
+	pattern_AgentDirectory_GetAgentMaster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent_directory", "get_agent_master"}, ""))
 )
 
 var (

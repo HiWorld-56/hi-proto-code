@@ -2984,13 +2984,10 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "GetParams"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn set_switches(
+        pub async fn set_enabled(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::PluginSwitchReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::PluginSwitchResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::super::ai::SetEnabledReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3001,11 +2998,10 @@ pub mod plugin_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/SetSwitches",
+                "/hi.club.Plugin/SetEnabled",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "SetSwitches"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "SetEnabled"));
             self.inner.unary(req, path, codec).await
         }
     }
