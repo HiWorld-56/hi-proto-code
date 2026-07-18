@@ -1019,86 +1019,132 @@ pub mod chat_client {
         }
     }
 }
-/// 一个脚本版本。**身份是两层:`uuid`(脚本)+ `version`(版本)**。
-/// 同一个脚本的多个版本**共享同一个 uuid**,靠 version 区分,只有一个 active。
+/// plugin_body:插件本体。身份两层 uuid(脚本,跨版本稳定)+ version;(uuid,version) 不可变。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PluginItem {
-    /// **脚本 id**:跨版本稳定 —— 同脚本的所有版本共用它
+pub struct PluginBody {
+    /// 脚本 id:同脚本所有版本共用
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
-    /// 智能体did
+    /// 版本号(用户上传自填)
     #[prost(string, tag = "2")]
-    pub agent: ::prost::alloc::string::String,
-    /// 脚本名字
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// 主脚本包(zip)url:内含 main.py + requirement.txt
-    #[prost(string, tag = "4")]
-    pub url: ::prost::alloc::string::String,
-    /// 脚本描述
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// 版本号(用户上传时自填)
-    #[prost(string, tag = "6")]
     pub version: ::prost::alloc::string::String,
-    /// **版本级**开关:本版本是否供 function call 调用(同 uuid 下只有一个为 true)
-    #[prost(bool, tag = "7")]
-    pub active: bool,
-    #[prost(int64, tag = "8")]
-    pub created_at: i64,
-    /// **脚本级**开关:本脚本是否参与推理。与 active 是两个维度:
-    #[prost(bool, tag = "9")]
-    pub enabled: bool,
+    /// 主脚本包 zip url(内含 main.py + requirement.txt)
+    #[prost(string, tag = "3")]
+    pub url: ::prost::alloc::string::String,
+    /// 脚本名字
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// Python\_<uuid>:给 LLM 的工具名,跨版本稳定
+    #[prost(string, tag = "5")]
+    pub function_name: ::prost::alloc::string::String,
+    /// function-call spec:name/作用/parameters schema 合一(网页配置后生成)
+    #[prost(string, tag = "6")]
+    pub description: ::prost::alloc::string::String,
 }
-/// 脚本级开关:设定某脚本是否参与推理(与 SetActiveVersion 的"版本级 active"对称)。
-/// **有 plugin 权限即模块开**,单个脚本用 enabled 自行关掉;不在插件这边碰记忆开关。
-/// (记忆开关 use_mem 归 AgentConfig,经 Agent.Edit 设置 —— 不开第二条写同一位的路径。)
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetEnabledReq {
-    /// 脚本 id
+/// plugin_annex:某机器人对某 body 的附件。运行期以字典全局变量注入执行环境。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PluginAnnex {
+    /// bot 的 club-apikey(club 上传时自动取第一个)
     #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 是否参与推理
+    pub api_key: ::prost::alloc::string::String,
+    /// 用户填的运行时扩展数据
+    #[prost(message, optional, tag = "2")]
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
+}
+/// 某 bot 视角的一个插件:body + 该 bot 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginView {
+    #[prost(message, optional, tag = "1")]
+    pub body: ::core::option::Option<PluginBody>,
+    /// body.version 是否为该 bot 的激活版本(List 返回激活版本时恒 true)
     #[prost(bool, tag = "2")]
+    pub active: bool,
+    /// 该 bot 是否启用此插件参与推理
+    #[prost(bool, tag = "3")]
     pub enabled: bool,
 }
-/// 上传一个脚本版本。`uuid` 空 = 新脚本(后台生成 uuid);非空 = **给已有脚本加一个版本**。
-/// 后台按 (uuid, version) 判断:该版本已存在则**覆盖**,否则**新建**。
+/// 上传一个脚本版本 + 建 owner 自己的 annex。`body.uuid` 空=新脚本(后台生成),非空=给已有脚本加版本。
+/// 后台按 (uuid, version):存在则覆盖 body,否则新建。annex 建/更新按 (agent, uuid)。
+/// annex.api_key 由 club 自动取该 bot 第一个 club-apikey 填入(ai 只存);data 用户填。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreatePluginReq {
-    /// 智能体did
+    /// 智能体 did(owner bot)
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 主脚本包 zip url(内含 main.py + requirement.txt)
-    #[prost(string, tag = "2")]
-    pub url: ::prost::alloc::string::String,
-    /// 脚本包名字:仅字母数字下划线连字符,首尾须为字母或数字
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// 脚本描述
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
-    /// 版本号,用户自填
-    #[prost(string, tag = "5")]
-    pub version: ::prost::alloc::string::String,
-    /// 三方上传时自动塞入:脚本内调三方服务用
-    #[prost(string, tag = "6")]
-    pub ex_api_key: ::prost::alloc::string::String,
-    /// 预置数据,调用时注入执行环境
-    #[prost(message, optional, tag = "7")]
-    pub ex_data: ::core::option::Option<::pbjson_types::Struct>,
-    /// **脚本 id**:空=新脚本;非空=给该脚本加版本
-    #[prost(string, tag = "8")]
-    pub uuid: ::prost::alloc::string::String,
+    /// uuid 空=新脚本;url/version/name/description 由用户/前端提供
+    #[prost(message, optional, tag = "2")]
+    pub body: ::core::option::Option<PluginBody>,
+    /// api_key 由 club 填、data 用户填
+    #[prost(message, optional, tag = "3")]
+    pub annex: ::core::option::Option<PluginAnnex>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreatePluginResp {
-    /// 插件id
+    /// 插件 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
 }
-/// 一级页:列某 agent 的脚本(每个 uuid 一行,返回其**激活版本**)。
-/// ⚠️ 按 **uuid** 识别脚本,不是 name —— name 可重复,不能当身份。
+/// 把一个**已有 body** 绑定到某 bot(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
+/// owner 首次上传走 Create(自带 annex),本方法用于**同 body 多机器人引用**。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateAnnexReq {
+    /// 目标 bot did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 要绑定的 body uuid
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 激活哪个版本(该 bot 的 active)
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+    /// 该 bot 的 api_key(club 取)+ data
+    #[prost(message, optional, tag = "4")]
+    pub annex: ::core::option::Option<PluginAnnex>,
+}
+/// 改插件:body 的可变元数据(name/description)+ 该 bot 的 annex。url/version 不可改(改脚本=加版本)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EditPluginReq {
+    /// bot did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 脚本 id
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 改名(空=不改)
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// 改描述/function-call spec(空=不改)
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+    /// 改该 bot 的 api_key/data
+    #[prost(message, optional, tag = "5")]
+    pub annex: ::core::option::Option<PluginAnnex>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetEnabledReq {
+    /// bot did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 脚本 id
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 该 bot 是否参与推理
+    #[prost(bool, tag = "3")]
+    pub enabled: bool,
+}
+/// 选定该 bot 用哪个版本供 function call 调用(同脚本多版本共存,该 bot 只激活一个)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetActiveVersionReq {
+    /// bot did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 脚本 id
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 要激活的版本
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListPluginReq {
     #[prost(string, tag = "1")]
@@ -1106,13 +1152,15 @@ pub struct ListPluginReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
-/// 二级页:列某脚本的**所有版本**(版本管理页)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListVersionsReq {
-    /// 脚本 id
+    /// bot did
     #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 脚本 id
+    #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
+    #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1120,15 +1168,35 @@ pub struct ListPluginResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
-    pub list: ::prost::alloc::vec::Vec<PluginItem>,
+    pub list: ::prost::alloc::vec::Vec<PluginView>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetPluginReq {
+    /// bot did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 脚本 id
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 留空=该 bot 的激活版本
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetPluginResp {
+    #[prost(message, optional, tag = "1")]
+    pub view: ::core::option::Option<PluginView>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginReq {
-    /// 脚本 id
+    /// bot did
     #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 版本;**留空 = 删整个脚本(所有版本)**
+    pub agent: ::prost::alloc::string::String,
+    /// 脚本 id
     #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 留空=解绑该 bot 的整个脚本(所有版本 annex);非空=删该版本
+    #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1136,83 +1204,25 @@ pub struct DeletePluginByAgentsReq {
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// 改插件的可变字段:名字/包 url/描述/ExAPIKey/ExData。版本号不可改(改版本=新建一个版本)。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EditPluginReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
-    pub item: ::core::option::Option<PluginItem>,
-    #[prost(string, tag = "3")]
-    pub ex_api_key: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "4")]
-    pub ex_data: ::core::option::Option<::pbjson_types::Struct>,
-}
-/// 选定某脚本的哪个版本供 function call 调用(同脚本多版本共存,只能激活一个)。
-/// **必须 uuid + version** —— 单靠 uuid 定位不到具体版本。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetActiveVersionReq {
-    /// 脚本 id
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 要激活的版本
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetPluginReq {
-    /// 脚本 id
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 版本;**留空 = 取激活版本**
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetPluginResp {
-    #[prost(message, optional, tag = "1")]
-    pub item: ::core::option::Option<PluginItem>,
-}
-/// ⚠️ **参数文件 ≠ ExData,别再合并**(我曾把 GetPythonParams 改名成 GetExData,是错的):
-///
-/// * **参数文件(params)**:function call 的**参数 schema**,告诉 LLM 这个脚本怎么调,
-///   形如 {"type":"object","properties":{"city":{...}},"required":\["city"\]};网页上配置后自动生成。
-/// * **ExData**:用户**预先上传给脚本用的数据**,运行期以 py 字典注入执行环境。
-///   两者完全是两回事。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetParamsReq {
-    /// 脚本 id
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 版本;留空=激活版本
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetParamsResp {
-    /// function call 的参数 schema
-    #[prost(message, optional, tag = "1")]
-    pub params: ::core::option::Option<::pbjson_types::Struct>,
-}
+/// ── py-docker 执行契约 ──────────────────────────────────────────────────
+/// AiPlugin 是独立 py-docker 服务,专门安全执行 py 脚本。hiai 只作调用方,本 server 不在 hiai 实现。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReq {
-    /// 主脚本包 zip(main.py + requirement.txt)
+    /// 主脚本包 zip(= body.url)
     #[prost(string, tag = "1")]
     pub code_archive_url: ::prost::alloc::string::String,
-    /// 调用参数
+    /// 调用参数(作 argv)
     #[prost(string, tag = "2")]
     pub code_params: ::prost::alloc::string::String,
-    /// 插件id
+    /// 插件真实 uuid
     #[prost(string, tag = "3")]
     pub uuid: ::prost::alloc::string::String,
     /// 环境变量 key=value
     #[prost(string, repeated, tag = "4")]
     pub envs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// ExAPIKey / ExData 以 py 字典结构注入执行环境
-    #[prost(string, tag = "5")]
-    pub ex_api_key: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "6")]
-    pub ex_data: ::core::option::Option<::pbjson_types::Struct>,
+    /// {api_key, data} → 以字典全局变量 plugin_annex 注入
+    #[prost(message, optional, tag = "5")]
+    pub annex: ::core::option::Option<PluginAnnex>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunResp {
@@ -1235,11 +1245,8 @@ pub mod plugin_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 插件管理(主体=插件)。商户档:**hiai 自己的 web 与三方商户后台都会调**,
-    /// 故 token 与 apikey 都要收,两者解出同一个商户 did。
-    /// ⚠️ 方法名别用 `Switch` —— **switch 是 Dart 的保留字**,dart 生成器会吐出
-    /// `ResponseFuture<...> switch(...)` 直接语法错误,整个 CI 生成挂掉。
-    /// (Go/Rust 都没事,所以只测 go 生成发现不了。)
+    /// 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
+    /// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
     #[derive(Debug, Clone)]
     pub struct PluginClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1339,6 +1346,24 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/Create");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "Create"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn create_annex(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateAnnexReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/CreateAnnex");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "CreateAnnex"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(
@@ -1473,24 +1498,6 @@ pub mod plugin_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.Plugin", "SetActiveVersion"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_params(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetParamsReq>,
-        ) -> std::result::Result<tonic::Response<super::GetParamsResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/GetParams");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "GetParams"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_enabled(

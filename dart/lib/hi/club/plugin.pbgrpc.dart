@@ -51,6 +51,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$create, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> createAnnex(
+    $0.CreateAnnexReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createAnnex, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> edit(
     $0.EditPluginReq request, {
     $grpc.CallOptions? options,
@@ -100,13 +107,6 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$setActiveVersion, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetParamsResp> getParams(
-    $0.GetParamsReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$getParams, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> setEnabled(
     $0.SetEnabledReq request, {
     $grpc.CallOptions? options,
@@ -121,6 +121,10 @@ class PluginClient extends $grpc.Client {
           '/hi.club.Plugin/Create',
           ($0.CreatePluginReq value) => value.writeToBuffer(),
           $0.CreatePluginResp.fromBuffer);
+  static final _$createAnnex = $grpc.ClientMethod<$0.CreateAnnexReq, $1.Empty>(
+      '/hi.club.Plugin/CreateAnnex',
+      ($0.CreateAnnexReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditPluginReq, $1.Empty>(
       '/hi.club.Plugin/Edit',
       ($0.EditPluginReq value) => value.writeToBuffer(),
@@ -152,11 +156,6 @@ class PluginClient extends $grpc.Client {
           '/hi.club.Plugin/SetActiveVersion',
           ($0.SetActiveVersionReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$getParams =
-      $grpc.ClientMethod<$0.GetParamsReq, $0.GetParamsResp>(
-          '/hi.club.Plugin/GetParams',
-          ($0.GetParamsReq value) => value.writeToBuffer(),
-          $0.GetParamsResp.fromBuffer);
   static final _$setEnabled = $grpc.ClientMethod<$0.SetEnabledReq, $1.Empty>(
       '/hi.club.Plugin/SetEnabled',
       ($0.SetEnabledReq value) => value.writeToBuffer(),
@@ -175,6 +174,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CreatePluginReq.fromBuffer(value),
         ($0.CreatePluginResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateAnnexReq, $1.Empty>(
+        'CreateAnnex',
+        createAnnex_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.CreateAnnexReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditPluginReq, $1.Empty>(
         'Edit',
         edit_Pre,
@@ -226,13 +232,6 @@ abstract class PluginServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.SetActiveVersionReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetParamsReq, $0.GetParamsResp>(
-        'GetParams',
-        getParams_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.GetParamsReq.fromBuffer(value),
-        ($0.GetParamsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetEnabledReq, $1.Empty>(
         'SetEnabled',
         setEnabled_Pre,
@@ -249,6 +248,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$0.CreatePluginResp> create(
       $grpc.ServiceCall call, $0.CreatePluginReq request);
+
+  $async.Future<$1.Empty> createAnnex_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateAnnexReq> $request) async {
+    return createAnnex($call, await $request);
+  }
+
+  $async.Future<$1.Empty> createAnnex(
+      $grpc.ServiceCall call, $0.CreateAnnexReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditPluginReq> $request) async {
@@ -305,14 +312,6 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setActiveVersion(
       $grpc.ServiceCall call, $0.SetActiveVersionReq request);
-
-  $async.Future<$0.GetParamsResp> getParams_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.GetParamsReq> $request) async {
-    return getParams($call, await $request);
-  }
-
-  $async.Future<$0.GetParamsResp> getParams(
-      $grpc.ServiceCall call, $0.GetParamsReq request);
 
   $async.Future<$1.Empty> setEnabled_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SetEnabledReq> $request) async {

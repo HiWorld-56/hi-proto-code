@@ -231,7 +231,7 @@ const BrainToFace$json = {
       '3': 11,
       '4': 1,
       '5': 11,
-      '6': '.hi.ai.PluginItem',
+      '6': '.hi.ai.PluginView',
       '9': 0,
       '10': 'eventPlugin'
     },
@@ -317,7 +317,7 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'RW50aXR5SABSCGV2ZW50Qm90EjoKDGV2ZW50X21hc3RlchgJIAEoCzIVLmhpLm5pbmphLk1hc3'
     'RlckV2ZW50SABSC2V2ZW50TWFzdGVyEjkKDWV2ZW50X21lbWJlcnMYCiABKAsyEi5oaS5jbHVi'
     'Lkdyb3VwSW5mb0gAUgxldmVudE1lbWJlcnMSNgoMZXZlbnRfcGx1Z2luGAsgASgLMhEuaGkuYW'
-    'kuUGx1Z2luSXRlbUgAUgtldmVudFBsdWdpbhJCChFldmVudF90cmFuc2FjdGlvbhgMIAEoCzIT'
+    'kuUGx1Z2luVmlld0gAUgtldmVudFBsdWdpbhJCChFldmVudF90cmFuc2FjdGlvbhgMIAEoCzIT'
     'LmhpLmRpZC5UcmFuc2FjdGlvbkgAUhBldmVudFRyYW5zYWN0aW9uEjQKCnBsYXlfYXVkaW8YDS'
     'ABKAsyEy5oaS5uaW5qYS5BdWRpb1BsYXlIAFIJcGxheUF1ZGlvEjsKDWV2ZW50X2ZyaWVuZHMY'
     'DyABKAsyFC5oaS5uaW5qYS5GcmllbmRMaXN0SABSDGV2ZW50RnJpZW5kcxI8ChNldmVudF9mcm'

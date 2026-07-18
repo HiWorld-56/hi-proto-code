@@ -2612,6 +2612,27 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "Create"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn create_annex(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::CreateAnnexReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/CreateAnnex",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "CreateAnnex"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn edit(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::EditPluginReq>,
@@ -2754,27 +2775,6 @@ pub mod plugin_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Plugin", "SetActiveVersion"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_params(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::GetParamsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::GetParamsResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Plugin/GetParams");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "GetParams"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_enabled(

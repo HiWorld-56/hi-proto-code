@@ -592,7 +592,7 @@ func (x *BrainToFace) GetEventMembers() *club.GroupInfo {
 	return nil
 }
 
-func (x *BrainToFace) GetEventPlugin() *ai.PluginItem {
+func (x *BrainToFace) GetEventPlugin() *ai.PluginView {
 	if x != nil {
 		if x, ok := x.Cmd.(*BrainToFace_EventPlugin); ok {
 			return x.EventPlugin
@@ -713,7 +713,7 @@ type BrainToFace_EventMembers struct {
 }
 
 type BrainToFace_EventPlugin struct {
-	EventPlugin *ai.PluginItem `protobuf:"bytes,11,opt,name=event_plugin,json=eventPlugin,proto3,oneof"` // 插件加载完成
+	EventPlugin *ai.PluginView `protobuf:"bytes,11,opt,name=event_plugin,json=eventPlugin,proto3,oneof"` // 插件加载完成
 }
 
 type BrainToFace_EventTransaction struct {
@@ -947,7 +947,7 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\fevent_master\x18\t \x01(\v2\x15.hi.ninja.MasterEventH\x00R\veventMaster\x129\n" +
 	"\revent_members\x18\n" +
 	" \x01(\v2\x12.hi.club.GroupInfoH\x00R\feventMembers\x126\n" +
-	"\fevent_plugin\x18\v \x01(\v2\x11.hi.ai.PluginItemH\x00R\veventPlugin\x12B\n" +
+	"\fevent_plugin\x18\v \x01(\v2\x11.hi.ai.PluginViewH\x00R\veventPlugin\x12B\n" +
 	"\x11event_transaction\x18\f \x01(\v2\x13.hi.did.TransactionH\x00R\x10eventTransaction\x124\n" +
 	"\n" +
 	"play_audio\x18\r \x01(\v2\x13.hi.ninja.AudioPlayH\x00R\tplayAudio\x12;\n" +
@@ -1007,7 +1007,7 @@ var file_hi_ninja_ipc_proto_goTypes = []any{
 	(*club.GroupInfo)(nil),  // 12: hi.club.GroupInfo
 	(*club.Message)(nil),    // 13: hi.club.Message
 	(*emptypb.Empty)(nil),   // 14: google.protobuf.Empty
-	(*ai.PluginItem)(nil),   // 15: hi.ai.PluginItem
+	(*ai.PluginView)(nil),   // 15: hi.ai.PluginView
 	(*did.Transaction)(nil), // 16: hi.did.Transaction
 }
 var file_hi_ninja_ipc_proto_depIdxs = []int32{
@@ -1026,7 +1026,7 @@ var file_hi_ninja_ipc_proto_depIdxs = []int32{
 	11, // 12: hi.ninja.BrainToFace.event_bot:type_name -> hi.Entity
 	5,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
 	12, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	15, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginItem
+	15, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
 	16, // 16: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
 	7,  // 17: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
 	3,  // 18: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList

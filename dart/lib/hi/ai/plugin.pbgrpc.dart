@@ -21,11 +21,8 @@ import 'plugin.pb.dart' as $0;
 
 export 'plugin.pb.dart';
 
-/// 插件管理(主体=插件)。商户档:**hiai 自己的 web 与三方商户后台都会调**,
-/// 故 token 与 apikey 都要收,两者解出同一个商户 did。
-/// ⚠️ 方法名别用 `Switch` —— **switch 是 Dart 的保留字**,dart 生成器会吐出
-///    `ResponseFuture<...> switch(...)` 直接语法错误,整个 CI 生成挂掉。
-///    (Go/Rust 都没事,所以只测 go 生成发现不了。)
+/// 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
+/// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 @$pb.GrpcServiceName('hi.ai.Plugin')
 class PluginClient extends $grpc.Client {
   /// The hostname for this service.
@@ -43,6 +40,13 @@ class PluginClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$create, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> createAnnex(
+    $0.CreateAnnexReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createAnnex, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> edit(
@@ -94,13 +98,6 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$setActiveVersion, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetParamsResp> getParams(
-    $0.GetParamsReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$getParams, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> setEnabled(
     $0.SetEnabledReq request, {
     $grpc.CallOptions? options,
@@ -115,6 +112,10 @@ class PluginClient extends $grpc.Client {
           '/hi.ai.Plugin/Create',
           ($0.CreatePluginReq value) => value.writeToBuffer(),
           $0.CreatePluginResp.fromBuffer);
+  static final _$createAnnex = $grpc.ClientMethod<$0.CreateAnnexReq, $1.Empty>(
+      '/hi.ai.Plugin/CreateAnnex',
+      ($0.CreateAnnexReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditPluginReq, $1.Empty>(
       '/hi.ai.Plugin/Edit',
       ($0.EditPluginReq value) => value.writeToBuffer(),
@@ -146,11 +147,6 @@ class PluginClient extends $grpc.Client {
           '/hi.ai.Plugin/SetActiveVersion',
           ($0.SetActiveVersionReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$getParams =
-      $grpc.ClientMethod<$0.GetParamsReq, $0.GetParamsResp>(
-          '/hi.ai.Plugin/GetParams',
-          ($0.GetParamsReq value) => value.writeToBuffer(),
-          $0.GetParamsResp.fromBuffer);
   static final _$setEnabled = $grpc.ClientMethod<$0.SetEnabledReq, $1.Empty>(
       '/hi.ai.Plugin/SetEnabled',
       ($0.SetEnabledReq value) => value.writeToBuffer(),
@@ -169,6 +165,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CreatePluginReq.fromBuffer(value),
         ($0.CreatePluginResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateAnnexReq, $1.Empty>(
+        'CreateAnnex',
+        createAnnex_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.CreateAnnexReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditPluginReq, $1.Empty>(
         'Edit',
         edit_Pre,
@@ -220,13 +223,6 @@ abstract class PluginServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.SetActiveVersionReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetParamsReq, $0.GetParamsResp>(
-        'GetParams',
-        getParams_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.GetParamsReq.fromBuffer(value),
-        ($0.GetParamsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetEnabledReq, $1.Empty>(
         'SetEnabled',
         setEnabled_Pre,
@@ -243,6 +239,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$0.CreatePluginResp> create(
       $grpc.ServiceCall call, $0.CreatePluginReq request);
+
+  $async.Future<$1.Empty> createAnnex_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateAnnexReq> $request) async {
+    return createAnnex($call, await $request);
+  }
+
+  $async.Future<$1.Empty> createAnnex(
+      $grpc.ServiceCall call, $0.CreateAnnexReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditPluginReq> $request) async {
@@ -299,14 +303,6 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setActiveVersion(
       $grpc.ServiceCall call, $0.SetActiveVersionReq request);
-
-  $async.Future<$0.GetParamsResp> getParams_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.GetParamsReq> $request) async {
-    return getParams($call, await $request);
-  }
-
-  $async.Future<$0.GetParamsResp> getParams(
-      $grpc.ServiceCall call, $0.GetParamsReq request);
 
   $async.Future<$1.Empty> setEnabled_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SetEnabledReq> $request) async {

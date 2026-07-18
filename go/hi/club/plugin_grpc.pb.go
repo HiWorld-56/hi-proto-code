@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Plugin_Create_FullMethodName           = "/hi.club.Plugin/Create"
+	Plugin_CreateAnnex_FullMethodName      = "/hi.club.Plugin/CreateAnnex"
 	Plugin_Edit_FullMethodName             = "/hi.club.Plugin/Edit"
 	Plugin_Get_FullMethodName              = "/hi.club.Plugin/Get"
 	Plugin_List_FullMethodName             = "/hi.club.Plugin/List"
@@ -29,7 +30,6 @@ const (
 	Plugin_Delete_FullMethodName           = "/hi.club.Plugin/Delete"
 	Plugin_DeleteByAgents_FullMethodName   = "/hi.club.Plugin/DeleteByAgents"
 	Plugin_SetActiveVersion_FullMethodName = "/hi.club.Plugin/SetActiveVersion"
-	Plugin_GetParams_FullMethodName        = "/hi.club.Plugin/GetParams"
 	Plugin_SetEnabled_FullMethodName       = "/hi.club.Plugin/SetEnabled"
 )
 
@@ -50,6 +50,7 @@ const (
 //  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
 type PluginClient interface {
 	Create(ctx context.Context, in *ai.CreatePluginReq, opts ...grpc.CallOption) (*ai.CreatePluginResp, error)
+	CreateAnnex(ctx context.Context, in *ai.CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetPluginReq, opts ...grpc.CallOption) (*ai.GetPluginResp, error)
 	List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
@@ -57,7 +58,6 @@ type PluginClient interface {
 	Delete(ctx context.Context, in *ai.DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActiveVersion(ctx context.Context, in *ai.SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetParams(ctx context.Context, in *ai.GetParamsReq, opts ...grpc.CallOption) (*ai.GetParamsResp, error)
 	SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -73,6 +73,16 @@ func (c *pluginClient) Create(ctx context.Context, in *ai.CreatePluginReq, opts 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.CreatePluginResp)
 	err := c.cc.Invoke(ctx, Plugin_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pluginClient) CreateAnnex(ctx context.Context, in *ai.CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_CreateAnnex_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -149,16 +159,6 @@ func (c *pluginClient) SetActiveVersion(ctx context.Context, in *ai.SetActiveVer
 	return out, nil
 }
 
-func (c *pluginClient) GetParams(ctx context.Context, in *ai.GetParamsReq, opts ...grpc.CallOption) (*ai.GetParamsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.GetParamsResp)
-	err := c.cc.Invoke(ctx, Plugin_GetParams_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *pluginClient) SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -186,6 +186,7 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opt
 //  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
 type PluginServer interface {
 	Create(context.Context, *ai.CreatePluginReq) (*ai.CreatePluginResp, error)
+	CreateAnnex(context.Context, *ai.CreateAnnexReq) (*emptypb.Empty, error)
 	Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error)
 	List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error)
@@ -193,7 +194,6 @@ type PluginServer interface {
 	Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActiveVersion(context.Context, *ai.SetActiveVersionReq) (*emptypb.Empty, error)
-	GetParams(context.Context, *ai.GetParamsReq) (*ai.GetParamsResp, error)
 	SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error)
 }
 
@@ -206,6 +206,9 @@ type UnimplementedPluginServer struct{}
 
 func (UnimplementedPluginServer) Create(context.Context, *ai.CreatePluginReq) (*ai.CreatePluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedPluginServer) CreateAnnex(context.Context, *ai.CreateAnnexReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAnnex not implemented")
 }
 func (UnimplementedPluginServer) Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -227,9 +230,6 @@ func (UnimplementedPluginServer) DeleteByAgents(context.Context, *ai.DeletePlugi
 }
 func (UnimplementedPluginServer) SetActiveVersion(context.Context, *ai.SetActiveVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetActiveVersion not implemented")
-}
-func (UnimplementedPluginServer) GetParams(context.Context, *ai.GetParamsReq) (*ai.GetParamsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetParams not implemented")
 }
 func (UnimplementedPluginServer) SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
@@ -268,6 +268,24 @@ func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PluginServer).Create(ctx, req.(*ai.CreatePluginReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Plugin_CreateAnnex_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.CreateAnnexReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).CreateAnnex(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_CreateAnnex_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).CreateAnnex(ctx, req.(*ai.CreateAnnexReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -398,24 +416,6 @@ func _Plugin_SetActiveVersion_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_GetParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.GetParamsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).GetParams(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_GetParams_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).GetParams(ctx, req.(*ai.GetParamsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.SetEnabledReq)
 	if err := dec(in); err != nil {
@@ -446,6 +446,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_Create_Handler,
 		},
 		{
+			MethodName: "CreateAnnex",
+			Handler:    _Plugin_CreateAnnex_Handler,
+		},
+		{
 			MethodName: "Edit",
 			Handler:    _Plugin_Edit_Handler,
 		},
@@ -472,10 +476,6 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetActiveVersion",
 			Handler:    _Plugin_SetActiveVersion_Handler,
-		},
-		{
-			MethodName: "GetParams",
-			Handler:    _Plugin_GetParams_Handler,
 		},
 		{
 			MethodName: "SetEnabled",

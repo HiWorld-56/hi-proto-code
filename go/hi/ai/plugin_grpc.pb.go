@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Plugin_Create_FullMethodName           = "/hi.ai.Plugin/Create"
+	Plugin_CreateAnnex_FullMethodName      = "/hi.ai.Plugin/CreateAnnex"
 	Plugin_Edit_FullMethodName             = "/hi.ai.Plugin/Edit"
 	Plugin_Get_FullMethodName              = "/hi.ai.Plugin/Get"
 	Plugin_List_FullMethodName             = "/hi.ai.Plugin/List"
@@ -28,7 +29,6 @@ const (
 	Plugin_Delete_FullMethodName           = "/hi.ai.Plugin/Delete"
 	Plugin_DeleteByAgents_FullMethodName   = "/hi.ai.Plugin/DeleteByAgents"
 	Plugin_SetActiveVersion_FullMethodName = "/hi.ai.Plugin/SetActiveVersion"
-	Plugin_GetParams_FullMethodName        = "/hi.ai.Plugin/GetParams"
 	Plugin_SetEnabled_FullMethodName       = "/hi.ai.Plugin/SetEnabled"
 )
 
@@ -36,14 +36,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 插件管理(主体=插件)。商户档:**hiai 自己的 web 与三方商户后台都会调**,
-// 故 token 与 apikey 都要收,两者解出同一个商户 did。
-// ⚠️ 方法名别用 `Switch` —— **switch 是 Dart 的保留字**,dart 生成器会吐出
-//
-//	`ResponseFuture<...> switch(...)` 直接语法错误,整个 CI 生成挂掉。
-//	(Go/Rust 都没事,所以只测 go 生成发现不了。)
+// 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
+// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 type PluginClient interface {
 	Create(ctx context.Context, in *CreatePluginReq, opts ...grpc.CallOption) (*CreatePluginResp, error)
+	CreateAnnex(ctx context.Context, in *CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetPluginReq, opts ...grpc.CallOption) (*GetPluginResp, error)
 	List(ctx context.Context, in *ListPluginReq, opts ...grpc.CallOption) (*ListPluginResp, error)
@@ -51,7 +48,6 @@ type PluginClient interface {
 	Delete(ctx context.Context, in *DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActiveVersion(ctx context.Context, in *SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetParams(ctx context.Context, in *GetParamsReq, opts ...grpc.CallOption) (*GetParamsResp, error)
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -67,6 +63,16 @@ func (c *pluginClient) Create(ctx context.Context, in *CreatePluginReq, opts ...
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreatePluginResp)
 	err := c.cc.Invoke(ctx, Plugin_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pluginClient) CreateAnnex(ctx context.Context, in *CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_CreateAnnex_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -143,16 +149,6 @@ func (c *pluginClient) SetActiveVersion(ctx context.Context, in *SetActiveVersio
 	return out, nil
 }
 
-func (c *pluginClient) GetParams(ctx context.Context, in *GetParamsReq, opts ...grpc.CallOption) (*GetParamsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetParamsResp)
-	err := c.cc.Invoke(ctx, Plugin_GetParams_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -167,14 +163,11 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts .
 // All implementations should embed UnimplementedPluginServer
 // for forward compatibility.
 //
-// 插件管理(主体=插件)。商户档:**hiai 自己的 web 与三方商户后台都会调**,
-// 故 token 与 apikey 都要收,两者解出同一个商户 did。
-// ⚠️ 方法名别用 `Switch` —— **switch 是 Dart 的保留字**,dart 生成器会吐出
-//
-//	`ResponseFuture<...> switch(...)` 直接语法错误,整个 CI 生成挂掉。
-//	(Go/Rust 都没事,所以只测 go 生成发现不了。)
+// 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
+// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 type PluginServer interface {
 	Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error)
+	CreateAnnex(context.Context, *CreateAnnexReq) (*emptypb.Empty, error)
 	Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetPluginReq) (*GetPluginResp, error)
 	List(context.Context, *ListPluginReq) (*ListPluginResp, error)
@@ -182,7 +175,6 @@ type PluginServer interface {
 	Delete(context.Context, *DeletePluginReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActiveVersion(context.Context, *SetActiveVersionReq) (*emptypb.Empty, error)
-	GetParams(context.Context, *GetParamsReq) (*GetParamsResp, error)
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
 }
 
@@ -195,6 +187,9 @@ type UnimplementedPluginServer struct{}
 
 func (UnimplementedPluginServer) Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedPluginServer) CreateAnnex(context.Context, *CreateAnnexReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAnnex not implemented")
 }
 func (UnimplementedPluginServer) Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -216,9 +211,6 @@ func (UnimplementedPluginServer) DeleteByAgents(context.Context, *DeletePluginBy
 }
 func (UnimplementedPluginServer) SetActiveVersion(context.Context, *SetActiveVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetActiveVersion not implemented")
-}
-func (UnimplementedPluginServer) GetParams(context.Context, *GetParamsReq) (*GetParamsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetParams not implemented")
 }
 func (UnimplementedPluginServer) SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
@@ -257,6 +249,24 @@ func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PluginServer).Create(ctx, req.(*CreatePluginReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Plugin_CreateAnnex_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAnnexReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).CreateAnnex(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_CreateAnnex_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).CreateAnnex(ctx, req.(*CreateAnnexReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -387,24 +397,6 @@ func _Plugin_SetActiveVersion_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_GetParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetParamsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).GetParams(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_GetParams_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).GetParams(ctx, req.(*GetParamsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetEnabledReq)
 	if err := dec(in); err != nil {
@@ -435,6 +427,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_Create_Handler,
 		},
 		{
+			MethodName: "CreateAnnex",
+			Handler:    _Plugin_CreateAnnex_Handler,
+		},
+		{
 			MethodName: "Edit",
 			Handler:    _Plugin_Edit_Handler,
 		},
@@ -461,10 +457,6 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetActiveVersion",
 			Handler:    _Plugin_SetActiveVersion_Handler,
-		},
-		{
-			MethodName: "GetParams",
-			Handler:    _Plugin_GetParams_Handler,
 		},
 		{
 			MethodName: "SetEnabled",

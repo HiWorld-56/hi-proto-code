@@ -441,7 +441,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     $0.Entity? eventBot,
     MasterEvent? eventMaster,
     $1.GroupInfo? eventMembers,
-    $4.PluginItem? eventPlugin,
+    $4.PluginView? eventPlugin,
     $5.Transaction? eventTransaction,
     AudioPlay? playAudio,
     $0.Entity? eventFriendDelete,
@@ -527,8 +527,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: MasterEvent.create)
     ..aOM<$1.GroupInfo>(10, _omitFieldNames ? '' : 'eventMembers',
         subBuilder: $1.GroupInfo.create)
-    ..aOM<$4.PluginItem>(11, _omitFieldNames ? '' : 'eventPlugin',
-        subBuilder: $4.PluginItem.create)
+    ..aOM<$4.PluginView>(11, _omitFieldNames ? '' : 'eventPlugin',
+        subBuilder: $4.PluginView.create)
     ..aOM<$5.Transaction>(12, _omitFieldNames ? '' : 'eventTransaction',
         subBuilder: $5.Transaction.create)
     ..aOM<AudioPlay>(13, _omitFieldNames ? '' : 'playAudio',
@@ -714,15 +714,15 @@ class BrainToFace extends $pb.GeneratedMessage {
   $1.GroupInfo ensureEventMembers() => $_ensure(9);
 
   @$pb.TagNumber(11)
-  $4.PluginItem get eventPlugin => $_getN(10);
+  $4.PluginView get eventPlugin => $_getN(10);
   @$pb.TagNumber(11)
-  set eventPlugin($4.PluginItem value) => $_setField(11, value);
+  set eventPlugin($4.PluginView value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasEventPlugin() => $_has(10);
   @$pb.TagNumber(11)
   void clearEventPlugin() => $_clearField(11);
   @$pb.TagNumber(11)
-  $4.PluginItem ensureEventPlugin() => $_ensure(10);
+  $4.PluginView ensureEventPlugin() => $_ensure(10);
 
   @$pb.TagNumber(12)
   $5.Transaction get eventTransaction => $_getN(11);

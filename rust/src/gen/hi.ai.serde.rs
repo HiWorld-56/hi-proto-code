@@ -2302,6 +2302,148 @@ impl<'de> serde::Deserialize<'de> for CreateAgentResp {
         deserializer.deserialize_struct("hi.ai.CreateAgentResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for CreateAnnexReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
+        if !self.uuid.is_empty() {
+            len += 1;
+        }
+        if !self.version.is_empty() {
+            len += 1;
+        }
+        if self.annex.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.CreateAnnexReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
+        }
+        if !self.version.is_empty() {
+            struct_ser.serialize_field("version", &self.version)?;
+        }
+        if let Some(v) = self.annex.as_ref() {
+            struct_ser.serialize_field("annex", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateAnnexReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+            "uuid",
+            "version",
+            "annex",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+            Uuid,
+            Version,
+            Annex,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "version" => Ok(GeneratedField::Version),
+                            "annex" => Ok(GeneratedField::Annex),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateAnnexReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.CreateAnnexReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateAnnexReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                let mut uuid__ = None;
+                let mut version__ = None;
+                let mut annex__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Annex => {
+                            if annex__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("annex"));
+                            }
+                            annex__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateAnnexReq {
+                    agent: agent__.unwrap_or_default(),
+                    uuid: uuid__.unwrap_or_default(),
+                    version: version__.unwrap_or_default(),
+                    annex: annex__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.CreateAnnexReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateApiKeyResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2603,51 +2745,21 @@ impl serde::Serialize for CreatePluginReq {
         if !self.agent.is_empty() {
             len += 1;
         }
-        if !self.url.is_empty() {
+        if self.body.is_some() {
             len += 1;
         }
-        if !self.name.is_empty() {
-            len += 1;
-        }
-        if !self.description.is_empty() {
-            len += 1;
-        }
-        if !self.version.is_empty() {
-            len += 1;
-        }
-        if !self.ex_api_key.is_empty() {
-            len += 1;
-        }
-        if self.ex_data.is_some() {
-            len += 1;
-        }
-        if !self.uuid.is_empty() {
+        if self.annex.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CreatePluginReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
-        if !self.url.is_empty() {
-            struct_ser.serialize_field("url", &self.url)?;
+        if let Some(v) = self.body.as_ref() {
+            struct_ser.serialize_field("body", v)?;
         }
-        if !self.name.is_empty() {
-            struct_ser.serialize_field("name", &self.name)?;
-        }
-        if !self.description.is_empty() {
-            struct_ser.serialize_field("description", &self.description)?;
-        }
-        if !self.version.is_empty() {
-            struct_ser.serialize_field("version", &self.version)?;
-        }
-        if !self.ex_api_key.is_empty() {
-            struct_ser.serialize_field("exApiKey", &self.ex_api_key)?;
-        }
-        if let Some(v) = self.ex_data.as_ref() {
-            struct_ser.serialize_field("exData", v)?;
-        }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.annex.as_ref() {
+            struct_ser.serialize_field("annex", v)?;
         }
         struct_ser.end()
     }
@@ -2660,27 +2772,15 @@ impl<'de> serde::Deserialize<'de> for CreatePluginReq {
     {
         const FIELDS: &[&str] = &[
             "agent",
-            "url",
-            "name",
-            "description",
-            "version",
-            "ex_api_key",
-            "exApiKey",
-            "ex_data",
-            "exData",
-            "uuid",
+            "body",
+            "annex",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
-            Url,
-            Name,
-            Description,
-            Version,
-            ExApiKey,
-            ExData,
-            Uuid,
+            Body,
+            Annex,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2703,13 +2803,8 @@ impl<'de> serde::Deserialize<'de> for CreatePluginReq {
                     {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
-                            "url" => Ok(GeneratedField::Url),
-                            "name" => Ok(GeneratedField::Name),
-                            "description" => Ok(GeneratedField::Description),
-                            "version" => Ok(GeneratedField::Version),
-                            "exApiKey" | "ex_api_key" => Ok(GeneratedField::ExApiKey),
-                            "exData" | "ex_data" => Ok(GeneratedField::ExData),
-                            "uuid" => Ok(GeneratedField::Uuid),
+                            "body" => Ok(GeneratedField::Body),
+                            "annex" => Ok(GeneratedField::Annex),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2730,13 +2825,8 @@ impl<'de> serde::Deserialize<'de> for CreatePluginReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut agent__ = None;
-                let mut url__ = None;
-                let mut name__ = None;
-                let mut description__ = None;
-                let mut version__ = None;
-                let mut ex_api_key__ = None;
-                let mut ex_data__ = None;
-                let mut uuid__ = None;
+                let mut body__ = None;
+                let mut annex__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -2745,59 +2835,24 @@ impl<'de> serde::Deserialize<'de> for CreatePluginReq {
                             }
                             agent__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Url => {
-                            if url__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("url"));
+                        GeneratedField::Body => {
+                            if body__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("body"));
                             }
-                            url__ = Some(map_.next_value()?);
+                            body__ = map_.next_value()?;
                         }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
+                        GeneratedField::Annex => {
+                            if annex__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("annex"));
                             }
-                            name__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Description => {
-                            if description__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("description"));
-                            }
-                            description__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Version => {
-                            if version__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("version"));
-                            }
-                            version__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ExApiKey => {
-                            if ex_api_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("exApiKey"));
-                            }
-                            ex_api_key__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ExData => {
-                            if ex_data__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("exData"));
-                            }
-                            ex_data__ = map_.next_value()?;
-                        }
-                        GeneratedField::Uuid => {
-                            if uuid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("uuid"));
-                            }
-                            uuid__ = Some(map_.next_value()?);
+                            annex__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(CreatePluginReq {
                     agent: agent__.unwrap_or_default(),
-                    url: url__.unwrap_or_default(),
-                    name: name__.unwrap_or_default(),
-                    description: description__.unwrap_or_default(),
-                    version: version__.unwrap_or_default(),
-                    ex_api_key: ex_api_key__.unwrap_or_default(),
-                    ex_data: ex_data__,
-                    uuid: uuid__.unwrap_or_default(),
+                    body: body__,
+                    annex: annex__,
                 })
             }
         }
@@ -3467,6 +3522,9 @@ impl serde::Serialize for DeletePluginReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
         if !self.uuid.is_empty() {
             len += 1;
         }
@@ -3474,6 +3532,9 @@ impl serde::Serialize for DeletePluginReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.DeletePluginReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
@@ -3490,12 +3551,14 @@ impl<'de> serde::Deserialize<'de> for DeletePluginReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "agent",
             "uuid",
             "version",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Agent,
             Uuid,
             Version,
         }
@@ -3519,6 +3582,7 @@ impl<'de> serde::Deserialize<'de> for DeletePluginReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "version" => Ok(GeneratedField::Version),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3540,10 +3604,17 @@ impl<'de> serde::Deserialize<'de> for DeletePluginReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut agent__ = None;
                 let mut uuid__ = None;
                 let mut version__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
@@ -3559,6 +3630,7 @@ impl<'de> serde::Deserialize<'de> for DeletePluginReq {
                     }
                 }
                 Ok(DeletePluginReq {
+                    agent: agent__.unwrap_or_default(),
                     uuid: uuid__.unwrap_or_default(),
                     version: version__.unwrap_or_default(),
                 })
@@ -4025,30 +4097,36 @@ impl serde::Serialize for EditPluginReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
         if !self.uuid.is_empty() {
             len += 1;
         }
-        if self.item.is_some() {
+        if !self.name.is_empty() {
             len += 1;
         }
-        if !self.ex_api_key.is_empty() {
+        if !self.description.is_empty() {
             len += 1;
         }
-        if self.ex_data.is_some() {
+        if self.annex.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.EditPluginReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
-        if let Some(v) = self.item.as_ref() {
-            struct_ser.serialize_field("item", v)?;
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
         }
-        if !self.ex_api_key.is_empty() {
-            struct_ser.serialize_field("exApiKey", &self.ex_api_key)?;
+        if !self.description.is_empty() {
+            struct_ser.serialize_field("description", &self.description)?;
         }
-        if let Some(v) = self.ex_data.as_ref() {
-            struct_ser.serialize_field("exData", v)?;
+        if let Some(v) = self.annex.as_ref() {
+            struct_ser.serialize_field("annex", v)?;
         }
         struct_ser.end()
     }
@@ -4060,20 +4138,20 @@ impl<'de> serde::Deserialize<'de> for EditPluginReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "agent",
             "uuid",
-            "item",
-            "ex_api_key",
-            "exApiKey",
-            "ex_data",
-            "exData",
+            "name",
+            "description",
+            "annex",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Agent,
             Uuid,
-            Item,
-            ExApiKey,
-            ExData,
+            Name,
+            Description,
+            Annex,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4095,10 +4173,11 @@ impl<'de> serde::Deserialize<'de> for EditPluginReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
-                            "item" => Ok(GeneratedField::Item),
-                            "exApiKey" | "ex_api_key" => Ok(GeneratedField::ExApiKey),
-                            "exData" | "ex_data" => Ok(GeneratedField::ExData),
+                            "name" => Ok(GeneratedField::Name),
+                            "description" => Ok(GeneratedField::Description),
+                            "annex" => Ok(GeneratedField::Annex),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4118,43 +4197,51 @@ impl<'de> serde::Deserialize<'de> for EditPluginReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut agent__ = None;
                 let mut uuid__ = None;
-                let mut item__ = None;
-                let mut ex_api_key__ = None;
-                let mut ex_data__ = None;
+                let mut name__ = None;
+                let mut description__ = None;
+                let mut annex__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
                             uuid__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Item => {
-                            if item__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("item"));
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
                             }
-                            item__ = map_.next_value()?;
+                            name__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::ExApiKey => {
-                            if ex_api_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("exApiKey"));
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
                             }
-                            ex_api_key__ = Some(map_.next_value()?);
+                            description__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::ExData => {
-                            if ex_data__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("exData"));
+                        GeneratedField::Annex => {
+                            if annex__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("annex"));
                             }
-                            ex_data__ = map_.next_value()?;
+                            annex__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(EditPluginReq {
+                    agent: agent__.unwrap_or_default(),
                     uuid: uuid__.unwrap_or_default(),
-                    item: item__,
-                    ex_api_key: ex_api_key__.unwrap_or_default(),
-                    ex_data: ex_data__,
+                    name: name__.unwrap_or_default(),
+                    description: description__.unwrap_or_default(),
+                    annex: annex__,
                 })
             }
         }
@@ -4724,205 +4811,6 @@ impl<'de> serde::Deserialize<'de> for GetHistoryResp {
         deserializer.deserialize_struct("hi.ai.GetHistoryResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetParamsReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.uuid.is_empty() {
-            len += 1;
-        }
-        if !self.version.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.GetParamsReq", len)?;
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
-        }
-        if !self.version.is_empty() {
-            struct_ser.serialize_field("version", &self.version)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetParamsReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "uuid",
-            "version",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Uuid,
-            Version,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "uuid" => Ok(GeneratedField::Uuid),
-                            "version" => Ok(GeneratedField::Version),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetParamsReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.GetParamsReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetParamsReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut uuid__ = None;
-                let mut version__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Uuid => {
-                            if uuid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("uuid"));
-                            }
-                            uuid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Version => {
-                            if version__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("version"));
-                            }
-                            version__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(GetParamsReq {
-                    uuid: uuid__.unwrap_or_default(),
-                    version: version__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.GetParamsReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for GetParamsResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.params.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.GetParamsResp", len)?;
-        if let Some(v) = self.params.as_ref() {
-            struct_ser.serialize_field("params", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetParamsResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "params",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Params,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "params" => Ok(GeneratedField::Params),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetParamsResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.GetParamsResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetParamsResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut params__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Params => {
-                            if params__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("params"));
-                            }
-                            params__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(GetParamsResp {
-                    params: params__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.GetParamsResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for GetPluginReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -4931,6 +4819,9 @@ impl serde::Serialize for GetPluginReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
         if !self.uuid.is_empty() {
             len += 1;
         }
@@ -4938,6 +4829,9 @@ impl serde::Serialize for GetPluginReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.GetPluginReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
@@ -4954,12 +4848,14 @@ impl<'de> serde::Deserialize<'de> for GetPluginReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "agent",
             "uuid",
             "version",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Agent,
             Uuid,
             Version,
         }
@@ -4983,6 +4879,7 @@ impl<'de> serde::Deserialize<'de> for GetPluginReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "version" => Ok(GeneratedField::Version),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -5004,10 +4901,17 @@ impl<'de> serde::Deserialize<'de> for GetPluginReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut agent__ = None;
                 let mut uuid__ = None;
                 let mut version__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
@@ -5023,6 +4927,7 @@ impl<'de> serde::Deserialize<'de> for GetPluginReq {
                     }
                 }
                 Ok(GetPluginReq {
+                    agent: agent__.unwrap_or_default(),
                     uuid: uuid__.unwrap_or_default(),
                     version: version__.unwrap_or_default(),
                 })
@@ -5039,12 +4944,12 @@ impl serde::Serialize for GetPluginResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.item.is_some() {
+        if self.view.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.GetPluginResp", len)?;
-        if let Some(v) = self.item.as_ref() {
-            struct_ser.serialize_field("item", v)?;
+        if let Some(v) = self.view.as_ref() {
+            struct_ser.serialize_field("view", v)?;
         }
         struct_ser.end()
     }
@@ -5056,12 +4961,12 @@ impl<'de> serde::Deserialize<'de> for GetPluginResp {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "item",
+            "view",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Item,
+            View,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5083,7 +4988,7 @@ impl<'de> serde::Deserialize<'de> for GetPluginResp {
                         E: serde::de::Error,
                     {
                         match value {
-                            "item" => Ok(GeneratedField::Item),
+                            "view" => Ok(GeneratedField::View),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5103,19 +5008,19 @@ impl<'de> serde::Deserialize<'de> for GetPluginResp {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut item__ = None;
+                let mut view__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Item => {
-                            if item__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("item"));
+                        GeneratedField::View => {
+                            if view__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("view"));
                             }
-                            item__ = map_.next_value()?;
+                            view__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(GetPluginResp {
-                    item: item__,
+                    view: view__,
                 })
             }
         }
@@ -6362,6 +6267,9 @@ impl serde::Serialize for ListVersionsReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
         if !self.uuid.is_empty() {
             len += 1;
         }
@@ -6369,6 +6277,9 @@ impl serde::Serialize for ListVersionsReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListVersionsReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
@@ -6385,12 +6296,14 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "agent",
             "uuid",
             "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Agent,
             Uuid,
             Pagination,
         }
@@ -6414,6 +6327,7 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -6435,10 +6349,17 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut agent__ = None;
                 let mut uuid__ = None;
                 let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
@@ -6454,6 +6375,7 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
                     }
                 }
                 Ok(ListVersionsReq {
+                    agent: agent__.unwrap_or_default(),
                     uuid: uuid__.unwrap_or_default(),
                     pagination: pagination__,
                 })
@@ -8108,7 +8030,116 @@ impl<'de> serde::Deserialize<'de> for PermissionType {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
-impl serde::Serialize for PluginItem {
+impl serde::Serialize for PluginAnnex {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.api_key.is_empty() {
+            len += 1;
+        }
+        if self.data.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.PluginAnnex", len)?;
+        if !self.api_key.is_empty() {
+            struct_ser.serialize_field("apiKey", &self.api_key)?;
+        }
+        if let Some(v) = self.data.as_ref() {
+            struct_ser.serialize_field("data", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PluginAnnex {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "api_key",
+            "apiKey",
+            "data",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ApiKey,
+            Data,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
+                            "data" => Ok(GeneratedField::Data),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PluginAnnex;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.PluginAnnex")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginAnnex, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut api_key__ = None;
+                let mut data__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ApiKey => {
+                            if api_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiKey"));
+                            }
+                            api_key__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Data => {
+                            if data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("data"));
+                            }
+                            data__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PluginAnnex {
+                    api_key: api_key__.unwrap_or_default(),
+                    data: data__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.PluginAnnex", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PluginBody {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -8119,64 +8150,44 @@ impl serde::Serialize for PluginItem {
         if !self.uuid.is_empty() {
             len += 1;
         }
-        if !self.agent.is_empty() {
-            len += 1;
-        }
-        if !self.name.is_empty() {
-            len += 1;
-        }
-        if !self.url.is_empty() {
-            len += 1;
-        }
-        if !self.description.is_empty() {
-            len += 1;
-        }
         if !self.version.is_empty() {
             len += 1;
         }
-        if self.active {
+        if !self.url.is_empty() {
             len += 1;
-        }
-        if self.created_at != 0 {
-            len += 1;
-        }
-        if self.enabled {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.PluginItem", len)?;
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
-        }
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
         }
         if !self.name.is_empty() {
-            struct_ser.serialize_field("name", &self.name)?;
+            len += 1;
         }
-        if !self.url.is_empty() {
-            struct_ser.serialize_field("url", &self.url)?;
+        if !self.function_name.is_empty() {
+            len += 1;
         }
         if !self.description.is_empty() {
-            struct_ser.serialize_field("description", &self.description)?;
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.PluginBody", len)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
         }
         if !self.version.is_empty() {
             struct_ser.serialize_field("version", &self.version)?;
         }
-        if self.active {
-            struct_ser.serialize_field("active", &self.active)?;
+        if !self.url.is_empty() {
+            struct_ser.serialize_field("url", &self.url)?;
         }
-        if self.created_at != 0 {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("createdAt", ToString::to_string(&self.created_at).as_str())?;
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
         }
-        if self.enabled {
-            struct_ser.serialize_field("enabled", &self.enabled)?;
+        if !self.function_name.is_empty() {
+            struct_ser.serialize_field("functionName", &self.function_name)?;
+        }
+        if !self.description.is_empty() {
+            struct_ser.serialize_field("description", &self.description)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for PluginItem {
+impl<'de> serde::Deserialize<'de> for PluginBody {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -8184,28 +8195,22 @@ impl<'de> serde::Deserialize<'de> for PluginItem {
     {
         const FIELDS: &[&str] = &[
             "uuid",
-            "agent",
-            "name",
-            "url",
-            "description",
             "version",
-            "active",
-            "created_at",
-            "createdAt",
-            "enabled",
+            "url",
+            "name",
+            "function_name",
+            "functionName",
+            "description",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Uuid,
-            Agent,
-            Name,
-            Url,
-            Description,
             Version,
-            Active,
-            CreatedAt,
-            Enabled,
+            Url,
+            Name,
+            FunctionName,
+            Description,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8228,13 +8233,159 @@ impl<'de> serde::Deserialize<'de> for PluginItem {
                     {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
-                            "agent" => Ok(GeneratedField::Agent),
-                            "name" => Ok(GeneratedField::Name),
-                            "url" => Ok(GeneratedField::Url),
-                            "description" => Ok(GeneratedField::Description),
                             "version" => Ok(GeneratedField::Version),
+                            "url" => Ok(GeneratedField::Url),
+                            "name" => Ok(GeneratedField::Name),
+                            "functionName" | "function_name" => Ok(GeneratedField::FunctionName),
+                            "description" => Ok(GeneratedField::Description),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PluginBody;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.PluginBody")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginBody, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                let mut version__ = None;
+                let mut url__ = None;
+                let mut name__ = None;
+                let mut function_name__ = None;
+                let mut description__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::FunctionName => {
+                            if function_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionName"));
+                            }
+                            function_name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(PluginBody {
+                    uuid: uuid__.unwrap_or_default(),
+                    version: version__.unwrap_or_default(),
+                    url: url__.unwrap_or_default(),
+                    name: name__.unwrap_or_default(),
+                    function_name: function_name__.unwrap_or_default(),
+                    description: description__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.PluginBody", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PluginView {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.body.is_some() {
+            len += 1;
+        }
+        if self.active {
+            len += 1;
+        }
+        if self.enabled {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.PluginView", len)?;
+        if let Some(v) = self.body.as_ref() {
+            struct_ser.serialize_field("body", v)?;
+        }
+        if self.active {
+            struct_ser.serialize_field("active", &self.active)?;
+        }
+        if self.enabled {
+            struct_ser.serialize_field("enabled", &self.enabled)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PluginView {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "body",
+            "active",
+            "enabled",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Body,
+            Active,
+            Enabled,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "body" => Ok(GeneratedField::Body),
                             "active" => Ok(GeneratedField::Active),
-                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
                             "enabled" => Ok(GeneratedField::Enabled),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -8245,76 +8396,32 @@ impl<'de> serde::Deserialize<'de> for PluginItem {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = PluginItem;
+            type Value = PluginView;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.PluginItem")
+                formatter.write_str("struct hi.ai.PluginView")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginItem, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginView, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut uuid__ = None;
-                let mut agent__ = None;
-                let mut name__ = None;
-                let mut url__ = None;
-                let mut description__ = None;
-                let mut version__ = None;
+                let mut body__ = None;
                 let mut active__ = None;
-                let mut created_at__ = None;
                 let mut enabled__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Uuid => {
-                            if uuid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("uuid"));
+                        GeneratedField::Body => {
+                            if body__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("body"));
                             }
-                            uuid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
-                            }
-                            agent__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Url => {
-                            if url__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("url"));
-                            }
-                            url__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Description => {
-                            if description__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("description"));
-                            }
-                            description__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Version => {
-                            if version__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("version"));
-                            }
-                            version__ = Some(map_.next_value()?);
+                            body__ = map_.next_value()?;
                         }
                         GeneratedField::Active => {
                             if active__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("active"));
                             }
                             active__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::CreatedAt => {
-                            if created_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdAt"));
-                            }
-                            created_at__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
                         }
                         GeneratedField::Enabled => {
                             if enabled__.is_some() {
@@ -8324,20 +8431,14 @@ impl<'de> serde::Deserialize<'de> for PluginItem {
                         }
                     }
                 }
-                Ok(PluginItem {
-                    uuid: uuid__.unwrap_or_default(),
-                    agent: agent__.unwrap_or_default(),
-                    name: name__.unwrap_or_default(),
-                    url: url__.unwrap_or_default(),
-                    description: description__.unwrap_or_default(),
-                    version: version__.unwrap_or_default(),
+                Ok(PluginView {
+                    body: body__,
                     active: active__.unwrap_or_default(),
-                    created_at: created_at__.unwrap_or_default(),
                     enabled: enabled__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.PluginItem", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.PluginView", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Prompt {
@@ -8667,10 +8768,7 @@ impl serde::Serialize for RunReq {
         if !self.envs.is_empty() {
             len += 1;
         }
-        if !self.ex_api_key.is_empty() {
-            len += 1;
-        }
-        if self.ex_data.is_some() {
+        if self.annex.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.RunReq", len)?;
@@ -8686,11 +8784,8 @@ impl serde::Serialize for RunReq {
         if !self.envs.is_empty() {
             struct_ser.serialize_field("envs", &self.envs)?;
         }
-        if !self.ex_api_key.is_empty() {
-            struct_ser.serialize_field("exApiKey", &self.ex_api_key)?;
-        }
-        if let Some(v) = self.ex_data.as_ref() {
-            struct_ser.serialize_field("exData", v)?;
+        if let Some(v) = self.annex.as_ref() {
+            struct_ser.serialize_field("annex", v)?;
         }
         struct_ser.end()
     }
@@ -8708,10 +8803,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
             "codeParams",
             "uuid",
             "envs",
-            "ex_api_key",
-            "exApiKey",
-            "ex_data",
-            "exData",
+            "annex",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -8720,8 +8812,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
             CodeParams,
             Uuid,
             Envs,
-            ExApiKey,
-            ExData,
+            Annex,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8747,8 +8838,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             "codeParams" | "code_params" => Ok(GeneratedField::CodeParams),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "envs" => Ok(GeneratedField::Envs),
-                            "exApiKey" | "ex_api_key" => Ok(GeneratedField::ExApiKey),
-                            "exData" | "ex_data" => Ok(GeneratedField::ExData),
+                            "annex" => Ok(GeneratedField::Annex),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8772,8 +8862,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                 let mut code_params__ = None;
                 let mut uuid__ = None;
                 let mut envs__ = None;
-                let mut ex_api_key__ = None;
-                let mut ex_data__ = None;
+                let mut annex__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::CodeArchiveUrl => {
@@ -8800,17 +8889,11 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             }
                             envs__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::ExApiKey => {
-                            if ex_api_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("exApiKey"));
+                        GeneratedField::Annex => {
+                            if annex__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("annex"));
                             }
-                            ex_api_key__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ExData => {
-                            if ex_data__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("exData"));
-                            }
-                            ex_data__ = map_.next_value()?;
+                            annex__ = map_.next_value()?;
                         }
                     }
                 }
@@ -8819,8 +8902,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                     code_params: code_params__.unwrap_or_default(),
                     uuid: uuid__.unwrap_or_default(),
                     envs: envs__.unwrap_or_default(),
-                    ex_api_key: ex_api_key__.unwrap_or_default(),
-                    ex_data: ex_data__,
+                    annex: annex__,
                 })
             }
         }
@@ -8926,6 +9008,9 @@ impl serde::Serialize for SetActiveVersionReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
         if !self.uuid.is_empty() {
             len += 1;
         }
@@ -8933,6 +9018,9 @@ impl serde::Serialize for SetActiveVersionReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.SetActiveVersionReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
@@ -8949,12 +9037,14 @@ impl<'de> serde::Deserialize<'de> for SetActiveVersionReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "agent",
             "uuid",
             "version",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Agent,
             Uuid,
             Version,
         }
@@ -8978,6 +9068,7 @@ impl<'de> serde::Deserialize<'de> for SetActiveVersionReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "version" => Ok(GeneratedField::Version),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -8999,10 +9090,17 @@ impl<'de> serde::Deserialize<'de> for SetActiveVersionReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut agent__ = None;
                 let mut uuid__ = None;
                 let mut version__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
@@ -9018,6 +9116,7 @@ impl<'de> serde::Deserialize<'de> for SetActiveVersionReq {
                     }
                 }
                 Ok(SetActiveVersionReq {
+                    agent: agent__.unwrap_or_default(),
                     uuid: uuid__.unwrap_or_default(),
                     version: version__.unwrap_or_default(),
                 })
@@ -9034,6 +9133,9 @@ impl serde::Serialize for SetEnabledReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
         if !self.uuid.is_empty() {
             len += 1;
         }
@@ -9041,6 +9143,9 @@ impl serde::Serialize for SetEnabledReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.SetEnabledReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
@@ -9057,12 +9162,14 @@ impl<'de> serde::Deserialize<'de> for SetEnabledReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "agent",
             "uuid",
             "enabled",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Agent,
             Uuid,
             Enabled,
         }
@@ -9086,6 +9193,7 @@ impl<'de> serde::Deserialize<'de> for SetEnabledReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "enabled" => Ok(GeneratedField::Enabled),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -9107,10 +9215,17 @@ impl<'de> serde::Deserialize<'de> for SetEnabledReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut agent__ = None;
                 let mut uuid__ = None;
                 let mut enabled__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
@@ -9126,6 +9241,7 @@ impl<'de> serde::Deserialize<'de> for SetEnabledReq {
                     }
                 }
                 Ok(SetEnabledReq {
+                    agent: agent__.unwrap_or_default(),
                     uuid: uuid__.unwrap_or_default(),
                     enabled: enabled__.unwrap_or_default(),
                 })

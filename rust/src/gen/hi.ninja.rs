@@ -102,7 +102,7 @@ pub mod brain_to_face {
         EventMembers(super::super::club::GroupInfo),
         /// 插件加载完成
         #[prost(message, tag = "11")]
-        EventPlugin(super::super::ai::PluginItem),
+        EventPlugin(super::super::ai::PluginView),
         /// 收到转账
         #[prost(message, tag = "12")]
         EventTransaction(super::super::did::Transaction),
