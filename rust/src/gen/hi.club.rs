@@ -802,6 +802,61 @@ pub mod order_client {
         }
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ApiKeyInfo {
+    /// 归属用户 did(人/软bot/硬bot)
+    #[prost(string, tag = "1")]
+    pub user: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub value: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub note: ::prost::alloc::string::String,
+    #[prost(int64, tag = "4")]
+    pub created_at: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateApiKeyReq {
+    /// 给谁建(自己 / 自己名下的 bot;后端校验归属)
+    #[prost(string, tag = "1")]
+    pub user: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateApiKeyResp {
+    #[prost(message, optional, tag = "1")]
+    pub info: ::core::option::Option<ApiKeyInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EditApiKeyReq {
+    #[prost(string, tag = "1")]
+    pub api_key: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub note: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EditApiKeyResp {
+    #[prost(message, optional, tag = "1")]
+    pub info: ::core::option::Option<ApiKeyInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListApiKeysReq {
+    /// 列谁的(自己 / 自己名下的 bot)
+    #[prost(string, tag = "1")]
+    pub user: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListApiKeysResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub infos: ::prost::alloc::vec::Vec<ApiKeyInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteApiKeyReq {
+    #[prost(string, tag = "1")]
+    pub api_key: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
 pub mod api_key_client {
     #![allow(
@@ -813,7 +868,6 @@ pub mod api_key_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 使用token鉴权
     #[derive(Debug, Clone)]
     pub struct ApiKeyClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -896,9 +950,9 @@ pub mod api_key_client {
         }
         pub async fn create(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::did::CreateApiKeyReq>,
+            request: impl tonic::IntoRequest<super::CreateApiKeyReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::did::CreateApiKeyResp>,
+            tonic::Response<super::CreateApiKeyResp>,
             tonic::Status,
         > {
             self.inner
@@ -917,11 +971,8 @@ pub mod api_key_client {
         }
         pub async fn edit(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::did::EditApiKeyReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::did::EditApiKeyResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::EditApiKeyReq>,
+        ) -> std::result::Result<tonic::Response<super::EditApiKeyResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -938,9 +989,9 @@ pub mod api_key_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::did::ListApiKeyReq>,
+            request: impl tonic::IntoRequest<super::ListApiKeysReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::did::ListApiKeyResp>,
+            tonic::Response<super::ListApiKeysResp>,
             tonic::Status,
         > {
             self.inner
@@ -959,7 +1010,7 @@ pub mod api_key_client {
         }
         pub async fn delete(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::did::DeleteApiKeyReq>,
+            request: impl tonic::IntoRequest<super::DeleteApiKeyReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()

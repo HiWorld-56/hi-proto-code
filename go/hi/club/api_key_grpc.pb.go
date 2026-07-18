@@ -8,7 +8,6 @@ package club
 
 import (
 	context "context"
-	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -30,13 +29,11 @@ const (
 // ApiKeyClient is the client API for ApiKey service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 使用token鉴权
 type ApiKeyClient interface {
-	Create(ctx context.Context, in *did.CreateApiKeyReq, opts ...grpc.CallOption) (*did.CreateApiKeyResp, error)
-	Edit(ctx context.Context, in *did.EditApiKeyReq, opts ...grpc.CallOption) (*did.EditApiKeyResp, error)
-	List(ctx context.Context, in *did.ListApiKeyReq, opts ...grpc.CallOption) (*did.ListApiKeyResp, error)
-	Delete(ctx context.Context, in *did.DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Create(ctx context.Context, in *CreateApiKeyReq, opts ...grpc.CallOption) (*CreateApiKeyResp, error)
+	Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
+	List(ctx context.Context, in *ListApiKeysReq, opts ...grpc.CallOption) (*ListApiKeysResp, error)
+	Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type apiKeyClient struct {
@@ -47,9 +44,9 @@ func NewApiKeyClient(cc grpc.ClientConnInterface) ApiKeyClient {
 	return &apiKeyClient{cc}
 }
 
-func (c *apiKeyClient) Create(ctx context.Context, in *did.CreateApiKeyReq, opts ...grpc.CallOption) (*did.CreateApiKeyResp, error) {
+func (c *apiKeyClient) Create(ctx context.Context, in *CreateApiKeyReq, opts ...grpc.CallOption) (*CreateApiKeyResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.CreateApiKeyResp)
+	out := new(CreateApiKeyResp)
 	err := c.cc.Invoke(ctx, ApiKey_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -57,9 +54,9 @@ func (c *apiKeyClient) Create(ctx context.Context, in *did.CreateApiKeyReq, opts
 	return out, nil
 }
 
-func (c *apiKeyClient) Edit(ctx context.Context, in *did.EditApiKeyReq, opts ...grpc.CallOption) (*did.EditApiKeyResp, error) {
+func (c *apiKeyClient) Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.EditApiKeyResp)
+	out := new(EditApiKeyResp)
 	err := c.cc.Invoke(ctx, ApiKey_Edit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -67,9 +64,9 @@ func (c *apiKeyClient) Edit(ctx context.Context, in *did.EditApiKeyReq, opts ...
 	return out, nil
 }
 
-func (c *apiKeyClient) List(ctx context.Context, in *did.ListApiKeyReq, opts ...grpc.CallOption) (*did.ListApiKeyResp, error) {
+func (c *apiKeyClient) List(ctx context.Context, in *ListApiKeysReq, opts ...grpc.CallOption) (*ListApiKeysResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.ListApiKeyResp)
+	out := new(ListApiKeysResp)
 	err := c.cc.Invoke(ctx, ApiKey_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -77,7 +74,7 @@ func (c *apiKeyClient) List(ctx context.Context, in *did.ListApiKeyReq, opts ...
 	return out, nil
 }
 
-func (c *apiKeyClient) Delete(ctx context.Context, in *did.DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *apiKeyClient) Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ApiKey_Delete_FullMethodName, in, out, cOpts...)
@@ -90,13 +87,11 @@ func (c *apiKeyClient) Delete(ctx context.Context, in *did.DeleteApiKeyReq, opts
 // ApiKeyServer is the server API for ApiKey service.
 // All implementations should embed UnimplementedApiKeyServer
 // for forward compatibility.
-//
-// 使用token鉴权
 type ApiKeyServer interface {
-	Create(context.Context, *did.CreateApiKeyReq) (*did.CreateApiKeyResp, error)
-	Edit(context.Context, *did.EditApiKeyReq) (*did.EditApiKeyResp, error)
-	List(context.Context, *did.ListApiKeyReq) (*did.ListApiKeyResp, error)
-	Delete(context.Context, *did.DeleteApiKeyReq) (*emptypb.Empty, error)
+	Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error)
+	Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error)
+	List(context.Context, *ListApiKeysReq) (*ListApiKeysResp, error)
+	Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedApiKeyServer should be embedded to have
@@ -106,16 +101,16 @@ type ApiKeyServer interface {
 // pointer dereference when methods are called.
 type UnimplementedApiKeyServer struct{}
 
-func (UnimplementedApiKeyServer) Create(context.Context, *did.CreateApiKeyReq) (*did.CreateApiKeyResp, error) {
+func (UnimplementedApiKeyServer) Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedApiKeyServer) Edit(context.Context, *did.EditApiKeyReq) (*did.EditApiKeyResp, error) {
+func (UnimplementedApiKeyServer) Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
-func (UnimplementedApiKeyServer) List(context.Context, *did.ListApiKeyReq) (*did.ListApiKeyResp, error) {
+func (UnimplementedApiKeyServer) List(context.Context, *ListApiKeysReq) (*ListApiKeysResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedApiKeyServer) Delete(context.Context, *did.DeleteApiKeyReq) (*emptypb.Empty, error) {
+func (UnimplementedApiKeyServer) Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedApiKeyServer) testEmbeddedByValue() {}
@@ -139,7 +134,7 @@ func RegisterApiKeyServer(s grpc.ServiceRegistrar, srv ApiKeyServer) {
 }
 
 func _ApiKey_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.CreateApiKeyReq)
+	in := new(CreateApiKeyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -151,13 +146,13 @@ func _ApiKey_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: ApiKey_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiKeyServer).Create(ctx, req.(*did.CreateApiKeyReq))
+		return srv.(ApiKeyServer).Create(ctx, req.(*CreateApiKeyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ApiKey_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.EditApiKeyReq)
+	in := new(EditApiKeyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -169,13 +164,13 @@ func _ApiKey_Edit_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: ApiKey_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiKeyServer).Edit(ctx, req.(*did.EditApiKeyReq))
+		return srv.(ApiKeyServer).Edit(ctx, req.(*EditApiKeyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ApiKey_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.ListApiKeyReq)
+	in := new(ListApiKeysReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -187,13 +182,13 @@ func _ApiKey_List_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: ApiKey_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiKeyServer).List(ctx, req.(*did.ListApiKeyReq))
+		return srv.(ApiKeyServer).List(ctx, req.(*ListApiKeysReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ApiKey_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.DeleteApiKeyReq)
+	in := new(DeleteApiKeyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -205,7 +200,7 @@ func _ApiKey_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: ApiKey_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiKeyServer).Delete(ctx, req.(*did.DeleteApiKeyReq))
+		return srv.(ApiKeyServer).Delete(ctx, req.(*DeleteApiKeyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

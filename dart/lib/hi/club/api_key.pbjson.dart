@@ -14,3 +14,139 @@
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use apiKeyInfoDescriptor instead')
+const ApiKeyInfo$json = {
+  '1': 'ApiKeyInfo',
+  '2': [
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+    {'1': 'note', '3': 3, '4': 1, '5': 9, '10': 'note'},
+    {'1': 'created_at', '3': 4, '4': 1, '5': 3, '10': 'createdAt'},
+  ],
+};
+
+/// Descriptor for `ApiKeyInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List apiKeyInfoDescriptor = $convert.base64Decode(
+    'CgpBcGlLZXlJbmZvEhIKBHVzZXIYASABKAlSBHVzZXISFAoFdmFsdWUYAiABKAlSBXZhbHVlEh'
+    'IKBG5vdGUYAyABKAlSBG5vdGUSHQoKY3JlYXRlZF9hdBgEIAEoA1IJY3JlYXRlZEF0');
+
+@$core.Deprecated('Use createApiKeyReqDescriptor instead')
+const CreateApiKeyReq$json = {
+  '1': 'CreateApiKeyReq',
+  '2': [
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
+  ],
+};
+
+/// Descriptor for `CreateApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createApiKeyReqDescriptor = $convert
+    .base64Decode('Cg9DcmVhdGVBcGlLZXlSZXESEgoEdXNlchgBIAEoCVIEdXNlcg==');
+
+@$core.Deprecated('Use createApiKeyRespDescriptor instead')
+const CreateApiKeyResp$json = {
+  '1': 'CreateApiKeyResp',
+  '2': [
+    {
+      '1': 'info',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ApiKeyInfo',
+      '10': 'info'
+    },
+  ],
+};
+
+/// Descriptor for `CreateApiKeyResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createApiKeyRespDescriptor = $convert.base64Decode(
+    'ChBDcmVhdGVBcGlLZXlSZXNwEicKBGluZm8YASABKAsyEy5oaS5jbHViLkFwaUtleUluZm9SBG'
+    'luZm8=');
+
+@$core.Deprecated('Use editApiKeyReqDescriptor instead')
+const EditApiKeyReq$json = {
+  '1': 'EditApiKeyReq',
+  '2': [
+    {'1': 'api_key', '3': 1, '4': 1, '5': 9, '10': 'apiKey'},
+    {'1': 'note', '3': 2, '4': 1, '5': 9, '10': 'note'},
+  ],
+};
+
+/// Descriptor for `EditApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List editApiKeyReqDescriptor = $convert.base64Decode(
+    'Cg1FZGl0QXBpS2V5UmVxEhcKB2FwaV9rZXkYASABKAlSBmFwaUtleRISCgRub3RlGAIgASgJUg'
+    'Rub3Rl');
+
+@$core.Deprecated('Use editApiKeyRespDescriptor instead')
+const EditApiKeyResp$json = {
+  '1': 'EditApiKeyResp',
+  '2': [
+    {
+      '1': 'info',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ApiKeyInfo',
+      '10': 'info'
+    },
+  ],
+};
+
+/// Descriptor for `EditApiKeyResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List editApiKeyRespDescriptor = $convert.base64Decode(
+    'Cg5FZGl0QXBpS2V5UmVzcBInCgRpbmZvGAEgASgLMhMuaGkuY2x1Yi5BcGlLZXlJbmZvUgRpbm'
+    'Zv');
+
+@$core.Deprecated('Use listApiKeysReqDescriptor instead')
+const ListApiKeysReq$json = {
+  '1': 'ListApiKeysReq',
+  '2': [
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListApiKeysReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listApiKeysReqDescriptor = $convert.base64Decode(
+    'Cg5MaXN0QXBpS2V5c1JlcRISCgR1c2VyGAEgASgJUgR1c2VyEi4KCnBhZ2luYXRpb24YAiABKA'
+    'syDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+
+@$core.Deprecated('Use listApiKeysRespDescriptor instead')
+const ListApiKeysResp$json = {
+  '1': 'ListApiKeysResp',
+  '2': [
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {
+      '1': 'infos',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.ApiKeyInfo',
+      '10': 'infos'
+    },
+  ],
+};
+
+/// Descriptor for `ListApiKeysResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listApiKeysRespDescriptor = $convert.base64Decode(
+    'Cg9MaXN0QXBpS2V5c1Jlc3ASFAoFdG90YWwYASABKAVSBXRvdGFsEikKBWluZm9zGAIgAygLMh'
+    'MuaGkuY2x1Yi5BcGlLZXlJbmZvUgVpbmZvcw==');
+
+@$core.Deprecated('Use deleteApiKeyReqDescriptor instead')
+const DeleteApiKeyReq$json = {
+  '1': 'DeleteApiKeyReq',
+  '2': [
+    {'1': 'api_key', '3': 1, '4': 1, '5': 9, '10': 'apiKey'},
+  ],
+};
+
+/// Descriptor for `DeleteApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteApiKeyReqDescriptor = $convert
+    .base64Decode('Cg9EZWxldGVBcGlLZXlSZXESFwoHYXBpX2tleRgBIAEoCVIGYXBpS2V5');

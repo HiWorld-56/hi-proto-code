@@ -17,11 +17,10 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
-import '../did/api_key.pb.dart' as $0;
+import 'api_key.pb.dart' as $0;
 
 export 'api_key.pb.dart';
 
-/// 使用token鉴权
 @$pb.GrpcServiceName('hi.club.ApiKey')
 class ApiKeyClient extends $grpc.Client {
   /// The hostname for this service.
@@ -48,8 +47,8 @@ class ApiKeyClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListApiKeyResp> list(
-    $0.ListApiKeyReq request, {
+  $grpc.ResponseFuture<$0.ListApiKeysResp> list(
+    $0.ListApiKeysReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
@@ -73,10 +72,11 @@ class ApiKeyClient extends $grpc.Client {
       '/hi.club.ApiKey/Edit',
       ($0.EditApiKeyReq value) => value.writeToBuffer(),
       $0.EditApiKeyResp.fromBuffer);
-  static final _$list = $grpc.ClientMethod<$0.ListApiKeyReq, $0.ListApiKeyResp>(
-      '/hi.club.ApiKey/List',
-      ($0.ListApiKeyReq value) => value.writeToBuffer(),
-      $0.ListApiKeyResp.fromBuffer);
+  static final _$list =
+      $grpc.ClientMethod<$0.ListApiKeysReq, $0.ListApiKeysResp>(
+          '/hi.club.ApiKey/List',
+          ($0.ListApiKeysReq value) => value.writeToBuffer(),
+          $0.ListApiKeysResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$0.DeleteApiKeyReq, $1.Empty>(
       '/hi.club.ApiKey/Delete',
       ($0.DeleteApiKeyReq value) => value.writeToBuffer(),
@@ -102,13 +102,13 @@ abstract class ApiKeyServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.EditApiKeyReq.fromBuffer(value),
         ($0.EditApiKeyResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListApiKeyReq, $0.ListApiKeyResp>(
+    $addMethod($grpc.ServiceMethod<$0.ListApiKeysReq, $0.ListApiKeysResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListApiKeyReq.fromBuffer(value),
-        ($0.ListApiKeyResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.ListApiKeysReq.fromBuffer(value),
+        ($0.ListApiKeysResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteApiKeyReq, $1.Empty>(
         'Delete',
         delete_Pre,
@@ -134,13 +134,13 @@ abstract class ApiKeyServiceBase extends $grpc.Service {
   $async.Future<$0.EditApiKeyResp> edit(
       $grpc.ServiceCall call, $0.EditApiKeyReq request);
 
-  $async.Future<$0.ListApiKeyResp> list_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.ListApiKeyReq> $request) async {
+  $async.Future<$0.ListApiKeysResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListApiKeysReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListApiKeyResp> list(
-      $grpc.ServiceCall call, $0.ListApiKeyReq request);
+  $async.Future<$0.ListApiKeysResp> list(
+      $grpc.ServiceCall call, $0.ListApiKeysReq request);
 
   $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteApiKeyReq> $request) async {

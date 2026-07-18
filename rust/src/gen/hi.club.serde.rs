@@ -381,6 +381,153 @@ impl<'de> serde::Deserialize<'de> for AddTradeResp {
         deserializer.deserialize_struct("hi.club.AddTradeResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ApiKeyInfo {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.user.is_empty() {
+            len += 1;
+        }
+        if !self.value.is_empty() {
+            len += 1;
+        }
+        if !self.note.is_empty() {
+            len += 1;
+        }
+        if self.created_at != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ApiKeyInfo", len)?;
+        if !self.user.is_empty() {
+            struct_ser.serialize_field("user", &self.user)?;
+        }
+        if !self.value.is_empty() {
+            struct_ser.serialize_field("value", &self.value)?;
+        }
+        if !self.note.is_empty() {
+            struct_ser.serialize_field("note", &self.note)?;
+        }
+        if self.created_at != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&self.created_at).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ApiKeyInfo {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "user",
+            "value",
+            "note",
+            "created_at",
+            "createdAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            User,
+            Value,
+            Note,
+            CreatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "user" => Ok(GeneratedField::User),
+                            "value" => Ok(GeneratedField::Value),
+                            "note" => Ok(GeneratedField::Note),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ApiKeyInfo;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ApiKeyInfo")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ApiKeyInfo, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut user__ = None;
+                let mut value__ = None;
+                let mut note__ = None;
+                let mut created_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::User => {
+                            if user__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("user"));
+                            }
+                            user__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Value => {
+                            if value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("value"));
+                            }
+                            value__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ApiKeyInfo {
+                    user: user__.unwrap_or_default(),
+                    value: value__.unwrap_or_default(),
+                    note: note__.unwrap_or_default(),
+                    created_at: created_at__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ApiKeyInfo", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for BindMasterReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -1326,6 +1473,188 @@ impl<'de> serde::Deserialize<'de> for content::Chat {
         deserializer.deserialize_struct("hi.club.Content.Chat", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for CreateApiKeyReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.user.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.CreateApiKeyReq", len)?;
+        if !self.user.is_empty() {
+            struct_ser.serialize_field("user", &self.user)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateApiKeyReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "user",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            User,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "user" => Ok(GeneratedField::User),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateApiKeyReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.CreateApiKeyReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateApiKeyReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut user__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::User => {
+                            if user__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("user"));
+                            }
+                            user__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(CreateApiKeyReq {
+                    user: user__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.CreateApiKeyReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateApiKeyResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.info.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.CreateApiKeyResp", len)?;
+        if let Some(v) = self.info.as_ref() {
+            struct_ser.serialize_field("info", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateApiKeyResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "info",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Info,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "info" => Ok(GeneratedField::Info),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateApiKeyResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.CreateApiKeyResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateApiKeyResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut info__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Info => {
+                            if info__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("info"));
+                            }
+                            info__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateApiKeyResp {
+                    info: info__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.CreateApiKeyResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateGroupReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -1508,6 +1837,98 @@ impl<'de> serde::Deserialize<'de> for CreateSingleReq {
         deserializer.deserialize_struct("hi.club.CreateSingleReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for DeleteApiKeyReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.api_key.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.DeleteApiKeyReq", len)?;
+        if !self.api_key.is_empty() {
+            struct_ser.serialize_field("apiKey", &self.api_key)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DeleteApiKeyReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "api_key",
+            "apiKey",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ApiKey,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DeleteApiKeyReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.DeleteApiKeyReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteApiKeyReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut api_key__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ApiKey => {
+                            if api_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiKey"));
+                            }
+                            api_key__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(DeleteApiKeyReq {
+                    api_key: api_key__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.DeleteApiKeyReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for DeleteFriendReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -1688,6 +2109,206 @@ impl<'de> serde::Deserialize<'de> for DeleteSystemMessageReq {
             }
         }
         deserializer.deserialize_struct("hi.club.DeleteSystemMessageReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EditApiKeyReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.api_key.is_empty() {
+            len += 1;
+        }
+        if !self.note.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.EditApiKeyReq", len)?;
+        if !self.api_key.is_empty() {
+            struct_ser.serialize_field("apiKey", &self.api_key)?;
+        }
+        if !self.note.is_empty() {
+            struct_ser.serialize_field("note", &self.note)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EditApiKeyReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "api_key",
+            "apiKey",
+            "note",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ApiKey,
+            Note,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
+                            "note" => Ok(GeneratedField::Note),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EditApiKeyReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.EditApiKeyReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EditApiKeyReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut api_key__ = None;
+                let mut note__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ApiKey => {
+                            if api_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiKey"));
+                            }
+                            api_key__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(EditApiKeyReq {
+                    api_key: api_key__.unwrap_or_default(),
+                    note: note__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.EditApiKeyReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EditApiKeyResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.info.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.EditApiKeyResp", len)?;
+        if let Some(v) = self.info.as_ref() {
+            struct_ser.serialize_field("info", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EditApiKeyResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "info",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Info,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "info" => Ok(GeneratedField::Info),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EditApiKeyResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.EditApiKeyResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EditApiKeyResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut info__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Info => {
+                            if info__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("info"));
+                            }
+                            info__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(EditApiKeyResp {
+                    info: info__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.EditApiKeyResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for FriendRequestStatus {
@@ -4059,6 +4680,224 @@ impl<'de> serde::Deserialize<'de> for ListAllTradeReq {
             }
         }
         deserializer.deserialize_struct("hi.club.ListAllTradeReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListApiKeysReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.user.is_empty() {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListApiKeysReq", len)?;
+        if !self.user.is_empty() {
+            struct_ser.serialize_field("user", &self.user)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListApiKeysReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "user",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            User,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "user" => Ok(GeneratedField::User),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListApiKeysReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ListApiKeysReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListApiKeysReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut user__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::User => {
+                            if user__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("user"));
+                            }
+                            user__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListApiKeysReq {
+                    user: user__.unwrap_or_default(),
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ListApiKeysReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListApiKeysResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.total != 0 {
+            len += 1;
+        }
+        if !self.infos.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListApiKeysResp", len)?;
+        if self.total != 0 {
+            struct_ser.serialize_field("total", &self.total)?;
+        }
+        if !self.infos.is_empty() {
+            struct_ser.serialize_field("infos", &self.infos)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListApiKeysResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "total",
+            "infos",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Total,
+            Infos,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "total" => Ok(GeneratedField::Total),
+                            "infos" => Ok(GeneratedField::Infos),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListApiKeysResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ListApiKeysResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListApiKeysResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut total__ = None;
+                let mut infos__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Infos => {
+                            if infos__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("infos"));
+                            }
+                            infos__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ListApiKeysResp {
+                    total: total__.unwrap_or_default(),
+                    infos: infos__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ListApiKeysResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListGroupMemberReq {
