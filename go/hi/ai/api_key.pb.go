@@ -23,6 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// apikey 是商户机密(value 可鉴权),只发给持有它的商户本人。
 type ApiKeyInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Value         string                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
@@ -347,27 +348,27 @@ var File_hi_ai_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_ai_api_key_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/ai/api_key.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa3\x01\n" +
+	"\x13hi/ai/api_key.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xcd\x01\n" +
 	"\n" +
-	"ApiKeyInfo\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\tR\x05value\x12\x10\n" +
-	"\x03did\x18\x02 \x01(\tR\x03did\x12\x1d\n" +
+	"ApiKeyInfo\x12\x1a\n" +
+	"\x05value\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05value\x12\x16\n" +
+	"\x03did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12#\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\x05R\trateLimit\x12\x1b\n" +
-	"\tis_active\x18\x04 \x01(\bR\bisActive\x12\x12\n" +
-	"\x04note\x18\x05 \x01(\tR\x04note\x12\x1d\n" +
+	"rate_limit\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03R\trateLimit\x12!\n" +
+	"\tis_active\x18\x04 \x01(\bB\x04\x90\xb5\x18\x03R\bisActive\x12\x18\n" +
+	"\x04note\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12#\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\x03R\tcreatedAt\"9\n" +
-	"\x10CreateApiKeyResp\x12%\n" +
-	"\x04info\x18\x01 \x01(\v2\x11.hi.ai.ApiKeyInfoR\x04info\"<\n" +
+	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"E\n" +
+	"\x10CreateApiKeyResp\x12+\n" +
+	"\x04info\x18\x01 \x01(\v2\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"<\n" +
 	"\rEditApiKeyReq\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x12\n" +
-	"\x04note\x18\x02 \x01(\tR\x04note\"7\n" +
-	"\x0eEditApiKeyResp\x12%\n" +
-	"\x04info\x18\x01 \x01(\v2\x11.hi.ai.ApiKeyInfoR\x04info\"P\n" +
-	"\x0fListApiKeysResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12'\n" +
-	"\x05infos\x18\x02 \x03(\v2\x11.hi.ai.ApiKeyInfoR\x05infos\"*\n" +
+	"\x04note\x18\x02 \x01(\tR\x04note\"C\n" +
+	"\x0eEditApiKeyResp\x12+\n" +
+	"\x04info\x18\x01 \x01(\v2\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"b\n" +
+	"\x0fListApiKeysResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12-\n" +
+	"\x05infos\x18\x02 \x03(\v2\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"*\n" +
 	"\x0fDeleteApiKeyReq\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\xfe\x01\n" +
 	"\x06ApiKey\x12@\n" +

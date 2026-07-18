@@ -64,30 +64,40 @@ final $typed_data.Uint8List entityDescriptor = $convert.base64Decode(
 const MqttCredentials$json = {
   '1': 'MqttCredentials',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
-    {'1': 'username', '3': 2, '4': 1, '5': 9, '10': 'username'},
-    {'1': 'password', '3': 3, '4': 1, '5': 9, '10': 'password'},
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'id'},
+    {'1': 'username', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'username'},
+    {'1': 'password', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'password'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `MqttCredentials`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List mqttCredentialsDescriptor = $convert.base64Decode(
-    'Cg9NcXR0Q3JlZGVudGlhbHMSDgoCaWQYASABKAlSAmlkEhoKCHVzZXJuYW1lGAIgASgJUgh1c2'
-    'VybmFtZRIaCghwYXNzd29yZBgDIAEoCVIIcGFzc3dvcmQ=');
+    'Cg9NcXR0Q3JlZGVudGlhbHMSFAoCaWQYASABKAlCBJC1GANSAmlkEiAKCHVzZXJuYW1lGAIgAS'
+    'gJQgSQtRgDUgh1c2VybmFtZRIgCghwYXNzd29yZBgDIAEoCUIEkLUYA1IIcGFzc3dvcmQ6BJi1'
+    'GAM=');
 
 @$core.Deprecated('Use authTokenDescriptor instead')
 const AuthToken$json = {
   '1': 'AuthToken',
   '2': [
-    {'1': 'token', '3': 1, '4': 1, '5': 9, '10': 'token'},
-    {'1': 'refresh_token', '3': 2, '4': 1, '5': 9, '10': 'refreshToken'},
+    {'1': 'token', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'token'},
+    {
+      '1': 'refresh_token',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'refreshToken'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `AuthToken`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List authTokenDescriptor = $convert.base64Decode(
-    'CglBdXRoVG9rZW4SFAoFdG9rZW4YASABKAlSBXRva2VuEiMKDXJlZnJlc2hfdG9rZW4YAiABKA'
-    'lSDHJlZnJlc2hUb2tlbg==');
+    'CglBdXRoVG9rZW4SGgoFdG9rZW4YASABKAlCBJC1GANSBXRva2VuEikKDXJlZnJlc2hfdG9rZW'
+    '4YAiABKAlCBJC1GANSDHJlZnJlc2hUb2tlbjoEmLUYAw==');
 
 @$core.Deprecated('Use nonceDescriptor instead')
 const Nonce$json = {

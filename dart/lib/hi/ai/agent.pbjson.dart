@@ -104,16 +104,17 @@ final $typed_data.Uint8List agentConfigDescriptor = $convert.base64Decode(
 const TokenUsage$json = {
   '1': 'TokenUsage',
   '2': [
-    {'1': 'output', '3': 1, '4': 1, '5': 5, '10': 'output'},
-    {'1': 'input', '3': 2, '4': 1, '5': 5, '10': 'input'},
-    {'1': 'mem', '3': 3, '4': 1, '5': 5, '10': 'mem'},
+    {'1': 'output', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'output'},
+    {'1': 'input', '3': 2, '4': 1, '5': 5, '8': {}, '10': 'input'},
+    {'1': 'mem', '3': 3, '4': 1, '5': 5, '8': {}, '10': 'mem'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TokenUsage`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List tokenUsageDescriptor = $convert.base64Decode(
-    'CgpUb2tlblVzYWdlEhYKBm91dHB1dBgBIAEoBVIGb3V0cHV0EhQKBWlucHV0GAIgASgFUgVpbn'
-    'B1dBIQCgNtZW0YAyABKAVSA21lbQ==');
+    'CgpUb2tlblVzYWdlEhwKBm91dHB1dBgBIAEoBUIEkLUYA1IGb3V0cHV0EhoKBWlucHV0GAIgAS'
+    'gFQgSQtRgDUgVpbnB1dBIWCgNtZW0YAyABKAVCBJC1GANSA21lbToEmLUYAw==');
 
 @$core.Deprecated('Use agentInfoDescriptor instead')
 const AgentInfo$json = {
@@ -357,22 +358,32 @@ final $typed_data.Uint8List agentUsageReqDescriptor = $convert
 const AgentUsageResp$json = {
   '1': 'AgentUsageResp',
   '2': [
-    {'1': 'message_count', '3': 1, '4': 1, '5': 5, '10': 'messageCount'},
+    {
+      '1': 'message_count',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '10': 'messageCount'
+    },
     {
       '1': 'token',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.ai.TokenUsage',
+      '8': {},
       '10': 'token'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `AgentUsageResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List agentUsageRespDescriptor = $convert.base64Decode(
-    'Cg5BZ2VudFVzYWdlUmVzcBIjCg1tZXNzYWdlX2NvdW50GAEgASgFUgxtZXNzYWdlQ291bnQSJw'
-    'oFdG9rZW4YAiABKAsyES5oaS5haS5Ub2tlblVzYWdlUgV0b2tlbg==');
+    'Cg5BZ2VudFVzYWdlUmVzcBIpCg1tZXNzYWdlX2NvdW50GAEgASgFQgSQtRgDUgxtZXNzYWdlQ2'
+    '91bnQSLQoFdG9rZW4YAiABKAsyES5oaS5haS5Ub2tlblVzYWdlQgSQtRgDUgV0b2tlbjoEmLUY'
+    'Aw==');
 
 @$core.Deprecated('Use resetToDefaultReqDescriptor instead')
 const ResetToDefaultReq$json = {

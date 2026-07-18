@@ -76,6 +76,7 @@ class PermissionGetReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 }
 
+/// 某 did 持有的权限清单,只发给主体本人(经商户代查)或超管后门。
 class PermissionInfo extends $pb.GeneratedMessage {
   factory PermissionInfo({
     $core.String? did,

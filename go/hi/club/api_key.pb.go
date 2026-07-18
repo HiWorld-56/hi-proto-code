@@ -23,6 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// apikey 是用户机密(value 可鉴权),只发给归属用户本人。
 type ApiKeyInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 归属用户 did(人/软bot/硬bot)
@@ -427,31 +428,31 @@ var File_hi_club_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_club_api_key_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"i\n" +
+	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x87\x01\n" +
 	"\n" +
-	"ApiKeyInfo\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value\x12\x12\n" +
-	"\x04note\x18\x03 \x01(\tR\x04note\x12\x1d\n" +
+	"ApiKeyInfo\x12\x18\n" +
+	"\x04user\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04user\x12\x1a\n" +
+	"\x05value\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05value\x12\x18\n" +
+	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12#\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\x03R\tcreatedAt\"%\n" +
+	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"%\n" +
 	"\x0fCreateApiKeyReq\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\";\n" +
-	"\x10CreateApiKeyResp\x12'\n" +
-	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoR\x04info\"<\n" +
+	"\x04user\x18\x01 \x01(\tR\x04user\"G\n" +
+	"\x10CreateApiKeyResp\x12-\n" +
+	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"<\n" +
 	"\rEditApiKeyReq\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x12\n" +
-	"\x04note\x18\x02 \x01(\tR\x04note\"9\n" +
-	"\x0eEditApiKeyResp\x12'\n" +
-	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoR\x04info\"T\n" +
+	"\x04note\x18\x02 \x01(\tR\x04note\"E\n" +
+	"\x0eEditApiKeyResp\x12-\n" +
+	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"T\n" +
 	"\x0eListApiKeysReq\x12\x12\n" +
 	"\x04user\x18\x01 \x01(\tR\x04user\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"R\n" +
-	"\x0fListApiKeysResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12)\n" +
-	"\x05infos\x18\x02 \x03(\v2\x13.hi.club.ApiKeyInfoR\x05infos\"*\n" +
+	"pagination\"d\n" +
+	"\x0fListApiKeysResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12/\n" +
+	"\x05infos\x18\x02 \x03(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"*\n" +
 	"\x0fDeleteApiKeyReq\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\x93\x02\n" +
 	"\x06ApiKey\x12D\n" +

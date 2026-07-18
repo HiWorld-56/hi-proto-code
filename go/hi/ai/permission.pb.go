@@ -124,6 +124,7 @@ func (x *PermissionGetReq) GetDid() string {
 	return ""
 }
 
+// 某 did 持有的权限清单,只发给主体本人(经商户代查)或超管后门。
 type PermissionInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
@@ -615,11 +616,11 @@ const file_hi_ai_permission_proto_rawDesc = "" +
 	"\n" +
 	"\x16hi/ai/permission.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"$\n" +
 	"\x10PermissionGetReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"o\n" +
-	"\x0ePermissionInfo\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x127\n" +
-	"\vpermissions\x18\x02 \x03(\x0e2\x15.hi.ai.PermissionTypeR\vpermissions\x12\x12\n" +
-	"\x04note\x18\x03 \x01(\tR\x04note\"O\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\"\x87\x01\n" +
+	"\x0ePermissionInfo\x12\x16\n" +
+	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12=\n" +
+	"\vpermissions\x18\x02 \x03(\x0e2\x15.hi.ai.PermissionTypeB\x04\x90\xb5\x18\x03R\vpermissions\x12\x18\n" +
+	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04note:\x04\x98\xb5\x18\x03\"O\n" +
 	"\x10PermissionAddReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12)\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"R\n" +
@@ -634,10 +635,10 @@ const file_hi_ai_permission_proto_rawDesc = "" +
 	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"W\n" +
-	"\x12PermissionListResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12+\n" +
-	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoR\x05infos\"S\n" +
+	"pagination\"i\n" +
+	"\x12PermissionListResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x121\n" +
+	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"S\n" +
 	"\x0fMerchantListReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +

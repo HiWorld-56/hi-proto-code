@@ -802,6 +802,7 @@ pub mod order_client {
         }
     }
 }
+/// apikey 是用户机密(value 可鉴权),只发给归属用户本人。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ApiKeyInfo {
     /// 归属用户 did(人/软bot/硬bot)

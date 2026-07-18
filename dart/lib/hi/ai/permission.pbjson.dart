@@ -49,23 +49,26 @@ final $typed_data.Uint8List permissionGetReqDescriptor =
 const PermissionInfo$json = {
   '1': 'PermissionInfo',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
     {
       '1': 'permissions',
       '3': 2,
       '4': 3,
       '5': 14,
       '6': '.hi.ai.PermissionType',
+      '8': {},
       '10': 'permissions'
     },
-    {'1': 'note', '3': 3, '4': 1, '5': 9, '10': 'note'},
+    {'1': 'note', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'note'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `PermissionInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionInfoDescriptor = $convert.base64Decode(
-    'Cg5QZXJtaXNzaW9uSW5mbxIQCgNkaWQYASABKAlSA2RpZBI3CgtwZXJtaXNzaW9ucxgCIAMoDj'
-    'IVLmhpLmFpLlBlcm1pc3Npb25UeXBlUgtwZXJtaXNzaW9ucxISCgRub3RlGAMgASgJUgRub3Rl');
+    'Cg5QZXJtaXNzaW9uSW5mbxIWCgNkaWQYASABKAlCBJC1GANSA2RpZBI9CgtwZXJtaXNzaW9ucx'
+    'gCIAMoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlQgSQtRgDUgtwZXJtaXNzaW9ucxIYCgRub3Rl'
+    'GAMgASgJQgSQtRgDUgRub3RlOgSYtRgD');
 
 @$core.Deprecated('Use permissionAddReqDescriptor instead')
 const PermissionAddReq$json = {
@@ -157,22 +160,24 @@ final $typed_data.Uint8List permissionListReqDescriptor = $convert.base64Decode(
 const PermissionListResp$json = {
   '1': 'PermissionListResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'infos',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.ai.PermissionInfo',
+      '8': {},
       '10': 'infos'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `PermissionListResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionListRespDescriptor = $convert.base64Decode(
-    'ChJQZXJtaXNzaW9uTGlzdFJlc3ASFAoFdG90YWwYASABKAVSBXRvdGFsEisKBWluZm9zGAIgAy'
-    'gLMhUuaGkuYWkuUGVybWlzc2lvbkluZm9SBWluZm9z');
+    'ChJQZXJtaXNzaW9uTGlzdFJlc3ASGgoFdG90YWwYASABKAVCBJC1GANSBXRvdGFsEjEKBWluZm'
+    '9zGAIgAygLMhUuaGkuYWkuUGVybWlzc2lvbkluZm9CBJC1GANSBWluZm9zOgSYtRgD');
 
 @$core.Deprecated('Use merchantListReqDescriptor instead')
 const MerchantListReq$json = {

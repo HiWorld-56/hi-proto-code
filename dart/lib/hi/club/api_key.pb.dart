@@ -19,6 +19,7 @@ import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// apikey 是用户机密(value 可鉴权),只发给归属用户本人。
 class ApiKeyInfo extends $pb.GeneratedMessage {
   factory ApiKeyInfo({
     $core.String? user,

@@ -210,6 +210,7 @@ pub struct AgentConfig {
     #[prost(bool, optional, tag = "5")]
     pub use_mem: ::core::option::Option<bool>,
 }
+/// 用量/计费数据,只发给资源主人本人。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TokenUsage {
     /// 模型生成输出时消耗的token数。
@@ -626,6 +627,7 @@ pub mod agent_client {
         }
     }
 }
+/// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Content {
     #[prost(string, tag = "1")]
@@ -2309,12 +2311,13 @@ pub struct PermissionGetReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
 }
+/// 某 did 持有的权限清单,只发给主体本人(经商户代查)或超管后门。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PermissionInfo {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     /// 该 did 持有的权限
-    #[prost(enumeration = "PermissionType", repeated, tag = "2")]
+    #[prost(enumeration = "PermissionType", repeated, packed = "false", tag = "2")]
     pub permissions: ::prost::alloc::vec::Vec<i32>,
     #[prost(string, tag = "3")]
     pub note: ::prost::alloc::string::String,
@@ -3000,6 +3003,7 @@ pub mod auth_client {
         }
     }
 }
+/// apikey 是商户机密(value 可鉴权),只发给持有它的商户本人。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ApiKeyInfo {
     #[prost(string, tag = "1")]

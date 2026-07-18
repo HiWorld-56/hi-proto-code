@@ -299,6 +299,7 @@ class AgentConfig extends $pb.GeneratedMessage {
   void clearUseMem() => $_clearField(5);
 }
 
+/// 用量/计费数据,只发给资源主人本人。
 class TokenUsage extends $pb.GeneratedMessage {
   factory TokenUsage({
     $core.int? output,

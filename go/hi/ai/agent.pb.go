@@ -235,6 +235,7 @@ func (x *AgentConfig) GetUseMem() bool {
 	return false
 }
 
+// 用量/计费数据,只发给资源主人本人。
 type TokenUsage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Output        int32                  `protobuf:"varint,1,opt,name=output,proto3" json:"output,omitempty"` // 模型生成输出时消耗的token数。
@@ -1103,12 +1104,12 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\b_freedomB\t\n" +
 	"\a_qa_numB\n" +
 	"\n" +
-	"\b_use_mem\"L\n" +
+	"\b_use_mem\"d\n" +
 	"\n" +
-	"TokenUsage\x12\x16\n" +
-	"\x06output\x18\x01 \x01(\x05R\x06output\x12\x14\n" +
-	"\x05input\x18\x02 \x01(\x05R\x05input\x12\x10\n" +
-	"\x03mem\x18\x03 \x01(\x05R\x03mem\"\xe5\x01\n" +
+	"TokenUsage\x12\x1c\n" +
+	"\x06output\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x06output\x12\x1a\n" +
+	"\x05input\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\x05input\x12\x16\n" +
+	"\x03mem\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03R\x03mem:\x04\x98\xb5\x18\x03\"\xe5\x01\n" +
 	"\tAgentInfo\x12\x1e\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04base\x12*\n" +
@@ -1155,10 +1156,10 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\fGetAgentResp\x12$\n" +
 	"\x04info\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoR\x04info\"%\n" +
 	"\rAgentUsageReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"^\n" +
-	"\x0eAgentUsageResp\x12#\n" +
-	"\rmessage_count\x18\x01 \x01(\x05R\fmessageCount\x12'\n" +
-	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageR\x05token\"+\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"p\n" +
+	"\x0eAgentUsageResp\x12)\n" +
+	"\rmessage_count\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\fmessageCount\x12-\n" +
+	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token:\x04\x98\xb5\x18\x03\"+\n" +
 	"\x11ResetToDefaultReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\"<\n" +
 	"\fMarkAgentReq\x12\x14\n" +

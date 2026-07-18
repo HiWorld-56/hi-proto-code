@@ -17,6 +17,7 @@ import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 class Content extends $pb.GeneratedMessage {
   factory Content({
     $core.String? type,

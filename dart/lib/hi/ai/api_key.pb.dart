@@ -17,6 +17,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// apikey 是商户机密(value 可鉴权),只发给持有它的商户本人。
 class ApiKeyInfo extends $pb.GeneratedMessage {
   factory ApiKeyInfo({
     $core.String? value,
