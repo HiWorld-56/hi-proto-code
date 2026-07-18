@@ -638,8 +638,6 @@ pub struct PcOrderData {
 /// 我的订单(hidid-pc 为订单主体拉取)→ SELF。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PcOrder {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub order_id: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]

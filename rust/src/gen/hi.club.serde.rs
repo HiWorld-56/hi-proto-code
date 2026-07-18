@@ -7463,9 +7463,6 @@ impl serde::Serialize for PcOrder {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.id.is_empty() {
-            len += 1;
-        }
         if !self.order_id.is_empty() {
             len += 1;
         }
@@ -7491,9 +7488,6 @@ impl serde::Serialize for PcOrder {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.PcOrder", len)?;
-        if !self.id.is_empty() {
-            struct_ser.serialize_field("id", &self.id)?;
-        }
         if !self.order_id.is_empty() {
             struct_ser.serialize_field("orderId", &self.order_id)?;
         }
@@ -7532,7 +7526,6 @@ impl<'de> serde::Deserialize<'de> for PcOrder {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "id",
             "order_id",
             "orderId",
             "to_did",
@@ -7549,7 +7542,6 @@ impl<'de> serde::Deserialize<'de> for PcOrder {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Id,
             OrderId,
             ToDid,
             Amount,
@@ -7579,7 +7571,6 @@ impl<'de> serde::Deserialize<'de> for PcOrder {
                         E: serde::de::Error,
                     {
                         match value {
-                            "id" => Ok(GeneratedField::Id),
                             "orderId" | "order_id" => Ok(GeneratedField::OrderId),
                             "toDid" | "to_did" => Ok(GeneratedField::ToDid),
                             "amount" => Ok(GeneratedField::Amount),
@@ -7607,7 +7598,6 @@ impl<'de> serde::Deserialize<'de> for PcOrder {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut id__ = None;
                 let mut order_id__ = None;
                 let mut to_did__ = None;
                 let mut amount__ = None;
@@ -7618,12 +7608,6 @@ impl<'de> serde::Deserialize<'de> for PcOrder {
                 let mut status__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Id => {
-                            if id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("id"));
-                            }
-                            id__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::OrderId => {
                             if order_id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("orderId"));
@@ -7679,7 +7663,6 @@ impl<'de> serde::Deserialize<'de> for PcOrder {
                     }
                 }
                 Ok(PcOrder {
-                    id: id__.unwrap_or_default(),
                     order_id: order_id__.unwrap_or_default(),
                     to_did: to_did__.unwrap_or_default(),
                     amount: amount__.unwrap_or_default(),

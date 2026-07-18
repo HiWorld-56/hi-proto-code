@@ -79,7 +79,6 @@ func (x *PcOrderData) GetNonce() string {
 // 我的订单(hidid-pc 为订单主体拉取)→ SELF。
 type PcOrder struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	OrderId       string                 `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
 	ToDid         string                 `protobuf:"bytes,3,opt,name=to_did,json=toDid,proto3" json:"to_did,omitempty"`
 	Amount        string                 `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -120,13 +119,6 @@ func (x *PcOrder) ProtoReflect() protoreflect.Message {
 // Deprecated: Use PcOrder.ProtoReflect.Descriptor instead.
 func (*PcOrder) Descriptor() ([]byte, []int) {
 	return file_hi_club_order_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *PcOrder) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
 }
 
 func (x *PcOrder) GetOrderId() string {
@@ -357,9 +349,8 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"5\n" +
 	"\vPcOrderData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
-	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\x9b\x02\n" +
-	"\aPcOrder\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x02id\x12\x1f\n" +
+	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\x8f\x02\n" +
+	"\aPcOrder\x12\x1f\n" +
 	"\border_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12\x1b\n" +
 	"\x06to_did\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x05toDid\x12\x1c\n" +
 	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
@@ -369,7 +360,7 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03R\tupdatedAt\x12\x16\n" +
 	"\x03did\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12\x1c\n" +
-	"\x06status\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03\"P\n" +
+	"\x06status\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03J\x04\b\x01\x10\x02R\x02id\"P\n" +
 	"\x18GetNotPulledPcOrdersResp\x12.\n" +
 	"\x06orders\x18\x01 \x03(\v2\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"\x7f\n" +
 	"\x13UpdatePulledPcOrder\x12\x19\n" +

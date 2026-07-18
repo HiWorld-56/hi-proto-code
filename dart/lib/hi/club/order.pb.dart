@@ -87,7 +87,6 @@ class PcOrderData extends $pb.GeneratedMessage {
 /// 我的订单(hidid-pc 为订单主体拉取)→ SELF。
 class PcOrder extends $pb.GeneratedMessage {
   factory PcOrder({
-    $core.String? id,
     $core.String? orderId,
     $core.String? toDid,
     $core.String? amount,
@@ -98,7 +97,6 @@ class PcOrder extends $pb.GeneratedMessage {
     $core.String? status,
   }) {
     final result = create();
-    if (id != null) result.id = id;
     if (orderId != null) result.orderId = orderId;
     if (toDid != null) result.toDid = toDid;
     if (amount != null) result.amount = amount;
@@ -123,7 +121,6 @@ class PcOrder extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PcOrder',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'orderId')
     ..aOS(3, _omitFieldNames ? '' : 'toDid')
     ..aOS(4, _omitFieldNames ? '' : 'amount')
@@ -152,84 +149,75 @@ class PcOrder extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PcOrder>(create);
   static PcOrder? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set id($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-
   @$pb.TagNumber(2)
-  $core.String get orderId => $_getSZ(1);
+  $core.String get orderId => $_getSZ(0);
   @$pb.TagNumber(2)
-  set orderId($core.String value) => $_setString(1, value);
+  set orderId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(2)
-  $core.bool hasOrderId() => $_has(1);
+  $core.bool hasOrderId() => $_has(0);
   @$pb.TagNumber(2)
   void clearOrderId() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get toDid => $_getSZ(2);
+  $core.String get toDid => $_getSZ(1);
   @$pb.TagNumber(3)
-  set toDid($core.String value) => $_setString(2, value);
+  set toDid($core.String value) => $_setString(1, value);
   @$pb.TagNumber(3)
-  $core.bool hasToDid() => $_has(2);
+  $core.bool hasToDid() => $_has(1);
   @$pb.TagNumber(3)
   void clearToDid() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get amount => $_getSZ(3);
+  $core.String get amount => $_getSZ(2);
   @$pb.TagNumber(4)
-  set amount($core.String value) => $_setString(3, value);
+  set amount($core.String value) => $_setString(2, value);
   @$pb.TagNumber(4)
-  $core.bool hasAmount() => $_has(3);
+  $core.bool hasAmount() => $_has(2);
   @$pb.TagNumber(4)
   void clearAmount() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get type => $_getSZ(4);
+  $core.String get type => $_getSZ(3);
   @$pb.TagNumber(5)
-  set type($core.String value) => $_setString(4, value);
+  set type($core.String value) => $_setString(3, value);
   @$pb.TagNumber(5)
-  $core.bool hasType() => $_has(4);
+  $core.bool hasType() => $_has(3);
   @$pb.TagNumber(5)
   void clearType() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $fixnum.Int64 get createdAt => $_getI64(5);
+  $fixnum.Int64 get createdAt => $_getI64(4);
   @$pb.TagNumber(6)
-  set createdAt($fixnum.Int64 value) => $_setInt64(5, value);
+  set createdAt($fixnum.Int64 value) => $_setInt64(4, value);
   @$pb.TagNumber(6)
-  $core.bool hasCreatedAt() => $_has(5);
+  $core.bool hasCreatedAt() => $_has(4);
   @$pb.TagNumber(6)
   void clearCreatedAt() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  $fixnum.Int64 get updatedAt => $_getI64(6);
+  $fixnum.Int64 get updatedAt => $_getI64(5);
   @$pb.TagNumber(7)
-  set updatedAt($fixnum.Int64 value) => $_setInt64(6, value);
+  set updatedAt($fixnum.Int64 value) => $_setInt64(5, value);
   @$pb.TagNumber(7)
-  $core.bool hasUpdatedAt() => $_has(6);
+  $core.bool hasUpdatedAt() => $_has(5);
   @$pb.TagNumber(7)
   void clearUpdatedAt() => $_clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get did => $_getSZ(7);
+  $core.String get did => $_getSZ(6);
   @$pb.TagNumber(8)
-  set did($core.String value) => $_setString(7, value);
+  set did($core.String value) => $_setString(6, value);
   @$pb.TagNumber(8)
-  $core.bool hasDid() => $_has(7);
+  $core.bool hasDid() => $_has(6);
   @$pb.TagNumber(8)
   void clearDid() => $_clearField(8);
 
   @$pb.TagNumber(9)
-  $core.String get status => $_getSZ(8);
+  $core.String get status => $_getSZ(7);
   @$pb.TagNumber(9)
-  set status($core.String value) => $_setString(8, value);
+  set status($core.String value) => $_setString(7, value);
   @$pb.TagNumber(9)
-  $core.bool hasStatus() => $_has(8);
+  $core.bool hasStatus() => $_has(7);
   @$pb.TagNumber(9)
   void clearStatus() => $_clearField(9);
 }
