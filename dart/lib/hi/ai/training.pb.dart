@@ -21,11 +21,11 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 class StartReq extends $pb.GeneratedMessage {
   factory StartReq({
-    $core.Iterable<$core.int>? ids,
+    $core.Iterable<$core.String>? uuids,
     $core.String? agent,
   }) {
     final result = create();
-    if (ids != null) result.ids.addAll(ids);
+    if (uuids != null) result.uuids.addAll(uuids);
     if (agent != null) result.agent = agent;
     return result;
   }
@@ -43,7 +43,7 @@ class StartReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'StartReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..p<$core.int>(1, _omitFieldNames ? '' : 'ids', $pb.PbFieldType.K3)
+    ..pPS(1, _omitFieldNames ? '' : 'uuids')
     ..aOS(2, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
@@ -66,7 +66,7 @@ class StartReq extends $pb.GeneratedMessage {
   static StartReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$core.int> get ids => $_getList(0);
+  $pb.PbList<$core.String> get uuids => $_getList(0);
 
   @$pb.TagNumber(2)
   $core.String get agent => $_getSZ(1);
@@ -354,7 +354,7 @@ class UploadFileReq extends $pb.GeneratedMessage {
 
 class TrainingFile extends $pb.GeneratedMessage {
   factory TrainingFile({
-    $core.int? id,
+    $core.String? uuid,
     $core.String? content,
     $core.String? agent,
     $core.String? title,
@@ -367,7 +367,7 @@ class TrainingFile extends $pb.GeneratedMessage {
     $fixnum.Int64? updatedAt,
   }) {
     final result = create();
-    if (id != null) result.id = id;
+    if (uuid != null) result.uuid = uuid;
     if (content != null) result.content = content;
     if (agent != null) result.agent = agent;
     if (title != null) result.title = title;
@@ -394,7 +394,7 @@ class TrainingFile extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'TrainingFile',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'content')
     ..aOS(3, _omitFieldNames ? '' : 'agent')
     ..aOS(4, _omitFieldNames ? '' : 'title')
@@ -427,13 +427,13 @@ class TrainingFile extends $pb.GeneratedMessage {
   static TrainingFile? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get uuid => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
+  set uuid($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasUuid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
+  void clearUuid() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get content => $_getSZ(1);
@@ -671,11 +671,11 @@ class ListFilesResp extends $pb.GeneratedMessage {
 class DeleteFilesReq extends $pb.GeneratedMessage {
   factory DeleteFilesReq({
     $core.String? agent,
-    $core.Iterable<$core.int>? ids,
+    $core.Iterable<$core.String>? uuids,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
-    if (ids != null) result.ids.addAll(ids);
+    if (uuids != null) result.uuids.addAll(uuids);
     return result;
   }
 
@@ -693,7 +693,7 @@ class DeleteFilesReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..p<$core.int>(2, _omitFieldNames ? '' : 'ids', $pb.PbFieldType.K3)
+    ..pPS(2, _omitFieldNames ? '' : 'uuids')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -725,7 +725,7 @@ class DeleteFilesReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$core.int> get ids => $_getList(1);
+  $pb.PbList<$core.String> get uuids => $_getList(1);
 }
 
 class DeleteFilesByAgentsReq extends $pb.GeneratedMessage {
@@ -779,10 +779,12 @@ class DeleteFilesByAgentsReq extends $pb.GeneratedMessage {
 
 class GetFileReq extends $pb.GeneratedMessage {
   factory GetFileReq({
-    $core.int? id,
+    $core.String? uuid,
+    $core.String? agent,
   }) {
     final result = create();
-    if (id != null) result.id = id;
+    if (uuid != null) result.uuid = uuid;
+    if (agent != null) result.agent = agent;
     return result;
   }
 
@@ -799,7 +801,8 @@ class GetFileReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetFileReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -821,13 +824,22 @@ class GetFileReq extends $pb.GeneratedMessage {
   static GetFileReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get uuid => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
+  set uuid($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasUuid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get agent => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set agent($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAgent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAgent() => $_clearField(2);
 }
 
 class GetFileResp extends $pb.GeneratedMessage {
@@ -890,12 +902,12 @@ class GetFileResp extends $pb.GeneratedMessage {
 class UpdateContentReq extends $pb.GeneratedMessage {
   factory UpdateContentReq({
     $core.String? agent,
-    $core.int? id,
+    $core.String? uuid,
     $core.String? content,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
-    if (id != null) result.id = id;
+    if (uuid != null) result.uuid = uuid;
     if (content != null) result.content = content;
     return result;
   }
@@ -914,7 +926,7 @@ class UpdateContentReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aI(2, _omitFieldNames ? '' : 'id')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
     ..aOS(3, _omitFieldNames ? '' : 'content')
     ..hasRequiredFields = false;
 
@@ -947,13 +959,13 @@ class UpdateContentReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get id => $_getIZ(1);
+  $core.String get uuid => $_getSZ(1);
   @$pb.TagNumber(2)
-  set id($core.int value) => $_setSignedInt32(1, value);
+  set uuid($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasId() => $_has(1);
+  $core.bool hasUuid() => $_has(1);
   @$pb.TagNumber(2)
-  void clearId() => $_clearField(2);
+  void clearUuid() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get content => $_getSZ(2);
@@ -1090,12 +1102,12 @@ class CreateContentResp extends $pb.GeneratedMessage {
 
 class EditDigestReq extends $pb.GeneratedMessage {
   factory EditDigestReq({
-    $core.int? id,
+    $core.String? uuid,
     $core.String? agent,
     $core.String? digest,
   }) {
     final result = create();
-    if (id != null) result.id = id;
+    if (uuid != null) result.uuid = uuid;
     if (agent != null) result.agent = agent;
     if (digest != null) result.digest = digest;
     return result;
@@ -1114,7 +1126,7 @@ class EditDigestReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'EditDigestReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'agent')
     ..aOS(3, _omitFieldNames ? '' : 'digest')
     ..hasRequiredFields = false;
@@ -1139,13 +1151,13 @@ class EditDigestReq extends $pb.GeneratedMessage {
   static EditDigestReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get uuid => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
+  set uuid($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasUuid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
+  void clearUuid() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get agent => $_getSZ(1);

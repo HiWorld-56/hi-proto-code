@@ -1639,9 +1639,9 @@ pub mod ai_plugin_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct StartReq {
-    /// 训练文件id列表
-    #[prost(int32, repeated, tag = "1")]
-    pub ids: ::prost::alloc::vec::Vec<i32>,
+    /// 训练文件 uuid 列表(禁用数据表自增 id 跨端流转)
+    #[prost(string, repeated, tag = "1")]
+    pub uuids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// 智能体did
     #[prost(string, tag = "2")]
     pub agent: ::prost::alloc::string::String,
@@ -1685,9 +1685,9 @@ pub struct UploadFileReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TrainingFile {
-    /// 训练文件id
-    #[prost(int32, tag = "1")]
-    pub id: i32,
+    /// 训练文件稳定标识(uuid;不暴露数据表自增 id)
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
     /// content（文件内容） / path / url
     #[prost(string, tag = "2")]
     pub content: ::prost::alloc::string::String,
@@ -1742,9 +1742,9 @@ pub struct DeleteFilesReq {
     /// 智能体did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 训练文件id列表
-    #[prost(int32, repeated, tag = "2")]
-    pub ids: ::prost::alloc::vec::Vec<i32>,
+    /// 训练文件 uuid 列表
+    #[prost(string, repeated, tag = "2")]
+    pub uuids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteFilesByAgentsReq {
@@ -1752,11 +1752,14 @@ pub struct DeleteFilesByAgentsReq {
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetFileReq {
-    /// 训练文件id
-    #[prost(int32, tag = "1")]
-    pub id: i32,
+    /// 训练文件 uuid
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 bot)
+    #[prost(string, tag = "2")]
+    pub agent: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetFileResp {
@@ -1767,8 +1770,9 @@ pub struct GetFileResp {
 pub struct UpdateContentReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    #[prost(int32, tag = "2")]
-    pub id: i32,
+    /// 训练文件 uuid
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
     pub content: ::prost::alloc::string::String,
 }
@@ -1786,8 +1790,9 @@ pub struct CreateContentResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct EditDigestReq {
-    #[prost(int32, tag = "1")]
-    pub id: i32,
+    /// 训练文件 uuid
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]

@@ -25,8 +25,8 @@ const (
 
 type StartReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ids           []int32                `protobuf:"varint,1,rep,packed,name=ids,proto3" json:"ids,omitempty"` // 训练文件id列表
-	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"`     // 智能体did
+	Uuids         []string               `protobuf:"bytes,1,rep,name=uuids,proto3" json:"uuids,omitempty"` // 训练文件 uuid 列表(禁用数据表自增 id 跨端流转)
+	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -61,9 +61,9 @@ func (*StartReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_training_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *StartReq) GetIds() []int32 {
+func (x *StartReq) GetUuids() []string {
 	if x != nil {
-		return x.Ids
+		return x.Uuids
 	}
 	return nil
 }
@@ -293,7 +293,7 @@ func (x *UploadFileReq) GetContent() []byte {
 
 type TrainingFile struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                         // 训练文件id
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`                                      // 训练文件稳定标识(uuid;不暴露数据表自增 id)
 	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                                // content（文件内容） / path / url
 	Agent         string                 `protobuf:"bytes,3,opt,name=agent,proto3" json:"agent,omitempty"`                                    // 智能体did
 	Title         string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`                                    // 文件名
@@ -338,11 +338,11 @@ func (*TrainingFile) Descriptor() ([]byte, []int) {
 	return file_hi_ai_training_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *TrainingFile) GetId() int32 {
+func (x *TrainingFile) GetUuid() string {
 	if x != nil {
-		return x.Id
+		return x.Uuid
 	}
-	return 0
+	return ""
 }
 
 func (x *TrainingFile) GetContent() string {
@@ -529,8 +529,8 @@ func (x *ListFilesResp) GetList() []*TrainingFile {
 
 type DeleteFilesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // 智能体did
-	Ids           []int32                `protobuf:"varint,2,rep,packed,name=ids,proto3" json:"ids,omitempty"` // 训练文件id列表
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did
+	Uuids         []string               `protobuf:"bytes,2,rep,name=uuids,proto3" json:"uuids,omitempty"` // 训练文件 uuid 列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -572,9 +572,9 @@ func (x *DeleteFilesReq) GetAgent() string {
 	return ""
 }
 
-func (x *DeleteFilesReq) GetIds() []int32 {
+func (x *DeleteFilesReq) GetUuids() []string {
 	if x != nil {
-		return x.Ids
+		return x.Uuids
 	}
 	return nil
 }
@@ -625,7 +625,8 @@ func (x *DeleteFilesByAgentsReq) GetAgents() []string {
 
 type GetFileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 训练文件id
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 训练文件 uuid
+	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 bot)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -660,11 +661,18 @@ func (*GetFileReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_training_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *GetFileReq) GetId() int32 {
+func (x *GetFileReq) GetUuid() string {
 	if x != nil {
-		return x.Id
+		return x.Uuid
 	}
-	return 0
+	return ""
+}
+
+func (x *GetFileReq) GetAgent() string {
+	if x != nil {
+		return x.Agent
+	}
+	return ""
 }
 
 type GetFileResp struct {
@@ -714,7 +722,7 @@ func (x *GetFileResp) GetFile() *TrainingFile {
 type UpdateContentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Id            int32                  `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"` // 训练文件 uuid
 	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -757,11 +765,11 @@ func (x *UpdateContentReq) GetAgent() string {
 	return ""
 }
 
-func (x *UpdateContentReq) GetId() int32 {
+func (x *UpdateContentReq) GetUuid() string {
 	if x != nil {
-		return x.Id
+		return x.Uuid
 	}
-	return 0
+	return ""
 }
 
 func (x *UpdateContentReq) GetContent() string {
@@ -869,7 +877,7 @@ func (x *CreateContentResp) GetFile() *TrainingFile {
 
 type EditDigestReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // 训练文件 uuid
 	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"`
 	Digest        string                 `protobuf:"bytes,3,opt,name=digest,proto3" json:"digest,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -906,11 +914,11 @@ func (*EditDigestReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_training_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *EditDigestReq) GetId() int32 {
+func (x *EditDigestReq) GetUuid() string {
 	if x != nil {
-		return x.Id
+		return x.Uuid
 	}
-	return 0
+	return ""
 }
 
 func (x *EditDigestReq) GetAgent() string {
@@ -931,9 +939,9 @@ var File_hi_ai_training_proto protoreflect.FileDescriptor
 
 const file_hi_ai_training_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"2\n" +
-	"\bStartReq\x12\x10\n" +
-	"\x03ids\x18\x01 \x03(\x05R\x03ids\x12\x14\n" +
+	"\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"6\n" +
+	"\bStartReq\x12\x14\n" +
+	"\x05uuids\x18\x01 \x03(\tR\x05uuids\x12\x14\n" +
 	"\x05agent\x18\x02 \x01(\tR\x05agent\"!\n" +
 	"\tStatusReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"|\n" +
@@ -949,9 +957,9 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\rUploadFileReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x1a\n" +
 	"\bfilename\x18\x02 \x01(\tR\bfilename\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\fR\acontent\"\x9e\x02\n" +
-	"\fTrainingFile\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\fR\acontent\"\xa2\x02\n" +
+	"\fTrainingFile\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\x12\x14\n" +
 	"\x05agent\x18\x03 \x01(\tR\x05agent\x12\x14\n" +
 	"\x05title\x18\x04 \x01(\tR\x05title\x12\x12\n" +
@@ -973,28 +981,29 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"pagination\"N\n" +
 	"\rListFilesResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12'\n" +
-	"\x04list\x18\x02 \x03(\v2\x13.hi.ai.TrainingFileR\x04list\"8\n" +
+	"\x04list\x18\x02 \x03(\v2\x13.hi.ai.TrainingFileR\x04list\"<\n" +
 	"\x0eDeleteFilesReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
-	"\x03ids\x18\x02 \x03(\x05R\x03ids\"0\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x14\n" +
+	"\x05uuids\x18\x02 \x03(\tR\x05uuids\"0\n" +
 	"\x16DeleteFilesByAgentsReq\x12\x16\n" +
-	"\x06agents\x18\x01 \x03(\tR\x06agents\"\x1c\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\"6\n" +
 	"\n" +
-	"GetFileReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\"6\n" +
+	"GetFileReq\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
+	"\x05agent\x18\x02 \x01(\tR\x05agent\"6\n" +
 	"\vGetFileResp\x12'\n" +
-	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileR\x04file\"R\n" +
+	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileR\x04file\"V\n" +
 	"\x10UpdateContentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\x05R\x02id\x12\x18\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\tR\acontent\"B\n" +
 	"\x10CreateContentReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\"<\n" +
 	"\x11CreateContentResp\x12'\n" +
-	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileR\x04file\"M\n" +
-	"\rEditDigestReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x14\n" +
+	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileR\x04file\"Q\n" +
+	"\rEditDigestReq\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
 	"\x05agent\x18\x02 \x01(\tR\x05agent\x12\x16\n" +
 	"\x06digest\x18\x03 \x01(\tR\x06digest2\xde\x05\n" +
 	"\bTraining\x127\n" +

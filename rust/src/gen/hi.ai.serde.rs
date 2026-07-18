@@ -3271,15 +3271,15 @@ impl serde::Serialize for DeleteFilesReq {
         if !self.agent.is_empty() {
             len += 1;
         }
-        if !self.ids.is_empty() {
+        if !self.uuids.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.DeleteFilesReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
-        if !self.ids.is_empty() {
-            struct_ser.serialize_field("ids", &self.ids)?;
+        if !self.uuids.is_empty() {
+            struct_ser.serialize_field("uuids", &self.uuids)?;
         }
         struct_ser.end()
     }
@@ -3292,13 +3292,13 @@ impl<'de> serde::Deserialize<'de> for DeleteFilesReq {
     {
         const FIELDS: &[&str] = &[
             "agent",
-            "ids",
+            "uuids",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
-            Ids,
+            Uuids,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -3321,7 +3321,7 @@ impl<'de> serde::Deserialize<'de> for DeleteFilesReq {
                     {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
-                            "ids" => Ok(GeneratedField::Ids),
+                            "uuids" => Ok(GeneratedField::Uuids),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -3342,7 +3342,7 @@ impl<'de> serde::Deserialize<'de> for DeleteFilesReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut agent__ = None;
-                let mut ids__ = None;
+                let mut uuids__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -3351,20 +3351,17 @@ impl<'de> serde::Deserialize<'de> for DeleteFilesReq {
                             }
                             agent__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Ids => {
-                            if ids__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("ids"));
+                        GeneratedField::Uuids => {
+                            if uuids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuids"));
                             }
-                            ids__ = 
-                                Some(map_.next_value::<Vec<::pbjson::private::NumberDeserialize<_>>>()?
-                                    .into_iter().map(|x| x.0).collect())
-                            ;
+                            uuids__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(DeleteFilesReq {
                     agent: agent__.unwrap_or_default(),
-                    ids: ids__.unwrap_or_default(),
+                    uuids: uuids__.unwrap_or_default(),
                 })
             }
         }
@@ -3903,7 +3900,7 @@ impl serde::Serialize for EditDigestReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.id != 0 {
+        if !self.uuid.is_empty() {
             len += 1;
         }
         if !self.agent.is_empty() {
@@ -3913,8 +3910,8 @@ impl serde::Serialize for EditDigestReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.EditDigestReq", len)?;
-        if self.id != 0 {
-            struct_ser.serialize_field("id", &self.id)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
         }
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -3932,14 +3929,14 @@ impl<'de> serde::Deserialize<'de> for EditDigestReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "id",
+            "uuid",
             "agent",
             "digest",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Id,
+            Uuid,
             Agent,
             Digest,
         }
@@ -3963,7 +3960,7 @@ impl<'de> serde::Deserialize<'de> for EditDigestReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "id" => Ok(GeneratedField::Id),
+                            "uuid" => Ok(GeneratedField::Uuid),
                             "agent" => Ok(GeneratedField::Agent),
                             "digest" => Ok(GeneratedField::Digest),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3985,18 +3982,16 @@ impl<'de> serde::Deserialize<'de> for EditDigestReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut id__ = None;
+                let mut uuid__ = None;
                 let mut agent__ = None;
                 let mut digest__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Id => {
-                            if id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("id"));
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            id__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
+                            uuid__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Agent => {
                             if agent__.is_some() {
@@ -4013,7 +4008,7 @@ impl<'de> serde::Deserialize<'de> for EditDigestReq {
                     }
                 }
                 Ok(EditDigestReq {
-                    id: id__.unwrap_or_default(),
+                    uuid: uuid__.unwrap_or_default(),
                     agent: agent__.unwrap_or_default(),
                     digest: digest__.unwrap_or_default(),
                 })
@@ -4356,12 +4351,18 @@ impl serde::Serialize for GetFileReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.id != 0 {
+        if !self.uuid.is_empty() {
+            len += 1;
+        }
+        if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.GetFileReq", len)?;
-        if self.id != 0 {
-            struct_ser.serialize_field("id", &self.id)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
+        }
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
         }
         struct_ser.end()
     }
@@ -4373,12 +4374,14 @@ impl<'de> serde::Deserialize<'de> for GetFileReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "id",
+            "uuid",
+            "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Id,
+            Uuid,
+            Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4400,7 +4403,8 @@ impl<'de> serde::Deserialize<'de> for GetFileReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "id" => Ok(GeneratedField::Id),
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4420,21 +4424,27 @@ impl<'de> serde::Deserialize<'de> for GetFileReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut id__ = None;
+                let mut uuid__ = None;
+                let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Id => {
-                            if id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("id"));
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            id__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
+                            uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(GetFileReq {
-                    id: id__.unwrap_or_default(),
+                    uuid: uuid__.unwrap_or_default(),
+                    agent: agent__.unwrap_or_default(),
                 })
             }
         }
@@ -9460,15 +9470,15 @@ impl serde::Serialize for StartReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.ids.is_empty() {
+        if !self.uuids.is_empty() {
             len += 1;
         }
         if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.StartReq", len)?;
-        if !self.ids.is_empty() {
-            struct_ser.serialize_field("ids", &self.ids)?;
+        if !self.uuids.is_empty() {
+            struct_ser.serialize_field("uuids", &self.uuids)?;
         }
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -9483,13 +9493,13 @@ impl<'de> serde::Deserialize<'de> for StartReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "ids",
+            "uuids",
             "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Ids,
+            Uuids,
             Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -9512,7 +9522,7 @@ impl<'de> serde::Deserialize<'de> for StartReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "ids" => Ok(GeneratedField::Ids),
+                            "uuids" => Ok(GeneratedField::Uuids),
                             "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -9533,18 +9543,15 @@ impl<'de> serde::Deserialize<'de> for StartReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut ids__ = None;
+                let mut uuids__ = None;
                 let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Ids => {
-                            if ids__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("ids"));
+                        GeneratedField::Uuids => {
+                            if uuids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuids"));
                             }
-                            ids__ = 
-                                Some(map_.next_value::<Vec<::pbjson::private::NumberDeserialize<_>>>()?
-                                    .into_iter().map(|x| x.0).collect())
-                            ;
+                            uuids__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Agent => {
                             if agent__.is_some() {
@@ -9555,7 +9562,7 @@ impl<'de> serde::Deserialize<'de> for StartReq {
                     }
                 }
                 Ok(StartReq {
-                    ids: ids__.unwrap_or_default(),
+                    uuids: uuids__.unwrap_or_default(),
                     agent: agent__.unwrap_or_default(),
                 })
             }
@@ -10839,7 +10846,7 @@ impl serde::Serialize for TrainingFile {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.id != 0 {
+        if !self.uuid.is_empty() {
             len += 1;
         }
         if !self.content.is_empty() {
@@ -10873,8 +10880,8 @@ impl serde::Serialize for TrainingFile {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.TrainingFile", len)?;
-        if self.id != 0 {
-            struct_ser.serialize_field("id", &self.id)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
         }
         if !self.content.is_empty() {
             struct_ser.serialize_field("content", &self.content)?;
@@ -10922,7 +10929,7 @@ impl<'de> serde::Deserialize<'de> for TrainingFile {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "id",
+            "uuid",
             "content",
             "agent",
             "title",
@@ -10941,7 +10948,7 @@ impl<'de> serde::Deserialize<'de> for TrainingFile {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Id,
+            Uuid,
             Content,
             Agent,
             Title,
@@ -10973,7 +10980,7 @@ impl<'de> serde::Deserialize<'de> for TrainingFile {
                         E: serde::de::Error,
                     {
                         match value {
-                            "id" => Ok(GeneratedField::Id),
+                            "uuid" => Ok(GeneratedField::Uuid),
                             "content" => Ok(GeneratedField::Content),
                             "agent" => Ok(GeneratedField::Agent),
                             "title" => Ok(GeneratedField::Title),
@@ -11003,7 +11010,7 @@ impl<'de> serde::Deserialize<'de> for TrainingFile {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut id__ = None;
+                let mut uuid__ = None;
                 let mut content__ = None;
                 let mut agent__ = None;
                 let mut title__ = None;
@@ -11016,13 +11023,11 @@ impl<'de> serde::Deserialize<'de> for TrainingFile {
                 let mut updated_at__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Id => {
-                            if id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("id"));
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            id__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
+                            uuid__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Content => {
                             if content__.is_some() {
@@ -11095,7 +11100,7 @@ impl<'de> serde::Deserialize<'de> for TrainingFile {
                     }
                 }
                 Ok(TrainingFile {
-                    id: id__.unwrap_or_default(),
+                    uuid: uuid__.unwrap_or_default(),
                     content: content__.unwrap_or_default(),
                     agent: agent__.unwrap_or_default(),
                     title: title__.unwrap_or_default(),
@@ -11339,7 +11344,7 @@ impl serde::Serialize for UpdateContentReq {
         if !self.agent.is_empty() {
             len += 1;
         }
-        if self.id != 0 {
+        if !self.uuid.is_empty() {
             len += 1;
         }
         if !self.content.is_empty() {
@@ -11349,8 +11354,8 @@ impl serde::Serialize for UpdateContentReq {
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
-        if self.id != 0 {
-            struct_ser.serialize_field("id", &self.id)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
         }
         if !self.content.is_empty() {
             struct_ser.serialize_field("content", &self.content)?;
@@ -11366,14 +11371,14 @@ impl<'de> serde::Deserialize<'de> for UpdateContentReq {
     {
         const FIELDS: &[&str] = &[
             "agent",
-            "id",
+            "uuid",
             "content",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
-            Id,
+            Uuid,
             Content,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -11397,7 +11402,7 @@ impl<'de> serde::Deserialize<'de> for UpdateContentReq {
                     {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
-                            "id" => Ok(GeneratedField::Id),
+                            "uuid" => Ok(GeneratedField::Uuid),
                             "content" => Ok(GeneratedField::Content),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -11419,7 +11424,7 @@ impl<'de> serde::Deserialize<'de> for UpdateContentReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut agent__ = None;
-                let mut id__ = None;
+                let mut uuid__ = None;
                 let mut content__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -11429,13 +11434,11 @@ impl<'de> serde::Deserialize<'de> for UpdateContentReq {
                             }
                             agent__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Id => {
-                            if id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("id"));
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            id__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
+                            uuid__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Content => {
                             if content__.is_some() {
@@ -11447,7 +11450,7 @@ impl<'de> serde::Deserialize<'de> for UpdateContentReq {
                 }
                 Ok(UpdateContentReq {
                     agent: agent__.unwrap_or_default(),
-                    id: id__.unwrap_or_default(),
+                    uuid: uuid__.unwrap_or_default(),
                     content: content__.unwrap_or_default(),
                 })
             }
