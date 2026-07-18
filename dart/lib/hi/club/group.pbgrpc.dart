@@ -21,6 +21,12 @@ import 'group.pb.dart' as $0;
 
 export 'group.pb.dart';
 
+/// 群(主体=群)。用户 token 档。
+/// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
+///   owner   : 全允许(含解散群、加管理员)
+///   admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+///   member(公开群): 仅可拉人;其余禁止
+///   member(私密群): 全禁止(只能被邀请)
 @$pb.GrpcServiceName('hi.club.Group')
 class GroupClient extends $grpc.Client {
   /// The hostname for this service.
@@ -124,11 +130,18 @@ class GroupClient extends $grpc.Client {
     return $createUnaryCall(_$getRole, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> mute(
-    $0.MuteGroupReq request, {
+  $grpc.ResponseFuture<$1.Empty> setDnd(
+    $0.SetDndReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$mute, request, options: options);
+    return $createUnaryCall(_$setDnd, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> muteMembers(
+    $0.MuteMembersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$muteMembers, request, options: options);
   }
 
   // method descriptors
@@ -189,9 +202,13 @@ class GroupClient extends $grpc.Client {
       '/hi.club.Group/GetRole',
       ($0.GetRoleReq value) => value.writeToBuffer(),
       $0.GetRoleResp.fromBuffer);
-  static final _$mute = $grpc.ClientMethod<$0.MuteGroupReq, $1.Empty>(
-      '/hi.club.Group/Mute',
-      ($0.MuteGroupReq value) => value.writeToBuffer(),
+  static final _$setDnd = $grpc.ClientMethod<$0.SetDndReq, $1.Empty>(
+      '/hi.club.Group/SetDnd',
+      ($0.SetDndReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$muteMembers = $grpc.ClientMethod<$0.MuteMembersReq, $1.Empty>(
+      '/hi.club.Group/MuteMembers',
+      ($0.MuteMembersReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
 }
 
@@ -296,12 +313,19 @@ abstract class GroupServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetRoleReq.fromBuffer(value),
         ($0.GetRoleResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.MuteGroupReq, $1.Empty>(
-        'Mute',
-        mute_Pre,
+    $addMethod($grpc.ServiceMethod<$0.SetDndReq, $1.Empty>(
+        'SetDnd',
+        setDnd_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.MuteGroupReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.SetDndReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.MuteMembersReq, $1.Empty>(
+        'MuteMembers',
+        muteMembers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.MuteMembersReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
   }
 
@@ -408,10 +432,18 @@ abstract class GroupServiceBase extends $grpc.Service {
   $async.Future<$0.GetRoleResp> getRole(
       $grpc.ServiceCall call, $0.GetRoleReq request);
 
-  $async.Future<$1.Empty> mute_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.MuteGroupReq> $request) async {
-    return mute($call, await $request);
+  $async.Future<$1.Empty> setDnd_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.SetDndReq> $request) async {
+    return setDnd($call, await $request);
   }
 
-  $async.Future<$1.Empty> mute($grpc.ServiceCall call, $0.MuteGroupReq request);
+  $async.Future<$1.Empty> setDnd($grpc.ServiceCall call, $0.SetDndReq request);
+
+  $async.Future<$1.Empty> muteMembers_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.MuteMembersReq> $request) async {
+    return muteMembers($call, await $request);
+  }
+
+  $async.Future<$1.Empty> muteMembers(
+      $grpc.ServiceCall call, $0.MuteMembersReq request);
 }

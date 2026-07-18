@@ -33,12 +33,21 @@ const (
 	Group_ListMessages_FullMethodName   = "/hi.club.Group/ListMessages"
 	Group_SetRole_FullMethodName        = "/hi.club.Group/SetRole"
 	Group_GetRole_FullMethodName        = "/hi.club.Group/GetRole"
-	Group_Mute_FullMethodName           = "/hi.club.Group/Mute"
+	Group_SetDnd_FullMethodName         = "/hi.club.Group/SetDnd"
+	Group_MuteMembers_FullMethodName    = "/hi.club.Group/MuteMembers"
 )
 
 // GroupClient is the client API for Group service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 群(主体=群)。用户 token 档。
+// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
+//
+//	owner   : 全允许(含解散群、加管理员)
+//	admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+//	member(公开群): 仅可拉人;其余禁止
+//	member(私密群): 全禁止(只能被邀请)
 type GroupClient interface {
 	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
@@ -53,7 +62,8 @@ type GroupClient interface {
 	ListMessages(ctx context.Context, in *ListGroupMessageReq, opts ...grpc.CallOption) (*ListGroupMessageResp, error)
 	SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*GetRoleResp, error)
-	Mute(ctx context.Context, in *MuteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetDnd(ctx context.Context, in *SetDndReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MuteMembers(ctx context.Context, in *MuteMembersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type groupClient struct {
@@ -194,10 +204,20 @@ func (c *groupClient) GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.
 	return out, nil
 }
 
-func (c *groupClient) Mute(ctx context.Context, in *MuteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *groupClient) SetDnd(ctx context.Context, in *SetDndReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Group_Mute_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Group_SetDnd_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *groupClient) MuteMembers(ctx context.Context, in *MuteMembersReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Group_MuteMembers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -207,6 +227,14 @@ func (c *groupClient) Mute(ctx context.Context, in *MuteGroupReq, opts ...grpc.C
 // GroupServer is the server API for Group service.
 // All implementations should embed UnimplementedGroupServer
 // for forward compatibility.
+//
+// 群(主体=群)。用户 token 档。
+// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
+//
+//	owner   : 全允许(含解散群、加管理员)
+//	admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+//	member(公开群): 仅可拉人;其余禁止
+//	member(私密群): 全禁止(只能被邀请)
 type GroupServer interface {
 	Get(context.Context, *GetGroupReq) (*GroupBase, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
@@ -221,7 +249,8 @@ type GroupServer interface {
 	ListMessages(context.Context, *ListGroupMessageReq) (*ListGroupMessageResp, error)
 	SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error)
 	GetRole(context.Context, *GetRoleReq) (*GetRoleResp, error)
-	Mute(context.Context, *MuteGroupReq) (*emptypb.Empty, error)
+	SetDnd(context.Context, *SetDndReq) (*emptypb.Empty, error)
+	MuteMembers(context.Context, *MuteMembersReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedGroupServer should be embedded to have
@@ -270,8 +299,11 @@ func (UnimplementedGroupServer) SetRole(context.Context, *SetRoleReq) (*emptypb.
 func (UnimplementedGroupServer) GetRole(context.Context, *GetRoleReq) (*GetRoleResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRole not implemented")
 }
-func (UnimplementedGroupServer) Mute(context.Context, *MuteGroupReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Mute not implemented")
+func (UnimplementedGroupServer) SetDnd(context.Context, *SetDndReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetDnd not implemented")
+}
+func (UnimplementedGroupServer) MuteMembers(context.Context, *MuteMembersReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MuteMembers not implemented")
 }
 func (UnimplementedGroupServer) testEmbeddedByValue() {}
 
@@ -527,20 +559,38 @@ func _Group_GetRole_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Group_Mute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MuteGroupReq)
+func _Group_SetDnd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDndReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GroupServer).Mute(ctx, in)
+		return srv.(GroupServer).SetDnd(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Group_Mute_FullMethodName,
+		FullMethod: Group_SetDnd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).Mute(ctx, req.(*MuteGroupReq))
+		return srv.(GroupServer).SetDnd(ctx, req.(*SetDndReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Group_MuteMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MuteMembersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServer).MuteMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Group_MuteMembers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServer).MuteMembers(ctx, req.(*MuteMembersReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -605,8 +655,12 @@ var Group_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Group_GetRole_Handler,
 		},
 		{
-			MethodName: "Mute",
-			Handler:    _Group_Mute_Handler,
+			MethodName: "SetDnd",
+			Handler:    _Group_SetDnd_Handler,
+		},
+		{
+			MethodName: "MuteMembers",
+			Handler:    _Group_MuteMembers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

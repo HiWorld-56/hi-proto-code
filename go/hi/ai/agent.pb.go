@@ -650,7 +650,7 @@ func (x *ListAgentResp) GetInfos() []*AgentInfo {
 // Agent 列表入参:dids 空=列调用者自己的;非空=按 did 列。
 type ListAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dids          []string               `protobuf:"bytes,1,rep,name=dids,proto3" json:"dids,omitempty"` // 可选:只看这些 did;空=列自己的
+	Agents        []string               `protobuf:"bytes,1,rep,name=agents,proto3" json:"agents,omitempty"` // 可选:只看这些 did;空=列自己的
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -686,9 +686,9 @@ func (*ListAgentReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *ListAgentReq) GetDids() []string {
+func (x *ListAgentReq) GetAgents() []string {
 	if x != nil {
-		return x.Dids
+		return x.Agents
 	}
 	return nil
 }
@@ -703,7 +703,7 @@ func (x *ListAgentReq) GetPagination() *hi.Pagination {
 // 标记列表入参:查的是**调用者**打过标记的,必须有身份。
 type ListMarksReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dids          []string               `protobuf:"bytes,1,rep,name=dids,proto3" json:"dids,omitempty"` // 可选:在我的标记里再按 did 过滤
+	Agents        []string               `protobuf:"bytes,1,rep,name=agents,proto3" json:"agents,omitempty"` // 可选:在我的标记里再按 did 过滤
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -739,9 +739,9 @@ func (*ListMarksReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ListMarksReq) GetDids() []string {
+func (x *ListMarksReq) GetAgents() []string {
 	if x != nil {
-		return x.Dids
+		return x.Agents
 	}
 	return nil
 }
@@ -755,7 +755,7 @@ func (x *ListMarksReq) GetPagination() *hi.Pagination {
 
 type DeleteAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -790,16 +790,16 @@ func (*DeleteAgentReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *DeleteAgentReq) GetDid() string {
+func (x *DeleteAgentReq) GetAgent() string {
 	if x != nil {
-		return x.Did
+		return x.Agent
 	}
 	return ""
 }
 
 type GetAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -834,9 +834,9 @@ func (*GetAgentReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *GetAgentReq) GetDid() string {
+func (x *GetAgentReq) GetAgent() string {
 	if x != nil {
-		return x.Did
+		return x.Agent
 	}
 	return ""
 }
@@ -887,7 +887,7 @@ func (x *GetAgentResp) GetInfo() *AgentInfo {
 
 type AgentUsageReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -922,9 +922,9 @@ func (*AgentUsageReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *AgentUsageReq) GetDid() string {
+func (x *AgentUsageReq) GetAgent() string {
 	if x != nil {
-		return x.Did
+		return x.Agent
 	}
 	return ""
 }
@@ -984,7 +984,7 @@ func (x *AgentUsageResp) GetToken() *TokenUsage {
 
 type ResetToDefaultReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dids          []string               `protobuf:"bytes,1,rep,name=dids,proto3" json:"dids,omitempty"`
+	Agents        []string               `protobuf:"bytes,1,rep,name=agents,proto3" json:"agents,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1019,9 +1019,9 @@ func (*ResetToDefaultReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *ResetToDefaultReq) GetDids() []string {
+func (x *ResetToDefaultReq) GetAgents() []string {
 	if x != nil {
-		return x.Dids
+		return x.Agents
 	}
 	return nil
 }
@@ -1029,7 +1029,7 @@ func (x *ResetToDefaultReq) GetDids() []string {
 // 给机器人打/取消标记。**不是收藏** —— 带标记的机器人在显示时靠前。
 type MarkAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
 	Marked        bool                   `protobuf:"varint,2,opt,name=marked,proto3" json:"marked,omitempty"` // true=打标记(显示靠前),false=取消(与 AgentInfo.marked 对称)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1065,9 +1065,9 @@ func (*MarkAgentReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *MarkAgentReq) GetDid() string {
+func (x *MarkAgentReq) GetAgent() string {
 	if x != nil {
-		return x.Did
+		return x.Agent
 	}
 	return ""
 }
@@ -1137,32 +1137,32 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04note\x18\x03 \x01(\tR\x04note\"M\n" +
 	"\rListAgentResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\"R\n" +
-	"\fListAgentReq\x12\x12\n" +
-	"\x04dids\x18\x01 \x03(\tR\x04dids\x12.\n" +
+	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\"V\n" +
+	"\fListAgentReq\x12\x16\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"R\n" +
-	"\fListMarksReq\x12\x12\n" +
-	"\x04dids\x18\x01 \x03(\tR\x04dids\x12.\n" +
+	"pagination\"V\n" +
+	"\fListMarksReq\x12\x16\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\"\n" +
-	"\x0eDeleteAgentReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"\x1f\n" +
-	"\vGetAgentReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"4\n" +
+	"pagination\"&\n" +
+	"\x0eDeleteAgentReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"#\n" +
+	"\vGetAgentReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"4\n" +
 	"\fGetAgentResp\x12$\n" +
-	"\x04info\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoR\x04info\"!\n" +
-	"\rAgentUsageReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"^\n" +
+	"\x04info\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoR\x04info\"%\n" +
+	"\rAgentUsageReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"^\n" +
 	"\x0eAgentUsageResp\x12#\n" +
 	"\rmessage_count\x18\x01 \x01(\x05R\fmessageCount\x12'\n" +
-	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageR\x05token\"'\n" +
-	"\x11ResetToDefaultReq\x12\x12\n" +
-	"\x04dids\x18\x01 \x03(\tR\x04dids\"8\n" +
-	"\fMarkAgentReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x16\n" +
+	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageR\x05token\"+\n" +
+	"\x11ResetToDefaultReq\x12\x16\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\"<\n" +
+	"\fMarkAgentReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x16\n" +
 	"\x06marked\x18\x02 \x01(\bR\x06marked2\x87\x05\n" +
 	"\x05Agent\x12>\n" +
 	"\x06Create\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +

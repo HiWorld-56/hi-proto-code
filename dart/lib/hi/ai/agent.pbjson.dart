@@ -260,7 +260,7 @@ final $typed_data.Uint8List listAgentRespDescriptor = $convert.base64Decode(
 const ListAgentReq$json = {
   '1': 'ListAgentReq',
   '2': [
-    {'1': 'dids', '3': 1, '4': 3, '5': 9, '10': 'dids'},
+    {'1': 'agents', '3': 1, '4': 3, '5': 9, '10': 'agents'},
     {
       '1': 'pagination',
       '3': 2,
@@ -274,14 +274,14 @@ const ListAgentReq$json = {
 
 /// Descriptor for `ListAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0QWdlbnRSZXESEgoEZGlkcxgBIAMoCVIEZGlkcxIuCgpwYWdpbmF0aW9uGAIgASgLMg'
-    '4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+    'CgxMaXN0QWdlbnRSZXESFgoGYWdlbnRzGAEgAygJUgZhZ2VudHMSLgoKcGFnaW5hdGlvbhgCIA'
+    'EoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
 @$core.Deprecated('Use listMarksReqDescriptor instead')
 const ListMarksReq$json = {
   '1': 'ListMarksReq',
   '2': [
-    {'1': 'dids', '3': 1, '4': 3, '5': 9, '10': 'dids'},
+    {'1': 'agents', '3': 1, '4': 3, '5': 9, '10': 'agents'},
     {
       '1': 'pagination',
       '3': 2,
@@ -295,32 +295,32 @@ const ListMarksReq$json = {
 
 /// Descriptor for `ListMarksReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listMarksReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0TWFya3NSZXESEgoEZGlkcxgBIAMoCVIEZGlkcxIuCgpwYWdpbmF0aW9uGAIgASgLMg'
-    '4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+    'CgxMaXN0TWFya3NSZXESFgoGYWdlbnRzGAEgAygJUgZhZ2VudHMSLgoKcGFnaW5hdGlvbhgCIA'
+    'EoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
 @$core.Deprecated('Use deleteAgentReqDescriptor instead')
 const DeleteAgentReq$json = {
   '1': 'DeleteAgentReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
   ],
 };
 
 /// Descriptor for `DeleteAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteAgentReqDescriptor =
-    $convert.base64Decode('Cg5EZWxldGVBZ2VudFJlcRIQCgNkaWQYASABKAlSA2RpZA==');
+final $typed_data.Uint8List deleteAgentReqDescriptor = $convert
+    .base64Decode('Cg5EZWxldGVBZ2VudFJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQ=');
 
 @$core.Deprecated('Use getAgentReqDescriptor instead')
 const GetAgentReq$json = {
   '1': 'GetAgentReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
   ],
 };
 
 /// Descriptor for `GetAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getAgentReqDescriptor =
-    $convert.base64Decode('CgtHZXRBZ2VudFJlcRIQCgNkaWQYASABKAlSA2RpZA==');
+    $convert.base64Decode('CgtHZXRBZ2VudFJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQ=');
 
 @$core.Deprecated('Use getAgentRespDescriptor instead')
 const GetAgentResp$json = {
@@ -345,13 +345,13 @@ final $typed_data.Uint8List getAgentRespDescriptor = $convert.base64Decode(
 const AgentUsageReq$json = {
   '1': 'AgentUsageReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
   ],
 };
 
 /// Descriptor for `AgentUsageReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List agentUsageReqDescriptor =
-    $convert.base64Decode('Cg1BZ2VudFVzYWdlUmVxEhAKA2RpZBgBIAEoCVIDZGlk');
+final $typed_data.Uint8List agentUsageReqDescriptor = $convert
+    .base64Decode('Cg1BZ2VudFVzYWdlUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudA==');
 
 @$core.Deprecated('Use agentUsageRespDescriptor instead')
 const AgentUsageResp$json = {
@@ -378,24 +378,24 @@ final $typed_data.Uint8List agentUsageRespDescriptor = $convert.base64Decode(
 const ResetToDefaultReq$json = {
   '1': 'ResetToDefaultReq',
   '2': [
-    {'1': 'dids', '3': 1, '4': 3, '5': 9, '10': 'dids'},
+    {'1': 'agents', '3': 1, '4': 3, '5': 9, '10': 'agents'},
   ],
 };
 
 /// Descriptor for `ResetToDefaultReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List resetToDefaultReqDescriptor = $convert
-    .base64Decode('ChFSZXNldFRvRGVmYXVsdFJlcRISCgRkaWRzGAEgAygJUgRkaWRz');
+final $typed_data.Uint8List resetToDefaultReqDescriptor = $convert.base64Decode(
+    'ChFSZXNldFRvRGVmYXVsdFJlcRIWCgZhZ2VudHMYASADKAlSBmFnZW50cw==');
 
 @$core.Deprecated('Use markAgentReqDescriptor instead')
 const MarkAgentReq$json = {
   '1': 'MarkAgentReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
     {'1': 'marked', '3': 2, '4': 1, '5': 8, '10': 'marked'},
   ],
 };
 
 /// Descriptor for `MarkAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List markAgentReqDescriptor = $convert.base64Decode(
-    'CgxNYXJrQWdlbnRSZXESEAoDZGlkGAEgASgJUgNkaWQSFgoGbWFya2VkGAIgASgIUgZtYXJrZW'
-    'Q=');
+    'CgxNYXJrQWdlbnRSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhYKBm1hcmtlZBgCIAEoCFIGbW'
+    'Fya2Vk');

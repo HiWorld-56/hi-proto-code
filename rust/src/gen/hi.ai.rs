@@ -281,7 +281,7 @@ pub struct ListAgentResp {
 pub struct ListAgentReq {
     /// 可选:只看这些 did;空=列自己的
     #[prost(string, repeated, tag = "1")]
-    pub dids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -290,19 +290,19 @@ pub struct ListAgentReq {
 pub struct ListMarksReq {
     /// 可选:在我的标记里再按 did 过滤
     #[prost(string, repeated, tag = "1")]
-    pub dids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteAgentReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetAgentReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAgentResp {
@@ -312,7 +312,7 @@ pub struct GetAgentResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentUsageReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
 }
 /// 机器人用量。原 FindAgentCountResp —— 它不是"count",而是消息数 + token 三件套。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -325,13 +325,13 @@ pub struct AgentUsageResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ResetToDefaultReq {
     #[prost(string, repeated, tag = "1")]
-    pub dids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// 给机器人打/取消标记。**不是收藏** —— 带标记的机器人在显示时靠前。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarkAgentReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
     /// true=打标记(显示靠前),false=取消(与 AgentInfo.marked 对称)
     #[prost(bool, tag = "2")]
     pub marked: bool,

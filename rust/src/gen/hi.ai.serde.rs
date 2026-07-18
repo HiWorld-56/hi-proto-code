@@ -612,12 +612,12 @@ impl serde::Serialize for AgentUsageReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.did.is_empty() {
+        if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.AgentUsageReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
         }
         struct_ser.end()
     }
@@ -629,12 +629,12 @@ impl<'de> serde::Deserialize<'de> for AgentUsageReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "did",
+            "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Did,
+            Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -656,7 +656,7 @@ impl<'de> serde::Deserialize<'de> for AgentUsageReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "did" => Ok(GeneratedField::Did),
+                            "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -676,19 +676,19 @@ impl<'de> serde::Deserialize<'de> for AgentUsageReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut did__ = None;
+                let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            did__ = Some(map_.next_value()?);
+                            agent__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(AgentUsageReq {
-                    did: did__.unwrap_or_default(),
+                    agent: agent__.unwrap_or_default(),
                 })
             }
         }
@@ -2994,12 +2994,12 @@ impl serde::Serialize for DeleteAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.did.is_empty() {
+        if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.DeleteAgentReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
         }
         struct_ser.end()
     }
@@ -3011,12 +3011,12 @@ impl<'de> serde::Deserialize<'de> for DeleteAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "did",
+            "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Did,
+            Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -3038,7 +3038,7 @@ impl<'de> serde::Deserialize<'de> for DeleteAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "did" => Ok(GeneratedField::Did),
+                            "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -3058,19 +3058,19 @@ impl<'de> serde::Deserialize<'de> for DeleteAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut did__ = None;
+                let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            did__ = Some(map_.next_value()?);
+                            agent__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(DeleteAgentReq {
-                    did: did__.unwrap_or_default(),
+                    agent: agent__.unwrap_or_default(),
                 })
             }
         }
@@ -4174,12 +4174,12 @@ impl serde::Serialize for GetAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.did.is_empty() {
+        if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.GetAgentReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
         }
         struct_ser.end()
     }
@@ -4191,12 +4191,12 @@ impl<'de> serde::Deserialize<'de> for GetAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "did",
+            "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Did,
+            Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4218,7 +4218,7 @@ impl<'de> serde::Deserialize<'de> for GetAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "did" => Ok(GeneratedField::Did),
+                            "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4238,19 +4238,19 @@ impl<'de> serde::Deserialize<'de> for GetAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut did__ = None;
+                let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            did__ = Some(map_.next_value()?);
+                            agent__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(GetAgentReq {
-                    did: did__.unwrap_or_default(),
+                    agent: agent__.unwrap_or_default(),
                 })
             }
         }
@@ -5355,15 +5355,15 @@ impl serde::Serialize for ListAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.dids.is_empty() {
+        if !self.agents.is_empty() {
             len += 1;
         }
         if self.pagination.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentReq", len)?;
-        if !self.dids.is_empty() {
-            struct_ser.serialize_field("dids", &self.dids)?;
+        if !self.agents.is_empty() {
+            struct_ser.serialize_field("agents", &self.agents)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -5378,13 +5378,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "dids",
+            "agents",
             "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Dids,
+            Agents,
             Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -5407,7 +5407,7 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "dids" => Ok(GeneratedField::Dids),
+                            "agents" => Ok(GeneratedField::Agents),
                             "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -5428,15 +5428,15 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut dids__ = None;
+                let mut agents__ = None;
                 let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Dids => {
-                            if dids__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("dids"));
+                        GeneratedField::Agents => {
+                            if agents__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agents"));
                             }
-                            dids__ = Some(map_.next_value()?);
+                            agents__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -5447,7 +5447,7 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
                     }
                 }
                 Ok(ListAgentReq {
-                    dids: dids__.unwrap_or_default(),
+                    agents: agents__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
@@ -5918,15 +5918,15 @@ impl serde::Serialize for ListMarksReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.dids.is_empty() {
+        if !self.agents.is_empty() {
             len += 1;
         }
         if self.pagination.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListMarksReq", len)?;
-        if !self.dids.is_empty() {
-            struct_ser.serialize_field("dids", &self.dids)?;
+        if !self.agents.is_empty() {
+            struct_ser.serialize_field("agents", &self.agents)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -5941,13 +5941,13 @@ impl<'de> serde::Deserialize<'de> for ListMarksReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "dids",
+            "agents",
             "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Dids,
+            Agents,
             Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -5970,7 +5970,7 @@ impl<'de> serde::Deserialize<'de> for ListMarksReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "dids" => Ok(GeneratedField::Dids),
+                            "agents" => Ok(GeneratedField::Agents),
                             "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -5991,15 +5991,15 @@ impl<'de> serde::Deserialize<'de> for ListMarksReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut dids__ = None;
+                let mut agents__ = None;
                 let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Dids => {
-                            if dids__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("dids"));
+                        GeneratedField::Agents => {
+                            if agents__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agents"));
                             }
-                            dids__ = Some(map_.next_value()?);
+                            agents__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -6010,7 +6010,7 @@ impl<'de> serde::Deserialize<'de> for ListMarksReq {
                     }
                 }
                 Ok(ListMarksReq {
-                    dids: dids__.unwrap_or_default(),
+                    agents: agents__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
@@ -6460,15 +6460,15 @@ impl serde::Serialize for MarkAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.did.is_empty() {
+        if !self.agent.is_empty() {
             len += 1;
         }
         if self.marked {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.MarkAgentReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
         }
         if self.marked {
             struct_ser.serialize_field("marked", &self.marked)?;
@@ -6483,13 +6483,13 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "did",
+            "agent",
             "marked",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Did,
+            Agent,
             Marked,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -6512,7 +6512,7 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "did" => Ok(GeneratedField::Did),
+                            "agent" => Ok(GeneratedField::Agent),
                             "marked" => Ok(GeneratedField::Marked),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -6533,15 +6533,15 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut did__ = None;
+                let mut agent__ = None;
                 let mut marked__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            did__ = Some(map_.next_value()?);
+                            agent__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Marked => {
                             if marked__.is_some() {
@@ -6552,7 +6552,7 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
                     }
                 }
                 Ok(MarkAgentReq {
-                    did: did__.unwrap_or_default(),
+                    agent: agent__.unwrap_or_default(),
                     marked: marked__.unwrap_or_default(),
                 })
             }
@@ -8554,12 +8554,12 @@ impl serde::Serialize for ResetToDefaultReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.dids.is_empty() {
+        if !self.agents.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ResetToDefaultReq", len)?;
-        if !self.dids.is_empty() {
-            struct_ser.serialize_field("dids", &self.dids)?;
+        if !self.agents.is_empty() {
+            struct_ser.serialize_field("agents", &self.agents)?;
         }
         struct_ser.end()
     }
@@ -8571,12 +8571,12 @@ impl<'de> serde::Deserialize<'de> for ResetToDefaultReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "dids",
+            "agents",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Dids,
+            Agents,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8598,7 +8598,7 @@ impl<'de> serde::Deserialize<'de> for ResetToDefaultReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "dids" => Ok(GeneratedField::Dids),
+                            "agents" => Ok(GeneratedField::Agents),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8618,19 +8618,19 @@ impl<'de> serde::Deserialize<'de> for ResetToDefaultReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut dids__ = None;
+                let mut agents__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Dids => {
-                            if dids__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("dids"));
+                        GeneratedField::Agents => {
+                            if agents__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agents"));
                             }
-                            dids__ = Some(map_.next_value()?);
+                            agents__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(ResetToDefaultReq {
-                    dids: dids__.unwrap_or_default(),
+                    agents: agents__.unwrap_or_default(),
                 })
             }
         }

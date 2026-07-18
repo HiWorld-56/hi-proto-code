@@ -20,14 +20,13 @@ import 'messaging.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// 查询群信息的响应结构
+/// 群信息。群类型(单聊/群)在 base.type;public/private 见 private 字段。
 class GroupBase extends $pb.GeneratedMessage {
   factory GroupBase({
     $2.Entity? base,
     $core.String? background,
     $core.bool? private,
     $core.bool? dnd,
-    $core.int? muted,
     $fixnum.Int64? createdAt,
     $fixnum.Int64? updatedAt,
   }) {
@@ -36,7 +35,6 @@ class GroupBase extends $pb.GeneratedMessage {
     if (background != null) result.background = background;
     if (private != null) result.private = private;
     if (dnd != null) result.dnd = dnd;
-    if (muted != null) result.muted = muted;
     if (createdAt != null) result.createdAt = createdAt;
     if (updatedAt != null) result.updatedAt = updatedAt;
     return result;
@@ -60,9 +58,8 @@ class GroupBase extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'background')
     ..aOB(3, _omitFieldNames ? '' : 'private')
     ..aOB(4, _omitFieldNames ? '' : 'dnd')
-    ..aI(5, _omitFieldNames ? '' : 'muted')
-    ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
-    ..aInt64(7, _omitFieldNames ? '' : 'updatedAt')
+    ..aInt64(5, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(6, _omitFieldNames ? '' : 'updatedAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -122,41 +119,34 @@ class GroupBase extends $pb.GeneratedMessage {
   void clearDnd() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.int get muted => $_getIZ(4);
+  $fixnum.Int64 get createdAt => $_getI64(4);
   @$pb.TagNumber(5)
-  set muted($core.int value) => $_setSignedInt32(4, value);
+  set createdAt($fixnum.Int64 value) => $_setInt64(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasMuted() => $_has(4);
+  $core.bool hasCreatedAt() => $_has(4);
   @$pb.TagNumber(5)
-  void clearMuted() => $_clearField(5);
+  void clearCreatedAt() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $fixnum.Int64 get createdAt => $_getI64(5);
+  $fixnum.Int64 get updatedAt => $_getI64(5);
   @$pb.TagNumber(6)
-  set createdAt($fixnum.Int64 value) => $_setInt64(5, value);
+  set updatedAt($fixnum.Int64 value) => $_setInt64(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasCreatedAt() => $_has(5);
+  $core.bool hasUpdatedAt() => $_has(5);
   @$pb.TagNumber(6)
-  void clearCreatedAt() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $fixnum.Int64 get updatedAt => $_getI64(6);
-  @$pb.TagNumber(7)
-  set updatedAt($fixnum.Int64 value) => $_setInt64(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasUpdatedAt() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearUpdatedAt() => $_clearField(7);
+  void clearUpdatedAt() => $_clearField(6);
 }
 
 class GroupMember extends $pb.GeneratedMessage {
   factory GroupMember({
     $2.Entity? base,
     $core.String? role,
+    $core.bool? muted,
   }) {
     final result = create();
     if (base != null) result.base = base;
     if (role != null) result.role = role;
+    if (muted != null) result.muted = muted;
     return result;
   }
 
@@ -176,6 +166,7 @@ class GroupMember extends $pb.GeneratedMessage {
     ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
         subBuilder: $2.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'role')
+    ..aOB(3, _omitFieldNames ? '' : 'muted')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -216,6 +207,15 @@ class GroupMember extends $pb.GeneratedMessage {
   $core.bool hasRole() => $_has(1);
   @$pb.TagNumber(2)
   void clearRole() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get muted => $_getBF(2);
+  @$pb.TagNumber(3)
+  set muted($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMuted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMuted() => $_clearField(3);
 }
 
 class GroupInfo extends $pb.GeneratedMessage {
@@ -586,7 +586,7 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -618,24 +618,24 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearCode() => $_clearField(1);
 
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
   $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(3)
-  set pagination($2.Pagination value) => $_setField(3, value);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(3)
-  void clearPagination() => $_clearField(3);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class GetGroupMemberTotalReq extends $pb.GeneratedMessage {
   factory GetGroupMemberTotalReq({
-    $core.String? group,
+    $core.String? code,
   }) {
     final result = create();
-    if (group != null) result.group = group;
+    if (code != null) result.code = code;
     return result;
   }
 
@@ -652,7 +652,7 @@ class GetGroupMemberTotalReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetGroupMemberTotalReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -676,13 +676,13 @@ class GetGroupMemberTotalReq extends $pb.GeneratedMessage {
   static GetGroupMemberTotalReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 }
 
 class GetGroupMemberTotalResp extends $pb.GeneratedMessage {
@@ -742,11 +742,11 @@ class GetGroupMemberTotalResp extends $pb.GeneratedMessage {
 
 class InviteGroupReq extends $pb.GeneratedMessage {
   factory InviteGroupReq({
-    $core.String? group,
+    $core.String? code,
     $core.Iterable<$core.String>? members,
   }) {
     final result = create();
-    if (group != null) result.group = group;
+    if (code != null) result.code = code;
     if (members != null) result.members.addAll(members);
     return result;
   }
@@ -764,7 +764,7 @@ class InviteGroupReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'InviteGroupReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..pPS(2, _omitFieldNames ? '' : 'members')
     ..hasRequiredFields = false;
 
@@ -788,13 +788,13 @@ class InviteGroupReq extends $pb.GeneratedMessage {
   static InviteGroupReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $pb.PbList<$core.String> get members => $_getList(1);
@@ -802,10 +802,10 @@ class InviteGroupReq extends $pb.GeneratedMessage {
 
 class JoinGroupReq extends $pb.GeneratedMessage {
   factory JoinGroupReq({
-    $core.String? group,
+    $core.String? code,
   }) {
     final result = create();
-    if (group != null) result.group = group;
+    if (code != null) result.code = code;
     return result;
   }
 
@@ -822,7 +822,7 @@ class JoinGroupReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'JoinGroupReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -845,21 +845,21 @@ class JoinGroupReq extends $pb.GeneratedMessage {
   static JoinGroupReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 }
 
 class QuitGroupReq extends $pb.GeneratedMessage {
   factory QuitGroupReq({
-    $core.String? group,
+    $core.String? code,
   }) {
     final result = create();
-    if (group != null) result.group = group;
+    if (code != null) result.code = code;
     return result;
   }
 
@@ -876,7 +876,7 @@ class QuitGroupReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'QuitGroupReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -899,22 +899,22 @@ class QuitGroupReq extends $pb.GeneratedMessage {
   static QuitGroupReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 }
 
 class RemoveGroupReq extends $pb.GeneratedMessage {
   factory RemoveGroupReq({
-    $core.String? group,
+    $core.String? code,
     $core.Iterable<$core.String>? members,
   }) {
     final result = create();
-    if (group != null) result.group = group;
+    if (code != null) result.code = code;
     if (members != null) result.members.addAll(members);
     return result;
   }
@@ -932,7 +932,7 @@ class RemoveGroupReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'RemoveGroupReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..pPS(2, _omitFieldNames ? '' : 'members')
     ..hasRequiredFields = false;
 
@@ -956,13 +956,13 @@ class RemoveGroupReq extends $pb.GeneratedMessage {
   static RemoveGroupReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $pb.PbList<$core.String> get members => $_getList(1);
@@ -970,12 +970,12 @@ class RemoveGroupReq extends $pb.GeneratedMessage {
 
 class SetRoleReq extends $pb.GeneratedMessage {
   factory SetRoleReq({
-    $core.String? group,
+    $core.String? code,
     $core.Iterable<$core.String>? members,
     $core.String? role,
   }) {
     final result = create();
-    if (group != null) result.group = group;
+    if (code != null) result.code = code;
     if (members != null) result.members.addAll(members);
     if (role != null) result.role = role;
     return result;
@@ -994,7 +994,7 @@ class SetRoleReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'SetRoleReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..pPS(2, _omitFieldNames ? '' : 'members')
     ..aOS(3, _omitFieldNames ? '' : 'role')
     ..hasRequiredFields = false;
@@ -1018,13 +1018,13 @@ class SetRoleReq extends $pb.GeneratedMessage {
   static SetRoleReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $pb.PbList<$core.String> get members => $_getList(1);
@@ -1041,10 +1041,10 @@ class SetRoleReq extends $pb.GeneratedMessage {
 
 class GetRoleReq extends $pb.GeneratedMessage {
   factory GetRoleReq({
-    $core.String? group,
+    $core.String? code,
   }) {
     final result = create();
-    if (group != null) result.group = group;
+    if (code != null) result.code = code;
     return result;
   }
 
@@ -1061,7 +1061,7 @@ class GetRoleReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetRoleReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1083,13 +1083,13 @@ class GetRoleReq extends $pb.GeneratedMessage {
   static GetRoleReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 }
 
 class GetRoleResp extends $pb.GeneratedMessage {
@@ -1146,70 +1146,143 @@ class GetRoleResp extends $pb.GeneratedMessage {
   void clearRole() => $_clearField(1);
 }
 
-class MuteGroupReq extends $pb.GeneratedMessage {
-  factory MuteGroupReq({
-    $core.String? group,
-    $core.bool? muted,
+/// 免打扰(调用者自己):新消息不震动手机。用户自设,非管理操作。
+class SetDndReq extends $pb.GeneratedMessage {
+  factory SetDndReq({
+    $core.String? code,
+    $core.bool? dnd,
   }) {
     final result = create();
-    if (group != null) result.group = group;
-    if (muted != null) result.muted = muted;
+    if (code != null) result.code = code;
+    if (dnd != null) result.dnd = dnd;
     return result;
   }
 
-  MuteGroupReq._();
+  SetDndReq._();
 
-  factory MuteGroupReq.fromBuffer($core.List<$core.int> data,
+  factory SetDndReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MuteGroupReq.fromJson($core.String json,
+  factory SetDndReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MuteGroupReq',
+      _omitMessageNames ? '' : 'SetDndReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'group')
-    ..aOB(2, _omitFieldNames ? '' : 'muted')
+    ..aOS(1, _omitFieldNames ? '' : 'code')
+    ..aOB(2, _omitFieldNames ? '' : 'dnd')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MuteGroupReq clone() => deepCopy();
+  SetDndReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MuteGroupReq copyWith(void Function(MuteGroupReq) updates) =>
-      super.copyWith((message) => updates(message as MuteGroupReq))
-          as MuteGroupReq;
+  SetDndReq copyWith(void Function(SetDndReq) updates) =>
+      super.copyWith((message) => updates(message as SetDndReq)) as SetDndReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MuteGroupReq create() => MuteGroupReq._();
+  static SetDndReq create() => SetDndReq._();
   @$core.override
-  MuteGroupReq createEmptyInstance() => create();
+  SetDndReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MuteGroupReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MuteGroupReq>(create);
-  static MuteGroupReq? _defaultInstance;
+  static SetDndReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SetDndReq>(create);
+  static SetDndReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get group => $_getSZ(0);
+  $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set group($core.String value) => $_setString(0, value);
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasGroup() => $_has(0);
+  $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearGroup() => $_clearField(1);
+  void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.bool get muted => $_getBF(1);
+  $core.bool get dnd => $_getBF(1);
   @$pb.TagNumber(2)
-  set muted($core.bool value) => $_setBool(1, value);
+  set dnd($core.bool value) => $_setBool(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasMuted() => $_has(1);
+  $core.bool hasDnd() => $_has(1);
   @$pb.TagNumber(2)
-  void clearMuted() => $_clearField(2);
+  void clearDnd() => $_clearField(2);
+}
+
+/// 禁言/解禁成员(群主/管理员):被禁言者去写权限、留读权限(后端移 group:wracl、加 group:racl)。
+class MuteMembersReq extends $pb.GeneratedMessage {
+  factory MuteMembersReq({
+    $core.String? code,
+    $core.Iterable<$core.String>? members,
+    $core.bool? muted,
+  }) {
+    final result = create();
+    if (code != null) result.code = code;
+    if (members != null) result.members.addAll(members);
+    if (muted != null) result.muted = muted;
+    return result;
+  }
+
+  MuteMembersReq._();
+
+  factory MuteMembersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MuteMembersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MuteMembersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'code')
+    ..pPS(2, _omitFieldNames ? '' : 'members')
+    ..aOB(3, _omitFieldNames ? '' : 'muted')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MuteMembersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MuteMembersReq copyWith(void Function(MuteMembersReq) updates) =>
+      super.copyWith((message) => updates(message as MuteMembersReq))
+          as MuteMembersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MuteMembersReq create() => MuteMembersReq._();
+  @$core.override
+  MuteMembersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MuteMembersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MuteMembersReq>(create);
+  static MuteMembersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get code => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set code($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get members => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $core.bool get muted => $_getBF(2);
+  @$pb.TagNumber(3)
+  set muted($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMuted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMuted() => $_clearField(3);
 }
 
 const $core.bool _omitFieldNames =

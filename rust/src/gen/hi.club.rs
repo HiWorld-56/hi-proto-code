@@ -3079,31 +3079,34 @@ pub mod publisher_client {
         }
     }
 }
-/// 查询群信息的响应结构
+/// 群信息。群类型(单聊/群)在 base.type;public/private 见 private 字段。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupBase {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
     #[prost(string, tag = "2")]
     pub background: ::prost::alloc::string::String,
+    /// true=私密群(只能被邀请加入);false=公开群(可凭群 code 直接申请加入)
     #[prost(bool, tag = "3")]
     pub private: bool,
-    /// 免打扰
+    /// **调用者自己**对该群的免打扰(新消息不震动),用户自设(SetDnd)
     #[prost(bool, tag = "4")]
     pub dnd: bool,
-    #[prost(int32, tag = "5")]
-    pub muted: i32,
-    #[prost(int64, tag = "6")]
+    #[prost(int64, tag = "5")]
     pub created_at: i64,
-    #[prost(int64, tag = "7")]
+    #[prost(int64, tag = "6")]
     pub updated_at: i64,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupMember {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
+    /// owner / admin / member
     #[prost(string, tag = "2")]
     pub role: ::prost::alloc::string::String,
+    /// 是否被禁言(群主/管理员设;去写权限留读权限)
+    #[prost(bool, tag = "3")]
+    pub muted: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupInfo {
@@ -3134,7 +3137,7 @@ pub struct CreateSingleReq {
 pub struct ListGroupMessageReq {
     #[prost(string, tag = "1")]
     pub last_uuid: ::prost::alloc::string::String,
-    /// 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type,不再由客户端传
+    /// 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type
     #[prost(string, tag = "2")]
     pub code: ::prost::alloc::string::String,
 }
@@ -3145,16 +3148,15 @@ pub struct ListGroupMessageResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupMemberReq {
-    /// 群类型由后端按 code 反查,不再由客户端传 type
     #[prost(string, tag = "1")]
     pub code: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "3")]
+    #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupMemberTotalReq {
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
+    pub code: ::prost::alloc::string::String,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupMemberTotalResp {
@@ -3164,52 +3166,65 @@ pub struct GetGroupMemberTotalResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InviteGroupReq {
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
+    pub code: ::prost::alloc::string::String,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct JoinGroupReq {
+    /// 凭群 code 申请加入(仅公开群;私密群只能被邀请)
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
+    pub code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct QuitGroupReq {
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
+    pub code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RemoveGroupReq {
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
+    pub code: ::prost::alloc::string::String,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetRoleReq {
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
-    /// 与 Invite/Remove 的 members 一致(原 users)
+    pub code: ::prost::alloc::string::String,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// admin=添加管理员 / member=取消管理员
     #[prost(string, tag = "3")]
     pub role: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetRoleReq {
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
+    pub code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetRoleResp {
     #[prost(string, tag = "1")]
     pub role: ::prost::alloc::string::String,
 }
+/// 免打扰(调用者自己):新消息不震动手机。用户自设,非管理操作。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MuteGroupReq {
+pub struct SetDndReq {
     #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
+    pub code: ::prost::alloc::string::String,
     #[prost(bool, tag = "2")]
+    pub dnd: bool,
+}
+/// 禁言/解禁成员(群主/管理员):被禁言者去写权限、留读权限(后端移 group:wracl、加 group:racl)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MuteMembersReq {
+    #[prost(string, tag = "1")]
+    pub code: ::prost::alloc::string::String,
+    #[prost(string, repeated, tag = "2")]
+    pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// true=禁言,false=解禁
+    #[prost(bool, tag = "3")]
     pub muted: bool,
 }
 /// Generated client implementations.
@@ -3223,6 +3238,12 @@ pub mod group_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 群(主体=群)。用户 token 档。
+    /// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
+    /// owner   : 全允许(含解散群、加管理员)
+    /// admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+    /// member(公开群): 仅可拉人;其余禁止
+    /// member(私密群): 全禁止(只能被邀请)
     #[derive(Debug, Clone)]
     pub struct GroupClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3554,9 +3575,9 @@ pub mod group_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "GetRole"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn mute(
+        pub async fn set_dnd(
             &mut self,
-            request: impl tonic::IntoRequest<super::MuteGroupReq>,
+            request: impl tonic::IntoRequest<super::SetDndReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -3567,9 +3588,29 @@ pub mod group_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Group/Mute");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Group/SetDnd");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "Mute"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "SetDnd"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn mute_members(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MuteMembersReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Group/MuteMembers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "MuteMembers"));
             self.inner.unary(req, path, codec).await
         }
     }

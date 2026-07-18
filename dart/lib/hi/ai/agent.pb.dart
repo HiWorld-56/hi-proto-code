@@ -859,11 +859,11 @@ class ListAgentResp extends $pb.GeneratedMessage {
 /// Agent 列表入参:dids 空=列调用者自己的;非空=按 did 列。
 class ListAgentReq extends $pb.GeneratedMessage {
   factory ListAgentReq({
-    $core.Iterable<$core.String>? dids,
+    $core.Iterable<$core.String>? agents,
     $2.Pagination? pagination,
   }) {
     final result = create();
-    if (dids != null) result.dids.addAll(dids);
+    if (agents != null) result.agents.addAll(agents);
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -881,7 +881,7 @@ class ListAgentReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'dids')
+    ..pPS(1, _omitFieldNames ? '' : 'agents')
     ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
@@ -906,7 +906,7 @@ class ListAgentReq extends $pb.GeneratedMessage {
   static ListAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get dids => $_getList(0);
+  $pb.PbList<$core.String> get agents => $_getList(0);
 
   @$pb.TagNumber(2)
   $2.Pagination get pagination => $_getN(1);
@@ -923,11 +923,11 @@ class ListAgentReq extends $pb.GeneratedMessage {
 /// 标记列表入参:查的是**调用者**打过标记的,必须有身份。
 class ListMarksReq extends $pb.GeneratedMessage {
   factory ListMarksReq({
-    $core.Iterable<$core.String>? dids,
+    $core.Iterable<$core.String>? agents,
     $2.Pagination? pagination,
   }) {
     final result = create();
-    if (dids != null) result.dids.addAll(dids);
+    if (agents != null) result.agents.addAll(agents);
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -945,7 +945,7 @@ class ListMarksReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListMarksReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'dids')
+    ..pPS(1, _omitFieldNames ? '' : 'agents')
     ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
@@ -970,7 +970,7 @@ class ListMarksReq extends $pb.GeneratedMessage {
   static ListMarksReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get dids => $_getList(0);
+  $pb.PbList<$core.String> get agents => $_getList(0);
 
   @$pb.TagNumber(2)
   $2.Pagination get pagination => $_getN(1);
@@ -986,10 +986,10 @@ class ListMarksReq extends $pb.GeneratedMessage {
 
 class DeleteAgentReq extends $pb.GeneratedMessage {
   factory DeleteAgentReq({
-    $core.String? did,
+    $core.String? agent,
   }) {
     final result = create();
-    if (did != null) result.did = did;
+    if (agent != null) result.agent = agent;
     return result;
   }
 
@@ -1006,7 +1006,7 @@ class DeleteAgentReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'DeleteAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1029,21 +1029,21 @@ class DeleteAgentReq extends $pb.GeneratedMessage {
   static DeleteAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
+  void clearAgent() => $_clearField(1);
 }
 
 class GetAgentReq extends $pb.GeneratedMessage {
   factory GetAgentReq({
-    $core.String? did,
+    $core.String? agent,
   }) {
     final result = create();
-    if (did != null) result.did = did;
+    if (agent != null) result.agent = agent;
     return result;
   }
 
@@ -1060,7 +1060,7 @@ class GetAgentReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1083,13 +1083,13 @@ class GetAgentReq extends $pb.GeneratedMessage {
   static GetAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
+  void clearAgent() => $_clearField(1);
 }
 
 class GetAgentResp extends $pb.GeneratedMessage {
@@ -1151,10 +1151,10 @@ class GetAgentResp extends $pb.GeneratedMessage {
 
 class AgentUsageReq extends $pb.GeneratedMessage {
   factory AgentUsageReq({
-    $core.String? did,
+    $core.String? agent,
   }) {
     final result = create();
-    if (did != null) result.did = did;
+    if (agent != null) result.agent = agent;
     return result;
   }
 
@@ -1171,7 +1171,7 @@ class AgentUsageReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'AgentUsageReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1194,13 +1194,13 @@ class AgentUsageReq extends $pb.GeneratedMessage {
   static AgentUsageReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
+  void clearAgent() => $_clearField(1);
 }
 
 /// 机器人用量。原 FindAgentCountResp —— 它不是"count",而是消息数 + token 三件套。
@@ -1275,10 +1275,10 @@ class AgentUsageResp extends $pb.GeneratedMessage {
 
 class ResetToDefaultReq extends $pb.GeneratedMessage {
   factory ResetToDefaultReq({
-    $core.Iterable<$core.String>? dids,
+    $core.Iterable<$core.String>? agents,
   }) {
     final result = create();
-    if (dids != null) result.dids.addAll(dids);
+    if (agents != null) result.agents.addAll(agents);
     return result;
   }
 
@@ -1295,7 +1295,7 @@ class ResetToDefaultReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ResetToDefaultReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'dids')
+    ..pPS(1, _omitFieldNames ? '' : 'agents')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1318,17 +1318,17 @@ class ResetToDefaultReq extends $pb.GeneratedMessage {
   static ResetToDefaultReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get dids => $_getList(0);
+  $pb.PbList<$core.String> get agents => $_getList(0);
 }
 
 /// 给机器人打/取消标记。**不是收藏** —— 带标记的机器人在显示时靠前。
 class MarkAgentReq extends $pb.GeneratedMessage {
   factory MarkAgentReq({
-    $core.String? did,
+    $core.String? agent,
     $core.bool? marked,
   }) {
     final result = create();
-    if (did != null) result.did = did;
+    if (agent != null) result.agent = agent;
     if (marked != null) result.marked = marked;
     return result;
   }
@@ -1346,7 +1346,7 @@ class MarkAgentReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'MarkAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOB(2, _omitFieldNames ? '' : 'marked')
     ..hasRequiredFields = false;
 
@@ -1370,13 +1370,13 @@ class MarkAgentReq extends $pb.GeneratedMessage {
   static MarkAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
+  void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.bool get marked => $_getBF(1);
