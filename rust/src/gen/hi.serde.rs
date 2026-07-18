@@ -414,7 +414,7 @@ impl serde::Serialize for Entity {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.r#type.is_empty() {
+        if self.r#type != 0 {
             len += 1;
         }
         if !self.did.is_empty() {
@@ -430,8 +430,10 @@ impl serde::Serialize for Entity {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.Entity", len)?;
-        if !self.r#type.is_empty() {
-            struct_ser.serialize_field("type", &self.r#type)?;
+        if self.r#type != 0 {
+            let v = EntityType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
+            struct_ser.serialize_field("type", &v)?;
         }
         if !self.did.is_empty() {
             struct_ser.serialize_field("did", &self.did)?;
@@ -527,7 +529,7 @@ impl<'de> serde::Deserialize<'de> for Entity {
                             if r#type__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("type"));
                             }
-                            r#type__ = Some(map_.next_value()?);
+                            r#type__ = Some(map_.next_value::<EntityType>()? as i32);
                         }
                         GeneratedField::Did => {
                             if did__.is_some() {
@@ -567,6 +569,83 @@ impl<'de> serde::Deserialize<'de> for Entity {
             }
         }
         deserializer.deserialize_struct("hi.Entity", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EntityType {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::EntityUnspecified => "ENTITY_UNSPECIFIED",
+            Self::EntityUser => "ENTITY_USER",
+            Self::EntityAgent => "ENTITY_AGENT",
+            Self::EntityAssistant => "ENTITY_ASSISTANT",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for EntityType {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "ENTITY_UNSPECIFIED",
+            "ENTITY_USER",
+            "ENTITY_AGENT",
+            "ENTITY_ASSISTANT",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = EntityType;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "ENTITY_UNSPECIFIED" => Ok(EntityType::EntityUnspecified),
+                    "ENTITY_USER" => Ok(EntityType::EntityUser),
+                    "ENTITY_AGENT" => Ok(EntityType::EntityAgent),
+                    "ENTITY_ASSISTANT" => Ok(EntityType::EntityAssistant),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for MqttCredentials {

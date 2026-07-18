@@ -21,6 +21,59 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 实体类型:人 / 硬件机器人(agent,有 DID、具身)/ 软件机器人(assistant)。
+type EntityType int32
+
+const (
+	EntityType_ENTITY_UNSPECIFIED EntityType = 0 // 空/未知
+	EntityType_ENTITY_USER        EntityType = 1 // 人
+	EntityType_ENTITY_AGENT       EntityType = 2 // 硬件机器人(有身份、具身)
+	EntityType_ENTITY_ASSISTANT   EntityType = 3 // 软件机器人
+)
+
+// Enum value maps for EntityType.
+var (
+	EntityType_name = map[int32]string{
+		0: "ENTITY_UNSPECIFIED",
+		1: "ENTITY_USER",
+		2: "ENTITY_AGENT",
+		3: "ENTITY_ASSISTANT",
+	}
+	EntityType_value = map[string]int32{
+		"ENTITY_UNSPECIFIED": 0,
+		"ENTITY_USER":        1,
+		"ENTITY_AGENT":       2,
+		"ENTITY_ASSISTANT":   3,
+	}
+)
+
+func (x EntityType) Enum() *EntityType {
+	p := new(EntityType)
+	*p = x
+	return p
+}
+
+func (x EntityType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (EntityType) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_common_proto_enumTypes[0].Descriptor()
+}
+
+func (EntityType) Type() protoreflect.EnumType {
+	return &file_hi_common_proto_enumTypes[0]
+}
+
+func (x EntityType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use EntityType.Descriptor instead.
+func (EntityType) EnumDescriptor() ([]byte, []int) {
+	return file_hi_common_proto_rawDescGZIP(), []int{0}
+}
+
 type SignedData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
@@ -119,7 +172,7 @@ func (x *DID) GetId() string {
 
 type Entity struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Type          EntityType             `protobuf:"varint,1,opt,name=type,proto3,enum=hi.EntityType" json:"type,omitempty"`
 	Did           string                 `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Avatar        string                 `protobuf:"bytes,4,opt,name=avatar,proto3" json:"avatar,omitempty"`
@@ -158,11 +211,11 @@ func (*Entity) Descriptor() ([]byte, []int) {
 	return file_hi_common_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Entity) GetType() string {
+func (x *Entity) GetType() EntityType {
 	if x != nil {
 		return x.Type
 	}
-	return ""
+	return EntityType_ENTITY_UNSPECIFIED
 }
 
 func (x *Entity) GetDid() string {
@@ -656,9 +709,9 @@ const file_hi_common_proto_rawDesc = "" +
 	"\x04data\x18\x01 \x01(\fR\x04data\x12\x1c\n" +
 	"\tsignature\x18\x02 \x01(\tR\tsignature\"!\n" +
 	"\x03DID\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x02id:\x04\x98\xb5\x18\x01\"\x96\x01\n" +
-	"\x06Entity\x12\x18\n" +
-	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04type\x12\x16\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x02id:\x04\x98\xb5\x18\x01\"\xa6\x01\n" +
+	"\x06Entity\x12(\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x0e.hi.EntityTypeB\x04\x90\xb5\x18\x01R\x04type\x12\x16\n" +
 	"\x03did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03did\x12\x18\n" +
 	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12\x1c\n" +
 	"\x06avatar\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x06avatar\x12\x1c\n" +
@@ -689,7 +742,13 @@ const file_hi_common_proto_rawDesc = "" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"Q\n" +
 	"\x11ServerVersionResp\x12\x1e\n" +
 	"\aversion\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\aversion\x12\x16\n" +
-	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01Bc\n" +
+	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01*]\n" +
+	"\n" +
+	"EntityType\x12\x16\n" +
+	"\x12ENTITY_UNSPECIFIED\x10\x00\x12\x0f\n" +
+	"\vENTITY_USER\x10\x01\x12\x10\n" +
+	"\fENTITY_AGENT\x10\x02\x12\x14\n" +
+	"\x10ENTITY_ASSISTANT\x10\x03Bc\n" +
 	"\x06com.hiB\vCommonProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (
@@ -704,27 +763,30 @@ func file_hi_common_proto_rawDescGZIP() []byte {
 	return file_hi_common_proto_rawDescData
 }
 
+var file_hi_common_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_hi_common_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_hi_common_proto_goTypes = []any{
-	(*SignedData)(nil),        // 0: hi.SignedData
-	(*DID)(nil),               // 1: hi.DID
-	(*Entity)(nil),            // 2: hi.Entity
-	(*MqttCredentials)(nil),   // 3: hi.MqttCredentials
-	(*AuthToken)(nil),         // 4: hi.AuthToken
-	(*Nonce)(nil),             // 5: hi.Nonce
-	(*RequestId)(nil),         // 6: hi.RequestId
-	(*State)(nil),             // 7: hi.State
-	(*Number)(nil),            // 8: hi.Number
-	(*ClientInfo)(nil),        // 9: hi.ClientInfo
-	(*Pagination)(nil),        // 10: hi.Pagination
-	(*ServerVersionResp)(nil), // 11: hi.ServerVersionResp
+	(EntityType)(0),           // 0: hi.EntityType
+	(*SignedData)(nil),        // 1: hi.SignedData
+	(*DID)(nil),               // 2: hi.DID
+	(*Entity)(nil),            // 3: hi.Entity
+	(*MqttCredentials)(nil),   // 4: hi.MqttCredentials
+	(*AuthToken)(nil),         // 5: hi.AuthToken
+	(*Nonce)(nil),             // 6: hi.Nonce
+	(*RequestId)(nil),         // 7: hi.RequestId
+	(*State)(nil),             // 8: hi.State
+	(*Number)(nil),            // 9: hi.Number
+	(*ClientInfo)(nil),        // 10: hi.ClientInfo
+	(*Pagination)(nil),        // 11: hi.Pagination
+	(*ServerVersionResp)(nil), // 12: hi.ServerVersionResp
 }
 var file_hi_common_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: hi.Entity.type:type_name -> hi.EntityType
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_hi_common_proto_init() }
@@ -738,13 +800,14 @@ func file_hi_common_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_common_proto_rawDesc), len(file_hi_common_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_hi_common_proto_goTypes,
 		DependencyIndexes: file_hi_common_proto_depIdxs,
+		EnumInfos:         file_hi_common_proto_enumTypes,
 		MessageInfos:      file_hi_common_proto_msgTypes,
 	}.Build()
 	File_hi_common_proto = out.File

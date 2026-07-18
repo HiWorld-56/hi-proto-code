@@ -15,6 +15,22 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use entityTypeDescriptor instead')
+const EntityType$json = {
+  '1': 'EntityType',
+  '2': [
+    {'1': 'ENTITY_UNSPECIFIED', '2': 0},
+    {'1': 'ENTITY_USER', '2': 1},
+    {'1': 'ENTITY_AGENT', '2': 2},
+    {'1': 'ENTITY_ASSISTANT', '2': 3},
+  ],
+};
+
+/// Descriptor for `EntityType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List entityTypeDescriptor = $convert.base64Decode(
+    'CgpFbnRpdHlUeXBlEhYKEkVOVElUWV9VTlNQRUNJRklFRBAAEg8KC0VOVElUWV9VU0VSEAESEA'
+    'oMRU5USVRZX0FHRU5UEAISFAoQRU5USVRZX0FTU0lTVEFOVBAD');
+
 @$core.Deprecated('Use signedDataDescriptor instead')
 const SignedData$json = {
   '1': 'SignedData',
@@ -46,7 +62,15 @@ final $typed_data.Uint8List dIDDescriptor =
 const Entity$json = {
   '1': 'Entity',
   '2': [
-    {'1': 'type', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'type'},
+    {
+      '1': 'type',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.EntityType',
+      '8': {},
+      '10': 'type'
+    },
     {'1': 'did', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'did'},
     {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
     {'1': 'avatar', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'avatar'},
@@ -57,9 +81,10 @@ const Entity$json = {
 
 /// Descriptor for `Entity`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List entityDescriptor = $convert.base64Decode(
-    'CgZFbnRpdHkSGAoEdHlwZRgBIAEoCUIEkLUYAVIEdHlwZRIWCgNkaWQYAiABKAlCBJC1GAFSA2'
-    'RpZBIYCgRuYW1lGAMgASgJQgSQtRgBUgRuYW1lEhwKBmF2YXRhchgEIAEoCUIEkLUYAVIGYXZh'
-    'dGFyEhwKBnVwZGF0ZRgFIAEoA0IEkLUYAVIGdXBkYXRlOgSYtRgB');
+    'CgZFbnRpdHkSKAoEdHlwZRgBIAEoDjIOLmhpLkVudGl0eVR5cGVCBJC1GAFSBHR5cGUSFgoDZG'
+    'lkGAIgASgJQgSQtRgBUgNkaWQSGAoEbmFtZRgDIAEoCUIEkLUYAVIEbmFtZRIcCgZhdmF0YXIY'
+    'BCABKAlCBJC1GAFSBmF2YXRhchIcCgZ1cGRhdGUYBSABKANCBJC1GAFSBnVwZGF0ZToEmLUYAQ'
+    '==');
 
 @$core.Deprecated('Use mqttCredentialsDescriptor instead')
 const MqttCredentials$json = {

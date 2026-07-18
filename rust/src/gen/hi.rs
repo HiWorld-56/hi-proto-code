@@ -150,8 +150,8 @@ pub struct Did {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Entity {
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(enumeration = "EntityType", tag = "1")]
+    pub r#type: i32,
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
@@ -225,4 +225,41 @@ pub struct ServerVersionResp {
     /// 运行环境:dev/prod(echo 探测得出)
     #[prost(string, tag = "2")]
     pub env: ::prost::alloc::string::String,
+}
+/// 实体类型:人 / 硬件机器人(agent,有 DID、具身)/ 软件机器人(assistant)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum EntityType {
+    /// 空/未知
+    EntityUnspecified = 0,
+    /// 人
+    EntityUser = 1,
+    /// 硬件机器人(有身份、具身)
+    EntityAgent = 2,
+    /// 软件机器人
+    EntityAssistant = 3,
+}
+impl EntityType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::EntityUnspecified => "ENTITY_UNSPECIFIED",
+            Self::EntityUser => "ENTITY_USER",
+            Self::EntityAgent => "ENTITY_AGENT",
+            Self::EntityAssistant => "ENTITY_ASSISTANT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ENTITY_UNSPECIFIED" => Some(Self::EntityUnspecified),
+            "ENTITY_USER" => Some(Self::EntityUser),
+            "ENTITY_AGENT" => Some(Self::EntityAgent),
+            "ENTITY_ASSISTANT" => Some(Self::EntityAssistant),
+            _ => None,
+        }
+    }
 }

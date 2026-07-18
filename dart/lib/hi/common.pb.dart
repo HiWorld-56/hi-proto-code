@@ -15,7 +15,11 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'common.pbenum.dart';
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'common.pbenum.dart';
 
 class SignedData extends $pb.GeneratedMessage {
   factory SignedData({
@@ -138,7 +142,7 @@ class DID extends $pb.GeneratedMessage {
 
 class Entity extends $pb.GeneratedMessage {
   factory Entity({
-    $core.String? type,
+    EntityType? type,
     $core.String? did,
     $core.String? name,
     $core.String? avatar,
@@ -166,7 +170,8 @@ class Entity extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'Entity',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'type')
+    ..aE<EntityType>(1, _omitFieldNames ? '' : 'type',
+        enumValues: EntityType.values)
     ..aOS(2, _omitFieldNames ? '' : 'did')
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'avatar')
@@ -192,9 +197,9 @@ class Entity extends $pb.GeneratedMessage {
   static Entity? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get type => $_getSZ(0);
+  EntityType get type => $_getN(0);
   @$pb.TagNumber(1)
-  set type($core.String value) => $_setString(0, value);
+  set type(EntityType value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasType() => $_has(0);
   @$pb.TagNumber(1)
