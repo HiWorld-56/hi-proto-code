@@ -23,13 +23,16 @@ const EntityType$json = {
     {'1': 'ENTITY_USER', '2': 1},
     {'1': 'ENTITY_AGENT', '2': 2},
     {'1': 'ENTITY_ASSISTANT', '2': 3},
+    {'1': 'ENTITY_GROUP', '2': 4},
+    {'1': 'ENTITY_SINGLE', '2': 5},
   ],
 };
 
 /// Descriptor for `EntityType`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List entityTypeDescriptor = $convert.base64Decode(
     'CgpFbnRpdHlUeXBlEhYKEkVOVElUWV9VTlNQRUNJRklFRBAAEg8KC0VOVElUWV9VU0VSEAESEA'
-    'oMRU5USVRZX0FHRU5UEAISFAoQRU5USVRZX0FTU0lTVEFOVBAD');
+    'oMRU5USVRZX0FHRU5UEAISFAoQRU5USVRZX0FTU0lTVEFOVBADEhAKDEVOVElUWV9HUk9VUBAE'
+    'EhEKDUVOVElUWV9TSU5HTEUQBQ==');
 
 @$core.Deprecated('Use signedDataDescriptor instead')
 const SignedData$json = {

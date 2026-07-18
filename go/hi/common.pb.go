@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 实体类型:人 / 硬件机器人(agent,有 DID、具身)/ 软件机器人(assistant)。
+// 实体类型:身份门面 Entity 的种类。含"人型"(user/agent/assistant)与"会话型"(group/single)。
 type EntityType int32
 
 const (
@@ -29,6 +29,8 @@ const (
 	EntityType_ENTITY_USER        EntityType = 1 // 人
 	EntityType_ENTITY_AGENT       EntityType = 2 // 硬件机器人(有身份、具身)
 	EntityType_ENTITY_ASSISTANT   EntityType = 3 // 软件机器人
+	EntityType_ENTITY_GROUP       EntityType = 4 // 群聊会话
+	EntityType_ENTITY_SINGLE      EntityType = 5 // 单聊会话
 )
 
 // Enum value maps for EntityType.
@@ -38,12 +40,16 @@ var (
 		1: "ENTITY_USER",
 		2: "ENTITY_AGENT",
 		3: "ENTITY_ASSISTANT",
+		4: "ENTITY_GROUP",
+		5: "ENTITY_SINGLE",
 	}
 	EntityType_value = map[string]int32{
 		"ENTITY_UNSPECIFIED": 0,
 		"ENTITY_USER":        1,
 		"ENTITY_AGENT":       2,
 		"ENTITY_ASSISTANT":   3,
+		"ENTITY_GROUP":       4,
+		"ENTITY_SINGLE":      5,
 	}
 )
 
@@ -742,13 +748,15 @@ const file_hi_common_proto_rawDesc = "" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"Q\n" +
 	"\x11ServerVersionResp\x12\x1e\n" +
 	"\aversion\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\aversion\x12\x16\n" +
-	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01*]\n" +
+	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01*\x82\x01\n" +
 	"\n" +
 	"EntityType\x12\x16\n" +
 	"\x12ENTITY_UNSPECIFIED\x10\x00\x12\x0f\n" +
 	"\vENTITY_USER\x10\x01\x12\x10\n" +
 	"\fENTITY_AGENT\x10\x02\x12\x14\n" +
-	"\x10ENTITY_ASSISTANT\x10\x03Bc\n" +
+	"\x10ENTITY_ASSISTANT\x10\x03\x12\x10\n" +
+	"\fENTITY_GROUP\x10\x04\x12\x11\n" +
+	"\rENTITY_SINGLE\x10\x05Bc\n" +
 	"\x06com.hiB\vCommonProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (

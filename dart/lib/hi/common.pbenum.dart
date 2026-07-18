@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-/// 实体类型:人 / 硬件机器人(agent,有 DID、具身)/ 软件机器人(assistant)。
+/// 实体类型:身份门面 Entity 的种类。含"人型"(user/agent/assistant)与"会话型"(group/single)。
 class EntityType extends $pb.ProtobufEnum {
   static const EntityType ENTITY_UNSPECIFIED =
       EntityType._(0, _omitEnumNames ? '' : 'ENTITY_UNSPECIFIED');
@@ -24,16 +24,22 @@ class EntityType extends $pb.ProtobufEnum {
       EntityType._(2, _omitEnumNames ? '' : 'ENTITY_AGENT');
   static const EntityType ENTITY_ASSISTANT =
       EntityType._(3, _omitEnumNames ? '' : 'ENTITY_ASSISTANT');
+  static const EntityType ENTITY_GROUP =
+      EntityType._(4, _omitEnumNames ? '' : 'ENTITY_GROUP');
+  static const EntityType ENTITY_SINGLE =
+      EntityType._(5, _omitEnumNames ? '' : 'ENTITY_SINGLE');
 
   static const $core.List<EntityType> values = <EntityType>[
     ENTITY_UNSPECIFIED,
     ENTITY_USER,
     ENTITY_AGENT,
     ENTITY_ASSISTANT,
+    ENTITY_GROUP,
+    ENTITY_SINGLE,
   ];
 
   static final $core.List<EntityType?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 3);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static EntityType? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

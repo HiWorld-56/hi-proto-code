@@ -582,6 +582,8 @@ impl serde::Serialize for EntityType {
             Self::EntityUser => "ENTITY_USER",
             Self::EntityAgent => "ENTITY_AGENT",
             Self::EntityAssistant => "ENTITY_ASSISTANT",
+            Self::EntityGroup => "ENTITY_GROUP",
+            Self::EntitySingle => "ENTITY_SINGLE",
         };
         serializer.serialize_str(variant)
     }
@@ -597,6 +599,8 @@ impl<'de> serde::Deserialize<'de> for EntityType {
             "ENTITY_USER",
             "ENTITY_AGENT",
             "ENTITY_ASSISTANT",
+            "ENTITY_GROUP",
+            "ENTITY_SINGLE",
         ];
 
         struct GeneratedVisitor;
@@ -641,6 +645,8 @@ impl<'de> serde::Deserialize<'de> for EntityType {
                     "ENTITY_USER" => Ok(EntityType::EntityUser),
                     "ENTITY_AGENT" => Ok(EntityType::EntityAgent),
                     "ENTITY_ASSISTANT" => Ok(EntityType::EntityAssistant),
+                    "ENTITY_GROUP" => Ok(EntityType::EntityGroup),
+                    "ENTITY_SINGLE" => Ok(EntityType::EntitySingle),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

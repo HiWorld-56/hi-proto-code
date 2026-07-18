@@ -226,7 +226,7 @@ pub struct ServerVersionResp {
     #[prost(string, tag = "2")]
     pub env: ::prost::alloc::string::String,
 }
-/// 实体类型:人 / 硬件机器人(agent,有 DID、具身)/ 软件机器人(assistant)。
+/// 实体类型:身份门面 Entity 的种类。含"人型"(user/agent/assistant)与"会话型"(group/single)。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum EntityType {
@@ -238,6 +238,10 @@ pub enum EntityType {
     EntityAgent = 2,
     /// 软件机器人
     EntityAssistant = 3,
+    /// 群聊会话
+    EntityGroup = 4,
+    /// 单聊会话
+    EntitySingle = 5,
 }
 impl EntityType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -250,6 +254,8 @@ impl EntityType {
             Self::EntityUser => "ENTITY_USER",
             Self::EntityAgent => "ENTITY_AGENT",
             Self::EntityAssistant => "ENTITY_ASSISTANT",
+            Self::EntityGroup => "ENTITY_GROUP",
+            Self::EntitySingle => "ENTITY_SINGLE",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -259,6 +265,8 @@ impl EntityType {
             "ENTITY_USER" => Some(Self::EntityUser),
             "ENTITY_AGENT" => Some(Self::EntityAgent),
             "ENTITY_ASSISTANT" => Some(Self::EntityAssistant),
+            "ENTITY_GROUP" => Some(Self::EntityGroup),
+            "ENTITY_SINGLE" => Some(Self::EntitySingle),
             _ => None,
         }
     }
