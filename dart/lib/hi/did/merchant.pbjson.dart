@@ -523,12 +523,13 @@ final $typed_data.Uint8List merchantNotifyReqDescriptor = $convert.base64Decode(
 const OrderEventResp$json = {
   '1': 'OrderEventResp',
   '2': [
-    {'1': 'event', '3': 1, '4': 1, '5': 9, '10': 'event'},
-    {'1': 'payload', '3': 2, '4': 1, '5': 9, '10': 'payload'},
+    {'1': 'event', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'event'},
+    {'1': 'payload', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'payload'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `OrderEventResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List orderEventRespDescriptor = $convert.base64Decode(
-    'Cg5PcmRlckV2ZW50UmVzcBIUCgVldmVudBgBIAEoCVIFZXZlbnQSGAoHcGF5bG9hZBgCIAEoCV'
-    'IHcGF5bG9hZA==');
+    'Cg5PcmRlckV2ZW50UmVzcBIaCgVldmVudBgBIAEoCUIEkLUYA1IFZXZlbnQSHgoHcGF5bG9hZB'
+    'gCIAEoCUIEkLUYA1IHcGF5bG9hZDoEmLUYAw==');

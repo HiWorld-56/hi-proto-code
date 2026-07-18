@@ -121,7 +121,7 @@ const ListOnlineResp$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.ai.AgentInfo',
+      '6': '.hi.Entity',
       '8': {},
       '10': 'infos'
     },
@@ -131,8 +131,8 @@ const ListOnlineResp$json = {
 
 /// Descriptor for `ListOnlineResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listOnlineRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0T25saW5lUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYAVIFdG90YWwSLAoFaW5mb3MYAi'
-    'ADKAsyEC5oaS5haS5BZ2VudEluZm9CBJC1GAFSBWluZm9zOgSYtRgB');
+    'Cg5MaXN0T25saW5lUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYAVIFdG90YWwSJgoFaW5mb3MYAi'
+    'ADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBWluZm9zOgSYtRgB');
 
 @$core.Deprecated('Use getAgentMasterReqDescriptor instead')
 const GetAgentMasterReq$json = {

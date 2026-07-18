@@ -329,9 +329,13 @@ func (x *ListOnlineReq) GetPagination() *hi.Pagination {
 }
 
 type ListOnlineResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Infos         []*ai.AgentInfo        `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did),不复用 hi.ai.AgentInfo ——
+	//
+	//	后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
+	//	此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
+	Total         int32        `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Infos         []*hi.Entity `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -373,7 +377,7 @@ func (x *ListOnlineResp) GetTotal() int32 {
 	return 0
 }
 
-func (x *ListOnlineResp) GetInfos() []*ai.AgentInfo {
+func (x *ListOnlineResp) GetInfos() []*hi.Entity {
 	if x != nil {
 		return x.Infos
 	}
@@ -491,10 +495,11 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\towner_did\x18\x01 \x01(\tR\bownerDid\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"`\n" +
+	"pagination\"Z\n" +
 	"\x0eListOnlineResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x12,\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\")\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x12&\n" +
+	"\x05infos\x18\x02 \x03(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\")\n" +
 	"\x11GetAgentMasterReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"D\n" +
 	"\x12GetAgentMasterResp\x12(\n" +
@@ -548,55 +553,54 @@ var file_hi_club_agent_proto_goTypes = []any{
 	(*GetAgentMasterResp)(nil),   // 8: hi.club.GetAgentMasterResp
 	(*hi.Entity)(nil),            // 9: hi.Entity
 	(*hi.Pagination)(nil),        // 10: hi.Pagination
-	(*ai.AgentInfo)(nil),         // 11: hi.ai.AgentInfo
-	(*ai.CreateAgentReq)(nil),    // 12: hi.ai.CreateAgentReq
-	(*ai.EditAgentReq)(nil),      // 13: hi.ai.EditAgentReq
-	(*ai.DeleteAgentReq)(nil),    // 14: hi.ai.DeleteAgentReq
-	(*ai.GetAgentReq)(nil),       // 15: hi.ai.GetAgentReq
-	(*ai.AgentUsageReq)(nil),     // 16: hi.ai.AgentUsageReq
-	(*ai.MarkAgentReq)(nil),      // 17: hi.ai.MarkAgentReq
-	(*ai.ListMarksReq)(nil),      // 18: hi.ai.ListMarksReq
-	(*emptypb.Empty)(nil),        // 19: google.protobuf.Empty
-	(*ai.ListAgentReq)(nil),      // 20: hi.ai.ListAgentReq
-	(*ai.CreateAgentResp)(nil),   // 21: hi.ai.CreateAgentResp
-	(*ai.GetAgentResp)(nil),      // 22: hi.ai.GetAgentResp
-	(*ai.AgentUsageResp)(nil),    // 23: hi.ai.AgentUsageResp
-	(*ai.ListAgentResp)(nil),     // 24: hi.ai.ListAgentResp
-	(*ai.DefaultConfigResp)(nil), // 25: hi.ai.DefaultConfigResp
+	(*ai.CreateAgentReq)(nil),    // 11: hi.ai.CreateAgentReq
+	(*ai.EditAgentReq)(nil),      // 12: hi.ai.EditAgentReq
+	(*ai.DeleteAgentReq)(nil),    // 13: hi.ai.DeleteAgentReq
+	(*ai.GetAgentReq)(nil),       // 14: hi.ai.GetAgentReq
+	(*ai.AgentUsageReq)(nil),     // 15: hi.ai.AgentUsageReq
+	(*ai.MarkAgentReq)(nil),      // 16: hi.ai.MarkAgentReq
+	(*ai.ListMarksReq)(nil),      // 17: hi.ai.ListMarksReq
+	(*emptypb.Empty)(nil),        // 18: google.protobuf.Empty
+	(*ai.ListAgentReq)(nil),      // 19: hi.ai.ListAgentReq
+	(*ai.CreateAgentResp)(nil),   // 20: hi.ai.CreateAgentResp
+	(*ai.GetAgentResp)(nil),      // 21: hi.ai.GetAgentResp
+	(*ai.AgentUsageResp)(nil),    // 22: hi.ai.AgentUsageResp
+	(*ai.ListAgentResp)(nil),     // 23: hi.ai.ListAgentResp
+	(*ai.DefaultConfigResp)(nil), // 24: hi.ai.DefaultConfigResp
 }
 var file_hi_club_agent_proto_depIdxs = []int32{
 	9,  // 0: hi.club.BindStatusResp.master:type_name -> hi.Entity
 	10, // 1: hi.club.ListOnlineReq.pagination:type_name -> hi.Pagination
-	11, // 2: hi.club.ListOnlineResp.infos:type_name -> hi.ai.AgentInfo
+	9,  // 2: hi.club.ListOnlineResp.infos:type_name -> hi.Entity
 	9,  // 3: hi.club.GetAgentMasterResp.master:type_name -> hi.Entity
-	12, // 4: hi.club.Agent.Create:input_type -> hi.ai.CreateAgentReq
-	13, // 5: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
-	14, // 6: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
-	15, // 7: hi.club.Agent.Get:input_type -> hi.ai.GetAgentReq
-	16, // 8: hi.club.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
-	17, // 9: hi.club.Agent.Mark:input_type -> hi.ai.MarkAgentReq
-	18, // 10: hi.club.Agent.ListMarks:input_type -> hi.ai.ListMarksReq
-	19, // 11: hi.club.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
+	11, // 4: hi.club.Agent.Create:input_type -> hi.ai.CreateAgentReq
+	12, // 5: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
+	13, // 6: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
+	14, // 7: hi.club.Agent.Get:input_type -> hi.ai.GetAgentReq
+	15, // 8: hi.club.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
+	16, // 9: hi.club.Agent.Mark:input_type -> hi.ai.MarkAgentReq
+	17, // 10: hi.club.Agent.ListMarks:input_type -> hi.ai.ListMarksReq
+	18, // 11: hi.club.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
 	0,  // 12: hi.club.Agent.BindMaster:input_type -> hi.club.BindMasterReq
 	1,  // 13: hi.club.Agent.UnbindMaster:input_type -> hi.club.UnbindMasterReq
 	2,  // 14: hi.club.Agent.BindStatus:input_type -> hi.club.BindStatusReq
 	4,  // 15: hi.club.Agent.Transfer:input_type -> hi.club.TransferReq
-	20, // 16: hi.club.AgentDirectory.List:input_type -> hi.ai.ListAgentReq
+	19, // 16: hi.club.AgentDirectory.List:input_type -> hi.ai.ListAgentReq
 	5,  // 17: hi.club.AgentDirectory.ListOnline:input_type -> hi.club.ListOnlineReq
 	7,  // 18: hi.club.AgentDirectory.GetAgentMaster:input_type -> hi.club.GetAgentMasterReq
-	21, // 19: hi.club.Agent.Create:output_type -> hi.ai.CreateAgentResp
-	19, // 20: hi.club.Agent.Edit:output_type -> google.protobuf.Empty
-	19, // 21: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
-	22, // 22: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp
-	23, // 23: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
-	19, // 24: hi.club.Agent.Mark:output_type -> google.protobuf.Empty
-	24, // 25: hi.club.Agent.ListMarks:output_type -> hi.ai.ListAgentResp
-	25, // 26: hi.club.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
-	19, // 27: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
-	19, // 28: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
+	20, // 19: hi.club.Agent.Create:output_type -> hi.ai.CreateAgentResp
+	18, // 20: hi.club.Agent.Edit:output_type -> google.protobuf.Empty
+	18, // 21: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
+	21, // 22: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp
+	22, // 23: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
+	18, // 24: hi.club.Agent.Mark:output_type -> google.protobuf.Empty
+	23, // 25: hi.club.Agent.ListMarks:output_type -> hi.ai.ListAgentResp
+	24, // 26: hi.club.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	18, // 27: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
+	18, // 28: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
 	3,  // 29: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp
-	19, // 30: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
-	24, // 31: hi.club.AgentDirectory.List:output_type -> hi.ai.ListAgentResp
+	18, // 30: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
+	23, // 31: hi.club.AgentDirectory.List:output_type -> hi.ai.ListAgentResp
 	6,  // 32: hi.club.AgentDirectory.ListOnline:output_type -> hi.club.ListOnlineResp
 	8,  // 33: hi.club.AgentDirectory.GetAgentMaster:output_type -> hi.club.GetAgentMasterResp
 	19, // [19:34] is the sub-list for method output_type

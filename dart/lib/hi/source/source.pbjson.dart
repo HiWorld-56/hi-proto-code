@@ -127,17 +127,19 @@ final $typed_data.Uint8List uploadMetaDescriptor = $convert.base64Decode(
 const DownloadStreamResp$json = {
   '1': 'DownloadStreamResp',
   '2': [
-    {'1': 'chunk', '3': 1, '4': 1, '5': 12, '10': 'chunk'},
-    {'1': 'sent', '3': 2, '4': 1, '5': 3, '10': 'sent'},
-    {'1': 'total', '3': 3, '4': 1, '5': 3, '10': 'total'},
-    {'1': 'offset', '3': 4, '4': 1, '5': 3, '10': 'offset'},
+    {'1': 'chunk', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'chunk'},
+    {'1': 'sent', '3': 2, '4': 1, '5': 3, '8': {}, '10': 'sent'},
+    {'1': 'total', '3': 3, '4': 1, '5': 3, '8': {}, '10': 'total'},
+    {'1': 'offset', '3': 4, '4': 1, '5': 3, '8': {}, '10': 'offset'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `DownloadStreamResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List downloadStreamRespDescriptor = $convert.base64Decode(
-    'ChJEb3dubG9hZFN0cmVhbVJlc3ASFAoFY2h1bmsYASABKAxSBWNodW5rEhIKBHNlbnQYAiABKA'
-    'NSBHNlbnQSFAoFdG90YWwYAyABKANSBXRvdGFsEhYKBm9mZnNldBgEIAEoA1IGb2Zmc2V0');
+    'ChJEb3dubG9hZFN0cmVhbVJlc3ASGgoFY2h1bmsYASABKAxCBJC1GAFSBWNodW5rEhgKBHNlbn'
+    'QYAiABKANCBJC1GAFSBHNlbnQSGgoFdG90YWwYAyABKANCBJC1GAFSBXRvdGFsEhwKBm9mZnNl'
+    'dBgEIAEoA0IEkLUYAVIGb2Zmc2V0OgSYtRgB');
 
 @$core.Deprecated('Use downloadStreamReqDescriptor instead')
 const DownloadStreamReq$json = {

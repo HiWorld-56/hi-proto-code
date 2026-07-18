@@ -1361,10 +1361,13 @@ pub struct ListOnlineReq {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOnlineResp {
+    /// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did),不复用 hi.ai.AgentInfo ——
+    /// 后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
+    /// 此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<super::ai::AgentInfo>,
+    pub infos: ::prost::alloc::vec::Vec<super::Entity>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetAgentMasterReq {

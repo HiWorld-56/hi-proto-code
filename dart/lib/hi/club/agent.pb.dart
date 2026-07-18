@@ -14,7 +14,6 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../ai/agent.pb.dart' as $0;
 import '../common.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -406,7 +405,7 @@ class ListOnlineReq extends $pb.GeneratedMessage {
 class ListOnlineResp extends $pb.GeneratedMessage {
   factory ListOnlineResp({
     $core.int? total,
-    $core.Iterable<$0.AgentInfo>? infos,
+    $core.Iterable<$3.Entity>? infos,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -428,8 +427,8 @@ class ListOnlineResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$0.AgentInfo>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: $0.AgentInfo.create)
+    ..pPM<$3.Entity>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: $3.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -451,6 +450,9 @@ class ListOnlineResp extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListOnlineResp>(create);
   static ListOnlineResp? _defaultInstance;
 
+  /// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did),不复用 hi.ai.AgentInfo ——
+  ///    后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
+  ///    此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -461,7 +463,7 @@ class ListOnlineResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$0.AgentInfo> get infos => $_getList(1);
+  $pb.PbList<$3.Entity> get infos => $_getList(1);
 }
 
 class GetAgentMasterReq extends $pb.GeneratedMessage {
