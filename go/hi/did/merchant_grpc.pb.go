@@ -590,6 +590,7 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	MerchantPub_Scheme_FullMethodName = "/hi.did.MerchantPub/Scheme"
+	MerchantPub_Server_FullMethodName = "/hi.did.MerchantPub/Server"
 )
 
 // MerchantPubClient is the client API for MerchantPub service.
@@ -606,6 +607,7 @@ const (
 // **安全性由返回体的窄来保证** —— 只吐 scheme,而不是靠鉴权挡。
 type MerchantPubClient interface {
 	Scheme(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantPubSchemeResp, error)
+	Server(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantPubServerResp, error)
 }
 
 type merchantPubClient struct {
@@ -626,6 +628,16 @@ func (c *merchantPubClient) Scheme(ctx context.Context, in *hi.DID, opts ...grpc
 	return out, nil
 }
 
+func (c *merchantPubClient) Server(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*MerchantPubServerResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantPubServerResp)
+	err := c.cc.Invoke(ctx, MerchantPub_Server_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MerchantPubServer is the server API for MerchantPub service.
 // All implementations should embed UnimplementedMerchantPubServer
 // for forward compatibility.
@@ -640,6 +652,7 @@ func (c *merchantPubClient) Scheme(ctx context.Context, in *hi.DID, opts ...grpc
 // **安全性由返回体的窄来保证** —— 只吐 scheme,而不是靠鉴权挡。
 type MerchantPubServer interface {
 	Scheme(context.Context, *hi.DID) (*MerchantPubSchemeResp, error)
+	Server(context.Context, *hi.DID) (*MerchantPubServerResp, error)
 }
 
 // UnimplementedMerchantPubServer should be embedded to have
@@ -651,6 +664,9 @@ type UnimplementedMerchantPubServer struct{}
 
 func (UnimplementedMerchantPubServer) Scheme(context.Context, *hi.DID) (*MerchantPubSchemeResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Scheme not implemented")
+}
+func (UnimplementedMerchantPubServer) Server(context.Context, *hi.DID) (*MerchantPubServerResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Server not implemented")
 }
 func (UnimplementedMerchantPubServer) testEmbeddedByValue() {}
 
@@ -690,6 +706,24 @@ func _MerchantPub_Scheme_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MerchantPub_Server_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.DID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantPubServer).Server(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantPub_Server_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantPubServer).Server(ctx, req.(*hi.DID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MerchantPub_ServiceDesc is the grpc.ServiceDesc for MerchantPub service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -700,6 +734,10 @@ var MerchantPub_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Scheme",
 			Handler:    _MerchantPub_Scheme_Handler,
+		},
+		{
+			MethodName: "Server",
+			Handler:    _MerchantPub_Server_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

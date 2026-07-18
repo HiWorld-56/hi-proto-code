@@ -377,6 +377,19 @@ final $typed_data.Uint8List merchantPubSchemeRespDescriptor =
     $convert.base64Decode(
         'ChVNZXJjaGFudFB1YlNjaGVtZVJlc3ASFgoGc2NoZW1lGAEgASgJUgZzY2hlbWU=');
 
+@$core.Deprecated('Use merchantPubServerRespDescriptor instead')
+const MerchantPubServerResp$json = {
+  '1': 'MerchantPubServerResp',
+  '2': [
+    {'1': 'server', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'server'},
+  ],
+};
+
+/// Descriptor for `MerchantPubServerResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantPubServerRespDescriptor = $convert.base64Decode(
+    'ChVNZXJjaGFudFB1YlNlcnZlclJlc3ASIgoGc2VydmVyGAEgASgLMgouaGkuRW50aXR5UgZzZX'
+    'J2ZXI=');
+
 @$core.Deprecated('Use merchantExDBRespDescriptor instead')
 const MerchantExDBResp$json = {
   '1': 'MerchantExDBResp',

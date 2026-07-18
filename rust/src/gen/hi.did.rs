@@ -1106,6 +1106,12 @@ pub struct MerchantPubSchemeResp {
     #[prost(string, tag = "1")]
     pub scheme: ::prost::alloc::string::String,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantPubServerResp {
+    /// 收款/付款 server(默认 = master);涉及转账时按 master did 取此作目标/源头
+    #[prost(message, optional, tag = "1")]
+    pub server: ::core::option::Option<super::Entity>,
+}
 /// 商户的扩展库访问凭证:extoken(=ExtendToken,商户的 API 凭证)+ extend 表名。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantExDbResp {
@@ -1606,6 +1612,29 @@ pub mod merchant_pub_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.MerchantPub", "Scheme"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn server(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Did>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantPubServerResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantPub/Server",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.MerchantPub", "Server"));
             self.inner.unary(req, path, codec).await
         }
     }

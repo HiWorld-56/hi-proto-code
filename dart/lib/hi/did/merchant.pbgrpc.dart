@@ -409,12 +409,23 @@ class MerchantPubClient extends $grpc.Client {
     return $createUnaryCall(_$scheme, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.MerchantPubServerResp> server(
+    $2.DID request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$server, request, options: options);
+  }
+
   // method descriptors
 
   static final _$scheme = $grpc.ClientMethod<$2.DID, $1.MerchantPubSchemeResp>(
       '/hi.did.MerchantPub/Scheme',
       ($2.DID value) => value.writeToBuffer(),
       $1.MerchantPubSchemeResp.fromBuffer);
+  static final _$server = $grpc.ClientMethod<$2.DID, $1.MerchantPubServerResp>(
+      '/hi.did.MerchantPub/Server',
+      ($2.DID value) => value.writeToBuffer(),
+      $1.MerchantPubServerResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.MerchantPub')
@@ -429,6 +440,13 @@ abstract class MerchantPubServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.DID.fromBuffer(value),
         ($1.MerchantPubSchemeResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.DID, $1.MerchantPubServerResp>(
+        'Server',
+        server_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.DID.fromBuffer(value),
+        ($1.MerchantPubServerResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.MerchantPubSchemeResp> scheme_Pre(
@@ -437,6 +455,14 @@ abstract class MerchantPubServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.MerchantPubSchemeResp> scheme(
+      $grpc.ServiceCall call, $2.DID request);
+
+  $async.Future<$1.MerchantPubServerResp> server_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.DID> $request) async {
+    return server($call, await $request);
+  }
+
+  $async.Future<$1.MerchantPubServerResp> server(
       $grpc.ServiceCall call, $2.DID request);
 }
 

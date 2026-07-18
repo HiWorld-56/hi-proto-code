@@ -1105,6 +1105,50 @@ func (x *MerchantPubSchemeResp) GetScheme() string {
 	return ""
 }
 
+type MerchantPubServerResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Server        *hi.Entity             `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"` // 收款/付款 server(默认 = master);涉及转账时按 master did 取此作目标/源头
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MerchantPubServerResp) Reset() {
+	*x = MerchantPubServerResp{}
+	mi := &file_hi_did_merchant_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MerchantPubServerResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MerchantPubServerResp) ProtoMessage() {}
+
+func (x *MerchantPubServerResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_merchant_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MerchantPubServerResp.ProtoReflect.Descriptor instead.
+func (*MerchantPubServerResp) Descriptor() ([]byte, []int) {
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *MerchantPubServerResp) GetServer() *hi.Entity {
+	if x != nil {
+		return x.Server
+	}
+	return nil
+}
+
 // 商户的扩展库访问凭证:extoken(=ExtendToken,商户的 API 凭证)+ extend 表名。
 type MerchantExDBResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1116,7 +1160,7 @@ type MerchantExDBResp struct {
 
 func (x *MerchantExDBResp) Reset() {
 	*x = MerchantExDBResp{}
-	mi := &file_hi_did_merchant_proto_msgTypes[19]
+	mi := &file_hi_did_merchant_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1128,7 +1172,7 @@ func (x *MerchantExDBResp) String() string {
 func (*MerchantExDBResp) ProtoMessage() {}
 
 func (x *MerchantExDBResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_merchant_proto_msgTypes[19]
+	mi := &file_hi_did_merchant_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1141,7 +1185,7 @@ func (x *MerchantExDBResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantExDBResp.ProtoReflect.Descriptor instead.
 func (*MerchantExDBResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_merchant_proto_rawDescGZIP(), []int{19}
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *MerchantExDBResp) GetToken() string {
@@ -1168,7 +1212,7 @@ type MerchantNotifyReq struct {
 
 func (x *MerchantNotifyReq) Reset() {
 	*x = MerchantNotifyReq{}
-	mi := &file_hi_did_merchant_proto_msgTypes[20]
+	mi := &file_hi_did_merchant_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1180,7 +1224,7 @@ func (x *MerchantNotifyReq) String() string {
 func (*MerchantNotifyReq) ProtoMessage() {}
 
 func (x *MerchantNotifyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_merchant_proto_msgTypes[20]
+	mi := &file_hi_did_merchant_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1193,7 +1237,7 @@ func (x *MerchantNotifyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantNotifyReq.ProtoReflect.Descriptor instead.
 func (*MerchantNotifyReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_merchant_proto_rawDescGZIP(), []int{20}
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *MerchantNotifyReq) GetDid() string {
@@ -1220,7 +1264,7 @@ type OrderEventResp struct {
 
 func (x *OrderEventResp) Reset() {
 	*x = OrderEventResp{}
-	mi := &file_hi_did_merchant_proto_msgTypes[21]
+	mi := &file_hi_did_merchant_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1232,7 +1276,7 @@ func (x *OrderEventResp) String() string {
 func (*OrderEventResp) ProtoMessage() {}
 
 func (x *OrderEventResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_merchant_proto_msgTypes[21]
+	mi := &file_hi_did_merchant_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1245,7 +1289,7 @@ func (x *OrderEventResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderEventResp.ProtoReflect.Descriptor instead.
 func (*OrderEventResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_merchant_proto_rawDescGZIP(), []int{21}
+	return file_hi_did_merchant_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *OrderEventResp) GetEvent() string {
@@ -1348,7 +1392,10 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"/\n" +
 	"\x15MerchantPubSchemeResp\x12\x16\n" +
-	"\x06scheme\x18\x01 \x01(\tR\x06scheme\">\n" +
+	"\x06scheme\x18\x01 \x01(\tR\x06scheme\";\n" +
+	"\x15MerchantPubServerResp\x12\"\n" +
+	"\x06server\x18\x01 \x01(\v2\n" +
+	".hi.EntityR\x06server\">\n" +
 	"\x10MerchantExDBResp\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x14\n" +
 	"\x05table\x18\x02 \x01(\tR\x05table\";\n" +
@@ -1371,9 +1418,10 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\n" +
 	"ListGrants\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.ListGrantsResp\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
 	"\bAddGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
-	"\vRemoveGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032F\n" +
+	"\vRemoveGrant\x12\x10.hi.did.GrantReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032\x7f\n" +
 	"\vMerchantPub\x127\n" +
-	"\x06Scheme\x12\a.hi.DID\x1a\x1d.hi.did.MerchantPubSchemeResp\"\x05\x8a\xb5\x18\x01\x012\x92\x01\n" +
+	"\x06Scheme\x12\a.hi.DID\x1a\x1d.hi.did.MerchantPubSchemeResp\"\x05\x8a\xb5\x18\x01\x01\x127\n" +
+	"\x06Server\x12\a.hi.DID\x1a\x1d.hi.did.MerchantPubServerResp\"\x05\x8a\xb5\x18\x01\x012\x92\x01\n" +
 	"\fMerchantExDB\x12>\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\aRefresh\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x05\x8a\xb5\x18\x01\x022=\n" +
@@ -1397,7 +1445,7 @@ func file_hi_did_merchant_proto_rawDescGZIP() []byte {
 	return file_hi_did_merchant_proto_rawDescData
 }
 
-var file_hi_did_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_hi_did_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_hi_did_merchant_proto_goTypes = []any{
 	(*MerchantInfo)(nil),          // 0: hi.did.MerchantInfo
 	(*MerchantGetResp)(nil),       // 1: hi.did.MerchantGetResp
@@ -1418,69 +1466,73 @@ var file_hi_did_merchant_proto_goTypes = []any{
 	(*GetUserMqttReq)(nil),        // 16: hi.did.GetUserMqttReq
 	(*GetUserMqttResp)(nil),       // 17: hi.did.GetUserMqttResp
 	(*MerchantPubSchemeResp)(nil), // 18: hi.did.MerchantPubSchemeResp
-	(*MerchantExDBResp)(nil),      // 19: hi.did.MerchantExDBResp
-	(*MerchantNotifyReq)(nil),     // 20: hi.did.MerchantNotifyReq
-	(*OrderEventResp)(nil),        // 21: hi.did.OrderEventResp
-	(*hi.Entity)(nil),             // 22: hi.Entity
-	(*Coin)(nil),                  // 23: hi.did.Coin
-	(*hi.Pagination)(nil),         // 24: hi.Pagination
-	(*emptypb.Empty)(nil),         // 25: google.protobuf.Empty
-	(*hi.DID)(nil),                // 26: hi.DID
+	(*MerchantPubServerResp)(nil), // 19: hi.did.MerchantPubServerResp
+	(*MerchantExDBResp)(nil),      // 20: hi.did.MerchantExDBResp
+	(*MerchantNotifyReq)(nil),     // 21: hi.did.MerchantNotifyReq
+	(*OrderEventResp)(nil),        // 22: hi.did.OrderEventResp
+	(*hi.Entity)(nil),             // 23: hi.Entity
+	(*Coin)(nil),                  // 24: hi.did.Coin
+	(*hi.Pagination)(nil),         // 25: hi.Pagination
+	(*emptypb.Empty)(nil),         // 26: google.protobuf.Empty
+	(*hi.DID)(nil),                // 27: hi.DID
 }
 var file_hi_did_merchant_proto_depIdxs = []int32{
-	22, // 0: hi.did.MerchantInfo.master:type_name -> hi.Entity
-	22, // 1: hi.did.MerchantInfo.server:type_name -> hi.Entity
-	23, // 2: hi.did.MerchantInfo.public_coins:type_name -> hi.did.Coin
-	23, // 3: hi.did.MerchantInfo.custom_tokens:type_name -> hi.did.Coin
+	23, // 0: hi.did.MerchantInfo.master:type_name -> hi.Entity
+	23, // 1: hi.did.MerchantInfo.server:type_name -> hi.Entity
+	24, // 2: hi.did.MerchantInfo.public_coins:type_name -> hi.did.Coin
+	24, // 3: hi.did.MerchantInfo.custom_tokens:type_name -> hi.did.Coin
 	0,  // 4: hi.did.MerchantGetResp.info:type_name -> hi.did.MerchantInfo
 	0,  // 5: hi.did.MerchantListResp.list:type_name -> hi.did.MerchantInfo
-	22, // 6: hi.did.UserExtensionUnit.user:type_name -> hi.Entity
+	23, // 6: hi.did.UserExtensionUnit.user:type_name -> hi.Entity
 	4,  // 7: hi.did.UserExtensionUnit.info:type_name -> hi.did.UserExtensionInfo
-	22, // 8: hi.did.GrantUnit.grantee:type_name -> hi.Entity
+	23, // 8: hi.did.GrantUnit.grantee:type_name -> hi.Entity
 	7,  // 9: hi.did.ListGrantsResp.grants:type_name -> hi.did.GrantUnit
-	24, // 10: hi.did.ListUsersReq.pagination:type_name -> hi.Pagination
+	25, // 10: hi.did.ListUsersReq.pagination:type_name -> hi.Pagination
 	5,  // 11: hi.did.ListUsersResp.units:type_name -> hi.did.UserExtensionUnit
 	5,  // 12: hi.did.SetUsersReq.units:type_name -> hi.did.UserExtensionUnit
-	24, // 13: hi.did.ListMerchantsReq.pagination:type_name -> hi.Pagination
-	25, // 14: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
-	2,  // 15: hi.did.Merchant.Update:input_type -> hi.did.MerchantSetReq
-	9,  // 16: hi.did.Merchant.GetUser:input_type -> hi.did.GetUserReq
-	10, // 17: hi.did.Merchant.ListUsers:input_type -> hi.did.ListUsersReq
-	15, // 18: hi.did.Merchant.List:input_type -> hi.did.ListMerchantsReq
-	12, // 19: hi.did.Merchant.SetUsers:input_type -> hi.did.SetUsersReq
-	13, // 20: hi.did.Merchant.AddUsers:input_type -> hi.did.AddUsersReq
-	14, // 21: hi.did.Merchant.RemoveUsers:input_type -> hi.did.RemoveUsersReq
-	16, // 22: hi.did.Merchant.GetUserMqtt:input_type -> hi.did.GetUserMqttReq
-	25, // 23: hi.did.Merchant.ListGrants:input_type -> google.protobuf.Empty
-	6,  // 24: hi.did.Merchant.AddGrant:input_type -> hi.did.GrantReq
-	6,  // 25: hi.did.Merchant.RemoveGrant:input_type -> hi.did.GrantReq
-	26, // 26: hi.did.MerchantPub.Scheme:input_type -> hi.DID
-	25, // 27: hi.did.MerchantExDB.Get:input_type -> google.protobuf.Empty
-	25, // 28: hi.did.MerchantExDB.Refresh:input_type -> google.protobuf.Empty
-	26, // 29: hi.did.OrderEvent.Sub:input_type -> hi.DID
-	20, // 30: hi.did.OrderNotify.Send:input_type -> hi.did.MerchantNotifyReq
-	1,  // 31: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
-	25, // 32: hi.did.Merchant.Update:output_type -> google.protobuf.Empty
-	5,  // 33: hi.did.Merchant.GetUser:output_type -> hi.did.UserExtensionUnit
-	11, // 34: hi.did.Merchant.ListUsers:output_type -> hi.did.ListUsersResp
-	3,  // 35: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
-	25, // 36: hi.did.Merchant.SetUsers:output_type -> google.protobuf.Empty
-	25, // 37: hi.did.Merchant.AddUsers:output_type -> google.protobuf.Empty
-	25, // 38: hi.did.Merchant.RemoveUsers:output_type -> google.protobuf.Empty
-	17, // 39: hi.did.Merchant.GetUserMqtt:output_type -> hi.did.GetUserMqttResp
-	8,  // 40: hi.did.Merchant.ListGrants:output_type -> hi.did.ListGrantsResp
-	25, // 41: hi.did.Merchant.AddGrant:output_type -> google.protobuf.Empty
-	25, // 42: hi.did.Merchant.RemoveGrant:output_type -> google.protobuf.Empty
-	18, // 43: hi.did.MerchantPub.Scheme:output_type -> hi.did.MerchantPubSchemeResp
-	19, // 44: hi.did.MerchantExDB.Get:output_type -> hi.did.MerchantExDBResp
-	19, // 45: hi.did.MerchantExDB.Refresh:output_type -> hi.did.MerchantExDBResp
-	21, // 46: hi.did.OrderEvent.Sub:output_type -> hi.did.OrderEventResp
-	25, // 47: hi.did.OrderNotify.Send:output_type -> google.protobuf.Empty
-	31, // [31:48] is the sub-list for method output_type
-	14, // [14:31] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	25, // 13: hi.did.ListMerchantsReq.pagination:type_name -> hi.Pagination
+	23, // 14: hi.did.MerchantPubServerResp.server:type_name -> hi.Entity
+	26, // 15: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
+	2,  // 16: hi.did.Merchant.Update:input_type -> hi.did.MerchantSetReq
+	9,  // 17: hi.did.Merchant.GetUser:input_type -> hi.did.GetUserReq
+	10, // 18: hi.did.Merchant.ListUsers:input_type -> hi.did.ListUsersReq
+	15, // 19: hi.did.Merchant.List:input_type -> hi.did.ListMerchantsReq
+	12, // 20: hi.did.Merchant.SetUsers:input_type -> hi.did.SetUsersReq
+	13, // 21: hi.did.Merchant.AddUsers:input_type -> hi.did.AddUsersReq
+	14, // 22: hi.did.Merchant.RemoveUsers:input_type -> hi.did.RemoveUsersReq
+	16, // 23: hi.did.Merchant.GetUserMqtt:input_type -> hi.did.GetUserMqttReq
+	26, // 24: hi.did.Merchant.ListGrants:input_type -> google.protobuf.Empty
+	6,  // 25: hi.did.Merchant.AddGrant:input_type -> hi.did.GrantReq
+	6,  // 26: hi.did.Merchant.RemoveGrant:input_type -> hi.did.GrantReq
+	27, // 27: hi.did.MerchantPub.Scheme:input_type -> hi.DID
+	27, // 28: hi.did.MerchantPub.Server:input_type -> hi.DID
+	26, // 29: hi.did.MerchantExDB.Get:input_type -> google.protobuf.Empty
+	26, // 30: hi.did.MerchantExDB.Refresh:input_type -> google.protobuf.Empty
+	27, // 31: hi.did.OrderEvent.Sub:input_type -> hi.DID
+	21, // 32: hi.did.OrderNotify.Send:input_type -> hi.did.MerchantNotifyReq
+	1,  // 33: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
+	26, // 34: hi.did.Merchant.Update:output_type -> google.protobuf.Empty
+	5,  // 35: hi.did.Merchant.GetUser:output_type -> hi.did.UserExtensionUnit
+	11, // 36: hi.did.Merchant.ListUsers:output_type -> hi.did.ListUsersResp
+	3,  // 37: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
+	26, // 38: hi.did.Merchant.SetUsers:output_type -> google.protobuf.Empty
+	26, // 39: hi.did.Merchant.AddUsers:output_type -> google.protobuf.Empty
+	26, // 40: hi.did.Merchant.RemoveUsers:output_type -> google.protobuf.Empty
+	17, // 41: hi.did.Merchant.GetUserMqtt:output_type -> hi.did.GetUserMqttResp
+	8,  // 42: hi.did.Merchant.ListGrants:output_type -> hi.did.ListGrantsResp
+	26, // 43: hi.did.Merchant.AddGrant:output_type -> google.protobuf.Empty
+	26, // 44: hi.did.Merchant.RemoveGrant:output_type -> google.protobuf.Empty
+	18, // 45: hi.did.MerchantPub.Scheme:output_type -> hi.did.MerchantPubSchemeResp
+	19, // 46: hi.did.MerchantPub.Server:output_type -> hi.did.MerchantPubServerResp
+	20, // 47: hi.did.MerchantExDB.Get:output_type -> hi.did.MerchantExDBResp
+	20, // 48: hi.did.MerchantExDB.Refresh:output_type -> hi.did.MerchantExDBResp
+	22, // 49: hi.did.OrderEvent.Sub:output_type -> hi.did.OrderEventResp
+	26, // 50: hi.did.OrderNotify.Send:output_type -> google.protobuf.Empty
+	33, // [33:51] is the sub-list for method output_type
+	15, // [15:33] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_merchant_proto_init() }
@@ -1496,7 +1548,7 @@ func file_hi_did_merchant_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_merchant_proto_rawDesc), len(file_hi_did_merchant_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   5,
 		},

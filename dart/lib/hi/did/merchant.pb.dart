@@ -1371,6 +1371,64 @@ class MerchantPubSchemeResp extends $pb.GeneratedMessage {
   void clearScheme() => $_clearField(1);
 }
 
+class MerchantPubServerResp extends $pb.GeneratedMessage {
+  factory MerchantPubServerResp({
+    $2.Entity? server,
+  }) {
+    final result = create();
+    if (server != null) result.server = server;
+    return result;
+  }
+
+  MerchantPubServerResp._();
+
+  factory MerchantPubServerResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantPubServerResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantPubServerResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'server',
+        subBuilder: $2.Entity.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantPubServerResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantPubServerResp copyWith(
+          void Function(MerchantPubServerResp) updates) =>
+      super.copyWith((message) => updates(message as MerchantPubServerResp))
+          as MerchantPubServerResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantPubServerResp create() => MerchantPubServerResp._();
+  @$core.override
+  MerchantPubServerResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantPubServerResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantPubServerResp>(create);
+  static MerchantPubServerResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $2.Entity get server => $_getN(0);
+  @$pb.TagNumber(1)
+  set server($2.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasServer() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearServer() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $2.Entity ensureServer() => $_ensure(0);
+}
+
 /// 商户的扩展库访问凭证:extoken(=ExtendToken,商户的 API 凭证)+ extend 表名。
 class MerchantExDBResp extends $pb.GeneratedMessage {
   factory MerchantExDBResp({
