@@ -21,7 +21,9 @@ import 'group.pb.dart' as $0;
 
 export 'group.pb.dart';
 
-/// 群(主体=群)。用户 token 档。
+/// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
+/// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
+///    故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
 /// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
 ///   owner   : 全允许(含解散群、加管理员)
 ///   admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
@@ -39,7 +41,7 @@ class GroupClient extends $grpc.Client {
 
   GroupClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GroupUserView> get(
+  $grpc.ResponseFuture<$0.GroupMemberView> get(
     $0.GetGroupReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -146,10 +148,10 @@ class GroupClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.GetGroupReq, $0.GroupUserView>(
+  static final _$get = $grpc.ClientMethod<$0.GetGroupReq, $0.GroupMemberView>(
       '/hi.club.Group/Get',
       ($0.GetGroupReq value) => value.writeToBuffer(),
-      $0.GroupUserView.fromBuffer);
+      $0.GroupMemberView.fromBuffer);
   static final _$create = $grpc.ClientMethod<$0.CreateGroupReq, $0.GroupBase>(
       '/hi.club.Group/Create',
       ($0.CreateGroupReq value) => value.writeToBuffer(),
@@ -217,13 +219,13 @@ abstract class GroupServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Group';
 
   GroupServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.GetGroupReq, $0.GroupUserView>(
+    $addMethod($grpc.ServiceMethod<$0.GetGroupReq, $0.GroupMemberView>(
         'Get',
         get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetGroupReq.fromBuffer(value),
-        ($0.GroupUserView value) => value.writeToBuffer()));
+        ($0.GroupMemberView value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.CreateGroupReq, $0.GroupBase>(
         'Create',
         create_Pre,
@@ -329,12 +331,12 @@ abstract class GroupServiceBase extends $grpc.Service {
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GroupUserView> get_Pre(
+  $async.Future<$0.GroupMemberView> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.GetGroupReq> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$0.GroupUserView> get(
+  $async.Future<$0.GroupMemberView> get(
       $grpc.ServiceCall call, $0.GetGroupReq request);
 
   $async.Future<$0.GroupBase> create_Pre($grpc.ServiceCall $call,

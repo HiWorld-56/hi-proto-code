@@ -30,20 +30,40 @@ final $typed_data.Uint8List groupBaseDescriptor = $convert.base64Decode(
     'CglHcm91cEJhc2USHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIeCgpiYWNrZ3JvdW'
     '5kGAIgASgJUgpiYWNrZ3JvdW5kEhgKB3ByaXZhdGUYAyABKAhSB3ByaXZhdGU=');
 
+@$core.Deprecated('Use groupMemberAttrDescriptor instead')
+const GroupMemberAttr$json = {
+  '1': 'GroupMemberAttr',
+  '2': [
+    {'1': 'role', '3': 1, '4': 1, '5': 9, '10': 'role'},
+    {'1': 'muted', '3': 2, '4': 1, '5': 8, '10': 'muted'},
+  ],
+};
+
+/// Descriptor for `GroupMemberAttr`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List groupMemberAttrDescriptor = $convert.base64Decode(
+    'Cg9Hcm91cE1lbWJlckF0dHISEgoEcm9sZRgBIAEoCVIEcm9sZRIUCgVtdXRlZBgCIAEoCFIFbX'
+    'V0ZWQ=');
+
 @$core.Deprecated('Use groupMemberDescriptor instead')
 const GroupMember$json = {
   '1': 'GroupMember',
   '2': [
     {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
-    {'1': 'role', '3': 2, '4': 1, '5': 9, '10': 'role'},
-    {'1': 'muted', '3': 3, '4': 1, '5': 8, '10': 'muted'},
+    {
+      '1': 'attr',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.GroupMemberAttr',
+      '10': 'attr'
+    },
   ],
 };
 
 /// Descriptor for `GroupMember`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupMemberDescriptor = $convert.base64Decode(
-    'CgtHcm91cE1lbWJlchIeCgRiYXNlGAEgASgLMgouaGkuRW50aXR5UgRiYXNlEhIKBHJvbGUYAi'
-    'ABKAlSBHJvbGUSFAoFbXV0ZWQYAyABKAhSBW11dGVk');
+    'CgtHcm91cE1lbWJlchIeCgRiYXNlGAEgASgLMgouaGkuRW50aXR5UgRiYXNlEiwKBGF0dHIYAi'
+    'ABKAsyGC5oaS5jbHViLkdyb3VwTWVtYmVyQXR0clIEYXR0cg==');
 
 @$core.Deprecated('Use groupInfoDescriptor instead')
 const GroupInfo$json = {
@@ -73,9 +93,9 @@ final $typed_data.Uint8List groupInfoDescriptor = $convert.base64Decode(
     'CglHcm91cEluZm8SJgoEYmFzZRgBIAEoCzISLmhpLmNsdWIuR3JvdXBCYXNlUgRiYXNlEigKBG'
     'xpc3QYAiADKAsyFC5oaS5jbHViLkdyb3VwTWVtYmVyUgRsaXN0');
 
-@$core.Deprecated('Use groupUserViewDescriptor instead')
-const GroupUserView$json = {
-  '1': 'GroupUserView',
+@$core.Deprecated('Use groupMemberViewDescriptor instead')
+const GroupMemberView$json = {
+  '1': 'GroupMemberView',
   '2': [
     {
       '1': 'base',
@@ -85,15 +105,23 @@ const GroupUserView$json = {
       '6': '.hi.club.GroupBase',
       '10': 'base'
     },
-    {'1': 'dnd', '3': 2, '4': 1, '5': 8, '10': 'dnd'},
-    {'1': 'muted', '3': 3, '4': 1, '5': 8, '10': 'muted'},
+    {
+      '1': 'attr',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.GroupMemberAttr',
+      '10': 'attr'
+    },
+    {'1': 'dnd', '3': 3, '4': 1, '5': 8, '10': 'dnd'},
   ],
 };
 
-/// Descriptor for `GroupUserView`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List groupUserViewDescriptor = $convert.base64Decode(
-    'Cg1Hcm91cFVzZXJWaWV3EiYKBGJhc2UYASABKAsyEi5oaS5jbHViLkdyb3VwQmFzZVIEYmFzZR'
-    'IQCgNkbmQYAiABKAhSA2RuZBIUCgVtdXRlZBgDIAEoCFIFbXV0ZWQ=');
+/// Descriptor for `GroupMemberView`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List groupMemberViewDescriptor = $convert.base64Decode(
+    'Cg9Hcm91cE1lbWJlclZpZXcSJgoEYmFzZRgBIAEoCzISLmhpLmNsdWIuR3JvdXBCYXNlUgRiYX'
+    'NlEiwKBGF0dHIYAiABKAsyGC5oaS5jbHViLkdyb3VwTWVtYmVyQXR0clIEYXR0chIQCgNkbmQY'
+    'AyABKAhSA2RuZA==');
 
 @$core.Deprecated('Use getGroupReqDescriptor instead')
 const GetGroupReq$json = {

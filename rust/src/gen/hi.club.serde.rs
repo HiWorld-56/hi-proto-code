@@ -4090,21 +4090,15 @@ impl serde::Serialize for GroupMember {
         if self.base.is_some() {
             len += 1;
         }
-        if !self.role.is_empty() {
-            len += 1;
-        }
-        if self.muted {
+        if self.attr.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.GroupMember", len)?;
         if let Some(v) = self.base.as_ref() {
             struct_ser.serialize_field("base", v)?;
         }
-        if !self.role.is_empty() {
-            struct_ser.serialize_field("role", &self.role)?;
-        }
-        if self.muted {
-            struct_ser.serialize_field("muted", &self.muted)?;
+        if let Some(v) = self.attr.as_ref() {
+            struct_ser.serialize_field("attr", v)?;
         }
         struct_ser.end()
     }
@@ -4117,13 +4111,119 @@ impl<'de> serde::Deserialize<'de> for GroupMember {
     {
         const FIELDS: &[&str] = &[
             "base",
+            "attr",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Base,
+            Attr,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "base" => Ok(GeneratedField::Base),
+                            "attr" => Ok(GeneratedField::Attr),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GroupMember;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.GroupMember")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GroupMember, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut base__ = None;
+                let mut attr__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Base => {
+                            if base__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("base"));
+                            }
+                            base__ = map_.next_value()?;
+                        }
+                        GeneratedField::Attr => {
+                            if attr__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("attr"));
+                            }
+                            attr__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(GroupMember {
+                    base: base__,
+                    attr: attr__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.GroupMember", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GroupMemberAttr {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.role.is_empty() {
+            len += 1;
+        }
+        if self.muted {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.GroupMemberAttr", len)?;
+        if !self.role.is_empty() {
+            struct_ser.serialize_field("role", &self.role)?;
+        }
+        if self.muted {
+            struct_ser.serialize_field("muted", &self.muted)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GroupMemberAttr {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
             "role",
             "muted",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Base,
             Role,
             Muted,
         }
@@ -4147,7 +4247,6 @@ impl<'de> serde::Deserialize<'de> for GroupMember {
                         E: serde::de::Error,
                     {
                         match value {
-                            "base" => Ok(GeneratedField::Base),
                             "role" => Ok(GeneratedField::Role),
                             "muted" => Ok(GeneratedField::Muted),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -4159,27 +4258,20 @@ impl<'de> serde::Deserialize<'de> for GroupMember {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GroupMember;
+            type Value = GroupMemberAttr;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.GroupMember")
+                formatter.write_str("struct hi.club.GroupMemberAttr")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GroupMember, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GroupMemberAttr, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut base__ = None;
                 let mut role__ = None;
                 let mut muted__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Base => {
-                            if base__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("base"));
-                            }
-                            base__ = map_.next_value()?;
-                        }
                         GeneratedField::Role => {
                             if role__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("role"));
@@ -4194,17 +4286,16 @@ impl<'de> serde::Deserialize<'de> for GroupMember {
                         }
                     }
                 }
-                Ok(GroupMember {
-                    base: base__,
+                Ok(GroupMemberAttr {
                     role: role__.unwrap_or_default(),
                     muted: muted__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.GroupMember", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.GroupMemberAttr", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GroupUserView {
+impl serde::Serialize for GroupMemberView {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4215,26 +4306,26 @@ impl serde::Serialize for GroupUserView {
         if self.base.is_some() {
             len += 1;
         }
+        if self.attr.is_some() {
+            len += 1;
+        }
         if self.dnd {
             len += 1;
         }
-        if self.muted {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.GroupUserView", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.GroupMemberView", len)?;
         if let Some(v) = self.base.as_ref() {
             struct_ser.serialize_field("base", v)?;
+        }
+        if let Some(v) = self.attr.as_ref() {
+            struct_ser.serialize_field("attr", v)?;
         }
         if self.dnd {
             struct_ser.serialize_field("dnd", &self.dnd)?;
         }
-        if self.muted {
-            struct_ser.serialize_field("muted", &self.muted)?;
-        }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GroupUserView {
+impl<'de> serde::Deserialize<'de> for GroupMemberView {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4242,15 +4333,15 @@ impl<'de> serde::Deserialize<'de> for GroupUserView {
     {
         const FIELDS: &[&str] = &[
             "base",
+            "attr",
             "dnd",
-            "muted",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Base,
+            Attr,
             Dnd,
-            Muted,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4273,8 +4364,8 @@ impl<'de> serde::Deserialize<'de> for GroupUserView {
                     {
                         match value {
                             "base" => Ok(GeneratedField::Base),
+                            "attr" => Ok(GeneratedField::Attr),
                             "dnd" => Ok(GeneratedField::Dnd),
-                            "muted" => Ok(GeneratedField::Muted),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4284,19 +4375,19 @@ impl<'de> serde::Deserialize<'de> for GroupUserView {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GroupUserView;
+            type Value = GroupMemberView;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.GroupUserView")
+                formatter.write_str("struct hi.club.GroupMemberView")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GroupUserView, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GroupMemberView, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut base__ = None;
+                let mut attr__ = None;
                 let mut dnd__ = None;
-                let mut muted__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Base => {
@@ -4305,28 +4396,28 @@ impl<'de> serde::Deserialize<'de> for GroupUserView {
                             }
                             base__ = map_.next_value()?;
                         }
+                        GeneratedField::Attr => {
+                            if attr__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("attr"));
+                            }
+                            attr__ = map_.next_value()?;
+                        }
                         GeneratedField::Dnd => {
                             if dnd__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("dnd"));
                             }
                             dnd__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Muted => {
-                            if muted__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("muted"));
-                            }
-                            muted__ = Some(map_.next_value()?);
-                        }
                     }
                 }
-                Ok(GroupUserView {
+                Ok(GroupMemberView {
                     base: base__,
+                    attr: attr__,
                     dnd: dnd__.unwrap_or_default(),
-                    muted: muted__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.GroupUserView", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.GroupMemberView", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for HandleSystemMessageReq {

@@ -41,7 +41,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 群(主体=群)。用户 token 档。
+// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
+// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
+//
+//	故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
+//
 // 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
 //
 //	owner   : 全允许(含解散群、加管理员)
@@ -49,7 +53,7 @@ const (
 //	member(公开群): 仅可拉人;其余禁止
 //	member(私密群): 全禁止(只能被邀请)
 type GroupClient interface {
-	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupUserView, error)
+	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupMemberView, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
 	Update(ctx context.Context, in *GroupBase, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -74,9 +78,9 @@ func NewGroupClient(cc grpc.ClientConnInterface) GroupClient {
 	return &groupClient{cc}
 }
 
-func (c *groupClient) Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupUserView, error) {
+func (c *groupClient) Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupMemberView, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GroupUserView)
+	out := new(GroupMemberView)
 	err := c.cc.Invoke(ctx, Group_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -228,7 +232,11 @@ func (c *groupClient) MuteMembers(ctx context.Context, in *MuteMembersReq, opts 
 // All implementations should embed UnimplementedGroupServer
 // for forward compatibility.
 //
-// 群(主体=群)。用户 token 档。
+// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
+// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
+//
+//	故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
+//
 // 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
 //
 //	owner   : 全允许(含解散群、加管理员)
@@ -236,7 +244,7 @@ func (c *groupClient) MuteMembers(ctx context.Context, in *MuteMembersReq, opts 
 //	member(公开群): 仅可拉人;其余禁止
 //	member(私密群): 全禁止(只能被邀请)
 type GroupServer interface {
-	Get(context.Context, *GetGroupReq) (*GroupUserView, error)
+	Get(context.Context, *GetGroupReq) (*GroupMemberView, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
 	Update(context.Context, *GroupBase) (*emptypb.Empty, error)
@@ -260,7 +268,7 @@ type GroupServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGroupServer struct{}
 
-func (UnimplementedGroupServer) Get(context.Context, *GetGroupReq) (*GroupUserView, error) {
+func (UnimplementedGroupServer) Get(context.Context, *GetGroupReq) (*GroupMemberView, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedGroupServer) Create(context.Context, *CreateGroupReq) (*GroupBase, error) {

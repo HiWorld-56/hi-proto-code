@@ -3081,8 +3081,6 @@ pub mod publisher_client {
 }
 /// 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。
 /// base.update 供前端判断缓存新鲜度。
-/// (dnd 是成员私有、已挪到 GroupUserView;muted 是成员私有、在 GroupMember;
-/// created_at/updated_at 是纯库字段、业务无用、已删。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupBase {
     #[prost(message, optional, tag = "1")]
@@ -3093,16 +3091,22 @@ pub struct GroupBase {
     #[prost(bool, tag = "3")]
     pub private: bool,
 }
+/// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GroupMemberAttr {
+    /// owner / admin / member
+    #[prost(string, tag = "1")]
+    pub role: ::prost::alloc::string::String,
+    /// 是否被禁言(群主/管理员设;去写权限留读权限)
+    #[prost(bool, tag = "2")]
+    pub muted: bool,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupMember {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
-    /// owner / admin / member
-    #[prost(string, tag = "2")]
-    pub role: ::prost::alloc::string::String,
-    /// 是否被禁言(群主/管理员设;去写权限留读权限)
-    #[prost(bool, tag = "3")]
-    pub muted: bool,
+    #[prost(message, optional, tag = "2")]
+    pub attr: ::core::option::Option<GroupMemberAttr>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupInfo {
@@ -3111,18 +3115,18 @@ pub struct GroupInfo {
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<GroupMember>,
 }
-/// 某用户视角的群信息 = 群公共 + 调用者自己的成员私有配置。
-/// 群信息页一次拉全(公共 base + 我的 dnd + 我是否被禁言),前端直接展示。
+/// 某成员(调用者本人)视角的群信息 = 群公共 + 我的成员属性 + 我的免打扰(私有)。
+/// 群信息页一次拉全,前端直接展示。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GroupUserView {
+pub struct GroupMemberView {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<GroupBase>,
-    /// **调用者自己**对该群的免打扰(用户自设,SetDnd)
-    #[prost(bool, tag = "2")]
-    pub dnd: bool,
-    /// **调用者自己**是否被禁言(群主/管理员设)
+    /// 我的 role/muted
+    #[prost(message, optional, tag = "2")]
+    pub attr: ::core::option::Option<GroupMemberAttr>,
+    /// **仅本人可见**的免打扰(私有,故不在 GroupMemberAttr 内)
     #[prost(bool, tag = "3")]
-    pub muted: bool,
+    pub dnd: bool,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupReq {
@@ -3247,7 +3251,9 @@ pub mod group_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 群(主体=群)。用户 token 档。
+    /// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
+    /// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
+    /// 故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
     /// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
     /// owner   : 全允许(含解散群、加管理员)
     /// admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
@@ -3336,7 +3342,10 @@ pub mod group_client {
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGroupReq>,
-        ) -> std::result::Result<tonic::Response<super::GroupUserView>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GroupMemberView>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
