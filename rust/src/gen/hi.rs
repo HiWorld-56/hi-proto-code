@@ -148,10 +148,19 @@ pub struct Did {
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
 }
+/// Entity 是"可寻址节点"的公开门面(did/code + 名字 + 头像 + 类型)。
+/// type: 实体类型(字符串,便于扩展 —— 新增类型只需在此登记一行)
+/// 人型(好友列表)
+/// user       人
+/// agent      硬件机器人(有 DID、具身、行为同用户)
+/// assistant  软件机器人(对话由后端接管,无私钥、不在 mqtt 上)
+/// 会话型(会话列表)
+/// group      群聊
+/// single     单聊
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Entity {
-    #[prost(enumeration = "EntityType", tag = "1")]
-    pub r#type: i32,
+    #[prost(string, tag = "1")]
+    pub r#type: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
@@ -225,49 +234,4 @@ pub struct ServerVersionResp {
     /// 运行环境:dev/prod(echo 探测得出)
     #[prost(string, tag = "2")]
     pub env: ::prost::alloc::string::String,
-}
-/// 实体类型:身份门面 Entity 的种类。含"人型"(user/agent/assistant)与"会话型"(group/single)。
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum EntityType {
-    /// 空/未知
-    EntityUnspecified = 0,
-    /// 人
-    EntityUser = 1,
-    /// 硬件机器人(有身份、具身)
-    EntityAgent = 2,
-    /// 软件机器人
-    EntityAssistant = 3,
-    /// 群聊会话
-    EntityGroup = 4,
-    /// 单聊会话
-    EntitySingle = 5,
-}
-impl EntityType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::EntityUnspecified => "ENTITY_UNSPECIFIED",
-            Self::EntityUser => "ENTITY_USER",
-            Self::EntityAgent => "ENTITY_AGENT",
-            Self::EntityAssistant => "ENTITY_ASSISTANT",
-            Self::EntityGroup => "ENTITY_GROUP",
-            Self::EntitySingle => "ENTITY_SINGLE",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "ENTITY_UNSPECIFIED" => Some(Self::EntityUnspecified),
-            "ENTITY_USER" => Some(Self::EntityUser),
-            "ENTITY_AGENT" => Some(Self::EntityAgent),
-            "ENTITY_ASSISTANT" => Some(Self::EntityAssistant),
-            "ENTITY_GROUP" => Some(Self::EntityGroup),
-            "ENTITY_SINGLE" => Some(Self::EntitySingle),
-            _ => None,
-        }
-    }
 }
