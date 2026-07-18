@@ -12,7 +12,6 @@
 
 import 'dart:core' as $core;
 
-import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
@@ -20,23 +19,20 @@ import 'messaging.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// 群信息。群类型(单聊/群)在 base.type;public/private 见 private 字段。
+/// 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。
+/// base.update 供前端判断缓存新鲜度。
+/// (dnd 是成员私有、已挪到 GroupUserView;muted 是成员私有、在 GroupMember;
+///  created_at/updated_at 是纯库字段、业务无用、已删。)
 class GroupBase extends $pb.GeneratedMessage {
   factory GroupBase({
     $2.Entity? base,
     $core.String? background,
     $core.bool? private,
-    $core.bool? dnd,
-    $fixnum.Int64? createdAt,
-    $fixnum.Int64? updatedAt,
   }) {
     final result = create();
     if (base != null) result.base = base;
     if (background != null) result.background = background;
     if (private != null) result.private = private;
-    if (dnd != null) result.dnd = dnd;
-    if (createdAt != null) result.createdAt = createdAt;
-    if (updatedAt != null) result.updatedAt = updatedAt;
     return result;
   }
 
@@ -57,9 +53,6 @@ class GroupBase extends $pb.GeneratedMessage {
         subBuilder: $2.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'background')
     ..aOB(3, _omitFieldNames ? '' : 'private')
-    ..aOB(4, _omitFieldNames ? '' : 'dnd')
-    ..aInt64(5, _omitFieldNames ? '' : 'createdAt')
-    ..aInt64(6, _omitFieldNames ? '' : 'updatedAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -108,33 +101,6 @@ class GroupBase extends $pb.GeneratedMessage {
   $core.bool hasPrivate() => $_has(2);
   @$pb.TagNumber(3)
   void clearPrivate() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.bool get dnd => $_getBF(3);
-  @$pb.TagNumber(4)
-  set dnd($core.bool value) => $_setBool(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasDnd() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearDnd() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $fixnum.Int64 get createdAt => $_getI64(4);
-  @$pb.TagNumber(5)
-  set createdAt($fixnum.Int64 value) => $_setInt64(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasCreatedAt() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearCreatedAt() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $fixnum.Int64 get updatedAt => $_getI64(5);
-  @$pb.TagNumber(6)
-  set updatedAt($fixnum.Int64 value) => $_setInt64(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasUpdatedAt() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearUpdatedAt() => $_clearField(6);
 }
 
 class GroupMember extends $pb.GeneratedMessage {
@@ -279,6 +245,89 @@ class GroupInfo extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<GroupMember> get list => $_getList(1);
+}
+
+/// 某用户视角的群信息 = 群公共 + 调用者自己的成员私有配置。
+/// 群信息页一次拉全(公共 base + 我的 dnd + 我是否被禁言),前端直接展示。
+class GroupUserView extends $pb.GeneratedMessage {
+  factory GroupUserView({
+    GroupBase? base,
+    $core.bool? dnd,
+    $core.bool? muted,
+  }) {
+    final result = create();
+    if (base != null) result.base = base;
+    if (dnd != null) result.dnd = dnd;
+    if (muted != null) result.muted = muted;
+    return result;
+  }
+
+  GroupUserView._();
+
+  factory GroupUserView.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GroupUserView.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GroupUserView',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<GroupBase>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: GroupBase.create)
+    ..aOB(2, _omitFieldNames ? '' : 'dnd')
+    ..aOB(3, _omitFieldNames ? '' : 'muted')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GroupUserView clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GroupUserView copyWith(void Function(GroupUserView) updates) =>
+      super.copyWith((message) => updates(message as GroupUserView))
+          as GroupUserView;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GroupUserView create() => GroupUserView._();
+  @$core.override
+  GroupUserView createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GroupUserView getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GroupUserView>(create);
+  static GroupUserView? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  GroupBase get base => $_getN(0);
+  @$pb.TagNumber(1)
+  set base(GroupBase value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBase() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBase() => $_clearField(1);
+  @$pb.TagNumber(1)
+  GroupBase ensureBase() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.bool get dnd => $_getBF(1);
+  @$pb.TagNumber(2)
+  set dnd($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDnd() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDnd() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get muted => $_getBF(2);
+  @$pb.TagNumber(3)
+  set muted($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMuted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMuted() => $_clearField(3);
 }
 
 class GetGroupReq extends $pb.GeneratedMessage {

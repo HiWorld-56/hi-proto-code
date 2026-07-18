@@ -39,7 +39,7 @@ class GroupClient extends $grpc.Client {
 
   GroupClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GroupBase> get(
+  $grpc.ResponseFuture<$0.GroupUserView> get(
     $0.GetGroupReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -146,10 +146,10 @@ class GroupClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.GetGroupReq, $0.GroupBase>(
+  static final _$get = $grpc.ClientMethod<$0.GetGroupReq, $0.GroupUserView>(
       '/hi.club.Group/Get',
       ($0.GetGroupReq value) => value.writeToBuffer(),
-      $0.GroupBase.fromBuffer);
+      $0.GroupUserView.fromBuffer);
   static final _$create = $grpc.ClientMethod<$0.CreateGroupReq, $0.GroupBase>(
       '/hi.club.Group/Create',
       ($0.CreateGroupReq value) => value.writeToBuffer(),
@@ -217,13 +217,13 @@ abstract class GroupServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Group';
 
   GroupServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.GetGroupReq, $0.GroupBase>(
+    $addMethod($grpc.ServiceMethod<$0.GetGroupReq, $0.GroupUserView>(
         'Get',
         get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GetGroupReq.fromBuffer(value),
-        ($0.GroupBase value) => value.writeToBuffer()));
+        ($0.GroupUserView value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.CreateGroupReq, $0.GroupBase>(
         'Create',
         create_Pre,
@@ -329,12 +329,12 @@ abstract class GroupServiceBase extends $grpc.Service {
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GroupBase> get_Pre(
+  $async.Future<$0.GroupUserView> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.GetGroupReq> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$0.GroupBase> get(
+  $async.Future<$0.GroupUserView> get(
       $grpc.ServiceCall call, $0.GetGroupReq request);
 
   $async.Future<$0.GroupBase> create_Pre($grpc.ServiceCall $call,

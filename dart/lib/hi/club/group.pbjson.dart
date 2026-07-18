@@ -22,18 +22,13 @@ const GroupBase$json = {
     {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
     {'1': 'background', '3': 2, '4': 1, '5': 9, '10': 'background'},
     {'1': 'private', '3': 3, '4': 1, '5': 8, '10': 'private'},
-    {'1': 'dnd', '3': 4, '4': 1, '5': 8, '10': 'dnd'},
-    {'1': 'created_at', '3': 5, '4': 1, '5': 3, '10': 'createdAt'},
-    {'1': 'updated_at', '3': 6, '4': 1, '5': 3, '10': 'updatedAt'},
   ],
 };
 
 /// Descriptor for `GroupBase`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupBaseDescriptor = $convert.base64Decode(
     'CglHcm91cEJhc2USHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIeCgpiYWNrZ3JvdW'
-    '5kGAIgASgJUgpiYWNrZ3JvdW5kEhgKB3ByaXZhdGUYAyABKAhSB3ByaXZhdGUSEAoDZG5kGAQg'
-    'ASgIUgNkbmQSHQoKY3JlYXRlZF9hdBgFIAEoA1IJY3JlYXRlZEF0Eh0KCnVwZGF0ZWRfYXQYBi'
-    'ABKANSCXVwZGF0ZWRBdA==');
+    '5kGAIgASgJUgpiYWNrZ3JvdW5kEhgKB3ByaXZhdGUYAyABKAhSB3ByaXZhdGU=');
 
 @$core.Deprecated('Use groupMemberDescriptor instead')
 const GroupMember$json = {
@@ -77,6 +72,28 @@ const GroupInfo$json = {
 final $typed_data.Uint8List groupInfoDescriptor = $convert.base64Decode(
     'CglHcm91cEluZm8SJgoEYmFzZRgBIAEoCzISLmhpLmNsdWIuR3JvdXBCYXNlUgRiYXNlEigKBG'
     'xpc3QYAiADKAsyFC5oaS5jbHViLkdyb3VwTWVtYmVyUgRsaXN0');
+
+@$core.Deprecated('Use groupUserViewDescriptor instead')
+const GroupUserView$json = {
+  '1': 'GroupUserView',
+  '2': [
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.GroupBase',
+      '10': 'base'
+    },
+    {'1': 'dnd', '3': 2, '4': 1, '5': 8, '10': 'dnd'},
+    {'1': 'muted', '3': 3, '4': 1, '5': 8, '10': 'muted'},
+  ],
+};
+
+/// Descriptor for `GroupUserView`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List groupUserViewDescriptor = $convert.base64Decode(
+    'Cg1Hcm91cFVzZXJWaWV3EiYKBGJhc2UYASABKAsyEi5oaS5jbHViLkdyb3VwQmFzZVIEYmFzZR'
+    'IQCgNkbmQYAiABKAhSA2RuZBIUCgVtdXRlZBgDIAEoCFIFbXV0ZWQ=');
 
 @$core.Deprecated('Use getGroupReqDescriptor instead')
 const GetGroupReq$json = {

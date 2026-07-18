@@ -49,7 +49,7 @@ const (
 //	member(公开群): 仅可拉人;其余禁止
 //	member(私密群): 全禁止(只能被邀请)
 type GroupClient interface {
-	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
+	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupUserView, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
 	Update(ctx context.Context, in *GroupBase, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -74,9 +74,9 @@ func NewGroupClient(cc grpc.ClientConnInterface) GroupClient {
 	return &groupClient{cc}
 }
 
-func (c *groupClient) Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupBase, error) {
+func (c *groupClient) Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupUserView, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GroupBase)
+	out := new(GroupUserView)
 	err := c.cc.Invoke(ctx, Group_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -236,7 +236,7 @@ func (c *groupClient) MuteMembers(ctx context.Context, in *MuteMembersReq, opts 
 //	member(公开群): 仅可拉人;其余禁止
 //	member(私密群): 全禁止(只能被邀请)
 type GroupServer interface {
-	Get(context.Context, *GetGroupReq) (*GroupBase, error)
+	Get(context.Context, *GetGroupReq) (*GroupUserView, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
 	Update(context.Context, *GroupBase) (*emptypb.Empty, error)
@@ -260,7 +260,7 @@ type GroupServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGroupServer struct{}
 
-func (UnimplementedGroupServer) Get(context.Context, *GetGroupReq) (*GroupBase, error) {
+func (UnimplementedGroupServer) Get(context.Context, *GetGroupReq) (*GroupUserView, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedGroupServer) Create(context.Context, *CreateGroupReq) (*GroupBase, error) {

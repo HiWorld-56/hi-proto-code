@@ -3079,7 +3079,10 @@ pub mod publisher_client {
         }
     }
 }
-/// 群信息。群类型(单聊/群)在 base.type;public/private 见 private 字段。
+/// 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。
+/// base.update 供前端判断缓存新鲜度。
+/// (dnd 是成员私有、已挪到 GroupUserView;muted 是成员私有、在 GroupMember;
+/// created_at/updated_at 是纯库字段、业务无用、已删。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupBase {
     #[prost(message, optional, tag = "1")]
@@ -3089,13 +3092,6 @@ pub struct GroupBase {
     /// true=私密群(只能被邀请加入);false=公开群(可凭群 code 直接申请加入)
     #[prost(bool, tag = "3")]
     pub private: bool,
-    /// **调用者自己**对该群的免打扰(新消息不震动),用户自设(SetDnd)
-    #[prost(bool, tag = "4")]
-    pub dnd: bool,
-    #[prost(int64, tag = "5")]
-    pub created_at: i64,
-    #[prost(int64, tag = "6")]
-    pub updated_at: i64,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupMember {
@@ -3114,6 +3110,19 @@ pub struct GroupInfo {
     pub base: ::core::option::Option<GroupBase>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<GroupMember>,
+}
+/// 某用户视角的群信息 = 群公共 + 调用者自己的成员私有配置。
+/// 群信息页一次拉全(公共 base + 我的 dnd + 我是否被禁言),前端直接展示。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GroupUserView {
+    #[prost(message, optional, tag = "1")]
+    pub base: ::core::option::Option<GroupBase>,
+    /// **调用者自己**对该群的免打扰(用户自设,SetDnd)
+    #[prost(bool, tag = "2")]
+    pub dnd: bool,
+    /// **调用者自己**是否被禁言(群主/管理员设)
+    #[prost(bool, tag = "3")]
+    pub muted: bool,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupReq {
@@ -3327,7 +3336,7 @@ pub mod group_client {
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGroupReq>,
-        ) -> std::result::Result<tonic::Response<super::GroupBase>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::GroupUserView>, tonic::Status> {
             self.inner
                 .ready()
                 .await
