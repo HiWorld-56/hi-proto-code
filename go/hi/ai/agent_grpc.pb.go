@@ -20,16 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_Create_FullMethodName         = "/hi.ai.Agent/Create"
-	Agent_Edit_FullMethodName           = "/hi.ai.Agent/Edit"
-	Agent_Delete_FullMethodName         = "/hi.ai.Agent/Delete"
-	Agent_Get_FullMethodName            = "/hi.ai.Agent/Get"
-	Agent_List_FullMethodName           = "/hi.ai.Agent/List"
-	Agent_Mark_FullMethodName           = "/hi.ai.Agent/Mark"
-	Agent_ListMarks_FullMethodName      = "/hi.ai.Agent/ListMarks"
-	Agent_GetUsage_FullMethodName       = "/hi.ai.Agent/GetUsage"
-	Agent_DefaultConfig_FullMethodName  = "/hi.ai.Agent/DefaultConfig"
-	Agent_ResetToDefault_FullMethodName = "/hi.ai.Agent/ResetToDefault"
+	Agent_Create_FullMethodName           = "/hi.ai.Agent/Create"
+	Agent_Edit_FullMethodName             = "/hi.ai.Agent/Edit"
+	Agent_Delete_FullMethodName           = "/hi.ai.Agent/Delete"
+	Agent_Get_FullMethodName              = "/hi.ai.Agent/Get"
+	Agent_List_FullMethodName             = "/hi.ai.Agent/List"
+	Agent_Mark_FullMethodName             = "/hi.ai.Agent/Mark"
+	Agent_ListMarks_FullMethodName        = "/hi.ai.Agent/ListMarks"
+	Agent_GetUsage_FullMethodName         = "/hi.ai.Agent/GetUsage"
+	Agent_GetDefaultConfig_FullMethodName = "/hi.ai.Agent/GetDefaultConfig"
+	Agent_ResetToDefault_FullMethodName   = "/hi.ai.Agent/ResetToDefault"
 )
 
 // AgentClient is the client API for Agent service.
@@ -51,7 +51,7 @@ type AgentClient interface {
 	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error)
-	DefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error)
+	GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error)
 	ResetToDefault(ctx context.Context, in *ResetToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -143,10 +143,10 @@ func (c *agentClient) GetUsage(ctx context.Context, in *AgentUsageReq, opts ...g
 	return out, nil
 }
 
-func (c *agentClient) DefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error) {
+func (c *agentClient) GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DefaultConfigResp)
-	err := c.cc.Invoke(ctx, Agent_DefaultConfig_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_GetDefaultConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -182,7 +182,7 @@ type AgentServer interface {
 	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
 	ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error)
 	GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error)
-	DefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error)
+	GetDefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error)
 	ResetToDefault(context.Context, *ResetToDefaultReq) (*emptypb.Empty, error)
 }
 
@@ -217,8 +217,8 @@ func (UnimplementedAgentServer) ListMarks(context.Context, *ListMarksReq) (*List
 func (UnimplementedAgentServer) GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUsage not implemented")
 }
-func (UnimplementedAgentServer) DefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method DefaultConfig not implemented")
+func (UnimplementedAgentServer) GetDefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDefaultConfig not implemented")
 }
 func (UnimplementedAgentServer) ResetToDefault(context.Context, *ResetToDefaultReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method ResetToDefault not implemented")
@@ -387,20 +387,20 @@ func _Agent_GetUsage_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_DefaultConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Agent_GetDefaultConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).DefaultConfig(ctx, in)
+		return srv.(AgentServer).GetDefaultConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_DefaultConfig_FullMethodName,
+		FullMethod: Agent_GetDefaultConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).DefaultConfig(ctx, req.(*emptypb.Empty))
+		return srv.(AgentServer).GetDefaultConfig(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -463,8 +463,8 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_GetUsage_Handler,
 		},
 		{
-			MethodName: "DefaultConfig",
-			Handler:    _Agent_DefaultConfig_Handler,
+			MethodName: "GetDefaultConfig",
+			Handler:    _Agent_GetDefaultConfig_Handler,
 		},
 		{
 			MethodName: "ResetToDefault",

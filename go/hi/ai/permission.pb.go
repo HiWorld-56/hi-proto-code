@@ -23,6 +23,63 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 权限类型:固定闭集(四档),故用枚举而非魔法字符串。客户端有枚举即可显隐功能,不必再拉 ListTypes。
+// 名为 PermissionType(不能叫 Permission —— 与 service Permission 同命名空间会撞)。
+type PermissionType int32
+
+const (
+	PermissionType_PERMISSION_UNSPECIFIED PermissionType = 0 // 占位 / 列表过滤时表示"全部"
+	PermissionType_PERMISSION_NORMAL      PermissionType = 1 // 普通:自由度/系统提示词/用户提示词
+	PermissionType_PERMISSION_ADVANCED    PermissionType = 2 // 高级:上下文数/对话模型/嵌入模型/STT 模型
+	PermissionType_PERMISSION_MEM         PermissionType = 3 // 记忆:上传资料/训练记忆
+	PermissionType_PERMISSION_PLUGIN      PermissionType = 4 // 插件:启用插件
+)
+
+// Enum value maps for PermissionType.
+var (
+	PermissionType_name = map[int32]string{
+		0: "PERMISSION_UNSPECIFIED",
+		1: "PERMISSION_NORMAL",
+		2: "PERMISSION_ADVANCED",
+		3: "PERMISSION_MEM",
+		4: "PERMISSION_PLUGIN",
+	}
+	PermissionType_value = map[string]int32{
+		"PERMISSION_UNSPECIFIED": 0,
+		"PERMISSION_NORMAL":      1,
+		"PERMISSION_ADVANCED":    2,
+		"PERMISSION_MEM":         3,
+		"PERMISSION_PLUGIN":      4,
+	}
+)
+
+func (x PermissionType) Enum() *PermissionType {
+	p := new(PermissionType)
+	*p = x
+	return p
+}
+
+func (x PermissionType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PermissionType) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ai_permission_proto_enumTypes[0].Descriptor()
+}
+
+func (PermissionType) Type() protoreflect.EnumType {
+	return &file_hi_ai_permission_proto_enumTypes[0]
+}
+
+func (x PermissionType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PermissionType.Descriptor instead.
+func (PermissionType) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ai_permission_proto_rawDescGZIP(), []int{0}
+}
+
 type PermissionGetReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 要查谁的权限
@@ -70,7 +127,7 @@ func (x *PermissionGetReq) GetDid() string {
 type PermissionInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Permissions   []string               `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"` // 该 did 持有的权限:normal / advanced / mem / plugin
+	Permissions   []PermissionType       `protobuf:"varint,2,rep,packed,name=permissions,proto3,enum=hi.ai.PermissionType" json:"permissions,omitempty"` // 该 did 持有的权限
 	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -113,7 +170,7 @@ func (x *PermissionInfo) GetDid() string {
 	return ""
 }
 
-func (x *PermissionInfo) GetPermissions() []string {
+func (x *PermissionInfo) GetPermissions() []PermissionType {
 	if x != nil {
 		return x.Permissions
 	}
@@ -130,7 +187,7 @@ func (x *PermissionInfo) GetNote() string {
 type PermissionAddReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // 权限类型(见 PermissionManage.ListTypes)
+	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"` // 要授予的权限类型
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -172,17 +229,17 @@ func (x *PermissionAddReq) GetDid() string {
 	return ""
 }
 
-func (x *PermissionAddReq) GetType() string {
+func (x *PermissionAddReq) GetType() PermissionType {
 	if x != nil {
 		return x.Type
 	}
-	return ""
+	return PermissionType_PERMISSION_UNSPECIFIED
 }
 
 type PermissionDeleteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"` // 要取消的权限类型
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -224,11 +281,11 @@ func (x *PermissionDeleteReq) GetDid() string {
 	return ""
 }
 
-func (x *PermissionDeleteReq) GetType() string {
+func (x *PermissionDeleteReq) GetType() PermissionType {
 	if x != nil {
 		return x.Type
 	}
-	return ""
+	return PermissionType_PERMISSION_UNSPECIFIED
 }
 
 type PermissionEditReq struct {
@@ -285,8 +342,8 @@ func (x *PermissionEditReq) GetNote() string {
 
 type PermissionListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`   // 可选:按 did 过滤
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // 按权限类型过滤
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                              // 可选:按 did 过滤
+	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"` // 可选:按权限类型过滤(UNSPECIFIED=全部)
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -329,11 +386,11 @@ func (x *PermissionListReq) GetDid() string {
 	return ""
 }
 
-func (x *PermissionListReq) GetType() string {
+func (x *PermissionListReq) GetType() PermissionType {
 	if x != nil {
 		return x.Type
 	}
-	return ""
+	return PermissionType_PERMISSION_UNSPECIFIED
 }
 
 func (x *PermissionListReq) GetPagination() *hi.Pagination {
@@ -395,50 +452,6 @@ func (x *PermissionListResp) GetInfos() []*PermissionInfo {
 	return nil
 }
 
-type PermissionListTypeResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Types         []string               `protobuf:"bytes,1,rep,name=types,proto3" json:"types,omitempty"` // normal / advanced / mem / plugin
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PermissionListTypeResp) Reset() {
-	*x = PermissionListTypeResp{}
-	mi := &file_hi_ai_permission_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PermissionListTypeResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PermissionListTypeResp) ProtoMessage() {}
-
-func (x *PermissionListTypeResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_permission_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PermissionListTypeResp.ProtoReflect.Descriptor instead.
-func (*PermissionListTypeResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_permission_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *PermissionListTypeResp) GetTypes() []string {
-	if x != nil {
-		return x.Types
-	}
-	return nil
-}
-
 // ── 商户目录 ─────────────────────────────────────────────────────────────
 type MerchantListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -450,7 +463,7 @@ type MerchantListReq struct {
 
 func (x *MerchantListReq) Reset() {
 	*x = MerchantListReq{}
-	mi := &file_hi_ai_permission_proto_msgTypes[8]
+	mi := &file_hi_ai_permission_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -462,7 +475,7 @@ func (x *MerchantListReq) String() string {
 func (*MerchantListReq) ProtoMessage() {}
 
 func (x *MerchantListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_permission_proto_msgTypes[8]
+	mi := &file_hi_ai_permission_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -475,7 +488,7 @@ func (x *MerchantListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantListReq.ProtoReflect.Descriptor instead.
 func (*MerchantListReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_permission_proto_rawDescGZIP(), []int{8}
+	return file_hi_ai_permission_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *MerchantListReq) GetDid() string {
@@ -502,7 +515,7 @@ type MerchantListResp struct {
 
 func (x *MerchantListResp) Reset() {
 	*x = MerchantListResp{}
-	mi := &file_hi_ai_permission_proto_msgTypes[9]
+	mi := &file_hi_ai_permission_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -514,7 +527,7 @@ func (x *MerchantListResp) String() string {
 func (*MerchantListResp) ProtoMessage() {}
 
 func (x *MerchantListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_permission_proto_msgTypes[9]
+	mi := &file_hi_ai_permission_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -527,7 +540,7 @@ func (x *MerchantListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantListResp.ProtoReflect.Descriptor instead.
 func (*MerchantListResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_permission_proto_rawDescGZIP(), []int{9}
+	return file_hi_ai_permission_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *MerchantListResp) GetTotal() int32 {
@@ -554,7 +567,7 @@ type MerchantListResp_Unit struct {
 
 func (x *MerchantListResp_Unit) Reset() {
 	*x = MerchantListResp_Unit{}
-	mi := &file_hi_ai_permission_proto_msgTypes[10]
+	mi := &file_hi_ai_permission_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -566,7 +579,7 @@ func (x *MerchantListResp_Unit) String() string {
 func (*MerchantListResp_Unit) ProtoMessage() {}
 
 func (x *MerchantListResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_permission_proto_msgTypes[10]
+	mi := &file_hi_ai_permission_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -579,7 +592,7 @@ func (x *MerchantListResp_Unit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantListResp_Unit.ProtoReflect.Descriptor instead.
 func (*MerchantListResp_Unit) Descriptor() ([]byte, []int) {
-	return file_hi_ai_permission_proto_rawDescGZIP(), []int{9, 0}
+	return file_hi_ai_permission_proto_rawDescGZIP(), []int{8, 0}
 }
 
 func (x *MerchantListResp_Unit) GetBase() *hi.Entity {
@@ -602,31 +615,29 @@ const file_hi_ai_permission_proto_rawDesc = "" +
 	"\n" +
 	"\x16hi/ai/permission.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"$\n" +
 	"\x10PermissionGetReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"X\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\"o\n" +
 	"\x0ePermissionInfo\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12 \n" +
-	"\vpermissions\x18\x02 \x03(\tR\vpermissions\x12\x12\n" +
-	"\x04note\x18\x03 \x01(\tR\x04note\"8\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x127\n" +
+	"\vpermissions\x18\x02 \x03(\x0e2\x15.hi.ai.PermissionTypeR\vpermissions\x12\x12\n" +
+	"\x04note\x18\x03 \x01(\tR\x04note\"O\n" +
 	"\x10PermissionAddReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\";\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12)\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"R\n" +
 	"\x13PermissionDeleteReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\"9\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12)\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"9\n" +
 	"\x11PermissionEditReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
-	"\x04note\x18\x02 \x01(\tR\x04note\"i\n" +
+	"\x04note\x18\x02 \x01(\tR\x04note\"\x80\x01\n" +
 	"\x11PermissionListReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\x12.\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12)\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"W\n" +
 	"\x12PermissionListResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12+\n" +
-	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoR\x05infos\".\n" +
-	"\x16PermissionListTypeResp\x12\x14\n" +
-	"\x05types\x18\x01 \x03(\tR\x05types\"S\n" +
+	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoR\x05infos\"S\n" +
 	"\x0fMerchantListReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
@@ -639,16 +650,21 @@ const file_hi_ai_permission_proto_rawDesc = "" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04base\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x02 \x01(\x03R\tcreatedAt2J\n" +
+	"created_at\x18\x02 \x01(\x03R\tcreatedAt*\x87\x01\n" +
+	"\x0ePermissionType\x12\x1a\n" +
+	"\x16PERMISSION_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11PERMISSION_NORMAL\x10\x01\x12\x17\n" +
+	"\x13PERMISSION_ADVANCED\x10\x02\x12\x12\n" +
+	"\x0ePERMISSION_MEM\x10\x03\x12\x15\n" +
+	"\x11PERMISSION_PLUGIN\x10\x042J\n" +
 	"\n" +
 	"Permission\x12<\n" +
-	"\x03Get\x12\x17.hi.ai.PermissionGetReq\x1a\x15.hi.ai.PermissionInfo\"\x05\x8a\xb5\x18\x01\x032\xe6\x02\n" +
+	"\x03Get\x12\x17.hi.ai.PermissionGetReq\x1a\x15.hi.ai.PermissionInfo\"\x05\x8a\xb5\x18\x01\x032\x9b\x02\n" +
 	"\x10PermissionManage\x12=\n" +
 	"\x03Add\x12\x17.hi.ai.PermissionAddReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12C\n" +
 	"\x06Delete\x12\x1a.hi.ai.PermissionDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12?\n" +
 	"\x04Edit\x12\x18.hi.ai.PermissionEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
-	"\x04List\x12\x18.hi.ai.PermissionListReq\x1a\x19.hi.ai.PermissionListResp\"\x05\x8a\xb5\x18\x01\x04\x12I\n" +
-	"\tListTypes\x12\x16.google.protobuf.Empty\x1a\x1d.hi.ai.PermissionListTypeResp\"\x05\x8a\xb5\x18\x01\x042J\n" +
+	"\x04List\x12\x18.hi.ai.PermissionListReq\x1a\x19.hi.ai.PermissionListResp\"\x05\x8a\xb5\x18\x01\x042J\n" +
 	"\bMerchant\x12>\n" +
 	"\x04List\x12\x16.hi.ai.MerchantListReq\x1a\x17.hi.ai.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04Bz\n" +
 	"\tcom.hi.aiB\x0fPermissionProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
@@ -665,48 +681,51 @@ func file_hi_ai_permission_proto_rawDescGZIP() []byte {
 	return file_hi_ai_permission_proto_rawDescData
 }
 
-var file_hi_ai_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_ai_permission_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_ai_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_hi_ai_permission_proto_goTypes = []any{
-	(*PermissionGetReq)(nil),       // 0: hi.ai.PermissionGetReq
-	(*PermissionInfo)(nil),         // 1: hi.ai.PermissionInfo
-	(*PermissionAddReq)(nil),       // 2: hi.ai.PermissionAddReq
-	(*PermissionDeleteReq)(nil),    // 3: hi.ai.PermissionDeleteReq
-	(*PermissionEditReq)(nil),      // 4: hi.ai.PermissionEditReq
-	(*PermissionListReq)(nil),      // 5: hi.ai.PermissionListReq
-	(*PermissionListResp)(nil),     // 6: hi.ai.PermissionListResp
-	(*PermissionListTypeResp)(nil), // 7: hi.ai.PermissionListTypeResp
-	(*MerchantListReq)(nil),        // 8: hi.ai.MerchantListReq
-	(*MerchantListResp)(nil),       // 9: hi.ai.MerchantListResp
-	(*MerchantListResp_Unit)(nil),  // 10: hi.ai.MerchantListResp.Unit
-	(*hi.Pagination)(nil),          // 11: hi.Pagination
-	(*hi.Entity)(nil),              // 12: hi.Entity
-	(*emptypb.Empty)(nil),          // 13: google.protobuf.Empty
+	(PermissionType)(0),           // 0: hi.ai.PermissionType
+	(*PermissionGetReq)(nil),      // 1: hi.ai.PermissionGetReq
+	(*PermissionInfo)(nil),        // 2: hi.ai.PermissionInfo
+	(*PermissionAddReq)(nil),      // 3: hi.ai.PermissionAddReq
+	(*PermissionDeleteReq)(nil),   // 4: hi.ai.PermissionDeleteReq
+	(*PermissionEditReq)(nil),     // 5: hi.ai.PermissionEditReq
+	(*PermissionListReq)(nil),     // 6: hi.ai.PermissionListReq
+	(*PermissionListResp)(nil),    // 7: hi.ai.PermissionListResp
+	(*MerchantListReq)(nil),       // 8: hi.ai.MerchantListReq
+	(*MerchantListResp)(nil),      // 9: hi.ai.MerchantListResp
+	(*MerchantListResp_Unit)(nil), // 10: hi.ai.MerchantListResp.Unit
+	(*hi.Pagination)(nil),         // 11: hi.Pagination
+	(*hi.Entity)(nil),             // 12: hi.Entity
+	(*emptypb.Empty)(nil),         // 13: google.protobuf.Empty
 }
 var file_hi_ai_permission_proto_depIdxs = []int32{
-	11, // 0: hi.ai.PermissionListReq.pagination:type_name -> hi.Pagination
-	1,  // 1: hi.ai.PermissionListResp.infos:type_name -> hi.ai.PermissionInfo
-	11, // 2: hi.ai.MerchantListReq.pagination:type_name -> hi.Pagination
-	10, // 3: hi.ai.MerchantListResp.infos:type_name -> hi.ai.MerchantListResp.Unit
-	12, // 4: hi.ai.MerchantListResp.Unit.base:type_name -> hi.Entity
-	0,  // 5: hi.ai.Permission.Get:input_type -> hi.ai.PermissionGetReq
-	2,  // 6: hi.ai.PermissionManage.Add:input_type -> hi.ai.PermissionAddReq
-	3,  // 7: hi.ai.PermissionManage.Delete:input_type -> hi.ai.PermissionDeleteReq
-	4,  // 8: hi.ai.PermissionManage.Edit:input_type -> hi.ai.PermissionEditReq
-	5,  // 9: hi.ai.PermissionManage.List:input_type -> hi.ai.PermissionListReq
-	13, // 10: hi.ai.PermissionManage.ListTypes:input_type -> google.protobuf.Empty
-	8,  // 11: hi.ai.Merchant.List:input_type -> hi.ai.MerchantListReq
-	1,  // 12: hi.ai.Permission.Get:output_type -> hi.ai.PermissionInfo
-	13, // 13: hi.ai.PermissionManage.Add:output_type -> google.protobuf.Empty
-	13, // 14: hi.ai.PermissionManage.Delete:output_type -> google.protobuf.Empty
-	13, // 15: hi.ai.PermissionManage.Edit:output_type -> google.protobuf.Empty
-	6,  // 16: hi.ai.PermissionManage.List:output_type -> hi.ai.PermissionListResp
-	7,  // 17: hi.ai.PermissionManage.ListTypes:output_type -> hi.ai.PermissionListTypeResp
-	9,  // 18: hi.ai.Merchant.List:output_type -> hi.ai.MerchantListResp
-	12, // [12:19] is the sub-list for method output_type
-	5,  // [5:12] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	0,  // 0: hi.ai.PermissionInfo.permissions:type_name -> hi.ai.PermissionType
+	0,  // 1: hi.ai.PermissionAddReq.type:type_name -> hi.ai.PermissionType
+	0,  // 2: hi.ai.PermissionDeleteReq.type:type_name -> hi.ai.PermissionType
+	0,  // 3: hi.ai.PermissionListReq.type:type_name -> hi.ai.PermissionType
+	11, // 4: hi.ai.PermissionListReq.pagination:type_name -> hi.Pagination
+	2,  // 5: hi.ai.PermissionListResp.infos:type_name -> hi.ai.PermissionInfo
+	11, // 6: hi.ai.MerchantListReq.pagination:type_name -> hi.Pagination
+	10, // 7: hi.ai.MerchantListResp.infos:type_name -> hi.ai.MerchantListResp.Unit
+	12, // 8: hi.ai.MerchantListResp.Unit.base:type_name -> hi.Entity
+	1,  // 9: hi.ai.Permission.Get:input_type -> hi.ai.PermissionGetReq
+	3,  // 10: hi.ai.PermissionManage.Add:input_type -> hi.ai.PermissionAddReq
+	4,  // 11: hi.ai.PermissionManage.Delete:input_type -> hi.ai.PermissionDeleteReq
+	5,  // 12: hi.ai.PermissionManage.Edit:input_type -> hi.ai.PermissionEditReq
+	6,  // 13: hi.ai.PermissionManage.List:input_type -> hi.ai.PermissionListReq
+	8,  // 14: hi.ai.Merchant.List:input_type -> hi.ai.MerchantListReq
+	2,  // 15: hi.ai.Permission.Get:output_type -> hi.ai.PermissionInfo
+	13, // 16: hi.ai.PermissionManage.Add:output_type -> google.protobuf.Empty
+	13, // 17: hi.ai.PermissionManage.Delete:output_type -> google.protobuf.Empty
+	13, // 18: hi.ai.PermissionManage.Edit:output_type -> google.protobuf.Empty
+	7,  // 19: hi.ai.PermissionManage.List:output_type -> hi.ai.PermissionListResp
+	9,  // 20: hi.ai.Merchant.List:output_type -> hi.ai.MerchantListResp
+	15, // [15:21] is the sub-list for method output_type
+	9,  // [9:15] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_permission_proto_init() }
@@ -719,13 +738,14 @@ func file_hi_ai_permission_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_permission_proto_rawDesc), len(file_hi_ai_permission_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   11,
+			NumEnums:      1,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   3,
 		},
 		GoTypes:           file_hi_ai_permission_proto_goTypes,
 		DependencyIndexes: file_hi_ai_permission_proto_depIdxs,
+		EnumInfos:         file_hi_ai_permission_proto_enumTypes,
 		MessageInfos:      file_hi_ai_permission_proto_msgTypes,
 	}.Build()
 	File_hi_ai_permission_proto = out.File

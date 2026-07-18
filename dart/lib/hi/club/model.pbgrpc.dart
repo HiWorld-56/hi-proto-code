@@ -35,14 +35,14 @@ class ModelClient extends $grpc.Client {
 
   ModelClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.ListLLMResp> listLlms(
+  $grpc.ResponseFuture<$1.ModelListResp> listLlms(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listLlms, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListEmbeddingResp> listEmbeddings(
+  $grpc.ResponseFuture<$1.ModelListResp> listEmbeddings(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
@@ -56,7 +56,7 @@ class ModelClient extends $grpc.Client {
     return $createUnaryCall(_$listStts, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListTTSResp> listTts(
+  $grpc.ResponseFuture<$1.ModelListResp> listTts(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
@@ -65,23 +65,23 @@ class ModelClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$listLlms = $grpc.ClientMethod<$0.Empty, $1.ListLLMResp>(
+  static final _$listLlms = $grpc.ClientMethod<$0.Empty, $1.ModelListResp>(
       '/hi.club.Model/ListLlms',
       ($0.Empty value) => value.writeToBuffer(),
-      $1.ListLLMResp.fromBuffer);
+      $1.ModelListResp.fromBuffer);
   static final _$listEmbeddings =
-      $grpc.ClientMethod<$0.Empty, $1.ListEmbeddingResp>(
+      $grpc.ClientMethod<$0.Empty, $1.ModelListResp>(
           '/hi.club.Model/ListEmbeddings',
           ($0.Empty value) => value.writeToBuffer(),
-          $1.ListEmbeddingResp.fromBuffer);
+          $1.ModelListResp.fromBuffer);
   static final _$listStts = $grpc.ClientMethod<$0.Empty, $1.ListSTTResp>(
       '/hi.club.Model/ListStts',
       ($0.Empty value) => value.writeToBuffer(),
       $1.ListSTTResp.fromBuffer);
-  static final _$listTts = $grpc.ClientMethod<$0.Empty, $1.ListTTSResp>(
+  static final _$listTts = $grpc.ClientMethod<$0.Empty, $1.ModelListResp>(
       '/hi.club.Model/ListTts',
       ($0.Empty value) => value.writeToBuffer(),
-      $1.ListTTSResp.fromBuffer);
+      $1.ModelListResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Model')
@@ -89,20 +89,20 @@ abstract class ModelServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Model';
 
   ModelServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListLLMResp>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ModelListResp>(
         'ListLlms',
         listLlms_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListLLMResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListEmbeddingResp>(
+        ($1.ModelListResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ModelListResp>(
         'ListEmbeddings',
         listEmbeddings_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListEmbeddingResp value) => value.writeToBuffer()));
+        ($1.ModelListResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSTTResp>(
         'ListStts',
         listStts_Pre,
@@ -110,29 +110,29 @@ abstract class ModelServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.ListSTTResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListTTSResp>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ModelListResp>(
         'ListTts',
         listTts_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ListTTSResp value) => value.writeToBuffer()));
+        ($1.ModelListResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.ListLLMResp> listLlms_Pre(
+  $async.Future<$1.ModelListResp> listLlms_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return listLlms($call, await $request);
   }
 
-  $async.Future<$1.ListLLMResp> listLlms(
+  $async.Future<$1.ModelListResp> listLlms(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$1.ListEmbeddingResp> listEmbeddings_Pre(
+  $async.Future<$1.ModelListResp> listEmbeddings_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return listEmbeddings($call, await $request);
   }
 
-  $async.Future<$1.ListEmbeddingResp> listEmbeddings(
+  $async.Future<$1.ModelListResp> listEmbeddings(
       $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.ListSTTResp> listStts_Pre(
@@ -143,11 +143,11 @@ abstract class ModelServiceBase extends $grpc.Service {
   $async.Future<$1.ListSTTResp> listStts(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$1.ListTTSResp> listTts_Pre(
+  $async.Future<$1.ModelListResp> listTts_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return listTts($call, await $request);
   }
 
-  $async.Future<$1.ListTTSResp> listTts(
+  $async.Future<$1.ModelListResp> listTts(
       $grpc.ServiceCall call, $0.Empty request);
 }

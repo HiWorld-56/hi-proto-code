@@ -83,11 +83,10 @@ type PcOrder struct {
 	ToDid         string                 `protobuf:"bytes,3,opt,name=to_did,json=toDid,proto3" json:"to_did,omitempty"`
 	Amount        string                 `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
 	Type          string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
-	CreatedAt     string                 `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     string                 `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	DeletedAt     string                 `protobuf:"bytes,8,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
-	Did           string                 `protobuf:"bytes,9,opt,name=did,proto3" json:"did,omitempty"`
-	Status        string                 `protobuf:"bytes,10,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     int64                  `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Did           string                 `protobuf:"bytes,8,opt,name=did,proto3" json:"did,omitempty"`
+	Status        string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -157,25 +156,18 @@ func (x *PcOrder) GetType() string {
 	return ""
 }
 
-func (x *PcOrder) GetCreatedAt() string {
+func (x *PcOrder) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
 	}
-	return ""
+	return 0
 }
 
-func (x *PcOrder) GetUpdatedAt() string {
+func (x *PcOrder) GetUpdatedAt() int64 {
 	if x != nil {
 		return x.UpdatedAt
 	}
-	return ""
-}
-
-func (x *PcOrder) GetDeletedAt() string {
-	if x != nil {
-		return x.DeletedAt
-	}
-	return ""
+	return 0
 }
 
 func (x *PcOrder) GetDid() string {
@@ -364,7 +356,7 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"5\n" +
 	"\vPcOrderData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
-	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\xfe\x01\n" +
+	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\xdf\x01\n" +
 	"\aPcOrder\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\border_id\x18\x02 \x01(\tR\aorderId\x12\x15\n" +
@@ -372,14 +364,11 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\x06amount\x18\x04 \x01(\tR\x06amount\x12\x12\n" +
 	"\x04type\x18\x05 \x01(\tR\x04type\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\tR\tcreatedAt\x12\x1d\n" +
+	"created_at\x18\x06 \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\a \x01(\tR\tupdatedAt\x12\x1d\n" +
-	"\n" +
-	"deleted_at\x18\b \x01(\tR\tdeletedAt\x12\x10\n" +
-	"\x03did\x18\t \x01(\tR\x03did\x12\x16\n" +
-	"\x06status\x18\n" +
-	" \x01(\tR\x06status\"D\n" +
+	"updated_at\x18\a \x01(\x03R\tupdatedAt\x12\x10\n" +
+	"\x03did\x18\b \x01(\tR\x03did\x12\x16\n" +
+	"\x06status\x18\t \x01(\tR\x06status\"D\n" +
 	"\x18GetNotPulledPcOrdersResp\x12(\n" +
 	"\x06orders\x18\x01 \x03(\v2\x10.hi.club.PcOrderR\x06orders\"\x7f\n" +
 	"\x13UpdatePulledPcOrder\x12\x19\n" +
@@ -389,10 +378,10 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"a\n" +
 	"\x17UpdatePulledPcOrderData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x124\n" +
-	"\x06orders\x18\x02 \x03(\v2\x1c.hi.club.UpdatePulledPcOrderR\x06orders2\xa0\x01\n" +
-	"\x05Order\x12P\n" +
-	"\x14GetNotPulledPcOrders\x12\x0e.hi.SignedData\x1a!.hi.club.GetNotPulledPcOrdersResp\"\x05\x8a\xb5\x18\x01\x05\x12E\n" +
-	"\x14UpdatePulledPcOrders\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B\x81\x01\n" +
+	"\x06orders\x18\x02 \x03(\v2\x1c.hi.club.UpdatePulledPcOrderR\x06orders2\x91\x01\n" +
+	"\x05Order\x12I\n" +
+	"\rListNotPulled\x12\x0e.hi.SignedData\x1a!.hi.club.GetNotPulledPcOrdersResp\"\x05\x8a\xb5\x18\x01\x05\x12=\n" +
+	"\fUpdatePulled\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"OrderProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
@@ -421,10 +410,10 @@ var file_hi_club_order_proto_goTypes = []any{
 var file_hi_club_order_proto_depIdxs = []int32{
 	1, // 0: hi.club.GetNotPulledPcOrdersResp.orders:type_name -> hi.club.PcOrder
 	3, // 1: hi.club.UpdatePulledPcOrderData.orders:type_name -> hi.club.UpdatePulledPcOrder
-	5, // 2: hi.club.Order.GetNotPulledPcOrders:input_type -> hi.SignedData
-	5, // 3: hi.club.Order.UpdatePulledPcOrders:input_type -> hi.SignedData
-	2, // 4: hi.club.Order.GetNotPulledPcOrders:output_type -> hi.club.GetNotPulledPcOrdersResp
-	6, // 5: hi.club.Order.UpdatePulledPcOrders:output_type -> google.protobuf.Empty
+	5, // 2: hi.club.Order.ListNotPulled:input_type -> hi.SignedData
+	5, // 3: hi.club.Order.UpdatePulled:input_type -> hi.SignedData
+	2, // 4: hi.club.Order.ListNotPulled:output_type -> hi.club.GetNotPulledPcOrdersResp
+	6, // 5: hi.club.Order.UpdatePulled:output_type -> google.protobuf.Empty
 	4, // [4:6] is the sub-list for method output_type
 	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

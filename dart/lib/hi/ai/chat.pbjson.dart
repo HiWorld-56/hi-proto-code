@@ -41,11 +41,11 @@ const NewSessionResp$json = {
 final $typed_data.Uint8List newSessionRespDescriptor =
     $convert.base64Decode('Cg5OZXdTZXNzaW9uUmVzcBIQCgNjaWQYASABKAlSA2NpZA==');
 
-@$core.Deprecated('Use sendReqDescriptor instead')
-const SendReq$json = {
-  '1': 'SendReq',
+@$core.Deprecated('Use completeReqDescriptor instead')
+const CompleteReq$json = {
+  '1': 'CompleteReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
     {'1': 'cid', '3': 2, '4': 1, '5': 9, '10': 'cid'},
     {
       '1': 'conts',
@@ -57,41 +57,30 @@ const SendReq$json = {
     },
     {'1': 'state', '3': 4, '4': 1, '5': 9, '10': 'state'},
     {'1': 'custom', '3': 5, '4': 1, '5': 9, '10': 'custom'},
-    {'1': 'return_plugin_use', '3': 6, '4': 1, '5': 8, '10': 'returnPluginUse'},
-    {
-      '1': 'return_training_data',
-      '3': 7,
-      '4': 1,
-      '5': 8,
-      '10': 'returnTrainingData'
-    },
-    {'1': 'return_context', '3': 8, '4': 1, '5': 8, '10': 'returnContext'},
   ],
 };
 
-/// Descriptor for `SendReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List sendReqDescriptor = $convert.base64Decode(
-    'CgdTZW5kUmVxEhAKA2RpZBgBIAEoCVIDZGlkEhAKA2NpZBgCIAEoCVIDY2lkEiQKBWNvbnRzGA'
-    'MgAygLMg4uaGkuYWkuQ29udGVudFIFY29udHMSFAoFc3RhdGUYBCABKAlSBXN0YXRlEhYKBmN1'
-    'c3RvbRgFIAEoCVIGY3VzdG9tEioKEXJldHVybl9wbHVnaW5fdXNlGAYgASgIUg9yZXR1cm5QbH'
-    'VnaW5Vc2USMAoUcmV0dXJuX3RyYWluaW5nX2RhdGEYByABKAhSEnJldHVyblRyYWluaW5nRGF0'
-    'YRIlCg5yZXR1cm5fY29udGV4dBgIIAEoCFINcmV0dXJuQ29udGV4dA==');
+/// Descriptor for `CompleteReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List completeReqDescriptor = $convert.base64Decode(
+    'CgtDb21wbGV0ZVJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEAoDY2lkGAIgASgJUgNjaWQSJA'
+    'oFY29udHMYAyADKAsyDi5oaS5haS5Db250ZW50UgVjb250cxIUCgVzdGF0ZRgEIAEoCVIFc3Rh'
+    'dGUSFgoGY3VzdG9tGAUgASgJUgZjdXN0b20=');
 
-@$core.Deprecated('Use sendRespDescriptor instead')
-const SendResp$json = {
-  '1': 'SendResp',
+@$core.Deprecated('Use completeRespDescriptor instead')
+const CompleteResp$json = {
+  '1': 'CompleteResp',
   '2': [
     {'1': 'reply', '3': 1, '4': 1, '5': 9, '10': 'reply'},
   ],
 };
 
-/// Descriptor for `SendResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List sendRespDescriptor =
-    $convert.base64Decode('CghTZW5kUmVzcBIUCgVyZXBseRgBIAEoCVIFcmVwbHk=');
+/// Descriptor for `CompleteResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List completeRespDescriptor =
+    $convert.base64Decode('CgxDb21wbGV0ZVJlc3ASFAoFcmVwbHkYASABKAlSBXJlcGx5');
 
-@$core.Deprecated('Use streamRespDescriptor instead')
-const StreamResp$json = {
-  '1': 'StreamResp',
+@$core.Deprecated('Use completeStreamRespDescriptor instead')
+const CompleteStreamResp$json = {
+  '1': 'CompleteStreamResp',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 5, '10': 'code'},
     {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
@@ -99,10 +88,10 @@ const StreamResp$json = {
   ],
 };
 
-/// Descriptor for `StreamResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List streamRespDescriptor = $convert.base64Decode(
-    'CgpTdHJlYW1SZXNwEhIKBGNvZGUYASABKAVSBGNvZGUSEgoEdHlwZRgCIAEoCVIEdHlwZRIYCg'
-    'dtZXNzYWdlGAMgASgJUgdtZXNzYWdl');
+/// Descriptor for `CompleteStreamResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List completeStreamRespDescriptor = $convert.base64Decode(
+    'ChJDb21wbGV0ZVN0cmVhbVJlc3ASEgoEY29kZRgBIAEoBVIEY29kZRISCgR0eXBlGAIgASgJUg'
+    'R0eXBlEhgKB21lc3NhZ2UYAyABKAlSB21lc3NhZ2U=');
 
 @$core.Deprecated('Use clearHistoryReqDescriptor instead')
 const ClearHistoryReq$json = {
@@ -121,14 +110,12 @@ const GetHistoryReq$json = {
   '1': 'GetHistoryReq',
   '2': [
     {'1': 'cid', '3': 1, '4': 1, '5': 9, '10': 'cid'},
-    {'1': 'agent', '3': 2, '4': 1, '5': 9, '10': 'agent'},
   ],
 };
 
 /// Descriptor for `GetHistoryReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getHistoryReqDescriptor = $convert.base64Decode(
-    'Cg1HZXRIaXN0b3J5UmVxEhAKA2NpZBgBIAEoCVIDY2lkEhQKBWFnZW50GAIgASgJUgVhZ2VudA'
-    '==');
+final $typed_data.Uint8List getHistoryReqDescriptor =
+    $convert.base64Decode('Cg1HZXRIaXN0b3J5UmVxEhAKA2NpZBgBIAEoCVIDY2lk');
 
 @$core.Deprecated('Use qADescriptor instead')
 const QA$json = {
@@ -155,11 +142,11 @@ const GetHistoryResp$json = {
 final $typed_data.Uint8List getHistoryRespDescriptor = $convert.base64Decode(
     'Cg5HZXRIaXN0b3J5UmVzcBIdCgRsaXN0GAEgAygLMgkuaGkuYWkuUUFSBGxpc3Q=');
 
-@$core.Deprecated('Use speechToSpeechReqDescriptor instead')
-const SpeechToSpeechReq$json = {
-  '1': 'SpeechToSpeechReq',
+@$core.Deprecated('Use chatReqDescriptor instead')
+const ChatReq$json = {
+  '1': 'ChatReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
     {'1': 'cid', '3': 2, '4': 1, '5': 9, '10': 'cid'},
     {
       '1': 'conts',
@@ -198,112 +185,14 @@ const SpeechToSpeechReq$json = {
   ],
 };
 
-/// Descriptor for `SpeechToSpeechReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List speechToSpeechReqDescriptor = $convert.base64Decode(
-    'ChFTcGVlY2hUb1NwZWVjaFJlcRIQCgNkaWQYASABKAlSA2RpZBIQCgNjaWQYAiABKAlSA2NpZB'
-    'IkCgVjb250cxgDIAMoCzIOLmhpLmFpLkNvbnRlbnRSBWNvbnRzEicKBXRvb2xzGAQgAygLMhEu'
-    'aGkuYWkuVG9vbFN1cHBseVIFdG9vbHMSJAoLdG9vbF9jaG9pY2UYBSABKAlIAFIKdG9vbENob2'
-    'ljZYgBARIbCgZjdXN0b20YBiABKAlIAVIGY3VzdG9tiAEBEhkKBXN0YXRlGAcgASgJSAJSBXN0'
-    'YXRliAEBEhkKBXN0eWxlGAggASgJSANSBXN0eWxliAEBQg4KDF90b29sX2Nob2ljZUIJCgdfY3'
-    'VzdG9tQggKBl9zdGF0ZUIICgZfc3R5bGU=');
-
-@$core.Deprecated('Use textToTextReqDescriptor instead')
-const TextToTextReq$json = {
-  '1': 'TextToTextReq',
-  '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'cid', '3': 2, '4': 1, '5': 9, '10': 'cid'},
-    {
-      '1': 'conts',
-      '3': 3,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.Content',
-      '10': 'conts'
-    },
-    {
-      '1': 'tools',
-      '3': 4,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.ToolSupply',
-      '10': 'tools'
-    },
-    {
-      '1': 'tool_choice',
-      '3': 5,
-      '4': 1,
-      '5': 9,
-      '9': 0,
-      '10': 'toolChoice',
-      '17': true
-    },
-    {'1': 'custom', '3': 6, '4': 1, '5': 9, '9': 1, '10': 'custom', '17': true},
-    {'1': 'state', '3': 7, '4': 1, '5': 9, '9': 2, '10': 'state', '17': true},
-  ],
-  '8': [
-    {'1': '_tool_choice'},
-    {'1': '_custom'},
-    {'1': '_state'},
-  ],
-};
-
-/// Descriptor for `TextToTextReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List textToTextReqDescriptor = $convert.base64Decode(
-    'Cg1UZXh0VG9UZXh0UmVxEhAKA2RpZBgBIAEoCVIDZGlkEhAKA2NpZBgCIAEoCVIDY2lkEiQKBW'
-    'NvbnRzGAMgAygLMg4uaGkuYWkuQ29udGVudFIFY29udHMSJwoFdG9vbHMYBCADKAsyES5oaS5h'
-    'aS5Ub29sU3VwcGx5UgV0b29scxIkCgt0b29sX2Nob2ljZRgFIAEoCUgAUgp0b29sQ2hvaWNliA'
-    'EBEhsKBmN1c3RvbRgGIAEoCUgBUgZjdXN0b22IAQESGQoFc3RhdGUYByABKAlIAlIFc3RhdGWI'
-    'AQFCDgoMX3Rvb2xfY2hvaWNlQgkKB19jdXN0b21CCAoGX3N0YXRl');
-
-@$core.Deprecated('Use speechToTextReqDescriptor instead')
-const SpeechToTextReq$json = {
-  '1': 'SpeechToTextReq',
-  '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'cid', '3': 2, '4': 1, '5': 9, '10': 'cid'},
-    {
-      '1': 'conts',
-      '3': 3,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.Content',
-      '10': 'conts'
-    },
-    {
-      '1': 'tools',
-      '3': 4,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.ToolSupply',
-      '10': 'tools'
-    },
-    {
-      '1': 'tool_choice',
-      '3': 5,
-      '4': 1,
-      '5': 9,
-      '9': 0,
-      '10': 'toolChoice',
-      '17': true
-    },
-    {'1': 'custom', '3': 6, '4': 1, '5': 9, '9': 1, '10': 'custom', '17': true},
-    {'1': 'state', '3': 7, '4': 1, '5': 9, '9': 2, '10': 'state', '17': true},
-  ],
-  '8': [
-    {'1': '_tool_choice'},
-    {'1': '_custom'},
-    {'1': '_state'},
-  ],
-};
-
-/// Descriptor for `SpeechToTextReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List speechToTextReqDescriptor = $convert.base64Decode(
-    'Cg9TcGVlY2hUb1RleHRSZXESEAoDZGlkGAEgASgJUgNkaWQSEAoDY2lkGAIgASgJUgNjaWQSJA'
-    'oFY29udHMYAyADKAsyDi5oaS5haS5Db250ZW50UgVjb250cxInCgV0b29scxgEIAMoCzIRLmhp'
-    'LmFpLlRvb2xTdXBwbHlSBXRvb2xzEiQKC3Rvb2xfY2hvaWNlGAUgASgJSABSCnRvb2xDaG9pY2'
-    'WIAQESGwoGY3VzdG9tGAYgASgJSAFSBmN1c3RvbYgBARIZCgVzdGF0ZRgHIAEoCUgCUgVzdGF0'
-    'ZYgBAUIOCgxfdG9vbF9jaG9pY2VCCQoHX2N1c3RvbUIICgZfc3RhdGU=');
+/// Descriptor for `ChatReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chatReqDescriptor = $convert.base64Decode(
+    'CgdDaGF0UmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBIQCgNjaWQYAiABKAlSA2NpZBIkCgVjb2'
+    '50cxgDIAMoCzIOLmhpLmFpLkNvbnRlbnRSBWNvbnRzEicKBXRvb2xzGAQgAygLMhEuaGkuYWku'
+    'VG9vbFN1cHBseVIFdG9vbHMSJAoLdG9vbF9jaG9pY2UYBSABKAlIAFIKdG9vbENob2ljZYgBAR'
+    'IbCgZjdXN0b20YBiABKAlIAVIGY3VzdG9tiAEBEhkKBXN0YXRlGAcgASgJSAJSBXN0YXRliAEB'
+    'EhkKBXN0eWxlGAggASgJSANSBXN0eWxliAEBQg4KDF90b29sX2Nob2ljZUIJCgdfY3VzdG9tQg'
+    'gKBl9zdGF0ZUIICgZfc3R5bGU=');
 
 @$core.Deprecated('Use toolCallResultDescriptor instead')
 const ToolCallResult$json = {

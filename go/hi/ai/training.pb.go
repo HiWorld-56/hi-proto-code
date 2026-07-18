@@ -299,7 +299,7 @@ type TrainingFile struct {
 	Title         string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`                                    // 文件名
 	Size          int32                  `protobuf:"varint,5,opt,name=size,proto3" json:"size,omitempty"`                                     // 文件大小
 	Type          string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`                                      // 文件类型
-	IsUse         int32                  `protobuf:"varint,7,opt,name=is_use,json=isUse,proto3" json:"is_use,omitempty"`                      // 是否已经训练，0-未训练，1-已训练
+	IsUse         bool                   `protobuf:"varint,7,opt,name=is_use,json=isUse,proto3" json:"is_use,omitempty"`                      // 是否已经训练
 	Digest        string                 `protobuf:"bytes,8,opt,name=digest,proto3" json:"digest,omitempty"`                                  // 文件摘要
 	TrainingTime  int64                  `protobuf:"varint,9,opt,name=training_time,json=trainingTime,proto3" json:"training_time,omitempty"` // 训练时间
 	CreatedAt     int64                  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`         // 创建时间
@@ -380,11 +380,11 @@ func (x *TrainingFile) GetType() string {
 	return ""
 }
 
-func (x *TrainingFile) GetIsUse() int32 {
+func (x *TrainingFile) GetIsUse() bool {
 	if x != nil {
 		return x.IsUse
 	}
-	return 0
+	return false
 }
 
 func (x *TrainingFile) GetDigest() string {
@@ -527,50 +527,6 @@ func (x *ListFilesResp) GetList() []*TrainingFile {
 	return nil
 }
 
-type DeleteFileReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 训练文件id
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteFileReq) Reset() {
-	*x = DeleteFileReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteFileReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteFileReq) ProtoMessage() {}
-
-func (x *DeleteFileReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteFileReq.ProtoReflect.Descriptor instead.
-func (*DeleteFileReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *DeleteFileReq) GetId() int32 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
 type DeleteFilesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // 智能体did
@@ -581,7 +537,7 @@ type DeleteFilesReq struct {
 
 func (x *DeleteFilesReq) Reset() {
 	*x = DeleteFilesReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[9]
+	mi := &file_hi_ai_training_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -593,7 +549,7 @@ func (x *DeleteFilesReq) String() string {
 func (*DeleteFilesReq) ProtoMessage() {}
 
 func (x *DeleteFilesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[9]
+	mi := &file_hi_ai_training_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -606,7 +562,7 @@ func (x *DeleteFilesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFilesReq.ProtoReflect.Descriptor instead.
 func (*DeleteFilesReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{9}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeleteFilesReq) GetAgent() string {
@@ -632,7 +588,7 @@ type DeleteFilesByAgentsReq struct {
 
 func (x *DeleteFilesByAgentsReq) Reset() {
 	*x = DeleteFilesByAgentsReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[10]
+	mi := &file_hi_ai_training_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -644,7 +600,7 @@ func (x *DeleteFilesByAgentsReq) String() string {
 func (*DeleteFilesByAgentsReq) ProtoMessage() {}
 
 func (x *DeleteFilesByAgentsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[10]
+	mi := &file_hi_ai_training_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -657,7 +613,7 @@ func (x *DeleteFilesByAgentsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFilesByAgentsReq.ProtoReflect.Descriptor instead.
 func (*DeleteFilesByAgentsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{10}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *DeleteFilesByAgentsReq) GetAgents() []string {
@@ -676,7 +632,7 @@ type GetFileReq struct {
 
 func (x *GetFileReq) Reset() {
 	*x = GetFileReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[11]
+	mi := &file_hi_ai_training_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -688,7 +644,7 @@ func (x *GetFileReq) String() string {
 func (*GetFileReq) ProtoMessage() {}
 
 func (x *GetFileReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[11]
+	mi := &file_hi_ai_training_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -701,7 +657,7 @@ func (x *GetFileReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFileReq.ProtoReflect.Descriptor instead.
 func (*GetFileReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{11}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetFileReq) GetId() int32 {
@@ -720,7 +676,7 @@ type GetFileResp struct {
 
 func (x *GetFileResp) Reset() {
 	*x = GetFileResp{}
-	mi := &file_hi_ai_training_proto_msgTypes[12]
+	mi := &file_hi_ai_training_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -732,7 +688,7 @@ func (x *GetFileResp) String() string {
 func (*GetFileResp) ProtoMessage() {}
 
 func (x *GetFileResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[12]
+	mi := &file_hi_ai_training_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -745,7 +701,7 @@ func (x *GetFileResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFileResp.ProtoReflect.Descriptor instead.
 func (*GetFileResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{12}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetFileResp) GetFile() *TrainingFile {
@@ -766,7 +722,7 @@ type UpdateContentReq struct {
 
 func (x *UpdateContentReq) Reset() {
 	*x = UpdateContentReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[13]
+	mi := &file_hi_ai_training_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -778,7 +734,7 @@ func (x *UpdateContentReq) String() string {
 func (*UpdateContentReq) ProtoMessage() {}
 
 func (x *UpdateContentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[13]
+	mi := &file_hi_ai_training_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -791,7 +747,7 @@ func (x *UpdateContentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateContentReq.ProtoReflect.Descriptor instead.
 func (*UpdateContentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{13}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UpdateContentReq) GetAgent() string {
@@ -825,7 +781,7 @@ type CreateContentReq struct {
 
 func (x *CreateContentReq) Reset() {
 	*x = CreateContentReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[14]
+	mi := &file_hi_ai_training_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -837,7 +793,7 @@ func (x *CreateContentReq) String() string {
 func (*CreateContentReq) ProtoMessage() {}
 
 func (x *CreateContentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[14]
+	mi := &file_hi_ai_training_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -850,7 +806,7 @@ func (x *CreateContentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateContentReq.ProtoReflect.Descriptor instead.
 func (*CreateContentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{14}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CreateContentReq) GetAgent() string {
@@ -876,7 +832,7 @@ type CreateContentResp struct {
 
 func (x *CreateContentResp) Reset() {
 	*x = CreateContentResp{}
-	mi := &file_hi_ai_training_proto_msgTypes[15]
+	mi := &file_hi_ai_training_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -888,7 +844,7 @@ func (x *CreateContentResp) String() string {
 func (*CreateContentResp) ProtoMessage() {}
 
 func (x *CreateContentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[15]
+	mi := &file_hi_ai_training_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -901,7 +857,7 @@ func (x *CreateContentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateContentResp.ProtoReflect.Descriptor instead.
 func (*CreateContentResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{15}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *CreateContentResp) GetFile() *TrainingFile {
@@ -922,7 +878,7 @@ type EditDigestReq struct {
 
 func (x *EditDigestReq) Reset() {
 	*x = EditDigestReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[16]
+	mi := &file_hi_ai_training_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -934,7 +890,7 @@ func (x *EditDigestReq) String() string {
 func (*EditDigestReq) ProtoMessage() {}
 
 func (x *EditDigestReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[16]
+	mi := &file_hi_ai_training_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -947,7 +903,7 @@ func (x *EditDigestReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditDigestReq.ProtoReflect.Descriptor instead.
 func (*EditDigestReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{16}
+	return file_hi_ai_training_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *EditDigestReq) GetId() int32 {
@@ -967,146 +923,6 @@ func (x *EditDigestReq) GetAgent() string {
 func (x *EditDigestReq) GetDigest() string {
 	if x != nil {
 		return x.Digest
-	}
-	return ""
-}
-
-type SetMemModelReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	MemModel      string                 `protobuf:"bytes,2,opt,name=mem_model,json=memModel,proto3" json:"mem_model,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SetMemModelReq) Reset() {
-	*x = SetMemModelReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SetMemModelReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SetMemModelReq) ProtoMessage() {}
-
-func (x *SetMemModelReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SetMemModelReq.ProtoReflect.Descriptor instead.
-func (*SetMemModelReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *SetMemModelReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
-	}
-	return ""
-}
-
-func (x *SetMemModelReq) GetMemModel() string {
-	if x != nil {
-		return x.MemModel
-	}
-	return ""
-}
-
-type GetMemModelReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetMemModelReq) Reset() {
-	*x = GetMemModelReq{}
-	mi := &file_hi_ai_training_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetMemModelReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetMemModelReq) ProtoMessage() {}
-
-func (x *GetMemModelReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetMemModelReq.ProtoReflect.Descriptor instead.
-func (*GetMemModelReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *GetMemModelReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
-	}
-	return ""
-}
-
-type GetMemModelResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	MemModel      string                 `protobuf:"bytes,1,opt,name=mem_model,json=memModel,proto3" json:"mem_model,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetMemModelResp) Reset() {
-	*x = GetMemModelResp{}
-	mi := &file_hi_ai_training_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetMemModelResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetMemModelResp) ProtoMessage() {}
-
-func (x *GetMemModelResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_training_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetMemModelResp.ProtoReflect.Descriptor instead.
-func (*GetMemModelResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_training_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *GetMemModelResp) GetMemModel() string {
-	if x != nil {
-		return x.MemModel
 	}
 	return ""
 }
@@ -1141,7 +957,7 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\x05title\x18\x04 \x01(\tR\x05title\x12\x12\n" +
 	"\x04size\x18\x05 \x01(\x05R\x04size\x12\x12\n" +
 	"\x04type\x18\x06 \x01(\tR\x04type\x12\x15\n" +
-	"\x06is_use\x18\a \x01(\x05R\x05isUse\x12\x16\n" +
+	"\x06is_use\x18\a \x01(\bR\x05isUse\x12\x16\n" +
 	"\x06digest\x18\b \x01(\tR\x06digest\x12#\n" +
 	"\rtraining_time\x18\t \x01(\x03R\ftrainingTime\x12\x1d\n" +
 	"\n" +
@@ -1157,9 +973,7 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"pagination\"N\n" +
 	"\rListFilesResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12'\n" +
-	"\x04list\x18\x02 \x03(\v2\x13.hi.ai.TrainingFileR\x04list\"\x1f\n" +
-	"\rDeleteFileReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\"8\n" +
+	"\x04list\x18\x02 \x03(\v2\x13.hi.ai.TrainingFileR\x04list\"8\n" +
 	"\x0eDeleteFilesReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03ids\x18\x02 \x03(\x05R\x03ids\"0\n" +
@@ -1182,14 +996,7 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\rEditDigestReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x14\n" +
 	"\x05agent\x18\x02 \x01(\tR\x05agent\x12\x16\n" +
-	"\x06digest\x18\x03 \x01(\tR\x06digest\"C\n" +
-	"\x0eSetMemModelReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x1b\n" +
-	"\tmem_model\x18\x02 \x01(\tR\bmemModel\"&\n" +
-	"\x0eGetMemModelReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\".\n" +
-	"\x0fGetMemModelResp\x12\x1b\n" +
-	"\tmem_model\x18\x01 \x01(\tR\bmemModel2\xab\a\n" +
+	"\x06digest\x18\x03 \x01(\tR\x06digest2\xde\x05\n" +
 	"\bTraining\x127\n" +
 	"\x05Start\x12\x0f.hi.ai.StartReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x124\n" +
 	"\x06Status\x12\x10.hi.ai.StatusReq\x1a\x11.hi.ai.StatusResp\"\x05\x8a\xb5\x18\x01\x03\x127\n" +
@@ -1197,17 +1004,13 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\n" +
 	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12=\n" +
 	"\tListFiles\x12\x13.hi.ai.ListFilesReq\x1a\x14.hi.ai.ListFilesResp\"\x05\x8a\xb5\x18\x01\x03\x127\n" +
-	"\aGetFile\x12\x11.hi.ai.GetFileReq\x1a\x12.hi.ai.GetFileResp\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
-	"\n" +
-	"DeleteFile\x12\x14.hi.ai.DeleteFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
+	"\aGetFile\x12\x11.hi.ai.GetFileReq\x1a\x12.hi.ai.GetFileResp\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
 	"\vDeleteFiles\x12\x15.hi.ai.DeleteFilesReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12S\n" +
 	"\x13DeleteFilesByAgents\x12\x1d.hi.ai.DeleteFilesByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
 	"\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\"\x05\x8a\xb5\x18\x01\x03\x12G\n" +
 	"\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
 	"\n" +
-	"EditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
-	"\vSetMemModel\x12\x15.hi.ai.SetMemModelReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
-	"\vGetMemModel\x12\x15.hi.ai.GetMemModelReq\x1a\x16.hi.ai.GetMemModelResp\"\x05\x8a\xb5\x18\x01\x03Bx\n" +
+	"EditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03Bx\n" +
 	"\tcom.hi.aiB\rTrainingProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
@@ -1222,7 +1025,7 @@ func file_hi_ai_training_proto_rawDescGZIP() []byte {
 	return file_hi_ai_training_proto_rawDescData
 }
 
-var file_hi_ai_training_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_hi_ai_training_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_hi_ai_training_proto_goTypes = []any{
 	(*StartReq)(nil),               // 0: hi.ai.StartReq
 	(*StatusReq)(nil),              // 1: hi.ai.StatusReq
@@ -1232,23 +1035,19 @@ var file_hi_ai_training_proto_goTypes = []any{
 	(*TrainingFile)(nil),           // 5: hi.ai.TrainingFile
 	(*ListFilesReq)(nil),           // 6: hi.ai.ListFilesReq
 	(*ListFilesResp)(nil),          // 7: hi.ai.ListFilesResp
-	(*DeleteFileReq)(nil),          // 8: hi.ai.DeleteFileReq
-	(*DeleteFilesReq)(nil),         // 9: hi.ai.DeleteFilesReq
-	(*DeleteFilesByAgentsReq)(nil), // 10: hi.ai.DeleteFilesByAgentsReq
-	(*GetFileReq)(nil),             // 11: hi.ai.GetFileReq
-	(*GetFileResp)(nil),            // 12: hi.ai.GetFileResp
-	(*UpdateContentReq)(nil),       // 13: hi.ai.UpdateContentReq
-	(*CreateContentReq)(nil),       // 14: hi.ai.CreateContentReq
-	(*CreateContentResp)(nil),      // 15: hi.ai.CreateContentResp
-	(*EditDigestReq)(nil),          // 16: hi.ai.EditDigestReq
-	(*SetMemModelReq)(nil),         // 17: hi.ai.SetMemModelReq
-	(*GetMemModelReq)(nil),         // 18: hi.ai.GetMemModelReq
-	(*GetMemModelResp)(nil),        // 19: hi.ai.GetMemModelResp
-	(*hi.Pagination)(nil),          // 20: hi.Pagination
-	(*emptypb.Empty)(nil),          // 21: google.protobuf.Empty
+	(*DeleteFilesReq)(nil),         // 8: hi.ai.DeleteFilesReq
+	(*DeleteFilesByAgentsReq)(nil), // 9: hi.ai.DeleteFilesByAgentsReq
+	(*GetFileReq)(nil),             // 10: hi.ai.GetFileReq
+	(*GetFileResp)(nil),            // 11: hi.ai.GetFileResp
+	(*UpdateContentReq)(nil),       // 12: hi.ai.UpdateContentReq
+	(*CreateContentReq)(nil),       // 13: hi.ai.CreateContentReq
+	(*CreateContentResp)(nil),      // 14: hi.ai.CreateContentResp
+	(*EditDigestReq)(nil),          // 15: hi.ai.EditDigestReq
+	(*hi.Pagination)(nil),          // 16: hi.Pagination
+	(*emptypb.Empty)(nil),          // 17: google.protobuf.Empty
 }
 var file_hi_ai_training_proto_depIdxs = []int32{
-	20, // 0: hi.ai.ListFilesReq.pagination:type_name -> hi.Pagination
+	16, // 0: hi.ai.ListFilesReq.pagination:type_name -> hi.Pagination
 	5,  // 1: hi.ai.ListFilesResp.list:type_name -> hi.ai.TrainingFile
 	5,  // 2: hi.ai.GetFileResp.file:type_name -> hi.ai.TrainingFile
 	5,  // 3: hi.ai.CreateContentResp.file:type_name -> hi.ai.TrainingFile
@@ -1257,31 +1056,25 @@ var file_hi_ai_training_proto_depIdxs = []int32{
 	3,  // 6: hi.ai.Training.Clear:input_type -> hi.ai.ClearReq
 	4,  // 7: hi.ai.Training.UploadFile:input_type -> hi.ai.UploadFileReq
 	6,  // 8: hi.ai.Training.ListFiles:input_type -> hi.ai.ListFilesReq
-	11, // 9: hi.ai.Training.GetFile:input_type -> hi.ai.GetFileReq
-	8,  // 10: hi.ai.Training.DeleteFile:input_type -> hi.ai.DeleteFileReq
-	9,  // 11: hi.ai.Training.DeleteFiles:input_type -> hi.ai.DeleteFilesReq
-	10, // 12: hi.ai.Training.DeleteFilesByAgents:input_type -> hi.ai.DeleteFilesByAgentsReq
-	14, // 13: hi.ai.Training.CreateContent:input_type -> hi.ai.CreateContentReq
-	13, // 14: hi.ai.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
-	16, // 15: hi.ai.Training.EditDigest:input_type -> hi.ai.EditDigestReq
-	17, // 16: hi.ai.Training.SetMemModel:input_type -> hi.ai.SetMemModelReq
-	18, // 17: hi.ai.Training.GetMemModel:input_type -> hi.ai.GetMemModelReq
-	21, // 18: hi.ai.Training.Start:output_type -> google.protobuf.Empty
-	2,  // 19: hi.ai.Training.Status:output_type -> hi.ai.StatusResp
-	21, // 20: hi.ai.Training.Clear:output_type -> google.protobuf.Empty
-	21, // 21: hi.ai.Training.UploadFile:output_type -> google.protobuf.Empty
-	7,  // 22: hi.ai.Training.ListFiles:output_type -> hi.ai.ListFilesResp
-	12, // 23: hi.ai.Training.GetFile:output_type -> hi.ai.GetFileResp
-	21, // 24: hi.ai.Training.DeleteFile:output_type -> google.protobuf.Empty
-	21, // 25: hi.ai.Training.DeleteFiles:output_type -> google.protobuf.Empty
-	21, // 26: hi.ai.Training.DeleteFilesByAgents:output_type -> google.protobuf.Empty
-	15, // 27: hi.ai.Training.CreateContent:output_type -> hi.ai.CreateContentResp
-	21, // 28: hi.ai.Training.UpdateContent:output_type -> google.protobuf.Empty
-	21, // 29: hi.ai.Training.EditDigest:output_type -> google.protobuf.Empty
-	21, // 30: hi.ai.Training.SetMemModel:output_type -> google.protobuf.Empty
-	19, // 31: hi.ai.Training.GetMemModel:output_type -> hi.ai.GetMemModelResp
-	18, // [18:32] is the sub-list for method output_type
-	4,  // [4:18] is the sub-list for method input_type
+	10, // 9: hi.ai.Training.GetFile:input_type -> hi.ai.GetFileReq
+	8,  // 10: hi.ai.Training.DeleteFiles:input_type -> hi.ai.DeleteFilesReq
+	9,  // 11: hi.ai.Training.DeleteFilesByAgents:input_type -> hi.ai.DeleteFilesByAgentsReq
+	13, // 12: hi.ai.Training.CreateContent:input_type -> hi.ai.CreateContentReq
+	12, // 13: hi.ai.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
+	15, // 14: hi.ai.Training.EditDigest:input_type -> hi.ai.EditDigestReq
+	17, // 15: hi.ai.Training.Start:output_type -> google.protobuf.Empty
+	2,  // 16: hi.ai.Training.Status:output_type -> hi.ai.StatusResp
+	17, // 17: hi.ai.Training.Clear:output_type -> google.protobuf.Empty
+	17, // 18: hi.ai.Training.UploadFile:output_type -> google.protobuf.Empty
+	7,  // 19: hi.ai.Training.ListFiles:output_type -> hi.ai.ListFilesResp
+	11, // 20: hi.ai.Training.GetFile:output_type -> hi.ai.GetFileResp
+	17, // 21: hi.ai.Training.DeleteFiles:output_type -> google.protobuf.Empty
+	17, // 22: hi.ai.Training.DeleteFilesByAgents:output_type -> google.protobuf.Empty
+	14, // 23: hi.ai.Training.CreateContent:output_type -> hi.ai.CreateContentResp
+	17, // 24: hi.ai.Training.UpdateContent:output_type -> google.protobuf.Empty
+	17, // 25: hi.ai.Training.EditDigest:output_type -> google.protobuf.Empty
+	15, // [15:26] is the sub-list for method output_type
+	4,  // [4:15] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
 	4,  // [4:4] is the sub-list for extension extendee
 	0,  // [0:4] is the sub-list for field type_name
@@ -1298,7 +1091,7 @@ func file_hi_ai_training_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_training_proto_rawDesc), len(file_hi_ai_training_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   20,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

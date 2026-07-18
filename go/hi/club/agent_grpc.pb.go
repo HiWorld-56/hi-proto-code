@@ -21,18 +21,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_Create_FullMethodName        = "/hi.club.Agent/Create"
-	Agent_Edit_FullMethodName          = "/hi.club.Agent/Edit"
-	Agent_Delete_FullMethodName        = "/hi.club.Agent/Delete"
-	Agent_Get_FullMethodName           = "/hi.club.Agent/Get"
-	Agent_GetUsage_FullMethodName      = "/hi.club.Agent/GetUsage"
-	Agent_Mark_FullMethodName          = "/hi.club.Agent/Mark"
-	Agent_ListMarks_FullMethodName     = "/hi.club.Agent/ListMarks"
-	Agent_DefaultConfig_FullMethodName = "/hi.club.Agent/DefaultConfig"
-	Agent_BindMaster_FullMethodName    = "/hi.club.Agent/BindMaster"
-	Agent_UnbindMaster_FullMethodName  = "/hi.club.Agent/UnbindMaster"
-	Agent_BindStatus_FullMethodName    = "/hi.club.Agent/BindStatus"
-	Agent_Transfer_FullMethodName      = "/hi.club.Agent/Transfer"
+	Agent_Create_FullMethodName           = "/hi.club.Agent/Create"
+	Agent_Edit_FullMethodName             = "/hi.club.Agent/Edit"
+	Agent_Delete_FullMethodName           = "/hi.club.Agent/Delete"
+	Agent_Get_FullMethodName              = "/hi.club.Agent/Get"
+	Agent_GetUsage_FullMethodName         = "/hi.club.Agent/GetUsage"
+	Agent_Mark_FullMethodName             = "/hi.club.Agent/Mark"
+	Agent_ListMarks_FullMethodName        = "/hi.club.Agent/ListMarks"
+	Agent_GetDefaultConfig_FullMethodName = "/hi.club.Agent/GetDefaultConfig"
+	Agent_BindMaster_FullMethodName       = "/hi.club.Agent/BindMaster"
+	Agent_UnbindMaster_FullMethodName     = "/hi.club.Agent/UnbindMaster"
+	Agent_BindStatus_FullMethodName       = "/hi.club.Agent/BindStatus"
+	Agent_Transfer_FullMethodName         = "/hi.club.Agent/Transfer"
 )
 
 // AgentClient is the client API for Agent service.
@@ -50,7 +50,7 @@ type AgentClient interface {
 	GetUsage(ctx context.Context, in *ai.AgentUsageReq, opts ...grpc.CallOption) (*ai.AgentUsageResp, error)
 	Mark(ctx context.Context, in *ai.MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMarks(ctx context.Context, in *ai.ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
-	DefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DefaultConfigResp, error)
+	GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DefaultConfigResp, error)
 	// ── club 自有:换绑主人 ──
 	BindMaster(ctx context.Context, in *BindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnbindMaster(ctx context.Context, in *UnbindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -136,10 +136,10 @@ func (c *agentClient) ListMarks(ctx context.Context, in *ai.ListMarksReq, opts .
 	return out, nil
 }
 
-func (c *agentClient) DefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DefaultConfigResp, error) {
+func (c *agentClient) GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DefaultConfigResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.DefaultConfigResp)
-	err := c.cc.Invoke(ctx, Agent_DefaultConfig_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_GetDefaultConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -201,7 +201,7 @@ type AgentServer interface {
 	GetUsage(context.Context, *ai.AgentUsageReq) (*ai.AgentUsageResp, error)
 	Mark(context.Context, *ai.MarkAgentReq) (*emptypb.Empty, error)
 	ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error)
-	DefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error)
+	GetDefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error)
 	// ── club 自有:换绑主人 ──
 	BindMaster(context.Context, *BindMasterReq) (*emptypb.Empty, error)
 	UnbindMaster(context.Context, *UnbindMasterReq) (*emptypb.Empty, error)
@@ -237,8 +237,8 @@ func (UnimplementedAgentServer) Mark(context.Context, *ai.MarkAgentReq) (*emptyp
 func (UnimplementedAgentServer) ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
-func (UnimplementedAgentServer) DefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method DefaultConfig not implemented")
+func (UnimplementedAgentServer) GetDefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDefaultConfig not implemented")
 }
 func (UnimplementedAgentServer) BindMaster(context.Context, *BindMasterReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method BindMaster not implemented")
@@ -398,20 +398,20 @@ func _Agent_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_DefaultConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Agent_GetDefaultConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).DefaultConfig(ctx, in)
+		return srv.(AgentServer).GetDefaultConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_DefaultConfig_FullMethodName,
+		FullMethod: Agent_GetDefaultConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).DefaultConfig(ctx, req.(*emptypb.Empty))
+		return srv.(AgentServer).GetDefaultConfig(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -524,8 +524,8 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_ListMarks_Handler,
 		},
 		{
-			MethodName: "DefaultConfig",
-			Handler:    _Agent_DefaultConfig_Handler,
+			MethodName: "GetDefaultConfig",
+			Handler:    _Agent_GetDefaultConfig_Handler,
 		},
 		{
 			MethodName: "BindMaster",

@@ -22,6 +22,7 @@ import 'order.pb.dart' as $1;
 
 export 'order.pb.dart';
 
+/// hidid-pc 拉未处理订单 / 回传处理结果(web3 自证)。裁决#10 的 club 侧。
 @$pb.GrpcServiceName('hi.club.Order')
 class OrderClient extends $grpc.Client {
   /// The hostname for this service.
@@ -34,32 +35,31 @@ class OrderClient extends $grpc.Client {
 
   OrderClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.GetNotPulledPcOrdersResp> getNotPulledPcOrders(
+  $grpc.ResponseFuture<$1.GetNotPulledPcOrdersResp> listNotPulled(
     $0.SignedData request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getNotPulledPcOrders, request, options: options);
+    return $createUnaryCall(_$listNotPulled, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> updatePulledPcOrders(
+  $grpc.ResponseFuture<$2.Empty> updatePulled(
     $0.SignedData request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$updatePulledPcOrders, request, options: options);
+    return $createUnaryCall(_$updatePulled, request, options: options);
   }
 
   // method descriptors
 
-  static final _$getNotPulledPcOrders =
+  static final _$listNotPulled =
       $grpc.ClientMethod<$0.SignedData, $1.GetNotPulledPcOrdersResp>(
-          '/hi.club.Order/GetNotPulledPcOrders',
+          '/hi.club.Order/ListNotPulled',
           ($0.SignedData value) => value.writeToBuffer(),
           $1.GetNotPulledPcOrdersResp.fromBuffer);
-  static final _$updatePulledPcOrders =
-      $grpc.ClientMethod<$0.SignedData, $2.Empty>(
-          '/hi.club.Order/UpdatePulledPcOrders',
-          ($0.SignedData value) => value.writeToBuffer(),
-          $2.Empty.fromBuffer);
+  static final _$updatePulled = $grpc.ClientMethod<$0.SignedData, $2.Empty>(
+      '/hi.club.Order/UpdatePulled',
+      ($0.SignedData value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Order')
@@ -68,34 +68,34 @@ abstract class OrderServiceBase extends $grpc.Service {
 
   OrderServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.SignedData, $1.GetNotPulledPcOrdersResp>(
-        'GetNotPulledPcOrders',
-        getNotPulledPcOrders_Pre,
+        'ListNotPulled',
+        listNotPulled_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.SignedData.fromBuffer(value),
         ($1.GetNotPulledPcOrdersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SignedData, $2.Empty>(
-        'UpdatePulledPcOrders',
-        updatePulledPcOrders_Pre,
+        'UpdatePulled',
+        updatePulled_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.SignedData.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.GetNotPulledPcOrdersResp> getNotPulledPcOrders_Pre(
+  $async.Future<$1.GetNotPulledPcOrdersResp> listNotPulled_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SignedData> $request) async {
-    return getNotPulledPcOrders($call, await $request);
+    return listNotPulled($call, await $request);
   }
 
-  $async.Future<$1.GetNotPulledPcOrdersResp> getNotPulledPcOrders(
+  $async.Future<$1.GetNotPulledPcOrdersResp> listNotPulled(
       $grpc.ServiceCall call, $0.SignedData request);
 
-  $async.Future<$2.Empty> updatePulledPcOrders_Pre(
+  $async.Future<$2.Empty> updatePulled_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SignedData> $request) async {
-    return updatePulledPcOrders($call, await $request);
+    return updatePulled($call, await $request);
   }
 
-  $async.Future<$2.Empty> updatePulledPcOrders(
+  $async.Future<$2.Empty> updatePulled(
       $grpc.ServiceCall call, $0.SignedData request);
 }

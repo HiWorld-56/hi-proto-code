@@ -37,7 +37,7 @@ var (
 
 func request_Plugin_Create_0(ctx context.Context, marshaler runtime.Marshaler, client PluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq CreateReq
+		protoReq CreatePluginReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -52,7 +52,7 @@ func request_Plugin_Create_0(ctx context.Context, marshaler runtime.Marshaler, c
 
 func local_request_Plugin_Create_0(ctx context.Context, marshaler runtime.Marshaler, server PluginServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq CreateReq
+		protoReq CreatePluginReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -205,9 +205,9 @@ func local_request_Plugin_Delete_0(ctx context.Context, marshaler runtime.Marsha
 	return msg, metadata, err
 }
 
-func request_Plugin_DeleteByDids_0(ctx context.Context, marshaler runtime.Marshaler, client PluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Plugin_DeleteByAgents_0(ctx context.Context, marshaler runtime.Marshaler, client PluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeletePluginByDidsReq
+		protoReq DeletePluginByAgentsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -216,19 +216,19 @@ func request_Plugin_DeleteByDids_0(ctx context.Context, marshaler runtime.Marsha
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.DeleteByDids(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.DeleteByAgents(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_Plugin_DeleteByDids_0(ctx context.Context, marshaler runtime.Marshaler, server PluginServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Plugin_DeleteByAgents_0(ctx context.Context, marshaler runtime.Marshaler, server PluginServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeletePluginByDidsReq
+		protoReq DeletePluginByAgentsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.DeleteByDids(ctx, &protoReq)
+	msg, err := server.DeleteByAgents(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -501,25 +501,25 @@ func RegisterPluginHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		}
 		forward_Plugin_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Plugin_DeleteByDids_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Plugin_DeleteByAgents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByDids", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_by_dids"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByAgents", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_by_agents"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Plugin_DeleteByDids_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Plugin_DeleteByAgents_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Plugin_DeleteByDids_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Plugin_DeleteByAgents_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Plugin_SetActiveVersion_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -773,22 +773,22 @@ func RegisterPluginHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		}
 		forward_Plugin_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Plugin_DeleteByDids_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Plugin_DeleteByAgents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByDids", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_by_dids"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByAgents", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_by_agents"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Plugin_DeleteByDids_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Plugin_DeleteByAgents_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Plugin_DeleteByDids_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Plugin_DeleteByAgents_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Plugin_SetActiveVersion_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -851,7 +851,7 @@ var (
 	pattern_Plugin_List_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list"}, ""))
 	pattern_Plugin_ListVersions_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list_versions"}, ""))
 	pattern_Plugin_Delete_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete"}, ""))
-	pattern_Plugin_DeleteByDids_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_by_dids"}, ""))
+	pattern_Plugin_DeleteByAgents_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_by_agents"}, ""))
 	pattern_Plugin_SetActiveVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_active_version"}, ""))
 	pattern_Plugin_GetParams_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "get_params"}, ""))
 	pattern_Plugin_SetEnabled_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_enabled"}, ""))
@@ -864,7 +864,7 @@ var (
 	forward_Plugin_List_0             = runtime.ForwardResponseMessage
 	forward_Plugin_ListVersions_0     = runtime.ForwardResponseMessage
 	forward_Plugin_Delete_0           = runtime.ForwardResponseMessage
-	forward_Plugin_DeleteByDids_0     = runtime.ForwardResponseMessage
+	forward_Plugin_DeleteByAgents_0   = runtime.ForwardResponseMessage
 	forward_Plugin_SetActiveVersion_0 = runtime.ForwardResponseMessage
 	forward_Plugin_GetParams_0        = runtime.ForwardResponseMessage
 	forward_Plugin_SetEnabled_0       = runtime.ForwardResponseMessage

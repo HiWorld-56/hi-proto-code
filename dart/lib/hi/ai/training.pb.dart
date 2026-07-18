@@ -360,7 +360,7 @@ class TrainingFile extends $pb.GeneratedMessage {
     $core.String? title,
     $core.int? size,
     $core.String? type,
-    $core.int? isUse,
+    $core.bool? isUse,
     $core.String? digest,
     $fixnum.Int64? trainingTime,
     $fixnum.Int64? createdAt,
@@ -400,7 +400,7 @@ class TrainingFile extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'title')
     ..aI(5, _omitFieldNames ? '' : 'size')
     ..aOS(6, _omitFieldNames ? '' : 'type')
-    ..aI(7, _omitFieldNames ? '' : 'isUse')
+    ..aOB(7, _omitFieldNames ? '' : 'isUse')
     ..aOS(8, _omitFieldNames ? '' : 'digest')
     ..aInt64(9, _omitFieldNames ? '' : 'trainingTime')
     ..aInt64(10, _omitFieldNames ? '' : 'createdAt')
@@ -481,9 +481,9 @@ class TrainingFile extends $pb.GeneratedMessage {
   void clearType() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  $core.int get isUse => $_getIZ(6);
+  $core.bool get isUse => $_getBF(6);
   @$pb.TagNumber(7)
-  set isUse($core.int value) => $_setSignedInt32(6, value);
+  set isUse($core.bool value) => $_setBool(6, value);
   @$pb.TagNumber(7)
   $core.bool hasIsUse() => $_has(6);
   @$pb.TagNumber(7)
@@ -666,60 +666,6 @@ class ListFilesResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<TrainingFile> get list => $_getList(1);
-}
-
-class DeleteFileReq extends $pb.GeneratedMessage {
-  factory DeleteFileReq({
-    $core.int? id,
-  }) {
-    final result = create();
-    if (id != null) result.id = id;
-    return result;
-  }
-
-  DeleteFileReq._();
-
-  factory DeleteFileReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory DeleteFileReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteFileReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteFileReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteFileReq copyWith(void Function(DeleteFileReq) updates) =>
-      super.copyWith((message) => updates(message as DeleteFileReq))
-          as DeleteFileReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static DeleteFileReq create() => DeleteFileReq._();
-  @$core.override
-  DeleteFileReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static DeleteFileReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteFileReq>(create);
-  static DeleteFileReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
 }
 
 class DeleteFilesReq extends $pb.GeneratedMessage {
@@ -1218,180 +1164,6 @@ class EditDigestReq extends $pb.GeneratedMessage {
   $core.bool hasDigest() => $_has(2);
   @$pb.TagNumber(3)
   void clearDigest() => $_clearField(3);
-}
-
-class SetMemModelReq extends $pb.GeneratedMessage {
-  factory SetMemModelReq({
-    $core.String? agent,
-    $core.String? memModel,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (memModel != null) result.memModel = memModel;
-    return result;
-  }
-
-  SetMemModelReq._();
-
-  factory SetMemModelReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SetMemModelReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SetMemModelReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'memModel')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetMemModelReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetMemModelReq copyWith(void Function(SetMemModelReq) updates) =>
-      super.copyWith((message) => updates(message as SetMemModelReq))
-          as SetMemModelReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SetMemModelReq create() => SetMemModelReq._();
-  @$core.override
-  SetMemModelReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SetMemModelReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SetMemModelReq>(create);
-  static SetMemModelReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get memModel => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set memModel($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMemModel() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMemModel() => $_clearField(2);
-}
-
-class GetMemModelReq extends $pb.GeneratedMessage {
-  factory GetMemModelReq({
-    $core.String? agent,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    return result;
-  }
-
-  GetMemModelReq._();
-
-  factory GetMemModelReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory GetMemModelReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMemModelReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMemModelReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMemModelReq copyWith(void Function(GetMemModelReq) updates) =>
-      super.copyWith((message) => updates(message as GetMemModelReq))
-          as GetMemModelReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetMemModelReq create() => GetMemModelReq._();
-  @$core.override
-  GetMemModelReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static GetMemModelReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMemModelReq>(create);
-  static GetMemModelReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-}
-
-class GetMemModelResp extends $pb.GeneratedMessage {
-  factory GetMemModelResp({
-    $core.String? memModel,
-  }) {
-    final result = create();
-    if (memModel != null) result.memModel = memModel;
-    return result;
-  }
-
-  GetMemModelResp._();
-
-  factory GetMemModelResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory GetMemModelResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMemModelResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'memModel')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMemModelResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMemModelResp copyWith(void Function(GetMemModelResp) updates) =>
-      super.copyWith((message) => updates(message as GetMemModelResp))
-          as GetMemModelResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetMemModelResp create() => GetMemModelResp._();
-  @$core.override
-  GetMemModelResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static GetMemModelResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMemModelResp>(create);
-  static GetMemModelResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get memModel => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set memModel($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasMemModel() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearMemModel() => $_clearField(1);
 }
 
 const $core.bool _omitFieldNames =

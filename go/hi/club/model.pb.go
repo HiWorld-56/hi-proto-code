@@ -28,30 +28,28 @@ var File_hi_club_model_proto protoreflect.FileDescriptor
 const file_hi_club_model_proto_rawDesc = "" +
 	"\n" +
 	"\x13hi/club/model.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/ai/model.proto\x1a\x10hi/options.proto2\x8e\x02\n" +
-	"\x05Model\x12=\n" +
-	"\bListLlms\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
-	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
-	"\bListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
-	"\aListTts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\"\x05\x8a\xb5\x18\x01\x02B\x81\x01\n" +
+	"\x05Model\x12?\n" +
+	"\bListLlms\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
+	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\bListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\aListTts\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"ModelProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_model_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),        // 0: google.protobuf.Empty
-	(*ai.ListLLMResp)(nil),       // 1: hi.ai.ListLLMResp
-	(*ai.ListEmbeddingResp)(nil), // 2: hi.ai.ListEmbeddingResp
-	(*ai.ListSTTResp)(nil),       // 3: hi.ai.ListSTTResp
-	(*ai.ListTTSResp)(nil),       // 4: hi.ai.ListTTSResp
+	(*emptypb.Empty)(nil),    // 0: google.protobuf.Empty
+	(*ai.ModelListResp)(nil), // 1: hi.ai.ModelListResp
+	(*ai.ListSTTResp)(nil),   // 2: hi.ai.ListSTTResp
 }
 var file_hi_club_model_proto_depIdxs = []int32{
 	0, // 0: hi.club.Model.ListLlms:input_type -> google.protobuf.Empty
 	0, // 1: hi.club.Model.ListEmbeddings:input_type -> google.protobuf.Empty
 	0, // 2: hi.club.Model.ListStts:input_type -> google.protobuf.Empty
 	0, // 3: hi.club.Model.ListTts:input_type -> google.protobuf.Empty
-	1, // 4: hi.club.Model.ListLlms:output_type -> hi.ai.ListLLMResp
-	2, // 5: hi.club.Model.ListEmbeddings:output_type -> hi.ai.ListEmbeddingResp
-	3, // 6: hi.club.Model.ListStts:output_type -> hi.ai.ListSTTResp
-	4, // 7: hi.club.Model.ListTts:output_type -> hi.ai.ListTTSResp
+	1, // 4: hi.club.Model.ListLlms:output_type -> hi.ai.ModelListResp
+	1, // 5: hi.club.Model.ListEmbeddings:output_type -> hi.ai.ModelListResp
+	2, // 6: hi.club.Model.ListStts:output_type -> hi.ai.ListSTTResp
+	1, // 7: hi.club.Model.ListTts:output_type -> hi.ai.ModelListResp
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

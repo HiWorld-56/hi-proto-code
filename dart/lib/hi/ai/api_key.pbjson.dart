@@ -22,7 +22,7 @@ const ApiKeyInfo$json = {
     {'1': 'value', '3': 1, '4': 1, '5': 9, '10': 'value'},
     {'1': 'did', '3': 2, '4': 1, '5': 9, '10': 'did'},
     {'1': 'rate_limit', '3': 3, '4': 1, '5': 5, '10': 'rateLimit'},
-    {'1': 'is_active', '3': 4, '4': 1, '5': 5, '10': 'isActive'},
+    {'1': 'is_active', '3': 4, '4': 1, '5': 8, '10': 'isActive'},
     {'1': 'note', '3': 5, '4': 1, '5': 9, '10': 'note'},
     {'1': 'created_at', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
   ],
@@ -31,7 +31,7 @@ const ApiKeyInfo$json = {
 /// Descriptor for `ApiKeyInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List apiKeyInfoDescriptor = $convert.base64Decode(
     'CgpBcGlLZXlJbmZvEhQKBXZhbHVlGAEgASgJUgV2YWx1ZRIQCgNkaWQYAiABKAlSA2RpZBIdCg'
-    'pyYXRlX2xpbWl0GAMgASgFUglyYXRlTGltaXQSGwoJaXNfYWN0aXZlGAQgASgFUghpc0FjdGl2'
+    'pyYXRlX2xpbWl0GAMgASgFUglyYXRlTGltaXQSGwoJaXNfYWN0aXZlGAQgASgIUghpc0FjdGl2'
     'ZRISCgRub3RlGAUgASgJUgRub3RlEh0KCmNyZWF0ZWRfYXQYBiABKANSCWNyZWF0ZWRBdA==');
 
 @$core.Deprecated('Use createApiKeyRespDescriptor instead')
@@ -88,9 +88,9 @@ final $typed_data.Uint8List editApiKeyRespDescriptor = $convert.base64Decode(
     'Cg5FZGl0QXBpS2V5UmVzcBIlCgRpbmZvGAEgASgLMhEuaGkuYWkuQXBpS2V5SW5mb1IEaW5mbw'
     '==');
 
-@$core.Deprecated('Use listApiKeyRespDescriptor instead')
-const ListApiKeyResp$json = {
-  '1': 'ListApiKeyResp',
+@$core.Deprecated('Use listApiKeysRespDescriptor instead')
+const ListApiKeysResp$json = {
+  '1': 'ListApiKeysResp',
   '2': [
     {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
     {
@@ -104,10 +104,10 @@ const ListApiKeyResp$json = {
   ],
 };
 
-/// Descriptor for `ListApiKeyResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listApiKeyRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0QXBpS2V5UmVzcBIUCgV0b3RhbBgBIAEoBVIFdG90YWwSJwoFaW5mb3MYAiADKAsyES'
-    '5oaS5haS5BcGlLZXlJbmZvUgVpbmZvcw==');
+/// Descriptor for `ListApiKeysResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listApiKeysRespDescriptor = $convert.base64Decode(
+    'Cg9MaXN0QXBpS2V5c1Jlc3ASFAoFdG90YWwYASABKAVSBXRvdGFsEicKBWluZm9zGAIgAygLMh'
+    'EuaGkuYWkuQXBpS2V5SW5mb1IFaW5mb3M=');
 
 @$core.Deprecated('Use deleteApiKeyReqDescriptor instead')
 const DeleteApiKeyReq$json = {

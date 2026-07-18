@@ -639,9 +639,8 @@ func (x *UpdateTransHashReq) GetHash() string {
 // 查自己的交易。
 type ListTradeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"` // 可选:只看该交易
-	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // 可选:只看该交易。查询主体(用户)从 token 取,不接受 did 入参(越权)
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -674,13 +673,6 @@ func (x *ListTradeReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListTradeReq.ProtoReflect.Descriptor instead.
 func (*ListTradeReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_trade_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *ListTradeReq) GetDid() string {
-	if x != nil {
-		return x.Did
-	}
-	return ""
 }
 
 func (x *ListTradeReq) GetId() string {
@@ -849,12 +841,11 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailR\x06detail\"8\n" +
 	"\x12UpdateTransHashReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04hash\x18\x02 \x01(\tR\x04hash\"`\n" +
-	"\fListTradeReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\tR\x02id\x12.\n" +
+	"\x04hash\x18\x02 \x01(\tR\x04hash\"N\n" +
+	"\fListTradeReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +
 	"\n" +
-	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"Q\n" +
 	"\x0fListAllTradeReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +

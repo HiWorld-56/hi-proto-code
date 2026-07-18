@@ -184,15 +184,15 @@ func (x *MerchantGetResp) GetInfo() *MerchantInfo {
 	return nil
 }
 
+// 商户改自己的配置。商户身份来自 ExtendToken —— 不接受 server 入参(冗余/越权);
+// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
 type MerchantSetReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Server        string                 `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`
-	Coins         []string               `protobuf:"bytes,4,rep,name=coins,proto3" json:"coins,omitempty"`
-	Endpoint      string                 `protobuf:"bytes,5,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	Scheme        string                 `protobuf:"bytes,6,opt,name=scheme,proto3" json:"scheme,omitempty"`
-	Comment       string                 `protobuf:"bytes,7,opt,name=comment,proto3" json:"comment,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Logo          string                 `protobuf:"bytes,2,opt,name=logo,proto3" json:"logo,omitempty"`
+	Coins         []string               `protobuf:"bytes,3,rep,name=coins,proto3" json:"coins,omitempty"`
+	Endpoint      string                 `protobuf:"bytes,4,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
+	Scheme        string                 `protobuf:"bytes,5,opt,name=scheme,proto3" json:"scheme,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -227,13 +227,6 @@ func (*MerchantSetReq) Descriptor() ([]byte, []int) {
 	return file_hi_did_merchant_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *MerchantSetReq) GetServer() string {
-	if x != nil {
-		return x.Server
-	}
-	return ""
-}
-
 func (x *MerchantSetReq) GetName() string {
 	if x != nil {
 		return x.Name
@@ -265,13 +258,6 @@ func (x *MerchantSetReq) GetEndpoint() string {
 func (x *MerchantSetReq) GetScheme() string {
 	if x != nil {
 		return x.Scheme
-	}
-	return ""
-}
-
-func (x *MerchantSetReq) GetComment() string {
-	if x != nil {
-		return x.Comment
 	}
 	return ""
 }
@@ -1296,15 +1282,13 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\x03R\tcreatedAt\";\n" +
 	"\x0fMerchantGetResp\x12(\n" +
-	"\x04info\x18\x01 \x01(\v2\x14.hi.did.MerchantInfoR\x04info\"\xb4\x01\n" +
-	"\x0eMerchantSetReq\x12\x16\n" +
-	"\x06server\x18\x01 \x01(\tR\x06server\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
-	"\x04logo\x18\x03 \x01(\tR\x04logo\x12\x14\n" +
-	"\x05coins\x18\x04 \x03(\tR\x05coins\x12\x1a\n" +
-	"\bendpoint\x18\x05 \x01(\tR\bendpoint\x12\x16\n" +
-	"\x06scheme\x18\x06 \x01(\tR\x06scheme\x12\x18\n" +
-	"\acomment\x18\a \x01(\tR\acomment\"R\n" +
+	"\x04info\x18\x01 \x01(\v2\x14.hi.did.MerchantInfoR\x04info\"\x82\x01\n" +
+	"\x0eMerchantSetReq\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
+	"\x04logo\x18\x02 \x01(\tR\x04logo\x12\x14\n" +
+	"\x05coins\x18\x03 \x03(\tR\x05coins\x12\x1a\n" +
+	"\bendpoint\x18\x04 \x01(\tR\bendpoint\x12\x16\n" +
+	"\x06scheme\x18\x05 \x01(\tR\x06scheme\"R\n" +
 	"\x10MerchantListResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12(\n" +
 	"\x04list\x18\x02 \x03(\v2\x14.hi.did.MerchantInfoR\x04list\"\xc6\x01\n" +

@@ -135,11 +135,9 @@ class UpdateAddressesReq extends $pb.GeneratedMessage {
 
 class GetWalletReq extends $pb.GeneratedMessage {
   factory GetWalletReq({
-    $core.String? did,
     $core.String? chain,
   }) {
     final result = create();
-    if (did != null) result.did = did;
     if (chain != null) result.chain = chain;
     return result;
   }
@@ -157,8 +155,7 @@ class GetWalletReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetWalletReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'chain')
+    ..aOS(1, _omitFieldNames ? '' : 'chain')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -181,22 +178,13 @@ class GetWalletReq extends $pb.GeneratedMessage {
   static GetWalletReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
+  $core.String get chain => $_getSZ(0);
   @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
+  set chain($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
+  $core.bool hasChain() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get chain => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set chain($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasChain() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearChain() => $_clearField(2);
+  void clearChain() => $_clearField(1);
 }
 
 class GetWalletResp_Unit extends $pb.GeneratedMessage {
@@ -1097,44 +1085,81 @@ class GetUserAssetsResp extends $pb.GeneratedMessage {
   void clearExchange() => $_clearField(2);
 }
 
-class UpdateAssetsReq extends $pb.GeneratedMessage {
-  factory UpdateAssetsReq({
-    $core.String? did,
-    $core.String? btc,
-    $core.String? eth,
-    $core.String? usdtErc20,
-    $core.String? trx,
-    $core.String? usdtTrc20,
-    $core.String? whdsTrc20,
-    $core.String? btTrc20,
-    $core.String? sol,
-    $core.String? usdtSol,
-    $core.String? btSol,
-    $core.String? pandaSol,
-    $core.String? apt,
-    $core.String? whdsApt,
-    $core.String? hwhdApt,
-    $core.String? slkjApt,
-    $core.String? wsmApt,
+class UpdateAssetsReq_Asset extends $pb.GeneratedMessage {
+  factory UpdateAssetsReq_Asset({
+    $core.String? coin,
+    $core.String? amount,
   }) {
     final result = create();
-    if (did != null) result.did = did;
-    if (btc != null) result.btc = btc;
-    if (eth != null) result.eth = eth;
-    if (usdtErc20 != null) result.usdtErc20 = usdtErc20;
-    if (trx != null) result.trx = trx;
-    if (usdtTrc20 != null) result.usdtTrc20 = usdtTrc20;
-    if (whdsTrc20 != null) result.whdsTrc20 = whdsTrc20;
-    if (btTrc20 != null) result.btTrc20 = btTrc20;
-    if (sol != null) result.sol = sol;
-    if (usdtSol != null) result.usdtSol = usdtSol;
-    if (btSol != null) result.btSol = btSol;
-    if (pandaSol != null) result.pandaSol = pandaSol;
-    if (apt != null) result.apt = apt;
-    if (whdsApt != null) result.whdsApt = whdsApt;
-    if (hwhdApt != null) result.hwhdApt = hwhdApt;
-    if (slkjApt != null) result.slkjApt = slkjApt;
-    if (wsmApt != null) result.wsmApt = wsmApt;
+    if (coin != null) result.coin = coin;
+    if (amount != null) result.amount = amount;
+    return result;
+  }
+
+  UpdateAssetsReq_Asset._();
+
+  factory UpdateAssetsReq_Asset.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateAssetsReq_Asset.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateAssetsReq.Asset',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'coin')
+    ..aOS(2, _omitFieldNames ? '' : 'amount')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAssetsReq_Asset clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAssetsReq_Asset copyWith(
+          void Function(UpdateAssetsReq_Asset) updates) =>
+      super.copyWith((message) => updates(message as UpdateAssetsReq_Asset))
+          as UpdateAssetsReq_Asset;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateAssetsReq_Asset create() => UpdateAssetsReq_Asset._();
+  @$core.override
+  UpdateAssetsReq_Asset createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateAssetsReq_Asset getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateAssetsReq_Asset>(create);
+  static UpdateAssetsReq_Asset? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get coin => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set coin($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCoin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCoin() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get amount => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set amount($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAmount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAmount() => $_clearField(2);
+}
+
+/// 刷新自己的资产快照。did 从 token 取(不接受任意 did 入参 —— 原 did 入参可覆写他人资产,越权)。
+/// 币种数据驱动:repeated {coin, amount},加币种不必改 proto(原来每加一种就得手工加字段+分段跳号)。
+class UpdateAssetsReq extends $pb.GeneratedMessage {
+  factory UpdateAssetsReq({
+    $core.Iterable<UpdateAssetsReq_Asset>? assets,
+  }) {
+    final result = create();
+    if (assets != null) result.assets.addAll(assets);
     return result;
   }
 
@@ -1151,23 +1176,8 @@ class UpdateAssetsReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UpdateAssetsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'btc')
-    ..aOS(31, _omitFieldNames ? '' : 'eth')
-    ..aOS(32, _omitFieldNames ? '' : 'usdtErc20')
-    ..aOS(41, _omitFieldNames ? '' : 'trx')
-    ..aOS(42, _omitFieldNames ? '' : 'usdtTrc20')
-    ..aOS(43, _omitFieldNames ? '' : 'whdsTrc20')
-    ..aOS(44, _omitFieldNames ? '' : 'btTrc20')
-    ..aOS(51, _omitFieldNames ? '' : 'sol')
-    ..aOS(52, _omitFieldNames ? '' : 'usdtSol')
-    ..aOS(53, _omitFieldNames ? '' : 'btSol')
-    ..aOS(54, _omitFieldNames ? '' : 'pandaSol')
-    ..aOS(61, _omitFieldNames ? '' : 'apt')
-    ..aOS(62, _omitFieldNames ? '' : 'whdsApt')
-    ..aOS(63, _omitFieldNames ? '' : 'hwhdApt')
-    ..aOS(64, _omitFieldNames ? '' : 'slkjApt')
-    ..aOS(65, _omitFieldNames ? '' : 'wsmApt')
+    ..pPM<UpdateAssetsReq_Asset>(1, _omitFieldNames ? '' : 'assets',
+        subBuilder: UpdateAssetsReq_Asset.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1190,157 +1200,7 @@ class UpdateAssetsReq extends $pb.GeneratedMessage {
   static UpdateAssetsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get btc => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set btc($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasBtc() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearBtc() => $_clearField(2);
-
-  @$pb.TagNumber(31)
-  $core.String get eth => $_getSZ(2);
-  @$pb.TagNumber(31)
-  set eth($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(31)
-  $core.bool hasEth() => $_has(2);
-  @$pb.TagNumber(31)
-  void clearEth() => $_clearField(31);
-
-  @$pb.TagNumber(32)
-  $core.String get usdtErc20 => $_getSZ(3);
-  @$pb.TagNumber(32)
-  set usdtErc20($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(32)
-  $core.bool hasUsdtErc20() => $_has(3);
-  @$pb.TagNumber(32)
-  void clearUsdtErc20() => $_clearField(32);
-
-  @$pb.TagNumber(41)
-  $core.String get trx => $_getSZ(4);
-  @$pb.TagNumber(41)
-  set trx($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(41)
-  $core.bool hasTrx() => $_has(4);
-  @$pb.TagNumber(41)
-  void clearTrx() => $_clearField(41);
-
-  @$pb.TagNumber(42)
-  $core.String get usdtTrc20 => $_getSZ(5);
-  @$pb.TagNumber(42)
-  set usdtTrc20($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(42)
-  $core.bool hasUsdtTrc20() => $_has(5);
-  @$pb.TagNumber(42)
-  void clearUsdtTrc20() => $_clearField(42);
-
-  @$pb.TagNumber(43)
-  $core.String get whdsTrc20 => $_getSZ(6);
-  @$pb.TagNumber(43)
-  set whdsTrc20($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(43)
-  $core.bool hasWhdsTrc20() => $_has(6);
-  @$pb.TagNumber(43)
-  void clearWhdsTrc20() => $_clearField(43);
-
-  @$pb.TagNumber(44)
-  $core.String get btTrc20 => $_getSZ(7);
-  @$pb.TagNumber(44)
-  set btTrc20($core.String value) => $_setString(7, value);
-  @$pb.TagNumber(44)
-  $core.bool hasBtTrc20() => $_has(7);
-  @$pb.TagNumber(44)
-  void clearBtTrc20() => $_clearField(44);
-
-  @$pb.TagNumber(51)
-  $core.String get sol => $_getSZ(8);
-  @$pb.TagNumber(51)
-  set sol($core.String value) => $_setString(8, value);
-  @$pb.TagNumber(51)
-  $core.bool hasSol() => $_has(8);
-  @$pb.TagNumber(51)
-  void clearSol() => $_clearField(51);
-
-  @$pb.TagNumber(52)
-  $core.String get usdtSol => $_getSZ(9);
-  @$pb.TagNumber(52)
-  set usdtSol($core.String value) => $_setString(9, value);
-  @$pb.TagNumber(52)
-  $core.bool hasUsdtSol() => $_has(9);
-  @$pb.TagNumber(52)
-  void clearUsdtSol() => $_clearField(52);
-
-  @$pb.TagNumber(53)
-  $core.String get btSol => $_getSZ(10);
-  @$pb.TagNumber(53)
-  set btSol($core.String value) => $_setString(10, value);
-  @$pb.TagNumber(53)
-  $core.bool hasBtSol() => $_has(10);
-  @$pb.TagNumber(53)
-  void clearBtSol() => $_clearField(53);
-
-  @$pb.TagNumber(54)
-  $core.String get pandaSol => $_getSZ(11);
-  @$pb.TagNumber(54)
-  set pandaSol($core.String value) => $_setString(11, value);
-  @$pb.TagNumber(54)
-  $core.bool hasPandaSol() => $_has(11);
-  @$pb.TagNumber(54)
-  void clearPandaSol() => $_clearField(54);
-
-  @$pb.TagNumber(61)
-  $core.String get apt => $_getSZ(12);
-  @$pb.TagNumber(61)
-  set apt($core.String value) => $_setString(12, value);
-  @$pb.TagNumber(61)
-  $core.bool hasApt() => $_has(12);
-  @$pb.TagNumber(61)
-  void clearApt() => $_clearField(61);
-
-  @$pb.TagNumber(62)
-  $core.String get whdsApt => $_getSZ(13);
-  @$pb.TagNumber(62)
-  set whdsApt($core.String value) => $_setString(13, value);
-  @$pb.TagNumber(62)
-  $core.bool hasWhdsApt() => $_has(13);
-  @$pb.TagNumber(62)
-  void clearWhdsApt() => $_clearField(62);
-
-  @$pb.TagNumber(63)
-  $core.String get hwhdApt => $_getSZ(14);
-  @$pb.TagNumber(63)
-  set hwhdApt($core.String value) => $_setString(14, value);
-  @$pb.TagNumber(63)
-  $core.bool hasHwhdApt() => $_has(14);
-  @$pb.TagNumber(63)
-  void clearHwhdApt() => $_clearField(63);
-
-  @$pb.TagNumber(64)
-  $core.String get slkjApt => $_getSZ(15);
-  @$pb.TagNumber(64)
-  set slkjApt($core.String value) => $_setString(15, value);
-  @$pb.TagNumber(64)
-  $core.bool hasSlkjApt() => $_has(15);
-  @$pb.TagNumber(64)
-  void clearSlkjApt() => $_clearField(64);
-
-  @$pb.TagNumber(65)
-  $core.String get wsmApt => $_getSZ(16);
-  @$pb.TagNumber(65)
-  set wsmApt($core.String value) => $_setString(16, value);
-  @$pb.TagNumber(65)
-  $core.bool hasWsmApt() => $_has(16);
-  @$pb.TagNumber(65)
-  void clearWsmApt() => $_clearField(65);
+  $pb.PbList<UpdateAssetsReq_Asset> get assets => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

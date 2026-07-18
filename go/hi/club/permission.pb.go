@@ -30,24 +30,22 @@ const file_hi_club_permission_proto_rawDesc = "" +
 	"\x18hi/club/permission.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16hi/ai/permission.proto\x1a\x10hi/options.proto2I\n" +
 	"\n" +
 	"Permission\x12;\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.PermissionInfo\"\x05\x8a\xb5\x18\x01\x022\xe6\x02\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.PermissionInfo\"\x05\x8a\xb5\x18\x01\x022\x9b\x02\n" +
 	"\x10PermissionManage\x12=\n" +
 	"\x03Add\x12\x17.hi.ai.PermissionAddReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12C\n" +
 	"\x06Delete\x12\x1a.hi.ai.PermissionDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12?\n" +
 	"\x04Edit\x12\x18.hi.ai.PermissionEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
-	"\x04List\x12\x18.hi.ai.PermissionListReq\x1a\x19.hi.ai.PermissionListResp\"\x05\x8a\xb5\x18\x01\x04\x12I\n" +
-	"\tListTypes\x12\x16.google.protobuf.Empty\x1a\x1d.hi.ai.PermissionListTypeResp\"\x05\x8a\xb5\x18\x01\x04B\x86\x01\n" +
+	"\x04List\x12\x18.hi.ai.PermissionListReq\x1a\x19.hi.ai.PermissionListResp\"\x05\x8a\xb5\x18\x01\x04B\x86\x01\n" +
 	"\vcom.hi.clubB\x0fPermissionProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_permission_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),             // 0: google.protobuf.Empty
-	(*ai.PermissionAddReq)(nil),       // 1: hi.ai.PermissionAddReq
-	(*ai.PermissionDeleteReq)(nil),    // 2: hi.ai.PermissionDeleteReq
-	(*ai.PermissionEditReq)(nil),      // 3: hi.ai.PermissionEditReq
-	(*ai.PermissionListReq)(nil),      // 4: hi.ai.PermissionListReq
-	(*ai.PermissionInfo)(nil),         // 5: hi.ai.PermissionInfo
-	(*ai.PermissionListResp)(nil),     // 6: hi.ai.PermissionListResp
-	(*ai.PermissionListTypeResp)(nil), // 7: hi.ai.PermissionListTypeResp
+	(*emptypb.Empty)(nil),          // 0: google.protobuf.Empty
+	(*ai.PermissionAddReq)(nil),    // 1: hi.ai.PermissionAddReq
+	(*ai.PermissionDeleteReq)(nil), // 2: hi.ai.PermissionDeleteReq
+	(*ai.PermissionEditReq)(nil),   // 3: hi.ai.PermissionEditReq
+	(*ai.PermissionListReq)(nil),   // 4: hi.ai.PermissionListReq
+	(*ai.PermissionInfo)(nil),      // 5: hi.ai.PermissionInfo
+	(*ai.PermissionListResp)(nil),  // 6: hi.ai.PermissionListResp
 }
 var file_hi_club_permission_proto_depIdxs = []int32{
 	0, // 0: hi.club.Permission.Get:input_type -> google.protobuf.Empty
@@ -55,15 +53,13 @@ var file_hi_club_permission_proto_depIdxs = []int32{
 	2, // 2: hi.club.PermissionManage.Delete:input_type -> hi.ai.PermissionDeleteReq
 	3, // 3: hi.club.PermissionManage.Edit:input_type -> hi.ai.PermissionEditReq
 	4, // 4: hi.club.PermissionManage.List:input_type -> hi.ai.PermissionListReq
-	0, // 5: hi.club.PermissionManage.ListTypes:input_type -> google.protobuf.Empty
-	5, // 6: hi.club.Permission.Get:output_type -> hi.ai.PermissionInfo
-	0, // 7: hi.club.PermissionManage.Add:output_type -> google.protobuf.Empty
-	0, // 8: hi.club.PermissionManage.Delete:output_type -> google.protobuf.Empty
-	0, // 9: hi.club.PermissionManage.Edit:output_type -> google.protobuf.Empty
-	6, // 10: hi.club.PermissionManage.List:output_type -> hi.ai.PermissionListResp
-	7, // 11: hi.club.PermissionManage.ListTypes:output_type -> hi.ai.PermissionListTypeResp
-	6, // [6:12] is the sub-list for method output_type
-	0, // [0:6] is the sub-list for method input_type
+	5, // 5: hi.club.Permission.Get:output_type -> hi.ai.PermissionInfo
+	0, // 6: hi.club.PermissionManage.Add:output_type -> google.protobuf.Empty
+	0, // 7: hi.club.PermissionManage.Delete:output_type -> google.protobuf.Empty
+	0, // 8: hi.club.PermissionManage.Edit:output_type -> google.protobuf.Empty
+	6, // 9: hi.club.PermissionManage.List:output_type -> hi.ai.PermissionListResp
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

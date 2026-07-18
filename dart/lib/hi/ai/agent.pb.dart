@@ -93,12 +93,14 @@ class ModelSet extends $pb.GeneratedMessage {
     $core.String? stt,
     $core.String? tts,
     $core.String? embedding,
+    $core.String? memModel,
   }) {
     final result = create();
     if (llm != null) result.llm = llm;
     if (stt != null) result.stt = stt;
     if (tts != null) result.tts = tts;
     if (embedding != null) result.embedding = embedding;
+    if (memModel != null) result.memModel = memModel;
     return result;
   }
 
@@ -119,6 +121,7 @@ class ModelSet extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'stt')
     ..aOS(3, _omitFieldNames ? '' : 'tts')
     ..aOS(4, _omitFieldNames ? '' : 'embedding')
+    ..aOS(5, _omitFieldNames ? '' : 'memModel')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -174,6 +177,15 @@ class ModelSet extends $pb.GeneratedMessage {
   $core.bool hasEmbedding() => $_has(3);
   @$pb.TagNumber(4)
   void clearEmbedding() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get memModel => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set memModel($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasMemModel() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMemModel() => $_clearField(5);
 }
 
 /// 智能体配置。
@@ -1313,11 +1325,11 @@ class ResetToDefaultReq extends $pb.GeneratedMessage {
 class MarkAgentReq extends $pb.GeneratedMessage {
   factory MarkAgentReq({
     $core.String? did,
-    $core.String? opt,
+    $core.bool? marked,
   }) {
     final result = create();
     if (did != null) result.did = did;
-    if (opt != null) result.opt = opt;
+    if (marked != null) result.marked = marked;
     return result;
   }
 
@@ -1335,7 +1347,7 @@ class MarkAgentReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'opt')
+    ..aOB(2, _omitFieldNames ? '' : 'marked')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1367,13 +1379,13 @@ class MarkAgentReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get opt => $_getSZ(1);
+  $core.bool get marked => $_getBF(1);
   @$pb.TagNumber(2)
-  set opt($core.String value) => $_setString(1, value);
+  set marked($core.bool value) => $_setBool(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasOpt() => $_has(1);
+  $core.bool hasMarked() => $_has(1);
   @$pb.TagNumber(2)
-  void clearOpt() => $_clearField(2);
+  void clearMarked() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

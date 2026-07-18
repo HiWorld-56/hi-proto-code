@@ -37,11 +37,10 @@ const PcOrder$json = {
     {'1': 'to_did', '3': 3, '4': 1, '5': 9, '10': 'toDid'},
     {'1': 'amount', '3': 4, '4': 1, '5': 9, '10': 'amount'},
     {'1': 'type', '3': 5, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'created_at', '3': 6, '4': 1, '5': 9, '10': 'createdAt'},
-    {'1': 'updated_at', '3': 7, '4': 1, '5': 9, '10': 'updatedAt'},
-    {'1': 'deleted_at', '3': 8, '4': 1, '5': 9, '10': 'deletedAt'},
-    {'1': 'did', '3': 9, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'status', '3': 10, '4': 1, '5': 9, '10': 'status'},
+    {'1': 'created_at', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
+    {'1': 'updated_at', '3': 7, '4': 1, '5': 3, '10': 'updatedAt'},
+    {'1': 'did', '3': 8, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'status', '3': 9, '4': 1, '5': 9, '10': 'status'},
   ],
 };
 
@@ -49,9 +48,9 @@ const PcOrder$json = {
 final $typed_data.Uint8List pcOrderDescriptor = $convert.base64Decode(
     'CgdQY09yZGVyEg4KAmlkGAEgASgJUgJpZBIZCghvcmRlcl9pZBgCIAEoCVIHb3JkZXJJZBIVCg'
     'Z0b19kaWQYAyABKAlSBXRvRGlkEhYKBmFtb3VudBgEIAEoCVIGYW1vdW50EhIKBHR5cGUYBSAB'
-    'KAlSBHR5cGUSHQoKY3JlYXRlZF9hdBgGIAEoCVIJY3JlYXRlZEF0Eh0KCnVwZGF0ZWRfYXQYBy'
-    'ABKAlSCXVwZGF0ZWRBdBIdCgpkZWxldGVkX2F0GAggASgJUglkZWxldGVkQXQSEAoDZGlkGAkg'
-    'ASgJUgNkaWQSFgoGc3RhdHVzGAogASgJUgZzdGF0dXM=');
+    'KAlSBHR5cGUSHQoKY3JlYXRlZF9hdBgGIAEoA1IJY3JlYXRlZEF0Eh0KCnVwZGF0ZWRfYXQYBy'
+    'ABKANSCXVwZGF0ZWRBdBIQCgNkaWQYCCABKAlSA2RpZBIWCgZzdGF0dXMYCSABKAlSBnN0YXR1'
+    'cw==');
 
 @$core.Deprecated('Use getNotPulledPcOrdersRespDescriptor instead')
 const GetNotPulledPcOrdersResp$json = {

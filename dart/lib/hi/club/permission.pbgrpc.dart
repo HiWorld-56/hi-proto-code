@@ -121,13 +121,6 @@ class PermissionManageClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.PermissionListTypeResp> listTypes(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listTypes, request, options: options);
-  }
-
   // method descriptors
 
   static final _$add = $grpc.ClientMethod<$1.PermissionAddReq, $0.Empty>(
@@ -147,11 +140,6 @@ class PermissionManageClient extends $grpc.Client {
           '/hi.club.PermissionManage/List',
           ($1.PermissionListReq value) => value.writeToBuffer(),
           $1.PermissionListResp.fromBuffer);
-  static final _$listTypes =
-      $grpc.ClientMethod<$0.Empty, $1.PermissionListTypeResp>(
-          '/hi.club.PermissionManage/ListTypes',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.PermissionListTypeResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.PermissionManage')
@@ -188,13 +176,6 @@ abstract class PermissionManageServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.PermissionListReq.fromBuffer(value),
         ($1.PermissionListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.PermissionListTypeResp>(
-        'ListTypes',
-        listTypes_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.PermissionListTypeResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.Empty> add_Pre($grpc.ServiceCall $call,
@@ -228,12 +209,4 @@ abstract class PermissionManageServiceBase extends $grpc.Service {
 
   $async.Future<$1.PermissionListResp> list(
       $grpc.ServiceCall call, $1.PermissionListReq request);
-
-  $async.Future<$1.PermissionListTypeResp> listTypes_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listTypes($call, await $request);
-  }
-
-  $async.Future<$1.PermissionListTypeResp> listTypes(
-      $grpc.ServiceCall call, $0.Empty request);
 }

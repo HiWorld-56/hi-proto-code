@@ -89,12 +89,10 @@ pub struct UpdateTransHashReq {
 /// 查自己的交易。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListTradeReq {
+    /// 可选:只看该交易。查询主体(用户)从 token 取,不接受 did 入参(越权)
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    /// 可选:只看该交易
-    #[prost(string, tag = "2")]
     pub id: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "3")]
+    #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 /// 交易统计(内部使用)。id 为空 = 全量。
@@ -632,15 +630,13 @@ pub struct PcOrder {
     pub amount: ::prost::alloc::string::String,
     #[prost(string, tag = "5")]
     pub r#type: ::prost::alloc::string::String,
-    #[prost(string, tag = "6")]
-    pub created_at: ::prost::alloc::string::String,
-    #[prost(string, tag = "7")]
-    pub updated_at: ::prost::alloc::string::String,
+    #[prost(int64, tag = "6")]
+    pub created_at: i64,
+    #[prost(int64, tag = "7")]
+    pub updated_at: i64,
     #[prost(string, tag = "8")]
-    pub deleted_at: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "9")]
     pub status: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -678,6 +674,7 @@ pub mod order_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// hidid-pc 拉未处理订单 / 回传处理结果(web3 自证)。裁决#10 的 club 侧。
     #[derive(Debug, Clone)]
     pub struct OrderClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -758,7 +755,7 @@ pub mod order_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_not_pulled_pc_orders(
+        pub async fn list_not_pulled(
             &mut self,
             request: impl tonic::IntoRequest<super::super::SignedData>,
         ) -> std::result::Result<
@@ -775,14 +772,14 @@ pub mod order_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Order/GetNotPulledPcOrders",
+                "/hi.club.Order/ListNotPulled",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Order", "GetNotPulledPcOrders"));
+                .insert(GrpcMethod::new("hi.club.Order", "ListNotPulled"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn update_pulled_pc_orders(
+        pub async fn update_pulled(
             &mut self,
             request: impl tonic::IntoRequest<super::super::SignedData>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
@@ -796,11 +793,11 @@ pub mod order_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Order/UpdatePulledPcOrders",
+                "/hi.club.Order/UpdatePulled",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Order", "UpdatePulledPcOrders"));
+                .insert(GrpcMethod::new("hi.club.Order", "UpdatePulled"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -1541,7 +1538,7 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "ListMarks"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn default_config(
+        pub async fn get_default_config(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
@@ -1558,11 +1555,11 @@ pub mod agent_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Agent/DefaultConfig",
+                "/hi.club.Agent/GetDefaultConfig",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Agent", "DefaultConfig"));
+                .insert(GrpcMethod::new("hi.club.Agent", "GetDefaultConfig"));
             self.inner.unary(req, path, codec).await
         }
         /// ── club 自有:换绑主人 ──
@@ -2525,9 +2522,9 @@ pub mod plugin_client {
         }
         pub async fn create(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::CreateReq>,
+            request: impl tonic::IntoRequest<super::super::ai::CreatePluginReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::CreateResp>,
+            tonic::Response<super::super::ai::CreatePluginResp>,
             tonic::Status,
         > {
             self.inner
@@ -2646,9 +2643,9 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_by_dids(
+        pub async fn delete_by_agents(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::DeletePluginByDidsReq>,
+            request: impl tonic::IntoRequest<super::super::ai::DeletePluginByAgentsReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -2660,11 +2657,11 @@ pub mod plugin_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/DeleteByDids",
+                "/hi.club.Plugin/DeleteByAgents",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "DeleteByDids"));
+                .insert(GrpcMethod::new("hi.club.Plugin", "DeleteByAgents"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_active_version(
@@ -3141,8 +3138,9 @@ pub struct RemoveGroupReq {
 pub struct SetRoleReq {
     #[prost(string, tag = "1")]
     pub group: ::prost::alloc::string::String,
+    /// 与 Invite/Remove 的 members 一致(原 users)
     #[prost(string, repeated, tag = "2")]
-    pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(string, tag = "3")]
     pub role: ::prost::alloc::string::String,
 }
@@ -3577,12 +3575,7 @@ pub struct RelationInfo {
     #[prost(string, tag = "3")]
     pub moment: ::prost::alloc::string::String,
 }
-/// ListFriends / ListServitors 共用(同形:一串 RelationInfo)。共用类型故不带方法名。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RelationListResp {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<RelationInfo>,
-}
+/// 一次拿好友+仆从(同表,一次调用拿全);已删按关系拆开的 ListFriends/ListServitors(重叠)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRelationsResp {
     /// 好友(friend 关系)
@@ -3906,51 +3899,6 @@ pub mod user_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.User", "HandleSystemMessage"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_friends(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::RelationListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListFriends");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListFriends"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_servitors(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::RelationListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/ListServitors",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "ListServitors"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_relations(
@@ -4336,27 +4284,6 @@ pub mod training_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Training", "GetFile"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_file(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::DeleteFileReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Training/DeleteFile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Training", "DeleteFile"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn delete_files(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::DeleteFilesReq>,
@@ -4445,58 +4372,13 @@ pub mod training_client {
                 .insert(GrpcMethod::new("hi.club.Training", "EditDigest"));
             self.inner.unary(req, path, codec).await
         }
-        /// ── 记忆模型 ──
-        pub async fn set_mem_model(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::SetMemModelReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Training/SetMemModel",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Training", "SetMemModel"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_mem_model(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::GetMemModelReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::GetMemModelResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Training/GetMemModel",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Training", "GetMemModel"));
-            self.inner.unary(req, path, codec).await
-        }
     }
 }
+/// 服务端整流程执行入参(工具在服务端跑)。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SendReq {
+pub struct CompleteReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub cid: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "3")]
@@ -4505,12 +4387,6 @@ pub struct SendReq {
     pub state: ::prost::alloc::string::String,
     #[prost(string, tag = "5")]
     pub custom: ::prost::alloc::string::String,
-    #[prost(bool, tag = "6")]
-    pub return_plugin_use: bool,
-    #[prost(bool, tag = "7")]
-    pub return_training_data: bool,
-    #[prost(bool, tag = "8")]
-    pub return_context: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Qa {
@@ -4526,10 +4402,11 @@ pub struct GetHistoryResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Qa>,
 }
+/// 客户端 tool-callback 两阶段对话入参(合并原 TextToText/SpeechToText/SpeechToSpeech;模态由 conts+style 决定)。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpeechToSpeechReq {
+pub struct ChatReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub cid: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "3")]
@@ -4542,42 +4419,9 @@ pub struct SpeechToSpeechReq {
     pub custom: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "7")]
     pub state: ::core::option::Option<::prost::alloc::string::String>,
+    /// 语音出音色等;纯文本留空
     #[prost(string, optional, tag = "8")]
     pub style: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextToTextReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub cid: ::prost::alloc::string::String,
-    #[prost(message, repeated, tag = "3")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
-    #[prost(message, repeated, tag = "4")]
-    pub tools: ::prost::alloc::vec::Vec<super::ai::ToolSupply>,
-    #[prost(string, optional, tag = "5")]
-    pub tool_choice: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub custom: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "7")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpeechToTextReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub cid: ::prost::alloc::string::String,
-    #[prost(message, repeated, tag = "3")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
-    #[prost(message, repeated, tag = "4")]
-    pub tools: ::prost::alloc::vec::Vec<super::ai::ToolSupply>,
-    #[prost(string, optional, tag = "5")]
-    pub tool_choice: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub custom: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "7")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResult {
@@ -4586,7 +4430,7 @@ pub struct ToolCallResult {
     #[prost(message, repeated, tag = "2")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
 }
-/// 工具结果续跑入参(Resume 系列):客户端执行完工具后把结果交回来,接着跑。
+/// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResultsReq {
     #[prost(string, tag = "1")]
@@ -4606,8 +4450,6 @@ pub mod chat_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
-    ///
-    /// (原 Simple 已删 —— ai 侧同步删掉了:那是给前端**无身份**直连 llm 推理的便捷方法,有安全隐患。)
     #[derive(Debug, Clone)]
     pub struct ChatClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -4710,48 +4552,6 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "NewSession"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn send(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SendReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::SendResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/Send");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Send"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SendReq>,
-        ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::super::ai::StreamResp>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/Stream");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Stream"));
-            self.inner.server_streaming(req, path, codec).await
-        }
         pub async fn get_history(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::GetHistoryReq>,
@@ -4790,10 +4590,58 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "ClearHistory"));
             self.inner.unary(req, path, codec).await
         }
-        /// ── 多模态对话(带工具调用);Resume = 交回工具结果续跑(原 xxx2)──
-        pub async fn text_to_text(
+        /// ── 服务端整流程执行(工具在服务端跑)──
+        pub async fn complete(
             &mut self,
-            request: impl tonic::IntoRequest<super::TextToTextReq>,
+            request: impl tonic::IntoRequest<super::CompleteReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::CompleteResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/Complete");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Complete"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn complete_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CompleteReq>,
+        ) -> std::result::Result<
+            tonic::Response<
+                tonic::codec::Streaming<super::super::ai::CompleteStreamResp>,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Chat/CompleteStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Chat", "CompleteStream"));
+            self.inner.server_streaming(req, path, codec).await
+        }
+        /// ── 客户端 tool-callback 两阶段 ──
+        pub async fn converse(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ChatReq>,
         ) -> std::result::Result<
             tonic::Response<super::super::ai::ChatResp>,
             tonic::Status,
@@ -4807,12 +4655,12 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/TextToText");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/Converse");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "TextToText"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Converse"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn text_to_text_resume(
+        pub async fn resume(
             &mut self,
             request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
         ) -> std::result::Result<
@@ -4828,107 +4676,9 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/TextToTextResume",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/Resume");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Chat", "TextToTextResume"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_text(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SpeechToTextReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::ChatResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/SpeechToText",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "SpeechToText"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_text_resume(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::ChatResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/SpeechToTextResume",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Chat", "SpeechToTextResume"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_speech(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SpeechToSpeechReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::ChatResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/SpeechToSpeech",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Chat", "SpeechToSpeech"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_speech_resume(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::ChatResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/SpeechToSpeechResume",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Chat", "SpeechToSpeechResume"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Resume"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -5446,7 +5196,7 @@ pub mod model_client {
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListLlmResp>,
+            tonic::Response<super::super::ai::ModelListResp>,
             tonic::Status,
         > {
             self.inner
@@ -5467,7 +5217,7 @@ pub mod model_client {
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListEmbeddingResp>,
+            tonic::Response<super::super::ai::ModelListResp>,
             tonic::Status,
         > {
             self.inner
@@ -5512,7 +5262,7 @@ pub mod model_client {
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListTtsResp>,
+            tonic::Response<super::super::ai::ModelListResp>,
             tonic::Status,
         > {
             self.inner
@@ -5831,30 +5581,6 @@ pub mod permission_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.PermissionManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_types(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::PermissionListTypeResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.PermissionManage/ListTypes",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.PermissionManage", "ListTypes"));
             self.inner.unary(req, path, codec).await
         }
     }

@@ -241,13 +241,10 @@ class SetEnabledReq extends $pb.GeneratedMessage {
   void clearEnabled() => $_clearField(2);
 }
 
-/// 上传/新建一个插件版本。
-/// 后台按 (agent, name, version) 判断:该版本已存在则**覆盖**,否则**新建**。
-/// 上传一个脚本版本。
-/// `uuid` 空 = 新脚本(后台生成 uuid);非空 = **给已有脚本加一个版本**。
+/// 上传一个脚本版本。`uuid` 空 = 新脚本(后台生成 uuid);非空 = **给已有脚本加一个版本**。
 /// 后台按 (uuid, version) 判断:该版本已存在则**覆盖**,否则**新建**。
-class CreateReq extends $pb.GeneratedMessage {
-  factory CreateReq({
+class CreatePluginReq extends $pb.GeneratedMessage {
+  factory CreatePluginReq({
     $core.String? agent,
     $core.String? url,
     $core.String? name,
@@ -269,17 +266,17 @@ class CreateReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  CreateReq._();
+  CreatePluginReq._();
 
-  factory CreateReq.fromBuffer($core.List<$core.int> data,
+  factory CreatePluginReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreateReq.fromJson($core.String json,
+  factory CreatePluginReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateReq',
+      _omitMessageNames ? '' : 'CreatePluginReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
@@ -294,22 +291,23 @@ class CreateReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateReq clone() => deepCopy();
+  CreatePluginReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateReq copyWith(void Function(CreateReq) updates) =>
-      super.copyWith((message) => updates(message as CreateReq)) as CreateReq;
+  CreatePluginReq copyWith(void Function(CreatePluginReq) updates) =>
+      super.copyWith((message) => updates(message as CreatePluginReq))
+          as CreatePluginReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreateReq create() => CreateReq._();
+  static CreatePluginReq create() => CreatePluginReq._();
   @$core.override
-  CreateReq createEmptyInstance() => create();
+  CreatePluginReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreateReq getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CreateReq>(create);
-  static CreateReq? _defaultInstance;
+  static CreatePluginReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreatePluginReq>(create);
+  static CreatePluginReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -386,8 +384,8 @@ class CreateReq extends $pb.GeneratedMessage {
   void clearUuid() => $_clearField(8);
 }
 
-class CreateResp extends $pb.GeneratedMessage {
-  factory CreateResp({
+class CreatePluginResp extends $pb.GeneratedMessage {
+  factory CreatePluginResp({
     $core.String? uuid,
   }) {
     final result = create();
@@ -395,39 +393,40 @@ class CreateResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  CreateResp._();
+  CreatePluginResp._();
 
-  factory CreateResp.fromBuffer($core.List<$core.int> data,
+  factory CreatePluginResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreateResp.fromJson($core.String json,
+  factory CreatePluginResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateResp',
+      _omitMessageNames ? '' : 'CreatePluginResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateResp clone() => deepCopy();
+  CreatePluginResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateResp copyWith(void Function(CreateResp) updates) =>
-      super.copyWith((message) => updates(message as CreateResp)) as CreateResp;
+  CreatePluginResp copyWith(void Function(CreatePluginResp) updates) =>
+      super.copyWith((message) => updates(message as CreatePluginResp))
+          as CreatePluginResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreateResp create() => CreateResp._();
+  static CreatePluginResp create() => CreatePluginResp._();
   @$core.override
-  CreateResp createEmptyInstance() => create();
+  CreatePluginResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreateResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateResp>(create);
-  static CreateResp? _defaultInstance;
+  static CreatePluginResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreatePluginResp>(create);
+  static CreatePluginResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get uuid => $_getSZ(0);
@@ -707,8 +706,8 @@ class DeletePluginReq extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(2);
 }
 
-class DeletePluginByDidsReq extends $pb.GeneratedMessage {
-  factory DeletePluginByDidsReq({
+class DeletePluginByAgentsReq extends $pb.GeneratedMessage {
+  factory DeletePluginByAgentsReq({
     $core.Iterable<$core.String>? agents,
   }) {
     final result = create();
@@ -716,41 +715,41 @@ class DeletePluginByDidsReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DeletePluginByDidsReq._();
+  DeletePluginByAgentsReq._();
 
-  factory DeletePluginByDidsReq.fromBuffer($core.List<$core.int> data,
+  factory DeletePluginByAgentsReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeletePluginByDidsReq.fromJson($core.String json,
+  factory DeletePluginByAgentsReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeletePluginByDidsReq',
+      _omitMessageNames ? '' : 'DeletePluginByAgentsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'agents')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeletePluginByDidsReq clone() => deepCopy();
+  DeletePluginByAgentsReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeletePluginByDidsReq copyWith(
-          void Function(DeletePluginByDidsReq) updates) =>
-      super.copyWith((message) => updates(message as DeletePluginByDidsReq))
-          as DeletePluginByDidsReq;
+  DeletePluginByAgentsReq copyWith(
+          void Function(DeletePluginByAgentsReq) updates) =>
+      super.copyWith((message) => updates(message as DeletePluginByAgentsReq))
+          as DeletePluginByAgentsReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeletePluginByDidsReq create() => DeletePluginByDidsReq._();
+  static DeletePluginByAgentsReq create() => DeletePluginByAgentsReq._();
   @$core.override
-  DeletePluginByDidsReq createEmptyInstance() => create();
+  DeletePluginByAgentsReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeletePluginByDidsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeletePluginByDidsReq>(create);
-  static DeletePluginByDidsReq? _defaultInstance;
+  static DeletePluginByAgentsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeletePluginByAgentsReq>(create);
+  static DeletePluginByAgentsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get agents => $_getList(0);

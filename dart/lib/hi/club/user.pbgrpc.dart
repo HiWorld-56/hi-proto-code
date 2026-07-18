@@ -77,20 +77,6 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$handleSystemMessage, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.RelationListResp> listFriends(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listFriends, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.RelationListResp> listServitors(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listServitors, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.ListRelationsResp> listRelations(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -178,16 +164,6 @@ class UserClient extends $grpc.Client {
           '/hi.club.User/HandleSystemMessage',
           ($1.HandleSystemMessageReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
-  static final _$listFriends =
-      $grpc.ClientMethod<$0.Empty, $1.RelationListResp>(
-          '/hi.club.User/ListFriends',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.RelationListResp.fromBuffer);
-  static final _$listServitors =
-      $grpc.ClientMethod<$0.Empty, $1.RelationListResp>(
-          '/hi.club.User/ListServitors',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.RelationListResp.fromBuffer);
   static final _$listRelations =
       $grpc.ClientMethod<$0.Empty, $1.ListRelationsResp>(
           '/hi.club.User/ListRelations',
@@ -277,20 +253,6 @@ abstract class UserServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.HandleSystemMessageReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.RelationListResp>(
-        'ListFriends',
-        listFriends_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.RelationListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.RelationListResp>(
-        'ListServitors',
-        listServitors_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.RelationListResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListRelationsResp>(
         'ListRelations',
         listRelations_Pre,
@@ -397,22 +359,6 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> handleSystemMessage(
       $grpc.ServiceCall call, $1.HandleSystemMessageReq request);
-
-  $async.Future<$1.RelationListResp> listFriends_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listFriends($call, await $request);
-  }
-
-  $async.Future<$1.RelationListResp> listFriends(
-      $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$1.RelationListResp> listServitors_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return listServitors($call, await $request);
-  }
-
-  $async.Future<$1.RelationListResp> listServitors(
-      $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.ListRelationsResp> listRelations_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {

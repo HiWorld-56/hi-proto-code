@@ -15,29 +15,17 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use listLLMRespDescriptor instead')
-const ListLLMResp$json = {
-  '1': 'ListLLMResp',
+@$core.Deprecated('Use modelListRespDescriptor instead')
+const ModelListResp$json = {
+  '1': 'ModelListResp',
   '2': [
     {'1': 'models', '3': 1, '4': 3, '5': 9, '10': 'models'},
   ],
 };
 
-/// Descriptor for `ListLLMResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listLLMRespDescriptor = $convert
-    .base64Decode('CgtMaXN0TExNUmVzcBIWCgZtb2RlbHMYASADKAlSBm1vZGVscw==');
-
-@$core.Deprecated('Use listEmbeddingRespDescriptor instead')
-const ListEmbeddingResp$json = {
-  '1': 'ListEmbeddingResp',
-  '2': [
-    {'1': 'models', '3': 1, '4': 3, '5': 9, '10': 'models'},
-  ],
-};
-
-/// Descriptor for `ListEmbeddingResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listEmbeddingRespDescriptor = $convert.base64Decode(
-    'ChFMaXN0RW1iZWRkaW5nUmVzcBIWCgZtb2RlbHMYASADKAlSBm1vZGVscw==');
+/// Descriptor for `ModelListResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List modelListRespDescriptor = $convert
+    .base64Decode('Cg1Nb2RlbExpc3RSZXNwEhYKBm1vZGVscxgBIAMoCVIGbW9kZWxz');
 
 @$core.Deprecated('Use listSTTRespDescriptor instead')
 const ListSTTResp$json = {
@@ -52,15 +40,3 @@ const ListSTTResp$json = {
 final $typed_data.Uint8List listSTTRespDescriptor = $convert.base64Decode(
     'CgtMaXN0U1RUUmVzcBIWCgZtb2RlbHMYASADKAlSBm1vZGVscxIUCgVsYW5ncxgCIAMoCVIFbG'
     'FuZ3M=');
-
-@$core.Deprecated('Use listTTSRespDescriptor instead')
-const ListTTSResp$json = {
-  '1': 'ListTTSResp',
-  '2': [
-    {'1': 'models', '3': 1, '4': 3, '5': 9, '10': 'models'},
-  ],
-};
-
-/// Descriptor for `ListTTSResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listTTSRespDescriptor = $convert
-    .base64Decode('CgtMaXN0VFRTUmVzcBIWCgZtb2RlbHMYASADKAlSBm1vZGVscw==');

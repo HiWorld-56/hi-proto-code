@@ -21,16 +21,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Order_GetNotPulledPcOrders_FullMethodName = "/hi.club.Order/GetNotPulledPcOrders"
-	Order_UpdatePulledPcOrders_FullMethodName = "/hi.club.Order/UpdatePulledPcOrders"
+	Order_ListNotPulled_FullMethodName = "/hi.club.Order/ListNotPulled"
+	Order_UpdatePulled_FullMethodName  = "/hi.club.Order/UpdatePulled"
 )
 
 // OrderClient is the client API for Order service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// hidid-pc 拉未处理订单 / 回传处理结果(web3 自证)。裁决#10 的 club 侧。
 type OrderClient interface {
-	GetNotPulledPcOrders(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GetNotPulledPcOrdersResp, error)
-	UpdatePulledPcOrders(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListNotPulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GetNotPulledPcOrdersResp, error)
+	UpdatePulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type orderClient struct {
@@ -41,20 +43,20 @@ func NewOrderClient(cc grpc.ClientConnInterface) OrderClient {
 	return &orderClient{cc}
 }
 
-func (c *orderClient) GetNotPulledPcOrders(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GetNotPulledPcOrdersResp, error) {
+func (c *orderClient) ListNotPulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GetNotPulledPcOrdersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetNotPulledPcOrdersResp)
-	err := c.cc.Invoke(ctx, Order_GetNotPulledPcOrders_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Order_ListNotPulled_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *orderClient) UpdatePulledPcOrders(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderClient) UpdatePulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Order_UpdatePulledPcOrders_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Order_UpdatePulled_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,9 +66,11 @@ func (c *orderClient) UpdatePulledPcOrders(ctx context.Context, in *hi.SignedDat
 // OrderServer is the server API for Order service.
 // All implementations should embed UnimplementedOrderServer
 // for forward compatibility.
+//
+// hidid-pc 拉未处理订单 / 回传处理结果(web3 自证)。裁决#10 的 club 侧。
 type OrderServer interface {
-	GetNotPulledPcOrders(context.Context, *hi.SignedData) (*GetNotPulledPcOrdersResp, error)
-	UpdatePulledPcOrders(context.Context, *hi.SignedData) (*emptypb.Empty, error)
+	ListNotPulled(context.Context, *hi.SignedData) (*GetNotPulledPcOrdersResp, error)
+	UpdatePulled(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }
 
 // UnimplementedOrderServer should be embedded to have
@@ -76,11 +80,11 @@ type OrderServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrderServer struct{}
 
-func (UnimplementedOrderServer) GetNotPulledPcOrders(context.Context, *hi.SignedData) (*GetNotPulledPcOrdersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetNotPulledPcOrders not implemented")
+func (UnimplementedOrderServer) ListNotPulled(context.Context, *hi.SignedData) (*GetNotPulledPcOrdersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListNotPulled not implemented")
 }
-func (UnimplementedOrderServer) UpdatePulledPcOrders(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdatePulledPcOrders not implemented")
+func (UnimplementedOrderServer) UpdatePulled(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdatePulled not implemented")
 }
 func (UnimplementedOrderServer) testEmbeddedByValue() {}
 
@@ -102,38 +106,38 @@ func RegisterOrderServer(s grpc.ServiceRegistrar, srv OrderServer) {
 	s.RegisterService(&Order_ServiceDesc, srv)
 }
 
-func _Order_GetNotPulledPcOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Order_ListNotPulled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServer).GetNotPulledPcOrders(ctx, in)
+		return srv.(OrderServer).ListNotPulled(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Order_GetNotPulledPcOrders_FullMethodName,
+		FullMethod: Order_ListNotPulled_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServer).GetNotPulledPcOrders(ctx, req.(*hi.SignedData))
+		return srv.(OrderServer).ListNotPulled(ctx, req.(*hi.SignedData))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Order_UpdatePulledPcOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Order_UpdatePulled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServer).UpdatePulledPcOrders(ctx, in)
+		return srv.(OrderServer).UpdatePulled(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Order_UpdatePulledPcOrders_FullMethodName,
+		FullMethod: Order_UpdatePulled_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServer).UpdatePulledPcOrders(ctx, req.(*hi.SignedData))
+		return srv.(OrderServer).UpdatePulled(ctx, req.(*hi.SignedData))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,12 +150,12 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OrderServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetNotPulledPcOrders",
-			Handler:    _Order_GetNotPulledPcOrders_Handler,
+			MethodName: "ListNotPulled",
+			Handler:    _Order_ListNotPulled_Handler,
 		},
 		{
-			MethodName: "UpdatePulledPcOrders",
-			Handler:    _Order_UpdatePulledPcOrders_Handler,
+			MethodName: "UpdatePulled",
+			Handler:    _Order_UpdatePulled_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

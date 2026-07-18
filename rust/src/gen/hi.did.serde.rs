@@ -3257,16 +3257,10 @@ impl serde::Serialize for GetWalletReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
         if !self.chain.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.did.GetWalletReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
         if !self.chain.is_empty() {
             struct_ser.serialize_field("chain", &self.chain)?;
         }
@@ -3280,13 +3274,11 @@ impl<'de> serde::Deserialize<'de> for GetWalletReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "did",
             "chain",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Did,
             Chain,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3309,7 +3301,6 @@ impl<'de> serde::Deserialize<'de> for GetWalletReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "did" => Ok(GeneratedField::Did),
                             "chain" => Ok(GeneratedField::Chain),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3330,16 +3321,9 @@ impl<'de> serde::Deserialize<'de> for GetWalletReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut did__ = None;
                 let mut chain__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
-                            }
-                            did__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Chain => {
                             if chain__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("chain"));
@@ -3349,7 +3333,6 @@ impl<'de> serde::Deserialize<'de> for GetWalletReq {
                     }
                 }
                 Ok(GetWalletReq {
-                    did: did__.unwrap_or_default(),
                     chain: chain__.unwrap_or_default(),
                 })
             }
@@ -8261,9 +8244,6 @@ impl serde::Serialize for MerchantSetReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.server.is_empty() {
-            len += 1;
-        }
         if !self.name.is_empty() {
             len += 1;
         }
@@ -8279,13 +8259,7 @@ impl serde::Serialize for MerchantSetReq {
         if !self.scheme.is_empty() {
             len += 1;
         }
-        if !self.comment.is_empty() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.did.MerchantSetReq", len)?;
-        if !self.server.is_empty() {
-            struct_ser.serialize_field("server", &self.server)?;
-        }
         if !self.name.is_empty() {
             struct_ser.serialize_field("name", &self.name)?;
         }
@@ -8301,9 +8275,6 @@ impl serde::Serialize for MerchantSetReq {
         if !self.scheme.is_empty() {
             struct_ser.serialize_field("scheme", &self.scheme)?;
         }
-        if !self.comment.is_empty() {
-            struct_ser.serialize_field("comment", &self.comment)?;
-        }
         struct_ser.end()
     }
 }
@@ -8314,24 +8285,20 @@ impl<'de> serde::Deserialize<'de> for MerchantSetReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "server",
             "name",
             "logo",
             "coins",
             "endpoint",
             "scheme",
-            "comment",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Server,
             Name,
             Logo,
             Coins,
             Endpoint,
             Scheme,
-            Comment,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8353,13 +8320,11 @@ impl<'de> serde::Deserialize<'de> for MerchantSetReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "server" => Ok(GeneratedField::Server),
                             "name" => Ok(GeneratedField::Name),
                             "logo" => Ok(GeneratedField::Logo),
                             "coins" => Ok(GeneratedField::Coins),
                             "endpoint" => Ok(GeneratedField::Endpoint),
                             "scheme" => Ok(GeneratedField::Scheme),
-                            "comment" => Ok(GeneratedField::Comment),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8379,21 +8344,13 @@ impl<'de> serde::Deserialize<'de> for MerchantSetReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut server__ = None;
                 let mut name__ = None;
                 let mut logo__ = None;
                 let mut coins__ = None;
                 let mut endpoint__ = None;
                 let mut scheme__ = None;
-                let mut comment__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Server => {
-                            if server__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("server"));
-                            }
-                            server__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Name => {
                             if name__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("name"));
@@ -8424,22 +8381,14 @@ impl<'de> serde::Deserialize<'de> for MerchantSetReq {
                             }
                             scheme__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Comment => {
-                            if comment__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("comment"));
-                            }
-                            comment__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(MerchantSetReq {
-                    server: server__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
                     logo: logo__.unwrap_or_default(),
                     coins: coins__.unwrap_or_default(),
                     endpoint: endpoint__.unwrap_or_default(),
                     scheme: scheme__.unwrap_or_default(),
-                    comment: comment__.unwrap_or_default(),
                 })
             }
         }
@@ -10145,108 +10094,12 @@ impl serde::Serialize for UpdateAssetsReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
-        if !self.btc.is_empty() {
-            len += 1;
-        }
-        if !self.eth.is_empty() {
-            len += 1;
-        }
-        if !self.usdt_erc20.is_empty() {
-            len += 1;
-        }
-        if !self.trx.is_empty() {
-            len += 1;
-        }
-        if !self.usdt_trc20.is_empty() {
-            len += 1;
-        }
-        if !self.whds_trc20.is_empty() {
-            len += 1;
-        }
-        if !self.bt_trc20.is_empty() {
-            len += 1;
-        }
-        if !self.sol.is_empty() {
-            len += 1;
-        }
-        if !self.usdt_sol.is_empty() {
-            len += 1;
-        }
-        if !self.bt_sol.is_empty() {
-            len += 1;
-        }
-        if !self.panda_sol.is_empty() {
-            len += 1;
-        }
-        if !self.apt.is_empty() {
-            len += 1;
-        }
-        if !self.whds_apt.is_empty() {
-            len += 1;
-        }
-        if !self.hwhd_apt.is_empty() {
-            len += 1;
-        }
-        if !self.slkj_apt.is_empty() {
-            len += 1;
-        }
-        if !self.wsm_apt.is_empty() {
+        if !self.assets.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.did.UpdateAssetsReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
-        if !self.btc.is_empty() {
-            struct_ser.serialize_field("btc", &self.btc)?;
-        }
-        if !self.eth.is_empty() {
-            struct_ser.serialize_field("eth", &self.eth)?;
-        }
-        if !self.usdt_erc20.is_empty() {
-            struct_ser.serialize_field("usdtErc20", &self.usdt_erc20)?;
-        }
-        if !self.trx.is_empty() {
-            struct_ser.serialize_field("trx", &self.trx)?;
-        }
-        if !self.usdt_trc20.is_empty() {
-            struct_ser.serialize_field("usdtTrc20", &self.usdt_trc20)?;
-        }
-        if !self.whds_trc20.is_empty() {
-            struct_ser.serialize_field("whdsTrc20", &self.whds_trc20)?;
-        }
-        if !self.bt_trc20.is_empty() {
-            struct_ser.serialize_field("btTrc20", &self.bt_trc20)?;
-        }
-        if !self.sol.is_empty() {
-            struct_ser.serialize_field("sol", &self.sol)?;
-        }
-        if !self.usdt_sol.is_empty() {
-            struct_ser.serialize_field("usdtSol", &self.usdt_sol)?;
-        }
-        if !self.bt_sol.is_empty() {
-            struct_ser.serialize_field("btSol", &self.bt_sol)?;
-        }
-        if !self.panda_sol.is_empty() {
-            struct_ser.serialize_field("pandaSol", &self.panda_sol)?;
-        }
-        if !self.apt.is_empty() {
-            struct_ser.serialize_field("apt", &self.apt)?;
-        }
-        if !self.whds_apt.is_empty() {
-            struct_ser.serialize_field("whdsApt", &self.whds_apt)?;
-        }
-        if !self.hwhd_apt.is_empty() {
-            struct_ser.serialize_field("hwhdApt", &self.hwhd_apt)?;
-        }
-        if !self.slkj_apt.is_empty() {
-            struct_ser.serialize_field("slkjApt", &self.slkj_apt)?;
-        }
-        if !self.wsm_apt.is_empty() {
-            struct_ser.serialize_field("wsmApt", &self.wsm_apt)?;
+        if !self.assets.is_empty() {
+            struct_ser.serialize_field("assets", &self.assets)?;
         }
         struct_ser.end()
     }
@@ -10258,55 +10111,12 @@ impl<'de> serde::Deserialize<'de> for UpdateAssetsReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "did",
-            "btc",
-            "eth",
-            "usdt_erc20",
-            "usdtErc20",
-            "trx",
-            "usdt_trc20",
-            "usdtTrc20",
-            "whds_trc20",
-            "whdsTrc20",
-            "bt_trc20",
-            "btTrc20",
-            "sol",
-            "usdt_sol",
-            "usdtSol",
-            "bt_sol",
-            "btSol",
-            "panda_sol",
-            "pandaSol",
-            "apt",
-            "whds_apt",
-            "whdsApt",
-            "hwhd_apt",
-            "hwhdApt",
-            "slkj_apt",
-            "slkjApt",
-            "wsm_apt",
-            "wsmApt",
+            "assets",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Did,
-            Btc,
-            Eth,
-            UsdtErc20,
-            Trx,
-            UsdtTrc20,
-            WhdsTrc20,
-            BtTrc20,
-            Sol,
-            UsdtSol,
-            BtSol,
-            PandaSol,
-            Apt,
-            WhdsApt,
-            HwhdApt,
-            SlkjApt,
-            WsmApt,
+            Assets,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10328,23 +10138,7 @@ impl<'de> serde::Deserialize<'de> for UpdateAssetsReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "btc" => Ok(GeneratedField::Btc),
-                            "eth" => Ok(GeneratedField::Eth),
-                            "usdtErc20" | "usdt_erc20" => Ok(GeneratedField::UsdtErc20),
-                            "trx" => Ok(GeneratedField::Trx),
-                            "usdtTrc20" | "usdt_trc20" => Ok(GeneratedField::UsdtTrc20),
-                            "whdsTrc20" | "whds_trc20" => Ok(GeneratedField::WhdsTrc20),
-                            "btTrc20" | "bt_trc20" => Ok(GeneratedField::BtTrc20),
-                            "sol" => Ok(GeneratedField::Sol),
-                            "usdtSol" | "usdt_sol" => Ok(GeneratedField::UsdtSol),
-                            "btSol" | "bt_sol" => Ok(GeneratedField::BtSol),
-                            "pandaSol" | "panda_sol" => Ok(GeneratedField::PandaSol),
-                            "apt" => Ok(GeneratedField::Apt),
-                            "whdsApt" | "whds_apt" => Ok(GeneratedField::WhdsApt),
-                            "hwhdApt" | "hwhd_apt" => Ok(GeneratedField::HwhdApt),
-                            "slkjApt" | "slkj_apt" => Ok(GeneratedField::SlkjApt),
-                            "wsmApt" | "wsm_apt" => Ok(GeneratedField::WsmApt),
+                            "assets" => Ok(GeneratedField::Assets),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10364,151 +10158,131 @@ impl<'de> serde::Deserialize<'de> for UpdateAssetsReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut did__ = None;
-                let mut btc__ = None;
-                let mut eth__ = None;
-                let mut usdt_erc20__ = None;
-                let mut trx__ = None;
-                let mut usdt_trc20__ = None;
-                let mut whds_trc20__ = None;
-                let mut bt_trc20__ = None;
-                let mut sol__ = None;
-                let mut usdt_sol__ = None;
-                let mut bt_sol__ = None;
-                let mut panda_sol__ = None;
-                let mut apt__ = None;
-                let mut whds_apt__ = None;
-                let mut hwhd_apt__ = None;
-                let mut slkj_apt__ = None;
-                let mut wsm_apt__ = None;
+                let mut assets__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
+                        GeneratedField::Assets => {
+                            if assets__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("assets"));
                             }
-                            did__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Btc => {
-                            if btc__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("btc"));
-                            }
-                            btc__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Eth => {
-                            if eth__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("eth"));
-                            }
-                            eth__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::UsdtErc20 => {
-                            if usdt_erc20__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("usdtErc20"));
-                            }
-                            usdt_erc20__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Trx => {
-                            if trx__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("trx"));
-                            }
-                            trx__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::UsdtTrc20 => {
-                            if usdt_trc20__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("usdtTrc20"));
-                            }
-                            usdt_trc20__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::WhdsTrc20 => {
-                            if whds_trc20__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("whdsTrc20"));
-                            }
-                            whds_trc20__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::BtTrc20 => {
-                            if bt_trc20__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("btTrc20"));
-                            }
-                            bt_trc20__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Sol => {
-                            if sol__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sol"));
-                            }
-                            sol__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::UsdtSol => {
-                            if usdt_sol__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("usdtSol"));
-                            }
-                            usdt_sol__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::BtSol => {
-                            if bt_sol__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("btSol"));
-                            }
-                            bt_sol__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::PandaSol => {
-                            if panda_sol__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("pandaSol"));
-                            }
-                            panda_sol__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Apt => {
-                            if apt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("apt"));
-                            }
-                            apt__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::WhdsApt => {
-                            if whds_apt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("whdsApt"));
-                            }
-                            whds_apt__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::HwhdApt => {
-                            if hwhd_apt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("hwhdApt"));
-                            }
-                            hwhd_apt__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::SlkjApt => {
-                            if slkj_apt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("slkjApt"));
-                            }
-                            slkj_apt__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::WsmApt => {
-                            if wsm_apt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("wsmApt"));
-                            }
-                            wsm_apt__ = Some(map_.next_value()?);
+                            assets__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(UpdateAssetsReq {
-                    did: did__.unwrap_or_default(),
-                    btc: btc__.unwrap_or_default(),
-                    eth: eth__.unwrap_or_default(),
-                    usdt_erc20: usdt_erc20__.unwrap_or_default(),
-                    trx: trx__.unwrap_or_default(),
-                    usdt_trc20: usdt_trc20__.unwrap_or_default(),
-                    whds_trc20: whds_trc20__.unwrap_or_default(),
-                    bt_trc20: bt_trc20__.unwrap_or_default(),
-                    sol: sol__.unwrap_or_default(),
-                    usdt_sol: usdt_sol__.unwrap_or_default(),
-                    bt_sol: bt_sol__.unwrap_or_default(),
-                    panda_sol: panda_sol__.unwrap_or_default(),
-                    apt: apt__.unwrap_or_default(),
-                    whds_apt: whds_apt__.unwrap_or_default(),
-                    hwhd_apt: hwhd_apt__.unwrap_or_default(),
-                    slkj_apt: slkj_apt__.unwrap_or_default(),
-                    wsm_apt: wsm_apt__.unwrap_or_default(),
+                    assets: assets__.unwrap_or_default(),
                 })
             }
         }
         deserializer.deserialize_struct("hi.did.UpdateAssetsReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for update_assets_req::Asset {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.coin.is_empty() {
+            len += 1;
+        }
+        if !self.amount.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.UpdateAssetsReq.Asset", len)?;
+        if !self.coin.is_empty() {
+            struct_ser.serialize_field("coin", &self.coin)?;
+        }
+        if !self.amount.is_empty() {
+            struct_ser.serialize_field("amount", &self.amount)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for update_assets_req::Asset {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "coin",
+            "amount",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Coin,
+            Amount,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "coin" => Ok(GeneratedField::Coin),
+                            "amount" => Ok(GeneratedField::Amount),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = update_assets_req::Asset;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.UpdateAssetsReq.Asset")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<update_assets_req::Asset, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut coin__ = None;
+                let mut amount__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Coin => {
+                            if coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("coin"));
+                            }
+                            coin__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Amount => {
+                            if amount__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("amount"));
+                            }
+                            amount__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(update_assets_req::Asset {
+                    coin: coin__.unwrap_or_default(),
+                    amount: amount__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.UpdateAssetsReq.Asset", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for UserExtensionInfo {

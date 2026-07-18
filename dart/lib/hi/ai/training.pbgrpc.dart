@@ -84,13 +84,6 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$getFile, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> deleteFile(
-    $0.DeleteFileReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$deleteFile, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> deleteFiles(
     $0.DeleteFilesReq request, {
     $grpc.CallOptions? options,
@@ -127,21 +120,6 @@ class TrainingClient extends $grpc.Client {
     return $createUnaryCall(_$editDigest, request, options: options);
   }
 
-  /// ── 记忆模型 ──
-  $grpc.ResponseFuture<$1.Empty> setMemModel(
-    $0.SetMemModelReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$setMemModel, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.GetMemModelResp> getMemModel(
-    $0.GetMemModelReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$getMemModel, request, options: options);
-  }
-
   // method descriptors
 
   static final _$start = $grpc.ClientMethod<$0.StartReq, $1.Empty>(
@@ -169,10 +147,6 @@ class TrainingClient extends $grpc.Client {
       '/hi.ai.Training/GetFile',
       ($0.GetFileReq value) => value.writeToBuffer(),
       $0.GetFileResp.fromBuffer);
-  static final _$deleteFile = $grpc.ClientMethod<$0.DeleteFileReq, $1.Empty>(
-      '/hi.ai.Training/DeleteFile',
-      ($0.DeleteFileReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
   static final _$deleteFiles = $grpc.ClientMethod<$0.DeleteFilesReq, $1.Empty>(
       '/hi.ai.Training/DeleteFiles',
       ($0.DeleteFilesReq value) => value.writeToBuffer(),
@@ -196,15 +170,6 @@ class TrainingClient extends $grpc.Client {
       '/hi.ai.Training/EditDigest',
       ($0.EditDigestReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
-  static final _$setMemModel = $grpc.ClientMethod<$0.SetMemModelReq, $1.Empty>(
-      '/hi.ai.Training/SetMemModel',
-      ($0.SetMemModelReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$getMemModel =
-      $grpc.ClientMethod<$0.GetMemModelReq, $0.GetMemModelResp>(
-          '/hi.ai.Training/GetMemModel',
-          ($0.GetMemModelReq value) => value.writeToBuffer(),
-          $0.GetMemModelResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Training')
@@ -254,13 +219,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetFileReq.fromBuffer(value),
         ($0.GetFileResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteFileReq, $1.Empty>(
-        'DeleteFile',
-        deleteFile_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.DeleteFileReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteFilesReq, $1.Empty>(
         'DeleteFiles',
         deleteFiles_Pre,
@@ -297,20 +255,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.EditDigestReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SetMemModelReq, $1.Empty>(
-        'SetMemModel',
-        setMemModel_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.SetMemModelReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetMemModelReq, $0.GetMemModelResp>(
-        'GetMemModel',
-        getMemModel_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.GetMemModelReq.fromBuffer(value),
-        ($0.GetMemModelResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.Empty> start_Pre(
@@ -359,14 +303,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
   $async.Future<$0.GetFileResp> getFile(
       $grpc.ServiceCall call, $0.GetFileReq request);
 
-  $async.Future<$1.Empty> deleteFile_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.DeleteFileReq> $request) async {
-    return deleteFile($call, await $request);
-  }
-
-  $async.Future<$1.Empty> deleteFile(
-      $grpc.ServiceCall call, $0.DeleteFileReq request);
-
   $async.Future<$1.Empty> deleteFiles_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteFilesReq> $request) async {
     return deleteFiles($call, await $request);
@@ -406,20 +342,4 @@ abstract class TrainingServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> editDigest(
       $grpc.ServiceCall call, $0.EditDigestReq request);
-
-  $async.Future<$1.Empty> setMemModel_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.SetMemModelReq> $request) async {
-    return setMemModel($call, await $request);
-  }
-
-  $async.Future<$1.Empty> setMemModel(
-      $grpc.ServiceCall call, $0.SetMemModelReq request);
-
-  $async.Future<$0.GetMemModelResp> getMemModel_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.GetMemModelReq> $request) async {
-    return getMemModel($call, await $request);
-  }
-
-  $async.Future<$0.GetMemModelResp> getMemModel(
-      $grpc.ServiceCall call, $0.GetMemModelReq request);
 }

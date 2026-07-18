@@ -36,13 +36,15 @@ const ModelSet$json = {
     {'1': 'stt', '3': 2, '4': 1, '5': 9, '10': 'stt'},
     {'1': 'tts', '3': 3, '4': 1, '5': 9, '10': 'tts'},
     {'1': 'embedding', '3': 4, '4': 1, '5': 9, '10': 'embedding'},
+    {'1': 'mem_model', '3': 5, '4': 1, '5': 9, '10': 'memModel'},
   ],
 };
 
 /// Descriptor for `ModelSet`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List modelSetDescriptor = $convert.base64Decode(
     'CghNb2RlbFNldBIQCgNsbG0YASABKAlSA2xsbRIQCgNzdHQYAiABKAlSA3N0dBIQCgN0dHMYAy'
-    'ABKAlSA3R0cxIcCgllbWJlZGRpbmcYBCABKAlSCWVtYmVkZGluZw==');
+    'ABKAlSA3R0cxIcCgllbWJlZGRpbmcYBCABKAlSCWVtYmVkZGluZxIbCgltZW1fbW9kZWwYBSAB'
+    'KAlSCG1lbU1vZGVs');
 
 @$core.Deprecated('Use agentConfigDescriptor instead')
 const AgentConfig$json = {
@@ -389,10 +391,11 @@ const MarkAgentReq$json = {
   '1': 'MarkAgentReq',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'opt', '3': 2, '4': 1, '5': 9, '10': 'opt'},
+    {'1': 'marked', '3': 2, '4': 1, '5': 8, '10': 'marked'},
   ],
 };
 
 /// Descriptor for `MarkAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List markAgentReqDescriptor = $convert.base64Decode(
-    'CgxNYXJrQWdlbnRSZXESEAoDZGlkGAEgASgJUgNkaWQSEAoDb3B0GAIgASgJUgNvcHQ=');
+    'CgxNYXJrQWdlbnRSZXESEAoDZGlkGAEgASgJUgNkaWQSFgoGbWFya2VkGAIgASgIUgZtYXJrZW'
+    'Q=');

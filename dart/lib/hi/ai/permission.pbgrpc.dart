@@ -119,13 +119,6 @@ class PermissionManageClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.PermissionListTypeResp> listTypes(
-    $1.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listTypes, request, options: options);
-  }
-
   // method descriptors
 
   static final _$add = $grpc.ClientMethod<$0.PermissionAddReq, $1.Empty>(
@@ -145,11 +138,6 @@ class PermissionManageClient extends $grpc.Client {
           '/hi.ai.PermissionManage/List',
           ($0.PermissionListReq value) => value.writeToBuffer(),
           $0.PermissionListResp.fromBuffer);
-  static final _$listTypes =
-      $grpc.ClientMethod<$1.Empty, $0.PermissionListTypeResp>(
-          '/hi.ai.PermissionManage/ListTypes',
-          ($1.Empty value) => value.writeToBuffer(),
-          $0.PermissionListTypeResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.PermissionManage')
@@ -186,13 +174,6 @@ abstract class PermissionManageServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.PermissionListReq.fromBuffer(value),
         ($0.PermissionListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Empty, $0.PermissionListTypeResp>(
-        'ListTypes',
-        listTypes_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
-        ($0.PermissionListTypeResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.Empty> add_Pre($grpc.ServiceCall $call,
@@ -226,14 +207,6 @@ abstract class PermissionManageServiceBase extends $grpc.Service {
 
   $async.Future<$0.PermissionListResp> list(
       $grpc.ServiceCall call, $0.PermissionListReq request);
-
-  $async.Future<$0.PermissionListTypeResp> listTypes_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
-    return listTypes($call, await $request);
-  }
-
-  $async.Future<$0.PermissionListTypeResp> listTypes(
-      $grpc.ServiceCall call, $1.Empty request);
 }
 
 /// 商户目录(超管)。承接原 `UserACL.List(type="all")` —— 那查的是**注册用户/商户名录**,

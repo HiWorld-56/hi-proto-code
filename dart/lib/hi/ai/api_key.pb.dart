@@ -22,7 +22,7 @@ class ApiKeyInfo extends $pb.GeneratedMessage {
     $core.String? value,
     $core.String? did,
     $core.int? rateLimit,
-    $core.int? isActive,
+    $core.bool? isActive,
     $core.String? note,
     $fixnum.Int64? createdAt,
   }) {
@@ -52,7 +52,7 @@ class ApiKeyInfo extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'value')
     ..aOS(2, _omitFieldNames ? '' : 'did')
     ..aI(3, _omitFieldNames ? '' : 'rateLimit')
-    ..aI(4, _omitFieldNames ? '' : 'isActive')
+    ..aOB(4, _omitFieldNames ? '' : 'isActive')
     ..aOS(5, _omitFieldNames ? '' : 'note')
     ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false;
@@ -103,9 +103,9 @@ class ApiKeyInfo extends $pb.GeneratedMessage {
   void clearRateLimit() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.int get isActive => $_getIZ(3);
+  $core.bool get isActive => $_getBF(3);
   @$pb.TagNumber(4)
-  set isActive($core.int value) => $_setSignedInt32(3, value);
+  set isActive($core.bool value) => $_setBool(3, value);
   @$pb.TagNumber(4)
   $core.bool hasIsActive() => $_has(3);
   @$pb.TagNumber(4)
@@ -310,8 +310,8 @@ class EditApiKeyResp extends $pb.GeneratedMessage {
   ApiKeyInfo ensureInfo() => $_ensure(0);
 }
 
-class ListApiKeyResp extends $pb.GeneratedMessage {
-  factory ListApiKeyResp({
+class ListApiKeysResp extends $pb.GeneratedMessage {
+  factory ListApiKeysResp({
     $core.int? total,
     $core.Iterable<ApiKeyInfo>? infos,
   }) {
@@ -321,17 +321,17 @@ class ListApiKeyResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListApiKeyResp._();
+  ListApiKeysResp._();
 
-  factory ListApiKeyResp.fromBuffer($core.List<$core.int> data,
+  factory ListApiKeysResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListApiKeyResp.fromJson($core.String json,
+  factory ListApiKeysResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListApiKeyResp',
+      _omitMessageNames ? '' : 'ListApiKeysResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
@@ -340,23 +340,23 @@ class ListApiKeyResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListApiKeyResp clone() => deepCopy();
+  ListApiKeysResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListApiKeyResp copyWith(void Function(ListApiKeyResp) updates) =>
-      super.copyWith((message) => updates(message as ListApiKeyResp))
-          as ListApiKeyResp;
+  ListApiKeysResp copyWith(void Function(ListApiKeysResp) updates) =>
+      super.copyWith((message) => updates(message as ListApiKeysResp))
+          as ListApiKeysResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListApiKeyResp create() => ListApiKeyResp._();
+  static ListApiKeysResp create() => ListApiKeysResp._();
   @$core.override
-  ListApiKeyResp createEmptyInstance() => create();
+  ListApiKeysResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListApiKeyResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListApiKeyResp>(create);
-  static ListApiKeyResp? _defaultInstance;
+  static ListApiKeysResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListApiKeysResp>(create);
+  static ListApiKeysResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);

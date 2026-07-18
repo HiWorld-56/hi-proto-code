@@ -110,8 +110,7 @@ func (x *UpdateAddressesReq) GetApt() string {
 
 type GetWalletReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Chain         string                 `protobuf:"bytes,2,opt,name=chain,proto3" json:"chain,omitempty"`
+	Chain         string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"` // did 从 token 取(自服务,不接受任意 did 入参)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -144,13 +143,6 @@ func (x *GetWalletReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetWalletReq.ProtoReflect.Descriptor instead.
 func (*GetWalletReq) Descriptor() ([]byte, []int) {
 	return file_hi_did_wallet_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *GetWalletReq) GetDid() string {
-	if x != nil {
-		return x.Did
-	}
-	return ""
 }
 
 func (x *GetWalletReq) GetChain() string {
@@ -590,25 +582,11 @@ func (x *GetUserAssetsResp) GetExchange() string {
 	return ""
 }
 
+// 刷新自己的资产快照。did 从 token 取(不接受任意 did 入参 —— 原 did 入参可覆写他人资产,越权)。
+// 币种数据驱动:repeated {coin, amount},加币种不必改 proto(原来每加一种就得手工加字段+分段跳号)。
 type UpdateAssetsReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Btc           string                 `protobuf:"bytes,2,opt,name=btc,proto3" json:"btc,omitempty"`
-	Eth           string                 `protobuf:"bytes,31,opt,name=eth,proto3" json:"eth,omitempty"`
-	UsdtErc20     string                 `protobuf:"bytes,32,opt,name=usdt_erc20,json=usdtErc20,proto3" json:"usdt_erc20,omitempty"`
-	Trx           string                 `protobuf:"bytes,41,opt,name=trx,proto3" json:"trx,omitempty"`
-	UsdtTrc20     string                 `protobuf:"bytes,42,opt,name=usdt_trc20,json=usdtTrc20,proto3" json:"usdt_trc20,omitempty"`
-	WhdsTrc20     string                 `protobuf:"bytes,43,opt,name=whds_trc20,json=whdsTrc20,proto3" json:"whds_trc20,omitempty"`
-	BtTrc20       string                 `protobuf:"bytes,44,opt,name=bt_trc20,json=btTrc20,proto3" json:"bt_trc20,omitempty"`
-	Sol           string                 `protobuf:"bytes,51,opt,name=sol,proto3" json:"sol,omitempty"`
-	UsdtSol       string                 `protobuf:"bytes,52,opt,name=usdt_sol,json=usdtSol,proto3" json:"usdt_sol,omitempty"`
-	BtSol         string                 `protobuf:"bytes,53,opt,name=bt_sol,json=btSol,proto3" json:"bt_sol,omitempty"`
-	PandaSol      string                 `protobuf:"bytes,54,opt,name=panda_sol,json=pandaSol,proto3" json:"panda_sol,omitempty"`
-	Apt           string                 `protobuf:"bytes,61,opt,name=apt,proto3" json:"apt,omitempty"`
-	WhdsApt       string                 `protobuf:"bytes,62,opt,name=whds_apt,json=whdsApt,proto3" json:"whds_apt,omitempty"`
-	HwhdApt       string                 `protobuf:"bytes,63,opt,name=hwhd_apt,json=hwhdApt,proto3" json:"hwhd_apt,omitempty"`
-	SlkjApt       string                 `protobuf:"bytes,64,opt,name=slkj_apt,json=slkjApt,proto3" json:"slkj_apt,omitempty"`
-	WsmApt        string                 `protobuf:"bytes,65,opt,name=wsm_apt,json=wsmApt,proto3" json:"wsm_apt,omitempty"`
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Assets        []*UpdateAssetsReq_Asset `protobuf:"bytes,1,rep,name=assets,proto3" json:"assets,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -643,123 +621,11 @@ func (*UpdateAssetsReq) Descriptor() ([]byte, []int) {
 	return file_hi_did_wallet_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *UpdateAssetsReq) GetDid() string {
+func (x *UpdateAssetsReq) GetAssets() []*UpdateAssetsReq_Asset {
 	if x != nil {
-		return x.Did
+		return x.Assets
 	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetBtc() string {
-	if x != nil {
-		return x.Btc
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetEth() string {
-	if x != nil {
-		return x.Eth
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetUsdtErc20() string {
-	if x != nil {
-		return x.UsdtErc20
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetTrx() string {
-	if x != nil {
-		return x.Trx
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetUsdtTrc20() string {
-	if x != nil {
-		return x.UsdtTrc20
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetWhdsTrc20() string {
-	if x != nil {
-		return x.WhdsTrc20
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetBtTrc20() string {
-	if x != nil {
-		return x.BtTrc20
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetSol() string {
-	if x != nil {
-		return x.Sol
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetUsdtSol() string {
-	if x != nil {
-		return x.UsdtSol
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetBtSol() string {
-	if x != nil {
-		return x.BtSol
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetPandaSol() string {
-	if x != nil {
-		return x.PandaSol
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetApt() string {
-	if x != nil {
-		return x.Apt
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetWhdsApt() string {
-	if x != nil {
-		return x.WhdsApt
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetHwhdApt() string {
-	if x != nil {
-		return x.HwhdApt
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetSlkjApt() string {
-	if x != nil {
-		return x.SlkjApt
-	}
-	return ""
-}
-
-func (x *UpdateAssetsReq) GetWsmApt() string {
-	if x != nil {
-		return x.WsmApt
-	}
-	return ""
+	return nil
 }
 
 type GetWalletResp_Unit struct {
@@ -1054,6 +920,58 @@ func (x *GetUserAssetsResp_Unit) GetPrice() string {
 	return ""
 }
 
+type UpdateAssetsReq_Asset struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"` // 币种标识:btc/eth/usdt_erc20/trx/usdt_trc20/sol/apt/...
+	Amount        string                 `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateAssetsReq_Asset) Reset() {
+	*x = UpdateAssetsReq_Asset{}
+	mi := &file_hi_did_wallet_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateAssetsReq_Asset) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAssetsReq_Asset) ProtoMessage() {}
+
+func (x *UpdateAssetsReq_Asset) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_wallet_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAssetsReq_Asset.ProtoReflect.Descriptor instead.
+func (*UpdateAssetsReq_Asset) Descriptor() ([]byte, []int) {
+	return file_hi_did_wallet_proto_rawDescGZIP(), []int{11, 0}
+}
+
+func (x *UpdateAssetsReq_Asset) GetCoin() string {
+	if x != nil {
+		return x.Coin
+	}
+	return ""
+}
+
+func (x *UpdateAssetsReq_Asset) GetAmount() string {
+	if x != nil {
+		return x.Amount
+	}
+	return ""
+}
+
 var File_hi_did_wallet_proto protoreflect.FileDescriptor
 
 const file_hi_did_wallet_proto_rawDesc = "" +
@@ -1071,10 +989,9 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\x04_ethB\x06\n" +
 	"\x04_trxB\x06\n" +
 	"\x04_solB\x06\n" +
-	"\x04_apt\"6\n" +
-	"\fGetWalletReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
-	"\x05chain\x18\x02 \x01(\tR\x05chain\"w\n" +
+	"\x04_apt\"$\n" +
+	"\fGetWalletReq\x12\x14\n" +
+	"\x05chain\x18\x01 \x01(\tR\x05chain\"w\n" +
 	"\rGetWalletResp\x12.\n" +
 	"\x04list\x18\x01 \x03(\v2\x1a.hi.did.GetWalletResp.UnitR\x04list\x1a6\n" +
 	"\x04Unit\x12\x14\n" +
@@ -1117,28 +1034,12 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinR\x04coin\x12\x18\n" +
 	"\aaddress\x18\x02 \x01(\tR\aaddress\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x14\n" +
-	"\x05price\x18\x04 \x01(\tR\x05price\"\xae\x03\n" +
-	"\x0fUpdateAssetsReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
-	"\x03btc\x18\x02 \x01(\tR\x03btc\x12\x10\n" +
-	"\x03eth\x18\x1f \x01(\tR\x03eth\x12\x1d\n" +
-	"\n" +
-	"usdt_erc20\x18  \x01(\tR\tusdtErc20\x12\x10\n" +
-	"\x03trx\x18) \x01(\tR\x03trx\x12\x1d\n" +
-	"\n" +
-	"usdt_trc20\x18* \x01(\tR\tusdtTrc20\x12\x1d\n" +
-	"\n" +
-	"whds_trc20\x18+ \x01(\tR\twhdsTrc20\x12\x19\n" +
-	"\bbt_trc20\x18, \x01(\tR\abtTrc20\x12\x10\n" +
-	"\x03sol\x183 \x01(\tR\x03sol\x12\x19\n" +
-	"\busdt_sol\x184 \x01(\tR\ausdtSol\x12\x15\n" +
-	"\x06bt_sol\x185 \x01(\tR\x05btSol\x12\x1b\n" +
-	"\tpanda_sol\x186 \x01(\tR\bpandaSol\x12\x10\n" +
-	"\x03apt\x18= \x01(\tR\x03apt\x12\x19\n" +
-	"\bwhds_apt\x18> \x01(\tR\awhdsApt\x12\x19\n" +
-	"\bhwhd_apt\x18? \x01(\tR\ahwhdApt\x12\x19\n" +
-	"\bslkj_apt\x18@ \x01(\tR\aslkjApt\x12\x17\n" +
-	"\awsm_apt\x18A \x01(\tR\x06wsmApt2\xd8\x01\n" +
+	"\x05price\x18\x04 \x01(\tR\x05price\"}\n" +
+	"\x0fUpdateAssetsReq\x125\n" +
+	"\x06assets\x18\x01 \x03(\v2\x1d.hi.did.UpdateAssetsReq.AssetR\x06assets\x1a3\n" +
+	"\x05Asset\x12\x12\n" +
+	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\tR\x06amount2\xd8\x01\n" +
 	"\x06Wallet\x12F\n" +
 	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x03Get\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
@@ -1163,7 +1064,7 @@ func file_hi_did_wallet_proto_rawDescGZIP() []byte {
 	return file_hi_did_wallet_proto_rawDescData
 }
 
-var file_hi_did_wallet_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_hi_did_wallet_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_did_wallet_proto_goTypes = []any{
 	(*UpdateAddressesReq)(nil),       // 0: hi.did.UpdateAddressesReq
 	(*GetWalletReq)(nil),             // 1: hi.did.GetWalletReq
@@ -1182,38 +1083,40 @@ var file_hi_did_wallet_proto_goTypes = []any{
 	(*ListAddressesResp_Unit)(nil),   // 14: hi.did.ListAddressesResp.Unit
 	(*ListUsersAssetsResp_Unit)(nil), // 15: hi.did.ListUsersAssetsResp.Unit
 	(*GetUserAssetsResp_Unit)(nil),   // 16: hi.did.GetUserAssetsResp.Unit
-	(*hi.Pagination)(nil),            // 17: hi.Pagination
-	(*Coin)(nil),                     // 18: hi.did.Coin
-	(*hi.SignedData)(nil),            // 19: hi.SignedData
-	(*emptypb.Empty)(nil),            // 20: google.protobuf.Empty
+	(*UpdateAssetsReq_Asset)(nil),    // 17: hi.did.UpdateAssetsReq.Asset
+	(*hi.Pagination)(nil),            // 18: hi.Pagination
+	(*Coin)(nil),                     // 19: hi.did.Coin
+	(*hi.SignedData)(nil),            // 20: hi.SignedData
+	(*emptypb.Empty)(nil),            // 21: google.protobuf.Empty
 }
 var file_hi_did_wallet_proto_depIdxs = []int32{
 	12, // 0: hi.did.GetWalletResp.list:type_name -> hi.did.GetWalletResp.Unit
 	13, // 1: hi.did.ListAddressesReq.list:type_name -> hi.did.ListAddressesReq.Unit
 	14, // 2: hi.did.ListAddressesResp.list:type_name -> hi.did.ListAddressesResp.Unit
-	17, // 3: hi.did.ListUsersAssetsReq.pagination:type_name -> hi.Pagination
+	18, // 3: hi.did.ListUsersAssetsReq.pagination:type_name -> hi.Pagination
 	15, // 4: hi.did.ListUsersAssetsResp.list:type_name -> hi.did.ListUsersAssetsResp.Unit
 	16, // 5: hi.did.GetUserAssetsResp.unit:type_name -> hi.did.GetUserAssetsResp.Unit
-	18, // 6: hi.did.GetUserAssetsResp.Unit.coin:type_name -> hi.did.Coin
-	11, // 7: hi.did.Wallet.UpdateAssets:input_type -> hi.did.UpdateAssetsReq
-	1,  // 8: hi.did.Wallet.Get:input_type -> hi.did.GetWalletReq
-	3,  // 9: hi.did.Wallet.ListAddresses:input_type -> hi.did.ListAddressesReq
-	5,  // 10: hi.did.Assets.Total:input_type -> hi.did.TotalAssetsReq
-	7,  // 11: hi.did.Assets.List:input_type -> hi.did.ListUsersAssetsReq
-	9,  // 12: hi.did.Assets.Get:input_type -> hi.did.GetUserAssetsReq
-	19, // 13: hi.did.Assets.UpdateAddresses:input_type -> hi.SignedData
-	20, // 14: hi.did.Wallet.UpdateAssets:output_type -> google.protobuf.Empty
-	2,  // 15: hi.did.Wallet.Get:output_type -> hi.did.GetWalletResp
-	4,  // 16: hi.did.Wallet.ListAddresses:output_type -> hi.did.ListAddressesResp
-	6,  // 17: hi.did.Assets.Total:output_type -> hi.did.TotalAssetsResp
-	8,  // 18: hi.did.Assets.List:output_type -> hi.did.ListUsersAssetsResp
-	10, // 19: hi.did.Assets.Get:output_type -> hi.did.GetUserAssetsResp
-	20, // 20: hi.did.Assets.UpdateAddresses:output_type -> google.protobuf.Empty
-	14, // [14:21] is the sub-list for method output_type
-	7,  // [7:14] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	17, // 6: hi.did.UpdateAssetsReq.assets:type_name -> hi.did.UpdateAssetsReq.Asset
+	19, // 7: hi.did.GetUserAssetsResp.Unit.coin:type_name -> hi.did.Coin
+	11, // 8: hi.did.Wallet.UpdateAssets:input_type -> hi.did.UpdateAssetsReq
+	1,  // 9: hi.did.Wallet.Get:input_type -> hi.did.GetWalletReq
+	3,  // 10: hi.did.Wallet.ListAddresses:input_type -> hi.did.ListAddressesReq
+	5,  // 11: hi.did.Assets.Total:input_type -> hi.did.TotalAssetsReq
+	7,  // 12: hi.did.Assets.List:input_type -> hi.did.ListUsersAssetsReq
+	9,  // 13: hi.did.Assets.Get:input_type -> hi.did.GetUserAssetsReq
+	20, // 14: hi.did.Assets.UpdateAddresses:input_type -> hi.SignedData
+	21, // 15: hi.did.Wallet.UpdateAssets:output_type -> google.protobuf.Empty
+	2,  // 16: hi.did.Wallet.Get:output_type -> hi.did.GetWalletResp
+	4,  // 17: hi.did.Wallet.ListAddresses:output_type -> hi.did.ListAddressesResp
+	6,  // 18: hi.did.Assets.Total:output_type -> hi.did.TotalAssetsResp
+	8,  // 19: hi.did.Assets.List:output_type -> hi.did.ListUsersAssetsResp
+	10, // 20: hi.did.Assets.Get:output_type -> hi.did.GetUserAssetsResp
+	21, // 21: hi.did.Assets.UpdateAddresses:output_type -> google.protobuf.Empty
+	15, // [15:22] is the sub-list for method output_type
+	8,  // [8:15] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_wallet_proto_init() }
@@ -1229,7 +1132,7 @@ func file_hi_did_wallet_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_wallet_proto_rawDesc), len(file_hi_did_wallet_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

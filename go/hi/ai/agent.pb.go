@@ -84,6 +84,7 @@ type ModelSet struct {
 	Stt           string                 `protobuf:"bytes,2,opt,name=stt,proto3" json:"stt,omitempty"`
 	Tts           string                 `protobuf:"bytes,3,opt,name=tts,proto3" json:"tts,omitempty"`
 	Embedding     string                 `protobuf:"bytes,4,opt,name=embedding,proto3" json:"embedding,omitempty"`
+	MemModel      string                 `protobuf:"bytes,5,opt,name=mem_model,json=memModel,proto3" json:"mem_model,omitempty"` // 记忆模型:与其它模型配置同处,经 Agent.Edit 设置(原 Training.SetMemModel/GetMemModel 已删,别再开第二条写路径)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -142,6 +143,13 @@ func (x *ModelSet) GetTts() string {
 func (x *ModelSet) GetEmbedding() string {
 	if x != nil {
 		return x.Embedding
+	}
+	return ""
+}
+
+func (x *ModelSet) GetMemModel() string {
+	if x != nil {
+		return x.MemModel
 	}
 	return ""
 }
@@ -1022,7 +1030,7 @@ func (x *ResetToDefaultReq) GetDids() []string {
 type MarkAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Opt           string                 `protobuf:"bytes,2,opt,name=opt,proto3" json:"opt,omitempty"` // 打标记 / 取消
+	Marked        bool                   `protobuf:"varint,2,opt,name=marked,proto3" json:"marked,omitempty"` // true=打标记(显示靠前),false=取消(与 AgentInfo.marked 对称)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1064,11 +1072,11 @@ func (x *MarkAgentReq) GetDid() string {
 	return ""
 }
 
-func (x *MarkAgentReq) GetOpt() string {
+func (x *MarkAgentReq) GetMarked() bool {
 	if x != nil {
-		return x.Opt
+		return x.Marked
 	}
-	return ""
+	return false
 }
 
 var File_hi_ai_agent_proto protoreflect.FileDescriptor
@@ -1078,12 +1086,13 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"4\n" +
 	"\x06Prompt\x12\x16\n" +
 	"\x06system\x18\x01 \x01(\tR\x06system\x12\x12\n" +
-	"\x04user\x18\x02 \x01(\tR\x04user\"^\n" +
+	"\x04user\x18\x02 \x01(\tR\x04user\"{\n" +
 	"\bModelSet\x12\x10\n" +
 	"\x03llm\x18\x01 \x01(\tR\x03llm\x12\x10\n" +
 	"\x03stt\x18\x02 \x01(\tR\x03stt\x12\x10\n" +
 	"\x03tts\x18\x03 \x01(\tR\x03tts\x12\x1c\n" +
-	"\tembedding\x18\x04 \x01(\tR\tembedding\"\xd7\x01\n" +
+	"\tembedding\x18\x04 \x01(\tR\tembedding\x12\x1b\n" +
+	"\tmem_model\x18\x05 \x01(\tR\bmemModel\"\xd7\x01\n" +
 	"\vAgentConfig\x12%\n" +
 	"\x06prompt\x18\x01 \x01(\v2\r.hi.ai.PromptR\x06prompt\x12\x1d\n" +
 	"\afreedom\x18\x02 \x01(\x02H\x00R\afreedom\x88\x01\x01\x12%\n" +
@@ -1151,10 +1160,10 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\rmessage_count\x18\x01 \x01(\x05R\fmessageCount\x12'\n" +
 	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageR\x05token\"'\n" +
 	"\x11ResetToDefaultReq\x12\x12\n" +
-	"\x04dids\x18\x01 \x03(\tR\x04dids\"2\n" +
+	"\x04dids\x18\x01 \x03(\tR\x04dids\"8\n" +
 	"\fMarkAgentReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
-	"\x03opt\x18\x02 \x01(\tR\x03opt2\x84\x05\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x16\n" +
+	"\x06marked\x18\x02 \x01(\bR\x06marked2\x87\x05\n" +
 	"\x05Agent\x12>\n" +
 	"\x06Create\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
 	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
@@ -1163,8 +1172,8 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04List\x12\x13.hi.ai.ListAgentReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
 	"\x04Mark\x12\x13.hi.ai.MarkAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12=\n" +
 	"\tListMarks\x12\x13.hi.ai.ListMarksReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
-	"\bGetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x03\x12H\n" +
-	"\rDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
+	"\bGetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x03\x12K\n" +
+	"\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
 	"\x0eResetToDefault\x12\x18.hi.ai.ResetToDefaultReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03Bu\n" +
 	"\tcom.hi.aiB\n" +
 	"AgentProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
@@ -1232,7 +1241,7 @@ var file_hi_ai_agent_proto_depIdxs = []int32{
 	18, // 22: hi.ai.Agent.Mark:input_type -> hi.ai.MarkAgentReq
 	11, // 23: hi.ai.Agent.ListMarks:input_type -> hi.ai.ListMarksReq
 	15, // 24: hi.ai.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
-	21, // 25: hi.ai.Agent.DefaultConfig:input_type -> google.protobuf.Empty
+	21, // 25: hi.ai.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
 	17, // 26: hi.ai.Agent.ResetToDefault:input_type -> hi.ai.ResetToDefaultReq
 	7,  // 27: hi.ai.Agent.Create:output_type -> hi.ai.CreateAgentResp
 	21, // 28: hi.ai.Agent.Edit:output_type -> google.protobuf.Empty
@@ -1242,7 +1251,7 @@ var file_hi_ai_agent_proto_depIdxs = []int32{
 	21, // 32: hi.ai.Agent.Mark:output_type -> google.protobuf.Empty
 	9,  // 33: hi.ai.Agent.ListMarks:output_type -> hi.ai.ListAgentResp
 	16, // 34: hi.ai.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
-	5,  // 35: hi.ai.Agent.DefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	5,  // 35: hi.ai.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
 	21, // 36: hi.ai.Agent.ResetToDefault:output_type -> google.protobuf.Empty
 	27, // [27:37] is the sub-list for method output_type
 	17, // [17:27] is the sub-list for method input_type

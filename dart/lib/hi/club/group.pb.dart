@@ -971,12 +971,12 @@ class RemoveGroupReq extends $pb.GeneratedMessage {
 class SetRoleReq extends $pb.GeneratedMessage {
   factory SetRoleReq({
     $core.String? group,
-    $core.Iterable<$core.String>? users,
+    $core.Iterable<$core.String>? members,
     $core.String? role,
   }) {
     final result = create();
     if (group != null) result.group = group;
-    if (users != null) result.users.addAll(users);
+    if (members != null) result.members.addAll(members);
     if (role != null) result.role = role;
     return result;
   }
@@ -995,7 +995,7 @@ class SetRoleReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'group')
-    ..pPS(2, _omitFieldNames ? '' : 'users')
+    ..pPS(2, _omitFieldNames ? '' : 'members')
     ..aOS(3, _omitFieldNames ? '' : 'role')
     ..hasRequiredFields = false;
 
@@ -1027,7 +1027,7 @@ class SetRoleReq extends $pb.GeneratedMessage {
   void clearGroup() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$core.String> get users => $_getList(1);
+  $pb.PbList<$core.String> get members => $_getList(1);
 
   @$pb.TagNumber(3)
   $core.String get role => $_getSZ(2);

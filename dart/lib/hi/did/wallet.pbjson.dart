@@ -47,14 +47,13 @@ final $typed_data.Uint8List updateAddressesReqDescriptor = $convert.base64Decode
 const GetWalletReq$json = {
   '1': 'GetWalletReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'chain', '3': 2, '4': 1, '5': 9, '10': 'chain'},
+    {'1': 'chain', '3': 1, '4': 1, '5': 9, '10': 'chain'},
   ],
 };
 
 /// Descriptor for `GetWalletReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getWalletReqDescriptor = $convert.base64Decode(
-    'CgxHZXRXYWxsZXRSZXESEAoDZGlkGAEgASgJUgNkaWQSFAoFY2hhaW4YAiABKAlSBWNoYWlu');
+final $typed_data.Uint8List getWalletReqDescriptor =
+    $convert.base64Decode('CgxHZXRXYWxsZXRSZXESFAoFY2hhaW4YASABKAlSBWNoYWlu');
 
 @$core.Deprecated('Use getWalletRespDescriptor instead')
 const GetWalletResp$json = {
@@ -281,33 +280,29 @@ final $typed_data.Uint8List getUserAssetsRespDescriptor = $convert.base64Decode(
 const UpdateAssetsReq$json = {
   '1': 'UpdateAssetsReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'btc', '3': 2, '4': 1, '5': 9, '10': 'btc'},
-    {'1': 'eth', '3': 31, '4': 1, '5': 9, '10': 'eth'},
-    {'1': 'usdt_erc20', '3': 32, '4': 1, '5': 9, '10': 'usdtErc20'},
-    {'1': 'trx', '3': 41, '4': 1, '5': 9, '10': 'trx'},
-    {'1': 'usdt_trc20', '3': 42, '4': 1, '5': 9, '10': 'usdtTrc20'},
-    {'1': 'whds_trc20', '3': 43, '4': 1, '5': 9, '10': 'whdsTrc20'},
-    {'1': 'bt_trc20', '3': 44, '4': 1, '5': 9, '10': 'btTrc20'},
-    {'1': 'sol', '3': 51, '4': 1, '5': 9, '10': 'sol'},
-    {'1': 'usdt_sol', '3': 52, '4': 1, '5': 9, '10': 'usdtSol'},
-    {'1': 'bt_sol', '3': 53, '4': 1, '5': 9, '10': 'btSol'},
-    {'1': 'panda_sol', '3': 54, '4': 1, '5': 9, '10': 'pandaSol'},
-    {'1': 'apt', '3': 61, '4': 1, '5': 9, '10': 'apt'},
-    {'1': 'whds_apt', '3': 62, '4': 1, '5': 9, '10': 'whdsApt'},
-    {'1': 'hwhd_apt', '3': 63, '4': 1, '5': 9, '10': 'hwhdApt'},
-    {'1': 'slkj_apt', '3': 64, '4': 1, '5': 9, '10': 'slkjApt'},
-    {'1': 'wsm_apt', '3': 65, '4': 1, '5': 9, '10': 'wsmApt'},
+    {
+      '1': 'assets',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.did.UpdateAssetsReq.Asset',
+      '10': 'assets'
+    },
+  ],
+  '3': [UpdateAssetsReq_Asset$json],
+};
+
+@$core.Deprecated('Use updateAssetsReqDescriptor instead')
+const UpdateAssetsReq_Asset$json = {
+  '1': 'Asset',
+  '2': [
+    {'1': 'coin', '3': 1, '4': 1, '5': 9, '10': 'coin'},
+    {'1': 'amount', '3': 2, '4': 1, '5': 9, '10': 'amount'},
   ],
 };
 
 /// Descriptor for `UpdateAssetsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateAssetsReqDescriptor = $convert.base64Decode(
-    'Cg9VcGRhdGVBc3NldHNSZXESEAoDZGlkGAEgASgJUgNkaWQSEAoDYnRjGAIgASgJUgNidGMSEA'
-    'oDZXRoGB8gASgJUgNldGgSHQoKdXNkdF9lcmMyMBggIAEoCVIJdXNkdEVyYzIwEhAKA3RyeBgp'
-    'IAEoCVIDdHJ4Eh0KCnVzZHRfdHJjMjAYKiABKAlSCXVzZHRUcmMyMBIdCgp3aGRzX3RyYzIwGC'
-    'sgASgJUgl3aGRzVHJjMjASGQoIYnRfdHJjMjAYLCABKAlSB2J0VHJjMjASEAoDc29sGDMgASgJ'
-    'UgNzb2wSGQoIdXNkdF9zb2wYNCABKAlSB3VzZHRTb2wSFQoGYnRfc29sGDUgASgJUgVidFNvbB'
-    'IbCglwYW5kYV9zb2wYNiABKAlSCHBhbmRhU29sEhAKA2FwdBg9IAEoCVIDYXB0EhkKCHdoZHNf'
-    'YXB0GD4gASgJUgd3aGRzQXB0EhkKCGh3aGRfYXB0GD8gASgJUgdod2hkQXB0EhkKCHNsa2pfYX'
-    'B0GEAgASgJUgdzbGtqQXB0EhcKB3dzbV9hcHQYQSABKAlSBndzbUFwdA==');
+    'Cg9VcGRhdGVBc3NldHNSZXESNQoGYXNzZXRzGAEgAygLMh0uaGkuZGlkLlVwZGF0ZUFzc2V0c1'
+    'JlcS5Bc3NldFIGYXNzZXRzGjMKBUFzc2V0EhIKBGNvaW4YASABKAlSBGNvaW4SFgoGYW1vdW50'
+    'GAIgASgJUgZhbW91bnQ=');

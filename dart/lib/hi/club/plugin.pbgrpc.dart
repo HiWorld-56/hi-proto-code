@@ -44,8 +44,8 @@ class PluginClient extends $grpc.Client {
 
   PluginClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.CreateResp> create(
-    $0.CreateReq request, {
+  $grpc.ResponseFuture<$0.CreatePluginResp> create(
+    $0.CreatePluginReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$create, request, options: options);
@@ -86,11 +86,11 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> deleteByDids(
-    $0.DeletePluginByDidsReq request, {
+  $grpc.ResponseFuture<$1.Empty> deleteByAgents(
+    $0.DeletePluginByAgentsReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$deleteByDids, request, options: options);
+    return $createUnaryCall(_$deleteByAgents, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> setActiveVersion(
@@ -116,10 +116,11 @@ class PluginClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$create = $grpc.ClientMethod<$0.CreateReq, $0.CreateResp>(
-      '/hi.club.Plugin/Create',
-      ($0.CreateReq value) => value.writeToBuffer(),
-      $0.CreateResp.fromBuffer);
+  static final _$create =
+      $grpc.ClientMethod<$0.CreatePluginReq, $0.CreatePluginResp>(
+          '/hi.club.Plugin/Create',
+          ($0.CreatePluginReq value) => value.writeToBuffer(),
+          $0.CreatePluginResp.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditPluginReq, $1.Empty>(
       '/hi.club.Plugin/Edit',
       ($0.EditPluginReq value) => value.writeToBuffer(),
@@ -141,10 +142,10 @@ class PluginClient extends $grpc.Client {
       '/hi.club.Plugin/Delete',
       ($0.DeletePluginReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
-  static final _$deleteByDids =
-      $grpc.ClientMethod<$0.DeletePluginByDidsReq, $1.Empty>(
-          '/hi.club.Plugin/DeleteByDids',
-          ($0.DeletePluginByDidsReq value) => value.writeToBuffer(),
+  static final _$deleteByAgents =
+      $grpc.ClientMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
+          '/hi.club.Plugin/DeleteByAgents',
+          ($0.DeletePluginByAgentsReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
   static final _$setActiveVersion =
       $grpc.ClientMethod<$0.SetActiveVersionReq, $1.Empty>(
@@ -167,13 +168,13 @@ abstract class PluginServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Plugin';
 
   PluginServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.CreateReq, $0.CreateResp>(
+    $addMethod($grpc.ServiceMethod<$0.CreatePluginReq, $0.CreatePluginResp>(
         'Create',
         create_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.CreateReq.fromBuffer(value),
-        ($0.CreateResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.CreatePluginReq.fromBuffer(value),
+        ($0.CreatePluginResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditPluginReq, $1.Empty>(
         'Edit',
         edit_Pre,
@@ -209,13 +210,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.DeletePluginReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeletePluginByDidsReq, $1.Empty>(
-        'DeleteByDids',
-        deleteByDids_Pre,
+    $addMethod($grpc.ServiceMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
+        'DeleteByAgents',
+        deleteByAgents_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.DeletePluginByDidsReq.fromBuffer(value),
+            $0.DeletePluginByAgentsReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetActiveVersionReq, $1.Empty>(
         'SetActiveVersion',
@@ -241,13 +242,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.CreateResp> create_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.CreateReq> $request) async {
+  $async.Future<$0.CreatePluginResp> create_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreatePluginReq> $request) async {
     return create($call, await $request);
   }
 
-  $async.Future<$0.CreateResp> create(
-      $grpc.ServiceCall call, $0.CreateReq request);
+  $async.Future<$0.CreatePluginResp> create(
+      $grpc.ServiceCall call, $0.CreatePluginReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditPluginReq> $request) async {
@@ -289,13 +290,13 @@ abstract class PluginServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> delete(
       $grpc.ServiceCall call, $0.DeletePluginReq request);
 
-  $async.Future<$1.Empty> deleteByDids_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeletePluginByDidsReq> $request) async {
-    return deleteByDids($call, await $request);
+  $async.Future<$1.Empty> deleteByAgents_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeletePluginByAgentsReq> $request) async {
+    return deleteByAgents($call, await $request);
   }
 
-  $async.Future<$1.Empty> deleteByDids(
-      $grpc.ServiceCall call, $0.DeletePluginByDidsReq request);
+  $async.Future<$1.Empty> deleteByAgents(
+      $grpc.ServiceCall call, $0.DeletePluginByAgentsReq request);
 
   $async.Future<$1.Empty> setActiveVersion_Pre($grpc.ServiceCall $call,
       $async.Future<$0.SetActiveVersionReq> $request) async {

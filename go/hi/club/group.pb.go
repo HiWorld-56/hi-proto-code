@@ -786,7 +786,7 @@ func (x *RemoveGroupReq) GetMembers() []string {
 type SetRoleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Group         string                 `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"`
-	Users         []string               `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	Members       []string               `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"` // 与 Invite/Remove 的 members 一致(原 users)
 	Role          string                 `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -829,9 +829,9 @@ func (x *SetRoleReq) GetGroup() string {
 	return ""
 }
 
-func (x *SetRoleReq) GetUsers() []string {
+func (x *SetRoleReq) GetMembers() []string {
 	if x != nil {
-		return x.Users
+		return x.Members
 	}
 	return nil
 }
@@ -1037,11 +1037,11 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\tR\x05group\"@\n" +
 	"\x0eRemoveGroupReq\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12\x18\n" +
-	"\amembers\x18\x02 \x03(\tR\amembers\"L\n" +
+	"\amembers\x18\x02 \x03(\tR\amembers\"P\n" +
 	"\n" +
 	"SetRoleReq\x12\x14\n" +
-	"\x05group\x18\x01 \x01(\tR\x05group\x12\x14\n" +
-	"\x05users\x18\x02 \x03(\tR\x05users\x12\x12\n" +
+	"\x05group\x18\x01 \x01(\tR\x05group\x12\x18\n" +
+	"\amembers\x18\x02 \x03(\tR\amembers\x12\x12\n" +
 	"\x04role\x18\x03 \x01(\tR\x04role\"\"\n" +
 	"\n" +
 	"GetRoleReq\x12\x14\n" +

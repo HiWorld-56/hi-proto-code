@@ -91,9 +91,8 @@ class PcOrder extends $pb.GeneratedMessage {
     $core.String? toDid,
     $core.String? amount,
     $core.String? type,
-    $core.String? createdAt,
-    $core.String? updatedAt,
-    $core.String? deletedAt,
+    $fixnum.Int64? createdAt,
+    $fixnum.Int64? updatedAt,
     $core.String? did,
     $core.String? status,
   }) {
@@ -105,7 +104,6 @@ class PcOrder extends $pb.GeneratedMessage {
     if (type != null) result.type = type;
     if (createdAt != null) result.createdAt = createdAt;
     if (updatedAt != null) result.updatedAt = updatedAt;
-    if (deletedAt != null) result.deletedAt = deletedAt;
     if (did != null) result.did = did;
     if (status != null) result.status = status;
     return result;
@@ -129,11 +127,10 @@ class PcOrder extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'toDid')
     ..aOS(4, _omitFieldNames ? '' : 'amount')
     ..aOS(5, _omitFieldNames ? '' : 'type')
-    ..aOS(6, _omitFieldNames ? '' : 'createdAt')
-    ..aOS(7, _omitFieldNames ? '' : 'updatedAt')
-    ..aOS(8, _omitFieldNames ? '' : 'deletedAt')
-    ..aOS(9, _omitFieldNames ? '' : 'did')
-    ..aOS(10, _omitFieldNames ? '' : 'status')
+    ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(7, _omitFieldNames ? '' : 'updatedAt')
+    ..aOS(8, _omitFieldNames ? '' : 'did')
+    ..aOS(9, _omitFieldNames ? '' : 'status')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -200,49 +197,40 @@ class PcOrder extends $pb.GeneratedMessage {
   void clearType() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $core.String get createdAt => $_getSZ(5);
+  $fixnum.Int64 get createdAt => $_getI64(5);
   @$pb.TagNumber(6)
-  set createdAt($core.String value) => $_setString(5, value);
+  set createdAt($fixnum.Int64 value) => $_setInt64(5, value);
   @$pb.TagNumber(6)
   $core.bool hasCreatedAt() => $_has(5);
   @$pb.TagNumber(6)
   void clearCreatedAt() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get updatedAt => $_getSZ(6);
+  $fixnum.Int64 get updatedAt => $_getI64(6);
   @$pb.TagNumber(7)
-  set updatedAt($core.String value) => $_setString(6, value);
+  set updatedAt($fixnum.Int64 value) => $_setInt64(6, value);
   @$pb.TagNumber(7)
   $core.bool hasUpdatedAt() => $_has(6);
   @$pb.TagNumber(7)
   void clearUpdatedAt() => $_clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get deletedAt => $_getSZ(7);
+  $core.String get did => $_getSZ(7);
   @$pb.TagNumber(8)
-  set deletedAt($core.String value) => $_setString(7, value);
+  set did($core.String value) => $_setString(7, value);
   @$pb.TagNumber(8)
-  $core.bool hasDeletedAt() => $_has(7);
+  $core.bool hasDid() => $_has(7);
   @$pb.TagNumber(8)
-  void clearDeletedAt() => $_clearField(8);
+  void clearDid() => $_clearField(8);
 
   @$pb.TagNumber(9)
-  $core.String get did => $_getSZ(8);
+  $core.String get status => $_getSZ(8);
   @$pb.TagNumber(9)
-  set did($core.String value) => $_setString(8, value);
+  set status($core.String value) => $_setString(8, value);
   @$pb.TagNumber(9)
-  $core.bool hasDid() => $_has(8);
+  $core.bool hasStatus() => $_has(8);
   @$pb.TagNumber(9)
-  void clearDid() => $_clearField(9);
-
-  @$pb.TagNumber(10)
-  $core.String get status => $_getSZ(9);
-  @$pb.TagNumber(10)
-  set status($core.String value) => $_setString(9, value);
-  @$pb.TagNumber(10)
-  $core.bool hasStatus() => $_has(9);
-  @$pb.TagNumber(10)
-  void clearStatus() => $_clearField(10);
+  void clearStatus() => $_clearField(9);
 }
 
 class GetNotPulledPcOrdersResp extends $pb.GeneratedMessage {

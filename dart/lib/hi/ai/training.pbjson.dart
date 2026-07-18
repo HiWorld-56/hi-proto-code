@@ -94,7 +94,7 @@ const TrainingFile$json = {
     {'1': 'title', '3': 4, '4': 1, '5': 9, '10': 'title'},
     {'1': 'size', '3': 5, '4': 1, '5': 5, '10': 'size'},
     {'1': 'type', '3': 6, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'is_use', '3': 7, '4': 1, '5': 5, '10': 'isUse'},
+    {'1': 'is_use', '3': 7, '4': 1, '5': 8, '10': 'isUse'},
     {'1': 'digest', '3': 8, '4': 1, '5': 9, '10': 'digest'},
     {'1': 'training_time', '3': 9, '4': 1, '5': 3, '10': 'trainingTime'},
     {'1': 'created_at', '3': 10, '4': 1, '5': 3, '10': 'createdAt'},
@@ -106,7 +106,7 @@ const TrainingFile$json = {
 final $typed_data.Uint8List trainingFileDescriptor = $convert.base64Decode(
     'CgxUcmFpbmluZ0ZpbGUSDgoCaWQYASABKAVSAmlkEhgKB2NvbnRlbnQYAiABKAlSB2NvbnRlbn'
     'QSFAoFYWdlbnQYAyABKAlSBWFnZW50EhQKBXRpdGxlGAQgASgJUgV0aXRsZRISCgRzaXplGAUg'
-    'ASgFUgRzaXplEhIKBHR5cGUYBiABKAlSBHR5cGUSFQoGaXNfdXNlGAcgASgFUgVpc1VzZRIWCg'
+    'ASgFUgRzaXplEhIKBHR5cGUYBiABKAlSBHR5cGUSFQoGaXNfdXNlGAcgASgIUgVpc1VzZRIWCg'
     'ZkaWdlc3QYCCABKAlSBmRpZ2VzdBIjCg10cmFpbmluZ190aW1lGAkgASgDUgx0cmFpbmluZ1Rp'
     'bWUSHQoKY3JlYXRlZF9hdBgKIAEoA1IJY3JlYXRlZEF0Eh0KCnVwZGF0ZWRfYXQYCyABKANSCX'
     'VwZGF0ZWRBdA==');
@@ -153,18 +153,6 @@ const ListFilesResp$json = {
 final $typed_data.Uint8List listFilesRespDescriptor = $convert.base64Decode(
     'Cg1MaXN0RmlsZXNSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBInCgRsaXN0GAIgAygLMhMuaG'
     'kuYWkuVHJhaW5pbmdGaWxlUgRsaXN0');
-
-@$core.Deprecated('Use deleteFileReqDescriptor instead')
-const DeleteFileReq$json = {
-  '1': 'DeleteFileReq',
-  '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
-  ],
-};
-
-/// Descriptor for `DeleteFileReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteFileReqDescriptor =
-    $convert.base64Decode('Cg1EZWxldGVGaWxlUmVxEg4KAmlkGAEgASgFUgJpZA==');
 
 @$core.Deprecated('Use deleteFilesReqDescriptor instead')
 const DeleteFilesReq$json = {
@@ -287,41 +275,3 @@ const EditDigestReq$json = {
 final $typed_data.Uint8List editDigestReqDescriptor = $convert.base64Decode(
     'Cg1FZGl0RGlnZXN0UmVxEg4KAmlkGAEgASgFUgJpZBIUCgVhZ2VudBgCIAEoCVIFYWdlbnQSFg'
     'oGZGlnZXN0GAMgASgJUgZkaWdlc3Q=');
-
-@$core.Deprecated('Use setMemModelReqDescriptor instead')
-const SetMemModelReq$json = {
-  '1': 'SetMemModelReq',
-  '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'mem_model', '3': 2, '4': 1, '5': 9, '10': 'memModel'},
-  ],
-};
-
-/// Descriptor for `SetMemModelReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List setMemModelReqDescriptor = $convert.base64Decode(
-    'Cg5TZXRNZW1Nb2RlbFJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSGwoJbWVtX21vZGVsGAIgAS'
-    'gJUghtZW1Nb2RlbA==');
-
-@$core.Deprecated('Use getMemModelReqDescriptor instead')
-const GetMemModelReq$json = {
-  '1': 'GetMemModelReq',
-  '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-  ],
-};
-
-/// Descriptor for `GetMemModelReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getMemModelReqDescriptor = $convert
-    .base64Decode('Cg5HZXRNZW1Nb2RlbFJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQ=');
-
-@$core.Deprecated('Use getMemModelRespDescriptor instead')
-const GetMemModelResp$json = {
-  '1': 'GetMemModelResp',
-  '2': [
-    {'1': 'mem_model', '3': 1, '4': 1, '5': 9, '10': 'memModel'},
-  ],
-};
-
-/// Descriptor for `GetMemModelResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getMemModelRespDescriptor = $convert.base64Decode(
-    'Cg9HZXRNZW1Nb2RlbFJlc3ASGwoJbWVtX21vZGVsGAEgASgJUghtZW1Nb2RlbA==');

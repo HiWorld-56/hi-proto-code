@@ -836,12 +836,10 @@ class UpdateTransHashReq extends $pb.GeneratedMessage {
 /// 查自己的交易。
 class ListTradeReq extends $pb.GeneratedMessage {
   factory ListTradeReq({
-    $core.String? did,
     $core.String? id,
     $3.Pagination? pagination,
   }) {
     final result = create();
-    if (did != null) result.did = did;
     if (id != null) result.id = id;
     if (pagination != null) result.pagination = pagination;
     return result;
@@ -860,9 +858,8 @@ class ListTradeReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListTradeReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'id')
-    ..aOM<$3.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -886,33 +883,24 @@ class ListTradeReq extends $pb.GeneratedMessage {
   static ListTradeReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
+  set id($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
+  $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
+  void clearId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get id => $_getSZ(1);
+  $3.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set id($core.String value) => $_setString(1, value);
+  set pagination($3.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasId() => $_has(1);
+  $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
-  void clearId() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $3.Pagination get pagination => $_getN(2);
-  @$pb.TagNumber(3)
-  set pagination($3.Pagination value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasPagination() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearPagination() => $_clearField(3);
-  @$pb.TagNumber(3)
-  $3.Pagination ensurePagination() => $_ensure(2);
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 /// 交易统计(内部使用)。id 为空 = 全量。

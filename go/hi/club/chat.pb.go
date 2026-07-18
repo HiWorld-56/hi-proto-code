@@ -24,34 +24,32 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type SendReq struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	Did                string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Cid                string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts              []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	State              string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
-	Custom             string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
-	ReturnPluginUse    bool                   `protobuf:"varint,6,opt,name=return_plugin_use,json=returnPluginUse,proto3" json:"return_plugin_use,omitempty"`
-	ReturnTrainingData bool                   `protobuf:"varint,7,opt,name=return_training_data,json=returnTrainingData,proto3" json:"return_training_data,omitempty"`
-	ReturnContext      bool                   `protobuf:"varint,8,opt,name=return_context,json=returnContext,proto3" json:"return_context,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+// 服务端整流程执行入参(工具在服务端跑)。
+type CompleteReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
+	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
+	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
+	Custom        string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SendReq) Reset() {
-	*x = SendReq{}
+func (x *CompleteReq) Reset() {
+	*x = CompleteReq{}
 	mi := &file_hi_club_chat_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SendReq) String() string {
+func (x *CompleteReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SendReq) ProtoMessage() {}
+func (*CompleteReq) ProtoMessage() {}
 
-func (x *SendReq) ProtoReflect() protoreflect.Message {
+func (x *CompleteReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_chat_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -63,65 +61,44 @@ func (x *SendReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SendReq.ProtoReflect.Descriptor instead.
-func (*SendReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use CompleteReq.ProtoReflect.Descriptor instead.
+func (*CompleteReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_chat_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SendReq) GetDid() string {
+func (x *CompleteReq) GetAgent() string {
 	if x != nil {
-		return x.Did
+		return x.Agent
 	}
 	return ""
 }
 
-func (x *SendReq) GetCid() string {
+func (x *CompleteReq) GetCid() string {
 	if x != nil {
 		return x.Cid
 	}
 	return ""
 }
 
-func (x *SendReq) GetConts() []*Content {
+func (x *CompleteReq) GetConts() []*Content {
 	if x != nil {
 		return x.Conts
 	}
 	return nil
 }
 
-func (x *SendReq) GetState() string {
+func (x *CompleteReq) GetState() string {
 	if x != nil {
 		return x.State
 	}
 	return ""
 }
 
-func (x *SendReq) GetCustom() string {
+func (x *CompleteReq) GetCustom() string {
 	if x != nil {
 		return x.Custom
 	}
 	return ""
-}
-
-func (x *SendReq) GetReturnPluginUse() bool {
-	if x != nil {
-		return x.ReturnPluginUse
-	}
-	return false
-}
-
-func (x *SendReq) GetReturnTrainingData() bool {
-	if x != nil {
-		return x.ReturnTrainingData
-	}
-	return false
-}
-
-func (x *SendReq) GetReturnContext() bool {
-	if x != nil {
-		return x.ReturnContext
-	}
-	return false
 }
 
 type QA struct {
@@ -220,34 +197,35 @@ func (x *GetHistoryResp) GetList() []*QA {
 	return nil
 }
 
-type SpeechToSpeechReq struct {
+// 客户端 tool-callback 两阶段对话入参(合并原 TextToText/SpeechToText/SpeechToSpeech;模态由 conts+style 决定)。
+type ChatReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
 	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
 	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
 	Tools         []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"`
 	ToolChoice    *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
 	Custom        *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
 	State         *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	Style         *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"`
+	Style         *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出音色等;纯文本留空
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SpeechToSpeechReq) Reset() {
-	*x = SpeechToSpeechReq{}
+func (x *ChatReq) Reset() {
+	*x = ChatReq{}
 	mi := &file_hi_club_chat_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SpeechToSpeechReq) String() string {
+func (x *ChatReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SpeechToSpeechReq) ProtoMessage() {}
+func (*ChatReq) ProtoMessage() {}
 
-func (x *SpeechToSpeechReq) ProtoReflect() protoreflect.Message {
+func (x *ChatReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_chat_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -259,247 +237,63 @@ func (x *SpeechToSpeechReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SpeechToSpeechReq.ProtoReflect.Descriptor instead.
-func (*SpeechToSpeechReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ChatReq.ProtoReflect.Descriptor instead.
+func (*ChatReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_chat_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *SpeechToSpeechReq) GetDid() string {
+func (x *ChatReq) GetAgent() string {
 	if x != nil {
-		return x.Did
+		return x.Agent
 	}
 	return ""
 }
 
-func (x *SpeechToSpeechReq) GetCid() string {
+func (x *ChatReq) GetCid() string {
 	if x != nil {
 		return x.Cid
 	}
 	return ""
 }
 
-func (x *SpeechToSpeechReq) GetConts() []*Content {
+func (x *ChatReq) GetConts() []*Content {
 	if x != nil {
 		return x.Conts
 	}
 	return nil
 }
 
-func (x *SpeechToSpeechReq) GetTools() []*ai.ToolSupply {
+func (x *ChatReq) GetTools() []*ai.ToolSupply {
 	if x != nil {
 		return x.Tools
 	}
 	return nil
 }
 
-func (x *SpeechToSpeechReq) GetToolChoice() string {
+func (x *ChatReq) GetToolChoice() string {
 	if x != nil && x.ToolChoice != nil {
 		return *x.ToolChoice
 	}
 	return ""
 }
 
-func (x *SpeechToSpeechReq) GetCustom() string {
+func (x *ChatReq) GetCustom() string {
 	if x != nil && x.Custom != nil {
 		return *x.Custom
 	}
 	return ""
 }
 
-func (x *SpeechToSpeechReq) GetState() string {
+func (x *ChatReq) GetState() string {
 	if x != nil && x.State != nil {
 		return *x.State
 	}
 	return ""
 }
 
-func (x *SpeechToSpeechReq) GetStyle() string {
+func (x *ChatReq) GetStyle() string {
 	if x != nil && x.Style != nil {
 		return *x.Style
-	}
-	return ""
-}
-
-type TextToTextReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	Tools         []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"`
-	ToolChoice    *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
-	Custom        *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
-	State         *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *TextToTextReq) Reset() {
-	*x = TextToTextReq{}
-	mi := &file_hi_club_chat_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TextToTextReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TextToTextReq) ProtoMessage() {}
-
-func (x *TextToTextReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TextToTextReq.ProtoReflect.Descriptor instead.
-func (*TextToTextReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *TextToTextReq) GetDid() string {
-	if x != nil {
-		return x.Did
-	}
-	return ""
-}
-
-func (x *TextToTextReq) GetCid() string {
-	if x != nil {
-		return x.Cid
-	}
-	return ""
-}
-
-func (x *TextToTextReq) GetConts() []*Content {
-	if x != nil {
-		return x.Conts
-	}
-	return nil
-}
-
-func (x *TextToTextReq) GetTools() []*ai.ToolSupply {
-	if x != nil {
-		return x.Tools
-	}
-	return nil
-}
-
-func (x *TextToTextReq) GetToolChoice() string {
-	if x != nil && x.ToolChoice != nil {
-		return *x.ToolChoice
-	}
-	return ""
-}
-
-func (x *TextToTextReq) GetCustom() string {
-	if x != nil && x.Custom != nil {
-		return *x.Custom
-	}
-	return ""
-}
-
-func (x *TextToTextReq) GetState() string {
-	if x != nil && x.State != nil {
-		return *x.State
-	}
-	return ""
-}
-
-type SpeechToTextReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	Tools         []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"`
-	ToolChoice    *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
-	Custom        *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
-	State         *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SpeechToTextReq) Reset() {
-	*x = SpeechToTextReq{}
-	mi := &file_hi_club_chat_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SpeechToTextReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SpeechToTextReq) ProtoMessage() {}
-
-func (x *SpeechToTextReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SpeechToTextReq.ProtoReflect.Descriptor instead.
-func (*SpeechToTextReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *SpeechToTextReq) GetDid() string {
-	if x != nil {
-		return x.Did
-	}
-	return ""
-}
-
-func (x *SpeechToTextReq) GetCid() string {
-	if x != nil {
-		return x.Cid
-	}
-	return ""
-}
-
-func (x *SpeechToTextReq) GetConts() []*Content {
-	if x != nil {
-		return x.Conts
-	}
-	return nil
-}
-
-func (x *SpeechToTextReq) GetTools() []*ai.ToolSupply {
-	if x != nil {
-		return x.Tools
-	}
-	return nil
-}
-
-func (x *SpeechToTextReq) GetToolChoice() string {
-	if x != nil && x.ToolChoice != nil {
-		return *x.ToolChoice
-	}
-	return ""
-}
-
-func (x *SpeechToTextReq) GetCustom() string {
-	if x != nil && x.Custom != nil {
-		return *x.Custom
-	}
-	return ""
-}
-
-func (x *SpeechToTextReq) GetState() string {
-	if x != nil && x.State != nil {
-		return *x.State
 	}
 	return ""
 }
@@ -514,7 +308,7 @@ type ToolCallResult struct {
 
 func (x *ToolCallResult) Reset() {
 	*x = ToolCallResult{}
-	mi := &file_hi_club_chat_proto_msgTypes[6]
+	mi := &file_hi_club_chat_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -526,7 +320,7 @@ func (x *ToolCallResult) String() string {
 func (*ToolCallResult) ProtoMessage() {}
 
 func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[6]
+	mi := &file_hi_club_chat_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -539,7 +333,7 @@ func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResult.ProtoReflect.Descriptor instead.
 func (*ToolCallResult) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_chat_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ToolCallResult) GetId() string {
@@ -556,7 +350,7 @@ func (x *ToolCallResult) GetConts() []*Content {
 	return nil
 }
 
-// 工具结果续跑入参(Resume 系列):客户端执行完工具后把结果交回来,接着跑。
+// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。
 type ToolCallResultsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -567,7 +361,7 @@ type ToolCallResultsReq struct {
 
 func (x *ToolCallResultsReq) Reset() {
 	*x = ToolCallResultsReq{}
-	mi := &file_hi_club_chat_proto_msgTypes[7]
+	mi := &file_hi_club_chat_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -579,7 +373,7 @@ func (x *ToolCallResultsReq) String() string {
 func (*ToolCallResultsReq) ProtoMessage() {}
 
 func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[7]
+	mi := &file_hi_club_chat_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -592,7 +386,7 @@ func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResultsReq.ProtoReflect.Descriptor instead.
 func (*ToolCallResultsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_chat_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ToolCallResultsReq) GetId() string {
@@ -613,23 +407,20 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"\x88\x02\n" +
-	"\aSendReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"\x8b\x01\n" +
+	"\vCompleteReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
 	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12\x14\n" +
 	"\x05state\x18\x04 \x01(\tR\x05state\x12\x16\n" +
-	"\x06custom\x18\x05 \x01(\tR\x06custom\x12*\n" +
-	"\x11return_plugin_use\x18\x06 \x01(\bR\x0freturnPluginUse\x120\n" +
-	"\x14return_training_data\x18\a \x01(\bR\x12returnTrainingData\x12%\n" +
-	"\x0ereturn_context\x18\b \x01(\bR\rreturnContext\"2\n" +
+	"\x06custom\x18\x05 \x01(\tR\x06custom\"2\n" +
 	"\x02QA\x12\x1e\n" +
 	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentR\x01q\x12\f\n" +
 	"\x01a\x18\x02 \x01(\tR\x01a\"1\n" +
 	"\x0eGetHistoryResp\x12\x1f\n" +
-	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAR\x04list\"\xb0\x02\n" +
-	"\x11SpeechToSpeechReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
+	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAR\x04list\"\xaa\x02\n" +
+	"\aChatReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
 	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12'\n" +
 	"\x05tools\x18\x04 \x03(\v2\x11.hi.ai.ToolSupplyR\x05tools\x12$\n" +
@@ -641,52 +432,23 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
 	"\x06_stateB\b\n" +
-	"\x06_style\"\x87\x02\n" +
-	"\rTextToTextReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
-	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
-	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12'\n" +
-	"\x05tools\x18\x04 \x03(\v2\x11.hi.ai.ToolSupplyR\x05tools\x12$\n" +
-	"\vtool_choice\x18\x05 \x01(\tH\x00R\n" +
-	"toolChoice\x88\x01\x01\x12\x1b\n" +
-	"\x06custom\x18\x06 \x01(\tH\x01R\x06custom\x88\x01\x01\x12\x19\n" +
-	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01B\x0e\n" +
-	"\f_tool_choiceB\t\n" +
-	"\a_customB\b\n" +
-	"\x06_state\"\x89\x02\n" +
-	"\x0fSpeechToTextReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x10\n" +
-	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
-	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12'\n" +
-	"\x05tools\x18\x04 \x03(\v2\x11.hi.ai.ToolSupplyR\x05tools\x12$\n" +
-	"\vtool_choice\x18\x05 \x01(\tH\x00R\n" +
-	"toolChoice\x88\x01\x01\x12\x1b\n" +
-	"\x06custom\x18\x06 \x01(\tH\x01R\x06custom\x88\x01\x01\x12\x19\n" +
-	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01B\x0e\n" +
-	"\f_tool_choiceB\t\n" +
-	"\a_customB\b\n" +
-	"\x06_state\"H\n" +
+	"\x06_style\"H\n" +
 	"\x0eToolCallResult\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12&\n" +
 	"\x05conts\x18\x02 \x03(\v2\x10.hi.club.ContentR\x05conts\"Q\n" +
 	"\x12ToolCallResultsReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12+\n" +
-	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04list2\xe6\x05\n" +
+	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04list2\xd4\x03\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
-	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x120\n" +
-	"\x04Send\x12\x10.hi.club.SendReq\x1a\x0f.hi.ai.SendResp\"\x05\x8a\xb5\x18\x01\x02\x126\n" +
-	"\x06Stream\x12\x10.hi.club.SendReq\x1a\x11.hi.ai.StreamResp\"\x05\x8a\xb5\x18\x01\x020\x01\x12B\n" +
+	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\n" +
 	"GetHistory\x12\x14.hi.ai.GetHistoryReq\x1a\x17.hi.club.GetHistoryResp\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
 	"\fClearHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
-	"\n" +
-	"TextToText\x12\x16.hi.club.TextToTextReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
-	"\x10TextToTextResume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
-	"\fSpeechToText\x12\x18.hi.club.SpeechToTextReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
-	"\x12SpeechToTextResume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12D\n" +
-	"\x0eSpeechToSpeech\x12\x1a.hi.club.SpeechToSpeechReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
-	"\x14SpeechToSpeechResume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
+	"\bComplete\x12\x14.hi.club.CompleteReq\x1a\x13.hi.ai.CompleteResp\"\x05\x8a\xb5\x18\x01\x02\x12J\n" +
+	"\x0eCompleteStream\x12\x14.hi.club.CompleteReq\x1a\x19.hi.ai.CompleteStreamResp\"\x05\x8a\xb5\x18\x01\x020\x01\x124\n" +
+	"\bConverse\x12\x10.hi.club.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\x06Resume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
 	"\vcom.hi.clubB\tChatProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -701,65 +463,51 @@ func file_hi_club_chat_proto_rawDescGZIP() []byte {
 	return file_hi_club_chat_proto_rawDescData
 }
 
-var file_hi_club_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_club_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_hi_club_chat_proto_goTypes = []any{
-	(*SendReq)(nil),            // 0: hi.club.SendReq
-	(*QA)(nil),                 // 1: hi.club.QA
-	(*GetHistoryResp)(nil),     // 2: hi.club.GetHistoryResp
-	(*SpeechToSpeechReq)(nil),  // 3: hi.club.SpeechToSpeechReq
-	(*TextToTextReq)(nil),      // 4: hi.club.TextToTextReq
-	(*SpeechToTextReq)(nil),    // 5: hi.club.SpeechToTextReq
-	(*ToolCallResult)(nil),     // 6: hi.club.ToolCallResult
-	(*ToolCallResultsReq)(nil), // 7: hi.club.ToolCallResultsReq
-	(*Content)(nil),            // 8: hi.club.Content
-	(*ai.ToolSupply)(nil),      // 9: hi.ai.ToolSupply
-	(*emptypb.Empty)(nil),      // 10: google.protobuf.Empty
-	(*ai.GetHistoryReq)(nil),   // 11: hi.ai.GetHistoryReq
-	(*ai.ClearHistoryReq)(nil), // 12: hi.ai.ClearHistoryReq
-	(*ai.NewSessionResp)(nil),  // 13: hi.ai.NewSessionResp
-	(*ai.SendResp)(nil),        // 14: hi.ai.SendResp
-	(*ai.StreamResp)(nil),      // 15: hi.ai.StreamResp
-	(*ai.ChatResp)(nil),        // 16: hi.ai.ChatResp
+	(*CompleteReq)(nil),           // 0: hi.club.CompleteReq
+	(*QA)(nil),                    // 1: hi.club.QA
+	(*GetHistoryResp)(nil),        // 2: hi.club.GetHistoryResp
+	(*ChatReq)(nil),               // 3: hi.club.ChatReq
+	(*ToolCallResult)(nil),        // 4: hi.club.ToolCallResult
+	(*ToolCallResultsReq)(nil),    // 5: hi.club.ToolCallResultsReq
+	(*Content)(nil),               // 6: hi.club.Content
+	(*ai.ToolSupply)(nil),         // 7: hi.ai.ToolSupply
+	(*emptypb.Empty)(nil),         // 8: google.protobuf.Empty
+	(*ai.GetHistoryReq)(nil),      // 9: hi.ai.GetHistoryReq
+	(*ai.ClearHistoryReq)(nil),    // 10: hi.ai.ClearHistoryReq
+	(*ai.NewSessionResp)(nil),     // 11: hi.ai.NewSessionResp
+	(*ai.CompleteResp)(nil),       // 12: hi.ai.CompleteResp
+	(*ai.CompleteStreamResp)(nil), // 13: hi.ai.CompleteStreamResp
+	(*ai.ChatResp)(nil),           // 14: hi.ai.ChatResp
 }
 var file_hi_club_chat_proto_depIdxs = []int32{
-	8,  // 0: hi.club.SendReq.conts:type_name -> hi.club.Content
-	8,  // 1: hi.club.QA.q:type_name -> hi.club.Content
+	6,  // 0: hi.club.CompleteReq.conts:type_name -> hi.club.Content
+	6,  // 1: hi.club.QA.q:type_name -> hi.club.Content
 	1,  // 2: hi.club.GetHistoryResp.list:type_name -> hi.club.QA
-	8,  // 3: hi.club.SpeechToSpeechReq.conts:type_name -> hi.club.Content
-	9,  // 4: hi.club.SpeechToSpeechReq.tools:type_name -> hi.ai.ToolSupply
-	8,  // 5: hi.club.TextToTextReq.conts:type_name -> hi.club.Content
-	9,  // 6: hi.club.TextToTextReq.tools:type_name -> hi.ai.ToolSupply
-	8,  // 7: hi.club.SpeechToTextReq.conts:type_name -> hi.club.Content
-	9,  // 8: hi.club.SpeechToTextReq.tools:type_name -> hi.ai.ToolSupply
-	8,  // 9: hi.club.ToolCallResult.conts:type_name -> hi.club.Content
-	6,  // 10: hi.club.ToolCallResultsReq.list:type_name -> hi.club.ToolCallResult
-	10, // 11: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
-	0,  // 12: hi.club.Chat.Send:input_type -> hi.club.SendReq
-	0,  // 13: hi.club.Chat.Stream:input_type -> hi.club.SendReq
-	11, // 14: hi.club.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
-	12, // 15: hi.club.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
-	4,  // 16: hi.club.Chat.TextToText:input_type -> hi.club.TextToTextReq
-	7,  // 17: hi.club.Chat.TextToTextResume:input_type -> hi.club.ToolCallResultsReq
-	5,  // 18: hi.club.Chat.SpeechToText:input_type -> hi.club.SpeechToTextReq
-	7,  // 19: hi.club.Chat.SpeechToTextResume:input_type -> hi.club.ToolCallResultsReq
-	3,  // 20: hi.club.Chat.SpeechToSpeech:input_type -> hi.club.SpeechToSpeechReq
-	7,  // 21: hi.club.Chat.SpeechToSpeechResume:input_type -> hi.club.ToolCallResultsReq
-	13, // 22: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	14, // 23: hi.club.Chat.Send:output_type -> hi.ai.SendResp
-	15, // 24: hi.club.Chat.Stream:output_type -> hi.ai.StreamResp
-	2,  // 25: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
-	10, // 26: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
-	16, // 27: hi.club.Chat.TextToText:output_type -> hi.ai.ChatResp
-	16, // 28: hi.club.Chat.TextToTextResume:output_type -> hi.ai.ChatResp
-	16, // 29: hi.club.Chat.SpeechToText:output_type -> hi.ai.ChatResp
-	16, // 30: hi.club.Chat.SpeechToTextResume:output_type -> hi.ai.ChatResp
-	16, // 31: hi.club.Chat.SpeechToSpeech:output_type -> hi.ai.ChatResp
-	16, // 32: hi.club.Chat.SpeechToSpeechResume:output_type -> hi.ai.ChatResp
-	22, // [22:33] is the sub-list for method output_type
-	11, // [11:22] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	6,  // 3: hi.club.ChatReq.conts:type_name -> hi.club.Content
+	7,  // 4: hi.club.ChatReq.tools:type_name -> hi.ai.ToolSupply
+	6,  // 5: hi.club.ToolCallResult.conts:type_name -> hi.club.Content
+	4,  // 6: hi.club.ToolCallResultsReq.list:type_name -> hi.club.ToolCallResult
+	8,  // 7: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
+	9,  // 8: hi.club.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
+	10, // 9: hi.club.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
+	0,  // 10: hi.club.Chat.Complete:input_type -> hi.club.CompleteReq
+	0,  // 11: hi.club.Chat.CompleteStream:input_type -> hi.club.CompleteReq
+	3,  // 12: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
+	5,  // 13: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
+	11, // 14: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	2,  // 15: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
+	8,  // 16: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
+	12, // 17: hi.club.Chat.Complete:output_type -> hi.ai.CompleteResp
+	13, // 18: hi.club.Chat.CompleteStream:output_type -> hi.ai.CompleteStreamResp
+	14, // 19: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
+	14, // 20: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
+	14, // [14:21] is the sub-list for method output_type
+	7,  // [7:14] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_chat_proto_init() }
@@ -769,15 +517,13 @@ func file_hi_club_chat_proto_init() {
 	}
 	file_hi_club_messaging_proto_init()
 	file_hi_club_chat_proto_msgTypes[3].OneofWrappers = []any{}
-	file_hi_club_chat_proto_msgTypes[4].OneofWrappers = []any{}
-	file_hi_club_chat_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_chat_proto_rawDesc), len(file_hi_club_chat_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -135,26 +135,6 @@ final $typed_data.Uint8List relationInfoDescriptor = $convert.base64Decode(
     'CgxSZWxhdGlvbkluZm8SHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIWCgZyZW1hcm'
     'sYAiABKAlSBnJlbWFyaxIWCgZtb21lbnQYAyABKAlSBm1vbWVudA==');
 
-@$core.Deprecated('Use relationListRespDescriptor instead')
-const RelationListResp$json = {
-  '1': 'RelationListResp',
-  '2': [
-    {
-      '1': 'list',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.club.RelationInfo',
-      '10': 'list'
-    },
-  ],
-};
-
-/// Descriptor for `RelationListResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List relationListRespDescriptor = $convert.base64Decode(
-    'ChBSZWxhdGlvbkxpc3RSZXNwEikKBGxpc3QYASADKAsyFS5oaS5jbHViLlJlbGF0aW9uSW5mb1'
-    'IEbGlzdA==');
-
 @$core.Deprecated('Use listRelationsRespDescriptor instead')
 const ListRelationsResp$json = {
   '1': 'ListRelationsResp',

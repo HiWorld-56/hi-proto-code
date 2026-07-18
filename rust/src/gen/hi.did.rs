@@ -1200,22 +1200,20 @@ pub struct MerchantGetResp {
     #[prost(message, optional, tag = "1")]
     pub info: ::core::option::Option<MerchantInfo>,
 }
+/// 商户改自己的配置。商户身份来自 ExtendToken —— 不接受 server 入参(冗余/越权);
+/// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantSetReq {
     #[prost(string, tag = "1")]
-    pub server: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
+    #[prost(string, tag = "2")]
     pub logo: ::prost::alloc::string::String,
-    #[prost(string, repeated, tag = "4")]
+    #[prost(string, repeated, tag = "3")]
     pub coins: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, tag = "5")]
+    #[prost(string, tag = "4")]
     pub endpoint: ::prost::alloc::string::String,
-    #[prost(string, tag = "6")]
+    #[prost(string, tag = "5")]
     pub scheme: ::prost::alloc::string::String,
-    #[prost(string, tag = "7")]
-    pub comment: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantListResp {
@@ -2389,9 +2387,8 @@ pub struct UpdateAddressesReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetWalletReq {
+    /// did 从 token 取(自服务,不接受任意 did 入参)
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
     pub chain: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2510,43 +2507,23 @@ pub mod get_user_assets_resp {
         pub price: ::prost::alloc::string::String,
     }
 }
-/// Token ----> Real.DID
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+/// 刷新自己的资产快照。did 从 token 取(不接受任意 did 入参 —— 原 did 入参可覆写他人资产,越权)。
+/// 币种数据驱动:repeated {coin, amount},加币种不必改 proto(原来每加一种就得手工加字段+分段跳号)。
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAssetsReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub btc: ::prost::alloc::string::String,
-    #[prost(string, tag = "31")]
-    pub eth: ::prost::alloc::string::String,
-    #[prost(string, tag = "32")]
-    pub usdt_erc20: ::prost::alloc::string::String,
-    #[prost(string, tag = "41")]
-    pub trx: ::prost::alloc::string::String,
-    #[prost(string, tag = "42")]
-    pub usdt_trc20: ::prost::alloc::string::String,
-    #[prost(string, tag = "43")]
-    pub whds_trc20: ::prost::alloc::string::String,
-    #[prost(string, tag = "44")]
-    pub bt_trc20: ::prost::alloc::string::String,
-    #[prost(string, tag = "51")]
-    pub sol: ::prost::alloc::string::String,
-    #[prost(string, tag = "52")]
-    pub usdt_sol: ::prost::alloc::string::String,
-    #[prost(string, tag = "53")]
-    pub bt_sol: ::prost::alloc::string::String,
-    #[prost(string, tag = "54")]
-    pub panda_sol: ::prost::alloc::string::String,
-    #[prost(string, tag = "61")]
-    pub apt: ::prost::alloc::string::String,
-    #[prost(string, tag = "62")]
-    pub whds_apt: ::prost::alloc::string::String,
-    #[prost(string, tag = "63")]
-    pub hwhd_apt: ::prost::alloc::string::String,
-    #[prost(string, tag = "64")]
-    pub slkj_apt: ::prost::alloc::string::String,
-    #[prost(string, tag = "65")]
-    pub wsm_apt: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "1")]
+    pub assets: ::prost::alloc::vec::Vec<update_assets_req::Asset>,
+}
+/// Nested message and enum types in `UpdateAssetsReq`.
+pub mod update_assets_req {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Asset {
+        /// 币种标识:btc/eth/usdt_erc20/trx/usdt_trc20/sol/apt/...
+        #[prost(string, tag = "1")]
+        pub coin: ::prost::alloc::string::String,
+        #[prost(string, tag = "2")]
+        pub amount: ::prost::alloc::string::String,
+    }
 }
 /// Generated client implementations.
 pub mod wallet_client {

@@ -499,7 +499,7 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"8\n" +
 	"\x12GetAgentMasterResp\x12\"\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x06master2\x94\x06\n" +
+	".hi.EntityR\x06master2\x97\x06\n" +
 	"\x05Agent\x12>\n" +
 	"\x06Create\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
 	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
@@ -507,8 +507,8 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\bGetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
 	"\x04Mark\x12\x13.hi.ai.MarkAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
-	"\tListMarks\x12\x13.hi.ai.ListMarksReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12H\n" +
-	"\rDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\tListMarks\x12\x13.hi.ai.ListMarksReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
+	"\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
 	"\n" +
 	"BindMaster\x12\x16.hi.club.BindMasterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
 	"\fUnbindMaster\x12\x18.hi.club.UnbindMasterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12D\n" +
@@ -576,7 +576,7 @@ var file_hi_club_agent_proto_depIdxs = []int32{
 	16, // 8: hi.club.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
 	17, // 9: hi.club.Agent.Mark:input_type -> hi.ai.MarkAgentReq
 	18, // 10: hi.club.Agent.ListMarks:input_type -> hi.ai.ListMarksReq
-	19, // 11: hi.club.Agent.DefaultConfig:input_type -> google.protobuf.Empty
+	19, // 11: hi.club.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
 	0,  // 12: hi.club.Agent.BindMaster:input_type -> hi.club.BindMasterReq
 	1,  // 13: hi.club.Agent.UnbindMaster:input_type -> hi.club.UnbindMasterReq
 	2,  // 14: hi.club.Agent.BindStatus:input_type -> hi.club.BindStatusReq
@@ -591,7 +591,7 @@ var file_hi_club_agent_proto_depIdxs = []int32{
 	23, // 23: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
 	19, // 24: hi.club.Agent.Mark:output_type -> google.protobuf.Empty
 	24, // 25: hi.club.Agent.ListMarks:output_type -> hi.ai.ListAgentResp
-	25, // 26: hi.club.Agent.DefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	25, // 26: hi.club.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
 	19, // 27: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
 	19, // 28: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
 	3,  // 29: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp

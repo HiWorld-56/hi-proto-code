@@ -823,7 +823,7 @@ impl serde::Serialize for ApiKeyInfo {
         if self.rate_limit != 0 {
             len += 1;
         }
-        if self.is_active != 0 {
+        if self.is_active {
             len += 1;
         }
         if !self.note.is_empty() {
@@ -842,7 +842,7 @@ impl serde::Serialize for ApiKeyInfo {
         if self.rate_limit != 0 {
             struct_ser.serialize_field("rateLimit", &self.rate_limit)?;
         }
-        if self.is_active != 0 {
+        if self.is_active {
             struct_ser.serialize_field("isActive", &self.is_active)?;
         }
         if !self.note.is_empty() {
@@ -960,9 +960,7 @@ impl<'de> serde::Deserialize<'de> for ApiKeyInfo {
                             if is_active__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("isActive"));
                             }
-                            is_active__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
+                            is_active__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Note => {
                             if note__.is_some() {
@@ -991,6 +989,217 @@ impl<'de> serde::Deserialize<'de> for ApiKeyInfo {
             }
         }
         deserializer.deserialize_struct("hi.ai.ApiKeyInfo", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ChatReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
+        if !self.cid.is_empty() {
+            len += 1;
+        }
+        if !self.conts.is_empty() {
+            len += 1;
+        }
+        if !self.tools.is_empty() {
+            len += 1;
+        }
+        if self.tool_choice.is_some() {
+            len += 1;
+        }
+        if self.custom.is_some() {
+            len += 1;
+        }
+        if self.state.is_some() {
+            len += 1;
+        }
+        if self.style.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ChatReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
+        if !self.cid.is_empty() {
+            struct_ser.serialize_field("cid", &self.cid)?;
+        }
+        if !self.conts.is_empty() {
+            struct_ser.serialize_field("conts", &self.conts)?;
+        }
+        if !self.tools.is_empty() {
+            struct_ser.serialize_field("tools", &self.tools)?;
+        }
+        if let Some(v) = self.tool_choice.as_ref() {
+            struct_ser.serialize_field("toolChoice", v)?;
+        }
+        if let Some(v) = self.custom.as_ref() {
+            struct_ser.serialize_field("custom", v)?;
+        }
+        if let Some(v) = self.state.as_ref() {
+            struct_ser.serialize_field("state", v)?;
+        }
+        if let Some(v) = self.style.as_ref() {
+            struct_ser.serialize_field("style", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ChatReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+            "cid",
+            "conts",
+            "tools",
+            "tool_choice",
+            "toolChoice",
+            "custom",
+            "state",
+            "style",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+            Cid,
+            Conts,
+            Tools,
+            ToolChoice,
+            Custom,
+            State,
+            Style,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            "cid" => Ok(GeneratedField::Cid),
+                            "conts" => Ok(GeneratedField::Conts),
+                            "tools" => Ok(GeneratedField::Tools),
+                            "toolChoice" | "tool_choice" => Ok(GeneratedField::ToolChoice),
+                            "custom" => Ok(GeneratedField::Custom),
+                            "state" => Ok(GeneratedField::State),
+                            "style" => Ok(GeneratedField::Style),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ChatReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.ChatReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ChatReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                let mut cid__ = None;
+                let mut conts__ = None;
+                let mut tools__ = None;
+                let mut tool_choice__ = None;
+                let mut custom__ = None;
+                let mut state__ = None;
+                let mut style__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Cid => {
+                            if cid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cid"));
+                            }
+                            cid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Conts => {
+                            if conts__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("conts"));
+                            }
+                            conts__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Tools => {
+                            if tools__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("tools"));
+                            }
+                            tools__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ToolChoice => {
+                            if tool_choice__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("toolChoice"));
+                            }
+                            tool_choice__ = map_.next_value()?;
+                        }
+                        GeneratedField::Custom => {
+                            if custom__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("custom"));
+                            }
+                            custom__ = map_.next_value()?;
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = map_.next_value()?;
+                        }
+                        GeneratedField::Style => {
+                            if style__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("style"));
+                            }
+                            style__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ChatReq {
+                    agent: agent__.unwrap_or_default(),
+                    cid: cid__.unwrap_or_default(),
+                    conts: conts__.unwrap_or_default(),
+                    tools: tools__.unwrap_or_default(),
+                    tool_choice: tool_choice__,
+                    custom: custom__,
+                    state: state__,
+                    style: style__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.ChatReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ChatResp {
@@ -1390,6 +1599,383 @@ impl<'de> serde::Deserialize<'de> for ClearReq {
             }
         }
         deserializer.deserialize_struct("hi.ai.ClearReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CompleteReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
+        if !self.cid.is_empty() {
+            len += 1;
+        }
+        if !self.conts.is_empty() {
+            len += 1;
+        }
+        if !self.state.is_empty() {
+            len += 1;
+        }
+        if !self.custom.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.CompleteReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
+        if !self.cid.is_empty() {
+            struct_ser.serialize_field("cid", &self.cid)?;
+        }
+        if !self.conts.is_empty() {
+            struct_ser.serialize_field("conts", &self.conts)?;
+        }
+        if !self.state.is_empty() {
+            struct_ser.serialize_field("state", &self.state)?;
+        }
+        if !self.custom.is_empty() {
+            struct_ser.serialize_field("custom", &self.custom)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CompleteReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+            "cid",
+            "conts",
+            "state",
+            "custom",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+            Cid,
+            Conts,
+            State,
+            Custom,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            "cid" => Ok(GeneratedField::Cid),
+                            "conts" => Ok(GeneratedField::Conts),
+                            "state" => Ok(GeneratedField::State),
+                            "custom" => Ok(GeneratedField::Custom),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CompleteReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.CompleteReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CompleteReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                let mut cid__ = None;
+                let mut conts__ = None;
+                let mut state__ = None;
+                let mut custom__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Cid => {
+                            if cid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cid"));
+                            }
+                            cid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Conts => {
+                            if conts__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("conts"));
+                            }
+                            conts__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Custom => {
+                            if custom__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("custom"));
+                            }
+                            custom__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(CompleteReq {
+                    agent: agent__.unwrap_or_default(),
+                    cid: cid__.unwrap_or_default(),
+                    conts: conts__.unwrap_or_default(),
+                    state: state__.unwrap_or_default(),
+                    custom: custom__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.CompleteReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CompleteResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.reply.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.CompleteResp", len)?;
+        if !self.reply.is_empty() {
+            struct_ser.serialize_field("reply", &self.reply)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CompleteResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "reply",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Reply,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "reply" => Ok(GeneratedField::Reply),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CompleteResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.CompleteResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CompleteResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut reply__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Reply => {
+                            if reply__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reply"));
+                            }
+                            reply__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(CompleteResp {
+                    reply: reply__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.CompleteResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CompleteStreamResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.code != 0 {
+            len += 1;
+        }
+        if !self.r#type.is_empty() {
+            len += 1;
+        }
+        if !self.message.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.CompleteStreamResp", len)?;
+        if self.code != 0 {
+            struct_ser.serialize_field("code", &self.code)?;
+        }
+        if !self.r#type.is_empty() {
+            struct_ser.serialize_field("type", &self.r#type)?;
+        }
+        if !self.message.is_empty() {
+            struct_ser.serialize_field("message", &self.message)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CompleteStreamResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "code",
+            "type",
+            "message",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Code,
+            Type,
+            Message,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "code" => Ok(GeneratedField::Code),
+                            "type" => Ok(GeneratedField::Type),
+                            "message" => Ok(GeneratedField::Message),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CompleteStreamResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.CompleteStreamResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CompleteStreamResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut code__ = None;
+                let mut r#type__ = None;
+                let mut message__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Code => {
+                            if code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("code"));
+                            }
+                            code__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Type => {
+                            if r#type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("type"));
+                            }
+                            r#type__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Message => {
+                            if message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("message"));
+                            }
+                            message__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(CompleteStreamResp {
+                    code: code__.unwrap_or_default(),
+                    r#type: r#type__.unwrap_or_default(),
+                    message: message__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.CompleteStreamResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Content {
@@ -2006,7 +2592,7 @@ impl<'de> serde::Deserialize<'de> for CreateContentResp {
         deserializer.deserialize_struct("hi.ai.CreateContentResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CreateReq {
+impl serde::Serialize for CreatePluginReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2038,7 +2624,7 @@ impl serde::Serialize for CreateReq {
         if !self.uuid.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.CreateReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.CreatePluginReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
@@ -2066,7 +2652,7 @@ impl serde::Serialize for CreateReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CreateReq {
+impl<'de> serde::Deserialize<'de> for CreatePluginReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -2133,13 +2719,13 @@ impl<'de> serde::Deserialize<'de> for CreateReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateReq;
+            type Value = CreatePluginReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.CreateReq")
+                formatter.write_str("struct hi.ai.CreatePluginReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreatePluginReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -2203,7 +2789,7 @@ impl<'de> serde::Deserialize<'de> for CreateReq {
                         }
                     }
                 }
-                Ok(CreateReq {
+                Ok(CreatePluginReq {
                     agent: agent__.unwrap_or_default(),
                     url: url__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
@@ -2215,10 +2801,10 @@ impl<'de> serde::Deserialize<'de> for CreateReq {
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.CreateReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.CreatePluginReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CreateResp {
+impl serde::Serialize for CreatePluginResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2229,14 +2815,14 @@ impl serde::Serialize for CreateResp {
         if !self.uuid.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.CreateResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.CreatePluginResp", len)?;
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CreateResp {
+impl<'de> serde::Deserialize<'de> for CreatePluginResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -2280,13 +2866,13 @@ impl<'de> serde::Deserialize<'de> for CreateResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateResp;
+            type Value = CreatePluginResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.CreateResp")
+                formatter.write_str("struct hi.ai.CreatePluginResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreatePluginResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -2301,12 +2887,12 @@ impl<'de> serde::Deserialize<'de> for CreateResp {
                         }
                     }
                 }
-                Ok(CreateResp {
+                Ok(CreatePluginResp {
                     uuid: uuid__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.CreateResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.CreatePluginResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for DefaultConfigResp {
@@ -2583,99 +3169,6 @@ impl<'de> serde::Deserialize<'de> for DeleteApiKeyReq {
         deserializer.deserialize_struct("hi.ai.DeleteApiKeyReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DeleteFileReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.id != 0 {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.DeleteFileReq", len)?;
-        if self.id != 0 {
-            struct_ser.serialize_field("id", &self.id)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for DeleteFileReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "id",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Id,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "id" => Ok(GeneratedField::Id),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DeleteFileReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.DeleteFileReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteFileReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Id => {
-                            if id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("id"));
-                            }
-                            id__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(DeleteFileReq {
-                    id: id__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.DeleteFileReq", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for DeleteFilesByAgentsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2878,7 +3371,7 @@ impl<'de> serde::Deserialize<'de> for DeleteFilesReq {
         deserializer.deserialize_struct("hi.ai.DeleteFilesReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DeletePluginByDidsReq {
+impl serde::Serialize for DeletePluginByAgentsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2889,14 +3382,14 @@ impl serde::Serialize for DeletePluginByDidsReq {
         if !self.agents.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.DeletePluginByDidsReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.DeletePluginByAgentsReq", len)?;
         if !self.agents.is_empty() {
             struct_ser.serialize_field("agents", &self.agents)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for DeletePluginByDidsReq {
+impl<'de> serde::Deserialize<'de> for DeletePluginByAgentsReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -2940,13 +3433,13 @@ impl<'de> serde::Deserialize<'de> for DeletePluginByDidsReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DeletePluginByDidsReq;
+            type Value = DeletePluginByAgentsReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.DeletePluginByDidsReq")
+                formatter.write_str("struct hi.ai.DeletePluginByAgentsReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeletePluginByDidsReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeletePluginByAgentsReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -2961,12 +3454,12 @@ impl<'de> serde::Deserialize<'de> for DeletePluginByDidsReq {
                         }
                     }
                 }
-                Ok(DeletePluginByDidsReq {
+                Ok(DeletePluginByAgentsReq {
                     agents: agents__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.DeletePluginByDidsReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.DeletePluginByAgentsReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for DeletePluginReq {
@@ -4050,15 +4543,9 @@ impl serde::Serialize for GetHistoryReq {
         if !self.cid.is_empty() {
             len += 1;
         }
-        if !self.agent.is_empty() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.GetHistoryReq", len)?;
         if !self.cid.is_empty() {
             struct_ser.serialize_field("cid", &self.cid)?;
-        }
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
         }
         struct_ser.end()
     }
@@ -4071,13 +4558,11 @@ impl<'de> serde::Deserialize<'de> for GetHistoryReq {
     {
         const FIELDS: &[&str] = &[
             "cid",
-            "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Cid,
-            Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4100,7 +4585,6 @@ impl<'de> serde::Deserialize<'de> for GetHistoryReq {
                     {
                         match value {
                             "cid" => Ok(GeneratedField::Cid),
-                            "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4121,7 +4605,6 @@ impl<'de> serde::Deserialize<'de> for GetHistoryReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut cid__ = None;
-                let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Cid => {
@@ -4130,17 +4613,10 @@ impl<'de> serde::Deserialize<'de> for GetHistoryReq {
                             }
                             cid__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
-                            }
-                            agent__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(GetHistoryReq {
                     cid: cid__.unwrap_or_default(),
-                    agent: agent__.unwrap_or_default(),
                 })
             }
         }
@@ -4236,189 +4712,6 @@ impl<'de> serde::Deserialize<'de> for GetHistoryResp {
             }
         }
         deserializer.deserialize_struct("hi.ai.GetHistoryResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for GetMemModelReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.agent.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.GetMemModelReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetMemModelReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "agent",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Agent,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "agent" => Ok(GeneratedField::Agent),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMemModelReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.GetMemModelReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMemModelReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut agent__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
-                            }
-                            agent__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(GetMemModelReq {
-                    agent: agent__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.GetMemModelReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for GetMemModelResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.mem_model.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.GetMemModelResp", len)?;
-        if !self.mem_model.is_empty() {
-            struct_ser.serialize_field("memModel", &self.mem_model)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetMemModelResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "mem_model",
-            "memModel",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            MemModel,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "memModel" | "mem_model" => Ok(GeneratedField::MemModel),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMemModelResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.GetMemModelResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMemModelResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut mem_model__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::MemModel => {
-                            if mem_model__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("memModel"));
-                            }
-                            mem_model__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(GetMemModelResp {
-                    mem_model: mem_model__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.GetMemModelResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetParamsReq {
@@ -5272,7 +5565,7 @@ impl<'de> serde::Deserialize<'de> for ListAgentResp {
         deserializer.deserialize_struct("hi.ai.ListAgentResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListApiKeyResp {
+impl serde::Serialize for ListApiKeysResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5286,7 +5579,7 @@ impl serde::Serialize for ListApiKeyResp {
         if !self.infos.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListApiKeyResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListApiKeysResp", len)?;
         if self.total != 0 {
             struct_ser.serialize_field("total", &self.total)?;
         }
@@ -5296,7 +5589,7 @@ impl serde::Serialize for ListApiKeyResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListApiKeyResp {
+impl<'de> serde::Deserialize<'de> for ListApiKeysResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5343,13 +5636,13 @@ impl<'de> serde::Deserialize<'de> for ListApiKeyResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListApiKeyResp;
+            type Value = ListApiKeysResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListApiKeyResp")
+                formatter.write_str("struct hi.ai.ListApiKeysResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListApiKeyResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListApiKeysResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5373,104 +5666,13 @@ impl<'de> serde::Deserialize<'de> for ListApiKeyResp {
                         }
                     }
                 }
-                Ok(ListApiKeyResp {
+                Ok(ListApiKeysResp {
                     total: total__.unwrap_or_default(),
                     infos: infos__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListApiKeyResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ListEmbeddingResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.models.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListEmbeddingResp", len)?;
-        if !self.models.is_empty() {
-            struct_ser.serialize_field("models", &self.models)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ListEmbeddingResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "models",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Models,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "models" => Ok(GeneratedField::Models),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListEmbeddingResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListEmbeddingResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListEmbeddingResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut models__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Models => {
-                            if models__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("models"));
-                            }
-                            models__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(ListEmbeddingResp {
-                    models: models__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.ListEmbeddingResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListApiKeysResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListFilesReq {
@@ -5706,97 +5908,6 @@ impl<'de> serde::Deserialize<'de> for ListFilesResp {
             }
         }
         deserializer.deserialize_struct("hi.ai.ListFilesResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ListLlmResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.models.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListLLMResp", len)?;
-        if !self.models.is_empty() {
-            struct_ser.serialize_field("models", &self.models)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ListLlmResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "models",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Models,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "models" => Ok(GeneratedField::Models),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListLlmResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListLLMResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListLlmResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut models__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Models => {
-                            if models__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("models"));
-                            }
-                            models__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(ListLlmResp {
-                    models: models__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.ListLLMResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListMarksReq {
@@ -6233,97 +6344,6 @@ impl<'de> serde::Deserialize<'de> for ListSttResp {
         deserializer.deserialize_struct("hi.ai.ListSTTResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListTtsResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.models.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListTTSResp", len)?;
-        if !self.models.is_empty() {
-            struct_ser.serialize_field("models", &self.models)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ListTtsResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "models",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Models,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "models" => Ok(GeneratedField::Models),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListTtsResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListTTSResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListTtsResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut models__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Models => {
-                            if models__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("models"));
-                            }
-                            models__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(ListTtsResp {
-                    models: models__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.ListTTSResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for ListVersionsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -6443,15 +6463,15 @@ impl serde::Serialize for MarkAgentReq {
         if !self.did.is_empty() {
             len += 1;
         }
-        if !self.opt.is_empty() {
+        if self.marked {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.MarkAgentReq", len)?;
         if !self.did.is_empty() {
             struct_ser.serialize_field("did", &self.did)?;
         }
-        if !self.opt.is_empty() {
-            struct_ser.serialize_field("opt", &self.opt)?;
+        if self.marked {
+            struct_ser.serialize_field("marked", &self.marked)?;
         }
         struct_ser.end()
     }
@@ -6464,13 +6484,13 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
     {
         const FIELDS: &[&str] = &[
             "did",
-            "opt",
+            "marked",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Did,
-            Opt,
+            Marked,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6493,7 +6513,7 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
                     {
                         match value {
                             "did" => Ok(GeneratedField::Did),
-                            "opt" => Ok(GeneratedField::Opt),
+                            "marked" => Ok(GeneratedField::Marked),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6514,7 +6534,7 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut did__ = None;
-                let mut opt__ = None;
+                let mut marked__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Did => {
@@ -6523,17 +6543,17 @@ impl<'de> serde::Deserialize<'de> for MarkAgentReq {
                             }
                             did__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Opt => {
-                            if opt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("opt"));
+                        GeneratedField::Marked => {
+                            if marked__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("marked"));
                             }
-                            opt__ = Some(map_.next_value()?);
+                            marked__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(MarkAgentReq {
                     did: did__.unwrap_or_default(),
-                    opt: opt__.unwrap_or_default(),
+                    marked: marked__.unwrap_or_default(),
                 })
             }
         }
@@ -6871,6 +6891,97 @@ impl<'de> serde::Deserialize<'de> for merchant_list_resp::Unit {
         deserializer.deserialize_struct("hi.ai.MerchantListResp.Unit", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ModelListResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.models.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ModelListResp", len)?;
+        if !self.models.is_empty() {
+            struct_ser.serialize_field("models", &self.models)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModelListResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "models",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Models,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "models" => Ok(GeneratedField::Models),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModelListResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.ModelListResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModelListResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut models__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Models => {
+                            if models__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("models"));
+                            }
+                            models__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ModelListResp {
+                    models: models__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.ModelListResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ModelSet {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -6891,6 +7002,9 @@ impl serde::Serialize for ModelSet {
         if !self.embedding.is_empty() {
             len += 1;
         }
+        if !self.mem_model.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ModelSet", len)?;
         if !self.llm.is_empty() {
             struct_ser.serialize_field("llm", &self.llm)?;
@@ -6903,6 +7017,9 @@ impl serde::Serialize for ModelSet {
         }
         if !self.embedding.is_empty() {
             struct_ser.serialize_field("embedding", &self.embedding)?;
+        }
+        if !self.mem_model.is_empty() {
+            struct_ser.serialize_field("memModel", &self.mem_model)?;
         }
         struct_ser.end()
     }
@@ -6918,6 +7035,8 @@ impl<'de> serde::Deserialize<'de> for ModelSet {
             "stt",
             "tts",
             "embedding",
+            "mem_model",
+            "memModel",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -6926,6 +7045,7 @@ impl<'de> serde::Deserialize<'de> for ModelSet {
             Stt,
             Tts,
             Embedding,
+            MemModel,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6951,6 +7071,7 @@ impl<'de> serde::Deserialize<'de> for ModelSet {
                             "stt" => Ok(GeneratedField::Stt),
                             "tts" => Ok(GeneratedField::Tts),
                             "embedding" => Ok(GeneratedField::Embedding),
+                            "memModel" | "mem_model" => Ok(GeneratedField::MemModel),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6974,6 +7095,7 @@ impl<'de> serde::Deserialize<'de> for ModelSet {
                 let mut stt__ = None;
                 let mut tts__ = None;
                 let mut embedding__ = None;
+                let mut mem_model__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Llm => {
@@ -7000,6 +7122,12 @@ impl<'de> serde::Deserialize<'de> for ModelSet {
                             }
                             embedding__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::MemModel => {
+                            if mem_model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("memModel"));
+                            }
+                            mem_model__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(ModelSet {
@@ -7007,6 +7135,7 @@ impl<'de> serde::Deserialize<'de> for ModelSet {
                     stt: stt__.unwrap_or_default(),
                     tts: tts__.unwrap_or_default(),
                     embedding: embedding__.unwrap_or_default(),
+                    mem_model: mem_model__.unwrap_or_default(),
                 })
             }
         }
@@ -7115,15 +7244,17 @@ impl serde::Serialize for PermissionAddReq {
         if !self.did.is_empty() {
             len += 1;
         }
-        if !self.r#type.is_empty() {
+        if self.r#type != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PermissionAddReq", len)?;
         if !self.did.is_empty() {
             struct_ser.serialize_field("did", &self.did)?;
         }
-        if !self.r#type.is_empty() {
-            struct_ser.serialize_field("type", &self.r#type)?;
+        if self.r#type != 0 {
+            let v = PermissionType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
+            struct_ser.serialize_field("type", &v)?;
         }
         struct_ser.end()
     }
@@ -7199,7 +7330,7 @@ impl<'de> serde::Deserialize<'de> for PermissionAddReq {
                             if r#type__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("type"));
                             }
-                            r#type__ = Some(map_.next_value()?);
+                            r#type__ = Some(map_.next_value::<PermissionType>()? as i32);
                         }
                     }
                 }
@@ -7223,15 +7354,17 @@ impl serde::Serialize for PermissionDeleteReq {
         if !self.did.is_empty() {
             len += 1;
         }
-        if !self.r#type.is_empty() {
+        if self.r#type != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PermissionDeleteReq", len)?;
         if !self.did.is_empty() {
             struct_ser.serialize_field("did", &self.did)?;
         }
-        if !self.r#type.is_empty() {
-            struct_ser.serialize_field("type", &self.r#type)?;
+        if self.r#type != 0 {
+            let v = PermissionType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
+            struct_ser.serialize_field("type", &v)?;
         }
         struct_ser.end()
     }
@@ -7307,7 +7440,7 @@ impl<'de> serde::Deserialize<'de> for PermissionDeleteReq {
                             if r#type__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("type"));
                             }
-                            r#type__ = Some(map_.next_value()?);
+                            r#type__ = Some(map_.next_value::<PermissionType>()? as i32);
                         }
                     }
                 }
@@ -7541,7 +7674,11 @@ impl serde::Serialize for PermissionInfo {
             struct_ser.serialize_field("did", &self.did)?;
         }
         if !self.permissions.is_empty() {
-            struct_ser.serialize_field("permissions", &self.permissions)?;
+            let v = self.permissions.iter().cloned().map(|v| {
+                PermissionType::try_from(v)
+                    .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", v)))
+                }).collect::<std::result::Result<Vec<_>, _>>()?;
+            struct_ser.serialize_field("permissions", &v)?;
         }
         if !self.note.is_empty() {
             struct_ser.serialize_field("note", &self.note)?;
@@ -7624,7 +7761,7 @@ impl<'de> serde::Deserialize<'de> for PermissionInfo {
                             if permissions__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("permissions"));
                             }
-                            permissions__ = Some(map_.next_value()?);
+                            permissions__ = Some(map_.next_value::<Vec<PermissionType>>()?.into_iter().map(|x| x as i32).collect());
                         }
                         GeneratedField::Note => {
                             if note__.is_some() {
@@ -7655,7 +7792,7 @@ impl serde::Serialize for PermissionListReq {
         if !self.did.is_empty() {
             len += 1;
         }
-        if !self.r#type.is_empty() {
+        if self.r#type != 0 {
             len += 1;
         }
         if self.pagination.is_some() {
@@ -7665,8 +7802,10 @@ impl serde::Serialize for PermissionListReq {
         if !self.did.is_empty() {
             struct_ser.serialize_field("did", &self.did)?;
         }
-        if !self.r#type.is_empty() {
-            struct_ser.serialize_field("type", &self.r#type)?;
+        if self.r#type != 0 {
+            let v = PermissionType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
+            struct_ser.serialize_field("type", &v)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -7749,7 +7888,7 @@ impl<'de> serde::Deserialize<'de> for PermissionListReq {
                             if r#type__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("type"));
                             }
-                            r#type__ = Some(map_.next_value()?);
+                            r#type__ = Some(map_.next_value::<PermissionType>()? as i32);
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -7879,95 +8018,84 @@ impl<'de> serde::Deserialize<'de> for PermissionListResp {
         deserializer.deserialize_struct("hi.ai.PermissionListResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for PermissionListTypeResp {
+impl serde::Serialize for PermissionType {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.types.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.PermissionListTypeResp", len)?;
-        if !self.types.is_empty() {
-            struct_ser.serialize_field("types", &self.types)?;
-        }
-        struct_ser.end()
+        let variant = match self {
+            Self::PermissionUnspecified => "PERMISSION_UNSPECIFIED",
+            Self::PermissionNormal => "PERMISSION_NORMAL",
+            Self::PermissionAdvanced => "PERMISSION_ADVANCED",
+            Self::PermissionMem => "PERMISSION_MEM",
+            Self::PermissionPlugin => "PERMISSION_PLUGIN",
+        };
+        serializer.serialize_str(variant)
     }
 }
-impl<'de> serde::Deserialize<'de> for PermissionListTypeResp {
+impl<'de> serde::Deserialize<'de> for PermissionType {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "types",
+            "PERMISSION_UNSPECIFIED",
+            "PERMISSION_NORMAL",
+            "PERMISSION_ADVANCED",
+            "PERMISSION_MEM",
+            "PERMISSION_PLUGIN",
         ];
 
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Types,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "types" => Ok(GeneratedField::Types),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
         struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = PermissionListTypeResp;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = PermissionType;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.PermissionListTypeResp")
+                write!(formatter, "expected one of: {:?}", &FIELDS)
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PermissionListTypeResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
             {
-                let mut types__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Types => {
-                            if types__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("types"));
-                            }
-                            types__ = Some(map_.next_value()?);
-                        }
-                    }
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PERMISSION_UNSPECIFIED" => Ok(PermissionType::PermissionUnspecified),
+                    "PERMISSION_NORMAL" => Ok(PermissionType::PermissionNormal),
+                    "PERMISSION_ADVANCED" => Ok(PermissionType::PermissionAdvanced),
+                    "PERMISSION_MEM" => Ok(PermissionType::PermissionMem),
+                    "PERMISSION_PLUGIN" => Ok(PermissionType::PermissionPlugin),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
-                Ok(PermissionListTypeResp {
-                    types: types__.unwrap_or_default(),
-                })
             }
         }
-        deserializer.deserialize_struct("hi.ai.PermissionListTypeResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for PluginItem {
@@ -8780,310 +8908,6 @@ impl<'de> serde::Deserialize<'de> for RunResp {
         deserializer.deserialize_struct("hi.ai.RunResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for SendReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
-        if !self.cid.is_empty() {
-            len += 1;
-        }
-        if !self.conts.is_empty() {
-            len += 1;
-        }
-        if !self.state.is_empty() {
-            len += 1;
-        }
-        if !self.custom.is_empty() {
-            len += 1;
-        }
-        if self.return_plugin_use {
-            len += 1;
-        }
-        if self.return_training_data {
-            len += 1;
-        }
-        if self.return_context {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.SendReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
-        if !self.cid.is_empty() {
-            struct_ser.serialize_field("cid", &self.cid)?;
-        }
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
-        }
-        if !self.state.is_empty() {
-            struct_ser.serialize_field("state", &self.state)?;
-        }
-        if !self.custom.is_empty() {
-            struct_ser.serialize_field("custom", &self.custom)?;
-        }
-        if self.return_plugin_use {
-            struct_ser.serialize_field("returnPluginUse", &self.return_plugin_use)?;
-        }
-        if self.return_training_data {
-            struct_ser.serialize_field("returnTrainingData", &self.return_training_data)?;
-        }
-        if self.return_context {
-            struct_ser.serialize_field("returnContext", &self.return_context)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SendReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "did",
-            "cid",
-            "conts",
-            "state",
-            "custom",
-            "return_plugin_use",
-            "returnPluginUse",
-            "return_training_data",
-            "returnTrainingData",
-            "return_context",
-            "returnContext",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Did,
-            Cid,
-            Conts,
-            State,
-            Custom,
-            ReturnPluginUse,
-            ReturnTrainingData,
-            ReturnContext,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "cid" => Ok(GeneratedField::Cid),
-                            "conts" => Ok(GeneratedField::Conts),
-                            "state" => Ok(GeneratedField::State),
-                            "custom" => Ok(GeneratedField::Custom),
-                            "returnPluginUse" | "return_plugin_use" => Ok(GeneratedField::ReturnPluginUse),
-                            "returnTrainingData" | "return_training_data" => Ok(GeneratedField::ReturnTrainingData),
-                            "returnContext" | "return_context" => Ok(GeneratedField::ReturnContext),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SendReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.SendReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SendReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut did__ = None;
-                let mut cid__ = None;
-                let mut conts__ = None;
-                let mut state__ = None;
-                let mut custom__ = None;
-                let mut return_plugin_use__ = None;
-                let mut return_training_data__ = None;
-                let mut return_context__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
-                            }
-                            did__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Cid => {
-                            if cid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("cid"));
-                            }
-                            cid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Custom => {
-                            if custom__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("custom"));
-                            }
-                            custom__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnPluginUse => {
-                            if return_plugin_use__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnPluginUse"));
-                            }
-                            return_plugin_use__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnTrainingData => {
-                            if return_training_data__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnTrainingData"));
-                            }
-                            return_training_data__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnContext => {
-                            if return_context__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnContext"));
-                            }
-                            return_context__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(SendReq {
-                    did: did__.unwrap_or_default(),
-                    cid: cid__.unwrap_or_default(),
-                    conts: conts__.unwrap_or_default(),
-                    state: state__.unwrap_or_default(),
-                    custom: custom__.unwrap_or_default(),
-                    return_plugin_use: return_plugin_use__.unwrap_or_default(),
-                    return_training_data: return_training_data__.unwrap_or_default(),
-                    return_context: return_context__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.SendReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SendResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.reply.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.SendResp", len)?;
-        if !self.reply.is_empty() {
-            struct_ser.serialize_field("reply", &self.reply)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SendResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "reply",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Reply,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "reply" => Ok(GeneratedField::Reply),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SendResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.SendResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SendResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut reply__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Reply => {
-                            if reply__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("reply"));
-                            }
-                            reply__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(SendResp {
-                    reply: reply__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.SendResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for SetActiveVersionReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -9298,115 +9122,6 @@ impl<'de> serde::Deserialize<'de> for SetEnabledReq {
             }
         }
         deserializer.deserialize_struct("hi.ai.SetEnabledReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetMemModelReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.agent.is_empty() {
-            len += 1;
-        }
-        if !self.mem_model.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.SetMemModelReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
-        }
-        if !self.mem_model.is_empty() {
-            struct_ser.serialize_field("memModel", &self.mem_model)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetMemModelReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "agent",
-            "mem_model",
-            "memModel",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Agent,
-            MemModel,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "agent" => Ok(GeneratedField::Agent),
-                            "memModel" | "mem_model" => Ok(GeneratedField::MemModel),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetMemModelReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.SetMemModelReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMemModelReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut agent__ = None;
-                let mut mem_model__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
-                            }
-                            agent__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::MemModel => {
-                            if mem_model__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("memModel"));
-                            }
-                            mem_model__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(SetMemModelReq {
-                    agent: agent__.unwrap_or_default(),
-                    mem_model: mem_model__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.SetMemModelReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for SettingEditReq {
@@ -9735,411 +9450,6 @@ impl<'de> serde::Deserialize<'de> for SettingInfo {
             }
         }
         deserializer.deserialize_struct("hi.ai.SettingInfo", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SpeechToSpeechReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
-        if !self.cid.is_empty() {
-            len += 1;
-        }
-        if !self.conts.is_empty() {
-            len += 1;
-        }
-        if !self.tools.is_empty() {
-            len += 1;
-        }
-        if self.tool_choice.is_some() {
-            len += 1;
-        }
-        if self.custom.is_some() {
-            len += 1;
-        }
-        if self.state.is_some() {
-            len += 1;
-        }
-        if self.style.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.SpeechToSpeechReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
-        if !self.cid.is_empty() {
-            struct_ser.serialize_field("cid", &self.cid)?;
-        }
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
-        }
-        if !self.tools.is_empty() {
-            struct_ser.serialize_field("tools", &self.tools)?;
-        }
-        if let Some(v) = self.tool_choice.as_ref() {
-            struct_ser.serialize_field("toolChoice", v)?;
-        }
-        if let Some(v) = self.custom.as_ref() {
-            struct_ser.serialize_field("custom", v)?;
-        }
-        if let Some(v) = self.state.as_ref() {
-            struct_ser.serialize_field("state", v)?;
-        }
-        if let Some(v) = self.style.as_ref() {
-            struct_ser.serialize_field("style", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SpeechToSpeechReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "did",
-            "cid",
-            "conts",
-            "tools",
-            "tool_choice",
-            "toolChoice",
-            "custom",
-            "state",
-            "style",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Did,
-            Cid,
-            Conts,
-            Tools,
-            ToolChoice,
-            Custom,
-            State,
-            Style,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "cid" => Ok(GeneratedField::Cid),
-                            "conts" => Ok(GeneratedField::Conts),
-                            "tools" => Ok(GeneratedField::Tools),
-                            "toolChoice" | "tool_choice" => Ok(GeneratedField::ToolChoice),
-                            "custom" => Ok(GeneratedField::Custom),
-                            "state" => Ok(GeneratedField::State),
-                            "style" => Ok(GeneratedField::Style),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SpeechToSpeechReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.SpeechToSpeechReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SpeechToSpeechReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut did__ = None;
-                let mut cid__ = None;
-                let mut conts__ = None;
-                let mut tools__ = None;
-                let mut tool_choice__ = None;
-                let mut custom__ = None;
-                let mut state__ = None;
-                let mut style__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
-                            }
-                            did__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Cid => {
-                            if cid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("cid"));
-                            }
-                            cid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Tools => {
-                            if tools__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("tools"));
-                            }
-                            tools__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ToolChoice => {
-                            if tool_choice__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("toolChoice"));
-                            }
-                            tool_choice__ = map_.next_value()?;
-                        }
-                        GeneratedField::Custom => {
-                            if custom__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("custom"));
-                            }
-                            custom__ = map_.next_value()?;
-                        }
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = map_.next_value()?;
-                        }
-                        GeneratedField::Style => {
-                            if style__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("style"));
-                            }
-                            style__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SpeechToSpeechReq {
-                    did: did__.unwrap_or_default(),
-                    cid: cid__.unwrap_or_default(),
-                    conts: conts__.unwrap_or_default(),
-                    tools: tools__.unwrap_or_default(),
-                    tool_choice: tool_choice__,
-                    custom: custom__,
-                    state: state__,
-                    style: style__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.SpeechToSpeechReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SpeechToTextReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
-        if !self.cid.is_empty() {
-            len += 1;
-        }
-        if !self.conts.is_empty() {
-            len += 1;
-        }
-        if !self.tools.is_empty() {
-            len += 1;
-        }
-        if self.tool_choice.is_some() {
-            len += 1;
-        }
-        if self.custom.is_some() {
-            len += 1;
-        }
-        if self.state.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.SpeechToTextReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
-        if !self.cid.is_empty() {
-            struct_ser.serialize_field("cid", &self.cid)?;
-        }
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
-        }
-        if !self.tools.is_empty() {
-            struct_ser.serialize_field("tools", &self.tools)?;
-        }
-        if let Some(v) = self.tool_choice.as_ref() {
-            struct_ser.serialize_field("toolChoice", v)?;
-        }
-        if let Some(v) = self.custom.as_ref() {
-            struct_ser.serialize_field("custom", v)?;
-        }
-        if let Some(v) = self.state.as_ref() {
-            struct_ser.serialize_field("state", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SpeechToTextReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "did",
-            "cid",
-            "conts",
-            "tools",
-            "tool_choice",
-            "toolChoice",
-            "custom",
-            "state",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Did,
-            Cid,
-            Conts,
-            Tools,
-            ToolChoice,
-            Custom,
-            State,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "cid" => Ok(GeneratedField::Cid),
-                            "conts" => Ok(GeneratedField::Conts),
-                            "tools" => Ok(GeneratedField::Tools),
-                            "toolChoice" | "tool_choice" => Ok(GeneratedField::ToolChoice),
-                            "custom" => Ok(GeneratedField::Custom),
-                            "state" => Ok(GeneratedField::State),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SpeechToTextReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.SpeechToTextReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SpeechToTextReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut did__ = None;
-                let mut cid__ = None;
-                let mut conts__ = None;
-                let mut tools__ = None;
-                let mut tool_choice__ = None;
-                let mut custom__ = None;
-                let mut state__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
-                            }
-                            did__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Cid => {
-                            if cid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("cid"));
-                            }
-                            cid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Tools => {
-                            if tools__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("tools"));
-                            }
-                            tools__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ToolChoice => {
-                            if tool_choice__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("toolChoice"));
-                            }
-                            tool_choice__ = map_.next_value()?;
-                        }
-                        GeneratedField::Custom => {
-                            if custom__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("custom"));
-                            }
-                            custom__ = map_.next_value()?;
-                        }
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SpeechToTextReq {
-                    did: did__.unwrap_or_default(),
-                    cid: cid__.unwrap_or_default(),
-                    conts: conts__.unwrap_or_default(),
-                    tools: tools__.unwrap_or_default(),
-                    tool_choice: tool_choice__,
-                    custom: custom__,
-                    state: state__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.SpeechToTextReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for StartReq {
@@ -10492,133 +9802,6 @@ impl<'de> serde::Deserialize<'de> for StatusResp {
         deserializer.deserialize_struct("hi.ai.StatusResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for StreamResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.code != 0 {
-            len += 1;
-        }
-        if !self.r#type.is_empty() {
-            len += 1;
-        }
-        if !self.message.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.StreamResp", len)?;
-        if self.code != 0 {
-            struct_ser.serialize_field("code", &self.code)?;
-        }
-        if !self.r#type.is_empty() {
-            struct_ser.serialize_field("type", &self.r#type)?;
-        }
-        if !self.message.is_empty() {
-            struct_ser.serialize_field("message", &self.message)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for StreamResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "code",
-            "type",
-            "message",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Code,
-            Type,
-            Message,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "code" => Ok(GeneratedField::Code),
-                            "type" => Ok(GeneratedField::Type),
-                            "message" => Ok(GeneratedField::Message),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = StreamResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.StreamResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<StreamResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut code__ = None;
-                let mut r#type__ = None;
-                let mut message__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Code => {
-                            if code__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("code"));
-                            }
-                            code__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::Type => {
-                            if r#type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("type"));
-                            }
-                            r#type__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Message => {
-                            if message__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("message"));
-                            }
-                            message__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(StreamResp {
-                    code: code__.unwrap_or_default(),
-                    r#type: r#type__.unwrap_or_default(),
-                    message: message__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.StreamResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for SynthesizeReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -10833,200 +10016,6 @@ impl<'de> serde::Deserialize<'de> for SynthesizeResp {
             }
         }
         deserializer.deserialize_struct("hi.ai.SynthesizeResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TextToTextReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
-        if !self.cid.is_empty() {
-            len += 1;
-        }
-        if !self.conts.is_empty() {
-            len += 1;
-        }
-        if !self.tools.is_empty() {
-            len += 1;
-        }
-        if self.tool_choice.is_some() {
-            len += 1;
-        }
-        if self.custom.is_some() {
-            len += 1;
-        }
-        if self.state.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.TextToTextReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
-        if !self.cid.is_empty() {
-            struct_ser.serialize_field("cid", &self.cid)?;
-        }
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
-        }
-        if !self.tools.is_empty() {
-            struct_ser.serialize_field("tools", &self.tools)?;
-        }
-        if let Some(v) = self.tool_choice.as_ref() {
-            struct_ser.serialize_field("toolChoice", v)?;
-        }
-        if let Some(v) = self.custom.as_ref() {
-            struct_ser.serialize_field("custom", v)?;
-        }
-        if let Some(v) = self.state.as_ref() {
-            struct_ser.serialize_field("state", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TextToTextReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "did",
-            "cid",
-            "conts",
-            "tools",
-            "tool_choice",
-            "toolChoice",
-            "custom",
-            "state",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Did,
-            Cid,
-            Conts,
-            Tools,
-            ToolChoice,
-            Custom,
-            State,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "cid" => Ok(GeneratedField::Cid),
-                            "conts" => Ok(GeneratedField::Conts),
-                            "tools" => Ok(GeneratedField::Tools),
-                            "toolChoice" | "tool_choice" => Ok(GeneratedField::ToolChoice),
-                            "custom" => Ok(GeneratedField::Custom),
-                            "state" => Ok(GeneratedField::State),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TextToTextReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.TextToTextReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToTextReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut did__ = None;
-                let mut cid__ = None;
-                let mut conts__ = None;
-                let mut tools__ = None;
-                let mut tool_choice__ = None;
-                let mut custom__ = None;
-                let mut state__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
-                            }
-                            did__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Cid => {
-                            if cid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("cid"));
-                            }
-                            cid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Tools => {
-                            if tools__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("tools"));
-                            }
-                            tools__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ToolChoice => {
-                            if tool_choice__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("toolChoice"));
-                            }
-                            tool_choice__ = map_.next_value()?;
-                        }
-                        GeneratedField::Custom => {
-                            if custom__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("custom"));
-                            }
-                            custom__ = map_.next_value()?;
-                        }
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(TextToTextReq {
-                    did: did__.unwrap_or_default(),
-                    cid: cid__.unwrap_or_default(),
-                    conts: conts__.unwrap_or_default(),
-                    tools: tools__.unwrap_or_default(),
-                    tool_choice: tool_choice__,
-                    custom: custom__,
-                    state: state__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.TextToTextReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for TokenUsage {
@@ -11868,7 +10857,7 @@ impl serde::Serialize for TrainingFile {
         if !self.r#type.is_empty() {
             len += 1;
         }
-        if self.is_use != 0 {
+        if self.is_use {
             len += 1;
         }
         if !self.digest.is_empty() {
@@ -11902,7 +10891,7 @@ impl serde::Serialize for TrainingFile {
         if !self.r#type.is_empty() {
             struct_ser.serialize_field("type", &self.r#type)?;
         }
-        if self.is_use != 0 {
+        if self.is_use {
             struct_ser.serialize_field("isUse", &self.is_use)?;
         }
         if !self.digest.is_empty() {
@@ -12071,9 +11060,7 @@ impl<'de> serde::Deserialize<'de> for TrainingFile {
                             if is_use__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("isUse"));
                             }
-                            is_use__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
+                            is_use__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Digest => {
                             if digest__.is_some() {

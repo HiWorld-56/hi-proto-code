@@ -252,15 +252,15 @@ const SetRoleReq$json = {
   '1': 'SetRoleReq',
   '2': [
     {'1': 'group', '3': 1, '4': 1, '5': 9, '10': 'group'},
-    {'1': 'users', '3': 2, '4': 3, '5': 9, '10': 'users'},
+    {'1': 'members', '3': 2, '4': 3, '5': 9, '10': 'members'},
     {'1': 'role', '3': 3, '4': 1, '5': 9, '10': 'role'},
   ],
 };
 
 /// Descriptor for `SetRoleReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setRoleReqDescriptor = $convert.base64Decode(
-    'CgpTZXRSb2xlUmVxEhQKBWdyb3VwGAEgASgJUgVncm91cBIUCgV1c2VycxgCIAMoCVIFdXNlcn'
-    'MSEgoEcm9sZRgDIAEoCVIEcm9sZQ==');
+    'CgpTZXRSb2xlUmVxEhQKBWdyb3VwGAEgASgJUgVncm91cBIYCgdtZW1iZXJzGAIgAygJUgdtZW'
+    '1iZXJzEhIKBHJvbGUYAyABKAlSBHJvbGU=');
 
 @$core.Deprecated('Use getRoleReqDescriptor instead')
 const GetRoleReq$json = {

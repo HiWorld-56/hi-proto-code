@@ -43,7 +43,7 @@ const (
 type ApiKeyClient interface {
 	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CreateApiKeyResp, error)
 	Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
-	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListApiKeyResp, error)
+	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListApiKeysResp, error)
 	Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -75,9 +75,9 @@ func (c *apiKeyClient) Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc
 	return out, nil
 }
 
-func (c *apiKeyClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListApiKeyResp, error) {
+func (c *apiKeyClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListApiKeysResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListApiKeyResp)
+	out := new(ListApiKeysResp)
 	err := c.cc.Invoke(ctx, ApiKey_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (c *apiKeyClient) Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...
 type ApiKeyServer interface {
 	Create(context.Context, *emptypb.Empty) (*CreateApiKeyResp, error)
 	Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error)
-	List(context.Context, *hi.Pagination) (*ListApiKeyResp, error)
+	List(context.Context, *hi.Pagination) (*ListApiKeysResp, error)
 	Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error)
 }
 
@@ -128,7 +128,7 @@ func (UnimplementedApiKeyServer) Create(context.Context, *emptypb.Empty) (*Creat
 func (UnimplementedApiKeyServer) Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
-func (UnimplementedApiKeyServer) List(context.Context, *hi.Pagination) (*ListApiKeyResp, error) {
+func (UnimplementedApiKeyServer) List(context.Context, *hi.Pagination) (*ListApiKeysResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedApiKeyServer) Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error) {

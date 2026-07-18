@@ -27,13 +27,10 @@ const (
 	Training_UploadFile_FullMethodName    = "/hi.club.Training/UploadFile"
 	Training_ListFiles_FullMethodName     = "/hi.club.Training/ListFiles"
 	Training_GetFile_FullMethodName       = "/hi.club.Training/GetFile"
-	Training_DeleteFile_FullMethodName    = "/hi.club.Training/DeleteFile"
 	Training_DeleteFiles_FullMethodName   = "/hi.club.Training/DeleteFiles"
 	Training_CreateContent_FullMethodName = "/hi.club.Training/CreateContent"
 	Training_UpdateContent_FullMethodName = "/hi.club.Training/UpdateContent"
 	Training_EditDigest_FullMethodName    = "/hi.club.Training/EditDigest"
-	Training_SetMemModel_FullMethodName   = "/hi.club.Training/SetMemModel"
-	Training_GetMemModel_FullMethodName   = "/hi.club.Training/GetMemModel"
 )
 
 // TrainingClient is the client API for Training service.
@@ -53,15 +50,11 @@ type TrainingClient interface {
 	UploadFile(ctx context.Context, in *ai.UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListFiles(ctx context.Context, in *ai.ListFilesReq, opts ...grpc.CallOption) (*ai.ListFilesResp, error)
 	GetFile(ctx context.Context, in *ai.GetFileReq, opts ...grpc.CallOption) (*ai.GetFileResp, error)
-	DeleteFile(ctx context.Context, in *ai.DeleteFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteFiles(ctx context.Context, in *ai.DeleteFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 文本记忆条目 ──
 	CreateContent(ctx context.Context, in *ai.CreateContentReq, opts ...grpc.CallOption) (*ai.CreateContentResp, error)
 	UpdateContent(ctx context.Context, in *ai.UpdateContentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditDigest(ctx context.Context, in *ai.EditDigestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// ── 记忆模型 ──
-	SetMemModel(ctx context.Context, in *ai.SetMemModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetMemModel(ctx context.Context, in *ai.GetMemModelReq, opts ...grpc.CallOption) (*ai.GetMemModelResp, error)
 }
 
 type trainingClient struct {
@@ -132,16 +125,6 @@ func (c *trainingClient) GetFile(ctx context.Context, in *ai.GetFileReq, opts ..
 	return out, nil
 }
 
-func (c *trainingClient) DeleteFile(ctx context.Context, in *ai.DeleteFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_DeleteFile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *trainingClient) DeleteFiles(ctx context.Context, in *ai.DeleteFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -182,26 +165,6 @@ func (c *trainingClient) EditDigest(ctx context.Context, in *ai.EditDigestReq, o
 	return out, nil
 }
 
-func (c *trainingClient) SetMemModel(ctx context.Context, in *ai.SetMemModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_SetMemModel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *trainingClient) GetMemModel(ctx context.Context, in *ai.GetMemModelReq, opts ...grpc.CallOption) (*ai.GetMemModelResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.GetMemModelResp)
-	err := c.cc.Invoke(ctx, Training_GetMemModel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // TrainingServer is the server API for Training service.
 // All implementations should embed UnimplementedTrainingServer
 // for forward compatibility.
@@ -219,15 +182,11 @@ type TrainingServer interface {
 	UploadFile(context.Context, *ai.UploadFileReq) (*emptypb.Empty, error)
 	ListFiles(context.Context, *ai.ListFilesReq) (*ai.ListFilesResp, error)
 	GetFile(context.Context, *ai.GetFileReq) (*ai.GetFileResp, error)
-	DeleteFile(context.Context, *ai.DeleteFileReq) (*emptypb.Empty, error)
 	DeleteFiles(context.Context, *ai.DeleteFilesReq) (*emptypb.Empty, error)
 	// ── 文本记忆条目 ──
 	CreateContent(context.Context, *ai.CreateContentReq) (*ai.CreateContentResp, error)
 	UpdateContent(context.Context, *ai.UpdateContentReq) (*emptypb.Empty, error)
 	EditDigest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error)
-	// ── 记忆模型 ──
-	SetMemModel(context.Context, *ai.SetMemModelReq) (*emptypb.Empty, error)
-	GetMemModel(context.Context, *ai.GetMemModelReq) (*ai.GetMemModelResp, error)
 }
 
 // UnimplementedTrainingServer should be embedded to have
@@ -255,9 +214,6 @@ func (UnimplementedTrainingServer) ListFiles(context.Context, *ai.ListFilesReq) 
 func (UnimplementedTrainingServer) GetFile(context.Context, *ai.GetFileReq) (*ai.GetFileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetFile not implemented")
 }
-func (UnimplementedTrainingServer) DeleteFile(context.Context, *ai.DeleteFileReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteFile not implemented")
-}
 func (UnimplementedTrainingServer) DeleteFiles(context.Context, *ai.DeleteFilesReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteFiles not implemented")
 }
@@ -269,12 +225,6 @@ func (UnimplementedTrainingServer) UpdateContent(context.Context, *ai.UpdateCont
 }
 func (UnimplementedTrainingServer) EditDigest(context.Context, *ai.EditDigestReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditDigest not implemented")
-}
-func (UnimplementedTrainingServer) SetMemModel(context.Context, *ai.SetMemModelReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetMemModel not implemented")
-}
-func (UnimplementedTrainingServer) GetMemModel(context.Context, *ai.GetMemModelReq) (*ai.GetMemModelResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetMemModel not implemented")
 }
 func (UnimplementedTrainingServer) testEmbeddedByValue() {}
 
@@ -404,24 +354,6 @@ func _Training_GetFile_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.DeleteFileReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TrainingServer).DeleteFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Training_DeleteFile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).DeleteFile(ctx, req.(*ai.DeleteFileReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Training_DeleteFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.DeleteFilesReq)
 	if err := dec(in); err != nil {
@@ -494,42 +426,6 @@ func _Training_EditDigest_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Training_SetMemModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.SetMemModelReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TrainingServer).SetMemModel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Training_SetMemModel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).SetMemModel(ctx, req.(*ai.SetMemModelReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Training_GetMemModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.GetMemModelReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TrainingServer).GetMemModel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Training_GetMemModel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).GetMemModel(ctx, req.(*ai.GetMemModelReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Training_ServiceDesc is the grpc.ServiceDesc for Training service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -562,10 +458,6 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Training_GetFile_Handler,
 		},
 		{
-			MethodName: "DeleteFile",
-			Handler:    _Training_DeleteFile_Handler,
-		},
-		{
 			MethodName: "DeleteFiles",
 			Handler:    _Training_DeleteFiles_Handler,
 		},
@@ -580,14 +472,6 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditDigest",
 			Handler:    _Training_EditDigest_Handler,
-		},
-		{
-			MethodName: "SetMemModel",
-			Handler:    _Training_SetMemModel_Handler,
-		},
-		{
-			MethodName: "GetMemModel",
-			Handler:    _Training_GetMemModel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -26,7 +26,7 @@ const (
 	Plugin_List_FullMethodName             = "/hi.ai.Plugin/List"
 	Plugin_ListVersions_FullMethodName     = "/hi.ai.Plugin/ListVersions"
 	Plugin_Delete_FullMethodName           = "/hi.ai.Plugin/Delete"
-	Plugin_DeleteByDids_FullMethodName     = "/hi.ai.Plugin/DeleteByDids"
+	Plugin_DeleteByAgents_FullMethodName   = "/hi.ai.Plugin/DeleteByAgents"
 	Plugin_SetActiveVersion_FullMethodName = "/hi.ai.Plugin/SetActiveVersion"
 	Plugin_GetParams_FullMethodName        = "/hi.ai.Plugin/GetParams"
 	Plugin_SetEnabled_FullMethodName       = "/hi.ai.Plugin/SetEnabled"
@@ -43,13 +43,13 @@ const (
 //	`ResponseFuture<...> switch(...)` 直接语法错误,整个 CI 生成挂掉。
 //	(Go/Rust 都没事,所以只测 go 生成发现不了。)
 type PluginClient interface {
-	Create(ctx context.Context, in *CreateReq, opts ...grpc.CallOption) (*CreateResp, error)
+	Create(ctx context.Context, in *CreatePluginReq, opts ...grpc.CallOption) (*CreatePluginResp, error)
 	Edit(ctx context.Context, in *EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetPluginReq, opts ...grpc.CallOption) (*GetPluginResp, error)
 	List(ctx context.Context, in *ListPluginReq, opts ...grpc.CallOption) (*ListPluginResp, error)
 	ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListPluginResp, error)
 	Delete(ctx context.Context, in *DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DeleteByDids(ctx context.Context, in *DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteByAgents(ctx context.Context, in *DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActiveVersion(ctx context.Context, in *SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetParams(ctx context.Context, in *GetParamsReq, opts ...grpc.CallOption) (*GetParamsResp, error)
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -63,9 +63,9 @@ func NewPluginClient(cc grpc.ClientConnInterface) PluginClient {
 	return &pluginClient{cc}
 }
 
-func (c *pluginClient) Create(ctx context.Context, in *CreateReq, opts ...grpc.CallOption) (*CreateResp, error) {
+func (c *pluginClient) Create(ctx context.Context, in *CreatePluginReq, opts ...grpc.CallOption) (*CreatePluginResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateResp)
+	out := new(CreatePluginResp)
 	err := c.cc.Invoke(ctx, Plugin_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -123,10 +123,10 @@ func (c *pluginClient) Delete(ctx context.Context, in *DeletePluginReq, opts ...
 	return out, nil
 }
 
-func (c *pluginClient) DeleteByDids(ctx context.Context, in *DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) DeleteByAgents(ctx context.Context, in *DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_DeleteByDids_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Plugin_DeleteByAgents_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -174,13 +174,13 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts .
 //	`ResponseFuture<...> switch(...)` 直接语法错误,整个 CI 生成挂掉。
 //	(Go/Rust 都没事,所以只测 go 生成发现不了。)
 type PluginServer interface {
-	Create(context.Context, *CreateReq) (*CreateResp, error)
+	Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error)
 	Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetPluginReq) (*GetPluginResp, error)
 	List(context.Context, *ListPluginReq) (*ListPluginResp, error)
 	ListVersions(context.Context, *ListVersionsReq) (*ListPluginResp, error)
 	Delete(context.Context, *DeletePluginReq) (*emptypb.Empty, error)
-	DeleteByDids(context.Context, *DeletePluginByDidsReq) (*emptypb.Empty, error)
+	DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActiveVersion(context.Context, *SetActiveVersionReq) (*emptypb.Empty, error)
 	GetParams(context.Context, *GetParamsReq) (*GetParamsResp, error)
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
@@ -193,7 +193,7 @@ type PluginServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPluginServer struct{}
 
-func (UnimplementedPluginServer) Create(context.Context, *CreateReq) (*CreateResp, error) {
+func (UnimplementedPluginServer) Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
 func (UnimplementedPluginServer) Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error) {
@@ -211,8 +211,8 @@ func (UnimplementedPluginServer) ListVersions(context.Context, *ListVersionsReq)
 func (UnimplementedPluginServer) Delete(context.Context, *DeletePluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedPluginServer) DeleteByDids(context.Context, *DeletePluginByDidsReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteByDids not implemented")
+func (UnimplementedPluginServer) DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteByAgents not implemented")
 }
 func (UnimplementedPluginServer) SetActiveVersion(context.Context, *SetActiveVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetActiveVersion not implemented")
@@ -244,7 +244,7 @@ func RegisterPluginServer(s grpc.ServiceRegistrar, srv PluginServer) {
 }
 
 func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateReq)
+	in := new(CreatePluginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -256,7 +256,7 @@ func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: Plugin_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).Create(ctx, req.(*CreateReq))
+		return srv.(PluginServer).Create(ctx, req.(*CreatePluginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -351,20 +351,20 @@ func _Plugin_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_DeleteByDids_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeletePluginByDidsReq)
+func _Plugin_DeleteByAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePluginByAgentsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).DeleteByDids(ctx, in)
+		return srv.(PluginServer).DeleteByAgents(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_DeleteByDids_FullMethodName,
+		FullMethod: Plugin_DeleteByAgents_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).DeleteByDids(ctx, req.(*DeletePluginByDidsReq))
+		return srv.(PluginServer).DeleteByAgents(ctx, req.(*DeletePluginByAgentsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -455,8 +455,8 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_Delete_Handler,
 		},
 		{
-			MethodName: "DeleteByDids",
-			Handler:    _Plugin_DeleteByDids_Handler,
+			MethodName: "DeleteByAgents",
+			Handler:    _Plugin_DeleteByAgents_Handler,
 		},
 		{
 			MethodName: "SetActiveVersion",

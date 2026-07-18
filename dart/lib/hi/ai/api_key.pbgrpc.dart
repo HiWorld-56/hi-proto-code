@@ -56,7 +56,7 @@ class ApiKeyClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListApiKeyResp> list(
+  $grpc.ResponseFuture<$1.ListApiKeysResp> list(
     $2.Pagination request, {
     $grpc.CallOptions? options,
   }) {
@@ -80,10 +80,10 @@ class ApiKeyClient extends $grpc.Client {
       '/hi.ai.ApiKey/Edit',
       ($1.EditApiKeyReq value) => value.writeToBuffer(),
       $1.EditApiKeyResp.fromBuffer);
-  static final _$list = $grpc.ClientMethod<$2.Pagination, $1.ListApiKeyResp>(
+  static final _$list = $grpc.ClientMethod<$2.Pagination, $1.ListApiKeysResp>(
       '/hi.ai.ApiKey/List',
       ($2.Pagination value) => value.writeToBuffer(),
-      $1.ListApiKeyResp.fromBuffer);
+      $1.ListApiKeysResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$1.DeleteApiKeyReq, $0.Empty>(
       '/hi.ai.ApiKey/Delete',
       ($1.DeleteApiKeyReq value) => value.writeToBuffer(),
@@ -109,13 +109,13 @@ abstract class ApiKeyServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.EditApiKeyReq.fromBuffer(value),
         ($1.EditApiKeyResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.ListApiKeyResp>(
+    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.ListApiKeysResp>(
         'List',
         list_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
-        ($1.ListApiKeyResp value) => value.writeToBuffer()));
+        ($1.ListApiKeysResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.DeleteApiKeyReq, $0.Empty>(
         'Delete',
         delete_Pre,
@@ -141,12 +141,12 @@ abstract class ApiKeyServiceBase extends $grpc.Service {
   $async.Future<$1.EditApiKeyResp> edit(
       $grpc.ServiceCall call, $1.EditApiKeyReq request);
 
-  $async.Future<$1.ListApiKeyResp> list_Pre(
+  $async.Future<$1.ListApiKeysResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$1.ListApiKeyResp> list(
+  $async.Future<$1.ListApiKeysResp> list(
       $grpc.ServiceCall call, $2.Pagination request);
 
   $async.Future<$0.Empty> delete_Pre($grpc.ServiceCall $call,

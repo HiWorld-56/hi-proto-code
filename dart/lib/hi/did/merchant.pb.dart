@@ -230,24 +230,22 @@ class MerchantGetResp extends $pb.GeneratedMessage {
   MerchantInfo ensureInfo() => $_ensure(0);
 }
 
+/// 商户改自己的配置。商户身份来自 ExtendToken —— 不接受 server 入参(冗余/越权);
+/// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
 class MerchantSetReq extends $pb.GeneratedMessage {
   factory MerchantSetReq({
-    $core.String? server,
     $core.String? name,
     $core.String? logo,
     $core.Iterable<$core.String>? coins,
     $core.String? endpoint,
     $core.String? scheme,
-    $core.String? comment,
   }) {
     final result = create();
-    if (server != null) result.server = server;
     if (name != null) result.name = name;
     if (logo != null) result.logo = logo;
     if (coins != null) result.coins.addAll(coins);
     if (endpoint != null) result.endpoint = endpoint;
     if (scheme != null) result.scheme = scheme;
-    if (comment != null) result.comment = comment;
     return result;
   }
 
@@ -264,13 +262,11 @@ class MerchantSetReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'MerchantSetReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'server')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..aOS(3, _omitFieldNames ? '' : 'logo')
-    ..pPS(4, _omitFieldNames ? '' : 'coins')
-    ..aOS(5, _omitFieldNames ? '' : 'endpoint')
-    ..aOS(6, _omitFieldNames ? '' : 'scheme')
-    ..aOS(7, _omitFieldNames ? '' : 'comment')
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'logo')
+    ..pPS(3, _omitFieldNames ? '' : 'coins')
+    ..aOS(4, _omitFieldNames ? '' : 'endpoint')
+    ..aOS(5, _omitFieldNames ? '' : 'scheme')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -293,61 +289,43 @@ class MerchantSetReq extends $pb.GeneratedMessage {
   static MerchantSetReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get server => $_getSZ(0);
+  $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set server($core.String value) => $_setString(0, value);
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasServer() => $_has(0);
+  $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearServer() => $_clearField(1);
+  void clearName() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
+  $core.String get logo => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set logo($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
+  $core.bool hasLogo() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
+  void clearLogo() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get logo => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set logo($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasLogo() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearLogo() => $_clearField(3);
+  $pb.PbList<$core.String> get coins => $_getList(2);
 
   @$pb.TagNumber(4)
-  $pb.PbList<$core.String> get coins => $_getList(3);
+  $core.String get endpoint => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set endpoint($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEndpoint() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEndpoint() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get endpoint => $_getSZ(4);
+  $core.String get scheme => $_getSZ(4);
   @$pb.TagNumber(5)
-  set endpoint($core.String value) => $_setString(4, value);
+  set scheme($core.String value) => $_setString(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasEndpoint() => $_has(4);
+  $core.bool hasScheme() => $_has(4);
   @$pb.TagNumber(5)
-  void clearEndpoint() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.String get scheme => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set scheme($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasScheme() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearScheme() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.String get comment => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set comment($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasComment() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearComment() => $_clearField(7);
+  void clearScheme() => $_clearField(5);
 }
 
 class MerchantListResp extends $pb.GeneratedMessage {

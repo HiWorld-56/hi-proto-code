@@ -126,11 +126,10 @@ var Permission_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	PermissionManage_Add_FullMethodName       = "/hi.ai.PermissionManage/Add"
-	PermissionManage_Delete_FullMethodName    = "/hi.ai.PermissionManage/Delete"
-	PermissionManage_Edit_FullMethodName      = "/hi.ai.PermissionManage/Edit"
-	PermissionManage_List_FullMethodName      = "/hi.ai.PermissionManage/List"
-	PermissionManage_ListTypes_FullMethodName = "/hi.ai.PermissionManage/ListTypes"
+	PermissionManage_Add_FullMethodName    = "/hi.ai.PermissionManage/Add"
+	PermissionManage_Delete_FullMethodName = "/hi.ai.PermissionManage/Delete"
+	PermissionManage_Edit_FullMethodName   = "/hi.ai.PermissionManage/Edit"
+	PermissionManage_List_FullMethodName   = "/hi.ai.PermissionManage/List"
 )
 
 // PermissionManageClient is the client API for PermissionManage service.
@@ -148,7 +147,6 @@ type PermissionManageClient interface {
 	Delete(ctx context.Context, in *PermissionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *PermissionEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	List(ctx context.Context, in *PermissionListReq, opts ...grpc.CallOption) (*PermissionListResp, error)
-	ListTypes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionListTypeResp, error)
 }
 
 type permissionManageClient struct {
@@ -199,16 +197,6 @@ func (c *permissionManageClient) List(ctx context.Context, in *PermissionListReq
 	return out, nil
 }
 
-func (c *permissionManageClient) ListTypes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionListTypeResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PermissionListTypeResp)
-	err := c.cc.Invoke(ctx, PermissionManage_ListTypes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // PermissionManageServer is the server API for PermissionManage service.
 // All implementations should embed UnimplementedPermissionManageServer
 // for forward compatibility.
@@ -224,7 +212,6 @@ type PermissionManageServer interface {
 	Delete(context.Context, *PermissionDeleteReq) (*emptypb.Empty, error)
 	Edit(context.Context, *PermissionEditReq) (*emptypb.Empty, error)
 	List(context.Context, *PermissionListReq) (*PermissionListResp, error)
-	ListTypes(context.Context, *emptypb.Empty) (*PermissionListTypeResp, error)
 }
 
 // UnimplementedPermissionManageServer should be embedded to have
@@ -245,9 +232,6 @@ func (UnimplementedPermissionManageServer) Edit(context.Context, *PermissionEdit
 }
 func (UnimplementedPermissionManageServer) List(context.Context, *PermissionListReq) (*PermissionListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
-func (UnimplementedPermissionManageServer) ListTypes(context.Context, *emptypb.Empty) (*PermissionListTypeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListTypes not implemented")
 }
 func (UnimplementedPermissionManageServer) testEmbeddedByValue() {}
 
@@ -341,24 +325,6 @@ func _PermissionManage_List_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionManage_ListTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionManageServer).ListTypes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionManage_ListTypes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionManageServer).ListTypes(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // PermissionManage_ServiceDesc is the grpc.ServiceDesc for PermissionManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -381,10 +347,6 @@ var PermissionManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _PermissionManage_List_Handler,
-		},
-		{
-			MethodName: "ListTypes",
-			Handler:    _PermissionManage_ListTypes_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

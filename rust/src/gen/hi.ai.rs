@@ -186,6 +186,9 @@ pub struct ModelSet {
     pub tts: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
     pub embedding: ::prost::alloc::string::String,
+    /// 记忆模型:与其它模型配置同处,经 Agent.Edit 设置(原 Training.SetMemModel/GetMemModel 已删,别再开第二条写路径)
+    #[prost(string, tag = "5")]
+    pub mem_model: ::prost::alloc::string::String,
 }
 /// 智能体配置。
 ///
@@ -329,9 +332,9 @@ pub struct ResetToDefaultReq {
 pub struct MarkAgentReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    /// 打标记 / 取消
-    #[prost(string, tag = "2")]
-    pub opt: ::prost::alloc::string::String,
+    /// true=打标记(显示靠前),false=取消(与 AgentInfo.marked 对称)
+    #[prost(bool, tag = "2")]
+    pub marked: bool,
 }
 /// Generated client implementations.
 pub mod agent_client {
@@ -576,7 +579,7 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "GetUsage"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn default_config(
+        pub async fn get_default_config(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
@@ -593,10 +596,11 @@ pub mod agent_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Agent/DefaultConfig",
+                "/hi.ai.Agent/GetDefaultConfig",
             );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "DefaultConfig"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Agent", "GetDefaultConfig"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn reset_to_default(
@@ -635,10 +639,13 @@ pub struct NewSessionResp {
     #[prost(string, tag = "1")]
     pub cid: ::prost::alloc::string::String,
 }
+/// ── 服务端整流程执行(Complete 家族)────────────────────────────────────────
+/// 服务端把一轮对话**整个跑完**(function call 也在服务端执行),客户端不参与工具调用,直接拿最终答复。
+/// Complete = 一次性;CompleteStream = 流式。与下面 Converse/Resume(客户端 tool-callback 两阶段)是两条路。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SendReq {
+pub struct CompleteReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub cid: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "3")]
@@ -647,20 +654,14 @@ pub struct SendReq {
     pub state: ::prost::alloc::string::String,
     #[prost(string, tag = "5")]
     pub custom: ::prost::alloc::string::String,
-    #[prost(bool, tag = "6")]
-    pub return_plugin_use: bool,
-    #[prost(bool, tag = "7")]
-    pub return_training_data: bool,
-    #[prost(bool, tag = "8")]
-    pub return_context: bool,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SendResp {
+pub struct CompleteResp {
     #[prost(string, tag = "1")]
     pub reply: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct StreamResp {
+pub struct CompleteStreamResp {
     #[prost(int32, tag = "1")]
     pub code: i32,
     #[prost(string, tag = "2")]
@@ -675,10 +676,9 @@ pub struct ClearHistoryReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetHistoryReq {
+    /// cid 已唯一定位会话,不再带 agent
     #[prost(string, tag = "1")]
     pub cid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub agent: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Qa {
@@ -694,13 +694,14 @@ pub struct GetHistoryResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Qa>,
 }
-/// ── 多模态对话入参 ────────────────────────────────────────────────────
-/// 命名读作「\<输入模态>To\<输出模态>」,描述的是一轮 agent 对话的模态组合(带工具调用),
-/// **不是字面的格式转换** —— 真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
+/// ── 客户端 tool-callback 两阶段对话入参(Converse/Resume)────────────────────
+/// 一轮对话:Converse 返回最终答复,或返回**待客户端执行的工具**(final=false);客户端执行后调 Resume 交回结果续跑。
+/// 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech 三个按模态复制的方法。
+/// 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpeechToSpeechReq {
+pub struct ChatReq {
     #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub cid: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "3")]
@@ -713,42 +714,9 @@ pub struct SpeechToSpeechReq {
     pub custom: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "7")]
     pub state: ::core::option::Option<::prost::alloc::string::String>,
+    /// 语音出的音色等;纯文本场景留空
     #[prost(string, optional, tag = "8")]
     pub style: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextToTextReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub cid: ::prost::alloc::string::String,
-    #[prost(message, repeated, tag = "3")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
-    #[prost(message, repeated, tag = "4")]
-    pub tools: ::prost::alloc::vec::Vec<ToolSupply>,
-    #[prost(string, optional, tag = "5")]
-    pub tool_choice: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub custom: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "7")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpeechToTextReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub cid: ::prost::alloc::string::String,
-    #[prost(message, repeated, tag = "3")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
-    #[prost(message, repeated, tag = "4")]
-    pub tools: ::prost::alloc::vec::Vec<ToolSupply>,
-    #[prost(string, optional, tag = "5")]
-    pub tool_choice: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub custom: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "7")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResult {
@@ -757,7 +725,7 @@ pub struct ToolCallResult {
     #[prost(message, repeated, tag = "2")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
 }
-/// 工具结果续跑入参(Resume 系列):客户端执行完工具后把结果交回来,接着跑。
+/// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。续跑的模态由原始调用的 id 决定。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResultsReq {
     #[prost(string, tag = "1")]
@@ -803,12 +771,8 @@ pub mod tool_call {
         pub arguments: ::prost::alloc::string::String,
     }
 }
-/// final == true
-/// result = text / url
-/// tools = null
-/// final == false
-/// result = tool_id
-/// tools = tools
+/// final == true  → result = text/url, tools = null
+/// final == false → result = tool_id,  tools = 待客户端执行的工具
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatResp {
     #[prost(bool, tag = "1")]
@@ -830,9 +794,9 @@ pub mod chat_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 对话(主体=会话)。商户档:hiai web(token)与商户后台服务(apikey)都会调。
-    ///
-    /// (原 Simple 已删 —— 那是给前端**无身份**直连 llm 推理的便捷方法,有安全隐患。)
-    /// 真 STT/TTS 已拆去 Speech;延迟统计已拆去 AgentBench。
+    /// 两条对话路:①Complete/CompleteStream —— 服务端整流程执行(工具在服务端跑);
+    /// ②Converse/Resume —— 客户端 tool-callback 两阶段(工具由客户端执行)。
+    /// (原 Simple 已删;真 STT/TTS 已拆去 Speech;延迟统计已拆去 AgentBench。)
     #[derive(Debug, Clone)]
     pub struct ChatClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -932,45 +896,6 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "NewSession"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn send(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SendReq>,
-        ) -> std::result::Result<tonic::Response<super::SendResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Send");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Send"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SendReq>,
-        ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::StreamResp>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Stream");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Stream"));
-            self.inner.server_streaming(req, path, codec).await
-        }
         pub async fn get_history(
             &mut self,
             request: impl tonic::IntoRequest<super::GetHistoryReq>,
@@ -1007,10 +932,52 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ClearHistory"));
             self.inner.unary(req, path, codec).await
         }
-        /// ── 多模态对话(带工具调用);Resume = 交回工具结果续跑(原 xxx2)──
-        pub async fn text_to_text(
+        /// ── 服务端整流程执行(工具在服务端跑)──
+        pub async fn complete(
             &mut self,
-            request: impl tonic::IntoRequest<super::TextToTextReq>,
+            request: impl tonic::IntoRequest<super::CompleteReq>,
+        ) -> std::result::Result<tonic::Response<super::CompleteResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Complete");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Complete"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn complete_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CompleteReq>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::CompleteStreamResp>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Chat/CompleteStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "CompleteStream"));
+            self.inner.server_streaming(req, path, codec).await
+        }
+        /// ── 客户端 tool-callback 两阶段 ──
+        pub async fn converse(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ChatReq>,
         ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
             self.inner
                 .ready()
@@ -1021,12 +988,12 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/TextToText");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Converse");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "TextToText"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Converse"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn text_to_text_resume(
+        pub async fn resume(
             &mut self,
             request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
         ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
@@ -1039,92 +1006,9 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Chat/TextToTextResume",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Resume");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Chat", "TextToTextResume"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_text(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SpeechToTextReq>,
-        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/SpeechToText");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "SpeechToText"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_text_resume(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
-        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Chat/SpeechToTextResume",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Chat", "SpeechToTextResume"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_speech(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SpeechToSpeechReq>,
-        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Chat/SpeechToSpeech",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "SpeechToSpeech"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn speech_to_speech_resume(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
-        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Chat/SpeechToSpeechResume",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Chat", "SpeechToSpeechResume"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Resume"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -1172,13 +1056,10 @@ pub struct SetEnabledReq {
     #[prost(bool, tag = "2")]
     pub enabled: bool,
 }
-/// 上传/新建一个插件版本。
-/// 后台按 (agent, name, version) 判断:该版本已存在则**覆盖**,否则**新建**。
-/// 上传一个脚本版本。
-/// `uuid` 空 = 新脚本(后台生成 uuid);非空 = **给已有脚本加一个版本**。
+/// 上传一个脚本版本。`uuid` 空 = 新脚本(后台生成 uuid);非空 = **给已有脚本加一个版本**。
 /// 后台按 (uuid, version) 判断:该版本已存在则**覆盖**,否则**新建**。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateReq {
+pub struct CreatePluginReq {
     /// 智能体did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
@@ -1205,7 +1086,7 @@ pub struct CreateReq {
     pub uuid: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateResp {
+pub struct CreatePluginResp {
     /// 插件id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
@@ -1245,7 +1126,7 @@ pub struct DeletePluginReq {
     pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeletePluginByDidsReq {
+pub struct DeletePluginByAgentsReq {
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -1435,8 +1316,11 @@ pub mod plugin_client {
         }
         pub async fn create(
             &mut self,
-            request: impl tonic::IntoRequest<super::CreateReq>,
-        ) -> std::result::Result<tonic::Response<super::CreateResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::CreatePluginReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreatePluginResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1543,9 +1427,9 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_by_dids(
+        pub async fn delete_by_agents(
             &mut self,
-            request: impl tonic::IntoRequest<super::DeletePluginByDidsReq>,
+            request: impl tonic::IntoRequest<super::DeletePluginByAgentsReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -1557,10 +1441,11 @@ pub mod plugin_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Plugin/DeleteByDids",
+                "/hi.ai.Plugin/DeleteByAgents",
             );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DeleteByDids"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Plugin", "DeleteByAgents"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_active_version(
@@ -1818,9 +1703,9 @@ pub struct TrainingFile {
     /// 文件类型
     #[prost(string, tag = "6")]
     pub r#type: ::prost::alloc::string::String,
-    /// 是否已经训练，0-未训练，1-已训练
-    #[prost(int32, tag = "7")]
-    pub is_use: i32,
+    /// 是否已经训练
+    #[prost(bool, tag = "7")]
+    pub is_use: bool,
     /// 文件摘要
     #[prost(string, tag = "8")]
     pub digest: ::prost::alloc::string::String,
@@ -1851,12 +1736,6 @@ pub struct ListFilesResp {
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<TrainingFile>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeleteFileReq {
-    /// 训练文件id
-    #[prost(int32, tag = "1")]
-    pub id: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteFilesReq {
@@ -1913,23 +1792,6 @@ pub struct EditDigestReq {
     pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
     pub digest: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetMemModelReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub mem_model: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMemModelReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMemModelResp {
-    #[prost(string, tag = "1")]
-    pub mem_model: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
 pub mod training_client {
@@ -2141,26 +2003,6 @@ pub mod training_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Training", "GetFile"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_file(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteFileReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Training/DeleteFile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Training", "DeleteFile"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn delete_files(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteFilesReq>,
@@ -2269,75 +2111,21 @@ pub mod training_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Training", "EditDigest"));
             self.inner.unary(req, path, codec).await
         }
-        /// ── 记忆模型 ──
-        pub async fn set_mem_model(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SetMemModelReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Training/SetMemModel",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Training", "SetMemModel"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_mem_model(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetMemModelReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMemModelResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Training/GetMemModel",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Training", "GetMemModel"));
-            self.inner.unary(req, path, codec).await
-        }
     }
 }
+/// 通用模型列表(LLM/Embedding/TTS 共用 —— 都只是一串模型名)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListLlmResp {
+pub struct ModelListResp {
     #[prost(string, repeated, tag = "1")]
     pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListEmbeddingResp {
-    #[prost(string, repeated, tag = "1")]
-    pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
+/// STT 单独:除模型名还带支持语言。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListSttResp {
     #[prost(string, repeated, tag = "1")]
     pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub langs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListTtsResp {
-    #[prost(string, repeated, tag = "1")]
-    pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod model_client {
@@ -2436,7 +2224,7 @@ pub mod model_client {
         pub async fn list_llms(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ListLlmResp>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2454,10 +2242,7 @@ pub mod model_client {
         pub async fn list_embeddings(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListEmbeddingResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2496,7 +2281,7 @@ pub mod model_client {
         pub async fn list_tts(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ListTtsResp>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2523,9 +2308,9 @@ pub struct PermissionGetReq {
 pub struct PermissionInfo {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    /// 该 did 持有的权限:normal / advanced / mem / plugin
-    #[prost(string, repeated, tag = "2")]
-    pub permissions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 该 did 持有的权限
+    #[prost(enumeration = "PermissionType", repeated, tag = "2")]
+    pub permissions: ::prost::alloc::vec::Vec<i32>,
     #[prost(string, tag = "3")]
     pub note: ::prost::alloc::string::String,
 }
@@ -2533,16 +2318,17 @@ pub struct PermissionInfo {
 pub struct PermissionAddReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    /// 权限类型(见 PermissionManage.ListTypes)
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    /// 要授予的权限类型
+    #[prost(enumeration = "PermissionType", tag = "2")]
+    pub r#type: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PermissionDeleteReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    /// 要取消的权限类型
+    #[prost(enumeration = "PermissionType", tag = "2")]
+    pub r#type: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PermissionEditReq {
@@ -2557,9 +2343,9 @@ pub struct PermissionListReq {
     /// 可选:按 did 过滤
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    /// 按权限类型过滤
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    /// 可选:按权限类型过滤(UNSPECIFIED=全部)
+    #[prost(enumeration = "PermissionType", tag = "2")]
+    pub r#type: i32,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -2569,12 +2355,6 @@ pub struct PermissionListResp {
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionListTypeResp {
-    /// normal / advanced / mem / plugin
-    #[prost(string, repeated, tag = "1")]
-    pub types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// ── 商户目录 ─────────────────────────────────────────────────────────────
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -2600,6 +2380,48 @@ pub mod merchant_list_resp {
         pub base: ::core::option::Option<super::super::Entity>,
         #[prost(int64, tag = "2")]
         pub created_at: i64,
+    }
+}
+/// 权限类型:固定闭集(四档),故用枚举而非魔法字符串。客户端有枚举即可显隐功能,不必再拉 ListTypes。
+/// 名为 PermissionType(不能叫 Permission —— 与 service Permission 同命名空间会撞)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PermissionType {
+    /// 占位 / 列表过滤时表示"全部"
+    PermissionUnspecified = 0,
+    /// 普通:自由度/系统提示词/用户提示词
+    PermissionNormal = 1,
+    /// 高级:上下文数/对话模型/嵌入模型/STT 模型
+    PermissionAdvanced = 2,
+    /// 记忆:上传资料/训练记忆
+    PermissionMem = 3,
+    /// 插件:启用插件
+    PermissionPlugin = 4,
+}
+impl PermissionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::PermissionUnspecified => "PERMISSION_UNSPECIFIED",
+            Self::PermissionNormal => "PERMISSION_NORMAL",
+            Self::PermissionAdvanced => "PERMISSION_ADVANCED",
+            Self::PermissionMem => "PERMISSION_MEM",
+            Self::PermissionPlugin => "PERMISSION_PLUGIN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PERMISSION_UNSPECIFIED" => Some(Self::PermissionUnspecified),
+            "PERMISSION_NORMAL" => Some(Self::PermissionNormal),
+            "PERMISSION_ADVANCED" => Some(Self::PermissionAdvanced),
+            "PERMISSION_MEM" => Some(Self::PermissionMem),
+            "PERMISSION_PLUGIN" => Some(Self::PermissionPlugin),
+            _ => None,
+        }
     }
 }
 /// Generated client implementations.
@@ -2898,30 +2720,6 @@ pub mod permission_manage_client {
                 .insert(GrpcMethod::new("hi.ai.PermissionManage", "List"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_types(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::PermissionListTypeResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.PermissionManage/ListTypes",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.PermissionManage", "ListTypes"));
-            self.inner.unary(req, path, codec).await
-        }
     }
 }
 /// Generated client implementations.
@@ -3205,8 +3003,8 @@ pub struct ApiKeyInfo {
     pub did: ::prost::alloc::string::String,
     #[prost(int32, tag = "3")]
     pub rate_limit: i32,
-    #[prost(int32, tag = "4")]
-    pub is_active: i32,
+    #[prost(bool, tag = "4")]
+    pub is_active: bool,
     #[prost(string, tag = "5")]
     pub note: ::prost::alloc::string::String,
     #[prost(int64, tag = "6")]
@@ -3230,7 +3028,7 @@ pub struct EditApiKeyResp {
     pub info: ::core::option::Option<ApiKeyInfo>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListApiKeyResp {
+pub struct ListApiKeysResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
@@ -3382,7 +3180,10 @@ pub mod api_key_client {
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,
-        ) -> std::result::Result<tonic::Response<super::ListApiKeyResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListApiKeysResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await

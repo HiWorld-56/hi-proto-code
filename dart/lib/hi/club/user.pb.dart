@@ -454,56 +454,7 @@ class RelationInfo extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(3);
 }
 
-/// ListFriends / ListServitors 共用(同形:一串 RelationInfo)。共用类型故不带方法名。
-class RelationListResp extends $pb.GeneratedMessage {
-  factory RelationListResp({
-    $core.Iterable<RelationInfo>? list,
-  }) {
-    final result = create();
-    if (list != null) result.list.addAll(list);
-    return result;
-  }
-
-  RelationListResp._();
-
-  factory RelationListResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RelationListResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RelationListResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..pPM<RelationInfo>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: RelationInfo.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RelationListResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RelationListResp copyWith(void Function(RelationListResp) updates) =>
-      super.copyWith((message) => updates(message as RelationListResp))
-          as RelationListResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RelationListResp create() => RelationListResp._();
-  @$core.override
-  RelationListResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static RelationListResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RelationListResp>(create);
-  static RelationListResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<RelationInfo> get list => $_getList(0);
-}
-
+/// 一次拿好友+仆从(同表,一次调用拿全);已删按关系拆开的 ListFriends/ListServitors(重叠)。
 class ListRelationsResp extends $pb.GeneratedMessage {
   factory ListRelationsResp({
     $core.Iterable<RelationInfo>? friend,

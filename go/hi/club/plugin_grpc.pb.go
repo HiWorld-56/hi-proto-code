@@ -27,7 +27,7 @@ const (
 	Plugin_List_FullMethodName             = "/hi.club.Plugin/List"
 	Plugin_ListVersions_FullMethodName     = "/hi.club.Plugin/ListVersions"
 	Plugin_Delete_FullMethodName           = "/hi.club.Plugin/Delete"
-	Plugin_DeleteByDids_FullMethodName     = "/hi.club.Plugin/DeleteByDids"
+	Plugin_DeleteByAgents_FullMethodName   = "/hi.club.Plugin/DeleteByAgents"
 	Plugin_SetActiveVersion_FullMethodName = "/hi.club.Plugin/SetActiveVersion"
 	Plugin_GetParams_FullMethodName        = "/hi.club.Plugin/GetParams"
 	Plugin_SetEnabled_FullMethodName       = "/hi.club.Plugin/SetEnabled"
@@ -49,13 +49,13 @@ const (
 //  2. apikey **挂机器人名下、不挂用户**,以便机器人换持有者后脚本照常跑。
 //  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
 type PluginClient interface {
-	Create(ctx context.Context, in *ai.CreateReq, opts ...grpc.CallOption) (*ai.CreateResp, error)
+	Create(ctx context.Context, in *ai.CreatePluginReq, opts ...grpc.CallOption) (*ai.CreatePluginResp, error)
 	Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetPluginReq, opts ...grpc.CallOption) (*ai.GetPluginResp, error)
 	List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
 	ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
 	Delete(ctx context.Context, in *ai.DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DeleteByDids(ctx context.Context, in *ai.DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActiveVersion(ctx context.Context, in *ai.SetActiveVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetParams(ctx context.Context, in *ai.GetParamsReq, opts ...grpc.CallOption) (*ai.GetParamsResp, error)
 	SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -69,9 +69,9 @@ func NewPluginClient(cc grpc.ClientConnInterface) PluginClient {
 	return &pluginClient{cc}
 }
 
-func (c *pluginClient) Create(ctx context.Context, in *ai.CreateReq, opts ...grpc.CallOption) (*ai.CreateResp, error) {
+func (c *pluginClient) Create(ctx context.Context, in *ai.CreatePluginReq, opts ...grpc.CallOption) (*ai.CreatePluginResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.CreateResp)
+	out := new(ai.CreatePluginResp)
 	err := c.cc.Invoke(ctx, Plugin_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -129,10 +129,10 @@ func (c *pluginClient) Delete(ctx context.Context, in *ai.DeletePluginReq, opts 
 	return out, nil
 }
 
-func (c *pluginClient) DeleteByDids(ctx context.Context, in *ai.DeletePluginByDidsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_DeleteByDids_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Plugin_DeleteByAgents_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -185,13 +185,13 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opt
 //  2. apikey **挂机器人名下、不挂用户**,以便机器人换持有者后脚本照常跑。
 //  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
 type PluginServer interface {
-	Create(context.Context, *ai.CreateReq) (*ai.CreateResp, error)
+	Create(context.Context, *ai.CreatePluginReq) (*ai.CreatePluginResp, error)
 	Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error)
 	List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error)
 	ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListPluginResp, error)
 	Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error)
-	DeleteByDids(context.Context, *ai.DeletePluginByDidsReq) (*emptypb.Empty, error)
+	DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActiveVersion(context.Context, *ai.SetActiveVersionReq) (*emptypb.Empty, error)
 	GetParams(context.Context, *ai.GetParamsReq) (*ai.GetParamsResp, error)
 	SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error)
@@ -204,7 +204,7 @@ type PluginServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPluginServer struct{}
 
-func (UnimplementedPluginServer) Create(context.Context, *ai.CreateReq) (*ai.CreateResp, error) {
+func (UnimplementedPluginServer) Create(context.Context, *ai.CreatePluginReq) (*ai.CreatePluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
 func (UnimplementedPluginServer) Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error) {
@@ -222,8 +222,8 @@ func (UnimplementedPluginServer) ListVersions(context.Context, *ai.ListVersionsR
 func (UnimplementedPluginServer) Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedPluginServer) DeleteByDids(context.Context, *ai.DeletePluginByDidsReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteByDids not implemented")
+func (UnimplementedPluginServer) DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteByAgents not implemented")
 }
 func (UnimplementedPluginServer) SetActiveVersion(context.Context, *ai.SetActiveVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetActiveVersion not implemented")
@@ -255,7 +255,7 @@ func RegisterPluginServer(s grpc.ServiceRegistrar, srv PluginServer) {
 }
 
 func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.CreateReq)
+	in := new(ai.CreatePluginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -267,7 +267,7 @@ func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: Plugin_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).Create(ctx, req.(*ai.CreateReq))
+		return srv.(PluginServer).Create(ctx, req.(*ai.CreatePluginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -362,20 +362,20 @@ func _Plugin_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_DeleteByDids_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.DeletePluginByDidsReq)
+func _Plugin_DeleteByAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.DeletePluginByAgentsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).DeleteByDids(ctx, in)
+		return srv.(PluginServer).DeleteByAgents(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_DeleteByDids_FullMethodName,
+		FullMethod: Plugin_DeleteByAgents_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).DeleteByDids(ctx, req.(*ai.DeletePluginByDidsReq))
+		return srv.(PluginServer).DeleteByAgents(ctx, req.(*ai.DeletePluginByAgentsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -466,8 +466,8 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_Delete_Handler,
 		},
 		{
-			MethodName: "DeleteByDids",
-			Handler:    _Plugin_DeleteByDids_Handler,
+			MethodName: "DeleteByAgents",
+			Handler:    _Plugin_DeleteByAgents_Handler,
 		},
 		{
 			MethodName: "SetActiveVersion",

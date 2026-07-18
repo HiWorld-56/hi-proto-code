@@ -86,11 +86,11 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$listMarks, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.DefaultConfigResp> defaultConfig(
+  $grpc.ResponseFuture<$0.DefaultConfigResp> getDefaultConfig(
     $1.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$defaultConfig, request, options: options);
+    return $createUnaryCall(_$getDefaultConfig, request, options: options);
   }
 
   /// ── club 自有:换绑主人 ──
@@ -155,9 +155,9 @@ class AgentClient extends $grpc.Client {
           '/hi.club.Agent/ListMarks',
           ($0.ListMarksReq value) => value.writeToBuffer(),
           $0.ListAgentResp.fromBuffer);
-  static final _$defaultConfig =
+  static final _$getDefaultConfig =
       $grpc.ClientMethod<$1.Empty, $0.DefaultConfigResp>(
-          '/hi.club.Agent/DefaultConfig',
+          '/hi.club.Agent/GetDefaultConfig',
           ($1.Empty value) => value.writeToBuffer(),
           $0.DefaultConfigResp.fromBuffer);
   static final _$bindMaster = $grpc.ClientMethod<$2.BindMasterReq, $1.Empty>(
@@ -235,8 +235,8 @@ abstract class AgentServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.ListMarksReq.fromBuffer(value),
         ($0.ListAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.Empty, $0.DefaultConfigResp>(
-        'DefaultConfig',
-        defaultConfig_Pre,
+        'GetDefaultConfig',
+        getDefaultConfig_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
@@ -325,12 +325,12 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$0.ListAgentResp> listMarks(
       $grpc.ServiceCall call, $0.ListMarksReq request);
 
-  $async.Future<$0.DefaultConfigResp> defaultConfig_Pre(
+  $async.Future<$0.DefaultConfigResp> getDefaultConfig_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
-    return defaultConfig($call, await $request);
+    return getDefaultConfig($call, await $request);
   }
 
-  $async.Future<$0.DefaultConfigResp> defaultConfig(
+  $async.Future<$0.DefaultConfigResp> getDefaultConfig(
       $grpc.ServiceCall call, $1.Empty request);
 
   $async.Future<$1.Empty> bindMaster_Pre(

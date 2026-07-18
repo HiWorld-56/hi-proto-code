@@ -28,7 +28,7 @@ type ApiKeyInfo struct {
 	Value         string                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
 	Did           string                 `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 	RateLimit     int32                  `protobuf:"varint,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
-	IsActive      int32                  `protobuf:"varint,4,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
+	IsActive      bool                   `protobuf:"varint,4,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
 	Note          string                 `protobuf:"bytes,5,opt,name=note,proto3" json:"note,omitempty"`
 	CreatedAt     int64                  `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -86,11 +86,11 @@ func (x *ApiKeyInfo) GetRateLimit() int32 {
 	return 0
 }
 
-func (x *ApiKeyInfo) GetIsActive() int32 {
+func (x *ApiKeyInfo) GetIsActive() bool {
 	if x != nil {
 		return x.IsActive
 	}
-	return 0
+	return false
 }
 
 func (x *ApiKeyInfo) GetNote() string {
@@ -247,7 +247,7 @@ func (x *EditApiKeyResp) GetInfo() *ApiKeyInfo {
 	return nil
 }
 
-type ListApiKeyResp struct {
+type ListApiKeysResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
 	Infos         []*ApiKeyInfo          `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
@@ -255,20 +255,20 @@ type ListApiKeyResp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListApiKeyResp) Reset() {
-	*x = ListApiKeyResp{}
+func (x *ListApiKeysResp) Reset() {
+	*x = ListApiKeysResp{}
 	mi := &file_hi_ai_api_key_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListApiKeyResp) String() string {
+func (x *ListApiKeysResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListApiKeyResp) ProtoMessage() {}
+func (*ListApiKeysResp) ProtoMessage() {}
 
-func (x *ListApiKeyResp) ProtoReflect() protoreflect.Message {
+func (x *ListApiKeysResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_api_key_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -280,19 +280,19 @@ func (x *ListApiKeyResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListApiKeyResp.ProtoReflect.Descriptor instead.
-func (*ListApiKeyResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListApiKeysResp.ProtoReflect.Descriptor instead.
+func (*ListApiKeysResp) Descriptor() ([]byte, []int) {
 	return file_hi_ai_api_key_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ListApiKeyResp) GetTotal() int32 {
+func (x *ListApiKeysResp) GetTotal() int32 {
 	if x != nil {
 		return x.Total
 	}
 	return 0
 }
 
-func (x *ListApiKeyResp) GetInfos() []*ApiKeyInfo {
+func (x *ListApiKeysResp) GetInfos() []*ApiKeyInfo {
 	if x != nil {
 		return x.Infos
 	}
@@ -354,7 +354,7 @@ const file_hi_ai_api_key_proto_rawDesc = "" +
 	"\x03did\x18\x02 \x01(\tR\x03did\x12\x1d\n" +
 	"\n" +
 	"rate_limit\x18\x03 \x01(\x05R\trateLimit\x12\x1b\n" +
-	"\tis_active\x18\x04 \x01(\x05R\bisActive\x12\x12\n" +
+	"\tis_active\x18\x04 \x01(\bR\bisActive\x12\x12\n" +
 	"\x04note\x18\x05 \x01(\tR\x04note\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\x06 \x01(\x03R\tcreatedAt\"9\n" +
@@ -364,16 +364,16 @@ const file_hi_ai_api_key_proto_rawDesc = "" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x12\n" +
 	"\x04note\x18\x02 \x01(\tR\x04note\"7\n" +
 	"\x0eEditApiKeyResp\x12%\n" +
-	"\x04info\x18\x01 \x01(\v2\x11.hi.ai.ApiKeyInfoR\x04info\"O\n" +
-	"\x0eListApiKeyResp\x12\x14\n" +
+	"\x04info\x18\x01 \x01(\v2\x11.hi.ai.ApiKeyInfoR\x04info\"P\n" +
+	"\x0fListApiKeysResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12'\n" +
 	"\x05infos\x18\x02 \x03(\v2\x11.hi.ai.ApiKeyInfoR\x05infos\"*\n" +
 	"\x0fDeleteApiKeyReq\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\xfd\x01\n" +
+	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\xfe\x01\n" +
 	"\x06ApiKey\x12@\n" +
 	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
-	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x124\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x15.hi.ai.ListApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x125\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x16.hi.ai.ListApiKeysResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\x06Delete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03Bv\n" +
 	"\tcom.hi.aiB\vApiKeyProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
@@ -395,7 +395,7 @@ var file_hi_ai_api_key_proto_goTypes = []any{
 	(*CreateApiKeyResp)(nil), // 1: hi.ai.CreateApiKeyResp
 	(*EditApiKeyReq)(nil),    // 2: hi.ai.EditApiKeyReq
 	(*EditApiKeyResp)(nil),   // 3: hi.ai.EditApiKeyResp
-	(*ListApiKeyResp)(nil),   // 4: hi.ai.ListApiKeyResp
+	(*ListApiKeysResp)(nil),  // 4: hi.ai.ListApiKeysResp
 	(*DeleteApiKeyReq)(nil),  // 5: hi.ai.DeleteApiKeyReq
 	(*emptypb.Empty)(nil),    // 6: google.protobuf.Empty
 	(*hi.Pagination)(nil),    // 7: hi.Pagination
@@ -403,14 +403,14 @@ var file_hi_ai_api_key_proto_goTypes = []any{
 var file_hi_ai_api_key_proto_depIdxs = []int32{
 	0, // 0: hi.ai.CreateApiKeyResp.info:type_name -> hi.ai.ApiKeyInfo
 	0, // 1: hi.ai.EditApiKeyResp.info:type_name -> hi.ai.ApiKeyInfo
-	0, // 2: hi.ai.ListApiKeyResp.infos:type_name -> hi.ai.ApiKeyInfo
+	0, // 2: hi.ai.ListApiKeysResp.infos:type_name -> hi.ai.ApiKeyInfo
 	6, // 3: hi.ai.ApiKey.Create:input_type -> google.protobuf.Empty
 	2, // 4: hi.ai.ApiKey.Edit:input_type -> hi.ai.EditApiKeyReq
 	7, // 5: hi.ai.ApiKey.List:input_type -> hi.Pagination
 	5, // 6: hi.ai.ApiKey.Delete:input_type -> hi.ai.DeleteApiKeyReq
 	1, // 7: hi.ai.ApiKey.Create:output_type -> hi.ai.CreateApiKeyResp
 	3, // 8: hi.ai.ApiKey.Edit:output_type -> hi.ai.EditApiKeyResp
-	4, // 9: hi.ai.ApiKey.List:output_type -> hi.ai.ListApiKeyResp
+	4, // 9: hi.ai.ApiKey.List:output_type -> hi.ai.ListApiKeysResp
 	6, // 10: hi.ai.ApiKey.Delete:output_type -> google.protobuf.Empty
 	7, // [7:11] is the sub-list for method output_type
 	3, // [3:7] is the sub-list for method input_type

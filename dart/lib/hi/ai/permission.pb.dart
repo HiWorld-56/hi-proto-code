@@ -16,8 +16,11 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
+import 'permission.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'permission.pbenum.dart';
 
 class PermissionGetReq extends $pb.GeneratedMessage {
   factory PermissionGetReq({
@@ -76,7 +79,7 @@ class PermissionGetReq extends $pb.GeneratedMessage {
 class PermissionInfo extends $pb.GeneratedMessage {
   factory PermissionInfo({
     $core.String? did,
-    $core.Iterable<$core.String>? permissions,
+    $core.Iterable<PermissionType>? permissions,
     $core.String? note,
   }) {
     final result = create();
@@ -100,7 +103,11 @@ class PermissionInfo extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..pPS(2, _omitFieldNames ? '' : 'permissions')
+    ..pc<PermissionType>(
+        2, _omitFieldNames ? '' : 'permissions', $pb.PbFieldType.KE,
+        valueOf: PermissionType.valueOf,
+        enumValues: PermissionType.values,
+        defaultEnumValue: PermissionType.PERMISSION_UNSPECIFIED)
     ..aOS(3, _omitFieldNames ? '' : 'note')
     ..hasRequiredFields = false;
 
@@ -133,7 +140,7 @@ class PermissionInfo extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$core.String> get permissions => $_getList(1);
+  $pb.PbList<PermissionType> get permissions => $_getList(1);
 
   @$pb.TagNumber(3)
   $core.String get note => $_getSZ(2);
@@ -148,7 +155,7 @@ class PermissionInfo extends $pb.GeneratedMessage {
 class PermissionAddReq extends $pb.GeneratedMessage {
   factory PermissionAddReq({
     $core.String? did,
-    $core.String? type,
+    PermissionType? type,
   }) {
     final result = create();
     if (did != null) result.did = did;
@@ -170,7 +177,8 @@ class PermissionAddReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
+    ..aE<PermissionType>(2, _omitFieldNames ? '' : 'type',
+        enumValues: PermissionType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -202,9 +210,9 @@ class PermissionAddReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
+  PermissionType get type => $_getN(1);
   @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
+  set type(PermissionType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasType() => $_has(1);
   @$pb.TagNumber(2)
@@ -214,7 +222,7 @@ class PermissionAddReq extends $pb.GeneratedMessage {
 class PermissionDeleteReq extends $pb.GeneratedMessage {
   factory PermissionDeleteReq({
     $core.String? did,
-    $core.String? type,
+    PermissionType? type,
   }) {
     final result = create();
     if (did != null) result.did = did;
@@ -236,7 +244,8 @@ class PermissionDeleteReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
+    ..aE<PermissionType>(2, _omitFieldNames ? '' : 'type',
+        enumValues: PermissionType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -268,9 +277,9 @@ class PermissionDeleteReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
+  PermissionType get type => $_getN(1);
   @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
+  set type(PermissionType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasType() => $_has(1);
   @$pb.TagNumber(2)
@@ -346,7 +355,7 @@ class PermissionEditReq extends $pb.GeneratedMessage {
 class PermissionListReq extends $pb.GeneratedMessage {
   factory PermissionListReq({
     $core.String? did,
-    $core.String? type,
+    PermissionType? type,
     $2.Pagination? pagination,
   }) {
     final result = create();
@@ -370,7 +379,8 @@ class PermissionListReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
+    ..aE<PermissionType>(2, _omitFieldNames ? '' : 'type',
+        enumValues: PermissionType.values)
     ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
@@ -404,9 +414,9 @@ class PermissionListReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
+  PermissionType get type => $_getN(1);
   @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
+  set type(PermissionType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasType() => $_has(1);
   @$pb.TagNumber(2)
@@ -483,55 +493,6 @@ class PermissionListResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<PermissionInfo> get infos => $_getList(1);
-}
-
-class PermissionListTypeResp extends $pb.GeneratedMessage {
-  factory PermissionListTypeResp({
-    $core.Iterable<$core.String>? types,
-  }) {
-    final result = create();
-    if (types != null) result.types.addAll(types);
-    return result;
-  }
-
-  PermissionListTypeResp._();
-
-  factory PermissionListTypeResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory PermissionListTypeResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PermissionListTypeResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'types')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PermissionListTypeResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PermissionListTypeResp copyWith(
-          void Function(PermissionListTypeResp) updates) =>
-      super.copyWith((message) => updates(message as PermissionListTypeResp))
-          as PermissionListTypeResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static PermissionListTypeResp create() => PermissionListTypeResp._();
-  @$core.override
-  PermissionListTypeResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static PermissionListTypeResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PermissionListTypeResp>(create);
-  static PermissionListTypeResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get types => $_getList(0);
 }
 
 /// ── 商户目录 ─────────────────────────────────────────────────────────────

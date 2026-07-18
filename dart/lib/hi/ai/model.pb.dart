@@ -16,8 +16,9 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class ListLLMResp extends $pb.GeneratedMessage {
-  factory ListLLMResp({
+/// 通用模型列表(LLM/Embedding/TTS 共用 —— 都只是一串模型名)。
+class ModelListResp extends $pb.GeneratedMessage {
+  factory ModelListResp({
     $core.Iterable<$core.String>? models,
   }) {
     final result = create();
@@ -25,93 +26,46 @@ class ListLLMResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListLLMResp._();
+  ModelListResp._();
 
-  factory ListLLMResp.fromBuffer($core.List<$core.int> data,
+  factory ModelListResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListLLMResp.fromJson($core.String json,
+  factory ModelListResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListLLMResp',
+      _omitMessageNames ? '' : 'ModelListResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'models')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListLLMResp clone() => deepCopy();
+  ModelListResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListLLMResp copyWith(void Function(ListLLMResp) updates) =>
-      super.copyWith((message) => updates(message as ListLLMResp))
-          as ListLLMResp;
+  ModelListResp copyWith(void Function(ModelListResp) updates) =>
+      super.copyWith((message) => updates(message as ModelListResp))
+          as ModelListResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListLLMResp create() => ListLLMResp._();
+  static ModelListResp create() => ModelListResp._();
   @$core.override
-  ListLLMResp createEmptyInstance() => create();
+  ModelListResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListLLMResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListLLMResp>(create);
-  static ListLLMResp? _defaultInstance;
+  static ModelListResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ModelListResp>(create);
+  static ModelListResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get models => $_getList(0);
 }
 
-class ListEmbeddingResp extends $pb.GeneratedMessage {
-  factory ListEmbeddingResp({
-    $core.Iterable<$core.String>? models,
-  }) {
-    final result = create();
-    if (models != null) result.models.addAll(models);
-    return result;
-  }
-
-  ListEmbeddingResp._();
-
-  factory ListEmbeddingResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListEmbeddingResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListEmbeddingResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'models')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListEmbeddingResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListEmbeddingResp copyWith(void Function(ListEmbeddingResp) updates) =>
-      super.copyWith((message) => updates(message as ListEmbeddingResp))
-          as ListEmbeddingResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListEmbeddingResp create() => ListEmbeddingResp._();
-  @$core.override
-  ListEmbeddingResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListEmbeddingResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListEmbeddingResp>(create);
-  static ListEmbeddingResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get models => $_getList(0);
-}
-
+/// STT 单独:除模型名还带支持语言。
 class ListSTTResp extends $pb.GeneratedMessage {
   factory ListSTTResp({
     $core.Iterable<$core.String>? models,
@@ -164,54 +118,6 @@ class ListSTTResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<$core.String> get langs => $_getList(1);
-}
-
-class ListTTSResp extends $pb.GeneratedMessage {
-  factory ListTTSResp({
-    $core.Iterable<$core.String>? models,
-  }) {
-    final result = create();
-    if (models != null) result.models.addAll(models);
-    return result;
-  }
-
-  ListTTSResp._();
-
-  factory ListTTSResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListTTSResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListTTSResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'models')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTTSResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTTSResp copyWith(void Function(ListTTSResp) updates) =>
-      super.copyWith((message) => updates(message as ListTTSResp))
-          as ListTTSResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListTTSResp create() => ListTTSResp._();
-  @$core.override
-  ListTTSResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListTTSResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListTTSResp>(create);
-  static ListTTSResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get models => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

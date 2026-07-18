@@ -34,10 +34,10 @@ const (
 // 模型目录(主体=模型)。**hi.ai.Model 的门面**,类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
 // 从 club.Agent 拆出 —— 跟 ai 一致:查"有哪些模型可用"与 agent CRUD 不是一个主体。
 type ModelClient interface {
-	ListLlms(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListLLMResp, error)
-	ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListEmbeddingResp, error)
+	ListLlms(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ModelListResp, error)
+	ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ModelListResp, error)
 	ListStts(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListSTTResp, error)
-	ListTts(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListTTSResp, error)
+	ListTts(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ModelListResp, error)
 }
 
 type modelClient struct {
@@ -48,9 +48,9 @@ func NewModelClient(cc grpc.ClientConnInterface) ModelClient {
 	return &modelClient{cc}
 }
 
-func (c *modelClient) ListLlms(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListLLMResp, error) {
+func (c *modelClient) ListLlms(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ModelListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListLLMResp)
+	out := new(ai.ModelListResp)
 	err := c.cc.Invoke(ctx, Model_ListLlms_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -58,9 +58,9 @@ func (c *modelClient) ListLlms(ctx context.Context, in *emptypb.Empty, opts ...g
 	return out, nil
 }
 
-func (c *modelClient) ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListEmbeddingResp, error) {
+func (c *modelClient) ListEmbeddings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ModelListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListEmbeddingResp)
+	out := new(ai.ModelListResp)
 	err := c.cc.Invoke(ctx, Model_ListEmbeddings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -78,9 +78,9 @@ func (c *modelClient) ListStts(ctx context.Context, in *emptypb.Empty, opts ...g
 	return out, nil
 }
 
-func (c *modelClient) ListTts(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListTTSResp, error) {
+func (c *modelClient) ListTts(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ModelListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListTTSResp)
+	out := new(ai.ModelListResp)
 	err := c.cc.Invoke(ctx, Model_ListTts_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -95,10 +95,10 @@ func (c *modelClient) ListTts(ctx context.Context, in *emptypb.Empty, opts ...gr
 // 模型目录(主体=模型)。**hi.ai.Model 的门面**,类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
 // 从 club.Agent 拆出 —— 跟 ai 一致:查"有哪些模型可用"与 agent CRUD 不是一个主体。
 type ModelServer interface {
-	ListLlms(context.Context, *emptypb.Empty) (*ai.ListLLMResp, error)
-	ListEmbeddings(context.Context, *emptypb.Empty) (*ai.ListEmbeddingResp, error)
+	ListLlms(context.Context, *emptypb.Empty) (*ai.ModelListResp, error)
+	ListEmbeddings(context.Context, *emptypb.Empty) (*ai.ModelListResp, error)
 	ListStts(context.Context, *emptypb.Empty) (*ai.ListSTTResp, error)
-	ListTts(context.Context, *emptypb.Empty) (*ai.ListTTSResp, error)
+	ListTts(context.Context, *emptypb.Empty) (*ai.ModelListResp, error)
 }
 
 // UnimplementedModelServer should be embedded to have
@@ -108,16 +108,16 @@ type ModelServer interface {
 // pointer dereference when methods are called.
 type UnimplementedModelServer struct{}
 
-func (UnimplementedModelServer) ListLlms(context.Context, *emptypb.Empty) (*ai.ListLLMResp, error) {
+func (UnimplementedModelServer) ListLlms(context.Context, *emptypb.Empty) (*ai.ModelListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListLlms not implemented")
 }
-func (UnimplementedModelServer) ListEmbeddings(context.Context, *emptypb.Empty) (*ai.ListEmbeddingResp, error) {
+func (UnimplementedModelServer) ListEmbeddings(context.Context, *emptypb.Empty) (*ai.ModelListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListEmbeddings not implemented")
 }
 func (UnimplementedModelServer) ListStts(context.Context, *emptypb.Empty) (*ai.ListSTTResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListStts not implemented")
 }
-func (UnimplementedModelServer) ListTts(context.Context, *emptypb.Empty) (*ai.ListTTSResp, error) {
+func (UnimplementedModelServer) ListTts(context.Context, *emptypb.Empty) (*ai.ModelListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTts not implemented")
 }
 func (UnimplementedModelServer) testEmbeddedByValue() {}

@@ -23,27 +23,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ListLLMResp struct {
+// 通用模型列表(LLM/Embedding/TTS 共用 —— 都只是一串模型名)。
+type ModelListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Models        []string               `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListLLMResp) Reset() {
-	*x = ListLLMResp{}
+func (x *ModelListResp) Reset() {
+	*x = ModelListResp{}
 	mi := &file_hi_ai_model_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListLLMResp) String() string {
+func (x *ModelListResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListLLMResp) ProtoMessage() {}
+func (*ModelListResp) ProtoMessage() {}
 
-func (x *ListLLMResp) ProtoReflect() protoreflect.Message {
+func (x *ModelListResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_model_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,62 +56,19 @@ func (x *ListLLMResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListLLMResp.ProtoReflect.Descriptor instead.
-func (*ListLLMResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ModelListResp.ProtoReflect.Descriptor instead.
+func (*ModelListResp) Descriptor() ([]byte, []int) {
 	return file_hi_ai_model_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListLLMResp) GetModels() []string {
+func (x *ModelListResp) GetModels() []string {
 	if x != nil {
 		return x.Models
 	}
 	return nil
 }
 
-type ListEmbeddingResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Models        []string               `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListEmbeddingResp) Reset() {
-	*x = ListEmbeddingResp{}
-	mi := &file_hi_ai_model_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListEmbeddingResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListEmbeddingResp) ProtoMessage() {}
-
-func (x *ListEmbeddingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_model_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListEmbeddingResp.ProtoReflect.Descriptor instead.
-func (*ListEmbeddingResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_model_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ListEmbeddingResp) GetModels() []string {
-	if x != nil {
-		return x.Models
-	}
-	return nil
-}
-
+// STT 单独:除模型名还带支持语言。
 type ListSTTResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Models        []string               `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
@@ -121,7 +79,7 @@ type ListSTTResp struct {
 
 func (x *ListSTTResp) Reset() {
 	*x = ListSTTResp{}
-	mi := &file_hi_ai_model_proto_msgTypes[2]
+	mi := &file_hi_ai_model_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -133,7 +91,7 @@ func (x *ListSTTResp) String() string {
 func (*ListSTTResp) ProtoMessage() {}
 
 func (x *ListSTTResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_model_proto_msgTypes[2]
+	mi := &file_hi_ai_model_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -146,7 +104,7 @@ func (x *ListSTTResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSTTResp.ProtoReflect.Descriptor instead.
 func (*ListSTTResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_model_proto_rawDescGZIP(), []int{2}
+	return file_hi_ai_model_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ListSTTResp) GetModels() []string {
@@ -163,69 +121,21 @@ func (x *ListSTTResp) GetLangs() []string {
 	return nil
 }
 
-type ListTTSResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Models        []string               `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListTTSResp) Reset() {
-	*x = ListTTSResp{}
-	mi := &file_hi_ai_model_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListTTSResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListTTSResp) ProtoMessage() {}
-
-func (x *ListTTSResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_model_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListTTSResp.ProtoReflect.Descriptor instead.
-func (*ListTTSResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_model_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *ListTTSResp) GetModels() []string {
-	if x != nil {
-		return x.Models
-	}
-	return nil
-}
-
 var File_hi_ai_model_proto protoreflect.FileDescriptor
 
 const file_hi_ai_model_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"%\n" +
-	"\vListLLMResp\x12\x16\n" +
-	"\x06models\x18\x01 \x03(\tR\x06models\"+\n" +
-	"\x11ListEmbeddingResp\x12\x16\n" +
+	"\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"'\n" +
+	"\rModelListResp\x12\x16\n" +
 	"\x06models\x18\x01 \x03(\tR\x06models\";\n" +
 	"\vListSTTResp\x12\x16\n" +
 	"\x06models\x18\x01 \x03(\tR\x06models\x12\x14\n" +
-	"\x05langs\x18\x02 \x03(\tR\x05langs\"%\n" +
-	"\vListTTSResp\x12\x16\n" +
-	"\x06models\x18\x01 \x03(\tR\x06models2\x8e\x02\n" +
-	"\x05Model\x12=\n" +
-	"\bListLlms\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListLLMResp\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
-	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.ListEmbeddingResp\"\x05\x8a\xb5\x18\x01\x03\x12=\n" +
-	"\bListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x03\x12<\n" +
-	"\aListTts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListTTSResp\"\x05\x8a\xb5\x18\x01\x03Bu\n" +
+	"\x05langs\x18\x02 \x03(\tR\x05langs2\x8e\x02\n" +
+	"\x05Model\x12?\n" +
+	"\bListLlms\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
+	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12=\n" +
+	"\bListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
+	"\aListTts\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03Bu\n" +
 	"\tcom.hi.aiB\n" +
 	"ModelProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
@@ -241,23 +151,21 @@ func file_hi_ai_model_proto_rawDescGZIP() []byte {
 	return file_hi_ai_model_proto_rawDescData
 }
 
-var file_hi_ai_model_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_hi_ai_model_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_ai_model_proto_goTypes = []any{
-	(*ListLLMResp)(nil),       // 0: hi.ai.ListLLMResp
-	(*ListEmbeddingResp)(nil), // 1: hi.ai.ListEmbeddingResp
-	(*ListSTTResp)(nil),       // 2: hi.ai.ListSTTResp
-	(*ListTTSResp)(nil),       // 3: hi.ai.ListTTSResp
-	(*emptypb.Empty)(nil),     // 4: google.protobuf.Empty
+	(*ModelListResp)(nil), // 0: hi.ai.ModelListResp
+	(*ListSTTResp)(nil),   // 1: hi.ai.ListSTTResp
+	(*emptypb.Empty)(nil), // 2: google.protobuf.Empty
 }
 var file_hi_ai_model_proto_depIdxs = []int32{
-	4, // 0: hi.ai.Model.ListLlms:input_type -> google.protobuf.Empty
-	4, // 1: hi.ai.Model.ListEmbeddings:input_type -> google.protobuf.Empty
-	4, // 2: hi.ai.Model.ListStts:input_type -> google.protobuf.Empty
-	4, // 3: hi.ai.Model.ListTts:input_type -> google.protobuf.Empty
-	0, // 4: hi.ai.Model.ListLlms:output_type -> hi.ai.ListLLMResp
-	1, // 5: hi.ai.Model.ListEmbeddings:output_type -> hi.ai.ListEmbeddingResp
-	2, // 6: hi.ai.Model.ListStts:output_type -> hi.ai.ListSTTResp
-	3, // 7: hi.ai.Model.ListTts:output_type -> hi.ai.ListTTSResp
+	2, // 0: hi.ai.Model.ListLlms:input_type -> google.protobuf.Empty
+	2, // 1: hi.ai.Model.ListEmbeddings:input_type -> google.protobuf.Empty
+	2, // 2: hi.ai.Model.ListStts:input_type -> google.protobuf.Empty
+	2, // 3: hi.ai.Model.ListTts:input_type -> google.protobuf.Empty
+	0, // 4: hi.ai.Model.ListLlms:output_type -> hi.ai.ModelListResp
+	0, // 5: hi.ai.Model.ListEmbeddings:output_type -> hi.ai.ModelListResp
+	1, // 6: hi.ai.Model.ListStts:output_type -> hi.ai.ListSTTResp
+	0, // 7: hi.ai.Model.ListTts:output_type -> hi.ai.ModelListResp
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -276,7 +184,7 @@ func file_hi_ai_model_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_model_proto_rawDesc), len(file_hi_ai_model_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
