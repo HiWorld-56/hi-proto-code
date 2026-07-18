@@ -174,7 +174,7 @@ func (x *BindStatusReq) GetAgent() string {
 
 type BindStatusResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"` // None / master
+	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"` // None / master(Entity=PUBLIC)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -480,10 +480,10 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x06master\x18\x01 \x01(\tR\x06master\x12\x14\n" +
 	"\x05agent\x18\x02 \x01(\tR\x05agent\"%\n" +
 	"\rBindStatusReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"4\n" +
-	"\x0eBindStatusResp\x12\"\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"@\n" +
+	"\x0eBindStatusResp\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x06master\"3\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x01\"3\n" +
 	"\vTransferReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x0e\n" +
 	"\x02to\x18\x02 \x01(\tR\x02to\"\\\n" +
@@ -491,15 +491,15 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\towner_did\x18\x01 \x01(\tR\bownerDid\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"N\n" +
-	"\x0eListOnlineResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\")\n" +
+	"pagination\"`\n" +
+	"\x0eListOnlineResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x12,\n" +
+	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\")\n" +
 	"\x11GetAgentMasterReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"8\n" +
-	"\x12GetAgentMasterResp\x12\"\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"D\n" +
+	"\x12GetAgentMasterResp\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x06master2\x97\x06\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x012\x97\x06\n" +
 	"\x05Agent\x12>\n" +
 	"\x06Create\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
 	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +

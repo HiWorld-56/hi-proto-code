@@ -210,15 +210,17 @@ const ListGroupMessageResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.club.Packet',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListGroupMessageResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGroupMessageRespDescriptor = $convert.base64Decode(
-    'ChRMaXN0R3JvdXBNZXNzYWdlUmVzcBIjCgRsaXN0GAEgAygLMg8uaGkuY2x1Yi5QYWNrZXRSBG'
-    'xpc3Q=');
+    'ChRMaXN0R3JvdXBNZXNzYWdlUmVzcBIpCgRsaXN0GAEgAygLMg8uaGkuY2x1Yi5QYWNrZXRCBJ'
+    'C1GAJSBGxpc3Q6BJi1GAI=');
 
 @$core.Deprecated('Use listGroupMemberReqDescriptor instead')
 const ListGroupMemberReq$json = {
@@ -258,14 +260,16 @@ final $typed_data.Uint8List getGroupMemberTotalReqDescriptor =
 const GetGroupMemberTotalResp$json = {
   '1': 'GetGroupMemberTotalResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetGroupMemberTotalResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getGroupMemberTotalRespDescriptor =
     $convert.base64Decode(
-        'ChdHZXRHcm91cE1lbWJlclRvdGFsUmVzcBIUCgV0b3RhbBgBIAEoBVIFdG90YWw=');
+        'ChdHZXRHcm91cE1lbWJlclRvdGFsUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYAlIFdG90YWw6BJ'
+        'i1GAI=');
 
 @$core.Deprecated('Use inviteGroupReqDescriptor instead')
 const InviteGroupReq$json = {
@@ -350,13 +354,14 @@ final $typed_data.Uint8List getRoleReqDescriptor =
 const GetRoleResp$json = {
   '1': 'GetRoleResp',
   '2': [
-    {'1': 'role', '3': 1, '4': 1, '5': 9, '10': 'role'},
+    {'1': 'role', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'role'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetRoleResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getRoleRespDescriptor =
-    $convert.base64Decode('CgtHZXRSb2xlUmVzcBISCgRyb2xlGAEgASgJUgRyb2xl');
+final $typed_data.Uint8List getRoleRespDescriptor = $convert.base64Decode(
+    'CgtHZXRSb2xlUmVzcBIYCgRyb2xlGAEgASgJQgSQtRgCUgRyb2xlOgSYtRgC');
 
 @$core.Deprecated('Use setDndReqDescriptor instead')
 const SetDndReq$json = {

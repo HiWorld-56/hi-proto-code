@@ -19,32 +19,35 @@ import 'dart:typed_data' as $typed_data;
 const Prompt$json = {
   '1': 'Prompt',
   '2': [
-    {'1': 'system', '3': 1, '4': 1, '5': 9, '10': 'system'},
-    {'1': 'user', '3': 2, '4': 1, '5': 9, '10': 'user'},
+    {'1': 'system', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'system'},
+    {'1': 'user', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'user'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `Prompt`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List promptDescriptor = $convert.base64Decode(
-    'CgZQcm9tcHQSFgoGc3lzdGVtGAEgASgJUgZzeXN0ZW0SEgoEdXNlchgCIAEoCVIEdXNlcg==');
+    'CgZQcm9tcHQSHAoGc3lzdGVtGAEgASgJQgSQtRgDUgZzeXN0ZW0SGAoEdXNlchgCIAEoCUIEkL'
+    'UYA1IEdXNlcjoEmLUYAw==');
 
 @$core.Deprecated('Use modelSetDescriptor instead')
 const ModelSet$json = {
   '1': 'ModelSet',
   '2': [
-    {'1': 'llm', '3': 1, '4': 1, '5': 9, '10': 'llm'},
-    {'1': 'stt', '3': 2, '4': 1, '5': 9, '10': 'stt'},
-    {'1': 'tts', '3': 3, '4': 1, '5': 9, '10': 'tts'},
-    {'1': 'embedding', '3': 4, '4': 1, '5': 9, '10': 'embedding'},
-    {'1': 'mem_model', '3': 5, '4': 1, '5': 9, '10': 'memModel'},
+    {'1': 'llm', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'llm'},
+    {'1': 'stt', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'stt'},
+    {'1': 'tts', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'tts'},
+    {'1': 'embedding', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'embedding'},
+    {'1': 'mem_model', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'memModel'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ModelSet`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List modelSetDescriptor = $convert.base64Decode(
-    'CghNb2RlbFNldBIQCgNsbG0YASABKAlSA2xsbRIQCgNzdHQYAiABKAlSA3N0dBIQCgN0dHMYAy'
-    'ABKAlSA3R0cxIcCgllbWJlZGRpbmcYBCABKAlSCWVtYmVkZGluZxIbCgltZW1fbW9kZWwYBSAB'
-    'KAlSCG1lbU1vZGVs');
+    'CghNb2RlbFNldBIWCgNsbG0YASABKAlCBJC1GANSA2xsbRIWCgNzdHQYAiABKAlCBJC1GANSA3'
+    'N0dBIWCgN0dHMYAyABKAlCBJC1GANSA3R0cxIiCgllbWJlZGRpbmcYBCABKAlCBJC1GANSCWVt'
+    'YmVkZGluZxIhCgltZW1fbW9kZWwYBSABKAlCBJC1GANSCG1lbU1vZGVsOgSYtRgD');
 
 @$core.Deprecated('Use agentConfigDescriptor instead')
 const AgentConfig$json = {
@@ -56,6 +59,7 @@ const AgentConfig$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ai.Prompt',
+      '8': {},
       '10': 'prompt'
     },
     {
@@ -63,6 +67,7 @@ const AgentConfig$json = {
       '3': 2,
       '4': 1,
       '5': 2,
+      '8': {},
       '9': 0,
       '10': 'freedom',
       '17': true
@@ -73,19 +78,31 @@ const AgentConfig$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ai.ModelSet',
+      '8': {},
       '10': 'model'
     },
-    {'1': 'qa_num', '3': 4, '4': 1, '5': 5, '9': 1, '10': 'qaNum', '17': true},
+    {
+      '1': 'qa_num',
+      '3': 4,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 1,
+      '10': 'qaNum',
+      '17': true
+    },
     {
       '1': 'use_mem',
       '3': 5,
       '4': 1,
       '5': 8,
+      '8': {},
       '9': 2,
       '10': 'useMem',
       '17': true
     },
   ],
+  '7': {},
   '8': [
     {'1': '_freedom'},
     {'1': '_qa_num'},
@@ -95,10 +112,11 @@ const AgentConfig$json = {
 
 /// Descriptor for `AgentConfig`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List agentConfigDescriptor = $convert.base64Decode(
-    'CgtBZ2VudENvbmZpZxIlCgZwcm9tcHQYASABKAsyDS5oaS5haS5Qcm9tcHRSBnByb21wdBIdCg'
-    'dmcmVlZG9tGAIgASgCSABSB2ZyZWVkb22IAQESJQoFbW9kZWwYAyABKAsyDy5oaS5haS5Nb2Rl'
-    'bFNldFIFbW9kZWwSGgoGcWFfbnVtGAQgASgFSAFSBXFhTnVtiAEBEhwKB3VzZV9tZW0YBSABKA'
-    'hIAlIGdXNlTWVtiAEBQgoKCF9mcmVlZG9tQgkKB19xYV9udW1CCgoIX3VzZV9tZW0=');
+    'CgtBZ2VudENvbmZpZxIrCgZwcm9tcHQYASABKAsyDS5oaS5haS5Qcm9tcHRCBJC1GANSBnByb2'
+    '1wdBIjCgdmcmVlZG9tGAIgASgCQgSQtRgDSABSB2ZyZWVkb22IAQESKwoFbW9kZWwYAyABKAsy'
+    'Dy5oaS5haS5Nb2RlbFNldEIEkLUYA1IFbW9kZWwSIAoGcWFfbnVtGAQgASgFQgSQtRgDSAFSBX'
+    'FhTnVtiAEBEiIKB3VzZV9tZW0YBSABKAhCBJC1GANIAlIGdXNlTWVtiAEBOgSYtRgDQgoKCF9m'
+    'cmVlZG9tQgkKB19xYV9udW1CCgoIX3VzZV9tZW0=');
 
 @$core.Deprecated('Use tokenUsageDescriptor instead')
 const TokenUsage$json = {
@@ -120,37 +138,49 @@ final $typed_data.Uint8List tokenUsageDescriptor = $convert.base64Decode(
 const AgentInfo$json = {
   '1': 'AgentInfo',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
     {
       '1': 'config',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.ai.AgentConfig',
+      '8': {},
       '10': 'config'
     },
-    {'1': 'creator', '3': 3, '4': 1, '5': 9, '10': 'creator'},
-    {'1': 'note', '3': 4, '4': 1, '5': 9, '10': 'note'},
+    {'1': 'creator', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'creator'},
+    {'1': 'note', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'note'},
     {
       '1': 'token',
       '3': 5,
       '4': 1,
       '5': 11,
       '6': '.hi.ai.TokenUsage',
+      '8': {},
       '10': 'token'
     },
-    {'1': 'created_at', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
-    {'1': 'marked', '3': 7, '4': 1, '5': 8, '10': 'marked'},
+    {'1': 'created_at', '3': 6, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+    {'1': 'marked', '3': 7, '4': 1, '5': 8, '8': {}, '10': 'marked'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `AgentInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List agentInfoDescriptor = $convert.base64Decode(
-    'CglBZ2VudEluZm8SHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIqCgZjb25maWcYAi'
-    'ABKAsyEi5oaS5haS5BZ2VudENvbmZpZ1IGY29uZmlnEhgKB2NyZWF0b3IYAyABKAlSB2NyZWF0'
-    'b3ISEgoEbm90ZRgEIAEoCVIEbm90ZRInCgV0b2tlbhgFIAEoCzIRLmhpLmFpLlRva2VuVXNhZ2'
-    'VSBXRva2VuEh0KCmNyZWF0ZWRfYXQYBiABKANSCWNyZWF0ZWRBdBIWCgZtYXJrZWQYByABKAhS'
-    'Bm1hcmtlZA==');
+    'CglBZ2VudEluZm8SJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIwCgZjb2'
+    '5maWcYAiABKAsyEi5oaS5haS5BZ2VudENvbmZpZ0IEkLUYA1IGY29uZmlnEh4KB2NyZWF0b3IY'
+    'AyABKAlCBJC1GANSB2NyZWF0b3ISGAoEbm90ZRgEIAEoCUIEkLUYA1IEbm90ZRItCgV0b2tlbh'
+    'gFIAEoCzIRLmhpLmFpLlRva2VuVXNhZ2VCBJC1GANSBXRva2VuEiMKCmNyZWF0ZWRfYXQYBiAB'
+    'KANCBJC1GANSCWNyZWF0ZWRBdBIcCgZtYXJrZWQYByABKAhCBJC1GANSBm1hcmtlZDoEmLUYAw'
+    '==');
 
 @$core.Deprecated('Use defaultConfigRespDescriptor instead')
 const DefaultConfigResp$json = {
@@ -162,15 +192,17 @@ const DefaultConfigResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ai.AgentConfig',
+      '8': {},
       '10': 'config'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `DefaultConfigResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List defaultConfigRespDescriptor = $convert.base64Decode(
-    'ChFEZWZhdWx0Q29uZmlnUmVzcBIqCgZjb25maWcYASABKAsyEi5oaS5haS5BZ2VudENvbmZpZ1'
-    'IGY29uZmln');
+    'ChFEZWZhdWx0Q29uZmlnUmVzcBIwCgZjb25maWcYASABKAsyEi5oaS5haS5BZ2VudENvbmZpZ0'
+    'IEkLUYA1IGY29uZmlnOgSYtRgD');
 
 @$core.Deprecated('Use createAgentReqDescriptor instead')
 const CreateAgentReq$json = {
@@ -188,13 +220,22 @@ final $typed_data.Uint8List createAgentReqDescriptor = $convert.base64Decode(
 const CreateAgentResp$json = {
   '1': 'CreateAgentResp',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
     {
       '1': 'config',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.ai.AgentConfig',
+      '8': {},
       '10': 'config'
     },
     {
@@ -203,16 +244,18 @@ const CreateAgentResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.Entity',
+      '8': {},
       '10': 'creator'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `CreateAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createAgentRespDescriptor = $convert.base64Decode(
-    'Cg9DcmVhdGVBZ2VudFJlc3ASHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIqCgZjb2'
-    '5maWcYAiABKAsyEi5oaS5haS5BZ2VudENvbmZpZ1IGY29uZmlnEiQKB2NyZWF0b3IYAyABKAsy'
-    'Ci5oaS5FbnRpdHlSB2NyZWF0b3I=');
+    'Cg9DcmVhdGVBZ2VudFJlc3ASJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZR'
+    'IwCgZjb25maWcYAiABKAsyEi5oaS5haS5BZ2VudENvbmZpZ0IEkLUYA1IGY29uZmlnEioKB2Ny'
+    'ZWF0b3IYAyABKAsyCi5oaS5FbnRpdHlCBJC1GAFSB2NyZWF0b3I6BJi1GAM=');
 
 @$core.Deprecated('Use editAgentReqDescriptor instead')
 const EditAgentReq$json = {
@@ -240,22 +283,24 @@ final $typed_data.Uint8List editAgentReqDescriptor = $convert.base64Decode(
 const ListAgentResp$json = {
   '1': 'ListAgentResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'infos',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.ai.AgentInfo',
+      '8': {},
       '10': 'infos'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0QWdlbnRSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBImCgVpbmZvcxgCIAMoCzIQLm'
-    'hpLmFpLkFnZW50SW5mb1IFaW5mb3M=');
+    'Cg1MaXN0QWdlbnRSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIsCgVpbmZvcxgCIA'
+    'MoCzIQLmhpLmFpLkFnZW50SW5mb0IEkLUYA1IFaW5mb3M6BJi1GAM=');
 
 @$core.Deprecated('Use listAgentReqDescriptor instead')
 const ListAgentReq$json = {
@@ -333,14 +378,17 @@ const GetAgentResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ai.AgentInfo',
+      '8': {},
       '10': 'info'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getAgentRespDescriptor = $convert.base64Decode(
-    'CgxHZXRBZ2VudFJlc3ASJAoEaW5mbxgBIAEoCzIQLmhpLmFpLkFnZW50SW5mb1IEaW5mbw==');
+    'CgxHZXRBZ2VudFJlc3ASKgoEaW5mbxgBIAEoCzIQLmhpLmFpLkFnZW50SW5mb0IEkLUYA1IEaW'
+    '5mbzoEmLUYAw==');
 
 @$core.Deprecated('Use agentUsageReqDescriptor instead')
 const AgentUsageReq$json = {

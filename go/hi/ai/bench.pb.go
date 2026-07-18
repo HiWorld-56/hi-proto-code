@@ -24,16 +24,17 @@ const (
 
 // 一次测时明细(bot_sts_count 的一行):各段耗时。
 type AgentDelayUnit struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	Llm           int32                  `protobuf:"varint,4,opt,name=llm,proto3" json:"llm,omitempty"`
-	Llm2          int32                  `protobuf:"varint,5,opt,name=llm2,proto3" json:"llm2,omitempty"`
-	Stt           int32                  `protobuf:"varint,6,opt,name=stt,proto3" json:"stt,omitempty"`
-	Tts           int32                  `protobuf:"varint,7,opt,name=tts,proto3" json:"tts,omitempty"`
-	FunctionCall  int32                  `protobuf:"varint,8,opt,name=function_call,json=functionCall,proto3" json:"function_call,omitempty"`
-	TestTime      int64                  `protobuf:"varint,9,opt,name=test_time,json=testTime,proto3" json:"test_time,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 与 AgentUsageResp(同 owner 运营指标)一致取 SELF —— 无 participant 对端会看别人机器人的延迟
+	Agent         string `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Uuid          string `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Type          string `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
+	Llm           int32  `protobuf:"varint,4,opt,name=llm,proto3" json:"llm,omitempty"`
+	Llm2          int32  `protobuf:"varint,5,opt,name=llm2,proto3" json:"llm2,omitempty"`
+	Stt           int32  `protobuf:"varint,6,opt,name=stt,proto3" json:"stt,omitempty"`
+	Tts           int32  `protobuf:"varint,7,opt,name=tts,proto3" json:"tts,omitempty"`
+	FunctionCall  int32  `protobuf:"varint,8,opt,name=function_call,json=functionCall,proto3" json:"function_call,omitempty"`
+	TestTime      int64  `protobuf:"varint,9,opt,name=test_time,json=testTime,proto3" json:"test_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -247,26 +248,26 @@ var File_hi_ai_bench_proto protoreflect.FileDescriptor
 
 const file_hi_ai_bench_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/bench.proto\x12\x05hi.ai\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xda\x01\n" +
-	"\x0eAgentDelayUnit\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\x12\x10\n" +
-	"\x03llm\x18\x04 \x01(\x05R\x03llm\x12\x12\n" +
-	"\x04llm2\x18\x05 \x01(\x05R\x04llm2\x12\x10\n" +
-	"\x03stt\x18\x06 \x01(\x05R\x03stt\x12\x10\n" +
-	"\x03tts\x18\a \x01(\x05R\x03tts\x12#\n" +
-	"\rfunction_call\x18\b \x01(\x05R\ffunctionCall\x12\x1b\n" +
-	"\ttest_time\x18\t \x01(\x03R\btestTime\"m\n" +
+	"\x11hi/ai/bench.proto\x12\x05hi.ai\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x96\x02\n" +
+	"\x0eAgentDelayUnit\x12\x1a\n" +
+	"\x05agent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05agent\x12\x18\n" +
+	"\x04uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x18\n" +
+	"\x04type\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x16\n" +
+	"\x03llm\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x03R\x03llm\x12\x18\n" +
+	"\x04llm2\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03R\x04llm2\x12\x16\n" +
+	"\x03stt\x18\x06 \x01(\x05B\x04\x90\xb5\x18\x03R\x03stt\x12\x16\n" +
+	"\x03tts\x18\a \x01(\x05B\x04\x90\xb5\x18\x03R\x03tts\x12)\n" +
+	"\rfunction_call\x18\b \x01(\x05B\x04\x90\xb5\x18\x03R\ffunctionCall\x12!\n" +
+	"\ttest_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03R\btestTime:\x04\x98\xb5\x18\x03\"m\n" +
 	"\x11ListAgentDelayReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04type\x18\x02 \x01(\tR\x04type\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"W\n" +
-	"\x12ListAgentDelayResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12+\n" +
-	"\x05units\x18\x02 \x03(\v2\x15.hi.ai.AgentDelayUnitR\x05units2P\n" +
+	"pagination\"i\n" +
+	"\x12ListAgentDelayResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x121\n" +
+	"\x05units\x18\x02 \x03(\v2\x15.hi.ai.AgentDelayUnitB\x04\x90\xb5\x18\x03R\x05units:\x04\x98\xb5\x18\x032P\n" +
 	"\n" +
 	"AgentBench\x12B\n" +
 	"\x04List\x12\x18.hi.ai.ListAgentDelayReq\x1a\x19.hi.ai.ListAgentDelayResp\"\x05\x8a\xb5\x18\x01\x03Bu\n" +

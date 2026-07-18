@@ -84,6 +84,7 @@ class PcOrderData extends $pb.GeneratedMessage {
   void clearNonce() => $_clearField(2);
 }
 
+/// 我的订单(hidid-pc 为订单主体拉取)→ SELF。
 class PcOrder extends $pb.GeneratedMessage {
   factory PcOrder({
     $core.String? id,

@@ -44,18 +44,19 @@ final $typed_data.Uint8List statusReqDescriptor =
 const StatusResp$json = {
   '1': 'StatusResp',
   '2': [
-    {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
-    {'1': 'mem_count', '3': 2, '4': 1, '5': 5, '10': 'memCount'},
-    {'1': 'slice_count', '3': 3, '4': 1, '5': 5, '10': 'sliceCount'},
-    {'1': 'message', '3': 4, '4': 1, '5': 9, '10': 'message'},
+    {'1': 'status', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'status'},
+    {'1': 'mem_count', '3': 2, '4': 1, '5': 5, '8': {}, '10': 'memCount'},
+    {'1': 'slice_count', '3': 3, '4': 1, '5': 5, '8': {}, '10': 'sliceCount'},
+    {'1': 'message', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'message'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `StatusResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List statusRespDescriptor = $convert.base64Decode(
-    'CgpTdGF0dXNSZXNwEhYKBnN0YXR1cxgBIAEoCVIGc3RhdHVzEhsKCW1lbV9jb3VudBgCIAEoBV'
-    'IIbWVtQ291bnQSHwoLc2xpY2VfY291bnQYAyABKAVSCnNsaWNlQ291bnQSGAoHbWVzc2FnZRgE'
-    'IAEoCVIHbWVzc2FnZQ==');
+    'CgpTdGF0dXNSZXNwEhwKBnN0YXR1cxgBIAEoCUIEkLUYA1IGc3RhdHVzEiEKCW1lbV9jb3VudB'
+    'gCIAEoBUIEkLUYA1IIbWVtQ291bnQSJQoLc2xpY2VfY291bnQYAyABKAVCBJC1GANSCnNsaWNl'
+    'Q291bnQSHgoHbWVzc2FnZRgEIAEoCUIEkLUYA1IHbWVzc2FnZToEmLUYAw==');
 
 @$core.Deprecated('Use clearReqDescriptor instead')
 const ClearReq$json = {
@@ -88,28 +89,37 @@ final $typed_data.Uint8List uploadFileReqDescriptor = $convert.base64Decode(
 const TrainingFile$json = {
   '1': 'TrainingFile',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
-    {'1': 'agent', '3': 3, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'title', '3': 4, '4': 1, '5': 9, '10': 'title'},
-    {'1': 'size', '3': 5, '4': 1, '5': 5, '10': 'size'},
-    {'1': 'type', '3': 6, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'is_use', '3': 7, '4': 1, '5': 8, '10': 'isUse'},
-    {'1': 'digest', '3': 8, '4': 1, '5': 9, '10': 'digest'},
-    {'1': 'training_time', '3': 9, '4': 1, '5': 3, '10': 'trainingTime'},
-    {'1': 'created_at', '3': 10, '4': 1, '5': 3, '10': 'createdAt'},
-    {'1': 'updated_at', '3': 11, '4': 1, '5': 3, '10': 'updatedAt'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'content', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'content'},
+    {'1': 'agent', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'title', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'title'},
+    {'1': 'size', '3': 5, '4': 1, '5': 5, '8': {}, '10': 'size'},
+    {'1': 'type', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'type'},
+    {'1': 'is_use', '3': 7, '4': 1, '5': 8, '8': {}, '10': 'isUse'},
+    {'1': 'digest', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'digest'},
+    {
+      '1': 'training_time',
+      '3': 9,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '10': 'trainingTime'
+    },
+    {'1': 'created_at', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+    {'1': 'updated_at', '3': 11, '4': 1, '5': 3, '8': {}, '10': 'updatedAt'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TrainingFile`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List trainingFileDescriptor = $convert.base64Decode(
-    'CgxUcmFpbmluZ0ZpbGUSEgoEdXVpZBgBIAEoCVIEdXVpZBIYCgdjb250ZW50GAIgASgJUgdjb2'
-    '50ZW50EhQKBWFnZW50GAMgASgJUgVhZ2VudBIUCgV0aXRsZRgEIAEoCVIFdGl0bGUSEgoEc2l6'
-    'ZRgFIAEoBVIEc2l6ZRISCgR0eXBlGAYgASgJUgR0eXBlEhUKBmlzX3VzZRgHIAEoCFIFaXNVc2'
-    'USFgoGZGlnZXN0GAggASgJUgZkaWdlc3QSIwoNdHJhaW5pbmdfdGltZRgJIAEoA1IMdHJhaW5p'
-    'bmdUaW1lEh0KCmNyZWF0ZWRfYXQYCiABKANSCWNyZWF0ZWRBdBIdCgp1cGRhdGVkX2F0GAsgAS'
-    'gDUgl1cGRhdGVkQXQ=');
+    'CgxUcmFpbmluZ0ZpbGUSGAoEdXVpZBgBIAEoCUIEkLUYA1IEdXVpZBIeCgdjb250ZW50GAIgAS'
+    'gJQgSQtRgDUgdjb250ZW50EhoKBWFnZW50GAMgASgJQgSQtRgDUgVhZ2VudBIaCgV0aXRsZRgE'
+    'IAEoCUIEkLUYA1IFdGl0bGUSGAoEc2l6ZRgFIAEoBUIEkLUYA1IEc2l6ZRIYCgR0eXBlGAYgAS'
+    'gJQgSQtRgDUgR0eXBlEhsKBmlzX3VzZRgHIAEoCEIEkLUYA1IFaXNVc2USHAoGZGlnZXN0GAgg'
+    'ASgJQgSQtRgDUgZkaWdlc3QSKQoNdHJhaW5pbmdfdGltZRgJIAEoA0IEkLUYA1IMdHJhaW5pbm'
+    'dUaW1lEiMKCmNyZWF0ZWRfYXQYCiABKANCBJC1GANSCWNyZWF0ZWRBdBIjCgp1cGRhdGVkX2F0'
+    'GAsgASgDQgSQtRgDUgl1cGRhdGVkQXQ6BJi1GAM=');
 
 @$core.Deprecated('Use listFilesReqDescriptor instead')
 const ListFilesReq$json = {
@@ -137,22 +147,24 @@ final $typed_data.Uint8List listFilesReqDescriptor = $convert.base64Decode(
 const ListFilesResp$json = {
   '1': 'ListFilesResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'list',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.ai.TrainingFile',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListFilesResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listFilesRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0RmlsZXNSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBInCgRsaXN0GAIgAygLMhMuaG'
-    'kuYWkuVHJhaW5pbmdGaWxlUgRsaXN0');
+    'Cg1MaXN0RmlsZXNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBItCgRsaXN0GAIgAy'
+    'gLMhMuaGkuYWkuVHJhaW5pbmdGaWxlQgSQtRgDUgRsaXN0OgSYtRgD');
 
 @$core.Deprecated('Use deleteFilesReqDescriptor instead')
 const DeleteFilesReq$json = {
@@ -204,14 +216,17 @@ const GetFileResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ai.TrainingFile',
+      '8': {},
       '10': 'file'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetFileResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getFileRespDescriptor = $convert.base64Decode(
-    'CgtHZXRGaWxlUmVzcBInCgRmaWxlGAEgASgLMhMuaGkuYWkuVHJhaW5pbmdGaWxlUgRmaWxl');
+    'CgtHZXRGaWxlUmVzcBItCgRmaWxlGAEgASgLMhMuaGkuYWkuVHJhaW5pbmdGaWxlQgSQtRgDUg'
+    'RmaWxlOgSYtRgD');
 
 @$core.Deprecated('Use updateContentReqDescriptor instead')
 const UpdateContentReq$json = {
@@ -252,15 +267,17 @@ const CreateContentResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ai.TrainingFile',
+      '8': {},
       '10': 'file'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `CreateContentResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createContentRespDescriptor = $convert.base64Decode(
-    'ChFDcmVhdGVDb250ZW50UmVzcBInCgRmaWxlGAEgASgLMhMuaGkuYWkuVHJhaW5pbmdGaWxlUg'
-    'RmaWxl');
+    'ChFDcmVhdGVDb250ZW50UmVzcBItCgRmaWxlGAEgASgLMhMuaGkuYWkuVHJhaW5pbmdGaWxlQg'
+    'SQtRgDUgRmaWxlOgSYtRgD');
 
 @$core.Deprecated('Use editDigestReqDescriptor instead')
 const EditDigestReq$json = {

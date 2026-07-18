@@ -493,7 +493,7 @@ func (x *ListGroupMessageReq) GetCode() string {
 
 type ListGroupMessageResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*Packet              `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	List          []*Packet              `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // Packet=PARTICIPANT
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1163,18 +1163,18 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x03did\x18\x01 \x01(\tR\x03did\"F\n" +
 	"\x13ListGroupMessageReq\x12\x1b\n" +
 	"\tlast_uuid\x18\x01 \x01(\tR\blastUuid\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\";\n" +
-	"\x14ListGroupMessageResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketR\x04list\"X\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\"G\n" +
+	"\x14ListGroupMessageResp\x12)\n" +
+	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"X\n" +
 	"\x12ListGroupMemberReq\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\",\n" +
 	"\x16GetGroupMemberTotalReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"/\n" +
-	"\x17GetGroupMemberTotalResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\">\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\";\n" +
+	"\x17GetGroupMemberTotalResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02R\x05total:\x04\x98\xb5\x18\x02\">\n" +
 	"\x0eInviteGroupReq\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
 	"\amembers\x18\x02 \x03(\tR\amembers\"\"\n" +
@@ -1192,9 +1192,9 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x04role\x18\x03 \x01(\tR\x04role\" \n" +
 	"\n" +
 	"GetRoleReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"!\n" +
-	"\vGetRoleResp\x12\x12\n" +
-	"\x04role\x18\x01 \x01(\tR\x04role\"1\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\"-\n" +
+	"\vGetRoleResp\x12\x18\n" +
+	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04role:\x04\x98\xb5\x18\x02\"1\n" +
 	"\tSetDndReq\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x10\n" +
 	"\x03dnd\x18\x02 \x01(\bR\x03dnd\"T\n" +

@@ -19,24 +19,26 @@ import 'dart:typed_data' as $typed_data;
 const ModelListResp$json = {
   '1': 'ModelListResp',
   '2': [
-    {'1': 'models', '3': 1, '4': 3, '5': 9, '10': 'models'},
+    {'1': 'models', '3': 1, '4': 3, '5': 9, '8': {}, '10': 'models'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ModelListResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List modelListRespDescriptor = $convert
-    .base64Decode('Cg1Nb2RlbExpc3RSZXNwEhYKBm1vZGVscxgBIAMoCVIGbW9kZWxz');
+final $typed_data.Uint8List modelListRespDescriptor = $convert.base64Decode(
+    'Cg1Nb2RlbExpc3RSZXNwEhwKBm1vZGVscxgBIAMoCUIEkLUYAVIGbW9kZWxzOgSYtRgB');
 
 @$core.Deprecated('Use listSTTRespDescriptor instead')
 const ListSTTResp$json = {
   '1': 'ListSTTResp',
   '2': [
-    {'1': 'models', '3': 1, '4': 3, '5': 9, '10': 'models'},
-    {'1': 'langs', '3': 2, '4': 3, '5': 9, '10': 'langs'},
+    {'1': 'models', '3': 1, '4': 3, '5': 9, '8': {}, '10': 'models'},
+    {'1': 'langs', '3': 2, '4': 3, '5': 9, '8': {}, '10': 'langs'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListSTTResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listSTTRespDescriptor = $convert.base64Decode(
-    'CgtMaXN0U1RUUmVzcBIWCgZtb2RlbHMYASADKAlSBm1vZGVscxIUCgVsYW5ncxgCIAMoCVIFbG'
-    'FuZ3M=');
+    'CgtMaXN0U1RUUmVzcBIcCgZtb2RlbHMYASADKAlCBJC1GAFSBm1vZGVscxIaCgVsYW5ncxgCIA'
+    'MoCUIEkLUYAVIFbGFuZ3M6BJi1GAE=');

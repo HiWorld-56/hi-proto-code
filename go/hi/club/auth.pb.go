@@ -25,10 +25,10 @@ const (
 
 type LoginResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Token         *hi.AuthToken          `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	Mqtt          *hi.MqttCredentials    `protobuf:"bytes,3,opt,name=mqtt,proto3" json:"mqtt,omitempty"`
-	Master        *hi.Entity             `protobuf:"bytes,4,opt,name=master,proto3" json:"master,omitempty"`
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`     // 用户名片(Entity=PUBLIC)
+	Token         *hi.AuthToken          `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`   // 登录令牌(凭证)
+	Mqtt          *hi.MqttCredentials    `protobuf:"bytes,3,opt,name=mqtt,proto3" json:"mqtt,omitempty"`     // MQTT 凭证
+	Master        *hi.Entity             `protobuf:"bytes,4,opt,name=master,proto3" json:"master,omitempty"` // 主人名片(Entity=PUBLIC)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -95,14 +95,14 @@ var File_hi_club_auth_proto protoreflect.FileDescriptor
 
 const file_hi_club_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/auth.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto\"\x9d\x01\n" +
-	"\tLoginResp\x12\x1e\n" +
+	"\x12hi/club/auth.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto\"\xbb\x01\n" +
+	"\tLoginResp\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12#\n" +
-	"\x05token\x18\x02 \x01(\v2\r.hi.AuthTokenR\x05token\x12'\n" +
-	"\x04mqtt\x18\x03 \x01(\v2\x13.hi.MqttCredentialsR\x04mqtt\x12\"\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12)\n" +
+	"\x05token\x18\x02 \x01(\v2\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n" +
+	"\x04mqtt\x18\x03 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt\x12(\n" +
 	"\x06master\x18\x04 \x01(\v2\n" +
-	".hi.EntityR\x06master2\xf8\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x032\xf8\x01\n" +
 	"\x04Auth\x12=\n" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12?\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +

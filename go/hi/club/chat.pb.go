@@ -103,7 +103,7 @@ func (x *CompleteReq) GetCustom() string {
 
 type QA struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Q             []*Content             `protobuf:"bytes,1,rep,name=q,proto3" json:"q,omitempty"` // User
+	Q             []*Content             `protobuf:"bytes,1,rep,name=q,proto3" json:"q,omitempty"` // User(club Content=PARTICIPANT)
 	A             string                 `protobuf:"bytes,2,opt,name=a,proto3" json:"a,omitempty"` // assistant
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -155,7 +155,7 @@ func (x *QA) GetA() string {
 
 type GetHistoryResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*QA                  `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	List          []*QA                  `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // QA=SELF
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -413,12 +413,12 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
 	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12\x14\n" +
 	"\x05state\x18\x04 \x01(\tR\x05state\x12\x16\n" +
-	"\x06custom\x18\x05 \x01(\tR\x06custom\"2\n" +
-	"\x02QA\x12\x1e\n" +
-	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentR\x01q\x12\f\n" +
-	"\x01a\x18\x02 \x01(\tR\x01a\"1\n" +
-	"\x0eGetHistoryResp\x12\x1f\n" +
-	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAR\x04list\"\xaa\x02\n" +
+	"\x06custom\x18\x05 \x01(\tR\x06custom\"D\n" +
+	"\x02QA\x12$\n" +
+	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x12\n" +
+	"\x01a\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x01a:\x04\x98\xb5\x18\x03\"=\n" +
+	"\x0eGetHistoryResp\x12%\n" +
+	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xaa\x02\n" +
 	"\aChatReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +

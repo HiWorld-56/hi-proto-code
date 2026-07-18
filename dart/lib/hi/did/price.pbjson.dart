@@ -37,24 +37,36 @@ const GetPriceResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.GetPriceResp.Unit',
+      '8': {},
       '10': 'list'
     },
-    {'1': 'exchange', '3': 2, '4': 1, '5': 9, '10': 'exchange'},
+    {'1': 'exchange', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'exchange'},
   ],
   '3': [GetPriceResp_Unit$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use getPriceRespDescriptor instead')
 const GetPriceResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'price', '3': 1, '4': 1, '5': 9, '10': 'price'},
-    {'1': 'coin', '3': 2, '4': 1, '5': 11, '6': '.hi.did.Coin', '10': 'coin'},
+    {'1': 'price', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'price'},
+    {
+      '1': 'coin',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.Coin',
+      '8': {},
+      '10': 'coin'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetPriceResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getPriceRespDescriptor = $convert.base64Decode(
-    'CgxHZXRQcmljZVJlc3ASLQoEbGlzdBgBIAMoCzIZLmhpLmRpZC5HZXRQcmljZVJlc3AuVW5pdF'
-    'IEbGlzdBIaCghleGNoYW5nZRgCIAEoCVIIZXhjaGFuZ2UaPgoEVW5pdBIUCgVwcmljZRgBIAEo'
-    'CVIFcHJpY2USIAoEY29pbhgCIAEoCzIMLmhpLmRpZC5Db2luUgRjb2lu');
+    'CgxHZXRQcmljZVJlc3ASMwoEbGlzdBgBIAMoCzIZLmhpLmRpZC5HZXRQcmljZVJlc3AuVW5pdE'
+    'IEkLUYAVIEbGlzdBIgCghleGNoYW5nZRgCIAEoCUIEkLUYAVIIZXhjaGFuZ2UaUAoEVW5pdBIa'
+    'CgVwcmljZRgBIAEoCUIEkLUYAVIFcHJpY2USJgoEY29pbhgCIAEoCzIMLmhpLmRpZC5Db2luQg'
+    'SQtRgBUgRjb2luOgSYtRgBOgSYtRgB');

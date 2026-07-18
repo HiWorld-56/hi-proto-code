@@ -125,12 +125,12 @@ var File_hi_ai_model_proto protoreflect.FileDescriptor
 
 const file_hi_ai_model_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"'\n" +
-	"\rModelListResp\x12\x16\n" +
-	"\x06models\x18\x01 \x03(\tR\x06models\";\n" +
-	"\vListSTTResp\x12\x16\n" +
-	"\x06models\x18\x01 \x03(\tR\x06models\x12\x14\n" +
-	"\x05langs\x18\x02 \x03(\tR\x05langs2\x8e\x02\n" +
+	"\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"3\n" +
+	"\rModelListResp\x12\x1c\n" +
+	"\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models:\x04\x98\xb5\x18\x01\"M\n" +
+	"\vListSTTResp\x12\x1c\n" +
+	"\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models\x12\x1a\n" +
+	"\x05langs\x18\x02 \x03(\tB\x04\x90\xb5\x18\x01R\x05langs:\x04\x98\xb5\x18\x012\x8e\x02\n" +
 	"\x05Model\x12?\n" +
 	"\bListLlms\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
 	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12=\n" +

@@ -19,19 +19,37 @@ import 'dart:typed_data' as $typed_data;
 const TradeUnit$json = {
   '1': 'TradeUnit',
   '2': [
-    {'1': 'coin', '3': 1, '4': 1, '5': 11, '6': '.hi.did.Coin', '10': 'coin'},
-    {'1': 'user', '3': 2, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'user'},
-    {'1': 'sum', '3': 3, '4': 1, '5': 9, '10': 'sum'},
-    {'1': 'amount', '3': 4, '4': 1, '5': 9, '10': 'amount'},
-    {'1': 'fee', '3': 5, '4': 1, '5': 9, '10': 'fee'},
+    {
+      '1': 'coin',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.Coin',
+      '8': {},
+      '10': 'coin'
+    },
+    {
+      '1': 'user',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'user'
+    },
+    {'1': 'sum', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'sum'},
+    {'1': 'amount', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'fee', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'fee'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TradeUnit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List tradeUnitDescriptor = $convert.base64Decode(
-    'CglUcmFkZVVuaXQSIAoEY29pbhgBIAEoCzIMLmhpLmRpZC5Db2luUgRjb2luEh4KBHVzZXIYAi'
-    'ABKAsyCi5oaS5FbnRpdHlSBHVzZXISEAoDc3VtGAMgASgJUgNzdW0SFgoGYW1vdW50GAQgASgJ'
-    'UgZhbW91bnQSEAoDZmVlGAUgASgJUgNmZWU=');
+    'CglUcmFkZVVuaXQSJgoEY29pbhgBIAEoCzIMLmhpLmRpZC5Db2luQgSQtRgBUgRjb2luEiQKBH'
+    'VzZXIYAiABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBHVzZXISFgoDc3VtGAMgASgJQgSQtRgCUgNz'
+    'dW0SHAoGYW1vdW50GAQgASgJQgSQtRgCUgZhbW91bnQSFgoDZmVlGAUgASgJQgSQtRgCUgNmZW'
+    'U6BJi1GAI=');
 
 @$core.Deprecated('Use tradeBaseDescriptor instead')
 const TradeBase$json = {
@@ -43,19 +61,29 @@ const TradeBase$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.TradeUnit',
+      '8': {},
       '10': 'from'
     },
-    {'1': 'to', '3': 2, '4': 1, '5': 11, '6': '.hi.club.TradeUnit', '10': 'to'},
-    {'1': 'id', '3': 3, '4': 1, '5': 9, '10': 'id'},
-    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '10': 'timestamp'},
+    {
+      '1': 'to',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.TradeUnit',
+      '8': {},
+      '10': 'to'
+    },
+    {'1': 'id', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'id'},
+    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TradeBase`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List tradeBaseDescriptor = $convert.base64Decode(
-    'CglUcmFkZUJhc2USJgoEZnJvbRgBIAEoCzISLmhpLmNsdWIuVHJhZGVVbml0UgRmcm9tEiIKAn'
-    'RvGAIgASgLMhIuaGkuY2x1Yi5UcmFkZVVuaXRSAnRvEg4KAmlkGAMgASgJUgJpZBIcCgl0aW1l'
-    'c3RhbXAYBCABKANSCXRpbWVzdGFtcA==');
+    'CglUcmFkZUJhc2USLAoEZnJvbRgBIAEoCzISLmhpLmNsdWIuVHJhZGVVbml0QgSQtRgCUgRmcm'
+    '9tEigKAnRvGAIgASgLMhIuaGkuY2x1Yi5UcmFkZVVuaXRCBJC1GAJSAnRvEhQKAmlkGAMgASgJ'
+    'QgSQtRgCUgJpZBIiCgl0aW1lc3RhbXAYBCABKANCBJC1GAJSCXRpbWVzdGFtcDoEmLUYAg==');
 
 @$core.Deprecated('Use getTradeFeeReqDescriptor instead')
 const GetTradeFeeReq$json = {
@@ -73,13 +101,14 @@ final $typed_data.Uint8List getTradeFeeReqDescriptor =
 const GetTradeFeeResp$json = {
   '1': 'GetTradeFeeResp',
   '2': [
-    {'1': 'fee', '3': 1, '4': 1, '5': 9, '10': 'fee'},
+    {'1': 'fee', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'fee'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetTradeFeeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getTradeFeeRespDescriptor =
-    $convert.base64Decode('Cg9HZXRUcmFkZUZlZVJlc3ASEAoDZmVlGAEgASgJUgNmZWU=');
+final $typed_data.Uint8List getTradeFeeRespDescriptor = $convert.base64Decode(
+    'Cg9HZXRUcmFkZUZlZVJlc3ASFgoDZmVlGAEgASgJQgSQtRgBUgNmZWU6BJi1GAE=');
 
 @$core.Deprecated('Use getTradeReqDescriptor instead')
 const GetTradeReq$json = {
@@ -97,52 +126,65 @@ final $typed_data.Uint8List getTradeReqDescriptor =
 const TradeTrans$json = {
   '1': 'TradeTrans',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'id'},
     {
       '1': 'trans',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.did.Transaction',
+      '8': {},
       '10': 'trans'
     },
-    {'1': 'status', '3': 3, '4': 1, '5': 9, '10': 'status'},
-    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '10': 'timestamp'},
+    {'1': 'status', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'status'},
+    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TradeTrans`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List tradeTransDescriptor = $convert.base64Decode(
-    'CgpUcmFkZVRyYW5zEg4KAmlkGAEgASgJUgJpZBIpCgV0cmFucxgCIAEoCzITLmhpLmRpZC5Ucm'
-    'Fuc2FjdGlvblIFdHJhbnMSFgoGc3RhdHVzGAMgASgJUgZzdGF0dXMSHAoJdGltZXN0YW1wGAQg'
-    'ASgDUgl0aW1lc3RhbXA=');
+    'CgpUcmFkZVRyYW5zEhQKAmlkGAEgASgJQgSQtRgDUgJpZBIvCgV0cmFucxgCIAEoCzITLmhpLm'
+    'RpZC5UcmFuc2FjdGlvbkIEkLUYAVIFdHJhbnMSHAoGc3RhdHVzGAMgASgJQgSQtRgDUgZzdGF0'
+    'dXMSIgoJdGltZXN0YW1wGAQgASgDQgSQtRgDUgl0aW1lc3RhbXA6BJi1GAM=');
 
 @$core.Deprecated('Use tradeDetailDescriptor instead')
 const TradeDetail$json = {
   '1': 'TradeDetail',
   '2': [
-    {'1': 'order', '3': 1, '4': 1, '5': 9, '10': 'order'},
-    {'1': 'status', '3': 2, '4': 1, '5': 9, '10': 'status'},
+    {'1': 'order', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'order'},
+    {'1': 'status', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'status'},
     {
       '1': 'from',
       '3': 3,
       '4': 1,
       '5': 11,
       '6': '.hi.club.TradeUnit',
+      '8': {},
       '10': 'from'
     },
-    {'1': 'to', '3': 4, '4': 1, '5': 11, '6': '.hi.club.TradeUnit', '10': 'to'},
+    {
+      '1': 'to',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.TradeUnit',
+      '8': {},
+      '10': 'to'
+    },
     {
       '1': 'list',
       '3': 5,
       '4': 3,
       '5': 11,
       '6': '.hi.club.TradeDetail.ListEntry',
+      '8': {},
       '10': 'list'
     },
-    {'1': 'timestamp', '3': 8, '4': 1, '5': 3, '10': 'timestamp'},
+    {'1': 'timestamp', '3': 8, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
   ],
   '3': [TradeDetail_ListEntry$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use tradeDetailDescriptor instead')
@@ -164,12 +206,13 @@ const TradeDetail_ListEntry$json = {
 
 /// Descriptor for `TradeDetail`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List tradeDetailDescriptor = $convert.base64Decode(
-    'CgtUcmFkZURldGFpbBIUCgVvcmRlchgBIAEoCVIFb3JkZXISFgoGc3RhdHVzGAIgASgJUgZzdG'
-    'F0dXMSJgoEZnJvbRgDIAEoCzISLmhpLmNsdWIuVHJhZGVVbml0UgRmcm9tEiIKAnRvGAQgASgL'
-    'MhIuaGkuY2x1Yi5UcmFkZVVuaXRSAnRvEjIKBGxpc3QYBSADKAsyHi5oaS5jbHViLlRyYWRlRG'
-    'V0YWlsLkxpc3RFbnRyeVIEbGlzdBIcCgl0aW1lc3RhbXAYCCABKANSCXRpbWVzdGFtcBpMCglM'
-    'aXN0RW50cnkSEAoDa2V5GAEgASgJUgNrZXkSKQoFdmFsdWUYAiABKAsyEy5oaS5jbHViLlRyYW'
-    'RlVHJhbnNSBXZhbHVlOgI4AQ==');
+    'CgtUcmFkZURldGFpbBIaCgVvcmRlchgBIAEoCUIEkLUYA1IFb3JkZXISHAoGc3RhdHVzGAIgAS'
+    'gJQgSQtRgDUgZzdGF0dXMSLAoEZnJvbRgDIAEoCzISLmhpLmNsdWIuVHJhZGVVbml0QgSQtRgC'
+    'UgRmcm9tEigKAnRvGAQgASgLMhIuaGkuY2x1Yi5UcmFkZVVuaXRCBJC1GAJSAnRvEjgKBGxpc3'
+    'QYBSADKAsyHi5oaS5jbHViLlRyYWRlRGV0YWlsLkxpc3RFbnRyeUIEkLUYA1IEbGlzdBIiCgl0'
+    'aW1lc3RhbXAYCCABKANCBJC1GANSCXRpbWVzdGFtcBpMCglMaXN0RW50cnkSEAoDa2V5GAEgAS'
+    'gJUgNrZXkSKQoFdmFsdWUYAiABKAsyEy5oaS5jbHViLlRyYWRlVHJhbnNSBXZhbHVlOgI4AToE'
+    'mLUYAw==');
 
 @$core.Deprecated('Use getTradeRespDescriptor instead')
 const GetTradeResp$json = {
@@ -181,15 +224,17 @@ const GetTradeResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.TradeDetail',
+      '8': {},
       '10': 'detail'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetTradeResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getTradeRespDescriptor = $convert.base64Decode(
-    'CgxHZXRUcmFkZVJlc3ASLAoGZGV0YWlsGAEgASgLMhQuaGkuY2x1Yi5UcmFkZURldGFpbFIGZG'
-    'V0YWls');
+    'CgxHZXRUcmFkZVJlc3ASMgoGZGV0YWlsGAEgASgLMhQuaGkuY2x1Yi5UcmFkZURldGFpbEIEkL'
+    'UYA1IGZGV0YWlsOgSYtRgD');
 
 @$core.Deprecated('Use addTradeReqDescriptor instead')
 const AddTradeReq$json = {
@@ -221,15 +266,17 @@ const AddTradeResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.TradeDetail',
+      '8': {},
       '10': 'detail'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `AddTradeResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List addTradeRespDescriptor = $convert.base64Decode(
-    'CgxBZGRUcmFkZVJlc3ASLAoGZGV0YWlsGAEgASgLMhQuaGkuY2x1Yi5UcmFkZURldGFpbFIGZG'
-    'V0YWls');
+    'CgxBZGRUcmFkZVJlc3ASMgoGZGV0YWlsGAEgASgLMhQuaGkuY2x1Yi5UcmFkZURldGFpbEIEkL'
+    'UYA1IGZGV0YWlsOgSYtRgD');
 
 @$core.Deprecated('Use updateTransHashReqDescriptor instead')
 const UpdateTransHashReq$json = {
@@ -291,19 +338,21 @@ final $typed_data.Uint8List listAllTradeReqDescriptor = $convert.base64Decode(
 const ListTradeResp$json = {
   '1': 'ListTradeResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'list',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.club.TradeDetail',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListTradeResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listTradeRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0VHJhZGVSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIoCgRsaXN0GAIgAygLMhQuaG'
-    'kuY2x1Yi5UcmFkZURldGFpbFIEbGlzdA==');
+    'Cg1MaXN0VHJhZGVSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIuCgRsaXN0GAIgAy'
+    'gLMhQuaGkuY2x1Yi5UcmFkZURldGFpbEIEkLUYA1IEbGlzdDoEmLUYAw==');

@@ -298,9 +298,9 @@ func (x *TokenUsage) GetMem() int32 {
 
 type AgentInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"` // hi.Entity 恒 PUBLIC
 	Config        *AgentConfig           `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
-	Creator       string                 `protobuf:"bytes,3,opt,name=creator,proto3" json:"creator,omitempty"`
+	Creator       string                 `protobuf:"bytes,3,opt,name=creator,proto3" json:"creator,omitempty"` // 归属 did
 	Note          string                 `protobuf:"bytes,4,opt,name=note,proto3" json:"note,omitempty"`
 	Token         *TokenUsage            `protobuf:"bytes,5,opt,name=token,proto3" json:"token,omitempty"`
 	CreatedAt     int64                  `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
@@ -478,9 +478,9 @@ func (x *CreateAgentReq) GetBase() *hi.Entity {
 
 type CreateAgentResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"` // hi.Entity 恒 PUBLIC
 	Config        *AgentConfig           `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
-	Creator       *hi.Entity             `protobuf:"bytes,3,opt,name=creator,proto3" json:"creator,omitempty"`
+	Creator       *hi.Entity             `protobuf:"bytes,3,opt,name=creator,proto3" json:"creator,omitempty"` // hi.Entity 恒 PUBLIC
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1084,22 +1084,22 @@ var File_hi_ai_agent_proto protoreflect.FileDescriptor
 
 const file_hi_ai_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"4\n" +
-	"\x06Prompt\x12\x16\n" +
-	"\x06system\x18\x01 \x01(\tR\x06system\x12\x12\n" +
-	"\x04user\x18\x02 \x01(\tR\x04user\"{\n" +
-	"\bModelSet\x12\x10\n" +
-	"\x03llm\x18\x01 \x01(\tR\x03llm\x12\x10\n" +
-	"\x03stt\x18\x02 \x01(\tR\x03stt\x12\x10\n" +
-	"\x03tts\x18\x03 \x01(\tR\x03tts\x12\x1c\n" +
-	"\tembedding\x18\x04 \x01(\tR\tembedding\x12\x1b\n" +
-	"\tmem_model\x18\x05 \x01(\tR\bmemModel\"\xd7\x01\n" +
-	"\vAgentConfig\x12%\n" +
-	"\x06prompt\x18\x01 \x01(\v2\r.hi.ai.PromptR\x06prompt\x12\x1d\n" +
-	"\afreedom\x18\x02 \x01(\x02H\x00R\afreedom\x88\x01\x01\x12%\n" +
-	"\x05model\x18\x03 \x01(\v2\x0f.hi.ai.ModelSetR\x05model\x12\x1a\n" +
-	"\x06qa_num\x18\x04 \x01(\x05H\x01R\x05qaNum\x88\x01\x01\x12\x1c\n" +
-	"\ause_mem\x18\x05 \x01(\bH\x02R\x06useMem\x88\x01\x01B\n" +
+	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"F\n" +
+	"\x06Prompt\x12\x1c\n" +
+	"\x06system\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x06system\x12\x18\n" +
+	"\x04user\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04user:\x04\x98\xb5\x18\x03\"\x9f\x01\n" +
+	"\bModelSet\x12\x16\n" +
+	"\x03llm\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03llm\x12\x16\n" +
+	"\x03stt\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x03stt\x12\x16\n" +
+	"\x03tts\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x03tts\x12\"\n" +
+	"\tembedding\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\tembedding\x12!\n" +
+	"\tmem_model\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\bmemModel:\x04\x98\xb5\x18\x03\"\xfb\x01\n" +
+	"\vAgentConfig\x12+\n" +
+	"\x06prompt\x18\x01 \x01(\v2\r.hi.ai.PromptB\x04\x90\xb5\x18\x03R\x06prompt\x12#\n" +
+	"\afreedom\x18\x02 \x01(\x02B\x04\x90\xb5\x18\x03H\x00R\afreedom\x88\x01\x01\x12+\n" +
+	"\x05model\x18\x03 \x01(\v2\x0f.hi.ai.ModelSetB\x04\x90\xb5\x18\x03R\x05model\x12 \n" +
+	"\x06qa_num\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x03H\x01R\x05qaNum\x88\x01\x01\x12\"\n" +
+	"\ause_mem\x18\x05 \x01(\bB\x04\x90\xb5\x18\x03H\x02R\x06useMem\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
 	"\b_freedomB\t\n" +
 	"\a_qa_numB\n" +
@@ -1109,36 +1109,36 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"TokenUsage\x12\x1c\n" +
 	"\x06output\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x06output\x12\x1a\n" +
 	"\x05input\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\x05input\x12\x16\n" +
-	"\x03mem\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03R\x03mem:\x04\x98\xb5\x18\x03\"\xe5\x01\n" +
-	"\tAgentInfo\x12\x1e\n" +
+	"\x03mem\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03R\x03mem:\x04\x98\xb5\x18\x03\"\x95\x02\n" +
+	"\tAgentInfo\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12*\n" +
-	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\x12\x18\n" +
-	"\acreator\x18\x03 \x01(\tR\acreator\x12\x12\n" +
-	"\x04note\x18\x04 \x01(\tR\x04note\x12'\n" +
-	"\x05token\x18\x05 \x01(\v2\x11.hi.ai.TokenUsageR\x05token\x12\x1d\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x120\n" +
+	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config\x12\x1e\n" +
+	"\acreator\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\acreator\x12\x18\n" +
+	"\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12-\n" +
+	"\x05token\x18\x05 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token\x12#\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\x03R\tcreatedAt\x12\x16\n" +
-	"\x06marked\x18\a \x01(\bR\x06marked\"?\n" +
-	"\x11DefaultConfigResp\x12*\n" +
-	"\x06config\x18\x01 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\"0\n" +
+	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12\x1c\n" +
+	"\x06marked\x18\a \x01(\bB\x04\x90\xb5\x18\x03R\x06marked:\x04\x98\xb5\x18\x03\"K\n" +
+	"\x11DefaultConfigResp\x120\n" +
+	"\x06config\x18\x01 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config:\x04\x98\xb5\x18\x03\"0\n" +
 	"\x0eCreateAgentReq\x12\x1e\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\"\x83\x01\n" +
-	"\x0fCreateAgentResp\x12\x1e\n" +
+	".hi.EntityR\x04base\"\x9b\x01\n" +
+	"\x0fCreateAgentResp\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12*\n" +
-	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\x12$\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x120\n" +
+	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config\x12*\n" +
 	"\acreator\x18\x03 \x01(\v2\n" +
-	".hi.EntityR\acreator\"n\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\acreator:\x04\x98\xb5\x18\x03\"n\n" +
 	"\fEditAgentReq\x12\x1e\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04base\x12*\n" +
 	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\x12\x12\n" +
-	"\x04note\x18\x03 \x01(\tR\x04note\"M\n" +
-	"\rListAgentResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoR\x05infos\"V\n" +
+	"\x04note\x18\x03 \x01(\tR\x04note\"_\n" +
+	"\rListAgentResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12,\n" +
+	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"V\n" +
 	"\fListAgentReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
 	"\n" +
@@ -1152,9 +1152,9 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x0eDeleteAgentReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"#\n" +
 	"\vGetAgentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"4\n" +
-	"\fGetAgentResp\x12$\n" +
-	"\x04info\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoR\x04info\"%\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"@\n" +
+	"\fGetAgentResp\x12*\n" +
+	"\x04info\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"%\n" +
 	"\rAgentUsageReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"p\n" +
 	"\x0eAgentUsageResp\x12)\n" +

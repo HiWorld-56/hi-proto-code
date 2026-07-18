@@ -33,13 +33,14 @@ final $typed_data.Uint8List signedDataDescriptor = $convert.base64Decode(
 const DID$json = {
   '1': 'DID',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'id'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `DID`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List dIDDescriptor =
-    $convert.base64Decode('CgNESUQSDgoCaWQYASABKAlSAmlk');
+    $convert.base64Decode('CgNESUQSFAoCaWQYASABKAlCBJC1GAFSAmlkOgSYtRgB');
 
 @$core.Deprecated('Use entityDescriptor instead')
 const Entity$json = {
@@ -115,13 +116,14 @@ final $typed_data.Uint8List nonceDescriptor =
 const RequestId$json = {
   '1': 'RequestId',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'id'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `RequestId`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List requestIdDescriptor =
-    $convert.base64Decode('CglSZXF1ZXN0SWQSDgoCaWQYASABKAlSAmlk');
+final $typed_data.Uint8List requestIdDescriptor = $convert
+    .base64Decode('CglSZXF1ZXN0SWQSFAoCaWQYASABKAlCBJC1GAFSAmlkOgSYtRgB');
 
 @$core.Deprecated('Use stateDescriptor instead')
 const State$json = {
@@ -179,12 +181,13 @@ final $typed_data.Uint8List paginationDescriptor = $convert.base64Decode(
 const ServerVersionResp$json = {
   '1': 'ServerVersionResp',
   '2': [
-    {'1': 'version', '3': 1, '4': 1, '5': 9, '10': 'version'},
-    {'1': 'env', '3': 2, '4': 1, '5': 9, '10': 'env'},
+    {'1': 'version', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'version'},
+    {'1': 'env', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'env'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ServerVersionResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List serverVersionRespDescriptor = $convert.base64Decode(
-    'ChFTZXJ2ZXJWZXJzaW9uUmVzcBIYCgd2ZXJzaW9uGAEgASgJUgd2ZXJzaW9uEhAKA2VudhgCIA'
-    'EoCVIDZW52');
+    'ChFTZXJ2ZXJWZXJzaW9uUmVzcBIeCgd2ZXJzaW9uGAEgASgJQgSQtRgBUgd2ZXJzaW9uEhYKA2'
+    'VudhgCIAEoCUIEkLUYAVIDZW52OgSYtRgB');

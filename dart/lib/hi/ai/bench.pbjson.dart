@@ -19,24 +19,34 @@ import 'dart:typed_data' as $typed_data;
 const AgentDelayUnit$json = {
   '1': 'AgentDelayUnit',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'type', '3': 3, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'llm', '3': 4, '4': 1, '5': 5, '10': 'llm'},
-    {'1': 'llm2', '3': 5, '4': 1, '5': 5, '10': 'llm2'},
-    {'1': 'stt', '3': 6, '4': 1, '5': 5, '10': 'stt'},
-    {'1': 'tts', '3': 7, '4': 1, '5': 5, '10': 'tts'},
-    {'1': 'function_call', '3': 8, '4': 1, '5': 5, '10': 'functionCall'},
-    {'1': 'test_time', '3': 9, '4': 1, '5': 3, '10': 'testTime'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'type', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'type'},
+    {'1': 'llm', '3': 4, '4': 1, '5': 5, '8': {}, '10': 'llm'},
+    {'1': 'llm2', '3': 5, '4': 1, '5': 5, '8': {}, '10': 'llm2'},
+    {'1': 'stt', '3': 6, '4': 1, '5': 5, '8': {}, '10': 'stt'},
+    {'1': 'tts', '3': 7, '4': 1, '5': 5, '8': {}, '10': 'tts'},
+    {
+      '1': 'function_call',
+      '3': 8,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '10': 'functionCall'
+    },
+    {'1': 'test_time', '3': 9, '4': 1, '5': 3, '8': {}, '10': 'testTime'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `AgentDelayUnit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List agentDelayUnitDescriptor = $convert.base64Decode(
-    'Cg5BZ2VudERlbGF5VW5pdBIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEgoEdXVpZBgCIAEoCVIEdX'
-    'VpZBISCgR0eXBlGAMgASgJUgR0eXBlEhAKA2xsbRgEIAEoBVIDbGxtEhIKBGxsbTIYBSABKAVS'
-    'BGxsbTISEAoDc3R0GAYgASgFUgNzdHQSEAoDdHRzGAcgASgFUgN0dHMSIwoNZnVuY3Rpb25fY2'
-    'FsbBgIIAEoBVIMZnVuY3Rpb25DYWxsEhsKCXRlc3RfdGltZRgJIAEoA1IIdGVzdFRpbWU=');
+    'Cg5BZ2VudERlbGF5VW5pdBIaCgVhZ2VudBgBIAEoCUIEkLUYA1IFYWdlbnQSGAoEdXVpZBgCIA'
+    'EoCUIEkLUYA1IEdXVpZBIYCgR0eXBlGAMgASgJQgSQtRgDUgR0eXBlEhYKA2xsbRgEIAEoBUIE'
+    'kLUYA1IDbGxtEhgKBGxsbTIYBSABKAVCBJC1GANSBGxsbTISFgoDc3R0GAYgASgFQgSQtRgDUg'
+    'NzdHQSFgoDdHRzGAcgASgFQgSQtRgDUgN0dHMSKQoNZnVuY3Rpb25fY2FsbBgIIAEoBUIEkLUY'
+    'A1IMZnVuY3Rpb25DYWxsEiEKCXRlc3RfdGltZRgJIAEoA0IEkLUYA1IIdGVzdFRpbWU6BJi1GA'
+    'M=');
 
 @$core.Deprecated('Use listAgentDelayReqDescriptor instead')
 const ListAgentDelayReq$json = {
@@ -64,19 +74,21 @@ final $typed_data.Uint8List listAgentDelayReqDescriptor = $convert.base64Decode(
 const ListAgentDelayResp$json = {
   '1': 'ListAgentDelayResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'units',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.ai.AgentDelayUnit',
+      '8': {},
       '10': 'units'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListAgentDelayResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentDelayRespDescriptor = $convert.base64Decode(
-    'ChJMaXN0QWdlbnREZWxheVJlc3ASFAoFdG90YWwYASABKAVSBXRvdGFsEisKBXVuaXRzGAIgAy'
-    'gLMhUuaGkuYWkuQWdlbnREZWxheVVuaXRSBXVuaXRz');
+    'ChJMaXN0QWdlbnREZWxheVJlc3ASGgoFdG90YWwYASABKAVCBJC1GANSBXRvdGFsEjEKBXVuaX'
+    'RzGAIgAygLMhUuaGkuYWkuQWdlbnREZWxheVVuaXRCBJC1GANSBXVuaXRzOgSYtRgD');

@@ -88,6 +88,7 @@ class AgentDelayUnit extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<AgentDelayUnit>(create);
   static AgentDelayUnit? _defaultInstance;
 
+  /// 与 AgentUsageResp(同 owner 运营指标)一致取 SELF —— 无 participant 对端会看别人机器人的延迟
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)

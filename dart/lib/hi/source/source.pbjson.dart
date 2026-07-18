@@ -35,17 +35,19 @@ final $typed_data.Uint8List uploadReqDescriptor = $convert.base64Decode(
 const UploadResp$json = {
   '1': 'UploadResp',
   '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '10': 'url'},
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
     {
       '1': 'thumb_url',
       '3': 2,
       '4': 1,
       '5': 9,
+      '8': {},
       '9': 0,
       '10': 'thumbUrl',
       '17': true
     },
   ],
+  '7': {},
   '8': [
     {'1': '_thumb_url'},
   ],
@@ -53,8 +55,8 @@ const UploadResp$json = {
 
 /// Descriptor for `UploadResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List uploadRespDescriptor = $convert.base64Decode(
-    'CgpVcGxvYWRSZXNwEhAKA3VybBgBIAEoCVIDdXJsEiAKCXRodW1iX3VybBgCIAEoCUgAUgh0aH'
-    'VtYlVybIgBAUIMCgpfdGh1bWJfdXJs');
+    'CgpVcGxvYWRSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiYKCXRodW1iX3VybBgCIAEoCU'
+    'IEkLUYAUgAUgh0aHVtYlVybIgBAToEmLUYAUIMCgpfdGh1bWJfdXJs');
 
 @$core.Deprecated('Use downloadReqDescriptor instead')
 const DownloadReq$json = {
@@ -72,13 +74,14 @@ final $typed_data.Uint8List downloadReqDescriptor = $convert.base64Decode(
 const DownloadResp$json = {
   '1': 'DownloadResp',
   '2': [
-    {'1': 'content', '3': 1, '4': 1, '5': 12, '10': 'content'},
+    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `DownloadResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List downloadRespDescriptor = $convert
-    .base64Decode('CgxEb3dubG9hZFJlc3ASGAoHY29udGVudBgBIAEoDFIHY29udGVudA==');
+final $typed_data.Uint8List downloadRespDescriptor = $convert.base64Decode(
+    'CgxEb3dubG9hZFJlc3ASHgoHY29udGVudBgBIAEoDEIEkLUYAVIHY29udGVudDoEmLUYAQ==');
 
 @$core.Deprecated('Use uploadStreamReqDescriptor instead')
 const UploadStreamReq$json = {

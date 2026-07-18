@@ -19,25 +19,41 @@ import 'dart:typed_data' as $typed_data;
 const SettingInfo$json = {
   '1': 'SettingInfo',
   '2': [
-    {'1': 'proxy_endpoint', '3': 1, '4': 1, '5': 9, '10': 'proxyEndpoint'},
-    {'1': 'proxy_enable', '3': 2, '4': 1, '5': 8, '10': 'proxyEnable'},
-    {'1': 'openai_endpoint', '3': 3, '4': 1, '5': 9, '10': 'openaiEndpoint'},
+    {
+      '1': 'proxy_endpoint',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'proxyEndpoint'
+    },
+    {'1': 'proxy_enable', '3': 2, '4': 1, '5': 8, '8': {}, '10': 'proxyEnable'},
+    {
+      '1': 'openai_endpoint',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'openaiEndpoint'
+    },
     {
       '1': 'openai_endpoint_enable',
       '3': 4,
       '4': 1,
       '5': 8,
+      '8': {},
       '10': 'openaiEndpointEnable'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `SettingInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List settingInfoDescriptor = $convert.base64Decode(
-    'CgtTZXR0aW5nSW5mbxIlCg5wcm94eV9lbmRwb2ludBgBIAEoCVINcHJveHlFbmRwb2ludBIhCg'
-    'xwcm94eV9lbmFibGUYAiABKAhSC3Byb3h5RW5hYmxlEicKD29wZW5haV9lbmRwb2ludBgDIAEo'
-    'CVIOb3BlbmFpRW5kcG9pbnQSNAoWb3BlbmFpX2VuZHBvaW50X2VuYWJsZRgEIAEoCFIUb3Blbm'
-    'FpRW5kcG9pbnRFbmFibGU=');
+    'CgtTZXR0aW5nSW5mbxIrCg5wcm94eV9lbmRwb2ludBgBIAEoCUIEkLUYA1INcHJveHlFbmRwb2'
+    'ludBInCgxwcm94eV9lbmFibGUYAiABKAhCBJC1GANSC3Byb3h5RW5hYmxlEi0KD29wZW5haV9l'
+    'bmRwb2ludBgDIAEoCUIEkLUYA1IOb3BlbmFpRW5kcG9pbnQSOgoWb3BlbmFpX2VuZHBvaW50X2'
+    'VuYWJsZRgEIAEoCEIEkLUYA1IUb3BlbmFpRW5kcG9pbnRFbmFibGU6BJi1GAM=');
 
 @$core.Deprecated('Use settingEditReqDescriptor instead')
 const SettingEditReq$json = {
@@ -69,12 +85,14 @@ const SettingGetResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ai.SettingInfo',
+      '8': {},
       '10': 'info'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `SettingGetResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List settingGetRespDescriptor = $convert.base64Decode(
-    'Cg5TZXR0aW5nR2V0UmVzcBImCgRpbmZvGAEgASgLMhIuaGkuYWkuU2V0dGluZ0luZm9SBGluZm'
-    '8=');
+    'Cg5TZXR0aW5nR2V0UmVzcBIsCgRpbmZvGAEgASgLMhIuaGkuYWkuU2V0dGluZ0luZm9CBJC1GA'
+    'NSBGluZm86BJi1GAM=');

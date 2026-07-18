@@ -65,26 +65,29 @@ const GetWalletResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.GetWalletResp.Unit',
+      '8': {},
       '10': 'list'
     },
   ],
   '3': [GetWalletResp_Unit$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use getWalletRespDescriptor instead')
 const GetWalletResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'chain', '3': 1, '4': 1, '5': 9, '10': 'chain'},
-    {'1': 'address', '3': 2, '4': 1, '5': 9, '10': 'address'},
+    {'1': 'chain', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'chain'},
+    {'1': 'address', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'address'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetWalletResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getWalletRespDescriptor = $convert.base64Decode(
-    'Cg1HZXRXYWxsZXRSZXNwEi4KBGxpc3QYASADKAsyGi5oaS5kaWQuR2V0V2FsbGV0UmVzcC5Vbm'
-    'l0UgRsaXN0GjYKBFVuaXQSFAoFY2hhaW4YASABKAlSBWNoYWluEhgKB2FkZHJlc3MYAiABKAlS'
-    'B2FkZHJlc3M=');
+    'Cg1HZXRXYWxsZXRSZXNwEjQKBGxpc3QYASADKAsyGi5oaS5kaWQuR2V0V2FsbGV0UmVzcC5Vbm'
+    'l0QgSQtRgDUgRsaXN0GkgKBFVuaXQSGgoFY2hhaW4YASABKAlCBJC1GANSBWNoYWluEh4KB2Fk'
+    'ZHJlc3MYAiABKAlCBJC1GANSB2FkZHJlc3M6BJi1GAM6BJi1GAM=');
 
 @$core.Deprecated('Use listAddressesReqDescriptor instead')
 const ListAddressesReq$json = {
@@ -127,27 +130,31 @@ const ListAddressesResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.ListAddressesResp.Unit',
+      '8': {},
       '10': 'list'
     },
   ],
   '3': [ListAddressesResp_Unit$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use listAddressesRespDescriptor instead')
 const ListAddressesResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'chain', '3': 2, '4': 1, '5': 9, '10': 'chain'},
-    {'1': 'address', '3': 3, '4': 1, '5': 9, '10': 'address'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
+    {'1': 'chain', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'chain'},
+    {'1': 'address', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'address'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListAddressesResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAddressesRespDescriptor = $convert.base64Decode(
-    'ChFMaXN0QWRkcmVzc2VzUmVzcBIyCgRsaXN0GAEgAygLMh4uaGkuZGlkLkxpc3RBZGRyZXNzZX'
-    'NSZXNwLlVuaXRSBGxpc3QaSAoEVW5pdBIQCgNkaWQYASABKAlSA2RpZBIUCgVjaGFpbhgCIAEo'
-    'CVIFY2hhaW4SGAoHYWRkcmVzcxgDIAEoCVIHYWRkcmVzcw==');
+    'ChFMaXN0QWRkcmVzc2VzUmVzcBI4CgRsaXN0GAEgAygLMh4uaGkuZGlkLkxpc3RBZGRyZXNzZX'
+    'NSZXNwLlVuaXRCBJC1GANSBGxpc3QaYAoEVW5pdBIWCgNkaWQYASABKAlCBJC1GANSA2RpZBIa'
+    'CgVjaGFpbhgCIAEoCUIEkLUYA1IFY2hhaW4SHgoHYWRkcmVzcxgDIAEoCUIEkLUYA1IHYWRkcm'
+    'VzczoEmLUYAzoEmLUYAw==');
 
 @$core.Deprecated('Use totalAssetsReqDescriptor instead')
 const TotalAssetsReq$json = {
@@ -165,13 +172,14 @@ final $typed_data.Uint8List totalAssetsReqDescriptor = $convert.base64Decode(
 const TotalAssetsResp$json = {
   '1': 'TotalAssetsResp',
   '2': [
-    {'1': 'n', '3': 1, '4': 1, '5': 9, '10': 'n'},
+    {'1': 'n', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'n'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TotalAssetsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List totalAssetsRespDescriptor =
-    $convert.base64Decode('Cg9Ub3RhbEFzc2V0c1Jlc3ASDAoBbhgBIAEoCVIBbg==');
+final $typed_data.Uint8List totalAssetsRespDescriptor = $convert.base64Decode(
+    'Cg9Ub3RhbEFzc2V0c1Jlc3ASEgoBbhgBIAEoCUIEkLUYAVIBbjoEmLUYAQ==');
 
 @$core.Deprecated('Use listUsersAssetsReqDescriptor instead')
 const ListUsersAssetsReq$json = {
@@ -198,34 +206,38 @@ final $typed_data.Uint8List listUsersAssetsReqDescriptor = $convert.base64Decode
 const ListUsersAssetsResp$json = {
   '1': 'ListUsersAssetsResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'list',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.did.ListUsersAssetsResp.Unit',
+      '8': {},
       '10': 'list'
     },
   ],
   '3': [ListUsersAssetsResp_Unit$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use listUsersAssetsRespDescriptor instead')
 const ListUsersAssetsResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'avatar', '3': 2, '4': 1, '5': 9, '10': 'avatar'},
-    {'1': 'n', '3': 3, '4': 1, '5': 9, '10': 'n'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
+    {'1': 'avatar', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'avatar'},
+    {'1': 'n', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'n'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListUsersAssetsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listUsersAssetsRespDescriptor = $convert.base64Decode(
-    'ChNMaXN0VXNlcnNBc3NldHNSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBI0CgRsaXN0GAIgAy'
-    'gLMiAuaGkuZGlkLkxpc3RVc2Vyc0Fzc2V0c1Jlc3AuVW5pdFIEbGlzdBo+CgRVbml0EhAKA2Rp'
-    'ZBgBIAEoCVIDZGlkEhYKBmF2YXRhchgCIAEoCVIGYXZhdGFyEgwKAW4YAyABKAlSAW4=');
+    'ChNMaXN0VXNlcnNBc3NldHNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgBUgV0b3RhbBI6CgRsaX'
+    'N0GAIgAygLMiAuaGkuZGlkLkxpc3RVc2Vyc0Fzc2V0c1Jlc3AuVW5pdEIEkLUYAVIEbGlzdBpW'
+    'CgRVbml0EhYKA2RpZBgBIAEoCUIEkLUYAVIDZGlkEhwKBmF2YXRhchgCIAEoCUIEkLUYAVIGYX'
+    'ZhdGFyEhIKAW4YAyABKAlCBJC1GAFSAW46BJi1GAE6BJi1GAE=');
 
 @$core.Deprecated('Use getUserAssetsReqDescriptor instead')
 const GetUserAssetsReq$json = {
@@ -251,30 +263,42 @@ const GetUserAssetsResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.GetUserAssetsResp.Unit',
+      '8': {},
       '10': 'unit'
     },
-    {'1': 'exchange', '3': 2, '4': 1, '5': 9, '10': 'exchange'},
+    {'1': 'exchange', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'exchange'},
   ],
   '3': [GetUserAssetsResp_Unit$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use getUserAssetsRespDescriptor instead')
 const GetUserAssetsResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'coin', '3': 1, '4': 1, '5': 11, '6': '.hi.did.Coin', '10': 'coin'},
-    {'1': 'address', '3': 2, '4': 1, '5': 9, '10': 'address'},
-    {'1': 'amount', '3': 3, '4': 1, '5': 9, '10': 'amount'},
-    {'1': 'price', '3': 4, '4': 1, '5': 9, '10': 'price'},
+    {
+      '1': 'coin',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.Coin',
+      '8': {},
+      '10': 'coin'
+    },
+    {'1': 'address', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'address'},
+    {'1': 'amount', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'price', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'price'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetUserAssetsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getUserAssetsRespDescriptor = $convert.base64Decode(
-    'ChFHZXRVc2VyQXNzZXRzUmVzcBIyCgR1bml0GAEgAygLMh4uaGkuZGlkLkdldFVzZXJBc3NldH'
-    'NSZXNwLlVuaXRSBHVuaXQSGgoIZXhjaGFuZ2UYAiABKAlSCGV4Y2hhbmdlGnAKBFVuaXQSIAoE'
-    'Y29pbhgBIAEoCzIMLmhpLmRpZC5Db2luUgRjb2luEhgKB2FkZHJlc3MYAiABKAlSB2FkZHJlc3'
-    'MSFgoGYW1vdW50GAMgASgJUgZhbW91bnQSFAoFcHJpY2UYBCABKAlSBXByaWNl');
+    'ChFHZXRVc2VyQXNzZXRzUmVzcBI4CgR1bml0GAEgAygLMh4uaGkuZGlkLkdldFVzZXJBc3NldH'
+    'NSZXNwLlVuaXRCBJC1GAFSBHVuaXQSIAoIZXhjaGFuZ2UYAiABKAlCBJC1GAFSCGV4Y2hhbmdl'
+    'Go4BCgRVbml0EiYKBGNvaW4YASABKAsyDC5oaS5kaWQuQ29pbkIEkLUYAVIEY29pbhIeCgdhZG'
+    'RyZXNzGAIgASgJQgSQtRgBUgdhZGRyZXNzEhwKBmFtb3VudBgDIAEoCUIEkLUYAVIGYW1vdW50'
+    'EhoKBXByaWNlGAQgASgJQgSQtRgBUgVwcmljZToEmLUYAToEmLUYAQ==');
 
 @$core.Deprecated('Use updateAssetsReqDescriptor instead')
 const UpdateAssetsReq$json = {

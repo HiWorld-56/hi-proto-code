@@ -24,10 +24,11 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 被 TradeBase 引用 → 必须 <=PARTICIPANT(交易卡随 TradeBase 入群消息)。
 type TradeUnit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          *did.Coin              `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
-	User          *hi.Entity             `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	Coin          *did.Coin              `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"` // Coin=公开
+	User          *hi.Entity             `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"` // Entity=公开门面
 	Sum           string                 `protobuf:"bytes,3,opt,name=sum,proto3" json:"sum,omitempty"`
 	Amount        string                 `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
 	Fee           string                 `protobuf:"bytes,5,opt,name=fee,proto3" json:"fee,omitempty"`
@@ -100,6 +101,7 @@ func (x *TradeUnit) GetFee() string {
 	return ""
 }
 
+// 交易基础卡:被 Content.trade 引用,可分享进群消息 → PARTICIPANT。
 type TradeBase struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	From          *TradeUnit             `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
@@ -212,6 +214,7 @@ func (x *GetTradeFeeReq) GetCoin() string {
 	return ""
 }
 
+// 手续费表:按币种查费率,非用户私有 → 公开。
 type GetTradeFeeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Fee           string                 `protobuf:"bytes,1,opt,name=fee,proto3" json:"fee,omitempty"`
@@ -300,10 +303,11 @@ func (x *GetTradeReq) GetOrder() string {
 	return ""
 }
 
+// 只在 my-trades 壳(TradeDetail)里出现,不被 TradeBase 引用 → 可 SELF。
 type TradeTrans struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Trans         *did.Transaction       `protobuf:"bytes,2,opt,name=trans,proto3" json:"trans,omitempty"`
+	Trans         *did.Transaction       `protobuf:"bytes,2,opt,name=trans,proto3" json:"trans,omitempty"` // Transaction=公开
 	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
 	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -368,13 +372,15 @@ func (x *TradeTrans) GetTimestamp() int64 {
 	return 0
 }
 
+// 我的交易详情:仅被 SELF 壳(GetTradeResp/AddTradeResp/ListTradeResp)引用 → SELF。
+// 里面放 PARTICIPANT 的 TradeUnit 合法(2<=3)。
 type TradeDetail struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Order         string                 `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
 	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	From          *TradeUnit             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"`
+	From          *TradeUnit             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // TradeUnit=PARTICIPANT
 	To            *TradeUnit             `protobuf:"bytes,4,opt,name=to,proto3" json:"to,omitempty"`
-	List          map[string]*TradeTrans `protobuf:"bytes,5,rep,name=list,proto3" json:"list,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	List          map[string]*TradeTrans `protobuf:"bytes,5,rep,name=list,proto3" json:"list,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // TradeTrans=SELF
 	Timestamp     int64                  `protobuf:"varint,8,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -452,6 +458,7 @@ func (x *TradeDetail) GetTimestamp() int64 {
 	return 0
 }
 
+// 我的交易详情壳。
 type GetTradeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Detail        *TradeDetail           `protobuf:"bytes,1,opt,name=detail,proto3" json:"detail,omitempty"`
@@ -742,6 +749,7 @@ func (x *ListAllTradeReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
+// 我的交易列表壳:SELF 壳收窄整体私密性,元素放 SELF 的 TradeDetail。
 type ListTradeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
@@ -798,47 +806,47 @@ var File_hi_club_trade_proto protoreflect.FileDescriptor
 
 const file_hi_club_trade_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/trade.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\"\x89\x01\n" +
-	"\tTradeUnit\x12 \n" +
-	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinR\x04coin\x12\x1e\n" +
+	"\x13hi/club/trade.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\"\xad\x01\n" +
+	"\tTradeUnit\x12&\n" +
+	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04coin\x12$\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\x12\x10\n" +
-	"\x03sum\x18\x03 \x01(\tR\x03sum\x12\x16\n" +
-	"\x06amount\x18\x04 \x01(\tR\x06amount\x12\x10\n" +
-	"\x03fee\x18\x05 \x01(\tR\x03fee\"\x85\x01\n" +
-	"\tTradeBase\x12&\n" +
-	"\x04from\x18\x01 \x01(\v2\x12.hi.club.TradeUnitR\x04from\x12\"\n" +
-	"\x02to\x18\x02 \x01(\v2\x12.hi.club.TradeUnitR\x02to\x12\x0e\n" +
-	"\x02id\x18\x03 \x01(\tR\x02id\x12\x1c\n" +
-	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"$\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x12\x16\n" +
+	"\x03sum\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x03sum\x12\x1c\n" +
+	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02R\x06amount\x12\x16\n" +
+	"\x03fee\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02R\x03fee:\x04\x98\xb5\x18\x02\"\xa3\x01\n" +
+	"\tTradeBase\x12,\n" +
+	"\x04from\x18\x01 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x04from\x12(\n" +
+	"\x02to\x18\x02 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x02to\x12\x14\n" +
+	"\x02id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x02id\x12\"\n" +
+	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x02R\ttimestamp:\x04\x98\xb5\x18\x02\"$\n" +
 	"\x0eGetTradeFeeReq\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\"#\n" +
-	"\x0fGetTradeFeeResp\x12\x10\n" +
-	"\x03fee\x18\x01 \x01(\tR\x03fee\"#\n" +
+	"\x04coin\x18\x01 \x01(\tR\x04coin\"/\n" +
+	"\x0fGetTradeFeeResp\x12\x16\n" +
+	"\x03fee\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03fee:\x04\x98\xb5\x18\x01\"#\n" +
 	"\vGetTradeReq\x12\x14\n" +
-	"\x05order\x18\x01 \x01(\tR\x05order\"}\n" +
+	"\x05order\x18\x01 \x01(\tR\x05order\"\x9b\x01\n" +
 	"\n" +
-	"TradeTrans\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12)\n" +
-	"\x05trans\x18\x02 \x01(\v2\x13.hi.did.TransactionR\x05trans\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\tR\x06status\x12\x1c\n" +
-	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"\xa7\x02\n" +
-	"\vTradeDetail\x12\x14\n" +
-	"\x05order\x18\x01 \x01(\tR\x05order\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\x12&\n" +
-	"\x04from\x18\x03 \x01(\v2\x12.hi.club.TradeUnitR\x04from\x12\"\n" +
-	"\x02to\x18\x04 \x01(\v2\x12.hi.club.TradeUnitR\x02to\x122\n" +
-	"\x04list\x18\x05 \x03(\v2\x1e.hi.club.TradeDetail.ListEntryR\x04list\x12\x1c\n" +
-	"\ttimestamp\x18\b \x01(\x03R\ttimestamp\x1aL\n" +
+	"TradeTrans\x12\x14\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x02id\x12/\n" +
+	"\x05trans\x18\x02 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01R\x05trans\x12\x1c\n" +
+	"\x06status\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12\"\n" +
+	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03R\ttimestamp:\x04\x98\xb5\x18\x03\"\xd1\x02\n" +
+	"\vTradeDetail\x12\x1a\n" +
+	"\x05order\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05order\x12\x1c\n" +
+	"\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12,\n" +
+	"\x04from\x18\x03 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x04from\x12(\n" +
+	"\x02to\x18\x04 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x02to\x128\n" +
+	"\x04list\x18\x05 \x03(\v2\x1e.hi.club.TradeDetail.ListEntryB\x04\x90\xb5\x18\x03R\x04list\x12\"\n" +
+	"\ttimestamp\x18\b \x01(\x03B\x04\x90\xb5\x18\x03R\ttimestamp\x1aL\n" +
 	"\tListEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12)\n" +
-	"\x05value\x18\x02 \x01(\v2\x13.hi.club.TradeTransR\x05value:\x028\x01\"<\n" +
-	"\fGetTradeResp\x12,\n" +
-	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailR\x06detail\";\n" +
+	"\x05value\x18\x02 \x01(\v2\x13.hi.club.TradeTransR\x05value:\x028\x01:\x04\x98\xb5\x18\x03\"H\n" +
+	"\fGetTradeResp\x122\n" +
+	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x06detail:\x04\x98\xb5\x18\x03\";\n" +
 	"\vAddTradeReq\x12,\n" +
-	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailR\x06detail\"<\n" +
-	"\fAddTradeResp\x12,\n" +
-	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailR\x06detail\"8\n" +
+	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailR\x06detail\"H\n" +
+	"\fAddTradeResp\x122\n" +
+	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x06detail:\x04\x98\xb5\x18\x03\"8\n" +
 	"\x12UpdateTransHashReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04hash\x18\x02 \x01(\tR\x04hash\"N\n" +
@@ -851,10 +859,10 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"O\n" +
-	"\rListTradeResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12(\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailR\x04list2\xce\x02\n" +
+	"pagination\"a\n" +
+	"\rListTradeResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x032\xce\x02\n" +
 	"\x05Trade\x12B\n" +
 	"\x06GetFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x03Get\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +

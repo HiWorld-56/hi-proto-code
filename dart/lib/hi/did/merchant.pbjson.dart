@@ -19,16 +19,33 @@ import 'dart:typed_data' as $typed_data;
 const MerchantInfo$json = {
   '1': 'MerchantInfo',
   '2': [
-    {'1': 'master', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'master'},
-    {'1': 'server', '3': 2, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'server'},
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'logo', '3': 4, '4': 1, '5': 9, '10': 'logo'},
+    {
+      '1': 'master',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'master'
+    },
+    {
+      '1': 'server',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'server'
+    },
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'logo', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'logo'},
     {
       '1': 'public_coins',
       '3': 5,
       '4': 3,
       '5': 11,
       '6': '.hi.did.Coin',
+      '8': {},
       '10': 'publicCoins'
     },
     {
@@ -37,22 +54,25 @@ const MerchantInfo$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.Coin',
+      '8': {},
       '10': 'customTokens'
     },
-    {'1': 'endpoint', '3': 7, '4': 1, '5': 9, '10': 'endpoint'},
-    {'1': 'scheme', '3': 8, '4': 1, '5': 9, '10': 'scheme'},
-    {'1': 'created_at', '3': 10, '4': 1, '5': 3, '10': 'createdAt'},
+    {'1': 'endpoint', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'endpoint'},
+    {'1': 'scheme', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'scheme'},
+    {'1': 'created_at', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `MerchantInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantInfoDescriptor = $convert.base64Decode(
-    'CgxNZXJjaGFudEluZm8SIgoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5UgZtYXN0ZXISIgoGc2'
-    'VydmVyGAIgASgLMgouaGkuRW50aXR5UgZzZXJ2ZXISEgoEbmFtZRgDIAEoCVIEbmFtZRISCgRs'
-    'b2dvGAQgASgJUgRsb2dvEi8KDHB1YmxpY19jb2lucxgFIAMoCzIMLmhpLmRpZC5Db2luUgtwdW'
-    'JsaWNDb2lucxIxCg1jdXN0b21fdG9rZW5zGAYgAygLMgwuaGkuZGlkLkNvaW5SDGN1c3RvbVRv'
-    'a2VucxIaCghlbmRwb2ludBgHIAEoCVIIZW5kcG9pbnQSFgoGc2NoZW1lGAggASgJUgZzY2hlbW'
-    'USHQoKY3JlYXRlZF9hdBgKIAEoA1IJY3JlYXRlZEF0');
+    'CgxNZXJjaGFudEluZm8SKAoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgZtYXN0ZX'
+    'ISKAoGc2VydmVyGAIgASgLMgouaGkuRW50aXR5QgSQtRgBUgZzZXJ2ZXISGAoEbmFtZRgDIAEo'
+    'CUIEkLUYAlIEbmFtZRIYCgRsb2dvGAQgASgJQgSQtRgCUgRsb2dvEjUKDHB1YmxpY19jb2lucx'
+    'gFIAMoCzIMLmhpLmRpZC5Db2luQgSQtRgCUgtwdWJsaWNDb2lucxI3Cg1jdXN0b21fdG9rZW5z'
+    'GAYgAygLMgwuaGkuZGlkLkNvaW5CBJC1GAJSDGN1c3RvbVRva2VucxIgCghlbmRwb2ludBgHIA'
+    'EoCUIEkLUYAlIIZW5kcG9pbnQSHAoGc2NoZW1lGAggASgJQgSQtRgCUgZzY2hlbWUSIwoKY3Jl'
+    'YXRlZF9hdBgKIAEoA0IEkLUYAlIJY3JlYXRlZEF0OgSYtRgC');
 
 @$core.Deprecated('Use merchantGetRespDescriptor instead')
 const MerchantGetResp$json = {
@@ -64,15 +84,17 @@ const MerchantGetResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.did.MerchantInfo',
+      '8': {},
       '10': 'info'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `MerchantGetResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantGetRespDescriptor = $convert.base64Decode(
-    'Cg9NZXJjaGFudEdldFJlc3ASKAoEaW5mbxgBIAEoCzIULmhpLmRpZC5NZXJjaGFudEluZm9SBG'
-    'luZm8=');
+    'Cg9NZXJjaGFudEdldFJlc3ASLgoEaW5mbxgBIAEoCzIULmhpLmRpZC5NZXJjaGFudEluZm9CBJ'
+    'C1GAJSBGluZm86BJi1GAI=');
 
 @$core.Deprecated('Use merchantSetReqDescriptor instead')
 const MerchantSetReq$json = {
@@ -96,33 +118,81 @@ final $typed_data.Uint8List merchantSetReqDescriptor = $convert.base64Decode(
 const MerchantListResp$json = {
   '1': 'MerchantListResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'list',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.did.MerchantInfo',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `MerchantListResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantListRespDescriptor = $convert.base64Decode(
-    'ChBNZXJjaGFudExpc3RSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIoCgRsaXN0GAIgAygLMh'
-    'QuaGkuZGlkLk1lcmNoYW50SW5mb1IEbGlzdA==');
+    'ChBNZXJjaGFudExpc3RSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgCUgV0b3RhbBIuCgRsaXN0GA'
+    'IgAygLMhQuaGkuZGlkLk1lcmNoYW50SW5mb0IEkLUYAlIEbGlzdDoEmLUYAg==');
 
 @$core.Deprecated('Use userExtensionInfoDescriptor instead')
 const UserExtensionInfo$json = {
   '1': 'UserExtensionInfo',
   '2': [
-    {'1': 'logo', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'logo', '17': true},
-    {'1': 'level', '3': 2, '4': 1, '5': 5, '9': 1, '10': 'level', '17': true},
-    {'1': 'card', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'card', '17': true},
-    {'1': 'extend', '3': 4, '4': 1, '5': 9, '9': 3, '10': 'extend', '17': true},
-    {'1': 'note', '3': 5, '4': 1, '5': 9, '9': 4, '10': 'note', '17': true},
+    {
+      '1': 'logo',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'logo',
+      '17': true
+    },
+    {
+      '1': 'level',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 1,
+      '10': 'level',
+      '17': true
+    },
+    {
+      '1': 'card',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'card',
+      '17': true
+    },
+    {
+      '1': 'extend',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'extend',
+      '17': true
+    },
+    {
+      '1': 'note',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'note',
+      '17': true
+    },
   ],
+  '7': {},
   '8': [
     {'1': '_logo'},
     {'1': '_level'},
@@ -134,31 +204,43 @@ const UserExtensionInfo$json = {
 
 /// Descriptor for `UserExtensionInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userExtensionInfoDescriptor = $convert.base64Decode(
-    'ChFVc2VyRXh0ZW5zaW9uSW5mbxIXCgRsb2dvGAEgASgJSABSBGxvZ2+IAQESGQoFbGV2ZWwYAi'
-    'ABKAVIAVIFbGV2ZWyIAQESFwoEY2FyZBgDIAEoCUgCUgRjYXJkiAEBEhsKBmV4dGVuZBgEIAEo'
-    'CUgDUgZleHRlbmSIAQESFwoEbm90ZRgFIAEoCUgEUgRub3RliAEBQgcKBV9sb2dvQggKBl9sZX'
-    'ZlbEIHCgVfY2FyZEIJCgdfZXh0ZW5kQgcKBV9ub3Rl');
+    'ChFVc2VyRXh0ZW5zaW9uSW5mbxIdCgRsb2dvGAEgASgJQgSQtRgCSABSBGxvZ2+IAQESHwoFbG'
+    'V2ZWwYAiABKAVCBJC1GAJIAVIFbGV2ZWyIAQESHQoEY2FyZBgDIAEoCUIEkLUYAkgCUgRjYXJk'
+    'iAEBEiEKBmV4dGVuZBgEIAEoCUIEkLUYAkgDUgZleHRlbmSIAQESHQoEbm90ZRgFIAEoCUIEkL'
+    'UYAkgEUgRub3RliAEBOgSYtRgCQgcKBV9sb2dvQggKBl9sZXZlbEIHCgVfY2FyZEIJCgdfZXh0'
+    'ZW5kQgcKBV9ub3Rl');
 
 @$core.Deprecated('Use userExtensionUnitDescriptor instead')
 const UserExtensionUnit$json = {
   '1': 'UserExtensionUnit',
   '2': [
-    {'1': 'user', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'user'},
+    {
+      '1': 'user',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'user'
+    },
     {
       '1': 'info',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.did.UserExtensionInfo',
+      '8': {},
       '10': 'info'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `UserExtensionUnit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userExtensionUnitDescriptor = $convert.base64Decode(
-    'ChFVc2VyRXh0ZW5zaW9uVW5pdBIeCgR1c2VyGAEgASgLMgouaGkuRW50aXR5UgR1c2VyEi0KBG'
-    'luZm8YAiABKAsyGS5oaS5kaWQuVXNlckV4dGVuc2lvbkluZm9SBGluZm8=');
+    'ChFVc2VyRXh0ZW5zaW9uVW5pdBIkCgR1c2VyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgR1c2'
+    'VyEjMKBGluZm8YAiABKAsyGS5oaS5kaWQuVXNlckV4dGVuc2lvbkluZm9CBJC1GAJSBGluZm86'
+    'BJi1GAI=');
 
 @$core.Deprecated('Use grantReqDescriptor instead')
 const GrantReq$json = {
@@ -184,17 +266,20 @@ const GrantUnit$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.Entity',
+      '8': {},
       '10': 'grantee'
     },
-    {'1': 'note', '3': 2, '4': 1, '5': 9, '10': 'note'},
-    {'1': 'created_at', '3': 3, '4': 1, '5': 3, '10': 'createdAt'},
+    {'1': 'note', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'note'},
+    {'1': 'created_at', '3': 3, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GrantUnit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List grantUnitDescriptor = $convert.base64Decode(
-    'CglHcmFudFVuaXQSJAoHZ3JhbnRlZRgBIAEoCzIKLmhpLkVudGl0eVIHZ3JhbnRlZRISCgRub3'
-    'RlGAIgASgJUgRub3RlEh0KCmNyZWF0ZWRfYXQYAyABKANSCWNyZWF0ZWRBdA==');
+    'CglHcmFudFVuaXQSKgoHZ3JhbnRlZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIHZ3JhbnRlZR'
+    'IYCgRub3RlGAIgASgJQgSQtRgDUgRub3RlEiMKCmNyZWF0ZWRfYXQYAyABKANCBJC1GANSCWNy'
+    'ZWF0ZWRBdDoEmLUYAw==');
 
 @$core.Deprecated('Use listGrantsRespDescriptor instead')
 const ListGrantsResp$json = {
@@ -206,15 +291,17 @@ const ListGrantsResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.GrantUnit',
+      '8': {},
       '10': 'grants'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListGrantsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGrantsRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0R3JhbnRzUmVzcBIpCgZncmFudHMYASADKAsyES5oaS5kaWQuR3JhbnRVbml0UgZncm'
-    'FudHM=');
+    'Cg5MaXN0R3JhbnRzUmVzcBIvCgZncmFudHMYASADKAsyES5oaS5kaWQuR3JhbnRVbml0QgSQtR'
+    'gDUgZncmFudHM6BJi1GAM=');
 
 @$core.Deprecated('Use getUserReqDescriptor instead')
 const GetUserReq$json = {
@@ -256,22 +343,24 @@ final $typed_data.Uint8List listUsersReqDescriptor = $convert.base64Decode(
 const ListUsersResp$json = {
   '1': 'ListUsersResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'units',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.did.UserExtensionUnit',
+      '8': {},
       '10': 'units'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListUsersResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listUsersRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0VXNlcnNSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIvCgV1bml0cxgCIAMoCzIZLm'
-    'hpLmRpZC5Vc2VyRXh0ZW5zaW9uVW5pdFIFdW5pdHM=');
+    'Cg1MaXN0VXNlcnNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgCUgV0b3RhbBI1CgV1bml0cxgCIA'
+    'MoCzIZLmhpLmRpZC5Vc2VyRXh0ZW5zaW9uVW5pdEIEkLUYAlIFdW5pdHM6BJi1GAI=');
 
 @$core.Deprecated('Use setUsersReqDescriptor instead')
 const SetUsersReq$json = {
@@ -354,55 +443,67 @@ final $typed_data.Uint8List getUserMqttReqDescriptor =
 const GetUserMqttResp$json = {
   '1': 'GetUserMqttResp',
   '2': [
-    {'1': 'username', '3': 1, '4': 1, '5': 9, '10': 'username'},
-    {'1': 'password', '3': 2, '4': 1, '5': 9, '10': 'password'},
+    {'1': 'username', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'username'},
+    {'1': 'password', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'password'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetUserMqttResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getUserMqttRespDescriptor = $convert.base64Decode(
-    'Cg9HZXRVc2VyTXF0dFJlc3ASGgoIdXNlcm5hbWUYASABKAlSCHVzZXJuYW1lEhoKCHBhc3N3b3'
-    'JkGAIgASgJUghwYXNzd29yZA==');
+    'Cg9HZXRVc2VyTXF0dFJlc3ASIAoIdXNlcm5hbWUYASABKAlCBJC1GAJSCHVzZXJuYW1lEiAKCH'
+    'Bhc3N3b3JkGAIgASgJQgSQtRgCUghwYXNzd29yZDoEmLUYAg==');
 
 @$core.Deprecated('Use merchantPubSchemeRespDescriptor instead')
 const MerchantPubSchemeResp$json = {
   '1': 'MerchantPubSchemeResp',
   '2': [
-    {'1': 'scheme', '3': 1, '4': 1, '5': 9, '10': 'scheme'},
+    {'1': 'scheme', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'scheme'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `MerchantPubSchemeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List merchantPubSchemeRespDescriptor =
-    $convert.base64Decode(
-        'ChVNZXJjaGFudFB1YlNjaGVtZVJlc3ASFgoGc2NoZW1lGAEgASgJUgZzY2hlbWU=');
+final $typed_data.Uint8List merchantPubSchemeRespDescriptor = $convert.base64Decode(
+    'ChVNZXJjaGFudFB1YlNjaGVtZVJlc3ASHAoGc2NoZW1lGAEgASgJQgSQtRgBUgZzY2hlbWU6BJ'
+    'i1GAE=');
 
 @$core.Deprecated('Use merchantPubServerRespDescriptor instead')
 const MerchantPubServerResp$json = {
   '1': 'MerchantPubServerResp',
   '2': [
-    {'1': 'server', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'server'},
+    {
+      '1': 'server',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'server'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `MerchantPubServerResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantPubServerRespDescriptor = $convert.base64Decode(
-    'ChVNZXJjaGFudFB1YlNlcnZlclJlc3ASIgoGc2VydmVyGAEgASgLMgouaGkuRW50aXR5UgZzZX'
-    'J2ZXI=');
+    'ChVNZXJjaGFudFB1YlNlcnZlclJlc3ASKAoGc2VydmVyGAEgASgLMgouaGkuRW50aXR5QgSQtR'
+    'gBUgZzZXJ2ZXI6BJi1GAE=');
 
 @$core.Deprecated('Use merchantExDBRespDescriptor instead')
 const MerchantExDBResp$json = {
   '1': 'MerchantExDBResp',
   '2': [
-    {'1': 'token', '3': 1, '4': 1, '5': 9, '10': 'token'},
-    {'1': 'table', '3': 2, '4': 1, '5': 9, '10': 'table'},
+    {'1': 'token', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'token'},
+    {'1': 'table', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'table'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `MerchantExDBResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantExDBRespDescriptor = $convert.base64Decode(
-    'ChBNZXJjaGFudEV4REJSZXNwEhQKBXRva2VuGAEgASgJUgV0b2tlbhIUCgV0YWJsZRgCIAEoCV'
-    'IFdGFibGU=');
+    'ChBNZXJjaGFudEV4REJSZXNwEhoKBXRva2VuGAEgASgJQgSQtRgDUgV0b2tlbhIaCgV0YWJsZR'
+    'gCIAEoCUIEkLUYA1IFdGFibGU6BJi1GAM=');
 
 @$core.Deprecated('Use merchantNotifyReqDescriptor instead')
 const MerchantNotifyReq$json = {

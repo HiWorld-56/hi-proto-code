@@ -225,10 +225,12 @@ pub struct TokenUsage {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgentInfo {
+    /// hi.Entity 恒 PUBLIC
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "2")]
     pub config: ::core::option::Option<AgentConfig>,
+    /// 归属 did
     #[prost(string, tag = "3")]
     pub creator: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
@@ -254,10 +256,12 @@ pub struct CreateAgentReq {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAgentResp {
+    /// hi.Entity 恒 PUBLIC
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "2")]
     pub config: ::core::option::Option<AgentConfig>,
+    /// hi.Entity 恒 PUBLIC
     #[prost(message, optional, tag = "3")]
     pub creator: ::core::option::Option<super::Entity>,
 }
@@ -2384,8 +2388,10 @@ pub struct MerchantListResp {
 pub mod merchant_list_resp {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Unit {
+        /// hi.Entity 恒 PUBLIC
         #[prost(message, optional, tag = "1")]
         pub base: ::core::option::Option<super::super::Entity>,
+        /// 取本消息档
         #[prost(int64, tag = "2")]
         pub created_at: i64,
     }
@@ -3796,6 +3802,7 @@ pub mod register_client {
 /// 一次测时明细(bot_sts_count 的一行):各段耗时。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentDelayUnit {
+    /// 与 AgentUsageResp(同 owner 运营指标)一致取 SELF —— 无 participant 对端会看别人机器人的延迟
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]

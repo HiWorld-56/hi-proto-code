@@ -32,25 +32,27 @@ final $typed_data.Uint8List pcOrderDataDescriptor = $convert.base64Decode(
 const PcOrder$json = {
   '1': 'PcOrder',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
-    {'1': 'order_id', '3': 2, '4': 1, '5': 9, '10': 'orderId'},
-    {'1': 'to_did', '3': 3, '4': 1, '5': 9, '10': 'toDid'},
-    {'1': 'amount', '3': 4, '4': 1, '5': 9, '10': 'amount'},
-    {'1': 'type', '3': 5, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'created_at', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
-    {'1': 'updated_at', '3': 7, '4': 1, '5': 3, '10': 'updatedAt'},
-    {'1': 'did', '3': 8, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'status', '3': 9, '4': 1, '5': 9, '10': 'status'},
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'id'},
+    {'1': 'order_id', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'orderId'},
+    {'1': 'to_did', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'toDid'},
+    {'1': 'amount', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'type', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'type'},
+    {'1': 'created_at', '3': 6, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+    {'1': 'updated_at', '3': 7, '4': 1, '5': 3, '8': {}, '10': 'updatedAt'},
+    {'1': 'did', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'did'},
+    {'1': 'status', '3': 9, '4': 1, '5': 9, '8': {}, '10': 'status'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `PcOrder`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pcOrderDescriptor = $convert.base64Decode(
-    'CgdQY09yZGVyEg4KAmlkGAEgASgJUgJpZBIZCghvcmRlcl9pZBgCIAEoCVIHb3JkZXJJZBIVCg'
-    'Z0b19kaWQYAyABKAlSBXRvRGlkEhYKBmFtb3VudBgEIAEoCVIGYW1vdW50EhIKBHR5cGUYBSAB'
-    'KAlSBHR5cGUSHQoKY3JlYXRlZF9hdBgGIAEoA1IJY3JlYXRlZEF0Eh0KCnVwZGF0ZWRfYXQYBy'
-    'ABKANSCXVwZGF0ZWRBdBIQCgNkaWQYCCABKAlSA2RpZBIWCgZzdGF0dXMYCSABKAlSBnN0YXR1'
-    'cw==');
+    'CgdQY09yZGVyEhQKAmlkGAEgASgJQgSQtRgDUgJpZBIfCghvcmRlcl9pZBgCIAEoCUIEkLUYA1'
+    'IHb3JkZXJJZBIbCgZ0b19kaWQYAyABKAlCBJC1GANSBXRvRGlkEhwKBmFtb3VudBgEIAEoCUIE'
+    'kLUYA1IGYW1vdW50EhgKBHR5cGUYBSABKAlCBJC1GANSBHR5cGUSIwoKY3JlYXRlZF9hdBgGIA'
+    'EoA0IEkLUYA1IJY3JlYXRlZEF0EiMKCnVwZGF0ZWRfYXQYByABKANCBJC1GANSCXVwZGF0ZWRB'
+    'dBIWCgNkaWQYCCABKAlCBJC1GANSA2RpZBIcCgZzdGF0dXMYCSABKAlCBJC1GANSBnN0YXR1cz'
+    'oEmLUYAw==');
 
 @$core.Deprecated('Use getNotPulledPcOrdersRespDescriptor instead')
 const GetNotPulledPcOrdersResp$json = {
@@ -62,16 +64,18 @@ const GetNotPulledPcOrdersResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.club.PcOrder',
+      '8': {},
       '10': 'orders'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetNotPulledPcOrdersResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getNotPulledPcOrdersRespDescriptor =
     $convert.base64Decode(
-        'ChhHZXROb3RQdWxsZWRQY09yZGVyc1Jlc3ASKAoGb3JkZXJzGAEgAygLMhAuaGkuY2x1Yi5QY0'
-        '9yZGVyUgZvcmRlcnM=');
+        'ChhHZXROb3RQdWxsZWRQY09yZGVyc1Jlc3ASLgoGb3JkZXJzGAEgAygLMhAuaGkuY2x1Yi5QY0'
+        '9yZGVyQgSQtRgDUgZvcmRlcnM6BJi1GAM=');
 
 @$core.Deprecated('Use updatePulledPcOrderDescriptor instead')
 const UpdatePulledPcOrder$json = {

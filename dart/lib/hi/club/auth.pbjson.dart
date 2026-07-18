@@ -19,13 +19,22 @@ import 'dart:typed_data' as $typed_data;
 const LoginResp$json = {
   '1': 'LoginResp',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
     {
       '1': 'token',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.AuthToken',
+      '8': {},
       '10': 'token'
     },
     {
@@ -34,14 +43,25 @@ const LoginResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.MqttCredentials',
+      '8': {},
       '10': 'mqtt'
     },
-    {'1': 'master', '3': 4, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'master'},
+    {
+      '1': 'master',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'master'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `LoginResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List loginRespDescriptor = $convert.base64Decode(
-    'CglMb2dpblJlc3ASHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIjCgV0b2tlbhgCIA'
-    'EoCzINLmhpLkF1dGhUb2tlblIFdG9rZW4SJwoEbXF0dBgDIAEoCzITLmhpLk1xdHRDcmVkZW50'
-    'aWFsc1IEbXF0dBIiCgZtYXN0ZXIYBCABKAsyCi5oaS5FbnRpdHlSBm1hc3Rlcg==');
+    'CglMb2dpblJlc3ASJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIpCgV0b2'
+    'tlbhgCIAEoCzINLmhpLkF1dGhUb2tlbkIEkLUYA1IFdG9rZW4SLQoEbXF0dBgDIAEoCzITLmhp'
+    'Lk1xdHRDcmVkZW50aWFsc0IEkLUYA1IEbXF0dBIoCgZtYXN0ZXIYBCABKAsyCi5oaS5FbnRpdH'
+    'lCBJC1GAFSBm1hc3RlcjoEmLUYAw==');

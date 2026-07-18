@@ -31,10 +31,11 @@ final $typed_data.Uint8List getConfigReqDescriptor =
 const GetConfigResp$json = {
   '1': 'GetConfigResp',
   '2': [
-    {'1': 'value', '3': 1, '4': 1, '5': 9, '10': 'value'},
+    {'1': 'value', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'value'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetConfigResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getConfigRespDescriptor = $convert
-    .base64Decode('Cg1HZXRDb25maWdSZXNwEhQKBXZhbHVlGAEgASgJUgV2YWx1ZQ==');
+final $typed_data.Uint8List getConfigRespDescriptor = $convert.base64Decode(
+    'Cg1HZXRDb25maWdSZXNwEhoKBXZhbHVlGAEgASgJQgSQtRgBUgV2YWx1ZToEmLUYAQ==');

@@ -77,10 +77,10 @@ func (FriendRequestStatus) EnumDescriptor() ([]byte, []int) {
 
 type UserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Permissions   []string               `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"`
-	VerifyPolicy  string                 `protobuf:"bytes,3,opt,name=verify_policy,json=verifyPolicy,proto3" json:"verify_policy,omitempty"` // 添加好友校验方式
-	Moment        string                 `protobuf:"bytes,4,opt,name=moment,proto3" json:"moment,omitempty"`                                 // 用户动态
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`                                     // 名片 name/avatar
+	Permissions   []string               `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"`                       // 我的权限列表(SELF)
+	VerifyPolicy  string                 `protobuf:"bytes,3,opt,name=verify_policy,json=verifyPolicy,proto3" json:"verify_policy,omitempty"` // 加好友校验方式(私有,SELF)
+	Moment        string                 `protobuf:"bytes,4,opt,name=moment,proto3" json:"moment,omitempty"`                                 // 用户动态(关系可见)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -199,7 +199,7 @@ type SystemMessages struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	HasNew        bool                   `protobuf:"varint,1,opt,name=has_new,json=hasNew,proto3" json:"has_new,omitempty"`
 	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
-	List          []*Notice              `protobuf:"bytes,3,rep,name=list,proto3" json:"list,omitempty"`
+	List          []*Notice              `protobuf:"bytes,3,rep,name=list,proto3" json:"list,omitempty"` // Notice(messaging)为通知型,关系/群级
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -353,9 +353,9 @@ func (x *HandleSystemMessageReq) GetStatus() string {
 
 type RelationInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Remark        string                 `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"` // 备注名
-	Moment        string                 `protobuf:"bytes,3,opt,name=moment,proto3" json:"moment,omitempty"` // 用户动态
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`     // 名片
+	Remark        string                 `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"` // 备注名(仅设置者本人可见)
+	Moment        string                 `protobuf:"bytes,3,opt,name=moment,proto3" json:"moment,omitempty"` // 用户动态(关系可见)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -606,7 +606,7 @@ func (x *DeleteFriendReq) GetDid() string {
 
 type ListGroupResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*GroupBase           `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // 群基本信息(含 dnd/muted 等),不再只回 Entity
+	List          []*GroupBase           `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // 每个 GroupBase 本身公开(GroupBase=PUBLIC)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -897,7 +897,7 @@ func (x *ListOnlineUserReq) GetUsers() []string {
 
 type ListOnlineUserResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*hi.Entity           `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // 在线的用户列表
+	List          []*hi.Entity           `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // 在线的用户列表(Entity=PUBLIC)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -943,49 +943,49 @@ var File_hi_club_user_proto protoreflect.FileDescriptor
 
 const file_hi_club_user_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/user.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x13hi/club/group.proto\x1a\x10hi/options.proto\"\x89\x01\n" +
-	"\bUserInfo\x12\x1e\n" +
+	"\x12hi/club/user.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x13hi/club/group.proto\x1a\x10hi/options.proto\"\xa7\x01\n" +
+	"\bUserInfo\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12 \n" +
-	"\vpermissions\x18\x02 \x03(\tR\vpermissions\x12#\n" +
-	"\rverify_policy\x18\x03 \x01(\tR\fverifyPolicy\x12\x16\n" +
-	"\x06moment\x18\x04 \x01(\tR\x06moment\"^\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12&\n" +
+	"\vpermissions\x18\x02 \x03(\tB\x04\x90\xb5\x18\x03R\vpermissions\x12)\n" +
+	"\rverify_policy\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\fverifyPolicy\x12\x1c\n" +
+	"\x06moment\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02R\x06moment:\x04\x98\xb5\x18\x03\"^\n" +
 	"\x14ListSystemMessageReq\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"d\n" +
-	"\x0eSystemMessages\x12\x17\n" +
-	"\ahas_new\x18\x01 \x01(\bR\x06hasNew\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x05R\x05total\x12#\n" +
-	"\x04list\x18\x03 \x03(\v2\x0f.hi.club.NoticeR\x04list\",\n" +
+	"pagination\"|\n" +
+	"\x0eSystemMessages\x12\x1d\n" +
+	"\ahas_new\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03R\x06hasNew\x12\x1a\n" +
+	"\x05total\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12)\n" +
+	"\x04list\x18\x03 \x03(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x03\",\n" +
 	"\x16DeleteSystemMessageReq\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"D\n" +
 	"\x16HandleSystemMessageReq\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\"^\n" +
-	"\fRelationInfo\x12\x1e\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\"v\n" +
+	"\fRelationInfo\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12\x16\n" +
-	"\x06remark\x18\x02 \x01(\tR\x06remark\x12\x16\n" +
-	"\x06moment\x18\x03 \x01(\tR\x06moment\"u\n" +
-	"\x11ListRelationsResp\x12-\n" +
-	"\x06friend\x18\x01 \x03(\v2\x15.hi.club.RelationInfoR\x06friend\x121\n" +
-	"\bservitor\x18\x02 \x03(\v2\x15.hi.club.RelationInfoR\bservitor\"4\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12\x1c\n" +
+	"\x06remark\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06remark\x12\x1c\n" +
+	"\x06moment\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x06moment:\x04\x98\xb5\x18\x03\"\x87\x01\n" +
+	"\x11ListRelationsResp\x123\n" +
+	"\x06friend\x18\x01 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\x06friend\x127\n" +
+	"\bservitor\x18\x02 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\bservitor:\x04\x98\xb5\x18\x03\"4\n" +
 	"\fAddFriendReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\"E\n" +
-	"\rAddFriendResp\x124\n" +
-	"\x06status\x18\x01 \x01(\x0e2\x1c.hi.club.FriendRequestStatusR\x06status\"#\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\"Q\n" +
+	"\rAddFriendResp\x12:\n" +
+	"\x06status\x18\x01 \x01(\x0e2\x1c.hi.club.FriendRequestStatusB\x04\x90\xb5\x18\x02R\x06status:\x04\x98\xb5\x18\x02\"#\n" +
 	"\x0fDeleteFriendReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"7\n" +
-	"\rListGroupResp\x12&\n" +
-	"\x04list\x18\x01 \x03(\v2\x12.hi.club.GroupBaseR\x04list\"\x1e\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\"C\n" +
+	"\rListGroupResp\x12,\n" +
+	"\x04list\x18\x01 \x03(\v2\x12.hi.club.GroupBaseB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x03\"\x1e\n" +
 	"\n" +
 	"GetUserReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"2\n" +
-	"\x1aUnprocessedSysMsgCountResp\x12\x14\n" +
-	"\x05count\x18\x01 \x01(\x05R\x05count\"|\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\">\n" +
+	"\x1aUnprocessedSysMsgCountResp\x12\x1a\n" +
+	"\x05count\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05count:\x04\x98\xb5\x18\x03\"|\n" +
 	"\rUpdateUserReq\x12\x1e\n" +
 	"\x04user\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x04user\x12#\n" +
@@ -996,10 +996,10 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\x04user\x18\x01 \x01(\tR\x04user\x12\x16\n" +
 	"\x06remark\x18\x02 \x01(\tR\x06remark\")\n" +
 	"\x11ListOnlineUserReq\x12\x14\n" +
-	"\x05users\x18\x01 \x03(\tR\x05users\"4\n" +
-	"\x12ListOnlineUserResp\x12\x1e\n" +
+	"\x05users\x18\x01 \x03(\tR\x05users\"@\n" +
+	"\x12ListOnlineUserResp\x12$\n" +
 	"\x04list\x18\x01 \x03(\v2\n" +
-	".hi.EntityR\x04list*\xa1\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01*\xa1\x01\n" +
 	"\x13FriendRequestStatus\x12%\n" +
 	"!FRIEND_REQUEST_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eFRIEND_REQUEST_STATUS_REJECTED\x10\x01\x12\x1e\n" +

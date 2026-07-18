@@ -186,16 +186,16 @@ var File_hi_ai_setting_proto protoreflect.FileDescriptor
 
 const file_hi_ai_setting_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xb6\x01\n" +
-	"\vSettingInfo\x12%\n" +
-	"\x0eproxy_endpoint\x18\x01 \x01(\tR\rproxyEndpoint\x12!\n" +
-	"\fproxy_enable\x18\x02 \x01(\bR\vproxyEnable\x12'\n" +
-	"\x0fopenai_endpoint\x18\x03 \x01(\tR\x0eopenaiEndpoint\x124\n" +
-	"\x16openai_endpoint_enable\x18\x04 \x01(\bR\x14openaiEndpointEnable\"8\n" +
+	"\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xd4\x01\n" +
+	"\vSettingInfo\x12+\n" +
+	"\x0eproxy_endpoint\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\rproxyEndpoint\x12'\n" +
+	"\fproxy_enable\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03R\vproxyEnable\x12-\n" +
+	"\x0fopenai_endpoint\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x0eopenaiEndpoint\x12:\n" +
+	"\x16openai_endpoint_enable\x18\x04 \x01(\bB\x04\x90\xb5\x18\x03R\x14openaiEndpointEnable:\x04\x98\xb5\x18\x03\"8\n" +
 	"\x0eSettingEditReq\x12&\n" +
-	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info\"8\n" +
-	"\x0eSettingGetResp\x12&\n" +
-	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info2\x84\x01\n" +
+	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info\"D\n" +
+	"\x0eSettingGetResp\x12,\n" +
+	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x032\x84\x01\n" +
 	"\aSetting\x12;\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetResp\"\x05\x8a\xb5\x18\x01\x04\x12<\n" +
 	"\x04Edit\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04Bw\n" +

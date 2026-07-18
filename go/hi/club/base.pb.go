@@ -119,9 +119,9 @@ const file_hi_club_base_proto_rawDesc = "" +
 	"\n" +
 	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\"\n" +
 	"\fGetConfigReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"%\n" +
-	"\rGetConfigResp\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\tR\x05value2\xdd\x01\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"1\n" +
+	"\rGetConfigResp\x12\x1a\n" +
+	"\x05value\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05value:\x04\x98\xb5\x18\x012\xdd\x01\n" +
 	"\x04Base\x12A\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
 	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +

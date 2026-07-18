@@ -204,30 +204,42 @@ final $typed_data.Uint8List merchantListReqDescriptor = $convert.base64Decode(
 const MerchantListResp$json = {
   '1': 'MerchantListResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'infos',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.ai.MerchantListResp.Unit',
+      '8': {},
       '10': 'infos'
     },
   ],
   '3': [MerchantListResp_Unit$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use merchantListRespDescriptor instead')
 const MerchantListResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
-    {'1': 'created_at', '3': 2, '4': 1, '5': 3, '10': 'createdAt'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
+    {'1': 'created_at', '3': 2, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `MerchantListResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantListRespDescriptor = $convert.base64Decode(
-    'ChBNZXJjaGFudExpc3RSZXNwEhQKBXRvdGFsGAEgASgFUgV0b3RhbBIyCgVpbmZvcxgCIAMoCz'
-    'IcLmhpLmFpLk1lcmNoYW50TGlzdFJlc3AuVW5pdFIFaW5mb3MaRQoEVW5pdBIeCgRiYXNlGAEg'
-    'ASgLMgouaGkuRW50aXR5UgRiYXNlEh0KCmNyZWF0ZWRfYXQYAiABKANSCWNyZWF0ZWRBdA==');
+    'ChBNZXJjaGFudExpc3RSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgCUgV0b3RhbBI4CgVpbmZvcx'
+    'gCIAMoCzIcLmhpLmFpLk1lcmNoYW50TGlzdFJlc3AuVW5pdEIEkLUYAlIFaW5mb3MaVwoEVW5p'
+    'dBIkCgRiYXNlGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgRiYXNlEiMKCmNyZWF0ZWRfYXQYAi'
+    'ABKANCBJC1GAJSCWNyZWF0ZWRBdDoEmLUYAjoEmLUYAg==');

@@ -25,6 +25,7 @@ const Packet$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.Notice',
+      '8': {},
       '9': 0,
       '10': 'notice'
     },
@@ -34,10 +35,12 @@ const Packet$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.Message',
+      '8': {},
       '9': 0,
       '10': 'message'
     },
   ],
+  '7': {},
   '8': [
     {'1': 'kind'},
   ],
@@ -45,97 +48,132 @@ const Packet$json = {
 
 /// Descriptor for `Packet`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List packetDescriptor = $convert.base64Decode(
-    'CgZQYWNrZXQSKQoGbm90aWNlGAEgASgLMg8uaGkuY2x1Yi5Ob3RpY2VIAFIGbm90aWNlEiwKB2'
-    '1lc3NhZ2UYAiABKAsyEC5oaS5jbHViLk1lc3NhZ2VIAFIHbWVzc2FnZUIGCgRraW5k');
+    'CgZQYWNrZXQSLwoGbm90aWNlGAEgASgLMg8uaGkuY2x1Yi5Ob3RpY2VCBJC1GAJIAFIGbm90aW'
+    'NlEjIKB21lc3NhZ2UYAiABKAsyEC5oaS5jbHViLk1lc3NhZ2VCBJC1GAJIAFIHbWVzc2FnZToE'
+    'mLUYAkIGCgRraW5k');
 
 @$core.Deprecated('Use noticeDescriptor instead')
 const Notice$json = {
   '1': 'Notice',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'from', '3': 3, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'from'},
-    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '10': 'timestamp'},
-    {'1': 'expiration', '3': 5, '4': 1, '5': 3, '10': 'expiration'},
-    {'1': 'status', '3': 6, '4': 1, '5': 9, '10': 'status'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'type', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'type'},
+    {
+      '1': 'from',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'from'
+    },
+    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
+    {'1': 'expiration', '3': 5, '4': 1, '5': 3, '8': {}, '10': 'expiration'},
+    {'1': 'status', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'status'},
     {
       '1': 'extra',
       '3': 7,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Any',
+      '8': {},
       '10': 'extra'
     },
-    {'1': 'ex_type', '3': 8, '4': 1, '5': 9, '10': 'exType'},
+    {'1': 'ex_type', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'exType'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `Notice`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List noticeDescriptor = $convert.base64Decode(
-    'CgZOb3RpY2USEgoEdXVpZBgBIAEoCVIEdXVpZBISCgR0eXBlGAIgASgJUgR0eXBlEh4KBGZyb2'
-    '0YAyABKAsyCi5oaS5FbnRpdHlSBGZyb20SHAoJdGltZXN0YW1wGAQgASgDUgl0aW1lc3RhbXAS'
-    'HgoKZXhwaXJhdGlvbhgFIAEoA1IKZXhwaXJhdGlvbhIWCgZzdGF0dXMYBiABKAlSBnN0YXR1cx'
-    'IqCgVleHRyYRgHIAEoCzIULmdvb2dsZS5wcm90b2J1Zi5BbnlSBWV4dHJhEhcKB2V4X3R5cGUY'
-    'CCABKAlSBmV4VHlwZQ==');
+    'CgZOb3RpY2USGAoEdXVpZBgBIAEoCUIEkLUYAlIEdXVpZBIYCgR0eXBlGAIgASgJQgSQtRgCUg'
+    'R0eXBlEiQKBGZyb20YAyABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBGZyb20SIgoJdGltZXN0YW1w'
+    'GAQgASgDQgSQtRgCUgl0aW1lc3RhbXASJAoKZXhwaXJhdGlvbhgFIAEoA0IEkLUYAlIKZXhwaX'
+    'JhdGlvbhIcCgZzdGF0dXMYBiABKAlCBJC1GAJSBnN0YXR1cxIwCgVleHRyYRgHIAEoCzIULmdv'
+    'b2dsZS5wcm90b2J1Zi5BbnlCBJC1GAJSBWV4dHJhEh0KB2V4X3R5cGUYCCABKAlCBJC1GAJSBm'
+    'V4VHlwZToEmLUYAg==');
 
 @$core.Deprecated('Use promptDescriptor instead')
 const Prompt$json = {
   '1': 'Prompt',
   '2': [
-    {'1': 'custom', '3': 1, '4': 1, '5': 9, '10': 'custom'},
-    {'1': 'state', '3': 2, '4': 1, '5': 9, '10': 'state'},
+    {'1': 'custom', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'custom'},
+    {'1': 'state', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'state'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `Prompt`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List promptDescriptor = $convert.base64Decode(
-    'CgZQcm9tcHQSFgoGY3VzdG9tGAEgASgJUgZjdXN0b20SFAoFc3RhdGUYAiABKAlSBXN0YXRl');
+    'CgZQcm9tcHQSHAoGY3VzdG9tGAEgASgJQgSQtRgCUgZjdXN0b20SGgoFc3RhdGUYAiABKAlCBJ'
+    'C1GAJSBXN0YXRlOgSYtRgC');
 
 @$core.Deprecated('Use messageDescriptor instead')
 const Message$json = {
   '1': 'Message',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'from', '3': 3, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'from'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'type', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'type'},
+    {
+      '1': 'from',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'from'
+    },
     {
       '1': 'conts',
       '3': 4,
       '4': 3,
       '5': 11,
       '6': '.hi.club.Content',
+      '8': {},
       '10': 'conts'
     },
-    {'1': 'timestamp', '3': 5, '4': 1, '5': 3, '10': 'timestamp'},
+    {'1': 'timestamp', '3': 5, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
     {
       '1': 'extra',
       '3': 6,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Any',
+      '8': {},
       '10': 'extra'
     },
-    {'1': 'ex_type', '3': 7, '4': 1, '5': 9, '10': 'exType'},
-    {'1': 'ghost', '3': 8, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'ghost'},
+    {'1': 'ex_type', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'exType'},
+    {
+      '1': 'ghost',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'ghost'
+    },
     {
       '1': 'prompt',
       '3': 9,
       '4': 1,
       '5': 11,
       '6': '.hi.club.Prompt',
+      '8': {},
       '10': 'prompt'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `Message`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
-    'CgdNZXNzYWdlEhIKBHV1aWQYASABKAlSBHV1aWQSEgoEdHlwZRgCIAEoCVIEdHlwZRIeCgRmcm'
-    '9tGAMgASgLMgouaGkuRW50aXR5UgRmcm9tEiYKBWNvbnRzGAQgAygLMhAuaGkuY2x1Yi5Db250'
-    'ZW50UgVjb250cxIcCgl0aW1lc3RhbXAYBSABKANSCXRpbWVzdGFtcBIqCgVleHRyYRgGIAEoCz'
-    'IULmdvb2dsZS5wcm90b2J1Zi5BbnlSBWV4dHJhEhcKB2V4X3R5cGUYByABKAlSBmV4VHlwZRIg'
-    'CgVnaG9zdBgIIAEoCzIKLmhpLkVudGl0eVIFZ2hvc3QSJwoGcHJvbXB0GAkgASgLMg8uaGkuY2'
-    'x1Yi5Qcm9tcHRSBnByb21wdA==');
+    'CgdNZXNzYWdlEhgKBHV1aWQYASABKAlCBJC1GAJSBHV1aWQSGAoEdHlwZRgCIAEoCUIEkLUYAl'
+    'IEdHlwZRIkCgRmcm9tGAMgASgLMgouaGkuRW50aXR5QgSQtRgBUgRmcm9tEiwKBWNvbnRzGAQg'
+    'AygLMhAuaGkuY2x1Yi5Db250ZW50QgSQtRgCUgVjb250cxIiCgl0aW1lc3RhbXAYBSABKANCBJ'
+    'C1GAJSCXRpbWVzdGFtcBIwCgVleHRyYRgGIAEoCzIULmdvb2dsZS5wcm90b2J1Zi5BbnlCBJC1'
+    'GAJSBWV4dHJhEh0KB2V4X3R5cGUYByABKAlCBJC1GAJSBmV4VHlwZRImCgVnaG9zdBgIIAEoCz'
+    'IKLmhpLkVudGl0eUIEkLUYAVIFZ2hvc3QSLQoGcHJvbXB0GAkgASgLMg8uaGkuY2x1Yi5Qcm9t'
+    'cHRCBJC1GAJSBnByb21wdDoEmLUYAg==');
 
 @$core.Deprecated('Use mentionDescriptor instead')
 const Mention$json = {
@@ -191,13 +229,14 @@ final $typed_data.Uint8List memberExitDescriptor = $convert.base64Decode(
 const Content$json = {
   '1': 'Content',
   '2': [
-    {'1': 'type', '3': 1, '4': 1, '5': 9, '10': 'type'},
+    {'1': 'type', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'type'},
     {
       '1': 'chat',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.club.Content.Chat',
+      '8': {},
       '9': 0,
       '10': 'chat'
     },
@@ -207,6 +246,7 @@ const Content$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.did.Transaction',
+      '8': {},
       '9': 0,
       '10': 'trans'
     },
@@ -216,11 +256,13 @@ const Content$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.TradeBase',
+      '8': {},
       '9': 0,
       '10': 'trade'
     },
   ],
   '3': [Content_Chat$json],
+  '7': {},
   '8': [
     {'1': 'kind'},
   ],
@@ -230,19 +272,39 @@ const Content$json = {
 const Content_Chat$json = {
   '1': 'Chat',
   '2': [
-    {'1': 'content', '3': 1, '4': 1, '5': 9, '10': 'content'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
-    {'1': 'size', '3': 3, '4': 1, '5': 13, '9': 1, '10': 'size', '17': true},
+    {'1': 'content', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'content'},
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'size',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 1,
+      '10': 'size',
+      '17': true
+    },
     {
       '1': 'duration',
       '3': 4,
       '4': 1,
       '5': 13,
+      '8': {},
       '9': 2,
       '10': 'duration',
       '17': true
     },
   ],
+  '7': {},
   '8': [
     {'1': '_name'},
     {'1': '_size'},
@@ -252,12 +314,13 @@ const Content_Chat$json = {
 
 /// Descriptor for `Content`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
-    'CgdDb250ZW50EhIKBHR5cGUYASABKAlSBHR5cGUSKwoEY2hhdBgCIAEoCzIVLmhpLmNsdWIuQ2'
-    '9udGVudC5DaGF0SABSBGNoYXQSKwoFdHJhbnMYAyABKAsyEy5oaS5kaWQuVHJhbnNhY3Rpb25I'
-    'AFIFdHJhbnMSKgoFdHJhZGUYBCABKAsyEi5oaS5jbHViLlRyYWRlQmFzZUgAUgV0cmFkZRqSAQ'
-    'oEQ2hhdBIYCgdjb250ZW50GAEgASgJUgdjb250ZW50EhcKBG5hbWUYAiABKAlIAFIEbmFtZYgB'
-    'ARIXCgRzaXplGAMgASgNSAFSBHNpemWIAQESHwoIZHVyYXRpb24YBCABKA1IAlIIZHVyYXRpb2'
-    '6IAQFCBwoFX25hbWVCBwoFX3NpemVCCwoJX2R1cmF0aW9uQgYKBGtpbmQ=');
+    'CgdDb250ZW50EhgKBHR5cGUYASABKAlCBJC1GAJSBHR5cGUSMQoEY2hhdBgCIAEoCzIVLmhpLm'
+    'NsdWIuQ29udGVudC5DaGF0QgSQtRgCSABSBGNoYXQSMQoFdHJhbnMYAyABKAsyEy5oaS5kaWQu'
+    'VHJhbnNhY3Rpb25CBJC1GAFIAFIFdHJhbnMSMAoFdHJhZGUYBCABKAsyEi5oaS5jbHViLlRyYW'
+    'RlQmFzZUIEkLUYAkgAUgV0cmFkZRqwAQoEQ2hhdBIeCgdjb250ZW50GAEgASgJQgSQtRgCUgdj'
+    'b250ZW50Eh0KBG5hbWUYAiABKAlCBJC1GAJIAFIEbmFtZYgBARIdCgRzaXplGAMgASgNQgSQtR'
+    'gCSAFSBHNpemWIAQESJQoIZHVyYXRpb24YBCABKA1CBJC1GAJIAlIIZHVyYXRpb26IAQE6BJi1'
+    'GAJCBwoFX25hbWVCBwoFX3NpemVCCwoJX2R1cmF0aW9uOgSYtRgCQgYKBGtpbmQ=');
 
 @$core.Deprecated('Use publishReqDescriptor instead')
 const PublishReq$json = {

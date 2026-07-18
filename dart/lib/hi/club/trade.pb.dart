@@ -21,6 +21,7 @@ import '../did/transfer.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// 被 TradeBase 引用 → 必须 <=PARTICIPANT(交易卡随 TradeBase 入群消息)。
 class TradeUnit extends $pb.GeneratedMessage {
   factory TradeUnit({
     $2.Coin? coin,
@@ -127,6 +128,7 @@ class TradeUnit extends $pb.GeneratedMessage {
   void clearFee() => $_clearField(5);
 }
 
+/// 交易基础卡:被 Content.trade 引用,可分享进群消息 → PARTICIPANT。
 class TradeBase extends $pb.GeneratedMessage {
   factory TradeBase({
     TradeUnit? from,
@@ -276,6 +278,7 @@ class GetTradeFeeReq extends $pb.GeneratedMessage {
   void clearCoin() => $_clearField(1);
 }
 
+/// 手续费表:按币种查费率,非用户私有 → 公开。
 class GetTradeFeeResp extends $pb.GeneratedMessage {
   factory GetTradeFeeResp({
     $core.String? fee,
@@ -384,6 +387,7 @@ class GetTradeReq extends $pb.GeneratedMessage {
   void clearOrder() => $_clearField(1);
 }
 
+/// 只在 my-trades 壳(TradeDetail)里出现,不被 TradeBase 引用 → 可 SELF。
 class TradeTrans extends $pb.GeneratedMessage {
   factory TradeTrans({
     $core.String? id,
@@ -476,6 +480,8 @@ class TradeTrans extends $pb.GeneratedMessage {
   void clearTimestamp() => $_clearField(4);
 }
 
+/// 我的交易详情:仅被 SELF 壳(GetTradeResp/AddTradeResp/ListTradeResp)引用 → SELF。
+/// 里面放 PARTICIPANT 的 TradeUnit 合法(2<=3)。
 class TradeDetail extends $pb.GeneratedMessage {
   factory TradeDetail({
     $core.String? order,
@@ -596,6 +602,7 @@ class TradeDetail extends $pb.GeneratedMessage {
   void clearTimestamp() => $_clearField(8);
 }
 
+/// 我的交易详情壳。
 class GetTradeResp extends $pb.GeneratedMessage {
   factory GetTradeResp({
     TradeDetail? detail,
@@ -973,6 +980,7 @@ class ListAllTradeReq extends $pb.GeneratedMessage {
   $3.Pagination ensurePagination() => $_ensure(1);
 }
 
+/// 我的交易列表壳:SELF 壳收窄整体私密性,元素放 SELF 的 TradeDetail。
 class ListTradeResp extends $pb.GeneratedMessage {
   factory ListTradeResp({
     $core.int? total,

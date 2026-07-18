@@ -59,13 +59,23 @@ final $typed_data.Uint8List bindStatusReqDescriptor = $convert
 const BindStatusResp$json = {
   '1': 'BindStatusResp',
   '2': [
-    {'1': 'master', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'master'},
+    {
+      '1': 'master',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'master'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `BindStatusResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List bindStatusRespDescriptor = $convert.base64Decode(
-    'Cg5CaW5kU3RhdHVzUmVzcBIiCgZtYXN0ZXIYASABKAsyCi5oaS5FbnRpdHlSBm1hc3Rlcg==');
+    'Cg5CaW5kU3RhdHVzUmVzcBIoCgZtYXN0ZXIYASABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBm1hc3'
+    'RlcjoEmLUYAQ==');
 
 @$core.Deprecated('Use transferReqDescriptor instead')
 const TransferReq$json = {
@@ -105,22 +115,24 @@ final $typed_data.Uint8List listOnlineReqDescriptor = $convert.base64Decode(
 const ListOnlineResp$json = {
   '1': 'ListOnlineResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'infos',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.ai.AgentInfo',
+      '8': {},
       '10': 'infos'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListOnlineResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listOnlineRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0T25saW5lUmVzcBIUCgV0b3RhbBgBIAEoBVIFdG90YWwSJgoFaW5mb3MYAiADKAsyEC'
-    '5oaS5haS5BZ2VudEluZm9SBWluZm9z');
+    'Cg5MaXN0T25saW5lUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYAVIFdG90YWwSLAoFaW5mb3MYAi'
+    'ADKAsyEC5oaS5haS5BZ2VudEluZm9CBJC1GAFSBWluZm9zOgSYtRgB');
 
 @$core.Deprecated('Use getAgentMasterReqDescriptor instead')
 const GetAgentMasterReq$json = {
@@ -138,11 +150,20 @@ final $typed_data.Uint8List getAgentMasterReqDescriptor = $convert
 const GetAgentMasterResp$json = {
   '1': 'GetAgentMasterResp',
   '2': [
-    {'1': 'master', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'master'},
+    {
+      '1': 'master',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'master'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetAgentMasterResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getAgentMasterRespDescriptor = $convert.base64Decode(
-    'ChJHZXRBZ2VudE1hc3RlclJlc3ASIgoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5UgZtYXN0ZX'
-    'I=');
+    'ChJHZXRBZ2VudE1hc3RlclJlc3ASKAoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUg'
+    'ZtYXN0ZXI6BJi1GAE=');

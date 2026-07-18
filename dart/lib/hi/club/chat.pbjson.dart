@@ -44,26 +44,46 @@ final $typed_data.Uint8List completeReqDescriptor = $convert.base64Decode(
 const QA$json = {
   '1': 'QA',
   '2': [
-    {'1': 'q', '3': 1, '4': 3, '5': 11, '6': '.hi.club.Content', '10': 'q'},
-    {'1': 'a', '3': 2, '4': 1, '5': 9, '10': 'a'},
+    {
+      '1': 'q',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.Content',
+      '8': {},
+      '10': 'q'
+    },
+    {'1': 'a', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'a'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `QA`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List qADescriptor = $convert.base64Decode(
-    'CgJRQRIeCgFxGAEgAygLMhAuaGkuY2x1Yi5Db250ZW50UgFxEgwKAWEYAiABKAlSAWE=');
+    'CgJRQRIkCgFxGAEgAygLMhAuaGkuY2x1Yi5Db250ZW50QgSQtRgCUgFxEhIKAWEYAiABKAlCBJ'
+    'C1GANSAWE6BJi1GAM=');
 
 @$core.Deprecated('Use getHistoryRespDescriptor instead')
 const GetHistoryResp$json = {
   '1': 'GetHistoryResp',
   '2': [
-    {'1': 'list', '3': 1, '4': 3, '5': 11, '6': '.hi.club.QA', '10': 'list'},
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.QA',
+      '8': {},
+      '10': 'list'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GetHistoryResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getHistoryRespDescriptor = $convert.base64Decode(
-    'Cg5HZXRIaXN0b3J5UmVzcBIfCgRsaXN0GAEgAygLMgsuaGkuY2x1Yi5RQVIEbGlzdA==');
+    'Cg5HZXRIaXN0b3J5UmVzcBIlCgRsaXN0GAEgAygLMgsuaGkuY2x1Yi5RQUIEkLUYA1IEbGlzdD'
+    'oEmLUYAw==');
 
 @$core.Deprecated('Use chatReqDescriptor instead')
 const ChatReq$json = {

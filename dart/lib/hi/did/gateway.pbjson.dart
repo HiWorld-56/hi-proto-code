@@ -19,16 +19,17 @@ import 'dart:typed_data' as $typed_data;
 const GatewayConfigUnit$json = {
   '1': 'GatewayConfigUnit',
   '2': [
-    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'url', '3': 2, '4': 1, '5': 9, '10': 'url'},
-    {'1': 'api_key', '3': 3, '4': 1, '5': 9, '10': 'apiKey'},
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'url', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'url'},
+    {'1': 'api_key', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'apiKey'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GatewayConfigUnit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayConfigUnitDescriptor = $convert.base64Decode(
-    'ChFHYXRld2F5Q29uZmlnVW5pdBISCgRuYW1lGAEgASgJUgRuYW1lEhAKA3VybBgCIAEoCVIDdX'
-    'JsEhcKB2FwaV9rZXkYAyABKAlSBmFwaUtleQ==');
+    'ChFHYXRld2F5Q29uZmlnVW5pdBIYCgRuYW1lGAEgASgJQgSQtRgBUgRuYW1lEhYKA3VybBgCIA'
+    'EoCUIEkLUYAVIDdXJsEh0KB2FwaV9rZXkYAyABKAlCBJC1GAFSBmFwaUtleToEmLUYAQ==');
 
 @$core.Deprecated('Use gatewayConfigListRespDescriptor instead')
 const GatewayConfigListResp$json = {
@@ -40,15 +41,17 @@ const GatewayConfigListResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.GatewayConfigUnit',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GatewayConfigListResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayConfigListRespDescriptor = $convert.base64Decode(
-    'ChVHYXRld2F5Q29uZmlnTGlzdFJlc3ASLQoEbGlzdBgBIAMoCzIZLmhpLmRpZC5HYXRld2F5Q2'
-    '9uZmlnVW5pdFIEbGlzdA==');
+    'ChVHYXRld2F5Q29uZmlnTGlzdFJlc3ASMwoEbGlzdBgBIAMoCzIZLmhpLmRpZC5HYXRld2F5Q2'
+    '9uZmlnVW5pdEIEkLUYAVIEbGlzdDoEmLUYAQ==');
 
 @$core.Deprecated('Use gatewayConfigSetReqDescriptor instead')
 const GatewayConfigSetReq$json = {

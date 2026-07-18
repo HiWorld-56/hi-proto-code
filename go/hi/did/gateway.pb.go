@@ -175,13 +175,13 @@ var File_hi_did_gateway_proto protoreflect.FileDescriptor
 
 const file_hi_did_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"R\n" +
-	"\x11GatewayConfigUnit\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
-	"\x03url\x18\x02 \x01(\tR\x03url\x12\x17\n" +
-	"\aapi_key\x18\x03 \x01(\tR\x06apiKey\"F\n" +
-	"\x15GatewayConfigListResp\x12-\n" +
-	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list\"D\n" +
+	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"j\n" +
+	"\x11GatewayConfigUnit\x12\x18\n" +
+	"\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12\x16\n" +
+	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12\x1d\n" +
+	"\aapi_key\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x06apiKey:\x04\x98\xb5\x18\x01\"R\n" +
+	"\x15GatewayConfigListResp\x123\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"D\n" +
 	"\x13GatewayConfigSetReq\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2P\n" +
 	"\aGateway\x12E\n" +

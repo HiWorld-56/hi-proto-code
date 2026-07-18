@@ -1089,19 +1089,19 @@ var File_hi_ai_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xe9\x01\n" +
+	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xa5\x02\n" +
 	"\n" +
-	"PluginItem\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05agent\x18\x02 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12\x10\n" +
-	"\x03url\x18\x04 \x01(\tR\x03url\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x18\n" +
-	"\aversion\x18\x06 \x01(\tR\aversion\x12\x16\n" +
-	"\x06active\x18\a \x01(\bR\x06active\x12\x1d\n" +
+	"PluginItem\x12\x18\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x1a\n" +
+	"\x05agent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05agent\x12\x18\n" +
+	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04name\x12\x16\n" +
+	"\x03url\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x03url\x12&\n" +
+	"\vdescription\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\vdescription\x12\x1e\n" +
+	"\aversion\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x12\x1c\n" +
+	"\x06active\x18\a \x01(\bB\x04\x90\xb5\x18\x03R\x06active\x12#\n" +
 	"\n" +
-	"created_at\x18\b \x01(\x03R\tcreatedAt\x12\x18\n" +
-	"\aenabled\x18\t \x01(\bR\aenabled\"=\n" +
+	"created_at\x18\b \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12\x1e\n" +
+	"\aenabled\x18\t \x01(\bB\x04\x90\xb5\x18\x03R\aenabled:\x04\x98\xb5\x18\x03\"=\n" +
 	"\rSetEnabledReq\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
 	"\aenabled\x18\x02 \x01(\bR\aenabled\"\xb5\x02\n" +
@@ -1114,9 +1114,9 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
 	"ex_api_key\x18\x06 \x01(\tR\bexApiKey\x120\n" +
 	"\aex_data\x18\a \x01(\v2\x17.google.protobuf.StructR\x06exData\x12\x12\n" +
-	"\x04uuid\x18\b \x01(\tR\x04uuid\"&\n" +
-	"\x10CreatePluginResp\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"U\n" +
+	"\x04uuid\x18\b \x01(\tR\x04uuid\"2\n" +
+	"\x10CreatePluginResp\x12\x18\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"U\n" +
 	"\rListPluginReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12.\n" +
 	"\n" +
@@ -1126,10 +1126,10 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"M\n" +
-	"\x0eListPluginResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x12%\n" +
-	"\x04list\x18\x02 \x03(\v2\x11.hi.ai.PluginItemR\x04list\"?\n" +
+	"pagination\"_\n" +
+	"\x0eListPluginResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12+\n" +
+	"\x04list\x18\x02 \x03(\v2\x11.hi.ai.PluginItemB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"?\n" +
 	"\x0fDeletePluginReq\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\"1\n" +
@@ -1146,14 +1146,14 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\aversion\x18\x02 \x01(\tR\aversion\"<\n" +
 	"\fGetPluginReq\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\tR\aversion\"6\n" +
-	"\rGetPluginResp\x12%\n" +
-	"\x04item\x18\x01 \x01(\v2\x11.hi.ai.PluginItemR\x04item\"<\n" +
+	"\aversion\x18\x02 \x01(\tR\aversion\"B\n" +
+	"\rGetPluginResp\x12+\n" +
+	"\x04item\x18\x01 \x01(\v2\x11.hi.ai.PluginItemB\x04\x90\xb5\x18\x03R\x04item:\x04\x98\xb5\x18\x03\"<\n" +
 	"\fGetParamsReq\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\tR\aversion\"@\n" +
-	"\rGetParamsResp\x12/\n" +
-	"\x06params\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x06params\"\xcb\x01\n" +
+	"\aversion\x18\x02 \x01(\tR\aversion\"L\n" +
+	"\rGetParamsResp\x125\n" +
+	"\x06params\x18\x01 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x06params:\x04\x98\xb5\x18\x03\"\xcb\x01\n" +
 	"\x06RunReq\x12(\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x1f\n" +
 	"\vcode_params\x18\x02 \x01(\tR\n" +
@@ -1162,9 +1162,9 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04envs\x18\x04 \x03(\tR\x04envs\x12\x1c\n" +
 	"\n" +
 	"ex_api_key\x18\x05 \x01(\tR\bexApiKey\x120\n" +
-	"\aex_data\x18\x06 \x01(\v2\x17.google.protobuf.StructR\x06exData\"/\n" +
-	"\aRunResp\x12$\n" +
-	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentR\x05conts\"6\n" +
+	"\aex_data\x18\x06 \x01(\v2\x17.google.protobuf.StructR\x06exData\";\n" +
+	"\aRunResp\x12*\n" +
+	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
 	"\n" +
 	"CleanupReq\x12(\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\xa5\x05\n" +

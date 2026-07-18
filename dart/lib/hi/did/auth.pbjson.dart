@@ -49,13 +49,22 @@ final $typed_data.Uint8List loginReqDescriptor = $convert.base64Decode(
 const LoginResp$json = {
   '1': 'LoginResp',
   '2': [
-    {'1': 'user', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'user'},
+    {
+      '1': 'user',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'user'
+    },
     {
       '1': 'token',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.AuthToken',
+      '8': {},
       '10': 'token'
     },
     {
@@ -64,16 +73,18 @@ const LoginResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.MqttCredentials',
+      '8': {},
       '10': 'mqtt'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `LoginResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List loginRespDescriptor = $convert.base64Decode(
-    'CglMb2dpblJlc3ASHgoEdXNlchgBIAEoCzIKLmhpLkVudGl0eVIEdXNlchIjCgV0b2tlbhgCIA'
-    'EoCzINLmhpLkF1dGhUb2tlblIFdG9rZW4SJwoEbXF0dBgDIAEoCzITLmhpLk1xdHRDcmVkZW50'
-    'aWFsc1IEbXF0dA==');
+    'CglMb2dpblJlc3ASJAoEdXNlchgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEdXNlchIpCgV0b2'
+    'tlbhgCIAEoCzINLmhpLkF1dGhUb2tlbkIEkLUYA1IFdG9rZW4SLQoEbXF0dBgDIAEoCzITLmhp'
+    'Lk1xdHRDcmVkZW50aWFsc0IEkLUYA1IEbXF0dDoEmLUYAw==');
 
 @$core.Deprecated('Use generateReqIdReqDescriptor instead')
 const GenerateReqIdReq$json = {
@@ -93,14 +104,23 @@ final $typed_data.Uint8List generateReqIdReqDescriptor = $convert.base64Decode(
 const ReqStatusResp$json = {
   '1': 'ReqStatusResp',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
-    {'1': 'status', '3': 2, '4': 1, '5': 9, '10': 'status'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
+    {'1': 'status', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'status'},
     {
       '1': 'token',
       '3': 3,
       '4': 1,
       '5': 11,
       '6': '.hi.AuthToken',
+      '8': {},
       '10': 'token'
     },
     {
@@ -109,16 +129,19 @@ const ReqStatusResp$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.MqttCredentials',
+      '8': {},
       '10': 'mqtt'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ReqStatusResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List reqStatusRespDescriptor = $convert.base64Decode(
-    'Cg1SZXFTdGF0dXNSZXNwEh4KBGJhc2UYASABKAsyCi5oaS5FbnRpdHlSBGJhc2USFgoGc3RhdH'
-    'VzGAIgASgJUgZzdGF0dXMSIwoFdG9rZW4YAyABKAsyDS5oaS5BdXRoVG9rZW5SBXRva2VuEicK'
-    'BG1xdHQYBCABKAsyEy5oaS5NcXR0Q3JlZGVudGlhbHNSBG1xdHQ=');
+    'Cg1SZXFTdGF0dXNSZXNwEiQKBGJhc2UYASABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBGJhc2USHA'
+    'oGc3RhdHVzGAIgASgJQgSQtRgDUgZzdGF0dXMSKQoFdG9rZW4YAyABKAsyDS5oaS5BdXRoVG9r'
+    'ZW5CBJC1GANSBXRva2VuEi0KBG1xdHQYBCABKAsyEy5oaS5NcXR0Q3JlZGVudGlhbHNCBJC1GA'
+    'NSBG1xdHQ6BJi1GAM=');
 
 @$core.Deprecated('Use logoutReqDescriptor instead')
 const LogoutReq$json = {

@@ -19,21 +19,46 @@ import 'dart:typed_data' as $typed_data;
 const Transaction$json = {
   '1': 'Transaction',
   '2': [
-    {'1': 'hash', '3': 1, '4': 1, '5': 9, '10': 'hash'},
-    {'1': 'amount', '3': 2, '4': 1, '5': 9, '10': 'amount'},
-    {'1': 'coin', '3': 3, '4': 1, '5': 11, '6': '.hi.did.Coin', '10': 'coin'},
-    {'1': 'from', '3': 4, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'from'},
-    {'1': 'to', '3': 5, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'to'},
-    {'1': 'remark', '3': 6, '4': 1, '5': 9, '10': 'remark'},
+    {'1': 'hash', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'hash'},
+    {'1': 'amount', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {
+      '1': 'coin',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.Coin',
+      '8': {},
+      '10': 'coin'
+    },
+    {
+      '1': 'from',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'from'
+    },
+    {
+      '1': 'to',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'to'
+    },
+    {'1': 'remark', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'remark'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `Transaction`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List transactionDescriptor = $convert.base64Decode(
-    'CgtUcmFuc2FjdGlvbhISCgRoYXNoGAEgASgJUgRoYXNoEhYKBmFtb3VudBgCIAEoCVIGYW1vdW'
-    '50EiAKBGNvaW4YAyABKAsyDC5oaS5kaWQuQ29pblIEY29pbhIeCgRmcm9tGAQgASgLMgouaGku'
-    'RW50aXR5UgRmcm9tEhoKAnRvGAUgASgLMgouaGkuRW50aXR5UgJ0bxIWCgZyZW1hcmsYBiABKA'
-    'lSBnJlbWFyaw==');
+    'CgtUcmFuc2FjdGlvbhIYCgRoYXNoGAEgASgJQgSQtRgBUgRoYXNoEhwKBmFtb3VudBgCIAEoCU'
+    'IEkLUYAVIGYW1vdW50EiYKBGNvaW4YAyABKAsyDC5oaS5kaWQuQ29pbkIEkLUYAVIEY29pbhIk'
+    'CgRmcm9tGAQgASgLMgouaGkuRW50aXR5QgSQtRgBUgRmcm9tEiAKAnRvGAUgASgLMgouaGkuRW'
+    '50aXR5QgSQtRgBUgJ0bxIcCgZyZW1hcmsYBiABKAlCBJC1GAFSBnJlbWFyazoEmLUYAQ==');
 
 @$core.Deprecated('Use historyReqDescriptor instead')
 const HistoryReq$json = {
@@ -61,11 +86,13 @@ const HistoryResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.did.HistoryResp.Unit',
+      '8': {},
       '10': 'list'
     },
-    {'1': 'next_cursor', '3': 2, '4': 1, '5': 9, '10': 'nextCursor'},
+    {'1': 'next_cursor', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'nextCursor'},
   ],
   '3': [HistoryResp_Unit$json],
+  '7': {},
 };
 
 @$core.Deprecated('Use historyRespDescriptor instead')
@@ -78,21 +105,23 @@ const HistoryResp_Unit$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.did.Transaction',
+      '8': {},
       '10': 'trans'
     },
-    {'1': 'direction', '3': 2, '4': 1, '5': 9, '10': 'direction'},
-    {'1': 'status', '3': 3, '4': 1, '5': 9, '10': 'status'},
-    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '10': 'timestamp'},
+    {'1': 'direction', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'direction'},
+    {'1': 'status', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'status'},
+    {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `HistoryResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List historyRespDescriptor = $convert.base64Decode(
-    'CgtIaXN0b3J5UmVzcBIsCgRsaXN0GAEgAygLMhguaGkuZGlkLkhpc3RvcnlSZXNwLlVuaXRSBG'
-    'xpc3QSHwoLbmV4dF9jdXJzb3IYAiABKAlSCm5leHRDdXJzb3IahQEKBFVuaXQSKQoFdHJhbnMY'
-    'ASABKAsyEy5oaS5kaWQuVHJhbnNhY3Rpb25SBXRyYW5zEhwKCWRpcmVjdGlvbhgCIAEoCVIJZG'
-    'lyZWN0aW9uEhYKBnN0YXR1cxgDIAEoCVIGc3RhdHVzEhwKCXRpbWVzdGFtcBgEIAEoA1IJdGlt'
-    'ZXN0YW1w');
+    'CgtIaXN0b3J5UmVzcBIyCgRsaXN0GAEgAygLMhguaGkuZGlkLkhpc3RvcnlSZXNwLlVuaXRCBJ'
+    'C1GAFSBGxpc3QSJQoLbmV4dF9jdXJzb3IYAiABKAlCBJC1GAFSCm5leHRDdXJzb3IaowEKBFVu'
+    'aXQSLwoFdHJhbnMYASABKAsyEy5oaS5kaWQuVHJhbnNhY3Rpb25CBJC1GAFSBXRyYW5zEiIKCW'
+    'RpcmVjdGlvbhgCIAEoCUIEkLUYAVIJZGlyZWN0aW9uEhwKBnN0YXR1cxgDIAEoCUIEkLUYAVIG'
+    'c3RhdHVzEiIKCXRpbWVzdGFtcBgEIAEoA0IEkLUYAVIJdGltZXN0YW1wOgSYtRgBOgSYtRgB');
 
 @$core.Deprecated('Use txStatusReqDescriptor instead')
 const TxStatusReq$json = {
@@ -111,15 +140,16 @@ final $typed_data.Uint8List txStatusReqDescriptor = $convert.base64Decode(
 const TxStatusResp$json = {
   '1': 'TxStatusResp',
   '2': [
-    {'1': 'state', '3': 1, '4': 1, '5': 9, '10': 'state'},
-    {'1': 'progress', '3': 2, '4': 1, '5': 13, '10': 'progress'},
+    {'1': 'state', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'state'},
+    {'1': 'progress', '3': 2, '4': 1, '5': 13, '8': {}, '10': 'progress'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TxStatusResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List txStatusRespDescriptor = $convert.base64Decode(
-    'CgxUeFN0YXR1c1Jlc3ASFAoFc3RhdGUYASABKAlSBXN0YXRlEhoKCHByb2dyZXNzGAIgASgNUg'
-    'hwcm9ncmVzcw==');
+    'CgxUeFN0YXR1c1Jlc3ASGgoFc3RhdGUYASABKAlCBJC1GAFSBXN0YXRlEiAKCHByb2dyZXNzGA'
+    'IgASgNQgSQtRgBUghwcm9ncmVzczoEmLUYAQ==');
 
 @$core.Deprecated('Use verifyTransactionReqDescriptor instead')
 const VerifyTransactionReq$json = {
@@ -143,18 +173,27 @@ final $typed_data.Uint8List verifyTransactionReqDescriptor = $convert.base64Deco
 const VerifyTransactionResp$json = {
   '1': 'VerifyTransactionResp',
   '2': [
-    {'1': 'state', '3': 1, '4': 1, '5': 9, '10': 'state'},
-    {'1': 'passed', '3': 2, '4': 1, '5': 8, '10': 'passed'},
-    {'1': 'reason', '3': 3, '4': 1, '5': 9, '10': 'reason'},
-    {'1': 'confirmed_blocks', '3': 4, '4': 1, '5': 3, '10': 'confirmedBlocks'},
-    {'1': 'timestamp', '3': 5, '4': 1, '5': 3, '10': 'timestamp'},
-    {'1': 'query_count', '3': 6, '4': 1, '5': 13, '10': 'queryCount'},
+    {'1': 'state', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'state'},
+    {'1': 'passed', '3': 2, '4': 1, '5': 8, '8': {}, '10': 'passed'},
+    {'1': 'reason', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'reason'},
+    {
+      '1': 'confirmed_blocks',
+      '3': 4,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '10': 'confirmedBlocks'
+    },
+    {'1': 'timestamp', '3': 5, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
+    {'1': 'query_count', '3': 6, '4': 1, '5': 13, '8': {}, '10': 'queryCount'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `VerifyTransactionResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List verifyTransactionRespDescriptor = $convert.base64Decode(
-    'ChVWZXJpZnlUcmFuc2FjdGlvblJlc3ASFAoFc3RhdGUYASABKAlSBXN0YXRlEhYKBnBhc3NlZB'
-    'gCIAEoCFIGcGFzc2VkEhYKBnJlYXNvbhgDIAEoCVIGcmVhc29uEikKEGNvbmZpcm1lZF9ibG9j'
-    'a3MYBCABKANSD2NvbmZpcm1lZEJsb2NrcxIcCgl0aW1lc3RhbXAYBSABKANSCXRpbWVzdGFtcB'
-    'IfCgtxdWVyeV9jb3VudBgGIAEoDVIKcXVlcnlDb3VudA==');
+    'ChVWZXJpZnlUcmFuc2FjdGlvblJlc3ASGgoFc3RhdGUYASABKAlCBJC1GAFSBXN0YXRlEhwKBn'
+    'Bhc3NlZBgCIAEoCEIEkLUYAVIGcGFzc2VkEhwKBnJlYXNvbhgDIAEoCUIEkLUYAVIGcmVhc29u'
+    'Ei8KEGNvbmZpcm1lZF9ibG9ja3MYBCABKANCBJC1GAFSD2NvbmZpcm1lZEJsb2NrcxIiCgl0aW'
+    '1lc3RhbXAYBSABKANCBJC1GAFSCXRpbWVzdGFtcBIlCgtxdWVyeV9jb3VudBgGIAEoDUIEkLUY'
+    'AVIKcXVlcnlDb3VudDoEmLUYAQ==');

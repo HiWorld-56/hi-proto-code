@@ -34,13 +34,14 @@ final $typed_data.Uint8List synthesizeReqDescriptor = $convert.base64Decode(
 const SynthesizeResp$json = {
   '1': 'SynthesizeResp',
   '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '10': 'url'},
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `SynthesizeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List synthesizeRespDescriptor =
-    $convert.base64Decode('Cg5TeW50aGVzaXplUmVzcBIQCgN1cmwYASABKAlSA3VybA==');
+final $typed_data.Uint8List synthesizeRespDescriptor = $convert.base64Decode(
+    'Cg5TeW50aGVzaXplUmVzcBIWCgN1cmwYASABKAlCBJC1GANSA3VybDoEmLUYAw==');
 
 @$core.Deprecated('Use transcribeReqDescriptor instead')
 const TranscribeReq$json = {
@@ -61,10 +62,11 @@ final $typed_data.Uint8List transcribeReqDescriptor = $convert.base64Decode(
 const TranscribeResp$json = {
   '1': 'TranscribeResp',
   '2': [
-    {'1': 'text', '3': 1, '4': 1, '5': 9, '10': 'text'},
+    {'1': 'text', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'text'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TranscribeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List transcribeRespDescriptor =
-    $convert.base64Decode('Cg5UcmFuc2NyaWJlUmVzcBISCgR0ZXh0GAEgASgJUgR0ZXh0');
+final $typed_data.Uint8List transcribeRespDescriptor = $convert.base64Decode(
+    'Cg5UcmFuc2NyaWJlUmVzcBIYCgR0ZXh0GAEgASgJQgSQtRgDUgR0ZXh0OgSYtRgD');

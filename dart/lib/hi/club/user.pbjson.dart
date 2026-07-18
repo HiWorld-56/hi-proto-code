@@ -36,18 +36,35 @@ final $typed_data.Uint8List friendRequestStatusDescriptor = $convert.base64Decod
 const UserInfo$json = {
   '1': 'UserInfo',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
-    {'1': 'permissions', '3': 2, '4': 3, '5': 9, '10': 'permissions'},
-    {'1': 'verify_policy', '3': 3, '4': 1, '5': 9, '10': 'verifyPolicy'},
-    {'1': 'moment', '3': 4, '4': 1, '5': 9, '10': 'moment'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
+    {'1': 'permissions', '3': 2, '4': 3, '5': 9, '8': {}, '10': 'permissions'},
+    {
+      '1': 'verify_policy',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'verifyPolicy'
+    },
+    {'1': 'moment', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'moment'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `UserInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userInfoDescriptor = $convert.base64Decode(
-    'CghVc2VySW5mbxIeCgRiYXNlGAEgASgLMgouaGkuRW50aXR5UgRiYXNlEiAKC3Blcm1pc3Npb2'
-    '5zGAIgAygJUgtwZXJtaXNzaW9ucxIjCg12ZXJpZnlfcG9saWN5GAMgASgJUgx2ZXJpZnlQb2xp'
-    'Y3kSFgoGbW9tZW50GAQgASgJUgZtb21lbnQ=');
+    'CghVc2VySW5mbxIkCgRiYXNlGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgRiYXNlEiYKC3Blcm'
+    '1pc3Npb25zGAIgAygJQgSQtRgDUgtwZXJtaXNzaW9ucxIpCg12ZXJpZnlfcG9saWN5GAMgASgJ'
+    'QgSQtRgDUgx2ZXJpZnlQb2xpY3kSHAoGbW9tZW50GAQgASgJQgSQtRgCUgZtb21lbnQ6BJi1GA'
+    'M=');
 
 @$core.Deprecated('Use listSystemMessageReqDescriptor instead')
 const ListSystemMessageReq$json = {
@@ -74,23 +91,26 @@ final $typed_data.Uint8List listSystemMessageReqDescriptor = $convert.base64Deco
 const SystemMessages$json = {
   '1': 'SystemMessages',
   '2': [
-    {'1': 'has_new', '3': 1, '4': 1, '5': 8, '10': 'hasNew'},
-    {'1': 'total', '3': 2, '4': 1, '5': 5, '10': 'total'},
+    {'1': 'has_new', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'hasNew'},
+    {'1': 'total', '3': 2, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
       '1': 'list',
       '3': 3,
       '4': 3,
       '5': 11,
       '6': '.hi.club.Notice',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `SystemMessages`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List systemMessagesDescriptor = $convert.base64Decode(
-    'Cg5TeXN0ZW1NZXNzYWdlcxIXCgdoYXNfbmV3GAEgASgIUgZoYXNOZXcSFAoFdG90YWwYAiABKA'
-    'VSBXRvdGFsEiMKBGxpc3QYAyADKAsyDy5oaS5jbHViLk5vdGljZVIEbGlzdA==');
+    'Cg5TeXN0ZW1NZXNzYWdlcxIdCgdoYXNfbmV3GAEgASgIQgSQtRgDUgZoYXNOZXcSGgoFdG90YW'
+    'wYAiABKAVCBJC1GANSBXRvdGFsEikKBGxpc3QYAyADKAsyDy5oaS5jbHViLk5vdGljZUIEkLUY'
+    'AlIEbGlzdDoEmLUYAw==');
 
 @$core.Deprecated('Use deleteSystemMessageReqDescriptor instead')
 const DeleteSystemMessageReq$json = {
@@ -124,16 +144,26 @@ final $typed_data.Uint8List handleSystemMessageReqDescriptor =
 const RelationInfo$json = {
   '1': 'RelationInfo',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
-    {'1': 'remark', '3': 2, '4': 1, '5': 9, '10': 'remark'},
-    {'1': 'moment', '3': 3, '4': 1, '5': 9, '10': 'moment'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
+    {'1': 'remark', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'remark'},
+    {'1': 'moment', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'moment'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `RelationInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List relationInfoDescriptor = $convert.base64Decode(
-    'CgxSZWxhdGlvbkluZm8SHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIWCgZyZW1hcm'
-    'sYAiABKAlSBnJlbWFyaxIWCgZtb21lbnQYAyABKAlSBm1vbWVudA==');
+    'CgxSZWxhdGlvbkluZm8SJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIcCg'
+    'ZyZW1hcmsYAiABKAlCBJC1GANSBnJlbWFyaxIcCgZtb21lbnQYAyABKAlCBJC1GAJSBm1vbWVu'
+    'dDoEmLUYAw==');
 
 @$core.Deprecated('Use listRelationsRespDescriptor instead')
 const ListRelationsResp$json = {
@@ -145,6 +175,7 @@ const ListRelationsResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.club.RelationInfo',
+      '8': {},
       '10': 'friend'
     },
     {
@@ -153,16 +184,18 @@ const ListRelationsResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.club.RelationInfo',
+      '8': {},
       '10': 'servitor'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListRelationsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listRelationsRespDescriptor = $convert.base64Decode(
-    'ChFMaXN0UmVsYXRpb25zUmVzcBItCgZmcmllbmQYASADKAsyFS5oaS5jbHViLlJlbGF0aW9uSW'
-    '5mb1IGZnJpZW5kEjEKCHNlcnZpdG9yGAIgAygLMhUuaGkuY2x1Yi5SZWxhdGlvbkluZm9SCHNl'
-    'cnZpdG9y');
+    'ChFMaXN0UmVsYXRpb25zUmVzcBIzCgZmcmllbmQYASADKAsyFS5oaS5jbHViLlJlbGF0aW9uSW'
+    '5mb0IEkLUYA1IGZnJpZW5kEjcKCHNlcnZpdG9yGAIgAygLMhUuaGkuY2x1Yi5SZWxhdGlvbklu'
+    'Zm9CBJC1GANSCHNlcnZpdG9yOgSYtRgD');
 
 @$core.Deprecated('Use addFriendReqDescriptor instead')
 const AddFriendReq$json = {
@@ -187,15 +220,17 @@ const AddFriendResp$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.club.FriendRequestStatus',
+      '8': {},
       '10': 'status'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `AddFriendResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List addFriendRespDescriptor = $convert.base64Decode(
-    'Cg1BZGRGcmllbmRSZXNwEjQKBnN0YXR1cxgBIAEoDjIcLmhpLmNsdWIuRnJpZW5kUmVxdWVzdF'
-    'N0YXR1c1IGc3RhdHVz');
+    'Cg1BZGRGcmllbmRSZXNwEjoKBnN0YXR1cxgBIAEoDjIcLmhpLmNsdWIuRnJpZW5kUmVxdWVzdF'
+    'N0YXR1c0IEkLUYAlIGc3RhdHVzOgSYtRgC');
 
 @$core.Deprecated('Use deleteFriendReqDescriptor instead')
 const DeleteFriendReq$json = {
@@ -219,15 +254,17 @@ const ListGroupResp$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.club.GroupBase',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListGroupResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGroupRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0R3JvdXBSZXNwEiYKBGxpc3QYASADKAsyEi5oaS5jbHViLkdyb3VwQmFzZVIEbGlzdA'
-    '==');
+    'Cg1MaXN0R3JvdXBSZXNwEiwKBGxpc3QYASADKAsyEi5oaS5jbHViLkdyb3VwQmFzZUIEkLUYAV'
+    'IEbGlzdDoEmLUYAw==');
 
 @$core.Deprecated('Use getUserReqDescriptor instead')
 const GetUserReq$json = {
@@ -245,14 +282,16 @@ final $typed_data.Uint8List getUserReqDescriptor =
 const UnprocessedSysMsgCountResp$json = {
   '1': 'UnprocessedSysMsgCountResp',
   '2': [
-    {'1': 'count', '3': 1, '4': 1, '5': 5, '10': 'count'},
+    {'1': 'count', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'count'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `UnprocessedSysMsgCountResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List unprocessedSysMsgCountRespDescriptor =
     $convert.base64Decode(
-        'ChpVbnByb2Nlc3NlZFN5c01zZ0NvdW50UmVzcBIUCgVjb3VudBgBIAEoBVIFY291bnQ=');
+        'ChpVbnByb2Nlc3NlZFN5c01zZ0NvdW50UmVzcBIaCgVjb3VudBgBIAEoBUIEkLUYA1IFY291bn'
+        'Q6BJi1GAM=');
 
 @$core.Deprecated('Use updateUserReqDescriptor instead')
 const UpdateUserReq$json = {
@@ -303,10 +342,20 @@ final $typed_data.Uint8List listOnlineUserReqDescriptor = $convert
 const ListOnlineUserResp$json = {
   '1': 'ListOnlineUserResp',
   '2': [
-    {'1': 'list', '3': 1, '4': 3, '5': 11, '6': '.hi.Entity', '10': 'list'},
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'list'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ListOnlineUserResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listOnlineUserRespDescriptor = $convert.base64Decode(
-    'ChJMaXN0T25saW5lVXNlclJlc3ASHgoEbGlzdBgBIAMoCzIKLmhpLkVudGl0eVIEbGlzdA==');
+    'ChJMaXN0T25saW5lVXNlclJlc3ASJAoEbGlzdBgBIAMoCzIKLmhpLkVudGl0eUIEkLUYAVIEbG'
+    'lzdDoEmLUYAQ==');

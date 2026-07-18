@@ -560,8 +560,8 @@ func (x *MerchantListResp) GetInfos() []*MerchantListResp_Unit {
 
 type MerchantListResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`                             // hi.Entity 恒 PUBLIC
+	CreatedAt     int64                  `protobuf:"varint,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // 取本消息档
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -643,15 +643,15 @@ const file_hi_ai_permission_proto_rawDesc = "" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\xa3\x01\n" +
-	"\x10MerchantListResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x05R\x05total\x122\n" +
-	"\x05infos\x18\x02 \x03(\v2\x1c.hi.ai.MerchantListResp.UnitR\x05infos\x1aE\n" +
-	"\x04Unit\x12\x1e\n" +
+	"pagination\"\xc7\x01\n" +
+	"\x10MerchantListResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02R\x05total\x128\n" +
+	"\x05infos\x18\x02 \x03(\v2\x1c.hi.ai.MerchantListResp.UnitB\x04\x90\xb5\x18\x02R\x05infos\x1aW\n" +
+	"\x04Unit\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12\x1d\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12#\n" +
 	"\n" +
-	"created_at\x18\x02 \x01(\x03R\tcreatedAt*\x87\x01\n" +
+	"created_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02R\tcreatedAt:\x04\x98\xb5\x18\x02:\x04\x98\xb5\x18\x02*\x87\x01\n" +
 	"\x0ePermissionType\x12\x1a\n" +
 	"\x16PERMISSION_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11PERMISSION_NORMAL\x10\x01\x12\x17\n" +
