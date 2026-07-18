@@ -3087,7 +3087,7 @@ pub struct GroupBase {
     pub base: ::core::option::Option<super::Entity>,
     #[prost(string, tag = "2")]
     pub background: ::prost::alloc::string::String,
-    /// true=私密群(只能被邀请加入);false=公开群(可凭群 code 直接申请加入)
+    /// true=私密群(只能被邀请加入);false=公开群
     #[prost(bool, tag = "3")]
     pub private: bool,
 }
@@ -3097,7 +3097,7 @@ pub struct GroupMemberAttr {
     /// owner / admin / member
     #[prost(string, tag = "1")]
     pub role: ::prost::alloc::string::String,
-    /// 是否被禁言(群主/管理员设;去写权限留读权限)
+    /// 是否被禁言(群主/管理员设;去写留读)
     #[prost(bool, tag = "2")]
     pub muted: bool,
 }
@@ -3124,7 +3124,7 @@ pub struct GroupMemberView {
     /// 我的 role/muted
     #[prost(message, optional, tag = "2")]
     pub attr: ::core::option::Option<GroupMemberAttr>,
-    /// **仅本人可见**的免打扰(私有,故不在 GroupMemberAttr 内)
+    /// **仅本人可见**的免打扰(SELF,故 audience 必须是 SELF)
     #[prost(bool, tag = "3")]
     pub dnd: bool,
 }

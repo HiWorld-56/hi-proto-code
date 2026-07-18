@@ -1394,3 +1394,80 @@ impl<'de> serde::Deserialize<'de> for State {
         deserializer.deserialize_struct("hi.State", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for Visibility {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::VisUnspecified => "VIS_UNSPECIFIED",
+            Self::VisPublic => "VIS_PUBLIC",
+            Self::VisParticipant => "VIS_PARTICIPANT",
+            Self::VisSelf => "VIS_SELF",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for Visibility {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "VIS_UNSPECIFIED",
+            "VIS_PUBLIC",
+            "VIS_PARTICIPANT",
+            "VIS_SELF",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = Visibility;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "VIS_UNSPECIFIED" => Ok(Visibility::VisUnspecified),
+                    "VIS_PUBLIC" => Ok(Visibility::VisPublic),
+                    "VIS_PARTICIPANT" => Ok(Visibility::VisParticipant),
+                    "VIS_SELF" => Ok(Visibility::VisSelf),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}

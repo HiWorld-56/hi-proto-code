@@ -19,51 +19,72 @@ import 'dart:typed_data' as $typed_data;
 const GroupBase$json = {
   '1': 'GroupBase',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
-    {'1': 'background', '3': 2, '4': 1, '5': 9, '10': 'background'},
-    {'1': 'private', '3': 3, '4': 1, '5': 8, '10': 'private'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
+    {'1': 'background', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'background'},
+    {'1': 'private', '3': 3, '4': 1, '5': 8, '8': {}, '10': 'private'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GroupBase`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupBaseDescriptor = $convert.base64Decode(
-    'CglHcm91cEJhc2USHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIeCgpiYWNrZ3JvdW'
-    '5kGAIgASgJUgpiYWNrZ3JvdW5kEhgKB3ByaXZhdGUYAyABKAhSB3ByaXZhdGU=');
+    'CglHcm91cEJhc2USJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIkCgpiYW'
+    'NrZ3JvdW5kGAIgASgJQgSQtRgBUgpiYWNrZ3JvdW5kEh4KB3ByaXZhdGUYAyABKAhCBJC1GAFS'
+    'B3ByaXZhdGU6BJi1GAE=');
 
 @$core.Deprecated('Use groupMemberAttrDescriptor instead')
 const GroupMemberAttr$json = {
   '1': 'GroupMemberAttr',
   '2': [
-    {'1': 'role', '3': 1, '4': 1, '5': 9, '10': 'role'},
-    {'1': 'muted', '3': 2, '4': 1, '5': 8, '10': 'muted'},
+    {'1': 'role', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'role'},
+    {'1': 'muted', '3': 2, '4': 1, '5': 8, '8': {}, '10': 'muted'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GroupMemberAttr`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupMemberAttrDescriptor = $convert.base64Decode(
-    'Cg9Hcm91cE1lbWJlckF0dHISEgoEcm9sZRgBIAEoCVIEcm9sZRIUCgVtdXRlZBgCIAEoCFIFbX'
-    'V0ZWQ=');
+    'Cg9Hcm91cE1lbWJlckF0dHISGAoEcm9sZRgBIAEoCUIEkLUYAlIEcm9sZRIaCgVtdXRlZBgCIA'
+    'EoCEIEkLUYAlIFbXV0ZWQ6BJi1GAI=');
 
 @$core.Deprecated('Use groupMemberDescriptor instead')
 const GroupMember$json = {
   '1': 'GroupMember',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
+    {
+      '1': 'base',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
     {
       '1': 'attr',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.club.GroupMemberAttr',
+      '8': {},
       '10': 'attr'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GroupMember`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupMemberDescriptor = $convert.base64Decode(
-    'CgtHcm91cE1lbWJlchIeCgRiYXNlGAEgASgLMgouaGkuRW50aXR5UgRiYXNlEiwKBGF0dHIYAi'
-    'ABKAsyGC5oaS5jbHViLkdyb3VwTWVtYmVyQXR0clIEYXR0cg==');
+    'CgtHcm91cE1lbWJlchIkCgRiYXNlGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgRiYXNlEjIKBG'
+    'F0dHIYAiABKAsyGC5oaS5jbHViLkdyb3VwTWVtYmVyQXR0ckIEkLUYAlIEYXR0cjoEmLUYAg==');
 
 @$core.Deprecated('Use groupInfoDescriptor instead')
 const GroupInfo$json = {
@@ -75,6 +96,7 @@ const GroupInfo$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.GroupBase',
+      '8': {},
       '10': 'base'
     },
     {
@@ -83,15 +105,17 @@ const GroupInfo$json = {
       '4': 3,
       '5': 11,
       '6': '.hi.club.GroupMember',
+      '8': {},
       '10': 'list'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `GroupInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupInfoDescriptor = $convert.base64Decode(
-    'CglHcm91cEluZm8SJgoEYmFzZRgBIAEoCzISLmhpLmNsdWIuR3JvdXBCYXNlUgRiYXNlEigKBG'
-    'xpc3QYAiADKAsyFC5oaS5jbHViLkdyb3VwTWVtYmVyUgRsaXN0');
+    'CglHcm91cEluZm8SLAoEYmFzZRgBIAEoCzISLmhpLmNsdWIuR3JvdXBCYXNlQgSQtRgBUgRiYX'
+    'NlEi4KBGxpc3QYAiADKAsyFC5oaS5jbHViLkdyb3VwTWVtYmVyQgSQtRgCUgRsaXN0OgSYtRgC');
 
 @$core.Deprecated('Use groupMemberViewDescriptor instead')
 const GroupMemberView$json = {
@@ -103,6 +127,7 @@ const GroupMemberView$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.GroupBase',
+      '8': {},
       '10': 'base'
     },
     {
@@ -111,17 +136,19 @@ const GroupMemberView$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.club.GroupMemberAttr',
+      '8': {},
       '10': 'attr'
     },
-    {'1': 'dnd', '3': 3, '4': 1, '5': 8, '10': 'dnd'},
+    {'1': 'dnd', '3': 3, '4': 1, '5': 8, '8': {}, '10': 'dnd'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `GroupMemberView`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupMemberViewDescriptor = $convert.base64Decode(
-    'Cg9Hcm91cE1lbWJlclZpZXcSJgoEYmFzZRgBIAEoCzISLmhpLmNsdWIuR3JvdXBCYXNlUgRiYX'
-    'NlEiwKBGF0dHIYAiABKAsyGC5oaS5jbHViLkdyb3VwTWVtYmVyQXR0clIEYXR0chIQCgNkbmQY'
-    'AyABKAhSA2RuZA==');
+    'Cg9Hcm91cE1lbWJlclZpZXcSLAoEYmFzZRgBIAEoCzISLmhpLmNsdWIuR3JvdXBCYXNlQgSQtR'
+    'gBUgRiYXNlEjIKBGF0dHIYAiABKAsyGC5oaS5jbHViLkdyb3VwTWVtYmVyQXR0ckIEkLUYAlIE'
+    'YXR0chIWCgNkbmQYAyABKAhCBJC1GANSA2RuZDoEmLUYAw==');
 
 @$core.Deprecated('Use getGroupReqDescriptor instead')
 const GetGroupReq$json = {

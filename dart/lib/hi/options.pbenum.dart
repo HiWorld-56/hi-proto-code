@@ -80,5 +80,49 @@ class Auth extends $pb.ProtobufEnum {
   const Auth._(super.value, super.name);
 }
 
+/// ── 数据可见性:字段级"给谁看",与 auth(方法级"谁能调")正交 ────────────────
+///
+/// 问题:auth 管"谁能调这个方法",但**一条返回数据里哪些字段能给这个受众看**没有约束 ——
+///   全靠人自觉,数据一多同事就会把私有字段(如群免打扰 dnd)随手塞进公开结构,静默泄漏。
+///
+/// 做法:**把"谁能看"编进结构本身,并机器强制**(check_auth.py,与 auth 同一套):
+///   · 每个字段标 `(hi.visibility)`(这字段的内在受众);
+///   · 每个"会被方法返回"的数据消息标 `option (hi.audience)`(整条发给谁);
+///   · lint 规则:**字段可见性不得比所在消息的受众更私** —— 即
+///        level(field.visibility) <= level(message.audience)
+///     (受众由宽到窄:PUBLIC=1 < PARTICIPANT=2 < SELF=3)。
+///     于是"把 SELF 字段放进 PUBLIC/PARTICIPANT 消息" = **CI 直接挂**,想错都难。
+///
+/// ⚠️ 这是**结构性**约束(私有字段就该单独放进 self-view 类型,别人拿到的类型里根本没这个字段),
+///    不是运行时抹值(那要处处记得抹、零值还有歧义、lint 也校验不了)。
+///    典型:dnd 只能在 GroupMemberView(audience=SELF),不许进 GroupMemberAttr(成员列表 audience=PARTICIPANT)。
+///
+/// 边界:本注解管③"字段外发给谁"。②"方法把 self-view 只发给本人"(行级/归属)仍在 handler。
+///   适用范围:**方法返回值可达的数据消息**(req 入参、纯内部消息不标)。
+class Visibility extends $pb.ProtobufEnum {
+  static const Visibility VIS_UNSPECIFIED =
+      Visibility._(0, _omitEnumNames ? '' : 'VIS_UNSPECIFIED');
+  static const Visibility VIS_PUBLIC =
+      Visibility._(1, _omitEnumNames ? '' : 'VIS_PUBLIC');
+  static const Visibility VIS_PARTICIPANT =
+      Visibility._(2, _omitEnumNames ? '' : 'VIS_PARTICIPANT');
+  static const Visibility VIS_SELF =
+      Visibility._(3, _omitEnumNames ? '' : 'VIS_SELF');
+
+  static const $core.List<Visibility> values = <Visibility>[
+    VIS_UNSPECIFIED,
+    VIS_PUBLIC,
+    VIS_PARTICIPANT,
+    VIS_SELF,
+  ];
+
+  static final $core.List<Visibility?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static Visibility? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const Visibility._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

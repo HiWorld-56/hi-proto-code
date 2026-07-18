@@ -45,19 +45,20 @@ final $typed_data.Uint8List dIDDescriptor =
 const Entity$json = {
   '1': 'Entity',
   '2': [
-    {'1': 'type', '3': 1, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'did', '3': 2, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'avatar', '3': 4, '4': 1, '5': 9, '10': 'avatar'},
-    {'1': 'update', '3': 5, '4': 1, '5': 3, '10': 'update'},
+    {'1': 'type', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'type'},
+    {'1': 'did', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'did'},
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'avatar', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'avatar'},
+    {'1': 'update', '3': 5, '4': 1, '5': 3, '8': {}, '10': 'update'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `Entity`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List entityDescriptor = $convert.base64Decode(
-    'CgZFbnRpdHkSEgoEdHlwZRgBIAEoCVIEdHlwZRIQCgNkaWQYAiABKAlSA2RpZBISCgRuYW1lGA'
-    'MgASgJUgRuYW1lEhYKBmF2YXRhchgEIAEoCVIGYXZhdGFyEhYKBnVwZGF0ZRgFIAEoA1IGdXBk'
-    'YXRl');
+    'CgZFbnRpdHkSGAoEdHlwZRgBIAEoCUIEkLUYAVIEdHlwZRIWCgNkaWQYAiABKAlCBJC1GAFSA2'
+    'RpZBIYCgRuYW1lGAMgASgJQgSQtRgBUgRuYW1lEhwKBmF2YXRhchgEIAEoCUIEkLUYAVIGYXZh'
+    'dGFyEhwKBnVwZGF0ZRgFIAEoA0IEkLUYAVIGdXBkYXRlOgSYtRgB');
 
 @$core.Deprecated('Use mqttCredentialsDescriptor instead')
 const MqttCredentials$json = {

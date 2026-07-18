@@ -118,6 +118,81 @@ func (Auth) EnumDescriptor() ([]byte, []int) {
 	return file_hi_options_proto_rawDescGZIP(), []int{0}
 }
 
+// ── 数据可见性:字段级"给谁看",与 auth(方法级"谁能调")正交 ────────────────
+//
+// 问题:auth 管"谁能调这个方法",但**一条返回数据里哪些字段能给这个受众看**没有约束 ——
+//
+//	全靠人自觉,数据一多同事就会把私有字段(如群免打扰 dnd)随手塞进公开结构,静默泄漏。
+//
+// 做法:**把"谁能看"编进结构本身,并机器强制**(check_auth.py,与 auth 同一套):
+//
+//	· 每个字段标 `(hi.visibility)`(这字段的内在受众);
+//	· 每个"会被方法返回"的数据消息标 `option (hi.audience)`(整条发给谁);
+//	· lint 规则:**字段可见性不得比所在消息的受众更私** —— 即
+//	     level(field.visibility) <= level(message.audience)
+//	  (受众由宽到窄:PUBLIC=1 < PARTICIPANT=2 < SELF=3)。
+//	  于是"把 SELF 字段放进 PUBLIC/PARTICIPANT 消息" = **CI 直接挂**,想错都难。
+//
+// ⚠️ 这是**结构性**约束(私有字段就该单独放进 self-view 类型,别人拿到的类型里根本没这个字段),
+//
+//	不是运行时抹值(那要处处记得抹、零值还有歧义、lint 也校验不了)。
+//	典型:dnd 只能在 GroupMemberView(audience=SELF),不许进 GroupMemberAttr(成员列表 audience=PARTICIPANT)。
+//
+// 边界:本注解管③"字段外发给谁"。②"方法把 self-view 只发给本人"(行级/归属)仍在 handler。
+//
+//	适用范围:**方法返回值可达的数据消息**(req 入参、纯内部消息不标)。
+type Visibility int32
+
+const (
+	Visibility_VIS_UNSPECIFIED Visibility = 0 // 占位:漏标即挂,别主动用
+	Visibility_VIS_PUBLIC      Visibility = 1 // 公开:任何人(Entity.name/avatar、群公共信息、机器人目录…)
+	Visibility_VIS_PARTICIPANT Visibility = 2 // 关系内成员:群成员/关系对端可见(群成员 role/muted…)
+	Visibility_VIS_SELF        Visibility = 3 // 仅主体本人:只有数据主体自己可见(dnd、verify_policy、我的 permissions/apikey 列表…)
+)
+
+// Enum value maps for Visibility.
+var (
+	Visibility_name = map[int32]string{
+		0: "VIS_UNSPECIFIED",
+		1: "VIS_PUBLIC",
+		2: "VIS_PARTICIPANT",
+		3: "VIS_SELF",
+	}
+	Visibility_value = map[string]int32{
+		"VIS_UNSPECIFIED": 0,
+		"VIS_PUBLIC":      1,
+		"VIS_PARTICIPANT": 2,
+		"VIS_SELF":        3,
+	}
+)
+
+func (x Visibility) Enum() *Visibility {
+	p := new(Visibility)
+	*p = x
+	return p
+}
+
+func (x Visibility) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Visibility) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_options_proto_enumTypes[1].Descriptor()
+}
+
+func (Visibility) Type() protoreflect.EnumType {
+	return &file_hi_options_proto_enumTypes[1]
+}
+
+func (x Visibility) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Visibility.Descriptor instead.
+func (Visibility) EnumDescriptor() ([]byte, []int) {
+	return file_hi_options_proto_rawDescGZIP(), []int{1}
+}
+
 var file_hi_options_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*descriptorpb.MethodOptions)(nil),
@@ -125,6 +200,22 @@ var file_hi_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         50001,
 		Name:          "hi.auth",
 		Tag:           "varint,50001,rep,packed,name=auth,enum=hi.Auth",
+		Filename:      "hi/options.proto",
+	},
+	{
+		ExtendedType:  (*descriptorpb.FieldOptions)(nil),
+		ExtensionType: (*Visibility)(nil),
+		Field:         50002,
+		Name:          "hi.visibility",
+		Tag:           "varint,50002,opt,name=visibility,enum=hi.Visibility",
+		Filename:      "hi/options.proto",
+	},
+	{
+		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
+		ExtensionType: (*Visibility)(nil),
+		Field:         50003,
+		Name:          "hi.audience",
+		Tag:           "varint,50003,opt,name=audience,enum=hi.Visibility",
 		Filename:      "hi/options.proto",
 	},
 }
@@ -146,6 +237,24 @@ var (
 	E_Auth = &file_hi_options_proto_extTypes[0]
 )
 
+// Extension fields to descriptorpb.FieldOptions.
+var (
+	// 该字段的内在受众。**返回值可达消息里的每个字段都必须标。**
+	// 消息类型字段:标它所引用消息的 audience(不得更宽)。
+	//
+	// optional hi.Visibility visibility = 50002;
+	E_Visibility = &file_hi_options_proto_extTypes[1]
+)
+
+// Extension fields to descriptorpb.MessageOptions.
+var (
+	// 这条数据整体发给谁。**每个"会被方法返回"的数据消息都必须标。**
+	// 约束:消息内每个字段的 visibility 不得比本 audience 更私(见 Visibility 说明)。
+	//
+	// optional hi.Visibility audience = 50003;
+	E_Audience = &file_hi_options_proto_extTypes[2]
+)
+
 var File_hi_options_proto protoreflect.FileDescriptor
 
 const file_hi_options_proto_rawDesc = "" +
@@ -157,8 +266,19 @@ const file_hi_options_proto_rawDesc = "" +
 	"\tAUTH_USER\x10\x02\x12\x11\n" +
 	"\rAUTH_MERCHANT\x10\x03\x12\x13\n" +
 	"\x0fAUTH_SUPERADMIN\x10\x04\x12\r\n" +
-	"\tAUTH_WEB3\x10\x05:>\n" +
-	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x03(\x0e2\b.hi.AuthR\x04authBd\n" +
+	"\tAUTH_WEB3\x10\x05*T\n" +
+	"\n" +
+	"Visibility\x12\x13\n" +
+	"\x0fVIS_UNSPECIFIED\x10\x00\x12\x0e\n" +
+	"\n" +
+	"VIS_PUBLIC\x10\x01\x12\x13\n" +
+	"\x0fVIS_PARTICIPANT\x10\x02\x12\f\n" +
+	"\bVIS_SELF\x10\x03:>\n" +
+	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x03(\x0e2\b.hi.AuthR\x04auth:R\n" +
+	"\n" +
+	"visibility\x12\x1d.google.protobuf.FieldOptions\x18҆\x03 \x01(\x0e2\x0e.hi.VisibilityR\n" +
+	"visibility\x88\x01\x01:P\n" +
+	"\baudience\x12\x1f.google.protobuf.MessageOptions\x18ӆ\x03 \x01(\x0e2\x0e.hi.VisibilityR\baudience\x88\x01\x01Bd\n" +
 	"\x06com.hiB\fOptionsProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (
@@ -173,18 +293,25 @@ func file_hi_options_proto_rawDescGZIP() []byte {
 	return file_hi_options_proto_rawDescData
 }
 
-var file_hi_options_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_options_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_hi_options_proto_goTypes = []any{
-	(Auth)(0),                          // 0: hi.Auth
-	(*descriptorpb.MethodOptions)(nil), // 1: google.protobuf.MethodOptions
+	(Auth)(0),                           // 0: hi.Auth
+	(Visibility)(0),                     // 1: hi.Visibility
+	(*descriptorpb.MethodOptions)(nil),  // 2: google.protobuf.MethodOptions
+	(*descriptorpb.FieldOptions)(nil),   // 3: google.protobuf.FieldOptions
+	(*descriptorpb.MessageOptions)(nil), // 4: google.protobuf.MessageOptions
 }
 var file_hi_options_proto_depIdxs = []int32{
-	1, // 0: hi.auth:extendee -> google.protobuf.MethodOptions
-	0, // 1: hi.auth:type_name -> hi.Auth
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	1, // [1:2] is the sub-list for extension type_name
-	0, // [0:1] is the sub-list for extension extendee
+	2, // 0: hi.auth:extendee -> google.protobuf.MethodOptions
+	3, // 1: hi.visibility:extendee -> google.protobuf.FieldOptions
+	4, // 2: hi.audience:extendee -> google.protobuf.MessageOptions
+	0, // 3: hi.auth:type_name -> hi.Auth
+	1, // 4: hi.visibility:type_name -> hi.Visibility
+	1, // 5: hi.audience:type_name -> hi.Visibility
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	3, // [3:6] is the sub-list for extension type_name
+	0, // [0:3] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
@@ -198,9 +325,9 @@ func file_hi_options_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_options_proto_rawDesc), len(file_hi_options_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      2,
 			NumMessages:   0,
-			NumExtensions: 1,
+			NumExtensions: 3,
 			NumServices:   0,
 		},
 		GoTypes:           file_hi_options_proto_goTypes,

@@ -29,8 +29,26 @@ class Options {
       check: $pb.getCheckFunction($pb.PbFieldType.KE),
       valueOf: Auth.valueOf,
       enumValues: Auth.values);
+  static final visibility = $pb.Extension<Visibility>(
+      _omitMessageNames ? '' : 'google.protobuf.FieldOptions',
+      _omitFieldNames ? '' : 'visibility',
+      50002,
+      $pb.PbFieldType.OE,
+      defaultOrMaker: Visibility.VIS_UNSPECIFIED,
+      valueOf: Visibility.valueOf,
+      enumValues: Visibility.values);
+  static final audience = $pb.Extension<Visibility>(
+      _omitMessageNames ? '' : 'google.protobuf.MessageOptions',
+      _omitFieldNames ? '' : 'audience',
+      50003,
+      $pb.PbFieldType.OE,
+      defaultOrMaker: Visibility.VIS_UNSPECIFIED,
+      valueOf: Visibility.valueOf,
+      enumValues: Visibility.values);
   static void registerAllExtensions($pb.ExtensionRegistry registry) {
     registry.add(auth);
+    registry.add(visibility);
+    registry.add(audience);
   }
 }
 

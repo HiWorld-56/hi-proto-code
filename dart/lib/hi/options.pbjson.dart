@@ -33,3 +33,19 @@ final $typed_data.Uint8List authDescriptor = $convert.base64Decode(
     'CgRBdXRoEhQKEEFVVEhfVU5TUEVDSUZJRUQQABINCglBVVRIX05PTkUQARINCglBVVRIX1VTRV'
     'IQAhIRCg1BVVRIX01FUkNIQU5UEAMSEwoPQVVUSF9TVVBFUkFETUlOEAQSDQoJQVVUSF9XRUIz'
     'EAU=');
+
+@$core.Deprecated('Use visibilityDescriptor instead')
+const Visibility$json = {
+  '1': 'Visibility',
+  '2': [
+    {'1': 'VIS_UNSPECIFIED', '2': 0},
+    {'1': 'VIS_PUBLIC', '2': 1},
+    {'1': 'VIS_PARTICIPANT', '2': 2},
+    {'1': 'VIS_SELF', '2': 3},
+  ],
+};
+
+/// Descriptor for `Visibility`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List visibilityDescriptor = $convert.base64Decode(
+    'CgpWaXNpYmlsaXR5EhMKD1ZJU19VTlNQRUNJRklFRBAAEg4KClZJU19QVUJMSUMQARITCg9WSV'
+    'NfUEFSVElDSVBBTlQQAhIMCghWSVNfU0VMRhAD');

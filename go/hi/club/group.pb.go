@@ -29,7 +29,7 @@ type GroupBase struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
 	Background    string                 `protobuf:"bytes,2,opt,name=background,proto3" json:"background,omitempty"`
-	Private       bool                   `protobuf:"varint,3,opt,name=private,proto3" json:"private,omitempty"` // true=私密群(只能被邀请加入);false=公开群(可凭群 code 直接申请加入)
+	Private       bool                   `protobuf:"varint,3,opt,name=private,proto3" json:"private,omitempty"` // true=私密群(只能被邀请加入);false=公开群
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -89,7 +89,7 @@ func (x *GroupBase) GetPrivate() bool {
 type GroupMemberAttr struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Role          string                 `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`    // owner / admin / member
-	Muted         bool                   `protobuf:"varint,2,opt,name=muted,proto3" json:"muted,omitempty"` // 是否被禁言(群主/管理员设;去写权限留读权限)
+	Muted         bool                   `protobuf:"varint,2,opt,name=muted,proto3" json:"muted,omitempty"` // 是否被禁言(群主/管理员设;去写留读)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -248,7 +248,7 @@ type GroupMemberView struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *GroupBase             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
 	Attr          *GroupMemberAttr       `protobuf:"bytes,2,opt,name=attr,proto3" json:"attr,omitempty"` // 我的 role/muted
-	Dnd           bool                   `protobuf:"varint,3,opt,name=dnd,proto3" json:"dnd,omitempty"`  // **仅本人可见**的免打扰(私有,故不在 GroupMemberAttr 内)
+	Dnd           bool                   `protobuf:"varint,3,opt,name=dnd,proto3" json:"dnd,omitempty"`  // **仅本人可见**的免打扰(SELF,故 audience 必须是 SELF)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1133,28 +1133,28 @@ var File_hi_club_group_proto protoreflect.FileDescriptor
 
 const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"e\n" +
-	"\tGroupBase\x12\x1e\n" +
+	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"}\n" +
+	"\tGroupBase\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12\x1e\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12$\n" +
 	"\n" +
-	"background\x18\x02 \x01(\tR\n" +
-	"background\x12\x18\n" +
-	"\aprivate\x18\x03 \x01(\bR\aprivate\";\n" +
-	"\x0fGroupMemberAttr\x12\x12\n" +
-	"\x04role\x18\x01 \x01(\tR\x04role\x12\x14\n" +
-	"\x05muted\x18\x02 \x01(\bR\x05muted\"[\n" +
-	"\vGroupMember\x12\x1e\n" +
+	"background\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\n" +
+	"background\x12\x1e\n" +
+	"\aprivate\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01R\aprivate:\x04\x98\xb5\x18\x01\"M\n" +
+	"\x0fGroupMemberAttr\x12\x18\n" +
+	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04role\x12\x1a\n" +
+	"\x05muted\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02R\x05muted:\x04\x98\xb5\x18\x02\"m\n" +
+	"\vGroupMember\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x04base\x12,\n" +
-	"\x04attr\x18\x02 \x01(\v2\x18.hi.club.GroupMemberAttrR\x04attr\"]\n" +
-	"\tGroupInfo\x12&\n" +
-	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseR\x04base\x12(\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.GroupMemberR\x04list\"y\n" +
-	"\x0fGroupMemberView\x12&\n" +
-	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseR\x04base\x12,\n" +
-	"\x04attr\x18\x02 \x01(\v2\x18.hi.club.GroupMemberAttrR\x04attr\x12\x10\n" +
-	"\x03dnd\x18\x03 \x01(\bR\x03dnd\"!\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x122\n" +
+	"\x04attr\x18\x02 \x01(\v2\x18.hi.club.GroupMemberAttrB\x04\x90\xb5\x18\x02R\x04attr:\x04\x98\xb5\x18\x02\"o\n" +
+	"\tGroupInfo\x12,\n" +
+	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseB\x04\x90\xb5\x18\x01R\x04base\x12.\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.GroupMemberB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"\x91\x01\n" +
+	"\x0fGroupMemberView\x12,\n" +
+	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseB\x04\x90\xb5\x18\x01R\x04base\x122\n" +
+	"\x04attr\x18\x02 \x01(\v2\x18.hi.club.GroupMemberAttrB\x04\x90\xb5\x18\x02R\x04attr\x12\x16\n" +
+	"\x03dnd\x18\x03 \x01(\bB\x04\x90\xb5\x18\x03R\x03dnd:\x04\x98\xb5\x18\x03\"!\n" +
 	"\vGetGroupReq\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\"$\n" +
 	"\x0eCreateGroupReq\x12\x12\n" +
