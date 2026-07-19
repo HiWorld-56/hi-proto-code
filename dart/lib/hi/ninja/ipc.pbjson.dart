@@ -46,19 +46,19 @@ final $typed_data.Uint8List emotionDescriptor = $convert.base64Decode(
     'CgdFbW90aW9uEhMKD0VNT1RJT05fVU5LTk9XThAAEhEKDUVNT1RJT05fQU5HRVIQARIRCg1FTU'
     '9USU9OX0xBVUdIEAISFQoRRU1PVElPTl9GUlVTVFJBVEUQAw==');
 
-@$core.Deprecated('Use botInitDescriptor instead')
-const BotInit$json = {
-  '1': 'BotInit',
+@$core.Deprecated('Use robotInitDescriptor instead')
+const RobotInit$json = {
+  '1': 'RobotInit',
   '2': [
-    {'1': 'bot', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'bot'},
+    {'1': 'robot', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'robot'},
     {'1': 'master', '3': 2, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'master'},
   ],
 };
 
-/// Descriptor for `BotInit`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List botInitDescriptor = $convert.base64Decode(
-    'CgdCb3RJbml0EhwKA2JvdBgBIAEoCzIKLmhpLkVudGl0eVIDYm90EiIKBm1hc3RlchgCIAEoCz'
-    'IKLmhpLkVudGl0eVIGbWFzdGVy');
+/// Descriptor for `RobotInit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List robotInitDescriptor = $convert.base64Decode(
+    'CglSb2JvdEluaXQSIAoFcm9ib3QYASABKAsyCi5oaS5FbnRpdHlSBXJvYm90EiIKBm1hc3Rlch'
+    'gCIAEoCzIKLmhpLkVudGl0eVIGbWFzdGVy');
 
 @$core.Deprecated('Use friendListDescriptor instead')
 const FriendList$json = {
@@ -137,13 +137,13 @@ const BrainToFace$json = {
   '1': 'BrainToFace',
   '2': [
     {
-      '1': 'init_bot',
+      '1': 'init_robot',
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.hi.ninja.BotInit',
+      '6': '.hi.ninja.RobotInit',
       '9': 0,
-      '10': 'initBot'
+      '10': 'initRobot'
     },
     {
       '1': 'show_listen',
@@ -200,13 +200,13 @@ const BrainToFace$json = {
       '10': 'showQrCode'
     },
     {
-      '1': 'event_bot',
+      '1': 'event_robot',
       '3': 8,
       '4': 1,
       '5': 11,
       '6': '.hi.Entity',
       '9': 0,
-      '10': 'eventBot'
+      '10': 'eventRobot'
     },
     {
       '1': 'event_master',
@@ -306,26 +306,26 @@ const BrainToFace$json = {
 
 /// Descriptor for `BrainToFace`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
-    'CgtCcmFpblRvRmFjZRIuCghpbml0X2JvdBgBIAEoCzIRLmhpLm5pbmphLkJvdEluaXRIAFIHaW'
-    '5pdEJvdBI4CgtzaG93X2xpc3RlbhgCIAEoDjIVLmhpLm5pbmphLlN0YXRlVG9nZ2xlSABSCnNo'
-    'b3dMaXN0ZW4SNgoMc2hvd19lbW90aW9uGAMgASgOMhEuaGkubmluamEuRW1vdGlvbkgAUgtzaG'
-    '93RW1vdGlvbhI6Cg9zaG93X2ltX3JlcXVlc3QYBCABKAsyEC5oaS5jbHViLk1lc3NhZ2VIAFIN'
-    'c2hvd0ltUmVxdWVzdBI5Cg1zaG93X2ltX3JlcGx5GAUgASgLMhMuaGkubmluamEuVGV4dFJlcG'
-    'x5SABSC3Nob3dJbVJlcGx5Ej8KEHNob3dfdm9pY2VfcmVwbHkYBiABKAsyEy5oaS5uaW5qYS5U'
-    'ZXh0UmVwbHlIAFIOc2hvd1ZvaWNlUmVwbHkSOgoMc2hvd19xcl9jb2RlGAcgASgLMhYuZ29vZ2'
-    'xlLnByb3RvYnVmLkVtcHR5SABSCnNob3dRckNvZGUSKQoJZXZlbnRfYm90GAggASgLMgouaGku'
-    'RW50aXR5SABSCGV2ZW50Qm90EjoKDGV2ZW50X21hc3RlchgJIAEoCzIVLmhpLm5pbmphLk1hc3'
-    'RlckV2ZW50SABSC2V2ZW50TWFzdGVyEjkKDWV2ZW50X21lbWJlcnMYCiABKAsyEi5oaS5jbHVi'
-    'Lkdyb3VwSW5mb0gAUgxldmVudE1lbWJlcnMSNgoMZXZlbnRfcGx1Z2luGAsgASgLMhEuaGkuYW'
-    'kuUGx1Z2luVmlld0gAUgtldmVudFBsdWdpbhJCChFldmVudF90cmFuc2FjdGlvbhgMIAEoCzIT'
-    'LmhpLmRpZC5UcmFuc2FjdGlvbkgAUhBldmVudFRyYW5zYWN0aW9uEjQKCnBsYXlfYXVkaW8YDS'
-    'ABKAsyEy5oaS5uaW5qYS5BdWRpb1BsYXlIAFIJcGxheUF1ZGlvEjsKDWV2ZW50X2ZyaWVuZHMY'
-    'DyABKAsyFC5oaS5uaW5qYS5GcmllbmRMaXN0SABSDGV2ZW50RnJpZW5kcxI8ChNldmVudF9mcm'
-    'llbmRfZGVsZXRlGA4gASgLMgouaGkuRW50aXR5SABSEWV2ZW50RnJpZW5kRGVsZXRlEjYKEGV2'
-    'ZW50X2ZyaWVuZF9hZGQYECABKAsyCi5oaS5FbnRpdHlIAFIOZXZlbnRGcmllbmRBZGQSPAoMbW'
-    'VtYmVyc19pbml0GBEgASgLMhcuaGkubmluamEuR3JvdXBJbmZvTGlzdEgAUgttZW1iZXJzSW5p'
-    'dBI6CgxldmVudF9zdGF0dXMYEiABKAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudF'
-    'N0YXR1c0IFCgNjbWQ=');
+    'CgtCcmFpblRvRmFjZRI0Cgppbml0X3JvYm90GAEgASgLMhMuaGkubmluamEuUm9ib3RJbml0SA'
+    'BSCWluaXRSb2JvdBI4CgtzaG93X2xpc3RlbhgCIAEoDjIVLmhpLm5pbmphLlN0YXRlVG9nZ2xl'
+    'SABSCnNob3dMaXN0ZW4SNgoMc2hvd19lbW90aW9uGAMgASgOMhEuaGkubmluamEuRW1vdGlvbk'
+    'gAUgtzaG93RW1vdGlvbhI6Cg9zaG93X2ltX3JlcXVlc3QYBCABKAsyEC5oaS5jbHViLk1lc3Nh'
+    'Z2VIAFINc2hvd0ltUmVxdWVzdBI5Cg1zaG93X2ltX3JlcGx5GAUgASgLMhMuaGkubmluamEuVG'
+    'V4dFJlcGx5SABSC3Nob3dJbVJlcGx5Ej8KEHNob3dfdm9pY2VfcmVwbHkYBiABKAsyEy5oaS5u'
+    'aW5qYS5UZXh0UmVwbHlIAFIOc2hvd1ZvaWNlUmVwbHkSOgoMc2hvd19xcl9jb2RlGAcgASgLMh'
+    'YuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSCnNob3dRckNvZGUSLQoLZXZlbnRfcm9ib3QYCCAB'
+    'KAsyCi5oaS5FbnRpdHlIAFIKZXZlbnRSb2JvdBI6CgxldmVudF9tYXN0ZXIYCSABKAsyFS5oaS'
+    '5uaW5qYS5NYXN0ZXJFdmVudEgAUgtldmVudE1hc3RlchI5Cg1ldmVudF9tZW1iZXJzGAogASgL'
+    'MhIuaGkuY2x1Yi5Hcm91cEluZm9IAFIMZXZlbnRNZW1iZXJzEjYKDGV2ZW50X3BsdWdpbhgLIA'
+    'EoCzIRLmhpLmFpLlBsdWdpblZpZXdIAFILZXZlbnRQbHVnaW4SQgoRZXZlbnRfdHJhbnNhY3Rp'
+    'b24YDCABKAsyEy5oaS5kaWQuVHJhbnNhY3Rpb25IAFIQZXZlbnRUcmFuc2FjdGlvbhI0CgpwbG'
+    'F5X2F1ZGlvGA0gASgLMhMuaGkubmluamEuQXVkaW9QbGF5SABSCXBsYXlBdWRpbxI7Cg1ldmVu'
+    'dF9mcmllbmRzGA8gASgLMhQuaGkubmluamEuRnJpZW5kTGlzdEgAUgxldmVudEZyaWVuZHMSPA'
+    'oTZXZlbnRfZnJpZW5kX2RlbGV0ZRgOIAEoCzIKLmhpLkVudGl0eUgAUhFldmVudEZyaWVuZERl'
+    'bGV0ZRI2ChBldmVudF9mcmllbmRfYWRkGBAgASgLMgouaGkuRW50aXR5SABSDmV2ZW50RnJpZW'
+    '5kQWRkEjwKDG1lbWJlcnNfaW5pdBgRIAEoCzIXLmhpLm5pbmphLkdyb3VwSW5mb0xpc3RIAFIL'
+    'bWVtYmVyc0luaXQSOgoMZXZlbnRfc3RhdHVzGBIgASgLMhUuaGkubmluamEuU3RhdHVzRXZlbn'
+    'RIAFILZXZlbnRTdGF0dXNCBQoDY21k');
 
 @$core.Deprecated('Use statusEventDescriptor instead')
 const StatusEvent$json = {

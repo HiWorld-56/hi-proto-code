@@ -2,9 +2,9 @@
 /// 机器人初始化：自身身份 + 当前所有者
 /// master 缺省表示尚未绑定所有者
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BotInit {
+pub struct RobotInit {
     #[prost(message, optional, tag = "1")]
-    pub bot: ::core::option::Option<super::Entity>,
+    pub robot: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "2")]
     pub master: ::core::option::Option<super::Entity>,
 }
@@ -66,7 +66,7 @@ pub mod brain_to_face {
         ///
         /// face 上线时推送，携带机器人和所有者身份
         #[prost(message, tag = "1")]
-        InitBot(super::BotInit),
+        InitRobot(super::RobotInit),
         /// 交互状态
         ///
         /// 语音监听开始/结束
@@ -93,7 +93,7 @@ pub mod brain_to_face {
         ///
         /// 机器人自身资料变更
         #[prost(message, tag = "8")]
-        EventBot(super::super::Entity),
+        EventRobot(super::super::Entity),
         /// 所有者绑定状态变化
         #[prost(message, tag = "9")]
         EventMaster(super::MasterEvent),

@@ -131,28 +131,28 @@ func (Emotion) EnumDescriptor() ([]byte, []int) {
 
 // 机器人初始化：自身身份 + 当前所有者
 // master 缺省表示尚未绑定所有者
-type BotInit struct {
+type RobotInit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bot           *hi.Entity             `protobuf:"bytes,1,opt,name=bot,proto3" json:"bot,omitempty"`
+	Robot         *hi.Entity             `protobuf:"bytes,1,opt,name=robot,proto3" json:"robot,omitempty"`
 	Master        *hi.Entity             `protobuf:"bytes,2,opt,name=master,proto3" json:"master,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BotInit) Reset() {
-	*x = BotInit{}
+func (x *RobotInit) Reset() {
+	*x = RobotInit{}
 	mi := &file_hi_ninja_ipc_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BotInit) String() string {
+func (x *RobotInit) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BotInit) ProtoMessage() {}
+func (*RobotInit) ProtoMessage() {}
 
-func (x *BotInit) ProtoReflect() protoreflect.Message {
+func (x *RobotInit) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ninja_ipc_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -164,19 +164,19 @@ func (x *BotInit) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BotInit.ProtoReflect.Descriptor instead.
-func (*BotInit) Descriptor() ([]byte, []int) {
+// Deprecated: Use RobotInit.ProtoReflect.Descriptor instead.
+func (*RobotInit) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *BotInit) GetBot() *hi.Entity {
+func (x *RobotInit) GetRobot() *hi.Entity {
 	if x != nil {
-		return x.Bot
+		return x.Robot
 	}
 	return nil
 }
 
-func (x *BotInit) GetMaster() *hi.Entity {
+func (x *RobotInit) GetMaster() *hi.Entity {
 	if x != nil {
 		return x.Master
 	}
@@ -442,14 +442,14 @@ type BrainToFace struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Cmd:
 	//
-	//	*BrainToFace_InitBot
+	//	*BrainToFace_InitRobot
 	//	*BrainToFace_ShowListen
 	//	*BrainToFace_ShowEmotion
 	//	*BrainToFace_ShowImRequest
 	//	*BrainToFace_ShowImReply
 	//	*BrainToFace_ShowVoiceReply
 	//	*BrainToFace_ShowQrCode
-	//	*BrainToFace_EventBot
+	//	*BrainToFace_EventRobot
 	//	*BrainToFace_EventMaster
 	//	*BrainToFace_EventMembers
 	//	*BrainToFace_EventPlugin
@@ -502,10 +502,10 @@ func (x *BrainToFace) GetCmd() isBrainToFace_Cmd {
 	return nil
 }
 
-func (x *BrainToFace) GetInitBot() *BotInit {
+func (x *BrainToFace) GetInitRobot() *RobotInit {
 	if x != nil {
-		if x, ok := x.Cmd.(*BrainToFace_InitBot); ok {
-			return x.InitBot
+		if x, ok := x.Cmd.(*BrainToFace_InitRobot); ok {
+			return x.InitRobot
 		}
 	}
 	return nil
@@ -565,10 +565,10 @@ func (x *BrainToFace) GetShowQrCode() *emptypb.Empty {
 	return nil
 }
 
-func (x *BrainToFace) GetEventBot() *hi.Entity {
+func (x *BrainToFace) GetEventRobot() *hi.Entity {
 	if x != nil {
-		if x, ok := x.Cmd.(*BrainToFace_EventBot); ok {
-			return x.EventBot
+		if x, ok := x.Cmd.(*BrainToFace_EventRobot); ok {
+			return x.EventRobot
 		}
 	}
 	return nil
@@ -668,9 +668,9 @@ type isBrainToFace_Cmd interface {
 	isBrainToFace_Cmd()
 }
 
-type BrainToFace_InitBot struct {
+type BrainToFace_InitRobot struct {
 	// 初始化
-	InitBot *BotInit `protobuf:"bytes,1,opt,name=init_bot,json=initBot,proto3,oneof"` // face 上线时推送，携带机器人和所有者身份
+	InitRobot *RobotInit `protobuf:"bytes,1,opt,name=init_robot,json=initRobot,proto3,oneof"` // face 上线时推送，携带机器人和所有者身份
 }
 
 type BrainToFace_ShowListen struct {
@@ -699,9 +699,9 @@ type BrainToFace_ShowQrCode struct {
 	ShowQrCode *emptypb.Empty `protobuf:"bytes,7,opt,name=show_qr_code,json=showQrCode,proto3,oneof"` // 展示机器人 DID 二维码
 }
 
-type BrainToFace_EventBot struct {
+type BrainToFace_EventRobot struct {
 	// 状态事件
-	EventBot *hi.Entity `protobuf:"bytes,8,opt,name=event_bot,json=eventBot,proto3,oneof"` // 机器人自身资料变更
+	EventRobot *hi.Entity `protobuf:"bytes,8,opt,name=event_robot,json=eventRobot,proto3,oneof"` // 机器人自身资料变更
 }
 
 type BrainToFace_EventMaster struct {
@@ -748,7 +748,7 @@ type BrainToFace_EventStatus struct {
 	EventStatus *StatusEvent `protobuf:"bytes,18,opt,name=event_status,json=eventStatus,proto3,oneof"`
 }
 
-func (*BrainToFace_InitBot) isBrainToFace_Cmd() {}
+func (*BrainToFace_InitRobot) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_ShowListen) isBrainToFace_Cmd() {}
 
@@ -762,7 +762,7 @@ func (*BrainToFace_ShowVoiceReply) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_ShowQrCode) isBrainToFace_Cmd() {}
 
-func (*BrainToFace_EventBot) isBrainToFace_Cmd() {}
+func (*BrainToFace_EventRobot) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_EventMaster) isBrainToFace_Cmd() {}
 
@@ -910,10 +910,10 @@ var File_hi_ninja_ipc_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/ipc.proto\x12\bhi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x15hi/did/transfer.proto\"K\n" +
-	"\aBotInit\x12\x1c\n" +
-	"\x03bot\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x03bot\x12\"\n" +
+	"\x12hi/ninja/ipc.proto\x12\bhi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x15hi/did/transfer.proto\"Q\n" +
+	"\tRobotInit\x12 \n" +
+	"\x05robot\x18\x01 \x01(\v2\n" +
+	".hi.EntityR\x05robot\x12\"\n" +
 	"\x06master\x18\x02 \x01(\v2\n" +
 	".hi.EntityR\x06master\",\n" +
 	"\n" +
@@ -931,9 +931,10 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value\"5\n" +
 	"\tAudioPlay\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05audio\x18\x02 \x01(\fR\x05audio\"\xab\b\n" +
-	"\vBrainToFace\x12.\n" +
-	"\binit_bot\x18\x01 \x01(\v2\x11.hi.ninja.BotInitH\x00R\ainitBot\x128\n" +
+	"\x05audio\x18\x02 \x01(\fR\x05audio\"\xb5\b\n" +
+	"\vBrainToFace\x124\n" +
+	"\n" +
+	"init_robot\x18\x01 \x01(\v2\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x128\n" +
 	"\vshow_listen\x18\x02 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"showListen\x126\n" +
 	"\fshow_emotion\x18\x03 \x01(\x0e2\x11.hi.ninja.EmotionH\x00R\vshowEmotion\x12:\n" +
@@ -941,9 +942,10 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\rshow_im_reply\x18\x05 \x01(\v2\x13.hi.ninja.TextReplyH\x00R\vshowImReply\x12?\n" +
 	"\x10show_voice_reply\x18\x06 \x01(\v2\x13.hi.ninja.TextReplyH\x00R\x0eshowVoiceReply\x12:\n" +
 	"\fshow_qr_code\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\n" +
-	"showQrCode\x12)\n" +
-	"\tevent_bot\x18\b \x01(\v2\n" +
-	".hi.EntityH\x00R\beventBot\x12:\n" +
+	"showQrCode\x12-\n" +
+	"\vevent_robot\x18\b \x01(\v2\n" +
+	".hi.EntityH\x00R\n" +
+	"eventRobot\x12:\n" +
 	"\fevent_master\x18\t \x01(\v2\x15.hi.ninja.MasterEventH\x00R\veventMaster\x129\n" +
 	"\revent_members\x18\n" +
 	" \x01(\v2\x12.hi.club.GroupInfoH\x00R\feventMembers\x126\n" +
@@ -994,7 +996,7 @@ var file_hi_ninja_ipc_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_hi_ninja_ipc_proto_goTypes = []any{
 	(StateToggle)(0),        // 0: hi.ninja.StateToggle
 	(Emotion)(0),            // 1: hi.ninja.Emotion
-	(*BotInit)(nil),         // 2: hi.ninja.BotInit
+	(*RobotInit)(nil),       // 2: hi.ninja.RobotInit
 	(*FriendList)(nil),      // 3: hi.ninja.FriendList
 	(*GroupInfoList)(nil),   // 4: hi.ninja.GroupInfoList
 	(*MasterEvent)(nil),     // 5: hi.ninja.MasterEvent
@@ -1011,19 +1013,19 @@ var file_hi_ninja_ipc_proto_goTypes = []any{
 	(*did.Transaction)(nil), // 16: hi.did.Transaction
 }
 var file_hi_ninja_ipc_proto_depIdxs = []int32{
-	11, // 0: hi.ninja.BotInit.bot:type_name -> hi.Entity
-	11, // 1: hi.ninja.BotInit.master:type_name -> hi.Entity
+	11, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
+	11, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
 	11, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
 	12, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
 	11, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
-	2,  // 5: hi.ninja.BrainToFace.init_bot:type_name -> hi.ninja.BotInit
+	2,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
 	0,  // 6: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
 	1,  // 7: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
 	13, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
 	6,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
 	6,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
 	14, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	11, // 12: hi.ninja.BrainToFace.event_bot:type_name -> hi.Entity
+	11, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
 	5,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
 	12, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
 	15, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
@@ -1048,14 +1050,14 @@ func file_hi_ninja_ipc_proto_init() {
 		return
 	}
 	file_hi_ninja_ipc_proto_msgTypes[6].OneofWrappers = []any{
-		(*BrainToFace_InitBot)(nil),
+		(*BrainToFace_InitRobot)(nil),
 		(*BrainToFace_ShowListen)(nil),
 		(*BrainToFace_ShowEmotion)(nil),
 		(*BrainToFace_ShowImRequest)(nil),
 		(*BrainToFace_ShowImReply)(nil),
 		(*BrainToFace_ShowVoiceReply)(nil),
 		(*BrainToFace_ShowQrCode)(nil),
-		(*BrainToFace_EventBot)(nil),
+		(*BrainToFace_EventRobot)(nil),
 		(*BrainToFace_EventMaster)(nil),
 		(*BrainToFace_EventMembers)(nil),
 		(*BrainToFace_EventPlugin)(nil),

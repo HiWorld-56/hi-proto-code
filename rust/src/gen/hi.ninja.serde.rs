@@ -110,114 +110,6 @@ impl<'de> serde::Deserialize<'de> for AudioPlay {
         deserializer.deserialize_struct("hi.ninja.AudioPlay", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for BotInit {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.bot.is_some() {
-            len += 1;
-        }
-        if self.master.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ninja.BotInit", len)?;
-        if let Some(v) = self.bot.as_ref() {
-            struct_ser.serialize_field("bot", v)?;
-        }
-        if let Some(v) = self.master.as_ref() {
-            struct_ser.serialize_field("master", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for BotInit {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "bot",
-            "master",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Bot,
-            Master,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "bot" => Ok(GeneratedField::Bot),
-                            "master" => Ok(GeneratedField::Master),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = BotInit;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ninja.BotInit")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BotInit, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut bot__ = None;
-                let mut master__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Bot => {
-                            if bot__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("bot"));
-                            }
-                            bot__ = map_.next_value()?;
-                        }
-                        GeneratedField::Master => {
-                            if master__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("master"));
-                            }
-                            master__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(BotInit {
-                    bot: bot__,
-                    master: master__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ninja.BotInit", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for BrainToFace {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -232,8 +124,8 @@ impl serde::Serialize for BrainToFace {
         let mut struct_ser = serializer.serialize_struct("hi.ninja.BrainToFace", len)?;
         if let Some(v) = self.cmd.as_ref() {
             match v {
-                brain_to_face::Cmd::InitBot(v) => {
-                    struct_ser.serialize_field("initBot", v)?;
+                brain_to_face::Cmd::InitRobot(v) => {
+                    struct_ser.serialize_field("initRobot", v)?;
                 }
                 brain_to_face::Cmd::ShowListen(v) => {
                     let v = StateToggle::try_from(*v)
@@ -257,8 +149,8 @@ impl serde::Serialize for BrainToFace {
                 brain_to_face::Cmd::ShowQrCode(v) => {
                     struct_ser.serialize_field("showQrCode", v)?;
                 }
-                brain_to_face::Cmd::EventBot(v) => {
-                    struct_ser.serialize_field("eventBot", v)?;
+                brain_to_face::Cmd::EventRobot(v) => {
+                    struct_ser.serialize_field("eventRobot", v)?;
                 }
                 brain_to_face::Cmd::EventMaster(v) => {
                     struct_ser.serialize_field("eventMaster", v)?;
@@ -302,8 +194,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "init_bot",
-            "initBot",
+            "init_robot",
+            "initRobot",
             "show_listen",
             "showListen",
             "show_emotion",
@@ -316,8 +208,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             "showVoiceReply",
             "show_qr_code",
             "showQrCode",
-            "event_bot",
-            "eventBot",
+            "event_robot",
+            "eventRobot",
             "event_master",
             "eventMaster",
             "event_members",
@@ -342,14 +234,14 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            InitBot,
+            InitRobot,
             ShowListen,
             ShowEmotion,
             ShowImRequest,
             ShowImReply,
             ShowVoiceReply,
             ShowQrCode,
-            EventBot,
+            EventRobot,
             EventMaster,
             EventMembers,
             EventPlugin,
@@ -381,14 +273,14 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                         E: serde::de::Error,
                     {
                         match value {
-                            "initBot" | "init_bot" => Ok(GeneratedField::InitBot),
+                            "initRobot" | "init_robot" => Ok(GeneratedField::InitRobot),
                             "showListen" | "show_listen" => Ok(GeneratedField::ShowListen),
                             "showEmotion" | "show_emotion" => Ok(GeneratedField::ShowEmotion),
                             "showImRequest" | "show_im_request" => Ok(GeneratedField::ShowImRequest),
                             "showImReply" | "show_im_reply" => Ok(GeneratedField::ShowImReply),
                             "showVoiceReply" | "show_voice_reply" => Ok(GeneratedField::ShowVoiceReply),
                             "showQrCode" | "show_qr_code" => Ok(GeneratedField::ShowQrCode),
-                            "eventBot" | "event_bot" => Ok(GeneratedField::EventBot),
+                            "eventRobot" | "event_robot" => Ok(GeneratedField::EventRobot),
                             "eventMaster" | "event_master" => Ok(GeneratedField::EventMaster),
                             "eventMembers" | "event_members" => Ok(GeneratedField::EventMembers),
                             "eventPlugin" | "event_plugin" => Ok(GeneratedField::EventPlugin),
@@ -421,11 +313,11 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                 let mut cmd__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::InitBot => {
+                        GeneratedField::InitRobot => {
                             if cmd__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("initBot"));
+                                return Err(serde::de::Error::duplicate_field("initRobot"));
                             }
-                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::InitBot)
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::InitRobot)
 ;
                         }
                         GeneratedField::ShowListen => {
@@ -468,11 +360,11 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::ShowQrCode)
 ;
                         }
-                        GeneratedField::EventBot => {
+                        GeneratedField::EventRobot => {
                             if cmd__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("eventBot"));
+                                return Err(serde::de::Error::duplicate_field("eventRobot"));
                             }
-                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::EventBot)
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::EventRobot)
 ;
                         }
                         GeneratedField::EventMaster => {
@@ -1018,6 +910,114 @@ impl<'de> serde::Deserialize<'de> for MasterEvent {
             }
         }
         deserializer.deserialize_struct("hi.ninja.MasterEvent", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for RobotInit {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.robot.is_some() {
+            len += 1;
+        }
+        if self.master.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.RobotInit", len)?;
+        if let Some(v) = self.robot.as_ref() {
+            struct_ser.serialize_field("robot", v)?;
+        }
+        if let Some(v) = self.master.as_ref() {
+            struct_ser.serialize_field("master", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for RobotInit {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "robot",
+            "master",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Robot,
+            Master,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "robot" => Ok(GeneratedField::Robot),
+                            "master" => Ok(GeneratedField::Master),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = RobotInit;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.RobotInit")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<RobotInit, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut robot__ = None;
+                let mut master__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Robot => {
+                            if robot__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("robot"));
+                            }
+                            robot__ = map_.next_value()?;
+                        }
+                        GeneratedField::Master => {
+                            if master__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("master"));
+                            }
+                            master__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(RobotInit {
+                    robot: robot__,
+                    master: master__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.RobotInit", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for StateToggle {

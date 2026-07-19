@@ -28,64 +28,64 @@ export 'ipc.pbenum.dart';
 
 /// 机器人初始化：自身身份 + 当前所有者
 /// master 缺省表示尚未绑定所有者
-class BotInit extends $pb.GeneratedMessage {
-  factory BotInit({
-    $0.Entity? bot,
+class RobotInit extends $pb.GeneratedMessage {
+  factory RobotInit({
+    $0.Entity? robot,
     $0.Entity? master,
   }) {
     final result = create();
-    if (bot != null) result.bot = bot;
+    if (robot != null) result.robot = robot;
     if (master != null) result.master = master;
     return result;
   }
 
-  BotInit._();
+  RobotInit._();
 
-  factory BotInit.fromBuffer($core.List<$core.int> data,
+  factory RobotInit.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory BotInit.fromJson($core.String json,
+  factory RobotInit.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'BotInit',
+      _omitMessageNames ? '' : 'RobotInit',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'bot',
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'robot',
         subBuilder: $0.Entity.create)
     ..aOM<$0.Entity>(2, _omitFieldNames ? '' : 'master',
         subBuilder: $0.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BotInit clone() => deepCopy();
+  RobotInit clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BotInit copyWith(void Function(BotInit) updates) =>
-      super.copyWith((message) => updates(message as BotInit)) as BotInit;
+  RobotInit copyWith(void Function(RobotInit) updates) =>
+      super.copyWith((message) => updates(message as RobotInit)) as RobotInit;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static BotInit create() => BotInit._();
+  static RobotInit create() => RobotInit._();
   @$core.override
-  BotInit createEmptyInstance() => create();
+  RobotInit createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static BotInit getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BotInit>(create);
-  static BotInit? _defaultInstance;
+  static RobotInit getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RobotInit>(create);
+  static RobotInit? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.Entity get bot => $_getN(0);
+  $0.Entity get robot => $_getN(0);
   @$pb.TagNumber(1)
-  set bot($0.Entity value) => $_setField(1, value);
+  set robot($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasBot() => $_has(0);
+  $core.bool hasRobot() => $_has(0);
   @$pb.TagNumber(1)
-  void clearBot() => $_clearField(1);
+  void clearRobot() => $_clearField(1);
   @$pb.TagNumber(1)
-  $0.Entity ensureBot() => $_ensure(0);
+  $0.Entity ensureRobot() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $0.Entity get master => $_getN(1);
@@ -407,14 +407,14 @@ class AudioPlay extends $pb.GeneratedMessage {
 }
 
 enum BrainToFace_Cmd {
-  initBot,
+  initRobot,
   showListen,
   showEmotion,
   showImRequest,
   showImReply,
   showVoiceReply,
   showQrCode,
-  eventBot,
+  eventRobot,
   eventMaster,
   eventMembers,
   eventPlugin,
@@ -431,14 +431,14 @@ enum BrainToFace_Cmd {
 /// brain -> face：所有指令通过 oneof 路由
 class BrainToFace extends $pb.GeneratedMessage {
   factory BrainToFace({
-    BotInit? initBot,
+    RobotInit? initRobot,
     StateToggle? showListen,
     Emotion? showEmotion,
     $2.Message? showImRequest,
     TextReply? showImReply,
     TextReply? showVoiceReply,
     $3.Empty? showQrCode,
-    $0.Entity? eventBot,
+    $0.Entity? eventRobot,
     MasterEvent? eventMaster,
     $1.GroupInfo? eventMembers,
     $4.PluginView? eventPlugin,
@@ -451,14 +451,14 @@ class BrainToFace extends $pb.GeneratedMessage {
     StatusEvent? eventStatus,
   }) {
     final result = create();
-    if (initBot != null) result.initBot = initBot;
+    if (initRobot != null) result.initRobot = initRobot;
     if (showListen != null) result.showListen = showListen;
     if (showEmotion != null) result.showEmotion = showEmotion;
     if (showImRequest != null) result.showImRequest = showImRequest;
     if (showImReply != null) result.showImReply = showImReply;
     if (showVoiceReply != null) result.showVoiceReply = showVoiceReply;
     if (showQrCode != null) result.showQrCode = showQrCode;
-    if (eventBot != null) result.eventBot = eventBot;
+    if (eventRobot != null) result.eventRobot = eventRobot;
     if (eventMaster != null) result.eventMaster = eventMaster;
     if (eventMembers != null) result.eventMembers = eventMembers;
     if (eventPlugin != null) result.eventPlugin = eventPlugin;
@@ -482,14 +482,14 @@ class BrainToFace extends $pb.GeneratedMessage {
       create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, BrainToFace_Cmd> _BrainToFace_CmdByTag = {
-    1: BrainToFace_Cmd.initBot,
+    1: BrainToFace_Cmd.initRobot,
     2: BrainToFace_Cmd.showListen,
     3: BrainToFace_Cmd.showEmotion,
     4: BrainToFace_Cmd.showImRequest,
     5: BrainToFace_Cmd.showImReply,
     6: BrainToFace_Cmd.showVoiceReply,
     7: BrainToFace_Cmd.showQrCode,
-    8: BrainToFace_Cmd.eventBot,
+    8: BrainToFace_Cmd.eventRobot,
     9: BrainToFace_Cmd.eventMaster,
     10: BrainToFace_Cmd.eventMembers,
     11: BrainToFace_Cmd.eventPlugin,
@@ -507,8 +507,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
     ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
-    ..aOM<BotInit>(1, _omitFieldNames ? '' : 'initBot',
-        subBuilder: BotInit.create)
+    ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
+        subBuilder: RobotInit.create)
     ..aE<StateToggle>(2, _omitFieldNames ? '' : 'showListen',
         enumValues: StateToggle.values)
     ..aE<Emotion>(3, _omitFieldNames ? '' : 'showEmotion',
@@ -521,7 +521,7 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: TextReply.create)
     ..aOM<$3.Empty>(7, _omitFieldNames ? '' : 'showQrCode',
         subBuilder: $3.Empty.create)
-    ..aOM<$0.Entity>(8, _omitFieldNames ? '' : 'eventBot',
+    ..aOM<$0.Entity>(8, _omitFieldNames ? '' : 'eventRobot',
         subBuilder: $0.Entity.create)
     ..aOM<MasterEvent>(9, _omitFieldNames ? '' : 'eventMaster',
         subBuilder: MasterEvent.create)
@@ -605,15 +605,15 @@ class BrainToFace extends $pb.GeneratedMessage {
 
   /// 初始化
   @$pb.TagNumber(1)
-  BotInit get initBot => $_getN(0);
+  RobotInit get initRobot => $_getN(0);
   @$pb.TagNumber(1)
-  set initBot(BotInit value) => $_setField(1, value);
+  set initRobot(RobotInit value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasInitBot() => $_has(0);
+  $core.bool hasInitRobot() => $_has(0);
   @$pb.TagNumber(1)
-  void clearInitBot() => $_clearField(1);
+  void clearInitRobot() => $_clearField(1);
   @$pb.TagNumber(1)
-  BotInit ensureInitBot() => $_ensure(0);
+  RobotInit ensureInitRobot() => $_ensure(0);
 
   /// 交互状态
   @$pb.TagNumber(2)
@@ -681,15 +681,15 @@ class BrainToFace extends $pb.GeneratedMessage {
 
   /// 状态事件
   @$pb.TagNumber(8)
-  $0.Entity get eventBot => $_getN(7);
+  $0.Entity get eventRobot => $_getN(7);
   @$pb.TagNumber(8)
-  set eventBot($0.Entity value) => $_setField(8, value);
+  set eventRobot($0.Entity value) => $_setField(8, value);
   @$pb.TagNumber(8)
-  $core.bool hasEventBot() => $_has(7);
+  $core.bool hasEventRobot() => $_has(7);
   @$pb.TagNumber(8)
-  void clearEventBot() => $_clearField(8);
+  void clearEventRobot() => $_clearField(8);
   @$pb.TagNumber(8)
-  $0.Entity ensureEventBot() => $_ensure(7);
+  $0.Entity ensureEventRobot() => $_ensure(7);
 
   @$pb.TagNumber(9)
   MasterEvent get eventMaster => $_getN(8);
