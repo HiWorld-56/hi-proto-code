@@ -626,7 +626,7 @@ func (x *DeleteFilesByAgentsReq) GetAgents() []string {
 type GetFileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 训练文件 uuid
-	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 bot)
+	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 agent)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

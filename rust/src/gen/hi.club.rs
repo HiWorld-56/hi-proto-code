@@ -833,7 +833,7 @@ pub struct ApiKeyInfo {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateApiKeyReq {
-    /// 给谁建(自己 / 自己名下的 bot;后端校验归属)
+    /// 给谁建(自己 / 自己名下的 agent;后端校验归属)
     #[prost(string, tag = "1")]
     pub user: ::prost::alloc::string::String,
 }
@@ -856,7 +856,7 @@ pub struct EditApiKeyResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListApiKeysReq {
-    /// 列谁的(自己 / 自己名下的 bot)
+    /// 列谁的(自己 / 自己名下的 agent)
     #[prost(string, tag = "1")]
     pub user: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
@@ -1336,8 +1336,8 @@ pub struct BindStatusResp {
 }
 /// 转让机器人 = **换 master**。club 侧不存在"机器人创建者"的概念。
 ///
-/// ⚠️ 不再转发 ai.Agent.Transfer —— 那个已从 ai 删除(它自称"转 apikey+bot",实际只改 creator,
-/// 还会把目标非超级用户的 bot 模型顺手降级)。这个概念本就该在 club 实现,故用 club 自己的类型。
+/// ⚠️ 不再转发 ai.Agent.Transfer —— 那个已从 ai 删除(它自称"转 apikey+agent",实际只改 creator,
+/// 还会把目标非超级用户的 agent 模型顺手降级)。这个概念本就该在 club 实现,故用 club 自己的类型。
 /// 它与 BindMaster/UnbindMaster 是同一件事(换绑主人),故同处 Agent。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TransferReq {
@@ -3721,7 +3721,7 @@ pub struct ListRelationsResp {
     /// 好友(friend 关系)
     #[prost(message, repeated, tag = "1")]
     pub friend: ::prost::alloc::vec::Vec<RelationInfo>,
-    /// 仆从(master 关系,人或 bot)
+    /// 仆从(master 关系,人或 agent)
     #[prost(message, repeated, tag = "2")]
     pub servitor: ::prost::alloc::vec::Vec<RelationInfo>,
 }

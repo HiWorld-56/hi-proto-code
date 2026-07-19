@@ -415,7 +415,7 @@ func (x *RelationInfo) GetMoment() string {
 type ListRelationsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Friend        []*RelationInfo        `protobuf:"bytes,1,rep,name=friend,proto3" json:"friend,omitempty"`     // 好友(friend 关系)
-	Servitor      []*RelationInfo        `protobuf:"bytes,2,rep,name=servitor,proto3" json:"servitor,omitempty"` // 仆从(master 关系,人或 bot)
+	Servitor      []*RelationInfo        `protobuf:"bytes,2,rep,name=servitor,proto3" json:"servitor,omitempty"` // 仆从(master 关系,人或 agent)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

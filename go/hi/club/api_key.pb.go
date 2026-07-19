@@ -94,7 +94,7 @@ func (x *ApiKeyInfo) GetCreatedAt() int64 {
 
 type CreateApiKeyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 给谁建(自己 / 自己名下的 bot;后端校验归属)
+	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 给谁建(自己 / 自己名下的 agent;后端校验归属)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -278,7 +278,7 @@ func (x *EditApiKeyResp) GetInfo() *ApiKeyInfo {
 
 type ListApiKeysReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 列谁的(自己 / 自己名下的 bot)
+	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 列谁的(自己 / 自己名下的 agent)
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

@@ -204,7 +204,7 @@ class PluginAnnex extends $pb.GeneratedMessage {
   $2.Struct ensureData() => $_ensure(1);
 }
 
-/// 某 bot 视角的一个插件:body + 该 bot 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+/// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
 class PluginView extends $pb.GeneratedMessage {
   factory PluginView({
     PluginBody? body,
@@ -287,7 +287,7 @@ class PluginView extends $pb.GeneratedMessage {
 
 /// 上传一个脚本版本 + 建 owner 自己的 annex。`body.uuid` 空=新脚本(后台生成),非空=给已有脚本加版本。
 /// 后台按 (uuid, version):存在则覆盖 body,否则新建。annex 建/更新按 (agent, uuid)。
-/// annex.api_key 由 club 自动取该 bot 第一个 club-apikey 填入(ai 只存);data 用户填。
+/// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 class CreatePluginReq extends $pb.GeneratedMessage {
   factory CreatePluginReq({
     $core.String? agent,
@@ -426,7 +426,7 @@ class CreatePluginResp extends $pb.GeneratedMessage {
   void clearUuid() => $_clearField(1);
 }
 
-/// 把一个**已有 body** 绑定到某 bot(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
+/// 把一个**已有 body** 绑定到某 agent(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
 /// owner 首次上传走 Create(自带 annex),本方法用于**同 body 多机器人引用**。
 class CreateAnnexReq extends $pb.GeneratedMessage {
   factory CreateAnnexReq({
@@ -521,7 +521,7 @@ class CreateAnnexReq extends $pb.GeneratedMessage {
   PluginAnnex ensureAnnex() => $_ensure(3);
 }
 
-/// 改插件:body 的可变元数据(name/description)+ 该 bot 的 annex。url/version 不可改(改脚本=加版本)。
+/// 改插件:body 的可变元数据(name/description)+ 该 agent 的 annex。url/version 不可改(改脚本=加版本)。
 class EditPluginReq extends $pb.GeneratedMessage {
   factory EditPluginReq({
     $core.String? agent,
@@ -705,7 +705,7 @@ class SetEnabledReq extends $pb.GeneratedMessage {
   void clearEnabled() => $_clearField(3);
 }
 
-/// 选定该 bot 用哪个版本供 function call 调用(同脚本多版本共存,该 bot 只激活一个)。
+/// 选定该 agent 用哪个版本供 function call 调用(同脚本多版本共存,该 agent 只激活一个)。
 class SetActiveVersionReq extends $pb.GeneratedMessage {
   factory SetActiveVersionReq({
     $core.String? agent,

@@ -113,7 +113,7 @@ func (x *PluginBody) GetDescription() string {
 // plugin_annex:某机器人对某 body 的附件。运行期以字典全局变量注入执行环境。
 type PluginAnnex struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // bot 的 club-apikey(club 上传时自动取第一个)
+	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // agent 的 club-apikey(club 上传时自动取第一个)
 	Data          *structpb.Struct       `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`                   // 用户填的运行时扩展数据
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -163,12 +163,12 @@ func (x *PluginAnnex) GetData() *structpb.Struct {
 	return nil
 }
 
-// 某 bot 视角的一个插件:body + 该 bot 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
 type PluginView struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Body          *PluginBody            `protobuf:"bytes,1,opt,name=body,proto3" json:"body,omitempty"`
-	Active        bool                   `protobuf:"varint,2,opt,name=active,proto3" json:"active,omitempty"`   // body.version 是否为该 bot 的激活版本(List 返回激活版本时恒 true)
-	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"` // 该 bot 是否启用此插件参与推理
+	Active        bool                   `protobuf:"varint,2,opt,name=active,proto3" json:"active,omitempty"`   // body.version 是否为该 agent 的激活版本(List 返回激活版本时恒 true)
+	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"` // 该 agent 是否启用此插件参与推理
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -226,10 +226,10 @@ func (x *PluginView) GetEnabled() bool {
 
 // 上传一个脚本版本 + 建 owner 自己的 annex。`body.uuid` 空=新脚本(后台生成),非空=给已有脚本加版本。
 // 后台按 (uuid, version):存在则覆盖 body,否则新建。annex 建/更新按 (agent, uuid)。
-// annex.api_key 由 club 自动取该 bot 第一个 club-apikey 填入(ai 只存);data 用户填。
+// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 type CreatePluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体 did(owner bot)
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体 did(owner agent)
 	Body          *PluginBody            `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`   // uuid 空=新脚本;url/version/name/description 由用户/前端提供
 	Annex         *PluginAnnex           `protobuf:"bytes,3,opt,name=annex,proto3" json:"annex,omitempty"` // api_key 由 club 填、data 用户填
 	unknownFields protoimpl.UnknownFields
@@ -331,14 +331,14 @@ func (x *CreatePluginResp) GetUuid() string {
 	return ""
 }
 
-// 把一个**已有 body** 绑定到某 bot(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
+// 把一个**已有 body** 绑定到某 agent(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
 // owner 首次上传走 Create(自带 annex),本方法用于**同 body 多机器人引用**。
 type CreateAnnexReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // 目标 bot did
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // 目标 agent did
 	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 要绑定的 body uuid
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 激活哪个版本(该 bot 的 active)
-	Annex         *PluginAnnex           `protobuf:"bytes,4,opt,name=annex,proto3" json:"annex,omitempty"`     // 该 bot 的 api_key(club 取)+ data
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 激活哪个版本(该 agent 的 active)
+	Annex         *PluginAnnex           `protobuf:"bytes,4,opt,name=annex,proto3" json:"annex,omitempty"`     // 该 agent 的 api_key(club 取)+ data
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -401,14 +401,14 @@ func (x *CreateAnnexReq) GetAnnex() *PluginAnnex {
 	return nil
 }
 
-// 改插件:body 的可变元数据(name/description)+ 该 bot 的 annex。url/version 不可改(改脚本=加版本)。
+// 改插件:body 的可变元数据(name/description)+ 该 agent 的 annex。url/version 不可改(改脚本=加版本)。
 type EditPluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`             // bot did
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`             // agent did
 	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`               // 脚本 id
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`               // 改名(空=不改)
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // 改描述/function-call spec(空=不改)
-	Annex         *PluginAnnex           `protobuf:"bytes,5,opt,name=annex,proto3" json:"annex,omitempty"`             // 改该 bot 的 api_key/data
+	Annex         *PluginAnnex           `protobuf:"bytes,5,opt,name=annex,proto3" json:"annex,omitempty"`             // 改该 agent 的 api_key/data
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -480,9 +480,9 @@ func (x *EditPluginReq) GetAnnex() *PluginAnnex {
 
 type SetEnabledReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`      // bot did
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`      // agent did
 	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`        // 脚本 id
-	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"` // 该 bot 是否参与推理
+	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"` // 该 agent 是否参与推理
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -538,10 +538,10 @@ func (x *SetEnabledReq) GetEnabled() bool {
 	return false
 }
 
-// 选定该 bot 用哪个版本供 function call 调用(同脚本多版本共存,该 bot 只激活一个)。
+// 选定该 agent 用哪个版本供 function call 调用(同脚本多版本共存,该 agent 只激活一个)。
 type SetActiveVersionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // bot did
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
 	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 脚本 id
 	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 要激活的版本
 	unknownFields protoimpl.UnknownFields
@@ -653,7 +653,7 @@ func (x *ListPluginReq) GetPagination() *hi.Pagination {
 
 type ListVersionsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // bot did
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
 	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 脚本 id
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -765,9 +765,9 @@ func (x *ListPluginResp) GetList() []*PluginView {
 
 type GetPluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // bot did
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
 	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 脚本 id
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=该 bot 的激活版本
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=该 agent 的激活版本
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -869,9 +869,9 @@ func (x *GetPluginResp) GetView() *PluginView {
 
 type DeletePluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // bot did
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
 	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 脚本 id
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=解绑该 bot 的整个脚本(所有版本 annex);非空=删该版本
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=解绑该 agent 的整个脚本(所有版本 annex);非空=删该版本
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

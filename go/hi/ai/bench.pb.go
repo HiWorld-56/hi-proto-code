@@ -22,7 +22,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 一次测时明细(bot_sts_count 的一行):各段耗时。
+// 一次测时明细(agent_sts_count 的一行):各段耗时。
 type AgentDelayUnit struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 与 AgentUsageResp(同 owner 运营指标)一致取 SELF —— 无 participant 对端会看别人机器人的延迟

@@ -19,7 +19,7 @@ import '../common.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// 一次测时明细(bot_sts_count 的一行):各段耗时。
+/// 一次测时明细(agent_sts_count 的一行):各段耗时。
 class AgentDelayUnit extends $pb.GeneratedMessage {
   factory AgentDelayUnit({
     $core.String? agent,

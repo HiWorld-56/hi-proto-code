@@ -24,8 +24,8 @@ export 'agent.pb.dart';
 /// 智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
 /// 两者解出同一个商户 did。
 ///
-/// (原 Transfer 已删 —— 它自称"转让 apikey+bot"但只改了 creator,还会顺带把目标非超级用户的
-///  bot 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
+/// (原 Transfer 已删 —— 它自称"转让 apikey+agent"但只改了 creator,还会顺带把目标非超级用户的
+///  agent 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
 @$pb.GrpcServiceName('hi.ai.Agent')
 class AgentClient extends $grpc.Client {
   /// The hostname for this service.

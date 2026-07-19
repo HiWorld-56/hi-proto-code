@@ -355,8 +355,8 @@ pub mod agent_client {
     /// 智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
     /// 两者解出同一个商户 did。
     ///
-    /// (原 Transfer 已删 —— 它自称"转让 apikey+bot"但只改了 creator,还会顺带把目标非超级用户的
-    /// bot 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
+    /// (原 Transfer 已删 —— 它自称"转让 apikey+agent"但只改了 creator,还会顺带把目标非超级用户的
+    /// agent 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
     #[derive(Debug, Clone)]
     pub struct AgentClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1044,31 +1044,31 @@ pub struct PluginBody {
 /// plugin_annex:某机器人对某 body 的附件。运行期以字典全局变量注入执行环境。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PluginAnnex {
-    /// bot 的 club-apikey(club 上传时自动取第一个)
+    /// agent 的 club-apikey(club 上传时自动取第一个)
     #[prost(string, tag = "1")]
     pub api_key: ::prost::alloc::string::String,
     /// 用户填的运行时扩展数据
     #[prost(message, optional, tag = "2")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 某 bot 视角的一个插件:body + 该 bot 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+/// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginView {
     #[prost(message, optional, tag = "1")]
     pub body: ::core::option::Option<PluginBody>,
-    /// body.version 是否为该 bot 的激活版本(List 返回激活版本时恒 true)
+    /// body.version 是否为该 agent 的激活版本(List 返回激活版本时恒 true)
     #[prost(bool, tag = "2")]
     pub active: bool,
-    /// 该 bot 是否启用此插件参与推理
+    /// 该 agent 是否启用此插件参与推理
     #[prost(bool, tag = "3")]
     pub enabled: bool,
 }
 /// 上传一个脚本版本 + 建 owner 自己的 annex。`body.uuid` 空=新脚本(后台生成),非空=给已有脚本加版本。
 /// 后台按 (uuid, version):存在则覆盖 body,否则新建。annex 建/更新按 (agent, uuid)。
-/// annex.api_key 由 club 自动取该 bot 第一个 club-apikey 填入(ai 只存);data 用户填。
+/// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreatePluginReq {
-    /// 智能体 did(owner bot)
+    /// 智能体 did(owner agent)
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// uuid 空=新脚本;url/version/name/description 由用户/前端提供
@@ -1084,27 +1084,27 @@ pub struct CreatePluginResp {
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
 }
-/// 把一个**已有 body** 绑定到某 bot(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
+/// 把一个**已有 body** 绑定到某 agent(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
 /// owner 首次上传走 Create(自带 annex),本方法用于**同 body 多机器人引用**。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAnnexReq {
-    /// 目标 bot did
+    /// 目标 agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// 要绑定的 body uuid
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 激活哪个版本(该 bot 的 active)
+    /// 激活哪个版本(该 agent 的 active)
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
-    /// 该 bot 的 api_key(club 取)+ data
+    /// 该 agent 的 api_key(club 取)+ data
     #[prost(message, optional, tag = "4")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
-/// 改插件:body 的可变元数据(name/description)+ 该 bot 的 annex。url/version 不可改(改脚本=加版本)。
+/// 改插件:body 的可变元数据(name/description)+ 该 agent 的 annex。url/version 不可改(改脚本=加版本)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditPluginReq {
-    /// bot did
+    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// 脚本 id
@@ -1116,26 +1116,26 @@ pub struct EditPluginReq {
     /// 改描述/function-call spec(空=不改)
     #[prost(string, tag = "4")]
     pub description: ::prost::alloc::string::String,
-    /// 改该 bot 的 api_key/data
+    /// 改该 agent 的 api_key/data
     #[prost(message, optional, tag = "5")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetEnabledReq {
-    /// bot did
+    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// 脚本 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 该 bot 是否参与推理
+    /// 该 agent 是否参与推理
     #[prost(bool, tag = "3")]
     pub enabled: bool,
 }
-/// 选定该 bot 用哪个版本供 function call 调用(同脚本多版本共存,该 bot 只激活一个)。
+/// 选定该 agent 用哪个版本供 function call 调用(同脚本多版本共存,该 agent 只激活一个)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveVersionReq {
-    /// bot did
+    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// 脚本 id
@@ -1154,7 +1154,7 @@ pub struct ListPluginReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListVersionsReq {
-    /// bot did
+    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// 脚本 id
@@ -1172,13 +1172,13 @@ pub struct ListPluginResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPluginReq {
-    /// bot did
+    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// 脚本 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 留空=该 bot 的激活版本
+    /// 留空=该 agent 的激活版本
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
@@ -1189,13 +1189,13 @@ pub struct GetPluginResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginReq {
-    /// bot did
+    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     /// 脚本 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 留空=解绑该 bot 的整个脚本(所有版本 annex);非空=删该版本
+    /// 留空=解绑该 agent 的整个脚本(所有版本 annex);非空=删该版本
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
@@ -1770,7 +1770,7 @@ pub struct GetFileReq {
     /// 训练文件 uuid
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
-    /// 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 bot)
+    /// 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 agent)
     #[prost(string, tag = "2")]
     pub agent: ::prost::alloc::string::String,
 }
@@ -3806,7 +3806,7 @@ pub mod register_client {
         }
     }
 }
-/// 一次测时明细(bot_sts_count 的一行):各段耗时。
+/// 一次测时明细(agent_sts_count 的一行):各段耗时。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentDelayUnit {
     /// 与 AgentUsageResp(同 owner 运营指标)一致取 SELF —— 无 participant 对端会看别人机器人的延迟
@@ -3860,9 +3860,9 @@ pub mod agent_bench_client {
     use tonic::codegen::http::Uri;
     /// 智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
     ///
-    /// 原 `Chat.ListAgentDelays` 与 `Chat.GetAgentDelay` **近乎重复**:都查 bot_sts_count、
+    /// 原 `Chat.ListAgentDelays` 与 `Chat.GetAgentDelay` **近乎重复**:都查 agent_sts_count、
     /// 同参(type/agent/分页)、返回同形 {total, \[\]AgentDelayUnit} 明细行,唯一差别是前者多校验
-    /// 一次 bot 存在。二者都不是"列 agent",故合并为一个 List。
+    /// 一次 agent 存在。二者都不是"列 agent",故合并为一个 List。
     ///
     /// 商户档:hiai web 与商户后台服务都会调。
     #[derive(Debug, Clone)]
