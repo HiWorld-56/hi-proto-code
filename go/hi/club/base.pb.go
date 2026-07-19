@@ -13,7 +13,6 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
-	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -24,146 +23,33 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ⚠️ 临时接口的载荷 —— 见下方 TempConfig。
-type GetConfigReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetConfigReq) Reset() {
-	*x = GetConfigReq{}
-	mi := &file_hi_club_base_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetConfigReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetConfigReq) ProtoMessage() {}
-
-func (x *GetConfigReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_base_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetConfigReq.ProtoReflect.Descriptor instead.
-func (*GetConfigReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_base_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GetConfigReq) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type GetConfigResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Value         string                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetConfigResp) Reset() {
-	*x = GetConfigResp{}
-	mi := &file_hi_club_base_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetConfigResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetConfigResp) ProtoMessage() {}
-
-func (x *GetConfigResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_base_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetConfigResp.ProtoReflect.Descriptor instead.
-func (*GetConfigResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_base_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *GetConfigResp) GetValue() string {
-	if x != nil {
-		return x.Value
-	}
-	return ""
-}
-
 var File_hi_club_base_proto protoreflect.FileDescriptor
 
 const file_hi_club_base_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\"\n" +
-	"\fGetConfigReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"1\n" +
-	"\rGetConfigResp\x12\x1a\n" +
-	"\x05value\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05value:\x04\x98\xb5\x18\x012\xdd\x01\n" +
+	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2\xdd\x01\n" +
 	"\x04Base\x12A\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
 	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
-	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x012I\n" +
-	"\n" +
-	"TempConfig\x12;\n" +
-	"\x03Get\x12\x15.hi.club.GetConfigReq\x1a\x16.hi.club.GetConfigResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
+	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01B\x80\x01\n" +
 	"\vcom.hi.clubB\tBaseProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
-var (
-	file_hi_club_base_proto_rawDescOnce sync.Once
-	file_hi_club_base_proto_rawDescData []byte
-)
-
-func file_hi_club_base_proto_rawDescGZIP() []byte {
-	file_hi_club_base_proto_rawDescOnce.Do(func() {
-		file_hi_club_base_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_hi_club_base_proto_rawDesc), len(file_hi_club_base_proto_rawDesc)))
-	})
-	return file_hi_club_base_proto_rawDescData
-}
-
-var file_hi_club_base_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_club_base_proto_goTypes = []any{
-	(*GetConfigReq)(nil),          // 0: hi.club.GetConfigReq
-	(*GetConfigResp)(nil),         // 1: hi.club.GetConfigResp
-	(*emptypb.Empty)(nil),         // 2: google.protobuf.Empty
-	(*did.LatestVersionReq)(nil),  // 3: hi.did.LatestVersionReq
-	(*did.ListCoinsResp)(nil),     // 4: hi.did.ListCoinsResp
-	(*did.LatestVersionResp)(nil), // 5: hi.did.LatestVersionResp
-	(*hi.ServerVersionResp)(nil),  // 6: hi.ServerVersionResp
+	(*emptypb.Empty)(nil),         // 0: google.protobuf.Empty
+	(*did.LatestVersionReq)(nil),  // 1: hi.did.LatestVersionReq
+	(*did.ListCoinsResp)(nil),     // 2: hi.did.ListCoinsResp
+	(*did.LatestVersionResp)(nil), // 3: hi.did.LatestVersionResp
+	(*hi.ServerVersionResp)(nil),  // 4: hi.ServerVersionResp
 }
 var file_hi_club_base_proto_depIdxs = []int32{
-	2, // 0: hi.club.Base.ListCoins:input_type -> google.protobuf.Empty
-	3, // 1: hi.club.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
-	2, // 2: hi.club.Base.ServerVersion:input_type -> google.protobuf.Empty
-	0, // 3: hi.club.TempConfig.Get:input_type -> hi.club.GetConfigReq
-	4, // 4: hi.club.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	5, // 5: hi.club.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	6, // 6: hi.club.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	1, // 7: hi.club.TempConfig.Get:output_type -> hi.club.GetConfigResp
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	0, // 0: hi.club.Base.ListCoins:input_type -> google.protobuf.Empty
+	1, // 1: hi.club.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
+	0, // 2: hi.club.Base.ServerVersion:input_type -> google.protobuf.Empty
+	2, // 3: hi.club.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	3, // 4: hi.club.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
+	4, // 5: hi.club.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -180,13 +66,12 @@ func file_hi_club_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_base_proto_rawDesc), len(file_hi_club_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   0,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   1,
 		},
 		GoTypes:           file_hi_club_base_proto_goTypes,
 		DependencyIndexes: file_hi_club_base_proto_depIdxs,
-		MessageInfos:      file_hi_club_base_proto_msgTypes,
 	}.Build()
 	File_hi_club_base_proto = out.File
 	file_hi_club_base_proto_goTypes = nil

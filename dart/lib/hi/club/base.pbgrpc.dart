@@ -19,7 +19,6 @@ import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
 import '../common.pb.dart' as $2;
 import '../did/base.pb.dart' as $1;
-import 'base.pb.dart' as $3;
 
 export 'base.pb.dart';
 
@@ -129,68 +128,4 @@ abstract class BaseServiceBase extends $grpc.Service {
 
   $async.Future<$2.ServerVersionResp> serverVersion(
       $grpc.ServiceCall call, $0.Empty request);
-}
-
-/// ⚠️ **临时接口 —— 用完即删。**
-///
-/// 它是个通用的 `name → value` 字符串查询(表 hi_club.hi_config),**后端完全不消费**,
-/// name 全由前端传、handler 只做透传。dev 上**只有一条数据**:
-///     webview → http://47.96.113.121/hiworldtest
-/// 指向一个**临时业务**,直接 webview 封装的。
-///
-/// **单独成 service 就是为了将来一行删掉,不牵动 Base。** 别往里加长期设施。
-///
-/// 档位:内容无私密性,token 或公开都行 —— 取 AUTH_USER 维持现状(零行为变更,不平白扩大暴露面)。
-///
-/// ⚠️ 后端遗留:model 里 `Name string \`gorm:"column:did"\`` 映射到**不存在的 did 列**。
-///    gorm 生成 SELECT * 故不报错、Value 正常填充(**已实测,接口是好的**),但 Name 永远是空
-///    —— 无人读,是颗埋着的雷。修:column:did → column:name。
-@$pb.GrpcServiceName('hi.club.TempConfig')
-class TempConfigClient extends $grpc.Client {
-  /// The hostname for this service.
-  static const $core.String defaultHost = '';
-
-  /// OAuth scopes needed for the client.
-  static const $core.List<$core.String> oauthScopes = [
-    '',
-  ];
-
-  TempConfigClient(super.channel, {super.options, super.interceptors});
-
-  $grpc.ResponseFuture<$3.GetConfigResp> get(
-    $3.GetConfigReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$get, request, options: options);
-  }
-
-  // method descriptors
-
-  static final _$get = $grpc.ClientMethod<$3.GetConfigReq, $3.GetConfigResp>(
-      '/hi.club.TempConfig/Get',
-      ($3.GetConfigReq value) => value.writeToBuffer(),
-      $3.GetConfigResp.fromBuffer);
-}
-
-@$pb.GrpcServiceName('hi.club.TempConfig')
-abstract class TempConfigServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.club.TempConfig';
-
-  TempConfigServiceBase() {
-    $addMethod($grpc.ServiceMethod<$3.GetConfigReq, $3.GetConfigResp>(
-        'Get',
-        get_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $3.GetConfigReq.fromBuffer(value),
-        ($3.GetConfigResp value) => value.writeToBuffer()));
-  }
-
-  $async.Future<$3.GetConfigResp> get_Pre(
-      $grpc.ServiceCall $call, $async.Future<$3.GetConfigReq> $request) async {
-    return get($call, await $request);
-  }
-
-  $async.Future<$3.GetConfigResp> get(
-      $grpc.ServiceCall call, $3.GetConfigReq request);
 }
