@@ -409,7 +409,7 @@ func local_request_MerchantPub_Server_0(ctx context.Context, marshaler runtime.M
 	return msg, metadata, err
 }
 
-func request_MerchantExDB_Get_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantExDBClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MerchantOwner_GetExDB_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantOwnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
@@ -417,20 +417,20 @@ func request_MerchantExDB_Get_0(ctx context.Context, marshaler runtime.Marshaler
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.Get(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetExDB(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MerchantExDB_Get_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantExDBServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MerchantOwner_GetExDB_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantOwnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
-	msg, err := server.Get(ctx, &protoReq)
+	msg, err := server.GetExDB(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_MerchantExDB_Refresh_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantExDBClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MerchantOwner_RefreshExDB_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantOwnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
@@ -438,16 +438,43 @@ func request_MerchantExDB_Refresh_0(ctx context.Context, marshaler runtime.Marsh
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.Refresh(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.RefreshExDB(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MerchantExDB_Refresh_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantExDBServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MerchantOwner_RefreshExDB_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantOwnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
-	msg, err := server.Refresh(ctx, &protoReq)
+	msg, err := server.RefreshExDB(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_MerchantOwner_SetServer_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantOwnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SetServerReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.SetServer(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_MerchantOwner_SetServer_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantOwnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SetServerReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.SetServer(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -801,51 +828,71 @@ func RegisterMerchantPubHandlerServer(ctx context.Context, mux *runtime.ServeMux
 	return nil
 }
 
-// RegisterMerchantExDBHandlerServer registers the http handlers for service MerchantExDB to "mux".
-// UnaryRPC     :call MerchantExDBServer directly.
+// RegisterMerchantOwnerHandlerServer registers the http handlers for service MerchantOwner to "mux".
+// UnaryRPC     :call MerchantOwnerServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMerchantExDBHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMerchantOwnerHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMerchantExDBHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MerchantExDBServer) error {
-	mux.Handle(http.MethodGet, pattern_MerchantExDB_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterMerchantOwnerHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MerchantOwnerServer) error {
+	mux.Handle(http.MethodGet, pattern_MerchantOwner_GetExDB_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantExDB/Get", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/get"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantOwner/GetExDB", runtime.WithHTTPPathPattern("/api/v1/merchant_owner/get_ex_db"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MerchantExDB_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MerchantOwner_GetExDB_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MerchantExDB_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MerchantOwner_GetExDB_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MerchantExDB_Refresh_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_MerchantOwner_RefreshExDB_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantExDB/Refresh", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/refresh"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantOwner/RefreshExDB", runtime.WithHTTPPathPattern("/api/v1/merchant_owner/refresh_ex_db"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MerchantExDB_Refresh_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MerchantOwner_RefreshExDB_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MerchantExDB_Refresh_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MerchantOwner_RefreshExDB_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_MerchantOwner_SetServer_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantOwner/SetServer", runtime.WithHTTPPathPattern("/api/v1/merchant_owner/set_server"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_MerchantOwner_SetServer_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_MerchantOwner_SetServer_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -1253,9 +1300,9 @@ var (
 	forward_MerchantPub_Server_0 = runtime.ForwardResponseMessage
 )
 
-// RegisterMerchantExDBHandlerFromEndpoint is same as RegisterMerchantExDBHandler but
+// RegisterMerchantOwnerHandlerFromEndpoint is same as RegisterMerchantOwnerHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMerchantExDBHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterMerchantOwnerHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -1274,66 +1321,85 @@ func RegisterMerchantExDBHandlerFromEndpoint(ctx context.Context, mux *runtime.S
 			}
 		}()
 	}()
-	return RegisterMerchantExDBHandler(ctx, mux, conn)
+	return RegisterMerchantOwnerHandler(ctx, mux, conn)
 }
 
-// RegisterMerchantExDBHandler registers the http handlers for service MerchantExDB to "mux".
+// RegisterMerchantOwnerHandler registers the http handlers for service MerchantOwner to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMerchantExDBHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMerchantExDBHandlerClient(ctx, mux, NewMerchantExDBClient(conn))
+func RegisterMerchantOwnerHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterMerchantOwnerHandlerClient(ctx, mux, NewMerchantOwnerClient(conn))
 }
 
-// RegisterMerchantExDBHandlerClient registers the http handlers for service MerchantExDB
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MerchantExDBClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MerchantExDBClient"
+// RegisterMerchantOwnerHandlerClient registers the http handlers for service MerchantOwner
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MerchantOwnerClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MerchantOwnerClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MerchantExDBClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMerchantExDBHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MerchantExDBClient) error {
-	mux.Handle(http.MethodGet, pattern_MerchantExDB_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "MerchantOwnerClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterMerchantOwnerHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MerchantOwnerClient) error {
+	mux.Handle(http.MethodGet, pattern_MerchantOwner_GetExDB_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantExDB/Get", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/get"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantOwner/GetExDB", runtime.WithHTTPPathPattern("/api/v1/merchant_owner/get_ex_db"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MerchantExDB_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MerchantOwner_GetExDB_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MerchantExDB_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MerchantOwner_GetExDB_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MerchantExDB_Refresh_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_MerchantOwner_RefreshExDB_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantExDB/Refresh", runtime.WithHTTPPathPattern("/api/v1/merchant_ex_db/refresh"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantOwner/RefreshExDB", runtime.WithHTTPPathPattern("/api/v1/merchant_owner/refresh_ex_db"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MerchantExDB_Refresh_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MerchantOwner_RefreshExDB_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MerchantExDB_Refresh_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MerchantOwner_RefreshExDB_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_MerchantOwner_SetServer_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantOwner/SetServer", runtime.WithHTTPPathPattern("/api/v1/merchant_owner/set_server"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_MerchantOwner_SetServer_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_MerchantOwner_SetServer_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_MerchantExDB_Get_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_ex_db", "get"}, ""))
-	pattern_MerchantExDB_Refresh_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_ex_db", "refresh"}, ""))
+	pattern_MerchantOwner_GetExDB_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_owner", "get_ex_db"}, ""))
+	pattern_MerchantOwner_RefreshExDB_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_owner", "refresh_ex_db"}, ""))
+	pattern_MerchantOwner_SetServer_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_owner", "set_server"}, ""))
 )
 
 var (
-	forward_MerchantExDB_Get_0     = runtime.ForwardResponseMessage
-	forward_MerchantExDB_Refresh_0 = runtime.ForwardResponseMessage
+	forward_MerchantOwner_GetExDB_0     = runtime.ForwardResponseMessage
+	forward_MerchantOwner_RefreshExDB_0 = runtime.ForwardResponseMessage
+	forward_MerchantOwner_SetServer_0   = runtime.ForwardResponseMessage
 )
 
 // RegisterOrderEventHandlerFromEndpoint is same as RegisterOrderEventHandler but

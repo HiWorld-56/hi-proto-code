@@ -230,7 +230,15 @@ class MerchantGetResp extends $pb.GeneratedMessage {
   MerchantInfo ensureInfo() => $_ensure(0);
 }
 
-/// 商户改自己的配置。商户身份来自 ExtendToken —— 不接受 server 入参(冗余/越权);
+/// 商户改自己的配置(主体 = 服务持 ExtendToken)。
+///
+/// ⚠️ **不含 server** —— 它是**资金流向**字段(落库 server_did:收款/付款实体),改它 = 改钱打给谁。
+///    ExtendToken 常驻商户后台、是最易泄露的那个凭证,故资金字段必须与它解耦:
+///    改 server 走 **MerchantOwner.SetServer**(登录 token 档,商户主人主体)。
+///    这样 extoken 即使泄露,攻击者也改不动资金去向。
+///    (旧注释说"冗余/越权"是错的:server 是**值**不是**键**,传进来也只能改自己那行,
+///     够不着别人;真正的理由是资金字段需要比展示配置更强的保护。)
+///
 /// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
 class MerchantSetReq extends $pb.GeneratedMessage {
   factory MerchantSetReq({
@@ -1494,6 +1502,62 @@ class MerchantExDBResp extends $pb.GeneratedMessage {
   $core.bool hasTable() => $_has(1);
   @$pb.TagNumber(2)
   void clearTable() => $_clearField(2);
+}
+
+/// 改商户的结算实体(收款/付款 server)。
+/// server 空 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
+class SetServerReq extends $pb.GeneratedMessage {
+  factory SetServerReq({
+    $core.String? server,
+  }) {
+    final result = create();
+    if (server != null) result.server = server;
+    return result;
+  }
+
+  SetServerReq._();
+
+  factory SetServerReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetServerReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetServerReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'server')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetServerReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetServerReq copyWith(void Function(SetServerReq) updates) =>
+      super.copyWith((message) => updates(message as SetServerReq))
+          as SetServerReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetServerReq create() => SetServerReq._();
+  @$core.override
+  SetServerReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetServerReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetServerReq>(create);
+  static SetServerReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get server => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set server($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasServer() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearServer() => $_clearField(1);
 }
 
 class MerchantNotifyReq extends $pb.GeneratedMessage {

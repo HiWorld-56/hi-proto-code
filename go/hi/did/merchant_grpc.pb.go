@@ -745,153 +745,197 @@ var MerchantPub_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	MerchantExDB_Get_FullMethodName     = "/hi.did.MerchantExDB/Get"
-	MerchantExDB_Refresh_FullMethodName = "/hi.did.MerchantExDB/Refresh"
+	MerchantOwner_GetExDB_FullMethodName     = "/hi.did.MerchantOwner/GetExDB"
+	MerchantOwner_RefreshExDB_FullMethodName = "/hi.did.MerchantOwner/RefreshExDB"
+	MerchantOwner_SetServer_FullMethodName   = "/hi.did.MerchantOwner/SetServer"
 )
 
-// MerchantExDBClient is the client API for MerchantExDB service.
+// MerchantOwnerClient is the client API for MerchantOwner service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
-// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
+// 商户主人自服务 —— **主体 = 商户主人(登录 token)**,与 Merchant(服务持 ExtendToken 干活)主体不同,
+// 故不与 Merchant 合并。原名 MerchantExDB(只讲 ExDB,装不下商户主人的其他配置);
+// 更早叫 UserExtensionSettings(假名,跟"用户扩展设置"无关,ctx.did 就是商户 did)。
 //
-// ⚠️ 为什么单独一个 service、且是 AUTH_USER:ExtendToken 是从这里**拿到**的,
+// ⚠️ 为什么必须是 AUTH_USER、且**不能**收 ExtendToken:
 //
-//	所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
-//	与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
-type MerchantExDBClient interface {
-	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error)
-	Refresh(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error)
+//	① **拿票窗口不能查票** —— ExtendToken 是从这里拿到的,本 service 不能要求先有它;
+//	② **资金面与泄露面解耦** —— SetServer 改的是钱的去向,而 ExtendToken 常驻商户后台服务、
+//	   是最易泄露的凭证。两者切开后,extoken 泄露也改不动资金流向。
+//	商户登录 web 本身已做 **web3 验签**,登录 token 即钱包控制权凭据,故无需、也不应再传签名。
+type MerchantOwnerClient interface {
+	GetExDB(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error)
+	RefreshExDB(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error)
+	SetServer(ctx context.Context, in *SetServerReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type merchantExDBClient struct {
+type merchantOwnerClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMerchantExDBClient(cc grpc.ClientConnInterface) MerchantExDBClient {
-	return &merchantExDBClient{cc}
+func NewMerchantOwnerClient(cc grpc.ClientConnInterface) MerchantOwnerClient {
+	return &merchantOwnerClient{cc}
 }
 
-func (c *merchantExDBClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error) {
+func (c *merchantOwnerClient) GetExDB(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MerchantExDBResp)
-	err := c.cc.Invoke(ctx, MerchantExDB_Get_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MerchantOwner_GetExDB_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *merchantExDBClient) Refresh(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error) {
+func (c *merchantOwnerClient) RefreshExDB(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantExDBResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MerchantExDBResp)
-	err := c.cc.Invoke(ctx, MerchantExDB_Refresh_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MerchantOwner_RefreshExDB_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MerchantExDBServer is the server API for MerchantExDB service.
-// All implementations should embed UnimplementedMerchantExDBServer
+func (c *merchantOwnerClient) SetServer(ctx context.Context, in *SetServerReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, MerchantOwner_SetServer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MerchantOwnerServer is the server API for MerchantOwner service.
+// All implementations should embed UnimplementedMerchantOwnerServer
 // for forward compatibility.
 //
-// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
-// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
+// 商户主人自服务 —— **主体 = 商户主人(登录 token)**,与 Merchant(服务持 ExtendToken 干活)主体不同,
+// 故不与 Merchant 合并。原名 MerchantExDB(只讲 ExDB,装不下商户主人的其他配置);
+// 更早叫 UserExtensionSettings(假名,跟"用户扩展设置"无关,ctx.did 就是商户 did)。
 //
-// ⚠️ 为什么单独一个 service、且是 AUTH_USER:ExtendToken 是从这里**拿到**的,
+// ⚠️ 为什么必须是 AUTH_USER、且**不能**收 ExtendToken:
 //
-//	所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
-//	与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
-type MerchantExDBServer interface {
-	Get(context.Context, *emptypb.Empty) (*MerchantExDBResp, error)
-	Refresh(context.Context, *emptypb.Empty) (*MerchantExDBResp, error)
+//	① **拿票窗口不能查票** —— ExtendToken 是从这里拿到的,本 service 不能要求先有它;
+//	② **资金面与泄露面解耦** —— SetServer 改的是钱的去向,而 ExtendToken 常驻商户后台服务、
+//	   是最易泄露的凭证。两者切开后,extoken 泄露也改不动资金流向。
+//	商户登录 web 本身已做 **web3 验签**,登录 token 即钱包控制权凭据,故无需、也不应再传签名。
+type MerchantOwnerServer interface {
+	GetExDB(context.Context, *emptypb.Empty) (*MerchantExDBResp, error)
+	RefreshExDB(context.Context, *emptypb.Empty) (*MerchantExDBResp, error)
+	SetServer(context.Context, *SetServerReq) (*emptypb.Empty, error)
 }
 
-// UnimplementedMerchantExDBServer should be embedded to have
+// UnimplementedMerchantOwnerServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMerchantExDBServer struct{}
+type UnimplementedMerchantOwnerServer struct{}
 
-func (UnimplementedMerchantExDBServer) Get(context.Context, *emptypb.Empty) (*MerchantExDBResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+func (UnimplementedMerchantOwnerServer) GetExDB(context.Context, *emptypb.Empty) (*MerchantExDBResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetExDB not implemented")
 }
-func (UnimplementedMerchantExDBServer) Refresh(context.Context, *emptypb.Empty) (*MerchantExDBResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Refresh not implemented")
+func (UnimplementedMerchantOwnerServer) RefreshExDB(context.Context, *emptypb.Empty) (*MerchantExDBResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method RefreshExDB not implemented")
 }
-func (UnimplementedMerchantExDBServer) testEmbeddedByValue() {}
+func (UnimplementedMerchantOwnerServer) SetServer(context.Context, *SetServerReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetServer not implemented")
+}
+func (UnimplementedMerchantOwnerServer) testEmbeddedByValue() {}
 
-// UnsafeMerchantExDBServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MerchantExDBServer will
+// UnsafeMerchantOwnerServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MerchantOwnerServer will
 // result in compilation errors.
-type UnsafeMerchantExDBServer interface {
-	mustEmbedUnimplementedMerchantExDBServer()
+type UnsafeMerchantOwnerServer interface {
+	mustEmbedUnimplementedMerchantOwnerServer()
 }
 
-func RegisterMerchantExDBServer(s grpc.ServiceRegistrar, srv MerchantExDBServer) {
-	// If the following call panics, it indicates UnimplementedMerchantExDBServer was
+func RegisterMerchantOwnerServer(s grpc.ServiceRegistrar, srv MerchantOwnerServer) {
+	// If the following call panics, it indicates UnimplementedMerchantOwnerServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&MerchantExDB_ServiceDesc, srv)
+	s.RegisterService(&MerchantOwner_ServiceDesc, srv)
 }
 
-func _MerchantExDB_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MerchantOwner_GetExDB_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MerchantExDBServer).Get(ctx, in)
+		return srv.(MerchantOwnerServer).GetExDB(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MerchantExDB_Get_FullMethodName,
+		FullMethod: MerchantOwner_GetExDB_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantExDBServer).Get(ctx, req.(*emptypb.Empty))
+		return srv.(MerchantOwnerServer).GetExDB(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MerchantExDB_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MerchantOwner_RefreshExDB_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MerchantExDBServer).Refresh(ctx, in)
+		return srv.(MerchantOwnerServer).RefreshExDB(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MerchantExDB_Refresh_FullMethodName,
+		FullMethod: MerchantOwner_RefreshExDB_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantExDBServer).Refresh(ctx, req.(*emptypb.Empty))
+		return srv.(MerchantOwnerServer).RefreshExDB(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MerchantExDB_ServiceDesc is the grpc.ServiceDesc for MerchantExDB service.
+func _MerchantOwner_SetServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetServerReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantOwnerServer).SetServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantOwner_SetServer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantOwnerServer).SetServer(ctx, req.(*SetServerReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// MerchantOwner_ServiceDesc is the grpc.ServiceDesc for MerchantOwner service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MerchantExDB_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.MerchantExDB",
-	HandlerType: (*MerchantExDBServer)(nil),
+var MerchantOwner_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.MerchantOwner",
+	HandlerType: (*MerchantOwnerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Get",
-			Handler:    _MerchantExDB_Get_Handler,
+			MethodName: "GetExDB",
+			Handler:    _MerchantOwner_GetExDB_Handler,
 		},
 		{
-			MethodName: "Refresh",
-			Handler:    _MerchantExDB_Refresh_Handler,
+			MethodName: "RefreshExDB",
+			Handler:    _MerchantOwner_RefreshExDB_Handler,
+		},
+		{
+			MethodName: "SetServer",
+			Handler:    _MerchantOwner_SetServer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

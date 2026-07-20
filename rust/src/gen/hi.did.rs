@@ -946,7 +946,15 @@ pub struct MerchantGetResp {
     #[prost(message, optional, tag = "1")]
     pub info: ::core::option::Option<MerchantInfo>,
 }
-/// 商户改自己的配置。商户身份来自 ExtendToken —— 不接受 server 入参(冗余/越权);
+/// 商户改自己的配置(主体 = 服务持 ExtendToken)。
+///
+/// ⚠️ **不含 server** —— 它是**资金流向**字段(落库 server_did:收款/付款实体),改它 = 改钱打给谁。
+/// ExtendToken 常驻商户后台、是最易泄露的那个凭证,故资金字段必须与它解耦:
+/// 改 server 走 **MerchantOwner.SetServer**(登录 token 档,商户主人主体)。
+/// 这样 extoken 即使泄露,攻击者也改不动资金去向。
+/// (旧注释说"冗余/越权"是错的:server 是**值**不是**键**,传进来也只能改自己那行,
+/// 够不着别人;真正的理由是资金字段需要比展示配置更强的保护。)
+///
 /// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantSetReq {
@@ -1121,6 +1129,14 @@ pub struct MerchantExDbResp {
     /// 扩展数据表名
     #[prost(string, tag = "2")]
     pub table: ::prost::alloc::string::String,
+}
+/// 改商户的结算实体(收款/付款 server)。
+/// server 空 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetServerReq {
+    /// 结算实体 did;留空=恢复默认(master)
+    #[prost(string, tag = "1")]
+    pub server: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantNotifyReq {
@@ -1640,7 +1656,7 @@ pub mod merchant_pub_client {
     }
 }
 /// Generated client implementations.
-pub mod merchant_ex_db_client {
+pub mod merchant_owner_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -1650,17 +1666,20 @@ pub mod merchant_ex_db_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
-    /// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
+    /// 商户主人自服务 —— **主体 = 商户主人(登录 token)**,与 Merchant(服务持 ExtendToken 干活)主体不同,
+    /// 故不与 Merchant 合并。原名 MerchantExDB(只讲 ExDB,装不下商户主人的其他配置);
+    /// 更早叫 UserExtensionSettings(假名,跟"用户扩展设置"无关,ctx.did 就是商户 did)。
     ///
-    /// ⚠️ 为什么单独一个 service、且是 AUTH_USER:ExtendToken 是从这里**拿到**的,
-    /// 所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
-    /// 与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
+    /// ⚠️ 为什么必须是 AUTH_USER、且**不能**收 ExtendToken:
+    /// ① **拿票窗口不能查票** —— ExtendToken 是从这里拿到的,本 service 不能要求先有它;
+    /// ② **资金面与泄露面解耦** —— SetServer 改的是钱的去向,而 ExtendToken 常驻商户后台服务、
+    /// 是最易泄露的凭证。两者切开后,extoken 泄露也改不动资金流向。
+    /// 商户登录 web 本身已做 **web3 验签**,登录 token 即钱包控制权凭据,故无需、也不应再传签名。
     #[derive(Debug, Clone)]
-    pub struct MerchantExDbClient<T> {
+    pub struct MerchantOwnerClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl MerchantExDbClient<tonic::transport::Channel> {
+    impl MerchantOwnerClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -1671,7 +1690,7 @@ pub mod merchant_ex_db_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> MerchantExDbClient<T>
+    impl<T> MerchantOwnerClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -1689,7 +1708,7 @@ pub mod merchant_ex_db_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MerchantExDbClient<InterceptedService<T, F>>
+        ) -> MerchantOwnerClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -1703,7 +1722,7 @@ pub mod merchant_ex_db_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MerchantExDbClient::new(InterceptedService::new(inner, interceptor))
+            MerchantOwnerClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -1736,28 +1755,7 @@ pub mod merchant_ex_db_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::MerchantExDbResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.MerchantExDB/Get");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.MerchantExDB", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn refresh(
+        pub async fn get_ex_db(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
@@ -1774,11 +1772,56 @@ pub mod merchant_ex_db_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.MerchantExDB/Refresh",
+                "/hi.did.MerchantOwner/GetExDB",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.MerchantExDB", "Refresh"));
+                .insert(GrpcMethod::new("hi.did.MerchantOwner", "GetExDB"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn refresh_ex_db(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantExDbResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantOwner/RefreshExDB",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantOwner", "RefreshExDB"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_server(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetServerReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantOwner/SetServer",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantOwner", "SetServer"));
             self.inner.unary(req, path, codec).await
         }
     }

@@ -505,6 +505,18 @@ final $typed_data.Uint8List merchantExDBRespDescriptor = $convert.base64Decode(
     'ChBNZXJjaGFudEV4REJSZXNwEhoKBXRva2VuGAEgASgJQgSQtRgDUgV0b2tlbhIaCgV0YWJsZR'
     'gCIAEoCUIEkLUYA1IFdGFibGU6BJi1GAM=');
 
+@$core.Deprecated('Use setServerReqDescriptor instead')
+const SetServerReq$json = {
+  '1': 'SetServerReq',
+  '2': [
+    {'1': 'server', '3': 1, '4': 1, '5': 9, '10': 'server'},
+  ],
+};
+
+/// Descriptor for `SetServerReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setServerReqDescriptor = $convert
+    .base64Decode('CgxTZXRTZXJ2ZXJSZXESFgoGc2VydmVyGAEgASgJUgZzZXJ2ZXI=');
+
 @$core.Deprecated('Use merchantNotifyReqDescriptor instead')
 const MerchantNotifyReq$json = {
   '1': 'MerchantNotifyReq',

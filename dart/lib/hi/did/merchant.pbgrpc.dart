@@ -466,14 +466,17 @@ abstract class MerchantPubServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $2.DID request);
 }
 
-/// 商户主人登录 hisrv 后,取/换自己的 ExtendToken —— **bootstrap 层**。
-/// 原名 UserExtensionSettings 是假名(跟"用户扩展设置"无关,ctx.did 就是商户 did)。
+/// 商户主人自服务 —— **主体 = 商户主人(登录 token)**,与 Merchant(服务持 ExtendToken 干活)主体不同,
+/// 故不与 Merchant 合并。原名 MerchantExDB(只讲 ExDB,装不下商户主人的其他配置);
+/// 更早叫 UserExtensionSettings(假名,跟"用户扩展设置"无关,ctx.did 就是商户 did)。
 ///
-/// ⚠️ 为什么单独一个 service、且是 AUTH_USER:ExtendToken 是从这里**拿到**的,
-///    所以本 service 不能要求先有 ExtendToken(拿票窗口不能查票)。主体是商户主人(登录 token),
-///    与 Merchant(服务持 ExtendToken 干活)主体不同,故不与 Merchant 合并。
-@$pb.GrpcServiceName('hi.did.MerchantExDB')
-class MerchantExDBClient extends $grpc.Client {
+/// ⚠️ 为什么必须是 AUTH_USER、且**不能**收 ExtendToken:
+///    ① **拿票窗口不能查票** —— ExtendToken 是从这里拿到的,本 service 不能要求先有它;
+///    ② **资金面与泄露面解耦** —— SetServer 改的是钱的去向,而 ExtendToken 常驻商户后台服务、
+///       是最易泄露的凭证。两者切开后,extoken 泄露也改不动资金流向。
+///    商户登录 web 本身已做 **web3 验签**,登录 token 即钱包控制权凭据,故无需、也不应再传签名。
+@$pb.GrpcServiceName('hi.did.MerchantOwner')
+class MerchantOwnerClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -482,70 +485,97 @@ class MerchantExDBClient extends $grpc.Client {
     '',
   ];
 
-  MerchantExDBClient(super.channel, {super.options, super.interceptors});
+  MerchantOwnerClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.MerchantExDBResp> get(
+  $grpc.ResponseFuture<$1.MerchantExDBResp> getExDB(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$get, request, options: options);
+    return $createUnaryCall(_$getExDB, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.MerchantExDBResp> refresh(
+  $grpc.ResponseFuture<$1.MerchantExDBResp> refreshExDB(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$refresh, request, options: options);
+    return $createUnaryCall(_$refreshExDB, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> setServer(
+    $1.SetServerReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setServer, request, options: options);
   }
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.Empty, $1.MerchantExDBResp>(
-      '/hi.did.MerchantExDB/Get',
+  static final _$getExDB = $grpc.ClientMethod<$0.Empty, $1.MerchantExDBResp>(
+      '/hi.did.MerchantOwner/GetExDB',
       ($0.Empty value) => value.writeToBuffer(),
       $1.MerchantExDBResp.fromBuffer);
-  static final _$refresh = $grpc.ClientMethod<$0.Empty, $1.MerchantExDBResp>(
-      '/hi.did.MerchantExDB/Refresh',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.MerchantExDBResp.fromBuffer);
+  static final _$refreshExDB =
+      $grpc.ClientMethod<$0.Empty, $1.MerchantExDBResp>(
+          '/hi.did.MerchantOwner/RefreshExDB',
+          ($0.Empty value) => value.writeToBuffer(),
+          $1.MerchantExDBResp.fromBuffer);
+  static final _$setServer = $grpc.ClientMethod<$1.SetServerReq, $0.Empty>(
+      '/hi.did.MerchantOwner/SetServer',
+      ($1.SetServerReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.did.MerchantExDB')
-abstract class MerchantExDBServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.did.MerchantExDB';
+@$pb.GrpcServiceName('hi.did.MerchantOwner')
+abstract class MerchantOwnerServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.MerchantOwner';
 
-  MerchantExDBServiceBase() {
+  MerchantOwnerServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.MerchantExDBResp>(
-        'Get',
-        get_Pre,
+        'GetExDB',
+        getExDB_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.MerchantExDBResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.MerchantExDBResp>(
-        'Refresh',
-        refresh_Pre,
+        'RefreshExDB',
+        refreshExDB_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.MerchantExDBResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetServerReq, $0.Empty>(
+        'SetServer',
+        setServer_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.SetServerReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.MerchantExDBResp> get_Pre(
+  $async.Future<$1.MerchantExDBResp> getExDB_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return get($call, await $request);
+    return getExDB($call, await $request);
   }
 
-  $async.Future<$1.MerchantExDBResp> get(
+  $async.Future<$1.MerchantExDBResp> getExDB(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$1.MerchantExDBResp> refresh_Pre(
+  $async.Future<$1.MerchantExDBResp> refreshExDB_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return refresh($call, await $request);
+    return refreshExDB($call, await $request);
   }
 
-  $async.Future<$1.MerchantExDBResp> refresh(
+  $async.Future<$1.MerchantExDBResp> refreshExDB(
       $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$0.Empty> setServer_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SetServerReq> $request) async {
+    return setServer($call, await $request);
+  }
+
+  $async.Future<$0.Empty> setServer(
+      $grpc.ServiceCall call, $1.SetServerReq request);
 }
 
 /// 订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
