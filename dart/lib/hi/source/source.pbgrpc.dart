@@ -34,6 +34,20 @@ class FileClient extends $grpc.Client {
 
   FileClient(super.channel, {super.options, super.interceptors});
 
+  $grpc.ResponseFuture<$0.PutResp> put(
+    $0.PutReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$put, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.PutResp> putStream(
+    $async.Stream<$0.PutStreamReq> request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(_$putStream, request, options: options).single;
+  }
+
   $grpc.ResponseFuture<$0.UploadResp> upload(
     $0.UploadReq request, {
     $grpc.CallOptions? options,
@@ -67,6 +81,14 @@ class FileClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$put = $grpc.ClientMethod<$0.PutReq, $0.PutResp>(
+      '/hi.source.File/Put',
+      ($0.PutReq value) => value.writeToBuffer(),
+      $0.PutResp.fromBuffer);
+  static final _$putStream = $grpc.ClientMethod<$0.PutStreamReq, $0.PutResp>(
+      '/hi.source.File/PutStream',
+      ($0.PutStreamReq value) => value.writeToBuffer(),
+      $0.PutResp.fromBuffer);
   static final _$upload = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
       '/hi.source.File/Upload',
       ($0.UploadReq value) => value.writeToBuffer(),
@@ -92,6 +114,20 @@ abstract class FileServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.source.File';
 
   FileServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.PutReq, $0.PutResp>(
+        'Put',
+        put_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PutReq.fromBuffer(value),
+        ($0.PutResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PutStreamReq, $0.PutResp>(
+        'PutStream',
+        putStream,
+        true,
+        false,
+        ($core.List<$core.int> value) => $0.PutStreamReq.fromBuffer(value),
+        ($0.PutResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'Upload',
         upload_Pre,
@@ -121,6 +157,16 @@ abstract class FileServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.DownloadStreamReq.fromBuffer(value),
         ($0.DownloadStreamResp value) => value.writeToBuffer()));
   }
+
+  $async.Future<$0.PutResp> put_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.PutReq> $request) async {
+    return put($call, await $request);
+  }
+
+  $async.Future<$0.PutResp> put($grpc.ServiceCall call, $0.PutReq request);
+
+  $async.Future<$0.PutResp> putStream(
+      $grpc.ServiceCall call, $async.Stream<$0.PutStreamReq> request);
 
   $async.Future<$0.UploadResp> upload_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {

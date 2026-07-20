@@ -156,3 +156,91 @@ final $typed_data.Uint8List downloadStreamReqDescriptor = $convert.base64Decode(
     'ChFEb3dubG9hZFN0cmVhbVJlcRIeCgN1cmwYASABKAlCDLpICXIHMgVeXFMrJFIDdXJsEh8KBm'
     '9mZnNldBgCIAEoA0IHukgEIgIoAFIGb2Zmc2V0Eh0KBWxpbWl0GAMgASgDQge6SAQiAigAUgVs'
     'aW1pdA==');
+
+@$core.Deprecated('Use putReqDescriptor instead')
+const PutReq$json = {
+  '1': 'PutReq',
+  '2': [
+    {'1': 'bucket', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'bucket'},
+    {'1': 'dir', '3': 2, '4': 1, '5': 9, '10': 'dir'},
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'content', '3': 4, '4': 1, '5': 12, '8': {}, '10': 'content'},
+    {'1': 'thumbnail', '3': 5, '4': 1, '5': 8, '10': 'thumbnail'},
+  ],
+};
+
+/// Descriptor for `PutReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putReqDescriptor = $convert.base64Decode(
+    'CgZQdXRSZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2tldBIQCgNkaXIYAi'
+    'ABKAlSA2RpchIgCgRuYW1lGAMgASgJQgy6SAlyBzIFXlxTKyRSBG5hbWUSIQoHY29udGVudBgE'
+    'IAEoDEIHukgEegIQAVIHY29udGVudBIcCgl0aHVtYm5haWwYBSABKAhSCXRodW1ibmFpbA==');
+
+@$core.Deprecated('Use putRespDescriptor instead')
+const PutResp$json = {
+  '1': 'PutResp',
+  '2': [
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+    {
+      '1': 'thumb_url',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'thumbUrl',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_thumb_url'},
+  ],
+};
+
+/// Descriptor for `PutResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putRespDescriptor = $convert.base64Decode(
+    'CgdQdXRSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiYKCXRodW1iX3VybBgCIAEoCUIEkL'
+    'UYAUgAUgh0aHVtYlVybIgBAToEmLUYAUIMCgpfdGh1bWJfdXJs');
+
+@$core.Deprecated('Use putStreamReqDescriptor instead')
+const PutStreamReq$json = {
+  '1': 'PutStreamReq',
+  '2': [
+    {
+      '1': 'meta',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.source.PutMeta',
+      '9': 0,
+      '10': 'meta'
+    },
+    {'1': 'chunk', '3': 2, '4': 1, '5': 12, '9': 0, '10': 'chunk'},
+  ],
+  '8': [
+    {'1': 'data'},
+  ],
+};
+
+/// Descriptor for `PutStreamReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putStreamReqDescriptor = $convert.base64Decode(
+    'CgxQdXRTdHJlYW1SZXESKAoEbWV0YRgBIAEoCzISLmhpLnNvdXJjZS5QdXRNZXRhSABSBG1ldG'
+    'ESFgoFY2h1bmsYAiABKAxIAFIFY2h1bmtCBgoEZGF0YQ==');
+
+@$core.Deprecated('Use putMetaDescriptor instead')
+const PutMeta$json = {
+  '1': 'PutMeta',
+  '2': [
+    {'1': 'bucket', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'bucket'},
+    {'1': 'dir', '3': 2, '4': 1, '5': 9, '10': 'dir'},
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'size', '3': 4, '4': 1, '5': 3, '8': {}, '10': 'size'},
+    {'1': 'thumbnail', '3': 5, '4': 1, '5': 8, '10': 'thumbnail'},
+  ],
+};
+
+/// Descriptor for `PutMeta`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putMetaDescriptor = $convert.base64Decode(
+    'CgdQdXRNZXRhEiQKBmJ1Y2tldBgBIAEoCUIMukgJcgcyBV5cUyskUgZidWNrZXQSEAoDZGlyGA'
+    'IgASgJUgNkaXISIAoEbmFtZRgDIAEoCUIMukgJcgcyBV5cUyskUgRuYW1lEhsKBHNpemUYBCAB'
+    'KANCB7pIBCICIABSBHNpemUSHAoJdGh1bWJuYWlsGAUgASgIUgl0aHVtYm5haWw=');

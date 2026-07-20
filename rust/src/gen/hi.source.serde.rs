@@ -475,6 +475,551 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamResp {
         deserializer.deserialize_struct("hi.source.DownloadStreamResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for PutMeta {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.bucket.is_empty() {
+            len += 1;
+        }
+        if !self.dir.is_empty() {
+            len += 1;
+        }
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if self.size != 0 {
+            len += 1;
+        }
+        if self.thumbnail {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.PutMeta", len)?;
+        if !self.bucket.is_empty() {
+            struct_ser.serialize_field("bucket", &self.bucket)?;
+        }
+        if !self.dir.is_empty() {
+            struct_ser.serialize_field("dir", &self.dir)?;
+        }
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if self.size != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("size", ToString::to_string(&self.size).as_str())?;
+        }
+        if self.thumbnail {
+            struct_ser.serialize_field("thumbnail", &self.thumbnail)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PutMeta {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "bucket",
+            "dir",
+            "name",
+            "size",
+            "thumbnail",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Bucket,
+            Dir,
+            Name,
+            Size,
+            Thumbnail,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "bucket" => Ok(GeneratedField::Bucket),
+                            "dir" => Ok(GeneratedField::Dir),
+                            "name" => Ok(GeneratedField::Name),
+                            "size" => Ok(GeneratedField::Size),
+                            "thumbnail" => Ok(GeneratedField::Thumbnail),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PutMeta;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.PutMeta")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PutMeta, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut bucket__ = None;
+                let mut dir__ = None;
+                let mut name__ = None;
+                let mut size__ = None;
+                let mut thumbnail__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Bucket => {
+                            if bucket__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bucket"));
+                            }
+                            bucket__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Dir => {
+                            if dir__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dir"));
+                            }
+                            dir__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Size => {
+                            if size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("size"));
+                            }
+                            size__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Thumbnail => {
+                            if thumbnail__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("thumbnail"));
+                            }
+                            thumbnail__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(PutMeta {
+                    bucket: bucket__.unwrap_or_default(),
+                    dir: dir__.unwrap_or_default(),
+                    name: name__.unwrap_or_default(),
+                    size: size__.unwrap_or_default(),
+                    thumbnail: thumbnail__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.PutMeta", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PutReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.bucket.is_empty() {
+            len += 1;
+        }
+        if !self.dir.is_empty() {
+            len += 1;
+        }
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if !self.content.is_empty() {
+            len += 1;
+        }
+        if self.thumbnail {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.PutReq", len)?;
+        if !self.bucket.is_empty() {
+            struct_ser.serialize_field("bucket", &self.bucket)?;
+        }
+        if !self.dir.is_empty() {
+            struct_ser.serialize_field("dir", &self.dir)?;
+        }
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if !self.content.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+        }
+        if self.thumbnail {
+            struct_ser.serialize_field("thumbnail", &self.thumbnail)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PutReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "bucket",
+            "dir",
+            "name",
+            "content",
+            "thumbnail",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Bucket,
+            Dir,
+            Name,
+            Content,
+            Thumbnail,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "bucket" => Ok(GeneratedField::Bucket),
+                            "dir" => Ok(GeneratedField::Dir),
+                            "name" => Ok(GeneratedField::Name),
+                            "content" => Ok(GeneratedField::Content),
+                            "thumbnail" => Ok(GeneratedField::Thumbnail),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PutReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.PutReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PutReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut bucket__ = None;
+                let mut dir__ = None;
+                let mut name__ = None;
+                let mut content__ = None;
+                let mut thumbnail__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Bucket => {
+                            if bucket__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bucket"));
+                            }
+                            bucket__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Dir => {
+                            if dir__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dir"));
+                            }
+                            dir__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Content => {
+                            if content__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("content"));
+                            }
+                            content__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Thumbnail => {
+                            if thumbnail__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("thumbnail"));
+                            }
+                            thumbnail__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(PutReq {
+                    bucket: bucket__.unwrap_or_default(),
+                    dir: dir__.unwrap_or_default(),
+                    name: name__.unwrap_or_default(),
+                    content: content__.unwrap_or_default(),
+                    thumbnail: thumbnail__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.PutReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PutResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.url.is_empty() {
+            len += 1;
+        }
+        if self.thumb_url.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.PutResp", len)?;
+        if !self.url.is_empty() {
+            struct_ser.serialize_field("url", &self.url)?;
+        }
+        if let Some(v) = self.thumb_url.as_ref() {
+            struct_ser.serialize_field("thumbUrl", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PutResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "url",
+            "thumb_url",
+            "thumbUrl",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Url,
+            ThumbUrl,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "url" => Ok(GeneratedField::Url),
+                            "thumbUrl" | "thumb_url" => Ok(GeneratedField::ThumbUrl),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PutResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.PutResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PutResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut url__ = None;
+                let mut thumb_url__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ThumbUrl => {
+                            if thumb_url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("thumbUrl"));
+                            }
+                            thumb_url__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PutResp {
+                    url: url__.unwrap_or_default(),
+                    thumb_url: thumb_url__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.PutResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PutStreamReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.data.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.PutStreamReq", len)?;
+        if let Some(v) = self.data.as_ref() {
+            match v {
+                put_stream_req::Data::Meta(v) => {
+                    struct_ser.serialize_field("meta", v)?;
+                }
+                put_stream_req::Data::Chunk(v) => {
+                    #[allow(clippy::needless_borrow)]
+                    #[allow(clippy::needless_borrows_for_generic_args)]
+                    struct_ser.serialize_field("chunk", pbjson::private::base64::encode(&v).as_str())?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PutStreamReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "meta",
+            "chunk",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Meta,
+            Chunk,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "meta" => Ok(GeneratedField::Meta),
+                            "chunk" => Ok(GeneratedField::Chunk),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PutStreamReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.PutStreamReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PutStreamReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut data__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Meta => {
+                            if data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("meta"));
+                            }
+                            data__ = map_.next_value::<::std::option::Option<_>>()?.map(put_stream_req::Data::Meta)
+;
+                        }
+                        GeneratedField::Chunk => {
+                            if data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("chunk"));
+                            }
+                            data__ = map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| put_stream_req::Data::Chunk(x.0));
+                        }
+                    }
+                }
+                Ok(PutStreamReq {
+                    data: data__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.PutStreamReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for UploadMeta {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

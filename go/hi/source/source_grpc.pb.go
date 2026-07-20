@@ -21,6 +21,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	File_Put_FullMethodName            = "/hi.source.File/Put"
+	File_PutStream_FullMethodName      = "/hi.source.File/PutStream"
 	File_Upload_FullMethodName         = "/hi.source.File/Upload"
 	File_Download_FullMethodName       = "/hi.source.File/Download"
 	File_UploadStream_FullMethodName   = "/hi.source.File/UploadStream"
@@ -31,6 +33,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileClient interface {
+	Put(ctx context.Context, in *PutReq, opts ...grpc.CallOption) (*PutResp, error)
+	PutStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[PutStreamReq, PutResp], error)
 	Upload(ctx context.Context, in *UploadReq, opts ...grpc.CallOption) (*UploadResp, error)
 	Download(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownloadResp, error)
 	UploadStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadStreamReq, UploadResp], error)
@@ -44,6 +48,29 @@ type fileClient struct {
 func NewFileClient(cc grpc.ClientConnInterface) FileClient {
 	return &fileClient{cc}
 }
+
+func (c *fileClient) Put(ctx context.Context, in *PutReq, opts ...grpc.CallOption) (*PutResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PutResp)
+	err := c.cc.Invoke(ctx, File_Put_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileClient) PutStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[PutStreamReq, PutResp], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &File_ServiceDesc.Streams[0], File_PutStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[PutStreamReq, PutResp]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type File_PutStreamClient = grpc.ClientStreamingClient[PutStreamReq, PutResp]
 
 func (c *fileClient) Upload(ctx context.Context, in *UploadReq, opts ...grpc.CallOption) (*UploadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -67,7 +94,7 @@ func (c *fileClient) Download(ctx context.Context, in *DownloadReq, opts ...grpc
 
 func (c *fileClient) UploadStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadStreamReq, UploadResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &File_ServiceDesc.Streams[0], File_UploadStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &File_ServiceDesc.Streams[1], File_UploadStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +107,7 @@ type File_UploadStreamClient = grpc.ClientStreamingClient[UploadStreamReq, Uploa
 
 func (c *fileClient) DownloadStream(ctx context.Context, in *DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadStreamResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &File_ServiceDesc.Streams[1], File_DownloadStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &File_ServiceDesc.Streams[2], File_DownloadStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -101,6 +128,8 @@ type File_DownloadStreamClient = grpc.ServerStreamingClient[DownloadStreamResp]
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
 type FileServer interface {
+	Put(context.Context, *PutReq) (*PutResp, error)
+	PutStream(grpc.ClientStreamingServer[PutStreamReq, PutResp]) error
 	Upload(context.Context, *UploadReq) (*UploadResp, error)
 	Download(context.Context, *DownloadReq) (*DownloadResp, error)
 	UploadStream(grpc.ClientStreamingServer[UploadStreamReq, UploadResp]) error
@@ -114,6 +143,12 @@ type FileServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFileServer struct{}
 
+func (UnimplementedFileServer) Put(context.Context, *PutReq) (*PutResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Put not implemented")
+}
+func (UnimplementedFileServer) PutStream(grpc.ClientStreamingServer[PutStreamReq, PutResp]) error {
+	return status.Error(codes.Unimplemented, "method PutStream not implemented")
+}
 func (UnimplementedFileServer) Upload(context.Context, *UploadReq) (*UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Upload not implemented")
 }
@@ -145,6 +180,31 @@ func RegisterFileServer(s grpc.ServiceRegistrar, srv FileServer) {
 	}
 	s.RegisterService(&File_ServiceDesc, srv)
 }
+
+func _File_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServer).Put(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: File_Put_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServer).Put(ctx, req.(*PutReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _File_PutStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(FileServer).PutStream(&grpc.GenericServerStream[PutStreamReq, PutResp]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type File_PutStreamServer = grpc.ClientStreamingServer[PutStreamReq, PutResp]
 
 func _File_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UploadReq)
@@ -208,6 +268,10 @@ var File_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FileServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "Put",
+			Handler:    _File_Put_Handler,
+		},
+		{
 			MethodName: "Upload",
 			Handler:    _File_Upload_Handler,
 		},
@@ -217,6 +281,11 @@ var File_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "PutStream",
+			Handler:       _File_PutStream_Handler,
+			ClientStreams: true,
+		},
 		{
 			StreamName:    "UploadStream",
 			Handler:       _File_UploadStream_Handler,

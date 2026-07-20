@@ -494,6 +494,308 @@ func (x *DownloadStreamReq) GetLimit() int64 {
 	return 0
 }
 
+// ── bucket 化上传(新)────────────────────────────────────────────────────
+// hi-source 的定位:**只做"帮各服务拿着 minio 凭据的搬运工"** —— 不再懂业务。
+// 存哪个 bucket、哪个目录由**调用方**决定;hi-source 只负责随机改名 + 落库 + 回 url。
+// 故 Put 没有 `type` 那套业务枚举(image/avatar/code…),它已被 bucket+dir 取代。
+//
+// 分工(定稿):
+//
+//	hidid  → avatar/ (用户头像)、logo/ (商户 logo)      公开读,永固
+//	hiclub → avatar/ (群头像)、background/ (群背景)      公开读,永固
+//	hiai   → plugin/<uuid>/<version>.zip (插件脚本)      **私有**,永固
+//	temp   → <YYYY_MM>/ (聊天/AI 媒体)                   公开读,**14 天过期**
+//	log    → <app>/<did>/                                私有
+//
+// ⚠️ 鉴权:AUTH_NONE 是**有意的** —— hi-source 只对内网开放(上传端口不对外),
+//
+//	鉴权由各业务模块在转发前完成(它们本就持有用户身份)。
+type PutReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"` // 目标 bucket
+	Dir           string                 `protobuf:"bytes,2,opt,name=dir,proto3" json:"dir,omitempty"`       // bucket 内逻辑目录,如 "avatar" / "plugin/<uuid>";空=根
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`     // 原始文件名,仅用于取扩展名(hi-source 会随机改名)
+	Content       []byte                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"` // 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutReq) Reset() {
+	*x = PutReq{}
+	mi := &file_hi_source_source_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutReq) ProtoMessage() {}
+
+func (x *PutReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutReq.ProtoReflect.Descriptor instead.
+func (*PutReq) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *PutReq) GetBucket() string {
+	if x != nil {
+		return x.Bucket
+	}
+	return ""
+}
+
+func (x *PutReq) GetDir() string {
+	if x != nil {
+		return x.Dir
+	}
+	return ""
+}
+
+func (x *PutReq) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PutReq) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+func (x *PutReq) GetThumbnail() bool {
+	if x != nil {
+		return x.Thumbnail
+	}
+	return false
+}
+
+type PutResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"` // 完整可下载 url(私有 bucket 的 url 需经 Download 取)
+	ThumbUrl      *string                `protobuf:"bytes,2,opt,name=thumb_url,json=thumbUrl,proto3,oneof" json:"thumb_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutResp) Reset() {
+	*x = PutResp{}
+	mi := &file_hi_source_source_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutResp) ProtoMessage() {}
+
+func (x *PutResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutResp.ProtoReflect.Descriptor instead.
+func (*PutResp) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *PutResp) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *PutResp) GetThumbUrl() string {
+	if x != nil && x.ThumbUrl != nil {
+		return *x.ThumbUrl
+	}
+	return ""
+}
+
+type PutStreamReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Data:
+	//
+	//	*PutStreamReq_Meta
+	//	*PutStreamReq_Chunk
+	Data          isPutStreamReq_Data `protobuf_oneof:"data"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutStreamReq) Reset() {
+	*x = PutStreamReq{}
+	mi := &file_hi_source_source_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutStreamReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutStreamReq) ProtoMessage() {}
+
+func (x *PutStreamReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutStreamReq.ProtoReflect.Descriptor instead.
+func (*PutStreamReq) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *PutStreamReq) GetData() isPutStreamReq_Data {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *PutStreamReq) GetMeta() *PutMeta {
+	if x != nil {
+		if x, ok := x.Data.(*PutStreamReq_Meta); ok {
+			return x.Meta
+		}
+	}
+	return nil
+}
+
+func (x *PutStreamReq) GetChunk() []byte {
+	if x != nil {
+		if x, ok := x.Data.(*PutStreamReq_Chunk); ok {
+			return x.Chunk
+		}
+	}
+	return nil
+}
+
+type isPutStreamReq_Data interface {
+	isPutStreamReq_Data()
+}
+
+type PutStreamReq_Meta struct {
+	Meta *PutMeta `protobuf:"bytes,1,opt,name=meta,proto3,oneof"` // 元数据,第一个请求包
+}
+
+type PutStreamReq_Chunk struct {
+	Chunk []byte `protobuf:"bytes,2,opt,name=chunk,proto3,oneof"` // 内容分片
+}
+
+func (*PutStreamReq_Meta) isPutStreamReq_Data() {}
+
+func (*PutStreamReq_Chunk) isPutStreamReq_Data() {}
+
+type PutMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	Dir           string                 `protobuf:"bytes,2,opt,name=dir,proto3" json:"dir,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Size          int64                  `protobuf:"varint,4,opt,name=size,proto3" json:"size,omitempty"`
+	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutMeta) Reset() {
+	*x = PutMeta{}
+	mi := &file_hi_source_source_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutMeta) ProtoMessage() {}
+
+func (x *PutMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutMeta.ProtoReflect.Descriptor instead.
+func (*PutMeta) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *PutMeta) GetBucket() string {
+	if x != nil {
+		return x.Bucket
+	}
+	return ""
+}
+
+func (x *PutMeta) GetDir() string {
+	if x != nil {
+		return x.Dir
+	}
+	return ""
+}
+
+func (x *PutMeta) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PutMeta) GetSize() int64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *PutMeta) GetThumbnail() bool {
+	if x != nil {
+		return x.Thumbnail
+	}
+	return false
+}
+
 var File_hi_source_source_proto protoreflect.FileDescriptor
 
 const file_hi_source_source_proto_rawDesc = "" +
@@ -530,8 +832,31 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x11DownloadStreamReq\x12\x1e\n" +
 	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\x12\x1f\n" +
 	"\x06offset\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x06offset\x12\x1d\n" +
-	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit2\xac\x02\n" +
-	"\x04File\x12<\n" +
+	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"\xa3\x01\n" +
+	"\x06PutReq\x12$\n" +
+	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12\x10\n" +
+	"\x03dir\x18\x02 \x01(\tR\x03dir\x12 \n" +
+	"\x04name\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12!\n" +
+	"\acontent\x18\x04 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\x12\x1c\n" +
+	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\"]\n" +
+	"\aPutResp\x12\x16\n" +
+	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12&\n" +
+	"\tthumb_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
+	"\n" +
+	"_thumb_url\"X\n" +
+	"\fPutStreamReq\x12(\n" +
+	"\x04meta\x18\x01 \x01(\v2\x12.hi.source.PutMetaH\x00R\x04meta\x12\x16\n" +
+	"\x05chunk\x18\x02 \x01(\fH\x00R\x05chunkB\x06\n" +
+	"\x04data\"\x9e\x01\n" +
+	"\aPutMeta\x12$\n" +
+	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12\x10\n" +
+	"\x03dir\x18\x02 \x01(\tR\x03dir\x12 \n" +
+	"\x04name\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12\x1b\n" +
+	"\x04size\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\x12\x1c\n" +
+	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail2\xa4\x03\n" +
+	"\x04File\x123\n" +
+	"\x03Put\x12\x11.hi.source.PutReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
+	"\tPutStream\x12\x17.hi.source.PutStreamReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12<\n" +
 	"\x06Upload\x12\x14.hi.source.UploadReq\x1a\x15.hi.source.UploadResp\"\x05\x8a\xb5\x18\x01\x01\x12B\n" +
 	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\"\x05\x8a\xb5\x18\x01\x01\x12J\n" +
 	"\fUploadStream\x12\x1a.hi.source.UploadStreamReq\x1a\x15.hi.source.UploadResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12V\n" +
@@ -553,7 +878,7 @@ func file_hi_source_source_proto_rawDescGZIP() []byte {
 	return file_hi_source_source_proto_rawDescData
 }
 
-var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_hi_source_source_proto_goTypes = []any{
 	(*UploadReq)(nil),            // 0: hi.source.UploadReq
 	(*UploadResp)(nil),           // 1: hi.source.UploadResp
@@ -563,26 +888,35 @@ var file_hi_source_source_proto_goTypes = []any{
 	(*UploadMeta)(nil),           // 5: hi.source.UploadMeta
 	(*DownloadStreamResp)(nil),   // 6: hi.source.DownloadStreamResp
 	(*DownloadStreamReq)(nil),    // 7: hi.source.DownloadStreamReq
-	(*emptypb.Empty)(nil),        // 8: google.protobuf.Empty
-	(*hi.ServerVersionResp)(nil), // 9: hi.ServerVersionResp
+	(*PutReq)(nil),               // 8: hi.source.PutReq
+	(*PutResp)(nil),              // 9: hi.source.PutResp
+	(*PutStreamReq)(nil),         // 10: hi.source.PutStreamReq
+	(*PutMeta)(nil),              // 11: hi.source.PutMeta
+	(*emptypb.Empty)(nil),        // 12: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil), // 13: hi.ServerVersionResp
 }
 var file_hi_source_source_proto_depIdxs = []int32{
-	5, // 0: hi.source.UploadStreamReq.meta:type_name -> hi.source.UploadMeta
-	0, // 1: hi.source.File.Upload:input_type -> hi.source.UploadReq
-	2, // 2: hi.source.File.Download:input_type -> hi.source.DownloadReq
-	4, // 3: hi.source.File.UploadStream:input_type -> hi.source.UploadStreamReq
-	7, // 4: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
-	8, // 5: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
-	1, // 6: hi.source.File.Upload:output_type -> hi.source.UploadResp
-	3, // 7: hi.source.File.Download:output_type -> hi.source.DownloadResp
-	1, // 8: hi.source.File.UploadStream:output_type -> hi.source.UploadResp
-	6, // 9: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	9, // 10: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	6, // [6:11] is the sub-list for method output_type
-	1, // [1:6] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	5,  // 0: hi.source.UploadStreamReq.meta:type_name -> hi.source.UploadMeta
+	11, // 1: hi.source.PutStreamReq.meta:type_name -> hi.source.PutMeta
+	8,  // 2: hi.source.File.Put:input_type -> hi.source.PutReq
+	10, // 3: hi.source.File.PutStream:input_type -> hi.source.PutStreamReq
+	0,  // 4: hi.source.File.Upload:input_type -> hi.source.UploadReq
+	2,  // 5: hi.source.File.Download:input_type -> hi.source.DownloadReq
+	4,  // 6: hi.source.File.UploadStream:input_type -> hi.source.UploadStreamReq
+	7,  // 7: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
+	12, // 8: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
+	9,  // 9: hi.source.File.Put:output_type -> hi.source.PutResp
+	9,  // 10: hi.source.File.PutStream:output_type -> hi.source.PutResp
+	1,  // 11: hi.source.File.Upload:output_type -> hi.source.UploadResp
+	3,  // 12: hi.source.File.Download:output_type -> hi.source.DownloadResp
+	1,  // 13: hi.source.File.UploadStream:output_type -> hi.source.UploadResp
+	6,  // 14: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
+	13, // 15: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	9,  // [9:16] is the sub-list for method output_type
+	2,  // [2:9] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_hi_source_source_proto_init() }
@@ -595,13 +929,18 @@ func file_hi_source_source_proto_init() {
 		(*UploadStreamReq_Meta)(nil),
 		(*UploadStreamReq_Chunk)(nil),
 	}
+	file_hi_source_source_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[10].OneofWrappers = []any{
+		(*PutStreamReq_Meta)(nil),
+		(*PutStreamReq_Chunk)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_source_source_proto_rawDesc), len(file_hi_source_source_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

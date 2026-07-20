@@ -84,6 +84,75 @@ pub struct DownloadStreamReq {
     #[prost(int64, tag = "3")]
     pub limit: i64,
 }
+/// ── bucket 化上传(新)────────────────────────────────────────────────────
+/// hi-source 的定位:**只做"帮各服务拿着 minio 凭据的搬运工"** —— 不再懂业务。
+/// 存哪个 bucket、哪个目录由**调用方**决定;hi-source 只负责随机改名 + 落库 + 回 url。
+/// 故 Put 没有 `type` 那套业务枚举(image/avatar/code…),它已被 bucket+dir 取代。
+///
+/// 分工(定稿):
+/// hidid  → avatar/ (用户头像)、logo/ (商户 logo)      公开读,永固
+/// hiclub → avatar/ (群头像)、background/ (群背景)      公开读,永固
+/// hiai   → plugin/<uuid>/<version>.zip (插件脚本)      **私有**,永固
+/// temp   → \<YYYY_MM>/ (聊天/AI 媒体)                   公开读,**14 天过期**
+/// log    → <app>/<did>/                                私有
+///
+/// ⚠️ 鉴权:AUTH_NONE 是**有意的** —— hi-source 只对内网开放(上传端口不对外),
+/// 鉴权由各业务模块在转发前完成(它们本就持有用户身份)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PutReq {
+    /// 目标 bucket
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    /// bucket 内逻辑目录,如 "avatar" / "plugin/<uuid>";空=根
+    #[prost(string, tag = "2")]
+    pub dir: ::prost::alloc::string::String,
+    /// 原始文件名,仅用于取扩展名(hi-source 会随机改名)
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", tag = "4")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+    /// 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
+    #[prost(bool, tag = "5")]
+    pub thumbnail: bool,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PutResp {
+    /// 完整可下载 url(私有 bucket 的 url 需经 Download 取)
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PutStreamReq {
+    #[prost(oneof = "put_stream_req::Data", tags = "1, 2")]
+    pub data: ::core::option::Option<put_stream_req::Data>,
+}
+/// Nested message and enum types in `PutStreamReq`.
+pub mod put_stream_req {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Data {
+        /// 元数据,第一个请求包
+        #[prost(message, tag = "1")]
+        Meta(super::PutMeta),
+        /// 内容分片
+        #[prost(bytes, tag = "2")]
+        Chunk(::prost::alloc::vec::Vec<u8>),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PutMeta {
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub dir: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(int64, tag = "4")]
+    pub size: i64,
+    #[prost(bool, tag = "5")]
+    pub thumbnail: bool,
+}
 /// Generated client implementations.
 pub mod file_client {
     #![allow(
@@ -174,6 +243,42 @@ pub mod file_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        pub async fn put(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PutReq>,
+        ) -> std::result::Result<tonic::Response<super::PutResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.source.File/Put");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "Put"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn put_stream(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<Message = super::PutStreamReq>,
+        ) -> std::result::Result<tonic::Response<super::PutResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.source.File/PutStream");
+            let mut req = request.into_streaming_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "PutStream"));
+            self.inner.client_streaming(req, path, codec).await
         }
         pub async fn upload(
             &mut self,
