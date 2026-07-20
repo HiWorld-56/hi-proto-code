@@ -15,49 +15,6 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use uploadReqDescriptor instead')
-const UploadReq$json = {
-  '1': 'UploadReq',
-  '2': [
-    {'1': 'type', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'type'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'content', '3': 3, '4': 1, '5': 12, '8': {}, '10': 'content'},
-  ],
-};
-
-/// Descriptor for `UploadReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List uploadReqDescriptor = $convert.base64Decode(
-    'CglVcGxvYWRSZXESIAoEdHlwZRgBIAEoCUIMukgJcgcyBV5cUyskUgR0eXBlEiAKBG5hbWUYAi'
-    'ABKAlCDLpICXIHMgVeXFMrJFIEbmFtZRIhCgdjb250ZW50GAMgASgMQge6SAR6AhABUgdjb250'
-    'ZW50');
-
-@$core.Deprecated('Use uploadRespDescriptor instead')
-const UploadResp$json = {
-  '1': 'UploadResp',
-  '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
-    {
-      '1': 'thumb_url',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 0,
-      '10': 'thumbUrl',
-      '17': true
-    },
-  ],
-  '7': {},
-  '8': [
-    {'1': '_thumb_url'},
-  ],
-};
-
-/// Descriptor for `UploadResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List uploadRespDescriptor = $convert.base64Decode(
-    'CgpVcGxvYWRSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiYKCXRodW1iX3VybBgCIAEoCU'
-    'IEkLUYAUgAUgh0aHVtYlVybIgBAToEmLUYAUIMCgpfdGh1bWJfdXJs');
-
 @$core.Deprecated('Use downloadReqDescriptor instead')
 const DownloadReq$json = {
   '1': 'DownloadReq',
@@ -82,46 +39,6 @@ const DownloadResp$json = {
 /// Descriptor for `DownloadResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List downloadRespDescriptor = $convert.base64Decode(
     'CgxEb3dubG9hZFJlc3ASHgoHY29udGVudBgBIAEoDEIEkLUYAVIHY29udGVudDoEmLUYAQ==');
-
-@$core.Deprecated('Use uploadStreamReqDescriptor instead')
-const UploadStreamReq$json = {
-  '1': 'UploadStreamReq',
-  '2': [
-    {
-      '1': 'meta',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.source.UploadMeta',
-      '9': 0,
-      '10': 'meta'
-    },
-    {'1': 'chunk', '3': 2, '4': 1, '5': 12, '9': 0, '10': 'chunk'},
-  ],
-  '8': [
-    {'1': 'data'},
-  ],
-};
-
-/// Descriptor for `UploadStreamReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List uploadStreamReqDescriptor = $convert.base64Decode(
-    'Cg9VcGxvYWRTdHJlYW1SZXESKwoEbWV0YRgBIAEoCzIVLmhpLnNvdXJjZS5VcGxvYWRNZXRhSA'
-    'BSBG1ldGESFgoFY2h1bmsYAiABKAxIAFIFY2h1bmtCBgoEZGF0YQ==');
-
-@$core.Deprecated('Use uploadMetaDescriptor instead')
-const UploadMeta$json = {
-  '1': 'UploadMeta',
-  '2': [
-    {'1': 'type', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'type'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'size', '3': 3, '4': 1, '5': 3, '8': {}, '10': 'size'},
-  ],
-};
-
-/// Descriptor for `UploadMeta`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List uploadMetaDescriptor = $convert.base64Decode(
-    'CgpVcGxvYWRNZXRhEiAKBHR5cGUYASABKAlCDLpICXIHMgVeXFMrJFIEdHlwZRIgCgRuYW1lGA'
-    'IgASgJQgy6SAlyBzIFXlxTKyRSBG5hbWUSGwoEc2l6ZRgDIAEoA0IHukgEIgIgAFIEc2l6ZQ==');
 
 @$core.Deprecated('Use downloadStreamRespDescriptor instead')
 const DownloadStreamResp$json = {
@@ -166,6 +83,7 @@ const PutReq$json = {
     {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
     {'1': 'content', '3': 4, '4': 1, '5': 12, '8': {}, '10': 'content'},
     {'1': 'thumbnail', '3': 5, '4': 1, '5': 8, '10': 'thumbnail'},
+    {'1': 'keep_name', '3': 6, '4': 1, '5': 8, '10': 'keepName'},
   ],
 };
 
@@ -173,7 +91,8 @@ const PutReq$json = {
 final $typed_data.Uint8List putReqDescriptor = $convert.base64Decode(
     'CgZQdXRSZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2tldBIQCgNkaXIYAi'
     'ABKAlSA2RpchIgCgRuYW1lGAMgASgJQgy6SAlyBzIFXlxTKyRSBG5hbWUSIQoHY29udGVudBgE'
-    'IAEoDEIHukgEegIQAVIHY29udGVudBIcCgl0aHVtYm5haWwYBSABKAhSCXRodW1ibmFpbA==');
+    'IAEoDEIHukgEegIQAVIHY29udGVudBIcCgl0aHVtYm5haWwYBSABKAhSCXRodW1ibmFpbBIbCg'
+    'lrZWVwX25hbWUYBiABKAhSCGtlZXBOYW1l');
 
 @$core.Deprecated('Use putRespDescriptor instead')
 const PutResp$json = {

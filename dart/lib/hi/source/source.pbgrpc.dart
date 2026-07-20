@@ -48,26 +48,11 @@ class FileClient extends $grpc.Client {
     return $createStreamingCall(_$putStream, request, options: options).single;
   }
 
-  $grpc.ResponseFuture<$0.UploadResp> upload(
-    $0.UploadReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$upload, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.DownloadResp> download(
     $0.DownloadReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$download, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.UploadResp> uploadStream(
-    $async.Stream<$0.UploadStreamReq> request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createStreamingCall(_$uploadStream, request, options: options)
-        .single;
   }
 
   $grpc.ResponseStream<$0.DownloadStreamResp> downloadStream(
@@ -89,19 +74,10 @@ class FileClient extends $grpc.Client {
       '/hi.source.File/PutStream',
       ($0.PutStreamReq value) => value.writeToBuffer(),
       $0.PutResp.fromBuffer);
-  static final _$upload = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
-      '/hi.source.File/Upload',
-      ($0.UploadReq value) => value.writeToBuffer(),
-      $0.UploadResp.fromBuffer);
   static final _$download = $grpc.ClientMethod<$0.DownloadReq, $0.DownloadResp>(
       '/hi.source.File/Download',
       ($0.DownloadReq value) => value.writeToBuffer(),
       $0.DownloadResp.fromBuffer);
-  static final _$uploadStream =
-      $grpc.ClientMethod<$0.UploadStreamReq, $0.UploadResp>(
-          '/hi.source.File/UploadStream',
-          ($0.UploadStreamReq value) => value.writeToBuffer(),
-          $0.UploadResp.fromBuffer);
   static final _$downloadStream =
       $grpc.ClientMethod<$0.DownloadStreamReq, $0.DownloadStreamResp>(
           '/hi.source.File/DownloadStream',
@@ -128,13 +104,6 @@ abstract class FileServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.PutStreamReq.fromBuffer(value),
         ($0.PutResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
-        'Upload',
-        upload_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
-        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DownloadReq, $0.DownloadResp>(
         'Download',
         download_Pre,
@@ -142,13 +111,6 @@ abstract class FileServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.DownloadReq.fromBuffer(value),
         ($0.DownloadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UploadStreamReq, $0.UploadResp>(
-        'UploadStream',
-        uploadStream,
-        true,
-        false,
-        ($core.List<$core.int> value) => $0.UploadStreamReq.fromBuffer(value),
-        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DownloadStreamReq, $0.DownloadStreamResp>(
         'DownloadStream',
         downloadStream_Pre,
@@ -168,14 +130,6 @@ abstract class FileServiceBase extends $grpc.Service {
   $async.Future<$0.PutResp> putStream(
       $grpc.ServiceCall call, $async.Stream<$0.PutStreamReq> request);
 
-  $async.Future<$0.UploadResp> upload_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
-    return upload($call, await $request);
-  }
-
-  $async.Future<$0.UploadResp> upload(
-      $grpc.ServiceCall call, $0.UploadReq request);
-
   $async.Future<$0.DownloadResp> download_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.DownloadReq> $request) async {
     return download($call, await $request);
@@ -183,9 +137,6 @@ abstract class FileServiceBase extends $grpc.Service {
 
   $async.Future<$0.DownloadResp> download(
       $grpc.ServiceCall call, $0.DownloadReq request);
-
-  $async.Future<$0.UploadResp> uploadStream(
-      $grpc.ServiceCall call, $async.Stream<$0.UploadStreamReq> request);
 
   $async.Stream<$0.DownloadStreamResp> downloadStream_Pre(
       $grpc.ServiceCall $call,

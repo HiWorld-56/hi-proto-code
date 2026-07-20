@@ -45,6 +45,18 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$uploadAvatar, request, options: options);
   }
 
+  /// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
+  ///
+  /// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
+  /// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
+  /// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
+  $grpc.ResponseFuture<$0.UploadResp> uploadLog(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadLog, request, options: options);
+  }
+
   $grpc.ResponseFuture<$2.UserInfo> getCurrent(
     $1.Empty request, {
     $grpc.CallOptions? options,
@@ -151,6 +163,10 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/UploadAvatar',
       ($0.UploadReq value) => value.writeToBuffer(),
       $0.UploadResp.fromBuffer);
+  static final _$uploadLog = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.club.User/UploadLog',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
   static final _$getCurrent = $grpc.ClientMethod<$1.Empty, $2.UserInfo>(
       '/hi.club.User/GetCurrent',
       ($1.Empty value) => value.writeToBuffer(),
@@ -226,6 +242,13 @@ abstract class UserServiceBase extends $grpc.Service {
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadAvatar',
         uploadAvatar_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadLog',
+        uploadLog_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
@@ -339,6 +362,14 @@ abstract class UserServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.UploadResp> uploadAvatar(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadLog_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadLog($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadLog(
       $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$2.UserInfo> getCurrent_Pre(

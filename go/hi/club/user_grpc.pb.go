@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	User_UploadAvatar_FullMethodName           = "/hi.club.User/UploadAvatar"
+	User_UploadLog_FullMethodName              = "/hi.club.User/UploadLog"
 	User_GetCurrent_FullMethodName             = "/hi.club.User/GetCurrent"
 	User_Update_FullMethodName                 = "/hi.club.User/Update"
 	User_ListSystemMessages_FullMethodName     = "/hi.club.User/ListSystemMessages"
@@ -47,6 +48,12 @@ type UserClient interface {
 	// **hi.did.Merchant.UploadUserAvatar**(商户档),不是 User.UploadAvatar(用户档)。
 	// app 不该感知头像"穿"到 did 这件事 —— 那是 club 与 did 之间的事,分层不能搅浑。
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
+	//
+	// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
+	// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
+	// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
+	UploadLog(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
 	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListSystemMessages(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error)
@@ -75,6 +82,16 @@ func (c *userClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ..
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.UploadResp)
 	err := c.cc.Invoke(ctx, User_UploadAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UploadLog(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, User_UploadLog_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -230,6 +247,12 @@ type UserServer interface {
 	// **hi.did.Merchant.UploadUserAvatar**(商户档),不是 User.UploadAvatar(用户档)。
 	// app 不该感知头像"穿"到 did 这件事 —— 那是 club 与 did 之间的事,分层不能搅浑。
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
+	//
+	// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
+	// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
+	// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
+	UploadLog(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error)
 	Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
 	ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error)
@@ -255,6 +278,9 @@ type UnimplementedUserServer struct{}
 
 func (UnimplementedUserServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
+}
+func (UnimplementedUserServer) UploadLog(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadLog not implemented")
 }
 func (UnimplementedUserServer) GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCurrent not implemented")
@@ -332,6 +358,24 @@ func _User_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).UploadAvatar(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UploadLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UploadLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UploadLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UploadLog(ctx, req.(*hi.UploadReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -598,6 +642,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadAvatar",
 			Handler:    _User_UploadAvatar_Handler,
+		},
+		{
+			MethodName: "UploadLog",
+			Handler:    _User_UploadLog_Handler,
 		},
 		{
 			MethodName: "GetCurrent",

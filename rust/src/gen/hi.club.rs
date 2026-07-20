@@ -4048,6 +4048,32 @@ pub mod user_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "UploadAvatar"));
             self.inner.unary(req, path, codec).await
         }
+        /// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
+        ///
+        /// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
+        /// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
+        /// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
+        pub async fn upload_log(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/UploadLog");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "UploadLog"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn get_current(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
