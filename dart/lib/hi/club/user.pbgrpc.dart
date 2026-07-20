@@ -34,8 +34,10 @@ class UserClient extends $grpc.Client {
 
   UserClient(super.channel, {super.options, super.interceptors});
 
-  /// 传用户头像:**club 不自己存**,内部转发 hi.did.User.UploadAvatar,落 hidid bucket。
-  /// 用户资料的权威在 hidid,存储也跟着走,避免两边各存一份。
+  /// 传用户头像:**club 不自己存**,内部转发 did,落 hidid bucket。
+  /// 链路 app --用户token--> club后端 --ExtendToken--> did后端,故 club 调的是
+  /// **hi.did.Merchant.UploadUserAvatar**(商户档),不是 User.UploadAvatar(用户档)。
+  /// app 不该感知头像"穿"到 did 这件事 —— 那是 club 与 did 之间的事,分层不能搅浑。
   $grpc.ResponseFuture<$0.UploadResp> uploadAvatar(
     $0.UploadReq request, {
     $grpc.CallOptions? options,

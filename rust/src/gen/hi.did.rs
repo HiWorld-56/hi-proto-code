@@ -1060,6 +1060,18 @@ pub struct ListUsersResp {
     #[prost(message, repeated, tag = "2")]
     pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
 }
+/// 商户给名下某用户传头像。user 必须在该商户名下。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UploadUserAvatarReq {
+    /// 用户 did
+    #[prost(string, tag = "1")]
+    pub user: ::prost::alloc::string::String,
+    /// 原始文件名(取扩展名用)
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", tag = "3")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetUsersReq {
     /// 批量写自己名下用户的扩展信息
@@ -1443,6 +1455,34 @@ pub mod merchant_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Merchant", "RemoveUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 给自己名下的用户传头像 → hidid bucket 的 avatar/。**档位必须是 AUTH_MERCHANT** ——
+        /// 链路是 app --用户token--> club后端 --ExtendToken--> did后端,club 手里只有商户凭证,
+        /// 调不了 User.UploadAvatar(那是用户档,给持 did 用户 token 的端用的)。
+        /// 只回 url;写进资料仍走 SetUsers(与现有 SetUserProfile 一致)。
+        pub async fn upload_user_avatar(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UploadUserAvatarReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/UploadUserAvatar",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "UploadUserAvatar"));
             self.inner.unary(req, path, codec).await
         }
         /// ── 用户 mqtt 凭证(基础信息,商户可见)──

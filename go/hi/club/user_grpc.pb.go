@@ -42,8 +42,10 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
-	// 传用户头像:**club 不自己存**,内部转发 hi.did.User.UploadAvatar,落 hidid bucket。
-	// 用户资料的权威在 hidid,存储也跟着走,避免两边各存一份。
+	// 传用户头像:**club 不自己存**,内部转发 did,落 hidid bucket。
+	// 链路 app --用户token--> club后端 --ExtendToken--> did后端,故 club 调的是
+	// **hi.did.Merchant.UploadUserAvatar**(商户档),不是 User.UploadAvatar(用户档)。
+	// app 不该感知头像"穿"到 did 这件事 —— 那是 club 与 did 之间的事,分层不能搅浑。
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
 	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -223,8 +225,10 @@ func (c *userClient) ListOnline(ctx context.Context, in *ListOnlineUserReq, opts
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
 type UserServer interface {
-	// 传用户头像:**club 不自己存**,内部转发 hi.did.User.UploadAvatar,落 hidid bucket。
-	// 用户资料的权威在 hidid,存储也跟着走,避免两边各存一份。
+	// 传用户头像:**club 不自己存**,内部转发 did,落 hidid bucket。
+	// 链路 app --用户token--> club后端 --ExtendToken--> did后端,故 club 调的是
+	// **hi.did.Merchant.UploadUserAvatar**(商户档),不是 User.UploadAvatar(用户档)。
+	// app 不该感知头像"穿"到 did 这件事 —— 那是 club 与 did 之间的事,分层不能搅浑。
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error)
 	Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error)

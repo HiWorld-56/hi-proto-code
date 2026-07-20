@@ -981,6 +981,86 @@ class ListUsersResp extends $pb.GeneratedMessage {
   $pb.PbList<UserExtensionUnit> get units => $_getList(1);
 }
 
+/// 商户给名下某用户传头像。user 必须在该商户名下。
+class UploadUserAvatarReq extends $pb.GeneratedMessage {
+  factory UploadUserAvatarReq({
+    $core.String? user,
+    $core.String? name,
+    $core.List<$core.int>? content,
+  }) {
+    final result = create();
+    if (user != null) result.user = user;
+    if (name != null) result.name = name;
+    if (content != null) result.content = content;
+    return result;
+  }
+
+  UploadUserAvatarReq._();
+
+  factory UploadUserAvatarReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UploadUserAvatarReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UploadUserAvatarReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..a<$core.List<$core.int>>(
+        3, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadUserAvatarReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadUserAvatarReq copyWith(void Function(UploadUserAvatarReq) updates) =>
+      super.copyWith((message) => updates(message as UploadUserAvatarReq))
+          as UploadUserAvatarReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UploadUserAvatarReq create() => UploadUserAvatarReq._();
+  @$core.override
+  UploadUserAvatarReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UploadUserAvatarReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadUserAvatarReq>(create);
+  static UploadUserAvatarReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get user => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set user($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUser() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.int> get content => $_getN(2);
+  @$pb.TagNumber(3)
+  set content($core.List<$core.int> value) => $_setBytes(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasContent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearContent() => $_clearField(3);
+}
+
 class SetUsersReq extends $pb.GeneratedMessage {
   factory SetUsersReq({
     $core.Iterable<UserExtensionUnit>? units,

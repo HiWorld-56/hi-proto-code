@@ -21,19 +21,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Merchant_Get_FullMethodName         = "/hi.did.Merchant/Get"
-	Merchant_Update_FullMethodName      = "/hi.did.Merchant/Update"
-	Merchant_UploadLogo_FullMethodName  = "/hi.did.Merchant/UploadLogo"
-	Merchant_GetUser_FullMethodName     = "/hi.did.Merchant/GetUser"
-	Merchant_ListUsers_FullMethodName   = "/hi.did.Merchant/ListUsers"
-	Merchant_List_FullMethodName        = "/hi.did.Merchant/List"
-	Merchant_SetUsers_FullMethodName    = "/hi.did.Merchant/SetUsers"
-	Merchant_AddUsers_FullMethodName    = "/hi.did.Merchant/AddUsers"
-	Merchant_RemoveUsers_FullMethodName = "/hi.did.Merchant/RemoveUsers"
-	Merchant_GetUserMqtt_FullMethodName = "/hi.did.Merchant/GetUserMqtt"
-	Merchant_ListGrants_FullMethodName  = "/hi.did.Merchant/ListGrants"
-	Merchant_AddGrant_FullMethodName    = "/hi.did.Merchant/AddGrant"
-	Merchant_RemoveGrant_FullMethodName = "/hi.did.Merchant/RemoveGrant"
+	Merchant_Get_FullMethodName              = "/hi.did.Merchant/Get"
+	Merchant_Update_FullMethodName           = "/hi.did.Merchant/Update"
+	Merchant_UploadLogo_FullMethodName       = "/hi.did.Merchant/UploadLogo"
+	Merchant_GetUser_FullMethodName          = "/hi.did.Merchant/GetUser"
+	Merchant_ListUsers_FullMethodName        = "/hi.did.Merchant/ListUsers"
+	Merchant_List_FullMethodName             = "/hi.did.Merchant/List"
+	Merchant_SetUsers_FullMethodName         = "/hi.did.Merchant/SetUsers"
+	Merchant_AddUsers_FullMethodName         = "/hi.did.Merchant/AddUsers"
+	Merchant_RemoveUsers_FullMethodName      = "/hi.did.Merchant/RemoveUsers"
+	Merchant_UploadUserAvatar_FullMethodName = "/hi.did.Merchant/UploadUserAvatar"
+	Merchant_GetUserMqtt_FullMethodName      = "/hi.did.Merchant/GetUserMqtt"
+	Merchant_ListGrants_FullMethodName       = "/hi.did.Merchant/ListGrants"
+	Merchant_AddGrant_FullMethodName         = "/hi.did.Merchant/AddGrant"
+	Merchant_RemoveGrant_FullMethodName      = "/hi.did.Merchant/RemoveGrant"
 )
 
 // MerchantClient is the client API for Merchant service.
@@ -73,6 +74,11 @@ type MerchantClient interface {
 	SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddUsers(ctx context.Context, in *AddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RemoveUsers(ctx context.Context, in *RemoveUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 给自己名下的用户传头像 → hidid bucket 的 avatar/。**档位必须是 AUTH_MERCHANT** ——
+	// 链路是 app --用户token--> club后端 --ExtendToken--> did后端,club 手里只有商户凭证,
+	// 调不了 User.UploadAvatar(那是用户档,给持 did 用户 token 的端用的)。
+	// 只回 url;写进资料仍走 SetUsers(与现有 SetUserProfile 一致)。
+	UploadUserAvatar(ctx context.Context, in *UploadUserAvatarReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// ── 用户 mqtt 凭证(基础信息,商户可见)──
 	GetUserMqtt(ctx context.Context, in *GetUserMqttReq, opts ...grpc.CallOption) (*GetUserMqttResp, error)
 	// ── 商户互授权 ──
@@ -179,6 +185,16 @@ func (c *merchantClient) RemoveUsers(ctx context.Context, in *RemoveUsersReq, op
 	return out, nil
 }
 
+func (c *merchantClient) UploadUserAvatar(ctx context.Context, in *UploadUserAvatarReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Merchant_UploadUserAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *merchantClient) GetUserMqtt(ctx context.Context, in *GetUserMqttReq, opts ...grpc.CallOption) (*GetUserMqttResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserMqttResp)
@@ -256,6 +272,11 @@ type MerchantServer interface {
 	SetUsers(context.Context, *SetUsersReq) (*emptypb.Empty, error)
 	AddUsers(context.Context, *AddUsersReq) (*emptypb.Empty, error)
 	RemoveUsers(context.Context, *RemoveUsersReq) (*emptypb.Empty, error)
+	// 给自己名下的用户传头像 → hidid bucket 的 avatar/。**档位必须是 AUTH_MERCHANT** ——
+	// 链路是 app --用户token--> club后端 --ExtendToken--> did后端,club 手里只有商户凭证,
+	// 调不了 User.UploadAvatar(那是用户档,给持 did 用户 token 的端用的)。
+	// 只回 url;写进资料仍走 SetUsers(与现有 SetUserProfile 一致)。
+	UploadUserAvatar(context.Context, *UploadUserAvatarReq) (*hi.UploadResp, error)
 	// ── 用户 mqtt 凭证(基础信息,商户可见)──
 	GetUserMqtt(context.Context, *GetUserMqttReq) (*GetUserMqttResp, error)
 	// ── 商户互授权 ──
@@ -297,6 +318,9 @@ func (UnimplementedMerchantServer) AddUsers(context.Context, *AddUsersReq) (*emp
 }
 func (UnimplementedMerchantServer) RemoveUsers(context.Context, *RemoveUsersReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method RemoveUsers not implemented")
+}
+func (UnimplementedMerchantServer) UploadUserAvatar(context.Context, *UploadUserAvatarReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadUserAvatar not implemented")
 }
 func (UnimplementedMerchantServer) GetUserMqtt(context.Context, *GetUserMqttReq) (*GetUserMqttResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserMqtt not implemented")
@@ -492,6 +516,24 @@ func _Merchant_RemoveUsers_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_UploadUserAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadUserAvatarReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).UploadUserAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_UploadUserAvatar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).UploadUserAvatar(ctx, req.(*UploadUserAvatarReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Merchant_GetUserMqtt_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserMqttReq)
 	if err := dec(in); err != nil {
@@ -606,6 +648,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveUsers",
 			Handler:    _Merchant_RemoveUsers_Handler,
+		},
+		{
+			MethodName: "UploadUserAvatar",
+			Handler:    _Merchant_UploadUserAvatar_Handler,
 		},
 		{
 			MethodName: "GetUserMqtt",

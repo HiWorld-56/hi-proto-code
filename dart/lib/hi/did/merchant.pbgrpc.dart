@@ -117,6 +117,17 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$removeUsers, request, options: options);
   }
 
+  /// 给自己名下的用户传头像 → hidid bucket 的 avatar/。**档位必须是 AUTH_MERCHANT** ——
+  /// 链路是 app --用户token--> club后端 --ExtendToken--> did后端,club 手里只有商户凭证,
+  /// 调不了 User.UploadAvatar(那是用户档,给持 did 用户 token 的端用的)。
+  /// 只回 url;写进资料仍走 SetUsers(与现有 SetUserProfile 一致)。
+  $grpc.ResponseFuture<$2.UploadResp> uploadUserAvatar(
+    $1.UploadUserAvatarReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadUserAvatar, request, options: options);
+  }
+
   /// ── 用户 mqtt 凭证(基础信息,商户可见)──
   $grpc.ResponseFuture<$1.GetUserMqttResp> getUserMqtt(
     $1.GetUserMqttReq request, {
@@ -188,6 +199,11 @@ class MerchantClient extends $grpc.Client {
       '/hi.did.Merchant/RemoveUsers',
       ($1.RemoveUsersReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
+  static final _$uploadUserAvatar =
+      $grpc.ClientMethod<$1.UploadUserAvatarReq, $2.UploadResp>(
+          '/hi.did.Merchant/UploadUserAvatar',
+          ($1.UploadUserAvatarReq value) => value.writeToBuffer(),
+          $2.UploadResp.fromBuffer);
   static final _$getUserMqtt =
       $grpc.ClientMethod<$1.GetUserMqttReq, $1.GetUserMqttResp>(
           '/hi.did.Merchant/GetUserMqtt',
@@ -275,6 +291,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.RemoveUsersReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.UploadUserAvatarReq, $2.UploadResp>(
+        'UploadUserAvatar',
+        uploadUserAvatar_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.UploadUserAvatarReq.fromBuffer(value),
+        ($2.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.GetUserMqttReq, $1.GetUserMqttResp>(
         'GetUserMqtt',
         getUserMqtt_Pre,
@@ -376,6 +400,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> removeUsers(
       $grpc.ServiceCall call, $1.RemoveUsersReq request);
+
+  $async.Future<$2.UploadResp> uploadUserAvatar_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.UploadUserAvatarReq> $request) async {
+    return uploadUserAvatar($call, await $request);
+  }
+
+  $async.Future<$2.UploadResp> uploadUserAvatar(
+      $grpc.ServiceCall call, $1.UploadUserAvatarReq request);
 
   $async.Future<$1.GetUserMqttResp> getUserMqtt_Pre($grpc.ServiceCall $call,
       $async.Future<$1.GetUserMqttReq> $request) async {
