@@ -24,6 +24,61 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 对象命名方式。
+//
+// ⚠️ **红线**:公开 bucket 的用户内容一律用 NAME_RANDOM。那些 bucket 的安全性正是靠
+//
+//	「32 位随机名不可猜 + LIST 403 不可枚举」撑起来的 —— 名字一旦可预测,等于门户洞开。
+//	非随机模式只给**私有 bucket 的运维类文件**(日志等)用。
+type NameMode int32
+
+const (
+	NameMode_NAME_RANDOM    NameMode = 0 // <32位随机>_<原名>。默认,用户内容必须用它
+	NameMode_NAME_TIMESTAMP NameMode = 1 // <原名主干>_<UTC纳秒时间戳><扩展名>。名字可读、天然有序,每次新对象 —— 日志用
+	NameMode_NAME_KEEP      NameMode = 2 // 原样用 name。**同一对象反复覆盖,只留最新一份**,会丢历史,慎用
+)
+
+// Enum value maps for NameMode.
+var (
+	NameMode_name = map[int32]string{
+		0: "NAME_RANDOM",
+		1: "NAME_TIMESTAMP",
+		2: "NAME_KEEP",
+	}
+	NameMode_value = map[string]int32{
+		"NAME_RANDOM":    0,
+		"NAME_TIMESTAMP": 1,
+		"NAME_KEEP":      2,
+	}
+)
+
+func (x NameMode) Enum() *NameMode {
+	p := new(NameMode)
+	*p = x
+	return p
+}
+
+func (x NameMode) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (NameMode) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_source_source_proto_enumTypes[0].Descriptor()
+}
+
+func (NameMode) Type() protoreflect.EnumType {
+	return &file_hi_source_source_proto_enumTypes[0]
+}
+
+func (x NameMode) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use NameMode.Descriptor instead.
+func (NameMode) EnumDescriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{0}
+}
+
 type DownloadReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
@@ -262,8 +317,8 @@ type PutReq struct {
 	Dir           string                 `protobuf:"bytes,2,opt,name=dir,proto3" json:"dir,omitempty"`       // bucket 内逻辑目录,如 "avatar" / "plugin/<uuid>";空=根
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`     // 原始文件名,仅用于取扩展名(hi-source 会随机改名)
 	Content       []byte                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
-	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"`               // 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
-	KeepName      bool                   `protobuf:"varint,6,opt,name=keep_name,json=keepName,proto3" json:"keep_name,omitempty"` // true=**原样用 name 作对象名,不随机改名**
+	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"`                                       // 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
+	NameMode      NameMode               `protobuf:"varint,6,opt,name=name_mode,json=nameMode,proto3,enum=hi.source.NameMode" json:"name_mode,omitempty"` // 对象命名方式,默认随机
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -333,11 +388,11 @@ func (x *PutReq) GetThumbnail() bool {
 	return false
 }
 
-func (x *PutReq) GetKeepName() bool {
+func (x *PutReq) GetNameMode() NameMode {
 	if x != nil {
-		return x.KeepName
+		return x.NameMode
 	}
-	return false
+	return NameMode_NAME_RANDOM
 }
 
 type PutResp struct {
@@ -567,14 +622,14 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x11DownloadStreamReq\x12\x1e\n" +
 	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\x12\x1f\n" +
 	"\x06offset\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x06offset\x12\x1d\n" +
-	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"\xc0\x01\n" +
+	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"\xd5\x01\n" +
 	"\x06PutReq\x12$\n" +
 	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12\x10\n" +
 	"\x03dir\x18\x02 \x01(\tR\x03dir\x12 \n" +
 	"\x04name\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12!\n" +
 	"\acontent\x18\x04 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\x12\x1c\n" +
-	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\x12\x1b\n" +
-	"\tkeep_name\x18\x06 \x01(\bR\bkeepName\"]\n" +
+	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\x120\n" +
+	"\tname_mode\x18\x06 \x01(\x0e2\x13.hi.source.NameModeR\bnameMode\"]\n" +
 	"\aPutResp\x12\x16\n" +
 	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12&\n" +
 	"\tthumb_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
@@ -589,7 +644,11 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x03dir\x18\x02 \x01(\tR\x03dir\x12 \n" +
 	"\x04name\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12\x1b\n" +
 	"\x04size\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\x12\x1c\n" +
-	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail2\x9a\x02\n" +
+	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail*>\n" +
+	"\bNameMode\x12\x0f\n" +
+	"\vNAME_RANDOM\x10\x00\x12\x12\n" +
+	"\x0eNAME_TIMESTAMP\x10\x01\x12\r\n" +
+	"\tNAME_KEEP\x10\x022\x9a\x02\n" +
 	"\x04File\x123\n" +
 	"\x03Put\x12\x11.hi.source.PutReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
 	"\tPutStream\x12\x17.hi.source.PutStreamReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12B\n" +
@@ -612,36 +671,39 @@ func file_hi_source_source_proto_rawDescGZIP() []byte {
 	return file_hi_source_source_proto_rawDescData
 }
 
+var file_hi_source_source_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_hi_source_source_proto_goTypes = []any{
-	(*DownloadReq)(nil),          // 0: hi.source.DownloadReq
-	(*DownloadResp)(nil),         // 1: hi.source.DownloadResp
-	(*DownloadStreamResp)(nil),   // 2: hi.source.DownloadStreamResp
-	(*DownloadStreamReq)(nil),    // 3: hi.source.DownloadStreamReq
-	(*PutReq)(nil),               // 4: hi.source.PutReq
-	(*PutResp)(nil),              // 5: hi.source.PutResp
-	(*PutStreamReq)(nil),         // 6: hi.source.PutStreamReq
-	(*PutMeta)(nil),              // 7: hi.source.PutMeta
-	(*emptypb.Empty)(nil),        // 8: google.protobuf.Empty
-	(*hi.ServerVersionResp)(nil), // 9: hi.ServerVersionResp
+	(NameMode)(0),                // 0: hi.source.NameMode
+	(*DownloadReq)(nil),          // 1: hi.source.DownloadReq
+	(*DownloadResp)(nil),         // 2: hi.source.DownloadResp
+	(*DownloadStreamResp)(nil),   // 3: hi.source.DownloadStreamResp
+	(*DownloadStreamReq)(nil),    // 4: hi.source.DownloadStreamReq
+	(*PutReq)(nil),               // 5: hi.source.PutReq
+	(*PutResp)(nil),              // 6: hi.source.PutResp
+	(*PutStreamReq)(nil),         // 7: hi.source.PutStreamReq
+	(*PutMeta)(nil),              // 8: hi.source.PutMeta
+	(*emptypb.Empty)(nil),        // 9: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil), // 10: hi.ServerVersionResp
 }
 var file_hi_source_source_proto_depIdxs = []int32{
-	7, // 0: hi.source.PutStreamReq.meta:type_name -> hi.source.PutMeta
-	4, // 1: hi.source.File.Put:input_type -> hi.source.PutReq
-	6, // 2: hi.source.File.PutStream:input_type -> hi.source.PutStreamReq
-	0, // 3: hi.source.File.Download:input_type -> hi.source.DownloadReq
-	3, // 4: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
-	8, // 5: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
-	5, // 6: hi.source.File.Put:output_type -> hi.source.PutResp
-	5, // 7: hi.source.File.PutStream:output_type -> hi.source.PutResp
-	1, // 8: hi.source.File.Download:output_type -> hi.source.DownloadResp
-	2, // 9: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	9, // 10: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	6, // [6:11] is the sub-list for method output_type
-	1, // [1:6] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0,  // 0: hi.source.PutReq.name_mode:type_name -> hi.source.NameMode
+	8,  // 1: hi.source.PutStreamReq.meta:type_name -> hi.source.PutMeta
+	5,  // 2: hi.source.File.Put:input_type -> hi.source.PutReq
+	7,  // 3: hi.source.File.PutStream:input_type -> hi.source.PutStreamReq
+	1,  // 4: hi.source.File.Download:input_type -> hi.source.DownloadReq
+	4,  // 5: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
+	9,  // 6: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
+	6,  // 7: hi.source.File.Put:output_type -> hi.source.PutResp
+	6,  // 8: hi.source.File.PutStream:output_type -> hi.source.PutResp
+	2,  // 9: hi.source.File.Download:output_type -> hi.source.DownloadResp
+	3,  // 10: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
+	10, // 11: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	7,  // [7:12] is the sub-list for method output_type
+	2,  // [2:7] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_hi_source_source_proto_init() }
@@ -659,13 +721,14 @@ func file_hi_source_source_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_source_source_proto_rawDesc), len(file_hi_source_source_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
 		GoTypes:           file_hi_source_source_proto_goTypes,
 		DependencyIndexes: file_hi_source_source_proto_depIdxs,
+		EnumInfos:         file_hi_source_source_proto_enumTypes,
 		MessageInfos:      file_hi_source_source_proto_msgTypes,
 	}.Build()
 	File_hi_source_source_proto = out.File

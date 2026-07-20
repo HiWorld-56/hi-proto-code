@@ -66,9 +66,9 @@ pub struct PutReq {
     /// 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
     #[prost(bool, tag = "5")]
     pub thumbnail: bool,
-    /// true=**原样用 name 作对象名,不随机改名**
-    #[prost(bool, tag = "6")]
-    pub keep_name: bool,
+    /// 对象命名方式,默认随机
+    #[prost(enumeration = "NameMode", tag = "6")]
+    pub name_mode: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PutResp {
@@ -107,6 +107,43 @@ pub struct PutMeta {
     pub size: i64,
     #[prost(bool, tag = "5")]
     pub thumbnail: bool,
+}
+/// 对象命名方式。
+///
+/// ⚠️ **红线**:公开 bucket 的用户内容一律用 NAME_RANDOM。那些 bucket 的安全性正是靠
+/// 「32 位随机名不可猜 + LIST 403 不可枚举」撑起来的 —— 名字一旦可预测,等于门户洞开。
+/// 非随机模式只给**私有 bucket 的运维类文件**(日志等)用。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum NameMode {
+    /// \<32位随机>\_\<原名>。默认,用户内容必须用它
+    NameRandom = 0,
+    /// \<原名主干>\_\<UTC纳秒时间戳>\<扩展名>。名字可读、天然有序,每次新对象 —— 日志用
+    NameTimestamp = 1,
+    /// 原样用 name。**同一对象反复覆盖,只留最新一份**,会丢历史,慎用
+    NameKeep = 2,
+}
+impl NameMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::NameRandom => "NAME_RANDOM",
+            Self::NameTimestamp => "NAME_TIMESTAMP",
+            Self::NameKeep => "NAME_KEEP",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "NAME_RANDOM" => Some(Self::NameRandom),
+            "NAME_TIMESTAMP" => Some(Self::NameTimestamp),
+            "NAME_KEEP" => Some(Self::NameKeep),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod file_client {

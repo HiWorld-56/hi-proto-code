@@ -15,7 +15,11 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'source.pbenum.dart';
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'source.pbenum.dart';
 
 class DownloadReq extends $pb.GeneratedMessage {
   factory DownloadReq({
@@ -316,7 +320,7 @@ class PutReq extends $pb.GeneratedMessage {
     $core.String? name,
     $core.List<$core.int>? content,
     $core.bool? thumbnail,
-    $core.bool? keepName,
+    NameMode? nameMode,
   }) {
     final result = create();
     if (bucket != null) result.bucket = bucket;
@@ -324,7 +328,7 @@ class PutReq extends $pb.GeneratedMessage {
     if (name != null) result.name = name;
     if (content != null) result.content = content;
     if (thumbnail != null) result.thumbnail = thumbnail;
-    if (keepName != null) result.keepName = keepName;
+    if (nameMode != null) result.nameMode = nameMode;
     return result;
   }
 
@@ -347,7 +351,8 @@ class PutReq extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(
         4, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
     ..aOB(5, _omitFieldNames ? '' : 'thumbnail')
-    ..aOB(6, _omitFieldNames ? '' : 'keepName')
+    ..aE<NameMode>(6, _omitFieldNames ? '' : 'nameMode',
+        enumValues: NameMode.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -414,13 +419,13 @@ class PutReq extends $pb.GeneratedMessage {
   void clearThumbnail() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $core.bool get keepName => $_getBF(5);
+  NameMode get nameMode => $_getN(5);
   @$pb.TagNumber(6)
-  set keepName($core.bool value) => $_setBool(5, value);
+  set nameMode(NameMode value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasKeepName() => $_has(5);
+  $core.bool hasNameMode() => $_has(5);
   @$pb.TagNumber(6)
-  void clearKeepName() => $_clearField(6);
+  void clearNameMode() => $_clearField(6);
 }
 
 class PutResp extends $pb.GeneratedMessage {

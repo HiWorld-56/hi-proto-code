@@ -15,6 +15,21 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use nameModeDescriptor instead')
+const NameMode$json = {
+  '1': 'NameMode',
+  '2': [
+    {'1': 'NAME_RANDOM', '2': 0},
+    {'1': 'NAME_TIMESTAMP', '2': 1},
+    {'1': 'NAME_KEEP', '2': 2},
+  ],
+};
+
+/// Descriptor for `NameMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List nameModeDescriptor = $convert.base64Decode(
+    'CghOYW1lTW9kZRIPCgtOQU1FX1JBTkRPTRAAEhIKDk5BTUVfVElNRVNUQU1QEAESDQoJTkFNRV'
+    '9LRUVQEAI=');
+
 @$core.Deprecated('Use downloadReqDescriptor instead')
 const DownloadReq$json = {
   '1': 'DownloadReq',
@@ -83,7 +98,14 @@ const PutReq$json = {
     {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
     {'1': 'content', '3': 4, '4': 1, '5': 12, '8': {}, '10': 'content'},
     {'1': 'thumbnail', '3': 5, '4': 1, '5': 8, '10': 'thumbnail'},
-    {'1': 'keep_name', '3': 6, '4': 1, '5': 8, '10': 'keepName'},
+    {
+      '1': 'name_mode',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.source.NameMode',
+      '10': 'nameMode'
+    },
   ],
 };
 
@@ -91,8 +113,8 @@ const PutReq$json = {
 final $typed_data.Uint8List putReqDescriptor = $convert.base64Decode(
     'CgZQdXRSZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2tldBIQCgNkaXIYAi'
     'ABKAlSA2RpchIgCgRuYW1lGAMgASgJQgy6SAlyBzIFXlxTKyRSBG5hbWUSIQoHY29udGVudBgE'
-    'IAEoDEIHukgEegIQAVIHY29udGVudBIcCgl0aHVtYm5haWwYBSABKAhSCXRodW1ibmFpbBIbCg'
-    'lrZWVwX25hbWUYBiABKAhSCGtlZXBOYW1l');
+    'IAEoDEIHukgEegIQAVIHY29udGVudBIcCgl0aHVtYm5haWwYBSABKAhSCXRodW1ibmFpbBIwCg'
+    'luYW1lX21vZGUYBiABKA4yEy5oaS5zb3VyY2UuTmFtZU1vZGVSCG5hbWVNb2Rl');
 
 @$core.Deprecated('Use putRespDescriptor instead')
 const PutResp$json = {

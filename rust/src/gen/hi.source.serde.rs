@@ -475,6 +475,80 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamResp {
         deserializer.deserialize_struct("hi.source.DownloadStreamResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for NameMode {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::NameRandom => "NAME_RANDOM",
+            Self::NameTimestamp => "NAME_TIMESTAMP",
+            Self::NameKeep => "NAME_KEEP",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for NameMode {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "NAME_RANDOM",
+            "NAME_TIMESTAMP",
+            "NAME_KEEP",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = NameMode;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "NAME_RANDOM" => Ok(NameMode::NameRandom),
+                    "NAME_TIMESTAMP" => Ok(NameMode::NameTimestamp),
+                    "NAME_KEEP" => Ok(NameMode::NameKeep),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for PutMeta {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -661,7 +735,7 @@ impl serde::Serialize for PutReq {
         if self.thumbnail {
             len += 1;
         }
-        if self.keep_name {
+        if self.name_mode != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.PutReq", len)?;
@@ -682,8 +756,10 @@ impl serde::Serialize for PutReq {
         if self.thumbnail {
             struct_ser.serialize_field("thumbnail", &self.thumbnail)?;
         }
-        if self.keep_name {
-            struct_ser.serialize_field("keepName", &self.keep_name)?;
+        if self.name_mode != 0 {
+            let v = NameMode::try_from(self.name_mode)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.name_mode)))?;
+            struct_ser.serialize_field("nameMode", &v)?;
         }
         struct_ser.end()
     }
@@ -700,8 +776,8 @@ impl<'de> serde::Deserialize<'de> for PutReq {
             "name",
             "content",
             "thumbnail",
-            "keep_name",
-            "keepName",
+            "name_mode",
+            "nameMode",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -711,7 +787,7 @@ impl<'de> serde::Deserialize<'de> for PutReq {
             Name,
             Content,
             Thumbnail,
-            KeepName,
+            NameMode,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -738,7 +814,7 @@ impl<'de> serde::Deserialize<'de> for PutReq {
                             "name" => Ok(GeneratedField::Name),
                             "content" => Ok(GeneratedField::Content),
                             "thumbnail" => Ok(GeneratedField::Thumbnail),
-                            "keepName" | "keep_name" => Ok(GeneratedField::KeepName),
+                            "nameMode" | "name_mode" => Ok(GeneratedField::NameMode),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -763,7 +839,7 @@ impl<'de> serde::Deserialize<'de> for PutReq {
                 let mut name__ = None;
                 let mut content__ = None;
                 let mut thumbnail__ = None;
-                let mut keep_name__ = None;
+                let mut name_mode__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Bucket => {
@@ -798,11 +874,11 @@ impl<'de> serde::Deserialize<'de> for PutReq {
                             }
                             thumbnail__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::KeepName => {
-                            if keep_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("keepName"));
+                        GeneratedField::NameMode => {
+                            if name_mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nameMode"));
                             }
-                            keep_name__ = Some(map_.next_value()?);
+                            name_mode__ = Some(map_.next_value::<NameMode>()? as i32);
                         }
                     }
                 }
@@ -812,7 +888,7 @@ impl<'de> serde::Deserialize<'de> for PutReq {
                     name: name__.unwrap_or_default(),
                     content: content__.unwrap_or_default(),
                     thumbnail: thumbnail__.unwrap_or_default(),
-                    keep_name: keep_name__.unwrap_or_default(),
+                    name_mode: name_mode__.unwrap_or_default(),
                 })
             }
         }
