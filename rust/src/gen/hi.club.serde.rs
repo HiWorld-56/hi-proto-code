@@ -10077,6 +10077,165 @@ impl<'de> serde::Deserialize<'de> for UnprocessedSysMsgCountResp {
         deserializer.deserialize_struct("hi.club.UnprocessedSysMsgCountResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for UpdateGroupReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.group.is_empty() {
+            len += 1;
+        }
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if !self.avatar.is_empty() {
+            len += 1;
+        }
+        if !self.background.is_empty() {
+            len += 1;
+        }
+        if self.private {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.UpdateGroupReq", len)?;
+        if !self.group.is_empty() {
+            struct_ser.serialize_field("group", &self.group)?;
+        }
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if !self.avatar.is_empty() {
+            struct_ser.serialize_field("avatar", &self.avatar)?;
+        }
+        if !self.background.is_empty() {
+            struct_ser.serialize_field("background", &self.background)?;
+        }
+        if self.private {
+            struct_ser.serialize_field("private", &self.private)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "group",
+            "name",
+            "avatar",
+            "background",
+            "private",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Group,
+            Name,
+            Avatar,
+            Background,
+            Private,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "group" => Ok(GeneratedField::Group),
+                            "name" => Ok(GeneratedField::Name),
+                            "avatar" => Ok(GeneratedField::Avatar),
+                            "background" => Ok(GeneratedField::Background),
+                            "private" => Ok(GeneratedField::Private),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateGroupReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.UpdateGroupReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateGroupReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut group__ = None;
+                let mut name__ = None;
+                let mut avatar__ = None;
+                let mut background__ = None;
+                let mut private__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Group => {
+                            if group__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("group"));
+                            }
+                            group__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Avatar => {
+                            if avatar__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("avatar"));
+                            }
+                            avatar__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Background => {
+                            if background__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("background"));
+                            }
+                            background__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Private => {
+                            if private__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("private"));
+                            }
+                            private__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(UpdateGroupReq {
+                    group: group__.unwrap_or_default(),
+                    name: name__.unwrap_or_default(),
+                    avatar: avatar__.unwrap_or_default(),
+                    background: background__.unwrap_or_default(),
+                    private: private__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.UpdateGroupReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for UpdatePulledPcOrder {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -10449,7 +10608,10 @@ impl serde::Serialize for UpdateUserReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.user.is_some() {
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if !self.avatar.is_empty() {
             len += 1;
         }
         if !self.verify_policy.is_empty() {
@@ -10459,8 +10621,11 @@ impl serde::Serialize for UpdateUserReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.UpdateUserReq", len)?;
-        if let Some(v) = self.user.as_ref() {
-            struct_ser.serialize_field("user", v)?;
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if !self.avatar.is_empty() {
+            struct_ser.serialize_field("avatar", &self.avatar)?;
         }
         if !self.verify_policy.is_empty() {
             struct_ser.serialize_field("verifyPolicy", &self.verify_policy)?;
@@ -10478,7 +10643,8 @@ impl<'de> serde::Deserialize<'de> for UpdateUserReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "user",
+            "name",
+            "avatar",
             "verify_policy",
             "verifyPolicy",
             "moment",
@@ -10486,7 +10652,8 @@ impl<'de> serde::Deserialize<'de> for UpdateUserReq {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            User,
+            Name,
+            Avatar,
             VerifyPolicy,
             Moment,
         }
@@ -10510,7 +10677,8 @@ impl<'de> serde::Deserialize<'de> for UpdateUserReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "user" => Ok(GeneratedField::User),
+                            "name" => Ok(GeneratedField::Name),
+                            "avatar" => Ok(GeneratedField::Avatar),
                             "verifyPolicy" | "verify_policy" => Ok(GeneratedField::VerifyPolicy),
                             "moment" => Ok(GeneratedField::Moment),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -10532,16 +10700,23 @@ impl<'de> serde::Deserialize<'de> for UpdateUserReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut user__ = None;
+                let mut name__ = None;
+                let mut avatar__ = None;
                 let mut verify_policy__ = None;
                 let mut moment__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::User => {
-                            if user__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("user"));
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
                             }
-                            user__ = map_.next_value()?;
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Avatar => {
+                            if avatar__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("avatar"));
+                            }
+                            avatar__ = Some(map_.next_value()?);
                         }
                         GeneratedField::VerifyPolicy => {
                             if verify_policy__.is_some() {
@@ -10558,7 +10733,8 @@ impl<'de> serde::Deserialize<'de> for UpdateUserReq {
                     }
                 }
                 Ok(UpdateUserReq {
-                    user: user__,
+                    name: name__.unwrap_or_default(),
+                    avatar: avatar__.unwrap_or_default(),
                     verify_policy: verify_policy__.unwrap_or_default(),
                     moment: moment__,
                 })

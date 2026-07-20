@@ -173,7 +173,7 @@ func local_request_Group_CreateSingle_0(ctx context.Context, marshaler runtime.M
 
 func request_Group_Update_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GroupBase
+		protoReq UpdateGroupReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -188,7 +188,7 @@ func request_Group_Update_0(ctx context.Context, marshaler runtime.Marshaler, cl
 
 func local_request_Group_Update_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GroupBase
+		protoReq UpdateGroupReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

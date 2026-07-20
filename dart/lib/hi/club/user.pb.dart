@@ -844,16 +844,20 @@ class UnprocessedSysMsgCountResp extends $pb.GeneratedMessage {
   void clearCount() => $_clearField(1);
 }
 
+/// 改自己的资料。**不收 hi.Entity 整体** —— Entity 带 did/type/update,
+/// 而"改谁"永远取自 token,type/update 是服务端产物。入参只放调用方真正该给的。
 class UpdateUserReq extends $pb.GeneratedMessage {
   factory UpdateUserReq({
-    $0.Entity? user,
+    $core.String? name,
     $core.String? verifyPolicy,
     $core.String? moment,
+    $core.String? avatar,
   }) {
     final result = create();
-    if (user != null) result.user = user;
+    if (name != null) result.name = name;
     if (verifyPolicy != null) result.verifyPolicy = verifyPolicy;
     if (moment != null) result.moment = moment;
+    if (avatar != null) result.avatar = avatar;
     return result;
   }
 
@@ -870,10 +874,10 @@ class UpdateUserReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UpdateUserReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'user',
-        subBuilder: $0.Entity.create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'verifyPolicy')
     ..aOS(3, _omitFieldNames ? '' : 'moment')
+    ..aOS(4, _omitFieldNames ? '' : 'avatar')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -896,15 +900,13 @@ class UpdateUserReq extends $pb.GeneratedMessage {
   static UpdateUserReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.Entity get user => $_getN(0);
+  $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set user($0.Entity value) => $_setField(1, value);
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasUser() => $_has(0);
+  $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUser() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $0.Entity ensureUser() => $_ensure(0);
+  void clearName() => $_clearField(1);
 
   /// auto_reject-自动拒绝
   /// manual_accept-手动同意
@@ -926,6 +928,15 @@ class UpdateUserReq extends $pb.GeneratedMessage {
   $core.bool hasMoment() => $_has(2);
   @$pb.TagNumber(3)
   void clearMoment() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get avatar => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set avatar($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAvatar() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAvatar() => $_clearField(4);
 }
 
 class SetRemarkReq extends $pb.GeneratedMessage {

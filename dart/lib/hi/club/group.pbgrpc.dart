@@ -22,14 +22,6 @@ import 'group.pb.dart' as $1;
 
 export 'group.pb.dart';
 
-/// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
-/// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
-///    故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
-/// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
-///   owner   : 全允许(含解散群、加管理员)
-///   admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
-///   member(公开群): 仅可拉人;其余禁止
-///   member(私密群): 全禁止(只能被邀请)
 @$pb.GrpcServiceName('hi.club.Group')
 class GroupClient extends $grpc.Client {
   /// The hostname for this service.
@@ -79,7 +71,7 @@ class GroupClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$2.Empty> update(
-    $1.GroupBase request, {
+    $1.UpdateGroupReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$update, request, options: options);
@@ -186,9 +178,9 @@ class GroupClient extends $grpc.Client {
           '/hi.club.Group/CreateSingle',
           ($1.CreateSingleReq value) => value.writeToBuffer(),
           $1.GroupBase.fromBuffer);
-  static final _$update = $grpc.ClientMethod<$1.GroupBase, $2.Empty>(
+  static final _$update = $grpc.ClientMethod<$1.UpdateGroupReq, $2.Empty>(
       '/hi.club.Group/Update',
-      ($1.GroupBase value) => value.writeToBuffer(),
+      ($1.UpdateGroupReq value) => value.writeToBuffer(),
       $2.Empty.fromBuffer);
   static final _$listMembers =
       $grpc.ClientMethod<$1.ListGroupMemberReq, $1.GroupInfo>(
@@ -279,12 +271,12 @@ abstract class GroupServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.CreateSingleReq.fromBuffer(value),
         ($1.GroupBase value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GroupBase, $2.Empty>(
+    $addMethod($grpc.ServiceMethod<$1.UpdateGroupReq, $2.Empty>(
         'Update',
         update_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.GroupBase.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.UpdateGroupReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListGroupMemberReq, $1.GroupInfo>(
         'ListMembers',
@@ -410,12 +402,13 @@ abstract class GroupServiceBase extends $grpc.Service {
   $async.Future<$1.GroupBase> createSingle(
       $grpc.ServiceCall call, $1.CreateSingleReq request);
 
-  $async.Future<$2.Empty> update_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GroupBase> $request) async {
+  $async.Future<$2.Empty> update_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.UpdateGroupReq> $request) async {
     return update($call, await $request);
   }
 
-  $async.Future<$2.Empty> update($grpc.ServiceCall call, $1.GroupBase request);
+  $async.Future<$2.Empty> update(
+      $grpc.ServiceCall call, $1.UpdateGroupReq request);
 
   $async.Future<$1.GroupInfo> listMembers_Pre($grpc.ServiceCall $call,
       $async.Future<$1.ListGroupMemberReq> $request) async {

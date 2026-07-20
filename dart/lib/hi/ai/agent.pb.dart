@@ -568,12 +568,16 @@ class DefaultConfigResp extends $pb.GeneratedMessage {
   AgentConfig ensureConfig() => $_ensure(0);
 }
 
+/// 建机器人。**不收 hi.Entity** —— did 由后台生成、type 固定 assistant、update 是服务端产物,
+/// 调用方能决定的只有名字和头像。
 class CreateAgentReq extends $pb.GeneratedMessage {
   factory CreateAgentReq({
-    $2.Entity? base,
+    $core.String? name,
+    $core.String? avatar,
   }) {
     final result = create();
-    if (base != null) result.base = base;
+    if (name != null) result.name = name;
+    if (avatar != null) result.avatar = avatar;
     return result;
   }
 
@@ -590,8 +594,8 @@ class CreateAgentReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'CreateAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $2.Entity.create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'avatar')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -614,15 +618,22 @@ class CreateAgentReq extends $pb.GeneratedMessage {
   static CreateAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get base => $_getN(0);
+  $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set base($2.Entity value) => $_setField(1, value);
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasBase() => $_has(0);
+  $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearBase() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $2.Entity ensureBase() => $_ensure(0);
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get avatar => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set avatar($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAvatar() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAvatar() => $_clearField(2);
 }
 
 class CreateAgentResp extends $pb.GeneratedMessage {
@@ -712,16 +723,21 @@ class CreateAgentResp extends $pb.GeneratedMessage {
   $2.Entity ensureCreator() => $_ensure(2);
 }
 
+/// 改机器人。agent 是**定位**参数(改哪个),归属由后端校验;name/avatar 才是可改的内容。
 class EditAgentReq extends $pb.GeneratedMessage {
   factory EditAgentReq({
-    $2.Entity? base,
+    $core.String? agent,
     AgentConfig? config,
     $core.String? note,
+    $core.String? name,
+    $core.String? avatar,
   }) {
     final result = create();
-    if (base != null) result.base = base;
+    if (agent != null) result.agent = agent;
     if (config != null) result.config = config;
     if (note != null) result.note = note;
+    if (name != null) result.name = name;
+    if (avatar != null) result.avatar = avatar;
     return result;
   }
 
@@ -738,11 +754,12 @@ class EditAgentReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'EditAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $2.Entity.create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOM<AgentConfig>(2, _omitFieldNames ? '' : 'config',
         subBuilder: AgentConfig.create)
     ..aOS(3, _omitFieldNames ? '' : 'note')
+    ..aOS(4, _omitFieldNames ? '' : 'name')
+    ..aOS(5, _omitFieldNames ? '' : 'avatar')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -765,15 +782,13 @@ class EditAgentReq extends $pb.GeneratedMessage {
   static EditAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get base => $_getN(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set base($2.Entity value) => $_setField(1, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasBase() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearBase() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $2.Entity ensureBase() => $_ensure(0);
+  void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
   AgentConfig get config => $_getN(1);
@@ -794,6 +809,24 @@ class EditAgentReq extends $pb.GeneratedMessage {
   $core.bool hasNote() => $_has(2);
   @$pb.TagNumber(3)
   void clearNote() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get name => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set name($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasName() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearName() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get avatar => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set avatar($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasAvatar() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearAvatar() => $_clearField(5);
 }
 
 class ListAgentResp extends $pb.GeneratedMessage {

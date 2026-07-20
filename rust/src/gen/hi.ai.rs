@@ -249,10 +249,14 @@ pub struct DefaultConfigResp {
     #[prost(message, optional, tag = "1")]
     pub config: ::core::option::Option<AgentConfig>,
 }
+/// 建机器人。**不收 hi.Entity** —— did 由后台生成、type 固定 assistant、update 是服务端产物,
+/// 调用方能决定的只有名字和头像。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateAgentReq {
-    #[prost(message, optional, tag = "1")]
-    pub base: ::core::option::Option<super::Entity>,
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub avatar: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAgentResp {
@@ -265,10 +269,16 @@ pub struct CreateAgentResp {
     #[prost(message, optional, tag = "3")]
     pub creator: ::core::option::Option<super::Entity>,
 }
+/// 改机器人。agent 是**定位**参数(改哪个),归属由后端校验;name/avatar 才是可改的内容。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditAgentReq {
-    #[prost(message, optional, tag = "1")]
-    pub base: ::core::option::Option<super::Entity>,
+    /// 机器人 did(定位)
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub avatar: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
     pub config: ::core::option::Option<AgentConfig>,
     #[prost(string, tag = "3")]

@@ -2094,12 +2094,18 @@ impl serde::Serialize for CreateAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.base.is_some() {
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if !self.avatar.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CreateAgentReq", len)?;
-        if let Some(v) = self.base.as_ref() {
-            struct_ser.serialize_field("base", v)?;
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if !self.avatar.is_empty() {
+            struct_ser.serialize_field("avatar", &self.avatar)?;
         }
         struct_ser.end()
     }
@@ -2111,12 +2117,14 @@ impl<'de> serde::Deserialize<'de> for CreateAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "base",
+            "name",
+            "avatar",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Base,
+            Name,
+            Avatar,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2138,7 +2146,8 @@ impl<'de> serde::Deserialize<'de> for CreateAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "base" => Ok(GeneratedField::Base),
+                            "name" => Ok(GeneratedField::Name),
+                            "avatar" => Ok(GeneratedField::Avatar),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2158,19 +2167,27 @@ impl<'de> serde::Deserialize<'de> for CreateAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut base__ = None;
+                let mut name__ = None;
+                let mut avatar__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Base => {
-                            if base__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("base"));
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
                             }
-                            base__ = map_.next_value()?;
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Avatar => {
+                            if avatar__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("avatar"));
+                            }
+                            avatar__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(CreateAgentReq {
-                    base: base__,
+                    name: name__.unwrap_or_default(),
+                    avatar: avatar__.unwrap_or_default(),
                 })
             }
         }
@@ -3884,7 +3901,13 @@ impl serde::Serialize for EditAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.base.is_some() {
+        if !self.agent.is_empty() {
+            len += 1;
+        }
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if !self.avatar.is_empty() {
             len += 1;
         }
         if self.config.is_some() {
@@ -3894,8 +3917,14 @@ impl serde::Serialize for EditAgentReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.EditAgentReq", len)?;
-        if let Some(v) = self.base.as_ref() {
-            struct_ser.serialize_field("base", v)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if !self.avatar.is_empty() {
+            struct_ser.serialize_field("avatar", &self.avatar)?;
         }
         if let Some(v) = self.config.as_ref() {
             struct_ser.serialize_field("config", v)?;
@@ -3913,14 +3942,18 @@ impl<'de> serde::Deserialize<'de> for EditAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "base",
+            "agent",
+            "name",
+            "avatar",
             "config",
             "note",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Base,
+            Agent,
+            Name,
+            Avatar,
             Config,
             Note,
         }
@@ -3944,7 +3977,9 @@ impl<'de> serde::Deserialize<'de> for EditAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "base" => Ok(GeneratedField::Base),
+                            "agent" => Ok(GeneratedField::Agent),
+                            "name" => Ok(GeneratedField::Name),
+                            "avatar" => Ok(GeneratedField::Avatar),
                             "config" => Ok(GeneratedField::Config),
                             "note" => Ok(GeneratedField::Note),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3966,16 +4001,30 @@ impl<'de> serde::Deserialize<'de> for EditAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut base__ = None;
+                let mut agent__ = None;
+                let mut name__ = None;
+                let mut avatar__ = None;
                 let mut config__ = None;
                 let mut note__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Base => {
-                            if base__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("base"));
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            base__ = map_.next_value()?;
+                            agent__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Avatar => {
+                            if avatar__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("avatar"));
+                            }
+                            avatar__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Config => {
                             if config__.is_some() {
@@ -3992,7 +4041,9 @@ impl<'de> serde::Deserialize<'de> for EditAgentReq {
                     }
                 }
                 Ok(EditAgentReq {
-                    base: base__,
+                    agent: agent__.unwrap_or_default(),
+                    name: name__.unwrap_or_default(),
+                    avatar: avatar__.unwrap_or_default(),
                     config: config__,
                     note: note__.unwrap_or_default(),
                 })

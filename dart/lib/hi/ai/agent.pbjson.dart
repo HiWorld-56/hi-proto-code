@@ -208,13 +208,15 @@ final $typed_data.Uint8List defaultConfigRespDescriptor = $convert.base64Decode(
 const CreateAgentReq$json = {
   '1': 'CreateAgentReq',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 2, '4': 1, '5': 9, '10': 'avatar'},
   ],
 };
 
 /// Descriptor for `CreateAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createAgentReqDescriptor = $convert.base64Decode(
-    'Cg5DcmVhdGVBZ2VudFJlcRIeCgRiYXNlGAEgASgLMgouaGkuRW50aXR5UgRiYXNl');
+    'Cg5DcmVhdGVBZ2VudFJlcRISCgRuYW1lGAEgASgJUgRuYW1lEhYKBmF2YXRhchgCIAEoCVIGYX'
+    'ZhdGFy');
 
 @$core.Deprecated('Use createAgentRespDescriptor instead')
 const CreateAgentResp$json = {
@@ -261,7 +263,9 @@ final $typed_data.Uint8List createAgentRespDescriptor = $convert.base64Decode(
 const EditAgentReq$json = {
   '1': 'EditAgentReq',
   '2': [
-    {'1': 'base', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'base'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
+    {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 5, '4': 1, '5': 9, '10': 'avatar'},
     {
       '1': 'config',
       '3': 2,
@@ -276,8 +280,9 @@ const EditAgentReq$json = {
 
 /// Descriptor for `EditAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List editAgentReqDescriptor = $convert.base64Decode(
-    'CgxFZGl0QWdlbnRSZXESHgoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eVIEYmFzZRIqCgZjb25maW'
-    'cYAiABKAsyEi5oaS5haS5BZ2VudENvbmZpZ1IGY29uZmlnEhIKBG5vdGUYAyABKAlSBG5vdGU=');
+    'CgxFZGl0QWdlbnRSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBG5hbWUYBCABKAlSBG5hbW'
+    'USFgoGYXZhdGFyGAUgASgJUgZhdmF0YXISKgoGY29uZmlnGAIgASgLMhIuaGkuYWkuQWdlbnRD'
+    'b25maWdSBmNvbmZpZxISCgRub3RlGAMgASgJUgRub3Rl');
 
 @$core.Deprecated('Use listAgentRespDescriptor instead')
 const ListAgentResp$json = {

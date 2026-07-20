@@ -3196,6 +3196,34 @@ pub struct MuteMembersReq {
     #[prost(bool, tag = "3")]
     pub muted: bool,
 }
+/// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
+/// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
+/// 故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
+/// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
+/// owner   : 全允许(含解散群、加管理员)
+/// admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+/// member(公开群): 仅可拉人;其余禁止
+/// member(私密群): 全禁止(只能被邀请)
+/// 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
+/// 里面的 Entity 带 type/update 等服务端产物。入参只放:定位用的群号 + 真正可改的字段。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateGroupReq {
+    /// 群号(定位;权限由后端校验 owner/admin)
+    #[prost(string, tag = "1")]
+    pub group: ::prost::alloc::string::String,
+    /// 群名
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// 群头像 url
+    #[prost(string, tag = "3")]
+    pub avatar: ::prost::alloc::string::String,
+    /// 群背景 url
+    #[prost(string, tag = "4")]
+    pub background: ::prost::alloc::string::String,
+    /// true=私密群(只能被邀请);false=公开群
+    #[prost(bool, tag = "5")]
+    pub private: bool,
+}
 /// Generated client implementations.
 pub mod group_client {
     #![allow(
@@ -3207,14 +3235,6 @@ pub mod group_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
-    /// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
-    /// 故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
-    /// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
-    /// owner   : 全允许(含解散群、加管理员)
-    /// admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
-    /// member(公开群): 仅可拉人;其余禁止
-    /// member(私密群): 全禁止(只能被邀请)
     #[derive(Debug, Clone)]
     pub struct GroupClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3406,7 +3426,7 @@ pub mod group_client {
         }
         pub async fn update(
             &mut self,
-            request: impl tonic::IntoRequest<super::GroupBase>,
+            request: impl tonic::IntoRequest<super::UpdateGroupReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -3737,10 +3757,16 @@ pub struct UnprocessedSysMsgCountResp {
     #[prost(int32, tag = "1")]
     pub count: i32,
 }
+/// 改自己的资料。**不收 hi.Entity 整体** —— Entity 带 did/type/update,
+/// 而"改谁"永远取自 token,type/update 是服务端产物。入参只放调用方真正该给的。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateUserReq {
-    #[prost(message, optional, tag = "1")]
-    pub user: ::core::option::Option<super::Entity>,
+    /// 昵称
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// 头像 url
+    #[prost(string, tag = "4")]
+    pub avatar: ::prost::alloc::string::String,
     /// auto_reject-自动拒绝
     /// manual_accept-手动同意
     /// auto_accept-自动同意

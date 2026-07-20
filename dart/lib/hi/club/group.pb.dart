@@ -1393,6 +1393,118 @@ class MuteMembersReq extends $pb.GeneratedMessage {
   void clearMuted() => $_clearField(3);
 }
 
+/// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
+/// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
+///    故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
+/// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
+///   owner   : 全允许(含解散群、加管理员)
+///   admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+///   member(公开群): 仅可拉人;其余禁止
+///   member(私密群): 全禁止(只能被邀请)
+/// 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
+/// 里面的 Entity 带 type/update 等服务端产物。入参只放:定位用的群号 + 真正可改的字段。
+class UpdateGroupReq extends $pb.GeneratedMessage {
+  factory UpdateGroupReq({
+    $core.String? group,
+    $core.String? name,
+    $core.String? avatar,
+    $core.String? background,
+    $core.bool? private,
+  }) {
+    final result = create();
+    if (group != null) result.group = group;
+    if (name != null) result.name = name;
+    if (avatar != null) result.avatar = avatar;
+    if (background != null) result.background = background;
+    if (private != null) result.private = private;
+    return result;
+  }
+
+  UpdateGroupReq._();
+
+  factory UpdateGroupReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateGroupReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateGroupReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'group')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'avatar')
+    ..aOS(4, _omitFieldNames ? '' : 'background')
+    ..aOB(5, _omitFieldNames ? '' : 'private')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateGroupReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateGroupReq copyWith(void Function(UpdateGroupReq) updates) =>
+      super.copyWith((message) => updates(message as UpdateGroupReq))
+          as UpdateGroupReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateGroupReq create() => UpdateGroupReq._();
+  @$core.override
+  UpdateGroupReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateGroupReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateGroupReq>(create);
+  static UpdateGroupReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get group => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set group($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGroup() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGroup() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get avatar => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set avatar($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAvatar() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAvatar() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get background => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set background($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBackground() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBackground() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get private => $_getBF(4);
+  @$pb.TagNumber(5)
+  set private($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrivate() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrivate() => $_clearField(5);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

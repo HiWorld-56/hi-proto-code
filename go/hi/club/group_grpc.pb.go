@@ -43,18 +43,6 @@ const (
 // GroupClient is the client API for Group service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
-// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
-//
-//	故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
-//
-// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
-//
-//	owner   : 全允许(含解散群、加管理员)
-//	admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
-//	member(公开群): 仅可拉人;其余禁止
-//	member(私密群): 全禁止(只能被邀请)
 type GroupClient interface {
 	// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
@@ -62,7 +50,7 @@ type GroupClient interface {
 	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupMemberView, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
-	Update(ctx context.Context, in *GroupBase, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMembers(ctx context.Context, in *ListGroupMemberReq, opts ...grpc.CallOption) (*GroupInfo, error)
 	GetMemberTotal(ctx context.Context, in *GetGroupMemberTotalReq, opts ...grpc.CallOption) (*GetGroupMemberTotalResp, error)
 	Invite(ctx context.Context, in *InviteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -134,7 +122,7 @@ func (c *groupClient) CreateSingle(ctx context.Context, in *CreateSingleReq, opt
 	return out, nil
 }
 
-func (c *groupClient) Update(ctx context.Context, in *GroupBase, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *groupClient) Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Group_Update_FullMethodName, in, out, cOpts...)
@@ -257,18 +245,6 @@ func (c *groupClient) MuteMembers(ctx context.Context, in *MuteMembersReq, opts 
 // GroupServer is the server API for Group service.
 // All implementations should embed UnimplementedGroupServer
 // for forward compatibility.
-//
-// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
-// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
-//
-//	故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
-//
-// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
-//
-//	owner   : 全允许(含解散群、加管理员)
-//	admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
-//	member(公开群): 仅可拉人;其余禁止
-//	member(私密群): 全禁止(只能被邀请)
 type GroupServer interface {
 	// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
@@ -276,7 +252,7 @@ type GroupServer interface {
 	Get(context.Context, *GetGroupReq) (*GroupMemberView, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
-	Update(context.Context, *GroupBase) (*emptypb.Empty, error)
+	Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error)
 	ListMembers(context.Context, *ListGroupMemberReq) (*GroupInfo, error)
 	GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error)
 	Invite(context.Context, *InviteGroupReq) (*emptypb.Empty, error)
@@ -312,7 +288,7 @@ func (UnimplementedGroupServer) Create(context.Context, *CreateGroupReq) (*Group
 func (UnimplementedGroupServer) CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateSingle not implemented")
 }
-func (UnimplementedGroupServer) Update(context.Context, *GroupBase) (*emptypb.Empty, error) {
+func (UnimplementedGroupServer) Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedGroupServer) ListMembers(context.Context, *ListGroupMemberReq) (*GroupInfo, error) {
@@ -459,7 +435,7 @@ func _Group_CreateSingle_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _Group_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GroupBase)
+	in := new(UpdateGroupReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -471,7 +447,7 @@ func _Group_Update_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Group_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).Update(ctx, req.(*GroupBase))
+		return srv.(GroupServer).Update(ctx, req.(*UpdateGroupReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -297,7 +297,8 @@ final $typed_data.Uint8List unprocessedSysMsgCountRespDescriptor =
 const UpdateUserReq$json = {
   '1': 'UpdateUserReq',
   '2': [
-    {'1': 'user', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'user'},
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 4, '4': 1, '5': 9, '10': 'avatar'},
     {'1': 'verify_policy', '3': 2, '4': 1, '5': 9, '10': 'verifyPolicy'},
     {'1': 'moment', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'moment', '17': true},
   ],
@@ -308,9 +309,9 @@ const UpdateUserReq$json = {
 
 /// Descriptor for `UpdateUserReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateUserReqDescriptor = $convert.base64Decode(
-    'Cg1VcGRhdGVVc2VyUmVxEh4KBHVzZXIYASABKAsyCi5oaS5FbnRpdHlSBHVzZXISIwoNdmVyaW'
-    'Z5X3BvbGljeRgCIAEoCVIMdmVyaWZ5UG9saWN5EhsKBm1vbWVudBgDIAEoCUgAUgZtb21lbnSI'
-    'AQFCCQoHX21vbWVudA==');
+    'Cg1VcGRhdGVVc2VyUmVxEhIKBG5hbWUYASABKAlSBG5hbWUSFgoGYXZhdGFyGAQgASgJUgZhdm'
+    'F0YXISIwoNdmVyaWZ5X3BvbGljeRgCIAEoCVIMdmVyaWZ5UG9saWN5EhsKBm1vbWVudBgDIAEo'
+    'CUgAUgZtb21lbnSIAQFCCQoHX21vbWVudA==');
 
 @$core.Deprecated('Use setRemarkReqDescriptor instead')
 const SetRemarkReq$json = {

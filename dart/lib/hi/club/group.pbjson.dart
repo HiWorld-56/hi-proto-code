@@ -390,3 +390,21 @@ const MuteMembersReq$json = {
 final $typed_data.Uint8List muteMembersReqDescriptor = $convert.base64Decode(
     'Cg5NdXRlTWVtYmVyc1JlcRISCgRjb2RlGAEgASgJUgRjb2RlEhgKB21lbWJlcnMYAiADKAlSB2'
     '1lbWJlcnMSFAoFbXV0ZWQYAyABKAhSBW11dGVk');
+
+@$core.Deprecated('Use updateGroupReqDescriptor instead')
+const UpdateGroupReq$json = {
+  '1': 'UpdateGroupReq',
+  '2': [
+    {'1': 'group', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'group'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 3, '4': 1, '5': 9, '10': 'avatar'},
+    {'1': 'background', '3': 4, '4': 1, '5': 9, '10': 'background'},
+    {'1': 'private', '3': 5, '4': 1, '5': 8, '10': 'private'},
+  ],
+};
+
+/// Descriptor for `UpdateGroupReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateGroupReqDescriptor = $convert.base64Decode(
+    'Cg5VcGRhdGVHcm91cFJlcRIiCgVncm91cBgBIAEoCUIMukgJcgcyBV5cUyskUgVncm91cBISCg'
+    'RuYW1lGAIgASgJUgRuYW1lEhYKBmF2YXRhchgDIAEoCVIGYXZhdGFyEh4KCmJhY2tncm91bmQY'
+    'BCABKAlSCmJhY2tncm91bmQSGAoHcHJpdmF0ZRgFIAEoCFIHcHJpdmF0ZQ==');
