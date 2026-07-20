@@ -37,11 +37,11 @@ class AgentClient extends $grpc.Client {
   AgentClient(super.channel, {super.options, super.interceptors});
 
   /// ── hi.ai 门面(跟 ai 定稿改名)──
-  $grpc.ResponseFuture<$0.CreateAgentResp> create(
-    $0.CreateAgentReq request, {
+  $grpc.ResponseFuture<$0.CreateAgentResp> createAssistant(
+    $0.CreateAssistantReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$create, request, options: options);
+    return $createUnaryCall(_$createAssistant, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> edit(
@@ -124,10 +124,10 @@ class AgentClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$create =
-      $grpc.ClientMethod<$0.CreateAgentReq, $0.CreateAgentResp>(
-          '/hi.club.Agent/Create',
-          ($0.CreateAgentReq value) => value.writeToBuffer(),
+  static final _$createAssistant =
+      $grpc.ClientMethod<$0.CreateAssistantReq, $0.CreateAgentResp>(
+          '/hi.club.Agent/CreateAssistant',
+          ($0.CreateAssistantReq value) => value.writeToBuffer(),
           $0.CreateAgentResp.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditAgentReq, $1.Empty>(
       '/hi.club.Agent/Edit',
@@ -185,12 +185,13 @@ abstract class AgentServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Agent';
 
   AgentServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.CreateAgentReq, $0.CreateAgentResp>(
-        'Create',
-        create_Pre,
+    $addMethod($grpc.ServiceMethod<$0.CreateAssistantReq, $0.CreateAgentResp>(
+        'CreateAssistant',
+        createAssistant_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.CreateAgentReq.fromBuffer(value),
+        ($core.List<$core.int> value) =>
+            $0.CreateAssistantReq.fromBuffer(value),
         ($0.CreateAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditAgentReq, $1.Empty>(
         'Edit',
@@ -271,13 +272,13 @@ abstract class AgentServiceBase extends $grpc.Service {
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.CreateAgentResp> create_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateAgentReq> $request) async {
-    return create($call, await $request);
+  $async.Future<$0.CreateAgentResp> createAssistant_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateAssistantReq> $request) async {
+    return createAssistant($call, await $request);
   }
 
-  $async.Future<$0.CreateAgentResp> create(
-      $grpc.ServiceCall call, $0.CreateAgentReq request);
+  $async.Future<$0.CreateAgentResp> createAssistant(
+      $grpc.ServiceCall call, $0.CreateAssistantReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditAgentReq> $request) async {

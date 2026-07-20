@@ -38,11 +38,23 @@ class AgentClient extends $grpc.Client {
 
   AgentClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.CreateAgentResp> create(
-    $0.CreateAgentReq request, {
+  /// ⚠️ **软硬件分开**,别再合成一个。合起来必然要问"type 信谁":
+  ///    原先是 `Create(did, type)` 靠 did 空不空隐式分支,而实现里把 type 硬编码成
+  ///    assistant —— 硬件机器人登录后被记成软件 assistant,club 拿着这个响应又把
+  ///    mqtt 配置走错分支(该 setupSelfReceiveMqtt 的走了 AddMqttUserWAcl)。
+  ///    拆开后各自的 type 由服务端固定,调用方无从传错。
+  $grpc.ResponseFuture<$0.CreateAgentResp> createAssistant(
+    $0.CreateAssistantReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$create, request, options: options);
+    return $createUnaryCall(_$createAssistant, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.CreateAgentResp> registerRobot(
+    $0.RegisterRobotReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$registerRobot, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> edit(
@@ -110,10 +122,15 @@ class AgentClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$create =
-      $grpc.ClientMethod<$0.CreateAgentReq, $0.CreateAgentResp>(
-          '/hi.ai.Agent/Create',
-          ($0.CreateAgentReq value) => value.writeToBuffer(),
+  static final _$createAssistant =
+      $grpc.ClientMethod<$0.CreateAssistantReq, $0.CreateAgentResp>(
+          '/hi.ai.Agent/CreateAssistant',
+          ($0.CreateAssistantReq value) => value.writeToBuffer(),
+          $0.CreateAgentResp.fromBuffer);
+  static final _$registerRobot =
+      $grpc.ClientMethod<$0.RegisterRobotReq, $0.CreateAgentResp>(
+          '/hi.ai.Agent/RegisterRobot',
+          ($0.RegisterRobotReq value) => value.writeToBuffer(),
           $0.CreateAgentResp.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditAgentReq, $1.Empty>(
       '/hi.ai.Agent/Edit',
@@ -162,12 +179,20 @@ abstract class AgentServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.Agent';
 
   AgentServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.CreateAgentReq, $0.CreateAgentResp>(
-        'Create',
-        create_Pre,
+    $addMethod($grpc.ServiceMethod<$0.CreateAssistantReq, $0.CreateAgentResp>(
+        'CreateAssistant',
+        createAssistant_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.CreateAgentReq.fromBuffer(value),
+        ($core.List<$core.int> value) =>
+            $0.CreateAssistantReq.fromBuffer(value),
+        ($0.CreateAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RegisterRobotReq, $0.CreateAgentResp>(
+        'RegisterRobot',
+        registerRobot_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.RegisterRobotReq.fromBuffer(value),
         ($0.CreateAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditAgentReq, $1.Empty>(
         'Edit',
@@ -234,13 +259,21 @@ abstract class AgentServiceBase extends $grpc.Service {
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.CreateAgentResp> create_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateAgentReq> $request) async {
-    return create($call, await $request);
+  $async.Future<$0.CreateAgentResp> createAssistant_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateAssistantReq> $request) async {
+    return createAssistant($call, await $request);
   }
 
-  $async.Future<$0.CreateAgentResp> create(
-      $grpc.ServiceCall call, $0.CreateAgentReq request);
+  $async.Future<$0.CreateAgentResp> createAssistant(
+      $grpc.ServiceCall call, $0.CreateAssistantReq request);
+
+  $async.Future<$0.CreateAgentResp> registerRobot_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RegisterRobotReq> $request) async {
+    return registerRobot($call, await $request);
+  }
+
+  $async.Future<$0.CreateAgentResp> registerRobot(
+      $grpc.ServiceCall call, $0.RegisterRobotReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditAgentReq> $request) async {

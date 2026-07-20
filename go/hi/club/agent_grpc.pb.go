@@ -21,7 +21,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_Create_FullMethodName           = "/hi.club.Agent/Create"
+	Agent_CreateAssistant_FullMethodName  = "/hi.club.Agent/CreateAssistant"
 	Agent_Edit_FullMethodName             = "/hi.club.Agent/Edit"
 	Agent_Delete_FullMethodName           = "/hi.club.Agent/Delete"
 	Agent_Get_FullMethodName              = "/hi.club.Agent/Get"
@@ -43,7 +43,7 @@ const (
 // 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
 type AgentClient interface {
 	// ── hi.ai 门面(跟 ai 定稿改名)──
-	Create(ctx context.Context, in *ai.CreateAgentReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
+	CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
 	Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *ai.DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetAgentReq, opts ...grpc.CallOption) (*ai.GetAgentResp, error)
@@ -66,10 +66,10 @@ func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
 }
 
-func (c *agentClient) Create(ctx context.Context, in *ai.CreateAgentReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error) {
+func (c *agentClient) CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.CreateAgentResp)
-	err := c.cc.Invoke(ctx, Agent_Create_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_CreateAssistant_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +194,7 @@ func (c *agentClient) Transfer(ctx context.Context, in *TransferReq, opts ...grp
 // 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
 type AgentServer interface {
 	// ── hi.ai 门面(跟 ai 定稿改名)──
-	Create(context.Context, *ai.CreateAgentReq) (*ai.CreateAgentResp, error)
+	CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error)
 	Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error)
 	Delete(context.Context, *ai.DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetAgentReq) (*ai.GetAgentResp, error)
@@ -216,8 +216,8 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
-func (UnimplementedAgentServer) Create(context.Context, *ai.CreateAgentReq) (*ai.CreateAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedAgentServer) CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAssistant not implemented")
 }
 func (UnimplementedAgentServer) Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -272,20 +272,20 @@ func RegisterAgentServer(s grpc.ServiceRegistrar, srv AgentServer) {
 	s.RegisterService(&Agent_ServiceDesc, srv)
 }
 
-func _Agent_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.CreateAgentReq)
+func _Agent_CreateAssistant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.CreateAssistantReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).Create(ctx, in)
+		return srv.(AgentServer).CreateAssistant(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_Create_FullMethodName,
+		FullMethod: Agent_CreateAssistant_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).Create(ctx, req.(*ai.CreateAgentReq))
+		return srv.(AgentServer).CreateAssistant(ctx, req.(*ai.CreateAssistantReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -496,8 +496,8 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AgentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _Agent_Create_Handler,
+			MethodName: "CreateAssistant",
+			Handler:    _Agent_CreateAssistant_Handler,
 		},
 		{
 			MethodName: "Edit",

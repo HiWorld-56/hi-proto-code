@@ -249,22 +249,27 @@ pub struct DefaultConfigResp {
     #[prost(message, optional, tag = "1")]
     pub config: ::core::option::Option<AgentConfig>,
 }
-/// 建机器人。**不收 hi.Entity 整体** —— Entity 里的 `update` 是服务端产物,不该出现在入参。
-/// 但 did/type 在这里是**真需要**的,两种用法:
-/// · 软件 assistant:did 留空,由后台生成;type=assistant
-/// · 硬件 robot:did **已存在**(硬件先在 hidid 注册),这里只是为它建 agent 记录;type=robot
-/// 调用方是兄弟服务(apikey 档),它确实知道这个身份 —— 与"用户自己乱传别人 did"是两回事。
+/// 造**软件** assistant:did 由后台生成,type 固定 assistant。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateAgentReq {
-    /// 空=新建软件 assistant(后台生成);非空=为已有身份(硬件 robot)建记录
+pub struct CreateAssistantReq {
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub avatar: ::prost::alloc::string::String,
+}
+/// 为**硬件** robot 建 agent 记录。
+///
+/// did **不是这里生成的** —— 硬件先在 hidid 完成注册拿到 did,club 在它登录时
+/// 把它分别登记到 hidid / hiai,这个方法就是 hiai 那一步。故 did 必填。
+/// type 由服务端固定为 robot,**不收调用方传的 type**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RegisterRobotReq {
+    /// 硬件机器人已注册的 did
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    /// assistant / robot(取值见 hi.Entity.type 的注释)
     #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
     pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
+    #[prost(string, tag = "3")]
     pub avatar: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -456,9 +461,14 @@ pub mod agent_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn create(
+        /// ⚠️ **软硬件分开**,别再合成一个。合起来必然要问"type 信谁":
+        /// 原先是 `Create(did, type)` 靠 did 空不空隐式分支,而实现里把 type 硬编码成
+        /// assistant —— 硬件机器人登录后被记成软件 assistant,club 拿着这个响应又把
+        /// mqtt 配置走错分支(该 setupSelfReceiveMqtt 的走了 AddMqttUserWAcl)。
+        /// 拆开后各自的 type 由服务端固定,调用方无从传错。
+        pub async fn create_assistant(
             &mut self,
-            request: impl tonic::IntoRequest<super::CreateAgentReq>,
+            request: impl tonic::IntoRequest<super::CreateAssistantReq>,
         ) -> std::result::Result<
             tonic::Response<super::CreateAgentResp>,
             tonic::Status,
@@ -472,9 +482,35 @@ pub mod agent_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/Create");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Agent/CreateAssistant",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "Create"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Agent", "CreateAssistant"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn register_robot(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RegisterRobotReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateAgentResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Agent/RegisterRobot",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "RegisterRobot"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(

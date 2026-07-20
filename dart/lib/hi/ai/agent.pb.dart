@@ -568,63 +568,127 @@ class DefaultConfigResp extends $pb.GeneratedMessage {
   AgentConfig ensureConfig() => $_ensure(0);
 }
 
-/// 建机器人。**不收 hi.Entity 整体** —— Entity 里的 `update` 是服务端产物,不该出现在入参。
-/// 但 did/type 在这里是**真需要**的,两种用法:
-///   · 软件 assistant:did 留空,由后台生成;type=assistant
-///   · 硬件 robot:did **已存在**(硬件先在 hidid 注册),这里只是为它建 agent 记录;type=robot
-/// 调用方是兄弟服务(apikey 档),它确实知道这个身份 —— 与"用户自己乱传别人 did"是两回事。
-class CreateAgentReq extends $pb.GeneratedMessage {
-  factory CreateAgentReq({
-    $core.String? did,
-    $core.String? type,
+/// 造**软件** assistant:did 由后台生成,type 固定 assistant。
+class CreateAssistantReq extends $pb.GeneratedMessage {
+  factory CreateAssistantReq({
     $core.String? name,
     $core.String? avatar,
   }) {
     final result = create();
-    if (did != null) result.did = did;
-    if (type != null) result.type = type;
     if (name != null) result.name = name;
     if (avatar != null) result.avatar = avatar;
     return result;
   }
 
-  CreateAgentReq._();
+  CreateAssistantReq._();
 
-  factory CreateAgentReq.fromBuffer($core.List<$core.int> data,
+  factory CreateAssistantReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreateAgentReq.fromJson($core.String json,
+  factory CreateAssistantReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateAgentReq',
+      _omitMessageNames ? '' : 'CreateAssistantReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOS(3, _omitFieldNames ? '' : 'name')
-    ..aOS(4, _omitFieldNames ? '' : 'avatar')
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'avatar')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateAgentReq clone() => deepCopy();
+  CreateAssistantReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateAgentReq copyWith(void Function(CreateAgentReq) updates) =>
-      super.copyWith((message) => updates(message as CreateAgentReq))
-          as CreateAgentReq;
+  CreateAssistantReq copyWith(void Function(CreateAssistantReq) updates) =>
+      super.copyWith((message) => updates(message as CreateAssistantReq))
+          as CreateAssistantReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreateAgentReq create() => CreateAgentReq._();
+  static CreateAssistantReq create() => CreateAssistantReq._();
   @$core.override
-  CreateAgentReq createEmptyInstance() => create();
+  CreateAssistantReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreateAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateAgentReq>(create);
-  static CreateAgentReq? _defaultInstance;
+  static CreateAssistantReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateAssistantReq>(create);
+  static CreateAssistantReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get avatar => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set avatar($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAvatar() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAvatar() => $_clearField(2);
+}
+
+/// 为**硬件** robot 建 agent 记录。
+///
+/// did **不是这里生成的** —— 硬件先在 hidid 完成注册拿到 did,club 在它登录时
+/// 把它分别登记到 hidid / hiai,这个方法就是 hiai 那一步。故 did 必填。
+/// type 由服务端固定为 robot,**不收调用方传的 type**。
+class RegisterRobotReq extends $pb.GeneratedMessage {
+  factory RegisterRobotReq({
+    $core.String? did,
+    $core.String? name,
+    $core.String? avatar,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    if (name != null) result.name = name;
+    if (avatar != null) result.avatar = avatar;
+    return result;
+  }
+
+  RegisterRobotReq._();
+
+  factory RegisterRobotReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RegisterRobotReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RegisterRobotReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'avatar')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RegisterRobotReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RegisterRobotReq copyWith(void Function(RegisterRobotReq) updates) =>
+      super.copyWith((message) => updates(message as RegisterRobotReq))
+          as RegisterRobotReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RegisterRobotReq create() => RegisterRobotReq._();
+  @$core.override
+  RegisterRobotReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static RegisterRobotReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RegisterRobotReq>(create);
+  static RegisterRobotReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
@@ -636,31 +700,22 @@ class CreateAgentReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
+  $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
+  set name($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasType() => $_has(1);
+  $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearType() => $_clearField(2);
+  void clearName() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get name => $_getSZ(2);
+  $core.String get avatar => $_getSZ(2);
   @$pb.TagNumber(3)
-  set name($core.String value) => $_setString(2, value);
+  set avatar($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasName() => $_has(2);
+  $core.bool hasAvatar() => $_has(2);
   @$pb.TagNumber(3)
-  void clearName() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get avatar => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set avatar($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasAvatar() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearAvatar() => $_clearField(4);
+  void clearAvatar() => $_clearField(3);
 }
 
 class CreateAgentResp extends $pb.GeneratedMessage {

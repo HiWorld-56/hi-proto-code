@@ -1353,9 +1353,9 @@ pub mod agent_client {
             self
         }
         /// ── hi.ai 门面(跟 ai 定稿改名)──
-        pub async fn create(
+        pub async fn create_assistant(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::CreateAgentReq>,
+            request: impl tonic::IntoRequest<super::super::ai::CreateAssistantReq>,
         ) -> std::result::Result<
             tonic::Response<super::super::ai::CreateAgentResp>,
             tonic::Status,
@@ -1369,9 +1369,12 @@ pub mod agent_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/Create");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Agent/CreateAssistant",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "Create"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Agent", "CreateAssistant"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(

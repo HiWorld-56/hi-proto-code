@@ -20,7 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_Create_FullMethodName           = "/hi.ai.Agent/Create"
+	Agent_CreateAssistant_FullMethodName  = "/hi.ai.Agent/CreateAssistant"
+	Agent_RegisterRobot_FullMethodName    = "/hi.ai.Agent/RegisterRobot"
 	Agent_Edit_FullMethodName             = "/hi.ai.Agent/Edit"
 	Agent_Delete_FullMethodName           = "/hi.ai.Agent/Delete"
 	Agent_Get_FullMethodName              = "/hi.ai.Agent/Get"
@@ -43,7 +44,14 @@ const (
 //
 //	agent 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
 type AgentClient interface {
-	Create(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
+	// ⚠️ **软硬件分开**,别再合成一个。合起来必然要问"type 信谁":
+	//
+	//	原先是 `Create(did, type)` 靠 did 空不空隐式分支,而实现里把 type 硬编码成
+	//	assistant —— 硬件机器人登录后被记成软件 assistant,club 拿着这个响应又把
+	//	mqtt 配置走错分支(该 setupSelfReceiveMqtt 的走了 AddMqttUserWAcl)。
+	//	拆开后各自的 type 由服务端固定,调用方无从传错。
+	CreateAssistant(ctx context.Context, in *CreateAssistantReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
+	RegisterRobot(ctx context.Context, in *RegisterRobotReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
 	Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
@@ -63,10 +71,20 @@ func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
 }
 
-func (c *agentClient) Create(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error) {
+func (c *agentClient) CreateAssistant(ctx context.Context, in *CreateAssistantReq, opts ...grpc.CallOption) (*CreateAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateAgentResp)
-	err := c.cc.Invoke(ctx, Agent_Create_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Agent_CreateAssistant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) RegisterRobot(ctx context.Context, in *RegisterRobotReq, opts ...grpc.CallOption) (*CreateAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAgentResp)
+	err := c.cc.Invoke(ctx, Agent_RegisterRobot_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -174,7 +192,14 @@ func (c *agentClient) ResetToDefault(ctx context.Context, in *ResetToDefaultReq,
 //
 //	agent 模型降级;"把软件机器人转给其他用户"这个概念应在 hiclub 侧实现。)
 type AgentServer interface {
-	Create(context.Context, *CreateAgentReq) (*CreateAgentResp, error)
+	// ⚠️ **软硬件分开**,别再合成一个。合起来必然要问"type 信谁":
+	//
+	//	原先是 `Create(did, type)` 靠 did 空不空隐式分支,而实现里把 type 硬编码成
+	//	assistant —— 硬件机器人登录后被记成软件 assistant,club 拿着这个响应又把
+	//	mqtt 配置走错分支(该 setupSelfReceiveMqtt 的走了 AddMqttUserWAcl)。
+	//	拆开后各自的 type 由服务端固定,调用方无从传错。
+	CreateAssistant(context.Context, *CreateAssistantReq) (*CreateAgentResp, error)
+	RegisterRobot(context.Context, *RegisterRobotReq) (*CreateAgentResp, error)
 	Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
@@ -193,8 +218,11 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
-func (UnimplementedAgentServer) Create(context.Context, *CreateAgentReq) (*CreateAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedAgentServer) CreateAssistant(context.Context, *CreateAssistantReq) (*CreateAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAssistant not implemented")
+}
+func (UnimplementedAgentServer) RegisterRobot(context.Context, *RegisterRobotReq) (*CreateAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method RegisterRobot not implemented")
 }
 func (UnimplementedAgentServer) Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -243,20 +271,38 @@ func RegisterAgentServer(s grpc.ServiceRegistrar, srv AgentServer) {
 	s.RegisterService(&Agent_ServiceDesc, srv)
 }
 
-func _Agent_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAgentReq)
+func _Agent_CreateAssistant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAssistantReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).Create(ctx, in)
+		return srv.(AgentServer).CreateAssistant(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_Create_FullMethodName,
+		FullMethod: Agent_CreateAssistant_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).Create(ctx, req.(*CreateAgentReq))
+		return srv.(AgentServer).CreateAssistant(ctx, req.(*CreateAssistantReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_RegisterRobot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRobotReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).RegisterRobot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_RegisterRobot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).RegisterRobot(ctx, req.(*RegisterRobotReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -431,8 +477,12 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AgentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _Agent_Create_Handler,
+			MethodName: "CreateAssistant",
+			Handler:    _Agent_CreateAssistant_Handler,
+		},
+		{
+			MethodName: "RegisterRobot",
+			Handler:    _Agent_RegisterRobot_Handler,
 		},
 		{
 			MethodName: "Edit",

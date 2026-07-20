@@ -2086,148 +2086,6 @@ impl<'de> serde::Deserialize<'de> for Content {
         deserializer.deserialize_struct("hi.ai.Content", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CreateAgentReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.did.is_empty() {
-            len += 1;
-        }
-        if !self.r#type.is_empty() {
-            len += 1;
-        }
-        if !self.name.is_empty() {
-            len += 1;
-        }
-        if !self.avatar.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.CreateAgentReq", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
-        }
-        if !self.r#type.is_empty() {
-            struct_ser.serialize_field("type", &self.r#type)?;
-        }
-        if !self.name.is_empty() {
-            struct_ser.serialize_field("name", &self.name)?;
-        }
-        if !self.avatar.is_empty() {
-            struct_ser.serialize_field("avatar", &self.avatar)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for CreateAgentReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "did",
-            "type",
-            "name",
-            "avatar",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Did,
-            Type,
-            Name,
-            Avatar,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "type" => Ok(GeneratedField::Type),
-                            "name" => Ok(GeneratedField::Name),
-                            "avatar" => Ok(GeneratedField::Avatar),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateAgentReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.CreateAgentReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateAgentReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut did__ = None;
-                let mut r#type__ = None;
-                let mut name__ = None;
-                let mut avatar__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
-                            }
-                            did__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Type => {
-                            if r#type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("type"));
-                            }
-                            r#type__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Avatar => {
-                            if avatar__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("avatar"));
-                            }
-                            avatar__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(CreateAgentReq {
-                    did: did__.unwrap_or_default(),
-                    r#type: r#type__.unwrap_or_default(),
-                    name: name__.unwrap_or_default(),
-                    avatar: avatar__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.CreateAgentReq", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for CreateAgentResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2584,6 +2442,114 @@ impl<'de> serde::Deserialize<'de> for CreateApiKeyResp {
             }
         }
         deserializer.deserialize_struct("hi.ai.CreateApiKeyResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateAssistantReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if !self.avatar.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.CreateAssistantReq", len)?;
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if !self.avatar.is_empty() {
+            struct_ser.serialize_field("avatar", &self.avatar)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateAssistantReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "name",
+            "avatar",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Name,
+            Avatar,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "name" => Ok(GeneratedField::Name),
+                            "avatar" => Ok(GeneratedField::Avatar),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateAssistantReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.CreateAssistantReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateAssistantReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut name__ = None;
+                let mut avatar__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Avatar => {
+                            if avatar__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("avatar"));
+                            }
+                            avatar__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(CreateAssistantReq {
+                    name: name__.unwrap_or_default(),
+                    avatar: avatar__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.CreateAssistantReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for CreateContentReq {
@@ -9052,6 +9018,131 @@ impl<'de> serde::Deserialize<'de> for Qa {
             }
         }
         deserializer.deserialize_struct("hi.ai.QA", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for RegisterRobotReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if !self.name.is_empty() {
+            len += 1;
+        }
+        if !self.avatar.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.RegisterRobotReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if !self.name.is_empty() {
+            struct_ser.serialize_field("name", &self.name)?;
+        }
+        if !self.avatar.is_empty() {
+            struct_ser.serialize_field("avatar", &self.avatar)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for RegisterRobotReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "name",
+            "avatar",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Name,
+            Avatar,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "name" => Ok(GeneratedField::Name),
+                            "avatar" => Ok(GeneratedField::Avatar),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = RegisterRobotReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.RegisterRobotReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<RegisterRobotReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut name__ = None;
+                let mut avatar__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Avatar => {
+                            if avatar__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("avatar"));
+                            }
+                            avatar__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(RegisterRobotReq {
+                    did: did__.unwrap_or_default(),
+                    name: name__.unwrap_or_default(),
+                    avatar: avatar__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.RegisterRobotReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ResetToDefaultReq {

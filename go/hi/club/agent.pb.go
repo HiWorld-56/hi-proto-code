@@ -504,9 +504,9 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"D\n" +
 	"\x12GetAgentMasterResp\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x012\x97\x06\n" +
-	"\x05Agent\x12>\n" +
-	"\x06Create\x12\x15.hi.ai.CreateAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x012\xa4\x06\n" +
+	"\x05Agent\x12K\n" +
+	"\x0fCreateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
 	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x06Delete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x125\n" +
 	"\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
@@ -542,38 +542,38 @@ func file_hi_club_agent_proto_rawDescGZIP() []byte {
 
 var file_hi_club_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_hi_club_agent_proto_goTypes = []any{
-	(*BindMasterReq)(nil),        // 0: hi.club.BindMasterReq
-	(*UnbindMasterReq)(nil),      // 1: hi.club.UnbindMasterReq
-	(*BindStatusReq)(nil),        // 2: hi.club.BindStatusReq
-	(*BindStatusResp)(nil),       // 3: hi.club.BindStatusResp
-	(*TransferReq)(nil),          // 4: hi.club.TransferReq
-	(*ListOnlineReq)(nil),        // 5: hi.club.ListOnlineReq
-	(*ListOnlineResp)(nil),       // 6: hi.club.ListOnlineResp
-	(*GetAgentMasterReq)(nil),    // 7: hi.club.GetAgentMasterReq
-	(*GetAgentMasterResp)(nil),   // 8: hi.club.GetAgentMasterResp
-	(*hi.Entity)(nil),            // 9: hi.Entity
-	(*hi.Pagination)(nil),        // 10: hi.Pagination
-	(*ai.CreateAgentReq)(nil),    // 11: hi.ai.CreateAgentReq
-	(*ai.EditAgentReq)(nil),      // 12: hi.ai.EditAgentReq
-	(*ai.DeleteAgentReq)(nil),    // 13: hi.ai.DeleteAgentReq
-	(*ai.GetAgentReq)(nil),       // 14: hi.ai.GetAgentReq
-	(*ai.AgentUsageReq)(nil),     // 15: hi.ai.AgentUsageReq
-	(*ai.MarkAgentReq)(nil),      // 16: hi.ai.MarkAgentReq
-	(*ai.ListMarksReq)(nil),      // 17: hi.ai.ListMarksReq
-	(*emptypb.Empty)(nil),        // 18: google.protobuf.Empty
-	(*ai.ListAgentReq)(nil),      // 19: hi.ai.ListAgentReq
-	(*ai.CreateAgentResp)(nil),   // 20: hi.ai.CreateAgentResp
-	(*ai.GetAgentResp)(nil),      // 21: hi.ai.GetAgentResp
-	(*ai.AgentUsageResp)(nil),    // 22: hi.ai.AgentUsageResp
-	(*ai.ListAgentResp)(nil),     // 23: hi.ai.ListAgentResp
-	(*ai.DefaultConfigResp)(nil), // 24: hi.ai.DefaultConfigResp
+	(*BindMasterReq)(nil),         // 0: hi.club.BindMasterReq
+	(*UnbindMasterReq)(nil),       // 1: hi.club.UnbindMasterReq
+	(*BindStatusReq)(nil),         // 2: hi.club.BindStatusReq
+	(*BindStatusResp)(nil),        // 3: hi.club.BindStatusResp
+	(*TransferReq)(nil),           // 4: hi.club.TransferReq
+	(*ListOnlineReq)(nil),         // 5: hi.club.ListOnlineReq
+	(*ListOnlineResp)(nil),        // 6: hi.club.ListOnlineResp
+	(*GetAgentMasterReq)(nil),     // 7: hi.club.GetAgentMasterReq
+	(*GetAgentMasterResp)(nil),    // 8: hi.club.GetAgentMasterResp
+	(*hi.Entity)(nil),             // 9: hi.Entity
+	(*hi.Pagination)(nil),         // 10: hi.Pagination
+	(*ai.CreateAssistantReq)(nil), // 11: hi.ai.CreateAssistantReq
+	(*ai.EditAgentReq)(nil),       // 12: hi.ai.EditAgentReq
+	(*ai.DeleteAgentReq)(nil),     // 13: hi.ai.DeleteAgentReq
+	(*ai.GetAgentReq)(nil),        // 14: hi.ai.GetAgentReq
+	(*ai.AgentUsageReq)(nil),      // 15: hi.ai.AgentUsageReq
+	(*ai.MarkAgentReq)(nil),       // 16: hi.ai.MarkAgentReq
+	(*ai.ListMarksReq)(nil),       // 17: hi.ai.ListMarksReq
+	(*emptypb.Empty)(nil),         // 18: google.protobuf.Empty
+	(*ai.ListAgentReq)(nil),       // 19: hi.ai.ListAgentReq
+	(*ai.CreateAgentResp)(nil),    // 20: hi.ai.CreateAgentResp
+	(*ai.GetAgentResp)(nil),       // 21: hi.ai.GetAgentResp
+	(*ai.AgentUsageResp)(nil),     // 22: hi.ai.AgentUsageResp
+	(*ai.ListAgentResp)(nil),      // 23: hi.ai.ListAgentResp
+	(*ai.DefaultConfigResp)(nil),  // 24: hi.ai.DefaultConfigResp
 }
 var file_hi_club_agent_proto_depIdxs = []int32{
 	9,  // 0: hi.club.BindStatusResp.master:type_name -> hi.Entity
 	10, // 1: hi.club.ListOnlineReq.pagination:type_name -> hi.Pagination
 	9,  // 2: hi.club.ListOnlineResp.infos:type_name -> hi.Entity
 	9,  // 3: hi.club.GetAgentMasterResp.master:type_name -> hi.Entity
-	11, // 4: hi.club.Agent.Create:input_type -> hi.ai.CreateAgentReq
+	11, // 4: hi.club.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
 	12, // 5: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
 	13, // 6: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
 	14, // 7: hi.club.Agent.Get:input_type -> hi.ai.GetAgentReq
@@ -588,7 +588,7 @@ var file_hi_club_agent_proto_depIdxs = []int32{
 	19, // 16: hi.club.AgentDirectory.List:input_type -> hi.ai.ListAgentReq
 	5,  // 17: hi.club.AgentDirectory.ListOnline:input_type -> hi.club.ListOnlineReq
 	7,  // 18: hi.club.AgentDirectory.GetAgentMaster:input_type -> hi.club.GetAgentMasterReq
-	20, // 19: hi.club.Agent.Create:output_type -> hi.ai.CreateAgentResp
+	20, // 19: hi.club.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
 	18, // 20: hi.club.Agent.Edit:output_type -> google.protobuf.Empty
 	18, // 21: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
 	21, // 22: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp

@@ -204,21 +204,34 @@ final $typed_data.Uint8List defaultConfigRespDescriptor = $convert.base64Decode(
     'ChFEZWZhdWx0Q29uZmlnUmVzcBIwCgZjb25maWcYASABKAsyEi5oaS5haS5BZ2VudENvbmZpZ0'
     'IEkLUYA1IGY29uZmlnOgSYtRgD');
 
-@$core.Deprecated('Use createAgentReqDescriptor instead')
-const CreateAgentReq$json = {
-  '1': 'CreateAgentReq',
+@$core.Deprecated('Use createAssistantReqDescriptor instead')
+const CreateAssistantReq$json = {
+  '1': 'CreateAssistantReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'avatar', '3': 4, '4': 1, '5': 9, '10': 'avatar'},
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 2, '4': 1, '5': 9, '10': 'avatar'},
   ],
 };
 
-/// Descriptor for `CreateAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List createAgentReqDescriptor = $convert.base64Decode(
-    'Cg5DcmVhdGVBZ2VudFJlcRIQCgNkaWQYASABKAlSA2RpZBISCgR0eXBlGAIgASgJUgR0eXBlEh'
-    'IKBG5hbWUYAyABKAlSBG5hbWUSFgoGYXZhdGFyGAQgASgJUgZhdmF0YXI=');
+/// Descriptor for `CreateAssistantReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createAssistantReqDescriptor = $convert.base64Decode(
+    'ChJDcmVhdGVBc3Npc3RhbnRSZXESEgoEbmFtZRgBIAEoCVIEbmFtZRIWCgZhdmF0YXIYAiABKA'
+    'lSBmF2YXRhcg==');
+
+@$core.Deprecated('Use registerRobotReqDescriptor instead')
+const RegisterRobotReq$json = {
+  '1': 'RegisterRobotReq',
+  '2': [
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 3, '4': 1, '5': 9, '10': 'avatar'},
+  ],
+};
+
+/// Descriptor for `RegisterRobotReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List registerRobotReqDescriptor = $convert.base64Decode(
+    'ChBSZWdpc3RlclJvYm90UmVxEh4KA2RpZBgBIAEoCUIMukgJcgcyBV5cUyskUgNkaWQSEgoEbm'
+    'FtZRgCIAEoCVIEbmFtZRIWCgZhdmF0YXIYAyABKAlSBmF2YXRhcg==');
 
 @$core.Deprecated('Use createAgentRespDescriptor instead')
 const CreateAgentResp$json = {
