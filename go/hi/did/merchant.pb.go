@@ -1550,10 +1550,10 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\rMerchantOwner\x12B\n" +
 	"\aGetExDB\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
 	"\vRefreshExDB\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantExDBResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
-	"\tSetServer\x12\x14.hi.did.SetServerReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022=\n" +
+	"\tSetServer\x12\x14.hi.did.SetServerReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022L\n" +
 	"\n" +
-	"OrderEvent\x12/\n" +
-	"\x03Sub\x12\a.hi.DID\x1a\x16.hi.did.OrderEventResp\"\x05\x8a\xb5\x18\x01\x020\x012O\n" +
+	"OrderEvent\x12>\n" +
+	"\x03Sub\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.OrderEventResp\"\x05\x8a\xb5\x18\x01\x020\x012O\n" +
 	"\vOrderNotify\x12@\n" +
 	"\x04Send\x12\x19.hi.did.MerchantNotifyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01B~\n" +
 	"\n" +
@@ -1641,7 +1641,7 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	28, // 31: hi.did.MerchantOwner.GetExDB:input_type -> google.protobuf.Empty
 	28, // 32: hi.did.MerchantOwner.RefreshExDB:input_type -> google.protobuf.Empty
 	22, // 33: hi.did.MerchantOwner.SetServer:input_type -> hi.did.SetServerReq
-	30, // 34: hi.did.OrderEvent.Sub:input_type -> hi.DID
+	28, // 34: hi.did.OrderEvent.Sub:input_type -> google.protobuf.Empty
 	23, // 35: hi.did.OrderNotify.Send:input_type -> hi.did.MerchantNotifyReq
 	1,  // 36: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
 	28, // 37: hi.did.Merchant.Update:output_type -> google.protobuf.Empty

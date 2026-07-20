@@ -1038,7 +1038,14 @@ const (
 //
 // 订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
 type OrderEventClient interface {
-	Sub(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error)
+	// ⚠️ **只能订阅自己的** —— did 取自 token,入参不给 did。
+	//
+	//	原先是 `Sub(hi.DID)` 且 handler 直接用 req.Id:任何登录用户传别人的 did,
+	//	既能收对方订单事件,又会触发下面的"重复登录"逻辑把对方的 hidid-pc 挤下线。
+	//
+	// 重复登录语义(hidid-pc 特有):A 机已登录且未显式登出时,**B 机登录应被挡下**,
+	// 而不是踢掉 A。原实现踢的是 A,方向反了。
+	Sub(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error)
 }
 
 type orderEventClient struct {
@@ -1049,13 +1056,13 @@ func NewOrderEventClient(cc grpc.ClientConnInterface) OrderEventClient {
 	return &orderEventClient{cc}
 }
 
-func (c *orderEventClient) Sub(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error) {
+func (c *orderEventClient) Sub(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[OrderEventResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &OrderEvent_ServiceDesc.Streams[0], OrderEvent_Sub_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[hi.DID, OrderEventResp]{ClientStream: stream}
+	x := &grpc.GenericClientStream[emptypb.Empty, OrderEventResp]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -1074,7 +1081,14 @@ type OrderEvent_SubClient = grpc.ServerStreamingClient[OrderEventResp]
 //
 // 订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
 type OrderEventServer interface {
-	Sub(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error
+	// ⚠️ **只能订阅自己的** —— did 取自 token,入参不给 did。
+	//
+	//	原先是 `Sub(hi.DID)` 且 handler 直接用 req.Id:任何登录用户传别人的 did,
+	//	既能收对方订单事件,又会触发下面的"重复登录"逻辑把对方的 hidid-pc 挤下线。
+	//
+	// 重复登录语义(hidid-pc 特有):A 机已登录且未显式登出时,**B 机登录应被挡下**,
+	// 而不是踢掉 A。原实现踢的是 A,方向反了。
+	Sub(*emptypb.Empty, grpc.ServerStreamingServer[OrderEventResp]) error
 }
 
 // UnimplementedOrderEventServer should be embedded to have
@@ -1084,7 +1098,7 @@ type OrderEventServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrderEventServer struct{}
 
-func (UnimplementedOrderEventServer) Sub(*hi.DID, grpc.ServerStreamingServer[OrderEventResp]) error {
+func (UnimplementedOrderEventServer) Sub(*emptypb.Empty, grpc.ServerStreamingServer[OrderEventResp]) error {
 	return status.Error(codes.Unimplemented, "method Sub not implemented")
 }
 func (UnimplementedOrderEventServer) testEmbeddedByValue() {}
@@ -1108,11 +1122,11 @@ func RegisterOrderEventServer(s grpc.ServiceRegistrar, srv OrderEventServer) {
 }
 
 func _OrderEvent_Sub_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(hi.DID)
+	m := new(emptypb.Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(OrderEventServer).Sub(m, &grpc.GenericServerStream[hi.DID, OrderEventResp]{ServerStream: stream})
+	return srv.(OrderEventServer).Sub(m, &grpc.GenericServerStream[emptypb.Empty, OrderEventResp]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.

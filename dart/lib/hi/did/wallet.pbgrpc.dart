@@ -49,13 +49,6 @@ class WalletClient extends $grpc.Client {
     return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListAddressesResp> listAddresses(
-    $0.ListAddressesReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listAddresses, request, options: options);
-  }
-
   // method descriptors
 
   static final _$updateAssets =
@@ -67,11 +60,6 @@ class WalletClient extends $grpc.Client {
       '/hi.did.Wallet/Get',
       ($0.GetWalletReq value) => value.writeToBuffer(),
       $0.GetWalletResp.fromBuffer);
-  static final _$listAddresses =
-      $grpc.ClientMethod<$0.ListAddressesReq, $0.ListAddressesResp>(
-          '/hi.did.Wallet/ListAddresses',
-          ($0.ListAddressesReq value) => value.writeToBuffer(),
-          $0.ListAddressesResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.Wallet')
@@ -93,13 +81,6 @@ abstract class WalletServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetWalletReq.fromBuffer(value),
         ($0.GetWalletResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListAddressesReq, $0.ListAddressesResp>(
-        'ListAddresses',
-        listAddresses_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListAddressesReq.fromBuffer(value),
-        ($0.ListAddressesResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.Empty> updateAssets_Pre($grpc.ServiceCall $call,
@@ -117,14 +98,6 @@ abstract class WalletServiceBase extends $grpc.Service {
 
   $async.Future<$0.GetWalletResp> get(
       $grpc.ServiceCall call, $0.GetWalletReq request);
-
-  $async.Future<$0.ListAddressesResp> listAddresses_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListAddressesReq> $request) async {
-    return listAddresses($call, await $request);
-  }
-
-  $async.Future<$0.ListAddressesResp> listAddresses(
-      $grpc.ServiceCall call, $0.ListAddressesReq request);
 }
 
 /// 资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
@@ -169,6 +142,16 @@ class AssetsClient extends $grpc.Client {
     return $createUnaryCall(_$updateAddresses, request, options: options);
   }
 
+  /// 列各链地址。**公开** —— 地址本就是链上公开数据,与同服务的 Total/List/Get 同档。
+  /// 原先它在 Wallet(AUTH_USER)里,但 handler 遍历入参里的任意 did、零校验,
+  /// 档位与行为对不上;而写入侧 UpdateAddresses 本来就在这个服务,读写归位到一处。
+  $grpc.ResponseFuture<$0.ListAddressesResp> listAddresses(
+    $0.ListAddressesReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listAddresses, request, options: options);
+  }
+
   // method descriptors
 
   static final _$total =
@@ -190,6 +173,11 @@ class AssetsClient extends $grpc.Client {
       '/hi.did.Assets/UpdateAddresses',
       ($2.SignedData value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$listAddresses =
+      $grpc.ClientMethod<$0.ListAddressesReq, $0.ListAddressesResp>(
+          '/hi.did.Assets/ListAddresses',
+          ($0.ListAddressesReq value) => value.writeToBuffer(),
+          $0.ListAddressesResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.Assets')
@@ -227,6 +215,13 @@ abstract class AssetsServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.SignedData.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListAddressesReq, $0.ListAddressesResp>(
+        'ListAddresses',
+        listAddresses_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ListAddressesReq.fromBuffer(value),
+        ($0.ListAddressesResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.TotalAssetsResp> total_Pre($grpc.ServiceCall $call,
@@ -260,4 +255,12 @@ abstract class AssetsServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> updateAddresses(
       $grpc.ServiceCall call, $2.SignedData request);
+
+  $async.Future<$0.ListAddressesResp> listAddresses_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListAddressesReq> $request) async {
+    return listAddresses($call, await $request);
+  }
+
+  $async.Future<$0.ListAddressesResp> listAddresses(
+      $grpc.ServiceCall call, $0.ListAddressesReq request);
 }

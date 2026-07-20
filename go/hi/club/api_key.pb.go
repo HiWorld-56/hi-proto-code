@@ -92,9 +92,11 @@ func (x *ApiKeyInfo) GetCreatedAt() int64 {
 	return 0
 }
 
+// ⚠️ **只有机器人能持 apikey** —— 原先设计里"人也能设 apikey",没必要,已废。
+// 故这里是**机器人 did**,后端校验:调用者必须是该机器人的 master。
 type CreateApiKeyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 给谁建(自己 / 自己名下的 agent;后端校验归属)
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did;能设置的只有它的 master
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -129,9 +131,9 @@ func (*CreateApiKeyReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_api_key_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateApiKeyReq) GetUser() string {
+func (x *CreateApiKeyReq) GetAgent() string {
 	if x != nil {
-		return x.User
+		return x.Agent
 	}
 	return ""
 }
@@ -278,7 +280,7 @@ func (x *EditApiKeyResp) GetInfo() *ApiKeyInfo {
 
 type ListApiKeysReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 列谁的(自己 / 自己名下的 agent)
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did;能查的只有它的 master
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -314,9 +316,9 @@ func (*ListApiKeysReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_api_key_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListApiKeysReq) GetUser() string {
+func (x *ListApiKeysReq) GetAgent() string {
 	if x != nil {
-		return x.User
+		return x.Agent
 	}
 	return ""
 }
@@ -435,18 +437,18 @@ const file_hi_club_api_key_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05value\x12\x18\n" +
 	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12#\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"%\n" +
-	"\x0fCreateApiKeyReq\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\"G\n" +
+	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"'\n" +
+	"\x0fCreateApiKeyReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\"G\n" +
 	"\x10CreateApiKeyResp\x12-\n" +
 	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"<\n" +
 	"\rEditApiKeyReq\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x12\n" +
 	"\x04note\x18\x02 \x01(\tR\x04note\"E\n" +
 	"\x0eEditApiKeyResp\x12-\n" +
-	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"T\n" +
-	"\x0eListApiKeysReq\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\x12.\n" +
+	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"V\n" +
+	"\x0eListApiKeysReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"d\n" +

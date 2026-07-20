@@ -109,12 +109,14 @@ class ApiKeyInfo extends $pb.GeneratedMessage {
   void clearCreatedAt() => $_clearField(4);
 }
 
+/// ⚠️ **只有机器人能持 apikey** —— 原先设计里"人也能设 apikey",没必要,已废。
+/// 故这里是**机器人 did**,后端校验:调用者必须是该机器人的 master。
 class CreateApiKeyReq extends $pb.GeneratedMessage {
   factory CreateApiKeyReq({
-    $core.String? user,
+    $core.String? agent,
   }) {
     final result = create();
-    if (user != null) result.user = user;
+    if (agent != null) result.agent = agent;
     return result;
   }
 
@@ -131,7 +133,7 @@ class CreateApiKeyReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'CreateApiKeyReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -154,13 +156,13 @@ class CreateApiKeyReq extends $pb.GeneratedMessage {
   static CreateApiKeyReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get user => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set user($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasUser() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUser() => $_clearField(1);
+  void clearAgent() => $_clearField(1);
 }
 
 class CreateApiKeyResp extends $pb.GeneratedMessage {
@@ -345,11 +347,11 @@ class EditApiKeyResp extends $pb.GeneratedMessage {
 
 class ListApiKeysReq extends $pb.GeneratedMessage {
   factory ListApiKeysReq({
-    $core.String? user,
+    $core.String? agent,
     $2.Pagination? pagination,
   }) {
     final result = create();
-    if (user != null) result.user = user;
+    if (agent != null) result.agent = agent;
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -367,7 +369,7 @@ class ListApiKeysReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListApiKeysReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
@@ -392,13 +394,13 @@ class ListApiKeysReq extends $pb.GeneratedMessage {
   static ListApiKeysReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get user => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set user($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasUser() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUser() => $_clearField(1);
+  void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $2.Pagination get pagination => $_getN(1);

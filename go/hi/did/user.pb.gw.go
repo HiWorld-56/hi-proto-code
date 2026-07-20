@@ -66,7 +66,7 @@ func local_request_User_UploadAvatar_0(ctx context.Context, marshaler runtime.Ma
 
 func request_User_Edit_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq hi.Entity
+		protoReq EditProfileReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -81,7 +81,7 @@ func request_User_Edit_0(ctx context.Context, marshaler runtime.Marshaler, clien
 
 func local_request_User_Edit_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq hi.Entity
+		protoReq EditProfileReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

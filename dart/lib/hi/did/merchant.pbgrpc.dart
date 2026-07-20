@@ -650,8 +650,14 @@ class OrderEventClient extends $grpc.Client {
 
   OrderEventClient(super.channel, {super.options, super.interceptors});
 
+  /// ⚠️ **只能订阅自己的** —— did 取自 token,入参不给 did。
+  ///    原先是 `Sub(hi.DID)` 且 handler 直接用 req.Id:任何登录用户传别人的 did,
+  ///    既能收对方订单事件,又会触发下面的"重复登录"逻辑把对方的 hidid-pc 挤下线。
+  ///
+  /// 重复登录语义(hidid-pc 特有):A 机已登录且未显式登出时,**B 机登录应被挡下**,
+  /// 而不是踢掉 A。原实现踢的是 A,方向反了。
   $grpc.ResponseStream<$1.OrderEventResp> sub(
-    $2.DID request, {
+    $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createStreamingCall(_$sub, $async.Stream.fromIterable([request]),
@@ -660,9 +666,9 @@ class OrderEventClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$sub = $grpc.ClientMethod<$2.DID, $1.OrderEventResp>(
+  static final _$sub = $grpc.ClientMethod<$0.Empty, $1.OrderEventResp>(
       '/hi.did.OrderEvent/Sub',
-      ($2.DID value) => value.writeToBuffer(),
+      ($0.Empty value) => value.writeToBuffer(),
       $1.OrderEventResp.fromBuffer);
 }
 
@@ -671,21 +677,22 @@ abstract class OrderEventServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.OrderEvent';
 
   OrderEventServiceBase() {
-    $addMethod($grpc.ServiceMethod<$2.DID, $1.OrderEventResp>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.OrderEventResp>(
         'Sub',
         sub_Pre,
         false,
         true,
-        ($core.List<$core.int> value) => $2.DID.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.OrderEventResp value) => value.writeToBuffer()));
   }
 
   $async.Stream<$1.OrderEventResp> sub_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.DID> $request) async* {
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async* {
     yield* sub($call, await $request);
   }
 
-  $async.Stream<$1.OrderEventResp> sub($grpc.ServiceCall call, $2.DID request);
+  $async.Stream<$1.OrderEventResp> sub(
+      $grpc.ServiceCall call, $0.Empty request);
 }
 
 /// 订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。

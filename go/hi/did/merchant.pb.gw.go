@@ -534,7 +534,7 @@ func local_request_MerchantOwner_SetServer_0(ctx context.Context, marshaler runt
 
 func request_OrderEvent_Sub_0(ctx context.Context, marshaler runtime.Marshaler, client OrderEventClient, req *http.Request, pathParams map[string]string) (OrderEvent_SubClient, runtime.ServerMetadata, error) {
 	var (
-		protoReq hi.DID
+		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

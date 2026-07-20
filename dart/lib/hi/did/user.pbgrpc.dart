@@ -15,13 +15,13 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
 import '../common.pb.dart' as $0;
+import 'user.pb.dart' as $1;
 
 export 'user.pb.dart';
 
-/// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
 @$pb.GrpcServiceName('hi.did.User')
 class UserClient extends $grpc.Client {
   /// The hostname for this service.
@@ -44,15 +44,15 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$uploadAvatar, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> edit(
-    $0.Entity request, {
+  $grpc.ResponseFuture<$2.Empty> edit(
+    $1.EditProfileReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Entity> query(
-    $1.Empty request, {
+    $2.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$query, request, options: options);
@@ -64,13 +64,13 @@ class UserClient extends $grpc.Client {
       '/hi.did.User/UploadAvatar',
       ($0.UploadReq value) => value.writeToBuffer(),
       $0.UploadResp.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$0.Entity, $1.Empty>(
+  static final _$edit = $grpc.ClientMethod<$1.EditProfileReq, $2.Empty>(
       '/hi.did.User/Edit',
-      ($0.Entity value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$query = $grpc.ClientMethod<$1.Empty, $0.Entity>(
+      ($1.EditProfileReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$query = $grpc.ClientMethod<$2.Empty, $0.Entity>(
       '/hi.did.User/Query',
-      ($1.Empty value) => value.writeToBuffer(),
+      ($2.Empty value) => value.writeToBuffer(),
       $0.Entity.fromBuffer);
 }
 
@@ -86,19 +86,19 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
         ($0.UploadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Entity, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$1.EditProfileReq, $2.Empty>(
         'Edit',
         edit_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Entity.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Empty, $0.Entity>(
+        ($core.List<$core.int> value) => $1.EditProfileReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.Empty, $0.Entity>(
         'Query',
         query_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
         ($0.Entity value) => value.writeToBuffer()));
   }
 
@@ -110,17 +110,18 @@ abstract class UserServiceBase extends $grpc.Service {
   $async.Future<$0.UploadResp> uploadAvatar(
       $grpc.ServiceCall call, $0.UploadReq request);
 
-  $async.Future<$1.Empty> edit_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Entity> $request) async {
+  $async.Future<$2.Empty> edit_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.EditProfileReq> $request) async {
     return edit($call, await $request);
   }
 
-  $async.Future<$1.Empty> edit($grpc.ServiceCall call, $0.Entity request);
+  $async.Future<$2.Empty> edit(
+      $grpc.ServiceCall call, $1.EditProfileReq request);
 
   $async.Future<$0.Entity> query_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
     return query($call, await $request);
   }
 
-  $async.Future<$0.Entity> query($grpc.ServiceCall call, $1.Empty request);
+  $async.Future<$0.Entity> query($grpc.ServiceCall call, $2.Empty request);
 }

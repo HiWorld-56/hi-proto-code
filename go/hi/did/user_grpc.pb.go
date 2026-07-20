@@ -29,14 +29,12 @@ const (
 // UserClient is the client API for User service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
 type UserClient interface {
 	// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
 	// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
 	// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
-	Edit(ctx context.Context, in *hi.Entity, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Edit(ctx context.Context, in *EditProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Query(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.Entity, error)
 }
 
@@ -58,7 +56,7 @@ func (c *userClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ..
 	return out, nil
 }
 
-func (c *userClient) Edit(ctx context.Context, in *hi.Entity, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userClient) Edit(ctx context.Context, in *EditProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, User_Edit_FullMethodName, in, out, cOpts...)
@@ -81,14 +79,12 @@ func (c *userClient) Query(ctx context.Context, in *emptypb.Empty, opts ...grpc.
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
-//
-// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
 type UserServer interface {
 	// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
 	// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
 	// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
-	Edit(context.Context, *hi.Entity) (*emptypb.Empty, error)
+	Edit(context.Context, *EditProfileReq) (*emptypb.Empty, error)
 	Query(context.Context, *emptypb.Empty) (*hi.Entity, error)
 }
 
@@ -102,7 +98,7 @@ type UnimplementedUserServer struct{}
 func (UnimplementedUserServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
 }
-func (UnimplementedUserServer) Edit(context.Context, *hi.Entity) (*emptypb.Empty, error) {
+func (UnimplementedUserServer) Edit(context.Context, *EditProfileReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedUserServer) Query(context.Context, *emptypb.Empty) (*hi.Entity, error) {
@@ -147,7 +143,7 @@ func _User_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _User_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.Entity)
+	in := new(EditProfileReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -159,7 +155,7 @@ func _User_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface
 		FullMethod: User_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).Edit(ctx, req.(*hi.Entity))
+		return srv.(UserServer).Edit(ctx, req.(*EditProfileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

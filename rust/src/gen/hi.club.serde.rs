@@ -1481,12 +1481,12 @@ impl serde::Serialize for CreateApiKeyReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.user.is_empty() {
+        if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.CreateApiKeyReq", len)?;
-        if !self.user.is_empty() {
-            struct_ser.serialize_field("user", &self.user)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
         }
         struct_ser.end()
     }
@@ -1498,12 +1498,12 @@ impl<'de> serde::Deserialize<'de> for CreateApiKeyReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "user",
+            "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            User,
+            Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1525,7 +1525,7 @@ impl<'de> serde::Deserialize<'de> for CreateApiKeyReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "user" => Ok(GeneratedField::User),
+                            "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1545,19 +1545,19 @@ impl<'de> serde::Deserialize<'de> for CreateApiKeyReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut user__ = None;
+                let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::User => {
-                            if user__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("user"));
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            user__ = Some(map_.next_value()?);
+                            agent__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(CreateApiKeyReq {
-                    user: user__.unwrap_or_default(),
+                    agent: agent__.unwrap_or_default(),
                 })
             }
         }
@@ -4661,15 +4661,15 @@ impl serde::Serialize for ListApiKeysReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.user.is_empty() {
+        if !self.agent.is_empty() {
             len += 1;
         }
         if self.pagination.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.ListApiKeysReq", len)?;
-        if !self.user.is_empty() {
-            struct_ser.serialize_field("user", &self.user)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -4684,13 +4684,13 @@ impl<'de> serde::Deserialize<'de> for ListApiKeysReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "user",
+            "agent",
             "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            User,
+            Agent,
             Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -4713,7 +4713,7 @@ impl<'de> serde::Deserialize<'de> for ListApiKeysReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "user" => Ok(GeneratedField::User),
+                            "agent" => Ok(GeneratedField::Agent),
                             "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -4734,15 +4734,15 @@ impl<'de> serde::Deserialize<'de> for ListApiKeysReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut user__ = None;
+                let mut agent__ = None;
                 let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::User => {
-                            if user__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("user"));
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            user__ = Some(map_.next_value()?);
+                            agent__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -4753,7 +4753,7 @@ impl<'de> serde::Deserialize<'de> for ListApiKeysReq {
                     }
                 }
                 Ok(ListApiKeysReq {
-                    user: user__.unwrap_or_default(),
+                    agent: agent__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }

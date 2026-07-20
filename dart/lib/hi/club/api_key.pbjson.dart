@@ -37,13 +37,13 @@ final $typed_data.Uint8List apiKeyInfoDescriptor = $convert.base64Decode(
 const CreateApiKeyReq$json = {
   '1': 'CreateApiKeyReq',
   '2': [
-    {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
   ],
 };
 
 /// Descriptor for `CreateApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createApiKeyReqDescriptor = $convert
-    .base64Decode('Cg9DcmVhdGVBcGlLZXlSZXESEgoEdXNlchgBIAEoCVIEdXNlcg==');
+    .base64Decode('Cg9DcmVhdGVBcGlLZXlSZXESFAoFYWdlbnQYASABKAlSBWFnZW50');
 
 @$core.Deprecated('Use createApiKeyRespDescriptor instead')
 const CreateApiKeyResp$json = {
@@ -107,7 +107,7 @@ final $typed_data.Uint8List editApiKeyRespDescriptor = $convert.base64Decode(
 const ListApiKeysReq$json = {
   '1': 'ListApiKeysReq',
   '2': [
-    {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
     {
       '1': 'pagination',
       '3': 2,
@@ -121,8 +121,8 @@ const ListApiKeysReq$json = {
 
 /// Descriptor for `ListApiKeysReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listApiKeysReqDescriptor = $convert.base64Decode(
-    'Cg5MaXN0QXBpS2V5c1JlcRISCgR1c2VyGAEgASgJUgR1c2VyEi4KCnBhZ2luYXRpb24YAiABKA'
-    'syDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+    'Cg5MaXN0QXBpS2V5c1JlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSLgoKcGFnaW5hdGlvbhgCIA'
+    'EoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
 @$core.Deprecated('Use listApiKeysRespDescriptor instead')
 const ListApiKeysResp$json = {

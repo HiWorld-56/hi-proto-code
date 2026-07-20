@@ -14,3 +14,17 @@
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use editProfileReqDescriptor instead')
+const EditProfileReq$json = {
+  '1': 'EditProfileReq',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 2, '4': 1, '5': 9, '10': 'avatar'},
+  ],
+};
+
+/// Descriptor for `EditProfileReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List editProfileReqDescriptor = $convert.base64Decode(
+    'Cg5FZGl0UHJvZmlsZVJlcRISCgRuYW1lGAEgASgJUgRuYW1lEhYKBmF2YXRhchgCIAEoCVIGYX'
+    'ZhdGFy');

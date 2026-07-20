@@ -911,6 +911,139 @@ pub mod auth_client {
         }
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetPriceReq {
+    #[prost(string, tag = "1")]
+    pub coin: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetPriceResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<get_price_resp::Unit>,
+    #[prost(string, tag = "2")]
+    pub exchange: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `GetPriceResp`.
+pub mod get_price_resp {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Unit {
+        #[prost(string, tag = "1")]
+        pub price: ::prost::alloc::string::String,
+        #[prost(message, optional, tag = "2")]
+        pub coin: ::core::option::Option<super::Coin>,
+    }
+}
+/// Generated client implementations.
+pub mod price_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct PriceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl PriceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> PriceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PriceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            PriceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetPriceReq>,
+        ) -> std::result::Result<tonic::Response<super::GetPriceResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Price/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Price", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// 商户节点信息。
 ///
 /// ⚠️ **绝不要把 extension_token(商户 API 凭证)加回这个结构。**
@@ -1983,9 +2116,15 @@ pub mod order_event_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// ⚠️ **只能订阅自己的** —— did 取自 token,入参不给 did。
+        /// 原先是 `Sub(hi.DID)` 且 handler 直接用 req.Id:任何登录用户传别人的 did,
+        /// 既能收对方订单事件,又会触发下面的"重复登录"逻辑把对方的 hidid-pc 挤下线。
+        ///
+        /// 重复登录语义(hidid-pc 特有):A 机已登录且未显式登出时,**B 机登录应被挡下**,
+        /// 而不是踢掉 A。原实现踢的是 A,方向反了。
         pub async fn sub(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::Did>,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::OrderEventResp>>,
             tonic::Status,
@@ -2116,139 +2255,6 @@ pub mod order_notify_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.OrderNotify/Send");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.OrderNotify", "Send"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetPriceReq {
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetPriceResp {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<get_price_resp::Unit>,
-    #[prost(string, tag = "2")]
-    pub exchange: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `GetPriceResp`.
-pub mod get_price_resp {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-    pub struct Unit {
-        #[prost(string, tag = "1")]
-        pub price: ::prost::alloc::string::String,
-        #[prost(message, optional, tag = "2")]
-        pub coin: ::core::option::Option<super::Coin>,
-    }
-}
-/// Generated client implementations.
-pub mod price_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct PriceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl PriceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> PriceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PriceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            PriceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetPriceReq>,
-        ) -> std::result::Result<tonic::Response<super::GetPriceResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Price/Get");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Price", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -2539,30 +2545,6 @@ pub mod wallet_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Wallet", "Get"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_addresses(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListAddressesReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListAddressesResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Wallet/ListAddresses",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Wallet", "ListAddresses"));
-            self.inner.unary(req, path, codec).await
-        }
     }
 }
 /// Generated client implementations.
@@ -2740,6 +2722,33 @@ pub mod assets_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Assets", "UpdateAddresses"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 列各链地址。**公开** —— 地址本就是链上公开数据,与同服务的 Total/List/Get 同档。
+        /// 原先它在 Wallet(AUTH_USER)里,但 handler 遍历入参里的任意 did、零校验,
+        /// 档位与行为对不上;而写入侧 UpdateAddresses 本来就在这个服务,读写归位到一处。
+        pub async fn list_addresses(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAddressesReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListAddressesResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Assets/ListAddresses",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Assets", "ListAddresses"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -3691,6 +3700,22 @@ pub mod merchant_manage_client {
         }
     }
 }
+/// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
+/// 改自己的资料。
+///
+/// ⚠️ **入参不用 hi.Entity 整体** —— Entity 里带 did/type/update,而这里一个都不该由调用方决定:
+/// 改谁永远取自 token。原先收 Entity、handler 记得忽略 req.did,是"接口形状在撒谎":
+/// 调用方有理由以为传 did 管用。换成专用消息后,"不能指定改谁"在**类型上就说不出来**。
+/// 通则:**参数用专用消息,返回才用 Entity 这类对象**(各端自取所需)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EditProfileReq {
+    /// 昵称
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// 头像 url
+    #[prost(string, tag = "2")]
+    pub avatar: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
 pub mod user_client {
     #![allow(
@@ -3702,7 +3727,6 @@ pub mod user_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
     #[derive(Debug, Clone)]
     pub struct UserClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3809,7 +3833,7 @@ pub mod user_client {
         }
         pub async fn edit(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::Entity>,
+            request: impl tonic::IntoRequest<super::EditProfileReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()

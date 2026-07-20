@@ -12,6 +12,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
+	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -22,33 +23,109 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
+// 改自己的资料。
+//
+// ⚠️ **入参不用 hi.Entity 整体** —— Entity 里带 did/type/update,而这里一个都不该由调用方决定:
+//
+//	改谁永远取自 token。原先收 Entity、handler 记得忽略 req.did,是"接口形状在撒谎":
+//	调用方有理由以为传 did 管用。换成专用消息后,"不能指定改谁"在**类型上就说不出来**。
+//	通则:**参数用专用消息,返回才用 Entity 这类对象**(各端自取所需)。
+type EditProfileReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`     // 昵称
+	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"` // 头像 url
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EditProfileReq) Reset() {
+	*x = EditProfileReq{}
+	mi := &file_hi_did_user_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EditProfileReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EditProfileReq) ProtoMessage() {}
+
+func (x *EditProfileReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_user_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EditProfileReq.ProtoReflect.Descriptor instead.
+func (*EditProfileReq) Descriptor() ([]byte, []int) {
+	return file_hi_did_user_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *EditProfileReq) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *EditProfileReq) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
 var File_hi_did_user_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2\xa3\x01\n" +
+	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"<\n" +
+	"\x0eEditProfileReq\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
+	"\x06avatar\x18\x02 \x01(\tR\x06avatar2\xaf\x01\n" +
 	"\x04User\x124\n" +
-	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x121\n" +
-	"\x04Edit\x12\n" +
-	".hi.Entity\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
+	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\x04Edit\x12\x16.hi.did.EditProfileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
 	"\x05Query\x12\x16.google.protobuf.Empty\x1a\n" +
 	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02Bz\n" +
 	"\n" +
 	"com.hi.didB\tUserProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
+var (
+	file_hi_did_user_proto_rawDescOnce sync.Once
+	file_hi_did_user_proto_rawDescData []byte
+)
+
+func file_hi_did_user_proto_rawDescGZIP() []byte {
+	file_hi_did_user_proto_rawDescOnce.Do(func() {
+		file_hi_did_user_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_hi_did_user_proto_rawDesc), len(file_hi_did_user_proto_rawDesc)))
+	})
+	return file_hi_did_user_proto_rawDescData
+}
+
+var file_hi_did_user_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_hi_did_user_proto_goTypes = []any{
-	(*hi.UploadReq)(nil),  // 0: hi.UploadReq
-	(*hi.Entity)(nil),     // 1: hi.Entity
-	(*emptypb.Empty)(nil), // 2: google.protobuf.Empty
-	(*hi.UploadResp)(nil), // 3: hi.UploadResp
+	(*EditProfileReq)(nil), // 0: hi.did.EditProfileReq
+	(*hi.UploadReq)(nil),   // 1: hi.UploadReq
+	(*emptypb.Empty)(nil),  // 2: google.protobuf.Empty
+	(*hi.UploadResp)(nil),  // 3: hi.UploadResp
+	(*hi.Entity)(nil),      // 4: hi.Entity
 }
 var file_hi_did_user_proto_depIdxs = []int32{
-	0, // 0: hi.did.User.UploadAvatar:input_type -> hi.UploadReq
-	1, // 1: hi.did.User.Edit:input_type -> hi.Entity
+	1, // 0: hi.did.User.UploadAvatar:input_type -> hi.UploadReq
+	0, // 1: hi.did.User.Edit:input_type -> hi.did.EditProfileReq
 	2, // 2: hi.did.User.Query:input_type -> google.protobuf.Empty
 	3, // 3: hi.did.User.UploadAvatar:output_type -> hi.UploadResp
 	2, // 4: hi.did.User.Edit:output_type -> google.protobuf.Empty
-	1, // 5: hi.did.User.Query:output_type -> hi.Entity
+	4, // 5: hi.did.User.Query:output_type -> hi.Entity
 	3, // [3:6] is the sub-list for method output_type
 	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -67,12 +144,13 @@ func file_hi_did_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_user_proto_rawDesc), len(file_hi_did_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   0,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_hi_did_user_proto_goTypes,
 		DependencyIndexes: file_hi_did_user_proto_depIdxs,
+		MessageInfos:      file_hi_did_user_proto_msgTypes,
 	}.Build()
 	File_hi_did_user_proto = out.File
 	file_hi_did_user_proto_goTypes = nil
