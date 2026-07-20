@@ -1019,26 +1019,38 @@ pub mod chat_client {
         }
     }
 }
-/// plugin_body:插件本体。身份两层 uuid(脚本,跨版本稳定)+ version;(uuid,version) 不可变。
+/// plugin_body:插件本体。
+///
+/// **uuid = \<主id>\_\<次id>,它就是"插件 id" —— 系统内一个 uuid 就是一个独立插件。**
+/// 同一个主id 下的多个 uuid = 同一脚本的多个版本;一级列表按主id 聚合,二级页列出各 uuid。
+/// ⚠️ **次id 与 version 无关**:次id 是后台生成的身份,version 是用户贴的标签。
+/// 正因如此,用户删掉某版本再用同一个版本号重建,拿到的是**新的 uuid**,
+/// 老的引用指向的仍是那个已删除的插件,不会被悄悄换掉内容。
+///
+/// ⚠️ **发布后整行冻结** —— name/logo/summary 也不例外。
+/// 定版的东西如果能改,版本就失去意义了;要改就发新版本。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginBody {
-    /// 脚本 id:同脚本所有版本共用
+    /// 插件 id = \<主id>\_\<次id>,后台生成
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
-    /// 版本号(用户上传自填)
+    /// 脚本名(给人看)
     #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// 图标 url
+    #[prost(string, tag = "3")]
+    pub logo: ::prost::alloc::string::String,
+    /// 详情资源 url:介绍页或一张美工图,由用户自定
+    #[prost(string, tag = "4")]
+    pub summary: ::prost::alloc::string::String,
+    /// 三级版本号如 1.23.66,用户自填;仅作标签,**不参与身份**
+    #[prost(string, tag = "5")]
     pub version: ::prost::alloc::string::String,
     /// 主脚本包 zip url(内含 main.py + requirement.txt)
-    #[prost(string, tag = "3")]
-    pub url: ::prost::alloc::string::String,
-    /// 脚本名字
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// Python\_<uuid>:给 LLM 的工具名,跨版本稳定
-    #[prost(string, tag = "5")]
-    pub function_name: ::prost::alloc::string::String,
-    /// function-call spec:name/作用/parameters schema 合一(网页配置后生成)
     #[prost(string, tag = "6")]
+    pub url: ::prost::alloc::string::String,
+    /// 完整 function-call spec(作用 + parameters schema)
+    #[prost(string, tag = "7")]
     pub description: ::prost::alloc::string::String,
 }
 /// plugin_annex:某机器人对某 body 的附件。运行期以字典全局变量注入执行环境。
@@ -1068,14 +1080,17 @@ pub struct PluginView {
 /// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreatePluginReq {
-    /// 智能体 did(owner agent)
+    /// 装到哪个 agent
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// uuid 空=新脚本;url/version/name/description 由用户/前端提供
-    #[prost(message, optional, tag = "2")]
-    pub body: ::core::option::Option<PluginBody>,
-    /// api_key 由 club 填、data 用户填
+    /// 主id:**空=全新脚本**(后台生成 主id+次id);非空=给该脚本**加新版本**(只生成次id)
+    #[prost(string, tag = "2")]
+    pub root: ::prost::alloc::string::String,
+    /// uuid 由后台生成并回填,调用方不要传;其余字段由用户/前端提供
     #[prost(message, optional, tag = "3")]
+    pub body: ::core::option::Option<PluginBody>,
+    /// api_key 由 club 自动填、data 用户填
+    #[prost(message, optional, tag = "4")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1101,23 +1116,17 @@ pub struct CreateAnnexReq {
     #[prost(message, optional, tag = "4")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
-/// 改插件:body 的可变元数据(name/description)+ 该 agent 的 annex。url/version 不可改(改脚本=加版本)。
+/// 改绑定关系。**body 一个字段都不能改** —— 发布即冻结,要改就发新版本。这里只动该 agent 的 annex。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditPluginReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 脚本 id
+    /// 插件 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 改名(空=不改)
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// 改描述/function-call spec(空=不改)
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
     /// 改该 agent 的 api_key/data
-    #[prost(message, optional, tag = "5")]
+    #[prost(message, optional, tag = "3")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1132,31 +1141,26 @@ pub struct SetEnabledReq {
     #[prost(bool, tag = "3")]
     pub enabled: bool,
 }
-/// 选定该 agent 用哪个版本供 function call 调用(同脚本多版本共存,该 agent 只激活一个)。
+/// 选定该 agent 激活哪个版本。uuid 本身即版本身份,不需要再传版本号。
+/// 同一主id 下只能激活一个;不同机器人可各自激活不同版本。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetActiveVersionReq {
+pub struct SetActiveReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 脚本 id
+    /// 要激活的插件 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 要激活的版本
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
 }
 /// 下载脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptReq {
-    /// agent did(校验脚本归属)
+    /// agent did(校验持有关系)
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 脚本 id
+    /// 插件 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 留空=该 agent 的激活版本
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptResp {
@@ -1178,9 +1182,9 @@ pub struct ListVersionsReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 脚本 id
+    /// 主id:列该脚本的所有版本
     #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    pub root: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -1196,29 +1200,29 @@ pub struct GetPluginReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 脚本 id
+    /// 插件 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 留空=该 agent 的激活版本
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPluginResp {
     #[prost(message, optional, tag = "1")]
     pub view: ::core::option::Option<PluginView>,
 }
+/// 删除。二选一:uuid=删这一个版本(**连同脚本文件一并删**);root=删该脚本全部版本。
+/// ⚠️ 允许**强删正被引用的插件** —— 引用方的 annex 不清理,指向随即失效;
+/// 调用时该 tool 返错给 LLM,但**不打断整体推理流程**。删前把 ref_count 摆给用户看。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 脚本 id
+    /// 删单个版本
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 留空=解绑该 agent 的整个脚本(所有版本 annex);非空=删该版本
+    /// 主id:删该脚本全部版本(与 uuid 二选一)
     #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    pub root: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginByAgentsReq {
@@ -1553,9 +1557,9 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.ai.Plugin", "DeleteByAgents"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn set_active_version(
+        pub async fn set_active(
             &mut self,
-            request: impl tonic::IntoRequest<super::SetActiveVersionReq>,
+            request: impl tonic::IntoRequest<super::SetActiveReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -1566,12 +1570,9 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Plugin/SetActiveVersion",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/SetActive");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Plugin", "SetActiveVersion"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "SetActive"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_enabled(

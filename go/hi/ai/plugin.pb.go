@@ -25,15 +25,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// plugin_body:插件本体。身份两层 uuid(脚本,跨版本稳定)+ version;(uuid,version) 不可变。
+// plugin_body:插件本体。
+//
+// **uuid = <主id>_<次id>,它就是"插件 id" —— 系统内一个 uuid 就是一个独立插件。**
+// 同一个主id 下的多个 uuid = 同一脚本的多个版本;一级列表按主id 聚合,二级页列出各 uuid。
+// ⚠️ **次id 与 version 无关**:次id 是后台生成的身份,version 是用户贴的标签。
+//
+//	正因如此,用户删掉某版本再用同一个版本号重建,拿到的是**新的 uuid**,
+//	老的引用指向的仍是那个已删除的插件,不会被悄悄换掉内容。
+//
+// ⚠️ **发布后整行冻结** —— name/logo/summary 也不例外。
+//
+//	定版的东西如果能改,版本就失去意义了;要改就发新版本。
 type PluginBody struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`                                     // 脚本 id:同脚本所有版本共用
-	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`                               // 版本号(用户上传自填)
-	Url           string                 `protobuf:"bytes,3,opt,name=url,proto3" json:"url,omitempty"`                                       // 主脚本包 zip url(内含 main.py + requirement.txt)
-	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`                                     // 脚本名字
-	FunctionName  string                 `protobuf:"bytes,5,opt,name=function_name,json=functionName,proto3" json:"function_name,omitempty"` // Python_<uuid>:给 LLM 的工具名,跨版本稳定
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`                       // function-call spec:name/作用/parameters schema 合一(网页配置后生成)
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`               // 插件 id = <主id>_<次id>,后台生成
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 脚本名(给人看)
+	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`               // 图标 url
+	Summary       string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`         // 详情资源 url:介绍页或一张美工图,由用户自定
+	Version       string                 `protobuf:"bytes,5,opt,name=version,proto3" json:"version,omitempty"`         // 三级版本号如 1.23.66,用户自填;仅作标签,**不参与身份**
+	Url           string                 `protobuf:"bytes,6,opt,name=url,proto3" json:"url,omitempty"`                 // 主脚本包 zip url(内含 main.py + requirement.txt)
+	Description   string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"` // 完整 function-call spec(作用 + parameters schema)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,6 +87,27 @@ func (x *PluginBody) GetUuid() string {
 	return ""
 }
 
+func (x *PluginBody) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PluginBody) GetLogo() string {
+	if x != nil {
+		return x.Logo
+	}
+	return ""
+}
+
+func (x *PluginBody) GetSummary() string {
+	if x != nil {
+		return x.Summary
+	}
+	return ""
+}
+
 func (x *PluginBody) GetVersion() string {
 	if x != nil {
 		return x.Version
@@ -85,20 +118,6 @@ func (x *PluginBody) GetVersion() string {
 func (x *PluginBody) GetUrl() string {
 	if x != nil {
 		return x.Url
-	}
-	return ""
-}
-
-func (x *PluginBody) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *PluginBody) GetFunctionName() string {
-	if x != nil {
-		return x.FunctionName
 	}
 	return ""
 }
@@ -229,9 +248,10 @@ func (x *PluginView) GetEnabled() bool {
 // annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 type CreatePluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体 did(owner agent)
-	Body          *PluginBody            `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`   // uuid 空=新脚本;url/version/name/description 由用户/前端提供
-	Annex         *PluginAnnex           `protobuf:"bytes,3,opt,name=annex,proto3" json:"annex,omitempty"` // api_key 由 club 填、data 用户填
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 装到哪个 agent
+	Root          string                 `protobuf:"bytes,2,opt,name=root,proto3" json:"root,omitempty"`   // 主id:**空=全新脚本**(后台生成 主id+次id);非空=给该脚本**加新版本**(只生成次id)
+	Body          *PluginBody            `protobuf:"bytes,3,opt,name=body,proto3" json:"body,omitempty"`   // uuid 由后台生成并回填,调用方不要传;其余字段由用户/前端提供
+	Annex         *PluginAnnex           `protobuf:"bytes,4,opt,name=annex,proto3" json:"annex,omitempty"` // api_key 由 club 自动填、data 用户填
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -269,6 +289,13 @@ func (*CreatePluginReq) Descriptor() ([]byte, []int) {
 func (x *CreatePluginReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
+	}
+	return ""
+}
+
+func (x *CreatePluginReq) GetRoot() string {
+	if x != nil {
+		return x.Root
 	}
 	return ""
 }
@@ -401,14 +428,12 @@ func (x *CreateAnnexReq) GetAnnex() *PluginAnnex {
 	return nil
 }
 
-// 改插件:body 的可变元数据(name/description)+ 该 agent 的 annex。url/version 不可改(改脚本=加版本)。
+// 改绑定关系。**body 一个字段都不能改** —— 发布即冻结,要改就发新版本。这里只动该 agent 的 annex。
 type EditPluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`             // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`               // 脚本 id
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`               // 改名(空=不改)
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // 改描述/function-call spec(空=不改)
-	Annex         *PluginAnnex           `protobuf:"bytes,5,opt,name=annex,proto3" json:"annex,omitempty"`             // 改该 agent 的 api_key/data
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id
+	Annex         *PluginAnnex           `protobuf:"bytes,3,opt,name=annex,proto3" json:"annex,omitempty"` // 改该 agent 的 api_key/data
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -453,20 +478,6 @@ func (x *EditPluginReq) GetAgent() string {
 func (x *EditPluginReq) GetUuid() string {
 	if x != nil {
 		return x.Uuid
-	}
-	return ""
-}
-
-func (x *EditPluginReq) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *EditPluginReq) GetDescription() string {
-	if x != nil {
-		return x.Description
 	}
 	return ""
 }
@@ -538,30 +549,30 @@ func (x *SetEnabledReq) GetEnabled() bool {
 	return false
 }
 
-// 选定该 agent 用哪个版本供 function call 调用(同脚本多版本共存,该 agent 只激活一个)。
-type SetActiveVersionReq struct {
+// 选定该 agent 激活哪个版本。uuid 本身即版本身份,不需要再传版本号。
+// 同一主id 下只能激活一个;不同机器人可各自激活不同版本。
+type SetActiveReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 脚本 id
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 要激活的版本
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 要激活的插件 id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SetActiveVersionReq) Reset() {
-	*x = SetActiveVersionReq{}
+func (x *SetActiveReq) Reset() {
+	*x = SetActiveReq{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SetActiveVersionReq) String() string {
+func (x *SetActiveReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SetActiveVersionReq) ProtoMessage() {}
+func (*SetActiveReq) ProtoMessage() {}
 
-func (x *SetActiveVersionReq) ProtoReflect() protoreflect.Message {
+func (x *SetActiveReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -573,28 +584,21 @@ func (x *SetActiveVersionReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SetActiveVersionReq.ProtoReflect.Descriptor instead.
-func (*SetActiveVersionReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use SetActiveReq.ProtoReflect.Descriptor instead.
+func (*SetActiveReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *SetActiveVersionReq) GetAgent() string {
+func (x *SetActiveReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
 	}
 	return ""
 }
 
-func (x *SetActiveVersionReq) GetUuid() string {
+func (x *SetActiveReq) GetUuid() string {
 	if x != nil {
 		return x.Uuid
-	}
-	return ""
-}
-
-func (x *SetActiveVersionReq) GetVersion() string {
-	if x != nil {
-		return x.Version
 	}
 	return ""
 }
@@ -602,9 +606,8 @@ func (x *SetActiveVersionReq) GetVersion() string {
 // 下载脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
 type DownloadScriptReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did(校验脚本归属)
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 脚本 id
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=该 agent 的激活版本
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did(校验持有关系)
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -649,13 +652,6 @@ func (x *DownloadScriptReq) GetAgent() string {
 func (x *DownloadScriptReq) GetUuid() string {
 	if x != nil {
 		return x.Uuid
-	}
-	return ""
-}
-
-func (x *DownloadScriptReq) GetVersion() string {
-	if x != nil {
-		return x.Version
 	}
 	return ""
 }
@@ -767,7 +763,7 @@ func (x *ListPluginReq) GetPagination() *hi.Pagination {
 type ListVersionsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 脚本 id
+	Root          string                 `protobuf:"bytes,2,opt,name=root,proto3" json:"root,omitempty"`   // 主id:列该脚本的所有版本
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -810,9 +806,9 @@ func (x *ListVersionsReq) GetAgent() string {
 	return ""
 }
 
-func (x *ListVersionsReq) GetUuid() string {
+func (x *ListVersionsReq) GetRoot() string {
 	if x != nil {
-		return x.Uuid
+		return x.Root
 	}
 	return ""
 }
@@ -878,9 +874,8 @@ func (x *ListPluginResp) GetList() []*PluginView {
 
 type GetPluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 脚本 id
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=该 agent 的激活版本
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -929,13 +924,6 @@ func (x *GetPluginReq) GetUuid() string {
 	return ""
 }
 
-func (x *GetPluginReq) GetVersion() string {
-	if x != nil {
-		return x.Version
-	}
-	return ""
-}
-
 type GetPluginResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	View          *PluginView            `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
@@ -980,11 +968,15 @@ func (x *GetPluginResp) GetView() *PluginView {
 	return nil
 }
 
+// 删除。二选一:uuid=删这一个版本(**连同脚本文件一并删**);root=删该脚本全部版本。
+// ⚠️ 允许**强删正被引用的插件** —— 引用方的 annex 不清理,指向随即失效;
+//
+//	调用时该 tool 返错给 LLM,但**不打断整体推理流程**。删前把 ref_count 摆给用户看。
 type DeletePluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 脚本 id
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=解绑该 agent 的整个脚本(所有版本 annex);非空=删该版本
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 删单个版本
+	Root          string                 `protobuf:"bytes,3,opt,name=root,proto3" json:"root,omitempty"`   // 主id:删该脚本全部版本(与 uuid 二选一)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1033,9 +1025,9 @@ func (x *DeletePluginReq) GetUuid() string {
 	return ""
 }
 
-func (x *DeletePluginReq) GetVersion() string {
+func (x *DeletePluginReq) GetRoot() string {
 	if x != nil {
-		return x.Version
+		return x.Root
 	}
 	return ""
 }
@@ -1254,15 +1246,16 @@ var File_hi_ai_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xd1\x01\n" +
+	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xe0\x01\n" +
 	"\n" +
 	"PluginBody\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x1e\n" +
-	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x12\x16\n" +
-	"\x03url\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x03url\x12\x18\n" +
-	"\x04name\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x04name\x12)\n" +
-	"\rfunction_name\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\ffunctionName\x12&\n" +
-	"\vdescription\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\vdescription:\x04\x98\xb5\x18\x03\"S\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x18\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name\x12\x18\n" +
+	"\x04logo\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04logo\x12\x1e\n" +
+	"\asummary\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\asummary\x12\x1e\n" +
+	"\aversion\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x12\x16\n" +
+	"\x03url\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x03url\x12&\n" +
+	"\vdescription\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\vdescription:\x04\x98\xb5\x18\x03\"S\n" +
 	"\vPluginAnnex\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12+\n" +
 	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04data\"}\n" +
@@ -1270,36 +1263,33 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"PluginView\x12+\n" +
 	"\x04body\x18\x01 \x01(\v2\x11.hi.ai.PluginBodyB\x04\x90\xb5\x18\x03R\x04body\x12\x1c\n" +
 	"\x06active\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03R\x06active\x12\x1e\n" +
-	"\aenabled\x18\x03 \x01(\bB\x04\x90\xb5\x18\x03R\aenabled:\x04\x98\xb5\x18\x03\"x\n" +
+	"\aenabled\x18\x03 \x01(\bB\x04\x90\xb5\x18\x03R\aenabled:\x04\x98\xb5\x18\x03\"\x8c\x01\n" +
 	"\x0fCreatePluginReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12%\n" +
-	"\x04body\x18\x02 \x01(\v2\x11.hi.ai.PluginBodyR\x04body\x12(\n" +
-	"\x05annex\x18\x03 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"2\n" +
+	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
+	"\x04root\x18\x02 \x01(\tR\x04root\x12%\n" +
+	"\x04body\x18\x03 \x01(\v2\x11.hi.ai.PluginBodyR\x04body\x12(\n" +
+	"\x05annex\x18\x04 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"2\n" +
 	"\x10CreatePluginResp\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"~\n" +
 	"\x0eCreateAnnexReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
 	"\aversion\x18\x03 \x01(\tR\aversion\x12(\n" +
-	"\x05annex\x18\x04 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"\x99\x01\n" +
+	"\x05annex\x18\x04 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"c\n" +
 	"\rEditPluginReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12(\n" +
-	"\x05annex\x18\x05 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"S\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12(\n" +
+	"\x05annex\x18\x03 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"S\n" +
 	"\rSetEnabledReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aenabled\x18\x03 \x01(\bR\aenabled\"Y\n" +
-	"\x13SetActiveVersionReq\x12\x14\n" +
+	"\aenabled\x18\x03 \x01(\bR\aenabled\"8\n" +
+	"\fSetActiveReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\tR\aversion\"W\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"=\n" +
 	"\x11DownloadScriptReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\tR\aversion\"T\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"T\n" +
 	"\x12DownloadScriptResp\x12\x1e\n" +
 	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x03R\acontent\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name:\x04\x98\xb5\x18\x03\"U\n" +
@@ -1310,23 +1300,22 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"pagination\"k\n" +
 	"\x0fListVersionsReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12.\n" +
+	"\x04root\x18\x02 \x01(\tR\x04root\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"_\n" +
 	"\x0eListPluginResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12+\n" +
-	"\x04list\x18\x02 \x03(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"R\n" +
+	"\x04list\x18\x02 \x03(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +
 	"\fGetPluginReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\tR\aversion\"B\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"B\n" +
 	"\rGetPluginResp\x12+\n" +
-	"\x04view\x18\x01 \x01(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04view:\x04\x98\xb5\x18\x03\"U\n" +
+	"\x04view\x18\x01 \x01(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04view:\x04\x98\xb5\x18\x03\"O\n" +
 	"\x0fDeletePluginReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\tR\aversion\"1\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
+	"\x04root\x18\x03 \x01(\tR\x04root\"1\n" +
 	"\x17DeletePluginByAgentsReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\"\xa5\x01\n" +
 	"\x06RunReq\x12(\n" +
@@ -1340,7 +1329,7 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
 	"\n" +
 	"CleanupReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\xb7\x06\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\xa9\x06\n" +
 	"\x06Plugin\x12<\n" +
 	"\fUploadScript\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03(\x01\x12L\n" +
 	"\x0eDownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
@@ -1351,8 +1340,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\"\x05\x8a\xb5\x18\x01\x03\x12D\n" +
 	"\fListVersions\x12\x16.hi.ai.ListVersionsReq\x1a\x15.hi.ai.ListPluginResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12O\n" +
-	"\x0eDeleteByAgents\x12\x1e.hi.ai.DeletePluginByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12M\n" +
-	"\x10SetActiveVersion\x12\x1a.hi.ai.SetActiveVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
+	"\x0eDeleteByAgents\x12\x1e.hi.ai.DeletePluginByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\tSetActive\x12\x13.hi.ai.SetActiveReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
 	"\n" +
 	"SetEnabled\x12\x14.hi.ai.SetEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032t\n" +
 	"\bAiPlugin\x12+\n" +
@@ -1382,7 +1371,7 @@ var file_hi_ai_plugin_proto_goTypes = []any{
 	(*CreateAnnexReq)(nil),          // 5: hi.ai.CreateAnnexReq
 	(*EditPluginReq)(nil),           // 6: hi.ai.EditPluginReq
 	(*SetEnabledReq)(nil),           // 7: hi.ai.SetEnabledReq
-	(*SetActiveVersionReq)(nil),     // 8: hi.ai.SetActiveVersionReq
+	(*SetActiveReq)(nil),            // 8: hi.ai.SetActiveReq
 	(*DownloadScriptReq)(nil),       // 9: hi.ai.DownloadScriptReq
 	(*DownloadScriptResp)(nil),      // 10: hi.ai.DownloadScriptResp
 	(*ListPluginReq)(nil),           // 11: hi.ai.ListPluginReq
@@ -1425,7 +1414,7 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	12, // 19: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
 	16, // 20: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
 	17, // 21: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	8,  // 22: hi.ai.Plugin.SetActiveVersion:input_type -> hi.ai.SetActiveVersionReq
+	8,  // 22: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
 	7,  // 23: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
 	18, // 24: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
 	20, // 25: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
@@ -1439,7 +1428,7 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	13, // 33: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginResp
 	26, // 34: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
 	26, // 35: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	26, // 36: hi.ai.Plugin.SetActiveVersion:output_type -> google.protobuf.Empty
+	26, // 36: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
 	26, // 37: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
 	19, // 38: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
 	26, // 39: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty

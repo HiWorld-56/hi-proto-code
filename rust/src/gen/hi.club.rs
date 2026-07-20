@@ -2807,9 +2807,9 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.club.Plugin", "DeleteByAgents"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn set_active_version(
+        pub async fn set_active(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::SetActiveVersionReq>,
+            request: impl tonic::IntoRequest<super::super::ai::SetActiveReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -2820,12 +2820,9 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/SetActiveVersion",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Plugin/SetActive");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "SetActiveVersion"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "SetActive"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_enabled(

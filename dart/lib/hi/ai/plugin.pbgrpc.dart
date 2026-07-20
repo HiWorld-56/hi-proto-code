@@ -111,11 +111,11 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$deleteByAgents, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> setActiveVersion(
-    $1.SetActiveVersionReq request, {
+  $grpc.ResponseFuture<$2.Empty> setActive(
+    $1.SetActiveReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$setActiveVersion, request, options: options);
+    return $createUnaryCall(_$setActive, request, options: options);
   }
 
   $grpc.ResponseFuture<$2.Empty> setEnabled(
@@ -172,11 +172,10 @@ class PluginClient extends $grpc.Client {
           '/hi.ai.Plugin/DeleteByAgents',
           ($1.DeletePluginByAgentsReq value) => value.writeToBuffer(),
           $2.Empty.fromBuffer);
-  static final _$setActiveVersion =
-      $grpc.ClientMethod<$1.SetActiveVersionReq, $2.Empty>(
-          '/hi.ai.Plugin/SetActiveVersion',
-          ($1.SetActiveVersionReq value) => value.writeToBuffer(),
-          $2.Empty.fromBuffer);
+  static final _$setActive = $grpc.ClientMethod<$1.SetActiveReq, $2.Empty>(
+      '/hi.ai.Plugin/SetActive',
+      ($1.SetActiveReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
   static final _$setEnabled = $grpc.ClientMethod<$1.SetEnabledReq, $2.Empty>(
       '/hi.ai.Plugin/SetEnabled',
       ($1.SetEnabledReq value) => value.writeToBuffer(),
@@ -259,13 +258,12 @@ abstract class PluginServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.DeletePluginByAgentsReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SetActiveVersionReq, $2.Empty>(
-        'SetActiveVersion',
-        setActiveVersion_Pre,
+    $addMethod($grpc.ServiceMethod<$1.SetActiveReq, $2.Empty>(
+        'SetActive',
+        setActive_Pre,
         false,
         false,
-        ($core.List<$core.int> value) =>
-            $1.SetActiveVersionReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.SetActiveReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.SetEnabledReq, $2.Empty>(
         'SetEnabled',
@@ -352,13 +350,13 @@ abstract class PluginServiceBase extends $grpc.Service {
   $async.Future<$2.Empty> deleteByAgents(
       $grpc.ServiceCall call, $1.DeletePluginByAgentsReq request);
 
-  $async.Future<$2.Empty> setActiveVersion_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.SetActiveVersionReq> $request) async {
-    return setActiveVersion($call, await $request);
+  $async.Future<$2.Empty> setActive_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SetActiveReq> $request) async {
+    return setActive($call, await $request);
   }
 
-  $async.Future<$2.Empty> setActiveVersion(
-      $grpc.ServiceCall call, $1.SetActiveVersionReq request);
+  $async.Future<$2.Empty> setActive(
+      $grpc.ServiceCall call, $1.SetActiveReq request);
 
   $async.Future<$2.Empty> setEnabled_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.SetEnabledReq> $request) async {

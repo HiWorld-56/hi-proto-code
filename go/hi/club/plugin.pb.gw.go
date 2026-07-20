@@ -329,9 +329,9 @@ func local_request_Plugin_DeleteByAgents_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
-func request_Plugin_SetActiveVersion_0(ctx context.Context, marshaler runtime.Marshaler, client PluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Plugin_SetActive_0(ctx context.Context, marshaler runtime.Marshaler, client PluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.SetActiveVersionReq
+		protoReq ai.SetActiveReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -340,19 +340,19 @@ func request_Plugin_SetActiveVersion_0(ctx context.Context, marshaler runtime.Ma
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.SetActiveVersion(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.SetActive(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_Plugin_SetActiveVersion_0(ctx context.Context, marshaler runtime.Marshaler, server PluginServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Plugin_SetActive_0(ctx context.Context, marshaler runtime.Marshaler, server PluginServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.SetActiveVersionReq
+		protoReq ai.SetActiveReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.SetActiveVersion(ctx, &protoReq)
+	msg, err := server.SetActive(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -575,25 +575,25 @@ func RegisterPluginHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		}
 		forward_Plugin_DeleteByAgents_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Plugin_SetActiveVersion_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Plugin_SetActive_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Plugin/SetActiveVersion", runtime.WithHTTPPathPattern("/api/v1/plugin/set_active_version"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Plugin/SetActive", runtime.WithHTTPPathPattern("/api/v1/plugin/set_active"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Plugin_SetActiveVersion_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Plugin_SetActive_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Plugin_SetActiveVersion_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Plugin_SetActive_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Plugin_SetEnabled_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -825,22 +825,22 @@ func RegisterPluginHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		}
 		forward_Plugin_DeleteByAgents_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Plugin_SetActiveVersion_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Plugin_SetActive_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Plugin/SetActiveVersion", runtime.WithHTTPPathPattern("/api/v1/plugin/set_active_version"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Plugin/SetActive", runtime.WithHTTPPathPattern("/api/v1/plugin/set_active"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Plugin_SetActiveVersion_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Plugin_SetActive_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Plugin_SetActiveVersion_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Plugin_SetActive_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_Plugin_SetEnabled_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -863,31 +863,31 @@ func RegisterPluginHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
-	pattern_Plugin_UploadScript_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Plugin", "UploadScript"}, ""))
-	pattern_Plugin_DownloadScript_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Plugin", "DownloadScript"}, ""))
-	pattern_Plugin_Create_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create"}, ""))
-	pattern_Plugin_CreateAnnex_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create_annex"}, ""))
-	pattern_Plugin_Edit_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "edit"}, ""))
-	pattern_Plugin_Get_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "get"}, ""))
-	pattern_Plugin_List_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list"}, ""))
-	pattern_Plugin_ListVersions_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list_versions"}, ""))
-	pattern_Plugin_Delete_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete"}, ""))
-	pattern_Plugin_DeleteByAgents_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_by_agents"}, ""))
-	pattern_Plugin_SetActiveVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_active_version"}, ""))
-	pattern_Plugin_SetEnabled_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_enabled"}, ""))
+	pattern_Plugin_UploadScript_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Plugin", "UploadScript"}, ""))
+	pattern_Plugin_DownloadScript_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Plugin", "DownloadScript"}, ""))
+	pattern_Plugin_Create_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create"}, ""))
+	pattern_Plugin_CreateAnnex_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create_annex"}, ""))
+	pattern_Plugin_Edit_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "edit"}, ""))
+	pattern_Plugin_Get_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "get"}, ""))
+	pattern_Plugin_List_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list"}, ""))
+	pattern_Plugin_ListVersions_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list_versions"}, ""))
+	pattern_Plugin_Delete_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete"}, ""))
+	pattern_Plugin_DeleteByAgents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_by_agents"}, ""))
+	pattern_Plugin_SetActive_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_active"}, ""))
+	pattern_Plugin_SetEnabled_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_enabled"}, ""))
 )
 
 var (
-	forward_Plugin_UploadScript_0     = runtime.ForwardResponseMessage
-	forward_Plugin_DownloadScript_0   = runtime.ForwardResponseMessage
-	forward_Plugin_Create_0           = runtime.ForwardResponseMessage
-	forward_Plugin_CreateAnnex_0      = runtime.ForwardResponseMessage
-	forward_Plugin_Edit_0             = runtime.ForwardResponseMessage
-	forward_Plugin_Get_0              = runtime.ForwardResponseMessage
-	forward_Plugin_List_0             = runtime.ForwardResponseMessage
-	forward_Plugin_ListVersions_0     = runtime.ForwardResponseMessage
-	forward_Plugin_Delete_0           = runtime.ForwardResponseMessage
-	forward_Plugin_DeleteByAgents_0   = runtime.ForwardResponseMessage
-	forward_Plugin_SetActiveVersion_0 = runtime.ForwardResponseMessage
-	forward_Plugin_SetEnabled_0       = runtime.ForwardResponseMessage
+	forward_Plugin_UploadScript_0   = runtime.ForwardResponseMessage
+	forward_Plugin_DownloadScript_0 = runtime.ForwardResponseMessage
+	forward_Plugin_Create_0         = runtime.ForwardResponseMessage
+	forward_Plugin_CreateAnnex_0    = runtime.ForwardResponseMessage
+	forward_Plugin_Edit_0           = runtime.ForwardResponseMessage
+	forward_Plugin_Get_0            = runtime.ForwardResponseMessage
+	forward_Plugin_List_0           = runtime.ForwardResponseMessage
+	forward_Plugin_ListVersions_0   = runtime.ForwardResponseMessage
+	forward_Plugin_Delete_0         = runtime.ForwardResponseMessage
+	forward_Plugin_DeleteByAgents_0 = runtime.ForwardResponseMessage
+	forward_Plugin_SetActive_0      = runtime.ForwardResponseMessage
+	forward_Plugin_SetEnabled_0     = runtime.ForwardResponseMessage
 )
