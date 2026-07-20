@@ -17,8 +17,11 @@ import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $3;
 
 import '../common.pb.dart' as $0;
 import 'chat.pb.dart' as $4;
+import 'plugin.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'plugin.pbenum.dart';
 
 /// plugin_body:插件本体。
 ///
@@ -229,13 +232,17 @@ class PluginAnnex extends $pb.GeneratedMessage {
 class PluginView extends $pb.GeneratedMessage {
   factory PluginView({
     PluginBody? body,
-    $core.bool? active,
+    $core.String? active,
     $core.bool? enabled,
+    PluginSource? source,
+    $core.int? refCount,
   }) {
     final result = create();
     if (body != null) result.body = body;
     if (active != null) result.active = active;
     if (enabled != null) result.enabled = enabled;
+    if (source != null) result.source = source;
+    if (refCount != null) result.refCount = refCount;
     return result;
   }
 
@@ -254,8 +261,11 @@ class PluginView extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<PluginBody>(1, _omitFieldNames ? '' : 'body',
         subBuilder: PluginBody.create)
-    ..aOB(2, _omitFieldNames ? '' : 'active')
+    ..aOS(2, _omitFieldNames ? '' : 'active')
     ..aOB(3, _omitFieldNames ? '' : 'enabled')
+    ..aE<PluginSource>(4, _omitFieldNames ? '' : 'source',
+        enumValues: PluginSource.values)
+    ..aI(5, _omitFieldNames ? '' : 'refCount')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -288,9 +298,9 @@ class PluginView extends $pb.GeneratedMessage {
   PluginBody ensureBody() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.bool get active => $_getBF(1);
+  $core.String get active => $_getSZ(1);
   @$pb.TagNumber(2)
-  set active($core.bool value) => $_setBool(1, value);
+  set active($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasActive() => $_has(1);
   @$pb.TagNumber(2)
@@ -304,10 +314,29 @@ class PluginView extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(2);
   @$pb.TagNumber(3)
   void clearEnabled() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  PluginSource get source => $_getN(3);
+  @$pb.TagNumber(4)
+  set source(PluginSource value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSource() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSource() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get refCount => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set refCount($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRefCount() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRefCount() => $_clearField(5);
 }
 
-/// 上传一个脚本版本 + 建 owner 自己的 annex。`body.uuid` 空=新脚本(后台生成),非空=给已有脚本加版本。
-/// 后台按 (uuid, version):存在则覆盖 body,否则新建。annex 建/更新按 (agent, uuid)。
+/// 发布一个插件(= 脚本的一个版本)+ 建该机器人的 annex(source=original)。
+/// root 空=全新脚本(生成 主id+次id);非空=给该脚本加新版本(只生成次id,且版本号须大于现有最大)。
+/// **uuid 已存在必拒**,发布即冻结。
 /// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 class CreatePluginReq extends $pb.GeneratedMessage {
   factory CreatePluginReq({

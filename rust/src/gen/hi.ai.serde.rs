@@ -8518,6 +8518,77 @@ impl<'de> serde::Deserialize<'de> for PluginBody {
         deserializer.deserialize_struct("hi.ai.PluginBody", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for PluginSource {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Original => "PLUGIN_SOURCE_ORIGINAL",
+            Self::Reference => "PLUGIN_SOURCE_REFERENCE",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for PluginSource {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "PLUGIN_SOURCE_ORIGINAL",
+            "PLUGIN_SOURCE_REFERENCE",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = PluginSource;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PLUGIN_SOURCE_ORIGINAL" => Ok(PluginSource::Original),
+                    "PLUGIN_SOURCE_REFERENCE" => Ok(PluginSource::Reference),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for PluginView {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -8529,21 +8600,35 @@ impl serde::Serialize for PluginView {
         if self.body.is_some() {
             len += 1;
         }
-        if self.active {
+        if !self.active.is_empty() {
             len += 1;
         }
         if self.enabled {
+            len += 1;
+        }
+        if self.source != 0 {
+            len += 1;
+        }
+        if self.ref_count != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginView", len)?;
         if let Some(v) = self.body.as_ref() {
             struct_ser.serialize_field("body", v)?;
         }
-        if self.active {
+        if !self.active.is_empty() {
             struct_ser.serialize_field("active", &self.active)?;
         }
         if self.enabled {
             struct_ser.serialize_field("enabled", &self.enabled)?;
+        }
+        if self.source != 0 {
+            let v = PluginSource::try_from(self.source)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.source)))?;
+            struct_ser.serialize_field("source", &v)?;
+        }
+        if self.ref_count != 0 {
+            struct_ser.serialize_field("refCount", &self.ref_count)?;
         }
         struct_ser.end()
     }
@@ -8558,6 +8643,9 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             "body",
             "active",
             "enabled",
+            "source",
+            "ref_count",
+            "refCount",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -8565,6 +8653,8 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             Body,
             Active,
             Enabled,
+            Source,
+            RefCount,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8589,6 +8679,8 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                             "body" => Ok(GeneratedField::Body),
                             "active" => Ok(GeneratedField::Active),
                             "enabled" => Ok(GeneratedField::Enabled),
+                            "source" => Ok(GeneratedField::Source),
+                            "refCount" | "ref_count" => Ok(GeneratedField::RefCount),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8611,6 +8703,8 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                 let mut body__ = None;
                 let mut active__ = None;
                 let mut enabled__ = None;
+                let mut source__ = None;
+                let mut ref_count__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Body => {
@@ -8631,12 +8725,28 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                             }
                             enabled__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Source => {
+                            if source__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("source"));
+                            }
+                            source__ = Some(map_.next_value::<PluginSource>()? as i32);
+                        }
+                        GeneratedField::RefCount => {
+                            if ref_count__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("refCount"));
+                            }
+                            ref_count__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
                     }
                 }
                 Ok(PluginView {
                     body: body__,
                     active: active__.unwrap_or_default(),
                     enabled: enabled__.unwrap_or_default(),
+                    source: source__.unwrap_or_default(),
+                    ref_count: ref_count__.unwrap_or_default(),
                 })
             }
         }

@@ -1068,15 +1068,22 @@ pub struct PluginAnnex {
 pub struct PluginView {
     #[prost(message, optional, tag = "1")]
     pub body: ::core::option::Option<PluginBody>,
-    /// body.version 是否为该 agent 的激活版本(List 返回激活版本时恒 true)
-    #[prost(bool, tag = "2")]
-    pub active: bool,
+    /// 该 agent 激活的 uuid;body.uuid == active 即本行生效
+    #[prost(string, tag = "2")]
+    pub active: ::prost::alloc::string::String,
     /// 该 agent 是否启用此插件参与推理
     #[prost(bool, tag = "3")]
     pub enabled: bool,
+    /// 来源:主人直接上传 or 经授权引用
+    #[prost(enumeration = "PluginSource", tag = "4")]
+    pub source: i32,
+    /// 被多少机器人引用(实时 COUNT,**不落库**,存了必漂)
+    #[prost(int32, tag = "5")]
+    pub ref_count: i32,
 }
-/// 上传一个脚本版本 + 建 owner 自己的 annex。`body.uuid` 空=新脚本(后台生成),非空=给已有脚本加版本。
-/// 后台按 (uuid, version):存在则覆盖 body,否则新建。annex 建/更新按 (agent, uuid)。
+/// 发布一个插件(= 脚本的一个版本)+ 建该机器人的 annex(source=original)。
+/// root 空=全新脚本(生成 主id+次id);非空=给该脚本加新版本(只生成次id,且版本号须大于现有最大)。
+/// **uuid 已存在必拒**,发布即冻结。
 /// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreatePluginReq {
@@ -1258,6 +1265,39 @@ pub struct RunResp {
 pub struct CleanupReq {
     #[prost(string, tag = "1")]
     pub code_archive_url: ::prost::alloc::string::String,
+}
+/// 插件在某机器人列表里的来源。
+///
+/// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判:
+/// 一个主人有三个机器人、同一脚本装三个上去,那样会把其中两个误判成引用。
+/// ⚠️ **引用不是拷贝** —— 只是把同一个 uuid 放进另一个机器人的列表,不新建 body。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PluginSource {
+    /// 原始:主人给这个机器人上传的
+    Original = 0,
+    /// 引用:经授权用别人的脚本;**不能下载源码**
+    Reference = 1,
+}
+impl PluginSource {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Original => "PLUGIN_SOURCE_ORIGINAL",
+            Self::Reference => "PLUGIN_SOURCE_REFERENCE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PLUGIN_SOURCE_ORIGINAL" => Some(Self::Original),
+            "PLUGIN_SOURCE_REFERENCE" => Some(Self::Reference),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod plugin_client {

@@ -15,6 +15,20 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use pluginSourceDescriptor instead')
+const PluginSource$json = {
+  '1': 'PluginSource',
+  '2': [
+    {'1': 'PLUGIN_SOURCE_ORIGINAL', '2': 0},
+    {'1': 'PLUGIN_SOURCE_REFERENCE', '2': 1},
+  ],
+};
+
+/// Descriptor for `PluginSource`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List pluginSourceDescriptor = $convert.base64Decode(
+    'CgxQbHVnaW5Tb3VyY2USGgoWUExVR0lOX1NPVVJDRV9PUklHSU5BTBAAEhsKF1BMVUdJTl9TT1'
+    'VSQ0VfUkVGRVJFTkNFEAE=');
+
 @$core.Deprecated('Use pluginBodyDescriptor instead')
 const PluginBody$json = {
   '1': 'PluginBody',
@@ -72,8 +86,18 @@ const PluginView$json = {
       '8': {},
       '10': 'body'
     },
-    {'1': 'active', '3': 2, '4': 1, '5': 8, '8': {}, '10': 'active'},
+    {'1': 'active', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'active'},
     {'1': 'enabled', '3': 3, '4': 1, '5': 8, '8': {}, '10': 'enabled'},
+    {
+      '1': 'source',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.ai.PluginSource',
+      '8': {},
+      '10': 'source'
+    },
+    {'1': 'ref_count', '3': 5, '4': 1, '5': 5, '8': {}, '10': 'refCount'},
   ],
   '7': {},
 };
@@ -81,8 +105,9 @@ const PluginView$json = {
 /// Descriptor for `PluginView`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginViewDescriptor = $convert.base64Decode(
     'CgpQbHVnaW5WaWV3EisKBGJvZHkYASABKAsyES5oaS5haS5QbHVnaW5Cb2R5QgSQtRgDUgRib2'
-    'R5EhwKBmFjdGl2ZRgCIAEoCEIEkLUYA1IGYWN0aXZlEh4KB2VuYWJsZWQYAyABKAhCBJC1GANS'
-    'B2VuYWJsZWQ6BJi1GAM=');
+    'R5EhwKBmFjdGl2ZRgCIAEoCUIEkLUYA1IGYWN0aXZlEh4KB2VuYWJsZWQYAyABKAhCBJC1GANS'
+    'B2VuYWJsZWQSMQoGc291cmNlGAQgASgOMhMuaGkuYWkuUGx1Z2luU291cmNlQgSQtRgDUgZzb3'
+    'VyY2USIQoJcmVmX2NvdW50GAUgASgFQgSQtRgDUghyZWZDb3VudDoEmLUYAw==');
 
 @$core.Deprecated('Use createPluginReqDescriptor instead')
 const CreatePluginReq$json = {
