@@ -378,6 +378,30 @@ final $typed_data.Uint8List uploadUserAvatarReqDescriptor = $convert.base64Decod
     'IgCgRuYW1lGAIgASgJQgy6SAlyBzIFXlxTKyRSBG5hbWUSIQoHY29udGVudBgDIAEoDEIHukgE'
     'egIQAVIHY29udGVudA==');
 
+@$core.Deprecated('Use setUserUnitDescriptor instead')
+const SetUserUnit$json = {
+  '1': 'SetUserUnit',
+  '2': [
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'user'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar', '3': 3, '4': 1, '5': 9, '10': 'avatar'},
+    {
+      '1': 'info',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.UserExtensionInfo',
+      '10': 'info'
+    },
+  ],
+};
+
+/// Descriptor for `SetUserUnit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setUserUnitDescriptor = $convert.base64Decode(
+    'CgtTZXRVc2VyVW5pdBIgCgR1c2VyGAEgASgJQgy6SAlyBzIFXlxTKyRSBHVzZXISEgoEbmFtZR'
+    'gCIAEoCVIEbmFtZRIWCgZhdmF0YXIYAyABKAlSBmF2YXRhchItCgRpbmZvGAQgASgLMhkuaGku'
+    'ZGlkLlVzZXJFeHRlbnNpb25JbmZvUgRpbmZv');
+
 @$core.Deprecated('Use setUsersReqDescriptor instead')
 const SetUsersReq$json = {
   '1': 'SetUsersReq',
@@ -387,7 +411,7 @@ const SetUsersReq$json = {
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.hi.did.UserExtensionUnit',
+      '6': '.hi.did.SetUserUnit',
       '10': 'units'
     },
   ],
@@ -395,8 +419,8 @@ const SetUsersReq$json = {
 
 /// Descriptor for `SetUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setUsersReqDescriptor = $convert.base64Decode(
-    'CgtTZXRVc2Vyc1JlcRIvCgV1bml0cxgBIAMoCzIZLmhpLmRpZC5Vc2VyRXh0ZW5zaW9uVW5pdF'
-    'IFdW5pdHM=');
+    'CgtTZXRVc2Vyc1JlcRIpCgV1bml0cxgBIAMoCzITLmhpLmRpZC5TZXRVc2VyVW5pdFIFdW5pdH'
+    'M=');
 
 @$core.Deprecated('Use addUsersReqDescriptor instead')
 const AddUsersReq$json = {

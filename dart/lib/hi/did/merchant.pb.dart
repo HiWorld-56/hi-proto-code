@@ -1061,9 +1061,107 @@ class UploadUserAvatarReq extends $pb.GeneratedMessage {
   void clearContent() => $_clearField(3);
 }
 
+/// 批量写用户的资料与扩展。
+///
+/// ⚠️ **入参不复用 UserExtensionUnit** —— 那是**返回类型**(GetUser/ListUsers 用),
+///    里面的 hi.Entity 带 type/update 等服务端产物。入参只放调用方真正该给的:
+///    改哪个用户(user)+ 要写的值。
+class SetUserUnit extends $pb.GeneratedMessage {
+  factory SetUserUnit({
+    $core.String? user,
+    $core.String? name,
+    $core.String? avatar,
+    UserExtensionInfo? info,
+  }) {
+    final result = create();
+    if (user != null) result.user = user;
+    if (name != null) result.name = name;
+    if (avatar != null) result.avatar = avatar;
+    if (info != null) result.info = info;
+    return result;
+  }
+
+  SetUserUnit._();
+
+  factory SetUserUnit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetUserUnit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetUserUnit',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'avatar')
+    ..aOM<UserExtensionInfo>(4, _omitFieldNames ? '' : 'info',
+        subBuilder: UserExtensionInfo.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetUserUnit clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetUserUnit copyWith(void Function(SetUserUnit) updates) =>
+      super.copyWith((message) => updates(message as SetUserUnit))
+          as SetUserUnit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetUserUnit create() => SetUserUnit._();
+  @$core.override
+  SetUserUnit createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetUserUnit getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetUserUnit>(create);
+  static SetUserUnit? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get user => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set user($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUser() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get avatar => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set avatar($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAvatar() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAvatar() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  UserExtensionInfo get info => $_getN(3);
+  @$pb.TagNumber(4)
+  set info(UserExtensionInfo value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasInfo() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearInfo() => $_clearField(4);
+  @$pb.TagNumber(4)
+  UserExtensionInfo ensureInfo() => $_ensure(3);
+}
+
 class SetUsersReq extends $pb.GeneratedMessage {
   factory SetUsersReq({
-    $core.Iterable<UserExtensionUnit>? units,
+    $core.Iterable<SetUserUnit>? units,
   }) {
     final result = create();
     if (units != null) result.units.addAll(units);
@@ -1083,8 +1181,8 @@ class SetUsersReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'SetUsersReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..pPM<UserExtensionUnit>(1, _omitFieldNames ? '' : 'units',
-        subBuilder: UserExtensionUnit.create)
+    ..pPM<SetUserUnit>(1, _omitFieldNames ? '' : 'units',
+        subBuilder: SetUserUnit.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1107,7 +1205,7 @@ class SetUsersReq extends $pb.GeneratedMessage {
   static SetUsersReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<UserExtensionUnit> get units => $_getList(0);
+  $pb.PbList<SetUserUnit> get units => $_getList(0);
 }
 
 class AddUsersReq extends $pb.GeneratedMessage {

@@ -1205,11 +1205,31 @@ pub struct UploadUserAvatarReq {
     #[prost(bytes = "vec", tag = "3")]
     pub content: ::prost::alloc::vec::Vec<u8>,
 }
+/// 批量写用户的资料与扩展。
+///
+/// ⚠️ **入参不复用 UserExtensionUnit** —— 那是**返回类型**(GetUser/ListUsers 用),
+/// 里面的 hi.Entity 带 type/update 等服务端产物。入参只放调用方真正该给的:
+/// 改哪个用户(user)+ 要写的值。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetUserUnit {
+    /// 用户 did
+    #[prost(string, tag = "1")]
+    pub user: ::prost::alloc::string::String,
+    /// 昵称(空=不改)
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// 头像 url(空=不改)
+    #[prost(string, tag = "3")]
+    pub avatar: ::prost::alloc::string::String,
+    /// 该商户维护的扩展信息
+    #[prost(message, optional, tag = "4")]
+    pub info: ::core::option::Option<UserExtensionInfo>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetUsersReq {
-    /// 批量写自己名下用户的扩展信息
+    /// 批量写自己名下用户的资料/扩展
     #[prost(message, repeated, tag = "1")]
-    pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
+    pub units: ::prost::alloc::vec::Vec<SetUserUnit>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AddUsersReq {
