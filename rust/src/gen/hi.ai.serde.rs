@@ -2094,6 +2094,12 @@ impl serde::Serialize for CreateAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if !self.r#type.is_empty() {
+            len += 1;
+        }
         if !self.name.is_empty() {
             len += 1;
         }
@@ -2101,6 +2107,12 @@ impl serde::Serialize for CreateAgentReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CreateAgentReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if !self.r#type.is_empty() {
+            struct_ser.serialize_field("type", &self.r#type)?;
+        }
         if !self.name.is_empty() {
             struct_ser.serialize_field("name", &self.name)?;
         }
@@ -2117,12 +2129,16 @@ impl<'de> serde::Deserialize<'de> for CreateAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "did",
+            "type",
             "name",
             "avatar",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Did,
+            Type,
             Name,
             Avatar,
         }
@@ -2146,6 +2162,8 @@ impl<'de> serde::Deserialize<'de> for CreateAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "type" => Ok(GeneratedField::Type),
                             "name" => Ok(GeneratedField::Name),
                             "avatar" => Ok(GeneratedField::Avatar),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -2167,10 +2185,24 @@ impl<'de> serde::Deserialize<'de> for CreateAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut did__ = None;
+                let mut r#type__ = None;
                 let mut name__ = None;
                 let mut avatar__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Type => {
+                            if r#type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("type"));
+                            }
+                            r#type__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Name => {
                             if name__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("name"));
@@ -2186,6 +2218,8 @@ impl<'de> serde::Deserialize<'de> for CreateAgentReq {
                     }
                 }
                 Ok(CreateAgentReq {
+                    did: did__.unwrap_or_default(),
+                    r#type: r#type__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
                     avatar: avatar__.unwrap_or_default(),
                 })

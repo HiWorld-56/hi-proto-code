@@ -249,13 +249,22 @@ pub struct DefaultConfigResp {
     #[prost(message, optional, tag = "1")]
     pub config: ::core::option::Option<AgentConfig>,
 }
-/// 建机器人。**不收 hi.Entity** —— did 由后台生成、type 固定 assistant、update 是服务端产物,
-/// 调用方能决定的只有名字和头像。
+/// 建机器人。**不收 hi.Entity 整体** —— Entity 里的 `update` 是服务端产物,不该出现在入参。
+/// 但 did/type 在这里是**真需要**的,两种用法:
+/// · 软件 assistant:did 留空,由后台生成;type=assistant
+/// · 硬件 robot:did **已存在**(硬件先在 hidid 注册),这里只是为它建 agent 记录;type=robot
+/// 调用方是兄弟服务(apikey 档),它确实知道这个身份 —— 与"用户自己乱传别人 did"是两回事。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateAgentReq {
+    /// 空=新建软件 assistant(后台生成);非空=为已有身份(硬件 robot)建记录
     #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
+    pub did: ::prost::alloc::string::String,
+    /// assistant / robot(取值见 hi.Entity.type 的注释)
     #[prost(string, tag = "2")]
+    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
     pub avatar: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]

@@ -432,12 +432,19 @@ func (x *DefaultConfigResp) GetConfig() *AgentConfig {
 	return nil
 }
 
-// 建机器人。**不收 hi.Entity** —— did 由后台生成、type 固定 assistant、update 是服务端产物,
-// 调用方能决定的只有名字和头像。
+// 建机器人。**不收 hi.Entity 整体** —— Entity 里的 `update` 是服务端产物,不该出现在入参。
+// 但 did/type 在这里是**真需要**的,两种用法:
+//
+//	· 软件 assistant:did 留空,由后台生成;type=assistant
+//	· 硬件 robot:did **已存在**(硬件先在 hidid 注册),这里只是为它建 agent 记录;type=robot
+//
+// 调用方是兄弟服务(apikey 档),它确实知道这个身份 —— 与"用户自己乱传别人 did"是两回事。
 type CreateAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`   // 空=新建软件 assistant(后台生成);非空=为已有身份(硬件 robot)建记录
+	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // assistant / robot(取值见 hi.Entity.type 的注释)
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Avatar        string                 `protobuf:"bytes,4,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -470,6 +477,20 @@ func (x *CreateAgentReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateAgentReq.ProtoReflect.Descriptor instead.
 func (*CreateAgentReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CreateAgentReq) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
+}
+
+func (x *CreateAgentReq) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
 }
 
 func (x *CreateAgentReq) GetName() string {
@@ -1148,10 +1169,12 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12\x1c\n" +
 	"\x06marked\x18\a \x01(\bB\x04\x90\xb5\x18\x03R\x06marked:\x04\x98\xb5\x18\x03\"K\n" +
 	"\x11DefaultConfigResp\x120\n" +
-	"\x06config\x18\x01 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config:\x04\x98\xb5\x18\x03\"<\n" +
-	"\x0eCreateAgentReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x02 \x01(\tR\x06avatar\"\x9b\x01\n" +
+	"\x06config\x18\x01 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config:\x04\x98\xb5\x18\x03\"b\n" +
+	"\x0eCreateAgentReq\x12\x10\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
+	"\x06avatar\x18\x04 \x01(\tR\x06avatar\"\x9b\x01\n" +
 	"\x0fCreateAgentResp\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x120\n" +
