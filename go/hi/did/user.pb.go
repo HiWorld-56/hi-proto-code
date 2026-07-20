@@ -26,8 +26,9 @@ var File_hi_did_user_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2m\n" +
-	"\x04User\x121\n" +
+	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2\xa3\x01\n" +
+	"\x04User\x124\n" +
+	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x121\n" +
 	"\x04Edit\x12\n" +
 	".hi.Entity\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
 	"\x05Query\x12\x16.google.protobuf.Empty\x1a\n" +
@@ -36,16 +37,20 @@ const file_hi_did_user_proto_rawDesc = "" +
 	"com.hi.didB\tUserProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var file_hi_did_user_proto_goTypes = []any{
-	(*hi.Entity)(nil),     // 0: hi.Entity
-	(*emptypb.Empty)(nil), // 1: google.protobuf.Empty
+	(*hi.UploadReq)(nil),  // 0: hi.UploadReq
+	(*hi.Entity)(nil),     // 1: hi.Entity
+	(*emptypb.Empty)(nil), // 2: google.protobuf.Empty
+	(*hi.UploadResp)(nil), // 3: hi.UploadResp
 }
 var file_hi_did_user_proto_depIdxs = []int32{
-	0, // 0: hi.did.User.Edit:input_type -> hi.Entity
-	1, // 1: hi.did.User.Query:input_type -> google.protobuf.Empty
-	1, // 2: hi.did.User.Edit:output_type -> google.protobuf.Empty
-	0, // 3: hi.did.User.Query:output_type -> hi.Entity
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	0, // 0: hi.did.User.UploadAvatar:input_type -> hi.UploadReq
+	1, // 1: hi.did.User.Edit:input_type -> hi.Entity
+	2, // 2: hi.did.User.Query:input_type -> google.protobuf.Empty
+	3, // 3: hi.did.User.UploadAvatar:output_type -> hi.UploadResp
+	2, // 4: hi.did.User.Edit:output_type -> google.protobuf.Empty
+	1, // 5: hi.did.User.Query:output_type -> hi.Entity
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

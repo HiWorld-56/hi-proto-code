@@ -211,6 +211,36 @@ final $typed_data.Uint8List setActiveVersionReqDescriptor = $convert.base64Decod
     'ChNTZXRBY3RpdmVWZXJzaW9uUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBISCgR1dWlkGAIgAS'
     'gJUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3ZlcnNpb24=');
 
+@$core.Deprecated('Use downloadScriptReqDescriptor instead')
+const DownloadScriptReq$json = {
+  '1': 'DownloadScriptReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+  ],
+};
+
+/// Descriptor for `DownloadScriptReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List downloadScriptReqDescriptor = $convert.base64Decode(
+    'ChFEb3dubG9hZFNjcmlwdFJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEgoEdXVpZBgCIAEoCV'
+    'IEdXVpZBIYCgd2ZXJzaW9uGAMgASgJUgd2ZXJzaW9u');
+
+@$core.Deprecated('Use downloadScriptRespDescriptor instead')
+const DownloadScriptResp$json = {
+  '1': 'DownloadScriptResp',
+  '2': [
+    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `DownloadScriptResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List downloadScriptRespDescriptor = $convert.base64Decode(
+    'ChJEb3dubG9hZFNjcmlwdFJlc3ASHgoHY29udGVudBgBIAEoDEIEkLUYA1IHY29udGVudBIYCg'
+    'RuYW1lGAIgASgJQgSQtRgDUgRuYW1lOgSYtRgD');
+
 @$core.Deprecated('Use listPluginReqDescriptor instead')
 const ListPluginReq$json = {
   '1': 'ListPluginReq',

@@ -34,6 +34,16 @@ class UserClient extends $grpc.Client {
 
   UserClient(super.channel, {super.options, super.interceptors});
 
+  /// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
+  /// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
+  /// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
+  $grpc.ResponseFuture<$0.UploadResp> uploadAvatar(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadAvatar, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> edit(
     $0.Entity request, {
     $grpc.CallOptions? options,
@@ -50,6 +60,10 @@ class UserClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$uploadAvatar = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.did.User/UploadAvatar',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.Entity, $1.Empty>(
       '/hi.did.User/Edit',
       ($0.Entity value) => value.writeToBuffer(),
@@ -65,6 +79,13 @@ abstract class UserServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.User';
 
   UserServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadAvatar',
+        uploadAvatar_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Entity, $1.Empty>(
         'Edit',
         edit_Pre,
@@ -80,6 +101,14 @@ abstract class UserServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
         ($0.Entity value) => value.writeToBuffer()));
   }
+
+  $async.Future<$0.UploadResp> uploadAvatar_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadAvatar($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadAvatar(
+      $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Entity> $request) async {

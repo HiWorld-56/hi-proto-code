@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $0;
 import 'group.pb.dart' as $4;
 import 'messaging.pb.dart' as $3;
 import 'user.pbenum.dart';
@@ -25,7 +25,7 @@ export 'user.pbenum.dart';
 
 class UserInfo extends $pb.GeneratedMessage {
   factory UserInfo({
-    $2.Entity? base,
+    $0.Entity? base,
     $core.Iterable<$core.String>? permissions,
     $core.String? verifyPolicy,
     $core.String? moment,
@@ -51,8 +51,8 @@ class UserInfo extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UserInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: $0.Entity.create)
     ..pPS(2, _omitFieldNames ? '' : 'permissions')
     ..aOS(3, _omitFieldNames ? '' : 'verifyPolicy')
     ..aOS(4, _omitFieldNames ? '' : 'moment')
@@ -77,15 +77,15 @@ class UserInfo extends $pb.GeneratedMessage {
   static UserInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get base => $_getN(0);
+  $0.Entity get base => $_getN(0);
   @$pb.TagNumber(1)
-  set base($2.Entity value) => $_setField(1, value);
+  set base($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBase() => $_has(0);
   @$pb.TagNumber(1)
   void clearBase() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureBase() => $_ensure(0);
+  $0.Entity ensureBase() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $pb.PbList<$core.String> get permissions => $_getList(1);
@@ -112,7 +112,7 @@ class UserInfo extends $pb.GeneratedMessage {
 class ListSystemMessageReq extends $pb.GeneratedMessage {
   factory ListSystemMessageReq({
     $core.String? status,
-    $2.Pagination? pagination,
+    $0.Pagination? pagination,
   }) {
     final result = create();
     if (status != null) result.status = status;
@@ -134,8 +134,8 @@ class ListSystemMessageReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'status')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$0.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $0.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -167,15 +167,15 @@ class ListSystemMessageReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $0.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($0.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $0.Pagination ensurePagination() => $_ensure(1);
 }
 
 class SystemMessages extends $pb.GeneratedMessage {
@@ -375,7 +375,7 @@ class HandleSystemMessageReq extends $pb.GeneratedMessage {
 
 class RelationInfo extends $pb.GeneratedMessage {
   factory RelationInfo({
-    $2.Entity? base,
+    $0.Entity? base,
     $core.String? remark,
     $core.String? moment,
   }) {
@@ -399,8 +399,8 @@ class RelationInfo extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'RelationInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: $0.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'remark')
     ..aOS(3, _omitFieldNames ? '' : 'moment')
     ..hasRequiredFields = false;
@@ -425,15 +425,15 @@ class RelationInfo extends $pb.GeneratedMessage {
   static RelationInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get base => $_getN(0);
+  $0.Entity get base => $_getN(0);
   @$pb.TagNumber(1)
-  set base($2.Entity value) => $_setField(1, value);
+  set base($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBase() => $_has(0);
   @$pb.TagNumber(1)
   void clearBase() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureBase() => $_ensure(0);
+  $0.Entity ensureBase() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get remark => $_getSZ(1);
@@ -846,7 +846,7 @@ class UnprocessedSysMsgCountResp extends $pb.GeneratedMessage {
 
 class UpdateUserReq extends $pb.GeneratedMessage {
   factory UpdateUserReq({
-    $2.Entity? user,
+    $0.Entity? user,
     $core.String? verifyPolicy,
     $core.String? moment,
   }) {
@@ -870,8 +870,8 @@ class UpdateUserReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UpdateUserReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'user',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'user',
+        subBuilder: $0.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'verifyPolicy')
     ..aOS(3, _omitFieldNames ? '' : 'moment')
     ..hasRequiredFields = false;
@@ -896,15 +896,15 @@ class UpdateUserReq extends $pb.GeneratedMessage {
   static UpdateUserReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get user => $_getN(0);
+  $0.Entity get user => $_getN(0);
   @$pb.TagNumber(1)
-  set user($2.Entity value) => $_setField(1, value);
+  set user($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
   void clearUser() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureUser() => $_ensure(0);
+  $0.Entity ensureUser() => $_ensure(0);
 
   /// auto_reject-自动拒绝
   /// manual_accept-手动同意
@@ -1044,7 +1044,7 @@ class ListOnlineUserReq extends $pb.GeneratedMessage {
 
 class ListOnlineUserResp extends $pb.GeneratedMessage {
   factory ListOnlineUserResp({
-    $core.Iterable<$2.Entity>? list,
+    $core.Iterable<$0.Entity>? list,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
@@ -1064,8 +1064,8 @@ class ListOnlineUserResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListOnlineUserResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<$2.Entity>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: $2.Entity.create)
+    ..pPM<$0.Entity>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $0.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1088,7 +1088,7 @@ class ListOnlineUserResp extends $pb.GeneratedMessage {
   static ListOnlineUserResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$2.Entity> get list => $_getList(0);
+  $pb.PbList<$0.Entity> get list => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

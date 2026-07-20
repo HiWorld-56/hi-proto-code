@@ -8,6 +8,7 @@ package club
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -21,13 +22,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Chat_NewSession_FullMethodName     = "/hi.club.Chat/NewSession"
-	Chat_GetHistory_FullMethodName     = "/hi.club.Chat/GetHistory"
-	Chat_ClearHistory_FullMethodName   = "/hi.club.Chat/ClearHistory"
-	Chat_Complete_FullMethodName       = "/hi.club.Chat/Complete"
-	Chat_CompleteStream_FullMethodName = "/hi.club.Chat/CompleteStream"
-	Chat_Converse_FullMethodName       = "/hi.club.Chat/Converse"
-	Chat_Resume_FullMethodName         = "/hi.club.Chat/Resume"
+	Chat_UploadMedia_FullMethodName       = "/hi.club.Chat/UploadMedia"
+	Chat_UploadMediaStream_FullMethodName = "/hi.club.Chat/UploadMediaStream"
+	Chat_NewSession_FullMethodName        = "/hi.club.Chat/NewSession"
+	Chat_GetHistory_FullMethodName        = "/hi.club.Chat/GetHistory"
+	Chat_ClearHistory_FullMethodName      = "/hi.club.Chat/ClearHistory"
+	Chat_Complete_FullMethodName          = "/hi.club.Chat/Complete"
+	Chat_CompleteStream_FullMethodName    = "/hi.club.Chat/CompleteStream"
+	Chat_Converse_FullMethodName          = "/hi.club.Chat/Converse"
+	Chat_Resume_FullMethodName            = "/hi.club.Chat/Resume"
 )
 
 // ChatClient is the client API for Chat service.
@@ -36,6 +39,11 @@ const (
 //
 // 对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
 type ChatClient interface {
+	// 传聊天媒体(图/语音/视频/文件)→ **temp bucket,14 天后自动过期**。
+	// 媒体是临时资产:redis 消息历史也只留 14 天,两者对齐;客户端收到即缓存到本地,
+	// 故过期不影响本地历史回看。**头像/群头像不要走这里** —— 那是永固资产,各有归属 bucket。
+	UploadMedia(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	UploadMediaStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
 	// ── 会话管理 ──
 	NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.NewSessionResp, error)
 	GetHistory(ctx context.Context, in *ai.GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error)
@@ -55,6 +63,29 @@ type chatClient struct {
 func NewChatClient(cc grpc.ClientConnInterface) ChatClient {
 	return &chatClient{cc}
 }
+
+func (c *chatClient) UploadMedia(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Chat_UploadMedia_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatClient) UploadMediaStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_UploadMediaStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[hi.UploadStreamReq, hi.UploadResp]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Chat_UploadMediaStreamClient = grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp]
 
 func (c *chatClient) NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.NewSessionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -98,7 +129,7 @@ func (c *chatClient) Complete(ctx context.Context, in *CompleteReq, opts ...grpc
 
 func (c *chatClient) CompleteStream(ctx context.Context, in *CompleteReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.CompleteStreamResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_CompleteStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[1], Chat_CompleteStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -141,6 +172,11 @@ func (c *chatClient) Resume(ctx context.Context, in *ToolCallResultsReq, opts ..
 //
 // 对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
 type ChatServer interface {
+	// 传聊天媒体(图/语音/视频/文件)→ **temp bucket,14 天后自动过期**。
+	// 媒体是临时资产:redis 消息历史也只留 14 天,两者对齐;客户端收到即缓存到本地,
+	// 故过期不影响本地历史回看。**头像/群头像不要走这里** —— 那是永固资产,各有归属 bucket。
+	UploadMedia(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	UploadMediaStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
 	// ── 会话管理 ──
 	NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error)
 	GetHistory(context.Context, *ai.GetHistoryReq) (*GetHistoryResp, error)
@@ -160,6 +196,12 @@ type ChatServer interface {
 // pointer dereference when methods are called.
 type UnimplementedChatServer struct{}
 
+func (UnimplementedChatServer) UploadMedia(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadMedia not implemented")
+}
+func (UnimplementedChatServer) UploadMediaStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error {
+	return status.Error(codes.Unimplemented, "method UploadMediaStream not implemented")
+}
 func (UnimplementedChatServer) NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method NewSession not implemented")
 }
@@ -200,6 +242,31 @@ func RegisterChatServer(s grpc.ServiceRegistrar, srv ChatServer) {
 	}
 	s.RegisterService(&Chat_ServiceDesc, srv)
 }
+
+func _Chat_UploadMedia_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServer).UploadMedia(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chat_UploadMedia_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServer).UploadMedia(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Chat_UploadMediaStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ChatServer).UploadMediaStream(&grpc.GenericServerStream[hi.UploadStreamReq, hi.UploadResp]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Chat_UploadMediaStreamServer = grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]
 
 func _Chat_NewSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
@@ -328,6 +395,10 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ChatServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "UploadMedia",
+			Handler:    _Chat_UploadMedia_Handler,
+		},
+		{
 			MethodName: "NewSession",
 			Handler:    _Chat_NewSession_Handler,
 		},
@@ -353,6 +424,11 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "UploadMediaStream",
+			Handler:       _Chat_UploadMediaStream_Handler,
+			ClientStreams: true,
+		},
 		{
 			StreamName:    "CompleteStream",
 			Handler:       _Chat_CompleteStream_Handler,

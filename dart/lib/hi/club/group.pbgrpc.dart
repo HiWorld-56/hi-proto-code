@@ -15,9 +15,10 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
-import 'group.pb.dart' as $0;
+import '../common.pb.dart' as $0;
+import 'group.pb.dart' as $1;
 
 export 'group.pb.dart';
 
@@ -41,106 +42,121 @@ class GroupClient extends $grpc.Client {
 
   GroupClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GroupMemberView> get(
-    $0.GetGroupReq request, {
+  /// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
+  $grpc.ResponseFuture<$0.UploadResp> uploadAvatar(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadAvatar, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.UploadResp> uploadBackground(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadBackground, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.GroupMemberView> get(
+    $1.GetGroupReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GroupBase> create(
-    $0.CreateGroupReq request, {
+  $grpc.ResponseFuture<$1.GroupBase> create(
+    $1.CreateGroupReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$create, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GroupBase> createSingle(
-    $0.CreateSingleReq request, {
+  $grpc.ResponseFuture<$1.GroupBase> createSingle(
+    $1.CreateSingleReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$createSingle, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> update(
-    $0.GroupBase request, {
+  $grpc.ResponseFuture<$2.Empty> update(
+    $1.GroupBase request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$update, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GroupInfo> listMembers(
-    $0.ListGroupMemberReq request, {
+  $grpc.ResponseFuture<$1.GroupInfo> listMembers(
+    $1.ListGroupMemberReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listMembers, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetGroupMemberTotalResp> getMemberTotal(
-    $0.GetGroupMemberTotalReq request, {
+  $grpc.ResponseFuture<$1.GetGroupMemberTotalResp> getMemberTotal(
+    $1.GetGroupMemberTotalReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getMemberTotal, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> invite(
-    $0.InviteGroupReq request, {
+  $grpc.ResponseFuture<$2.Empty> invite(
+    $1.InviteGroupReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$invite, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> join(
-    $0.JoinGroupReq request, {
+  $grpc.ResponseFuture<$2.Empty> join(
+    $1.JoinGroupReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$join, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> quit(
-    $0.QuitGroupReq request, {
+  $grpc.ResponseFuture<$2.Empty> quit(
+    $1.QuitGroupReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$quit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> remove(
-    $0.RemoveGroupReq request, {
+  $grpc.ResponseFuture<$2.Empty> remove(
+    $1.RemoveGroupReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$remove, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListGroupMessageResp> listMessages(
-    $0.ListGroupMessageReq request, {
+  $grpc.ResponseFuture<$1.ListGroupMessageResp> listMessages(
+    $1.ListGroupMessageReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listMessages, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> setRole(
-    $0.SetRoleReq request, {
+  $grpc.ResponseFuture<$2.Empty> setRole(
+    $1.SetRoleReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$setRole, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetRoleResp> getRole(
-    $0.GetRoleReq request, {
+  $grpc.ResponseFuture<$1.GetRoleResp> getRole(
+    $1.GetRoleReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getRole, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> setDnd(
-    $0.SetDndReq request, {
+  $grpc.ResponseFuture<$2.Empty> setDnd(
+    $1.SetDndReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$setDnd, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> muteMembers(
-    $0.MuteMembersReq request, {
+  $grpc.ResponseFuture<$2.Empty> muteMembers(
+    $1.MuteMembersReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$muteMembers, request, options: options);
@@ -148,70 +164,79 @@ class GroupClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.GetGroupReq, $0.GroupMemberView>(
+  static final _$uploadAvatar = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.club.Group/UploadAvatar',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
+  static final _$uploadBackground =
+      $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+          '/hi.club.Group/UploadBackground',
+          ($0.UploadReq value) => value.writeToBuffer(),
+          $0.UploadResp.fromBuffer);
+  static final _$get = $grpc.ClientMethod<$1.GetGroupReq, $1.GroupMemberView>(
       '/hi.club.Group/Get',
-      ($0.GetGroupReq value) => value.writeToBuffer(),
-      $0.GroupMemberView.fromBuffer);
-  static final _$create = $grpc.ClientMethod<$0.CreateGroupReq, $0.GroupBase>(
+      ($1.GetGroupReq value) => value.writeToBuffer(),
+      $1.GroupMemberView.fromBuffer);
+  static final _$create = $grpc.ClientMethod<$1.CreateGroupReq, $1.GroupBase>(
       '/hi.club.Group/Create',
-      ($0.CreateGroupReq value) => value.writeToBuffer(),
-      $0.GroupBase.fromBuffer);
+      ($1.CreateGroupReq value) => value.writeToBuffer(),
+      $1.GroupBase.fromBuffer);
   static final _$createSingle =
-      $grpc.ClientMethod<$0.CreateSingleReq, $0.GroupBase>(
+      $grpc.ClientMethod<$1.CreateSingleReq, $1.GroupBase>(
           '/hi.club.Group/CreateSingle',
-          ($0.CreateSingleReq value) => value.writeToBuffer(),
-          $0.GroupBase.fromBuffer);
-  static final _$update = $grpc.ClientMethod<$0.GroupBase, $1.Empty>(
+          ($1.CreateSingleReq value) => value.writeToBuffer(),
+          $1.GroupBase.fromBuffer);
+  static final _$update = $grpc.ClientMethod<$1.GroupBase, $2.Empty>(
       '/hi.club.Group/Update',
-      ($0.GroupBase value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      ($1.GroupBase value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
   static final _$listMembers =
-      $grpc.ClientMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
+      $grpc.ClientMethod<$1.ListGroupMemberReq, $1.GroupInfo>(
           '/hi.club.Group/ListMembers',
-          ($0.ListGroupMemberReq value) => value.writeToBuffer(),
-          $0.GroupInfo.fromBuffer);
+          ($1.ListGroupMemberReq value) => value.writeToBuffer(),
+          $1.GroupInfo.fromBuffer);
   static final _$getMemberTotal =
-      $grpc.ClientMethod<$0.GetGroupMemberTotalReq, $0.GetGroupMemberTotalResp>(
+      $grpc.ClientMethod<$1.GetGroupMemberTotalReq, $1.GetGroupMemberTotalResp>(
           '/hi.club.Group/GetMemberTotal',
-          ($0.GetGroupMemberTotalReq value) => value.writeToBuffer(),
-          $0.GetGroupMemberTotalResp.fromBuffer);
-  static final _$invite = $grpc.ClientMethod<$0.InviteGroupReq, $1.Empty>(
+          ($1.GetGroupMemberTotalReq value) => value.writeToBuffer(),
+          $1.GetGroupMemberTotalResp.fromBuffer);
+  static final _$invite = $grpc.ClientMethod<$1.InviteGroupReq, $2.Empty>(
       '/hi.club.Group/Invite',
-      ($0.InviteGroupReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$join = $grpc.ClientMethod<$0.JoinGroupReq, $1.Empty>(
+      ($1.InviteGroupReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$join = $grpc.ClientMethod<$1.JoinGroupReq, $2.Empty>(
       '/hi.club.Group/Join',
-      ($0.JoinGroupReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$quit = $grpc.ClientMethod<$0.QuitGroupReq, $1.Empty>(
+      ($1.JoinGroupReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$quit = $grpc.ClientMethod<$1.QuitGroupReq, $2.Empty>(
       '/hi.club.Group/Quit',
-      ($0.QuitGroupReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$remove = $grpc.ClientMethod<$0.RemoveGroupReq, $1.Empty>(
+      ($1.QuitGroupReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$remove = $grpc.ClientMethod<$1.RemoveGroupReq, $2.Empty>(
       '/hi.club.Group/Remove',
-      ($0.RemoveGroupReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      ($1.RemoveGroupReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
   static final _$listMessages =
-      $grpc.ClientMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
+      $grpc.ClientMethod<$1.ListGroupMessageReq, $1.ListGroupMessageResp>(
           '/hi.club.Group/ListMessages',
-          ($0.ListGroupMessageReq value) => value.writeToBuffer(),
-          $0.ListGroupMessageResp.fromBuffer);
-  static final _$setRole = $grpc.ClientMethod<$0.SetRoleReq, $1.Empty>(
+          ($1.ListGroupMessageReq value) => value.writeToBuffer(),
+          $1.ListGroupMessageResp.fromBuffer);
+  static final _$setRole = $grpc.ClientMethod<$1.SetRoleReq, $2.Empty>(
       '/hi.club.Group/SetRole',
-      ($0.SetRoleReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$getRole = $grpc.ClientMethod<$0.GetRoleReq, $0.GetRoleResp>(
+      ($1.SetRoleReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$getRole = $grpc.ClientMethod<$1.GetRoleReq, $1.GetRoleResp>(
       '/hi.club.Group/GetRole',
-      ($0.GetRoleReq value) => value.writeToBuffer(),
-      $0.GetRoleResp.fromBuffer);
-  static final _$setDnd = $grpc.ClientMethod<$0.SetDndReq, $1.Empty>(
+      ($1.GetRoleReq value) => value.writeToBuffer(),
+      $1.GetRoleResp.fromBuffer);
+  static final _$setDnd = $grpc.ClientMethod<$1.SetDndReq, $2.Empty>(
       '/hi.club.Group/SetDnd',
-      ($0.SetDndReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$muteMembers = $grpc.ClientMethod<$0.MuteMembersReq, $1.Empty>(
+      ($1.SetDndReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$muteMembers = $grpc.ClientMethod<$1.MuteMembersReq, $2.Empty>(
       '/hi.club.Group/MuteMembers',
-      ($0.MuteMembersReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      ($1.MuteMembersReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Group')
@@ -219,233 +244,263 @@ abstract class GroupServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Group';
 
   GroupServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.GetGroupReq, $0.GroupMemberView>(
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadAvatar',
+        uploadAvatar_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadBackground',
+        uploadBackground_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GetGroupReq, $1.GroupMemberView>(
         'Get',
         get_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GetGroupReq.fromBuffer(value),
-        ($0.GroupMemberView value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateGroupReq, $0.GroupBase>(
+        ($core.List<$core.int> value) => $1.GetGroupReq.fromBuffer(value),
+        ($1.GroupMemberView value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.CreateGroupReq, $1.GroupBase>(
         'Create',
         create_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.CreateGroupReq.fromBuffer(value),
-        ($0.GroupBase value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateSingleReq, $0.GroupBase>(
+        ($core.List<$core.int> value) => $1.CreateGroupReq.fromBuffer(value),
+        ($1.GroupBase value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.CreateSingleReq, $1.GroupBase>(
         'CreateSingle',
         createSingle_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.CreateSingleReq.fromBuffer(value),
-        ($0.GroupBase value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GroupBase, $1.Empty>(
+        ($core.List<$core.int> value) => $1.CreateSingleReq.fromBuffer(value),
+        ($1.GroupBase value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GroupBase, $2.Empty>(
         'Update',
         update_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GroupBase.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
+        ($core.List<$core.int> value) => $1.GroupBase.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListGroupMemberReq, $1.GroupInfo>(
         'ListMembers',
         listMembers_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ListGroupMemberReq.fromBuffer(value),
-        ($0.GroupInfo value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetGroupMemberTotalReq,
-            $0.GetGroupMemberTotalResp>(
+            $1.ListGroupMemberReq.fromBuffer(value),
+        ($1.GroupInfo value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GetGroupMemberTotalReq,
+            $1.GetGroupMemberTotalResp>(
         'GetMemberTotal',
         getMemberTotal_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.GetGroupMemberTotalReq.fromBuffer(value),
-        ($0.GetGroupMemberTotalResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.InviteGroupReq, $1.Empty>(
+            $1.GetGroupMemberTotalReq.fromBuffer(value),
+        ($1.GetGroupMemberTotalResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.InviteGroupReq, $2.Empty>(
         'Invite',
         invite_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.InviteGroupReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.JoinGroupReq, $1.Empty>(
+        ($core.List<$core.int> value) => $1.InviteGroupReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.JoinGroupReq, $2.Empty>(
         'Join',
         join_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.JoinGroupReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.QuitGroupReq, $1.Empty>(
+        ($core.List<$core.int> value) => $1.JoinGroupReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.QuitGroupReq, $2.Empty>(
         'Quit',
         quit_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.QuitGroupReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.RemoveGroupReq, $1.Empty>(
+        ($core.List<$core.int> value) => $1.QuitGroupReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.RemoveGroupReq, $2.Empty>(
         'Remove',
         remove_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.RemoveGroupReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $1.RemoveGroupReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
+        $grpc.ServiceMethod<$1.ListGroupMessageReq, $1.ListGroupMessageResp>(
             'ListMessages',
             listMessages_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.ListGroupMessageReq.fromBuffer(value),
-            ($0.ListGroupMessageResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SetRoleReq, $1.Empty>(
+                $1.ListGroupMessageReq.fromBuffer(value),
+            ($1.ListGroupMessageResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetRoleReq, $2.Empty>(
         'SetRole',
         setRole_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.SetRoleReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetRoleReq, $0.GetRoleResp>(
+        ($core.List<$core.int> value) => $1.SetRoleReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GetRoleReq, $1.GetRoleResp>(
         'GetRole',
         getRole_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GetRoleReq.fromBuffer(value),
-        ($0.GetRoleResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SetDndReq, $1.Empty>(
+        ($core.List<$core.int> value) => $1.GetRoleReq.fromBuffer(value),
+        ($1.GetRoleResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetDndReq, $2.Empty>(
         'SetDnd',
         setDnd_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.SetDndReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.MuteMembersReq, $1.Empty>(
+        ($core.List<$core.int> value) => $1.SetDndReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.MuteMembersReq, $2.Empty>(
         'MuteMembers',
         muteMembers_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.MuteMembersReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $1.MuteMembersReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GroupMemberView> get_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.GetGroupReq> $request) async {
+  $async.Future<$0.UploadResp> uploadAvatar_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadAvatar($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadAvatar(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadBackground_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadBackground($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadBackground(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$1.GroupMemberView> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GetGroupReq> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$0.GroupMemberView> get(
-      $grpc.ServiceCall call, $0.GetGroupReq request);
+  $async.Future<$1.GroupMemberView> get(
+      $grpc.ServiceCall call, $1.GetGroupReq request);
 
-  $async.Future<$0.GroupBase> create_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateGroupReq> $request) async {
+  $async.Future<$1.GroupBase> create_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.CreateGroupReq> $request) async {
     return create($call, await $request);
   }
 
-  $async.Future<$0.GroupBase> create(
-      $grpc.ServiceCall call, $0.CreateGroupReq request);
+  $async.Future<$1.GroupBase> create(
+      $grpc.ServiceCall call, $1.CreateGroupReq request);
 
-  $async.Future<$0.GroupBase> createSingle_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateSingleReq> $request) async {
+  $async.Future<$1.GroupBase> createSingle_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.CreateSingleReq> $request) async {
     return createSingle($call, await $request);
   }
 
-  $async.Future<$0.GroupBase> createSingle(
-      $grpc.ServiceCall call, $0.CreateSingleReq request);
+  $async.Future<$1.GroupBase> createSingle(
+      $grpc.ServiceCall call, $1.CreateSingleReq request);
 
-  $async.Future<$1.Empty> update_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.GroupBase> $request) async {
+  $async.Future<$2.Empty> update_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GroupBase> $request) async {
     return update($call, await $request);
   }
 
-  $async.Future<$1.Empty> update($grpc.ServiceCall call, $0.GroupBase request);
+  $async.Future<$2.Empty> update($grpc.ServiceCall call, $1.GroupBase request);
 
-  $async.Future<$0.GroupInfo> listMembers_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListGroupMemberReq> $request) async {
+  $async.Future<$1.GroupInfo> listMembers_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ListGroupMemberReq> $request) async {
     return listMembers($call, await $request);
   }
 
-  $async.Future<$0.GroupInfo> listMembers(
-      $grpc.ServiceCall call, $0.ListGroupMemberReq request);
+  $async.Future<$1.GroupInfo> listMembers(
+      $grpc.ServiceCall call, $1.ListGroupMemberReq request);
 
-  $async.Future<$0.GetGroupMemberTotalResp> getMemberTotal_Pre(
+  $async.Future<$1.GetGroupMemberTotalResp> getMemberTotal_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.GetGroupMemberTotalReq> $request) async {
+      $async.Future<$1.GetGroupMemberTotalReq> $request) async {
     return getMemberTotal($call, await $request);
   }
 
-  $async.Future<$0.GetGroupMemberTotalResp> getMemberTotal(
-      $grpc.ServiceCall call, $0.GetGroupMemberTotalReq request);
+  $async.Future<$1.GetGroupMemberTotalResp> getMemberTotal(
+      $grpc.ServiceCall call, $1.GetGroupMemberTotalReq request);
 
-  $async.Future<$1.Empty> invite_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.InviteGroupReq> $request) async {
+  $async.Future<$2.Empty> invite_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.InviteGroupReq> $request) async {
     return invite($call, await $request);
   }
 
-  $async.Future<$1.Empty> invite(
-      $grpc.ServiceCall call, $0.InviteGroupReq request);
+  $async.Future<$2.Empty> invite(
+      $grpc.ServiceCall call, $1.InviteGroupReq request);
 
-  $async.Future<$1.Empty> join_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.JoinGroupReq> $request) async {
+  $async.Future<$2.Empty> join_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.JoinGroupReq> $request) async {
     return join($call, await $request);
   }
 
-  $async.Future<$1.Empty> join($grpc.ServiceCall call, $0.JoinGroupReq request);
+  $async.Future<$2.Empty> join($grpc.ServiceCall call, $1.JoinGroupReq request);
 
-  $async.Future<$1.Empty> quit_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.QuitGroupReq> $request) async {
+  $async.Future<$2.Empty> quit_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.QuitGroupReq> $request) async {
     return quit($call, await $request);
   }
 
-  $async.Future<$1.Empty> quit($grpc.ServiceCall call, $0.QuitGroupReq request);
+  $async.Future<$2.Empty> quit($grpc.ServiceCall call, $1.QuitGroupReq request);
 
-  $async.Future<$1.Empty> remove_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.RemoveGroupReq> $request) async {
+  $async.Future<$2.Empty> remove_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.RemoveGroupReq> $request) async {
     return remove($call, await $request);
   }
 
-  $async.Future<$1.Empty> remove(
-      $grpc.ServiceCall call, $0.RemoveGroupReq request);
+  $async.Future<$2.Empty> remove(
+      $grpc.ServiceCall call, $1.RemoveGroupReq request);
 
-  $async.Future<$0.ListGroupMessageResp> listMessages_Pre(
+  $async.Future<$1.ListGroupMessageResp> listMessages_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ListGroupMessageReq> $request) async {
+      $async.Future<$1.ListGroupMessageReq> $request) async {
     return listMessages($call, await $request);
   }
 
-  $async.Future<$0.ListGroupMessageResp> listMessages(
-      $grpc.ServiceCall call, $0.ListGroupMessageReq request);
+  $async.Future<$1.ListGroupMessageResp> listMessages(
+      $grpc.ServiceCall call, $1.ListGroupMessageReq request);
 
-  $async.Future<$1.Empty> setRole_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.SetRoleReq> $request) async {
+  $async.Future<$2.Empty> setRole_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SetRoleReq> $request) async {
     return setRole($call, await $request);
   }
 
-  $async.Future<$1.Empty> setRole(
-      $grpc.ServiceCall call, $0.SetRoleReq request);
+  $async.Future<$2.Empty> setRole(
+      $grpc.ServiceCall call, $1.SetRoleReq request);
 
-  $async.Future<$0.GetRoleResp> getRole_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.GetRoleReq> $request) async {
+  $async.Future<$1.GetRoleResp> getRole_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.GetRoleReq> $request) async {
     return getRole($call, await $request);
   }
 
-  $async.Future<$0.GetRoleResp> getRole(
-      $grpc.ServiceCall call, $0.GetRoleReq request);
+  $async.Future<$1.GetRoleResp> getRole(
+      $grpc.ServiceCall call, $1.GetRoleReq request);
 
-  $async.Future<$1.Empty> setDnd_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.SetDndReq> $request) async {
+  $async.Future<$2.Empty> setDnd_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SetDndReq> $request) async {
     return setDnd($call, await $request);
   }
 
-  $async.Future<$1.Empty> setDnd($grpc.ServiceCall call, $0.SetDndReq request);
+  $async.Future<$2.Empty> setDnd($grpc.ServiceCall call, $1.SetDndReq request);
 
-  $async.Future<$1.Empty> muteMembers_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.MuteMembersReq> $request) async {
+  $async.Future<$2.Empty> muteMembers_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.MuteMembersReq> $request) async {
     return muteMembers($call, await $request);
   }
 
-  $async.Future<$1.Empty> muteMembers(
-      $grpc.ServiceCall call, $0.MuteMembersReq request);
+  $async.Future<$2.Empty> muteMembers(
+      $grpc.ServiceCall call, $1.MuteMembersReq request);
 }

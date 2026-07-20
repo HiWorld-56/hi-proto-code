@@ -8,6 +8,7 @@ package club
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,21 +21,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Group_Get_FullMethodName            = "/hi.club.Group/Get"
-	Group_Create_FullMethodName         = "/hi.club.Group/Create"
-	Group_CreateSingle_FullMethodName   = "/hi.club.Group/CreateSingle"
-	Group_Update_FullMethodName         = "/hi.club.Group/Update"
-	Group_ListMembers_FullMethodName    = "/hi.club.Group/ListMembers"
-	Group_GetMemberTotal_FullMethodName = "/hi.club.Group/GetMemberTotal"
-	Group_Invite_FullMethodName         = "/hi.club.Group/Invite"
-	Group_Join_FullMethodName           = "/hi.club.Group/Join"
-	Group_Quit_FullMethodName           = "/hi.club.Group/Quit"
-	Group_Remove_FullMethodName         = "/hi.club.Group/Remove"
-	Group_ListMessages_FullMethodName   = "/hi.club.Group/ListMessages"
-	Group_SetRole_FullMethodName        = "/hi.club.Group/SetRole"
-	Group_GetRole_FullMethodName        = "/hi.club.Group/GetRole"
-	Group_SetDnd_FullMethodName         = "/hi.club.Group/SetDnd"
-	Group_MuteMembers_FullMethodName    = "/hi.club.Group/MuteMembers"
+	Group_UploadAvatar_FullMethodName     = "/hi.club.Group/UploadAvatar"
+	Group_UploadBackground_FullMethodName = "/hi.club.Group/UploadBackground"
+	Group_Get_FullMethodName              = "/hi.club.Group/Get"
+	Group_Create_FullMethodName           = "/hi.club.Group/Create"
+	Group_CreateSingle_FullMethodName     = "/hi.club.Group/CreateSingle"
+	Group_Update_FullMethodName           = "/hi.club.Group/Update"
+	Group_ListMembers_FullMethodName      = "/hi.club.Group/ListMembers"
+	Group_GetMemberTotal_FullMethodName   = "/hi.club.Group/GetMemberTotal"
+	Group_Invite_FullMethodName           = "/hi.club.Group/Invite"
+	Group_Join_FullMethodName             = "/hi.club.Group/Join"
+	Group_Quit_FullMethodName             = "/hi.club.Group/Quit"
+	Group_Remove_FullMethodName           = "/hi.club.Group/Remove"
+	Group_ListMessages_FullMethodName     = "/hi.club.Group/ListMessages"
+	Group_SetRole_FullMethodName          = "/hi.club.Group/SetRole"
+	Group_GetRole_FullMethodName          = "/hi.club.Group/GetRole"
+	Group_SetDnd_FullMethodName           = "/hi.club.Group/SetDnd"
+	Group_MuteMembers_FullMethodName      = "/hi.club.Group/MuteMembers"
 )
 
 // GroupClient is the client API for Group service.
@@ -53,6 +56,9 @@ const (
 //	member(公开群): 仅可拉人;其余禁止
 //	member(私密群): 全禁止(只能被邀请)
 type GroupClient interface {
+	// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
+	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	UploadBackground(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupMemberView, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
@@ -76,6 +82,26 @@ type groupClient struct {
 
 func NewGroupClient(cc grpc.ClientConnInterface) GroupClient {
 	return &groupClient{cc}
+}
+
+func (c *groupClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Group_UploadAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *groupClient) UploadBackground(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Group_UploadBackground_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *groupClient) Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupMemberView, error) {
@@ -244,6 +270,9 @@ func (c *groupClient) MuteMembers(ctx context.Context, in *MuteMembersReq, opts 
 //	member(公开群): 仅可拉人;其余禁止
 //	member(私密群): 全禁止(只能被邀请)
 type GroupServer interface {
+	// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
+	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	UploadBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	Get(context.Context, *GetGroupReq) (*GroupMemberView, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
@@ -268,6 +297,12 @@ type GroupServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGroupServer struct{}
 
+func (UnimplementedGroupServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
+}
+func (UnimplementedGroupServer) UploadBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadBackground not implemented")
+}
 func (UnimplementedGroupServer) Get(context.Context, *GetGroupReq) (*GroupMemberView, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
@@ -331,6 +366,42 @@ func RegisterGroupServer(s grpc.ServiceRegistrar, srv GroupServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Group_ServiceDesc, srv)
+}
+
+func _Group_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServer).UploadAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Group_UploadAvatar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServer).UploadAvatar(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Group_UploadBackground_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServer).UploadBackground(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Group_UploadBackground_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServer).UploadBackground(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Group_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -610,6 +681,14 @@ var Group_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.club.Group",
 	HandlerType: (*GroupServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UploadAvatar",
+			Handler:    _Group_UploadAvatar_Handler,
+		},
+		{
+			MethodName: "UploadBackground",
+			Handler:    _Group_UploadBackground_Handler,
+		},
 		{
 			MethodName: "Get",
 			Handler:    _Group_Get_Handler,

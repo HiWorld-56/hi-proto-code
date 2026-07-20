@@ -7,7 +7,7 @@
 package club
 
 import (
-	_ "github.com/HiWorld-56/hi-proto/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -407,7 +407,7 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"\x8b\x01\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"\x8b\x01\n" +
 	"\vCompleteReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
@@ -438,8 +438,10 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x05conts\x18\x02 \x03(\v2\x10.hi.club.ContentR\x05conts\"Q\n" +
 	"\x12ToolCallResultsReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12+\n" +
-	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04list2\xd4\x03\n" +
-	"\x04Chat\x12B\n" +
+	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04list2\xcc\x04\n" +
+	"\x04Chat\x123\n" +
+	"\vUploadMedia\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
+	"\x11UploadMediaStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\n" +
@@ -473,13 +475,16 @@ var file_hi_club_chat_proto_goTypes = []any{
 	(*ToolCallResultsReq)(nil),    // 5: hi.club.ToolCallResultsReq
 	(*Content)(nil),               // 6: hi.club.Content
 	(*ai.ToolSupply)(nil),         // 7: hi.ai.ToolSupply
-	(*emptypb.Empty)(nil),         // 8: google.protobuf.Empty
-	(*ai.GetHistoryReq)(nil),      // 9: hi.ai.GetHistoryReq
-	(*ai.ClearHistoryReq)(nil),    // 10: hi.ai.ClearHistoryReq
-	(*ai.NewSessionResp)(nil),     // 11: hi.ai.NewSessionResp
-	(*ai.CompleteResp)(nil),       // 12: hi.ai.CompleteResp
-	(*ai.CompleteStreamResp)(nil), // 13: hi.ai.CompleteStreamResp
-	(*ai.ChatResp)(nil),           // 14: hi.ai.ChatResp
+	(*hi.UploadReq)(nil),          // 8: hi.UploadReq
+	(*hi.UploadStreamReq)(nil),    // 9: hi.UploadStreamReq
+	(*emptypb.Empty)(nil),         // 10: google.protobuf.Empty
+	(*ai.GetHistoryReq)(nil),      // 11: hi.ai.GetHistoryReq
+	(*ai.ClearHistoryReq)(nil),    // 12: hi.ai.ClearHistoryReq
+	(*hi.UploadResp)(nil),         // 13: hi.UploadResp
+	(*ai.NewSessionResp)(nil),     // 14: hi.ai.NewSessionResp
+	(*ai.CompleteResp)(nil),       // 15: hi.ai.CompleteResp
+	(*ai.CompleteStreamResp)(nil), // 16: hi.ai.CompleteStreamResp
+	(*ai.ChatResp)(nil),           // 17: hi.ai.ChatResp
 }
 var file_hi_club_chat_proto_depIdxs = []int32{
 	6,  // 0: hi.club.CompleteReq.conts:type_name -> hi.club.Content
@@ -489,22 +494,26 @@ var file_hi_club_chat_proto_depIdxs = []int32{
 	7,  // 4: hi.club.ChatReq.tools:type_name -> hi.ai.ToolSupply
 	6,  // 5: hi.club.ToolCallResult.conts:type_name -> hi.club.Content
 	4,  // 6: hi.club.ToolCallResultsReq.list:type_name -> hi.club.ToolCallResult
-	8,  // 7: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
-	9,  // 8: hi.club.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
-	10, // 9: hi.club.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
-	0,  // 10: hi.club.Chat.Complete:input_type -> hi.club.CompleteReq
-	0,  // 11: hi.club.Chat.CompleteStream:input_type -> hi.club.CompleteReq
-	3,  // 12: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
-	5,  // 13: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
-	11, // 14: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	2,  // 15: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
-	8,  // 16: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
-	12, // 17: hi.club.Chat.Complete:output_type -> hi.ai.CompleteResp
-	13, // 18: hi.club.Chat.CompleteStream:output_type -> hi.ai.CompleteStreamResp
-	14, // 19: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
-	14, // 20: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
-	14, // [14:21] is the sub-list for method output_type
-	7,  // [7:14] is the sub-list for method input_type
+	8,  // 7: hi.club.Chat.UploadMedia:input_type -> hi.UploadReq
+	9,  // 8: hi.club.Chat.UploadMediaStream:input_type -> hi.UploadStreamReq
+	10, // 9: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
+	11, // 10: hi.club.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
+	12, // 11: hi.club.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
+	0,  // 12: hi.club.Chat.Complete:input_type -> hi.club.CompleteReq
+	0,  // 13: hi.club.Chat.CompleteStream:input_type -> hi.club.CompleteReq
+	3,  // 14: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
+	5,  // 15: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
+	13, // 16: hi.club.Chat.UploadMedia:output_type -> hi.UploadResp
+	13, // 17: hi.club.Chat.UploadMediaStream:output_type -> hi.UploadResp
+	14, // 18: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	2,  // 19: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
+	10, // 20: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
+	15, // 21: hi.club.Chat.Complete:output_type -> hi.ai.CompleteResp
+	16, // 22: hi.club.Chat.CompleteStream:output_type -> hi.ai.CompleteStreamResp
+	17, // 23: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
+	17, // 24: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
+	16, // [16:25] is the sub-list for method output_type
+	7,  // [7:16] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name

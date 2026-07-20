@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Merchant_Get_FullMethodName         = "/hi.did.Merchant/Get"
 	Merchant_Update_FullMethodName      = "/hi.did.Merchant/Update"
+	Merchant_UploadLogo_FullMethodName  = "/hi.did.Merchant/UploadLogo"
 	Merchant_GetUser_FullMethodName     = "/hi.did.Merchant/GetUser"
 	Merchant_ListUsers_FullMethodName   = "/hi.did.Merchant/ListUsers"
 	Merchant_List_FullMethodName        = "/hi.did.Merchant/List"
@@ -61,6 +62,8 @@ type MerchantClient interface {
 	//	若确需看别的商户的公开信息(name/logo/scheme 等),走 MerchantPub(只吐安全字段)。
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MerchantGetResp, error)
 	Update(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 传商户 logo → hidid bucket 的 logo/。只回 url;写进配置仍走 Update。
+	UploadLogo(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// ── 商户管理其用户的扩展信息 ──
 	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
 	// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
@@ -100,6 +103,16 @@ func (c *merchantClient) Update(ctx context.Context, in *MerchantSetReq, opts ..
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Merchant_Update_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchantClient) UploadLogo(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Merchant_UploadLogo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -232,6 +245,8 @@ type MerchantServer interface {
 	//	若确需看别的商户的公开信息(name/logo/scheme 等),走 MerchantPub(只吐安全字段)。
 	Get(context.Context, *emptypb.Empty) (*MerchantGetResp, error)
 	Update(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
+	// 传商户 logo → hidid bucket 的 logo/。只回 url;写进配置仍走 Update。
+	UploadLogo(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	// ── 商户管理其用户的扩展信息 ──
 	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
 	// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
@@ -261,6 +276,9 @@ func (UnimplementedMerchantServer) Get(context.Context, *emptypb.Empty) (*Mercha
 }
 func (UnimplementedMerchantServer) Update(context.Context, *MerchantSetReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedMerchantServer) UploadLogo(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadLogo not implemented")
 }
 func (UnimplementedMerchantServer) GetUser(context.Context, *GetUserReq) (*UserExtensionUnit, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUser not implemented")
@@ -344,6 +362,24 @@ func _Merchant_Update_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MerchantServer).Update(ctx, req.(*MerchantSetReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Merchant_UploadLogo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).UploadLogo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_UploadLogo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).UploadLogo(ctx, req.(*hi.UploadReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -542,6 +578,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Update",
 			Handler:    _Merchant_Update_Handler,
+		},
+		{
+			MethodName: "UploadLogo",
+			Handler:    _Merchant_UploadLogo_Handler,
 		},
 		{
 			MethodName: "GetUser",

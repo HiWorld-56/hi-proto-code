@@ -812,6 +812,295 @@ class ServerVersionResp extends $pb.GeneratedMessage {
   void clearEnv() => $_clearField(2);
 }
 
+/// ── 上传(各模块转发 hi-source 用)──────────────────────────────────────
+/// 上传链路:客户端 → **业务模块**(在此鉴权)→ 内部转发 hi-source → 落对应 bucket。
+/// hi-source 的上传端口只对内网开放,客户端不再直连。各模块用常量定义自己的 bucket/目录:
+///   hidid  → hidid/avatar、hidid/logo        hiclub → hiclub/avatar、hiclub/background
+///   hiai   → hiai/plugin/<uuid>              聊天/AI 媒体 → temp/<YYYY_MM>(14 天过期)
+class UploadReq extends $pb.GeneratedMessage {
+  factory UploadReq({
+    $core.String? name,
+    $core.List<$core.int>? content,
+  }) {
+    final result = create();
+    if (name != null) result.name = name;
+    if (content != null) result.content = content;
+    return result;
+  }
+
+  UploadReq._();
+
+  factory UploadReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UploadReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UploadReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..a<$core.List<$core.int>>(
+        2, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadReq copyWith(void Function(UploadReq) updates) =>
+      super.copyWith((message) => updates(message as UploadReq)) as UploadReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UploadReq create() => UploadReq._();
+  @$core.override
+  UploadReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UploadReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<UploadReq>(create);
+  static UploadReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get content => $_getN(1);
+  @$pb.TagNumber(2)
+  set content($core.List<$core.int> value) => $_setBytes(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasContent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearContent() => $_clearField(2);
+}
+
+enum UploadStreamReq_Data { meta, chunk, notSet }
+
+/// 分片上传:首包 meta,后续 chunk(大媒体/脚本包用)。
+class UploadStreamReq extends $pb.GeneratedMessage {
+  factory UploadStreamReq({
+    UploadMeta? meta,
+    $core.List<$core.int>? chunk,
+  }) {
+    final result = create();
+    if (meta != null) result.meta = meta;
+    if (chunk != null) result.chunk = chunk;
+    return result;
+  }
+
+  UploadStreamReq._();
+
+  factory UploadStreamReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UploadStreamReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, UploadStreamReq_Data>
+      _UploadStreamReq_DataByTag = {
+    1: UploadStreamReq_Data.meta,
+    2: UploadStreamReq_Data.chunk,
+    0: UploadStreamReq_Data.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UploadStreamReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOM<UploadMeta>(1, _omitFieldNames ? '' : 'meta',
+        subBuilder: UploadMeta.create)
+    ..a<$core.List<$core.int>>(
+        2, _omitFieldNames ? '' : 'chunk', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadStreamReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadStreamReq copyWith(void Function(UploadStreamReq) updates) =>
+      super.copyWith((message) => updates(message as UploadStreamReq))
+          as UploadStreamReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UploadStreamReq create() => UploadStreamReq._();
+  @$core.override
+  UploadStreamReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UploadStreamReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadStreamReq>(create);
+  static UploadStreamReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  UploadStreamReq_Data whichData() =>
+      _UploadStreamReq_DataByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  void clearData() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  UploadMeta get meta => $_getN(0);
+  @$pb.TagNumber(1)
+  set meta(UploadMeta value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMeta() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMeta() => $_clearField(1);
+  @$pb.TagNumber(1)
+  UploadMeta ensureMeta() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get chunk => $_getN(1);
+  @$pb.TagNumber(2)
+  set chunk($core.List<$core.int> value) => $_setBytes(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasChunk() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearChunk() => $_clearField(2);
+}
+
+class UploadMeta extends $pb.GeneratedMessage {
+  factory UploadMeta({
+    $core.String? name,
+    $fixnum.Int64? size,
+  }) {
+    final result = create();
+    if (name != null) result.name = name;
+    if (size != null) result.size = size;
+    return result;
+  }
+
+  UploadMeta._();
+
+  factory UploadMeta.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UploadMeta.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UploadMeta',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aInt64(2, _omitFieldNames ? '' : 'size')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadMeta clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadMeta copyWith(void Function(UploadMeta) updates) =>
+      super.copyWith((message) => updates(message as UploadMeta)) as UploadMeta;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UploadMeta create() => UploadMeta._();
+  @$core.override
+  UploadMeta createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UploadMeta getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadMeta>(create);
+  static UploadMeta? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get size => $_getI64(1);
+  @$pb.TagNumber(2)
+  set size($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSize() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSize() => $_clearField(2);
+}
+
+class UploadResp extends $pb.GeneratedMessage {
+  factory UploadResp({
+    $core.String? url,
+    $core.String? thumbUrl,
+  }) {
+    final result = create();
+    if (url != null) result.url = url;
+    if (thumbUrl != null) result.thumbUrl = thumbUrl;
+    return result;
+  }
+
+  UploadResp._();
+
+  factory UploadResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UploadResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UploadResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..aOS(2, _omitFieldNames ? '' : 'thumbUrl')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadResp copyWith(void Function(UploadResp) updates) =>
+      super.copyWith((message) => updates(message as UploadResp)) as UploadResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UploadResp create() => UploadResp._();
+  @$core.override
+  UploadResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UploadResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadResp>(create);
+  static UploadResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get url => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set url($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUrl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUrl() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get thumbUrl => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set thumbUrl($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasThumbUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearThumbUrl() => $_clearField(2);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

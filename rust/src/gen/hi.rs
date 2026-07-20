@@ -236,3 +236,46 @@ pub struct ServerVersionResp {
     #[prost(string, tag = "2")]
     pub env: ::prost::alloc::string::String,
 }
+/// ── 上传(各模块转发 hi-source 用)──────────────────────────────────────
+/// 上传链路:客户端 → **业务模块**(在此鉴权)→ 内部转发 hi-source → 落对应 bucket。
+/// hi-source 的上传端口只对内网开放,客户端不再直连。各模块用常量定义自己的 bucket/目录:
+/// hidid  → hidid/avatar、hidid/logo        hiclub → hiclub/avatar、hiclub/background
+/// hiai   → hiai/plugin/<uuid>              聊天/AI 媒体 → temp/\<YYYY_MM>(14 天过期)
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UploadReq {
+    /// 原始文件名,仅用于取扩展名(存储侧会随机改名)
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", tag = "2")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+}
+/// 分片上传:首包 meta,后续 chunk(大媒体/脚本包用)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UploadStreamReq {
+    #[prost(oneof = "upload_stream_req::Data", tags = "1, 2")]
+    pub data: ::core::option::Option<upload_stream_req::Data>,
+}
+/// Nested message and enum types in `UploadStreamReq`.
+pub mod upload_stream_req {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Data {
+        #[prost(message, tag = "1")]
+        Meta(super::UploadMeta),
+        #[prost(bytes, tag = "2")]
+        Chunk(::prost::alloc::vec::Vec<u8>),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UploadMeta {
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(int64, tag = "2")]
+    pub size: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UploadResp {
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
+}

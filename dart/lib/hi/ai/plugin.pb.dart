@@ -13,9 +13,9 @@
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
+import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $3;
 
-import '../common.pb.dart' as $3;
+import '../common.pb.dart' as $0;
 import 'chat.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -138,7 +138,7 @@ class PluginBody extends $pb.GeneratedMessage {
 class PluginAnnex extends $pb.GeneratedMessage {
   factory PluginAnnex({
     $core.String? apiKey,
-    $2.Struct? data,
+    $3.Struct? data,
   }) {
     final result = create();
     if (apiKey != null) result.apiKey = apiKey;
@@ -160,8 +160,8 @@ class PluginAnnex extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'apiKey')
-    ..aOM<$2.Struct>(2, _omitFieldNames ? '' : 'data',
-        subBuilder: $2.Struct.create)
+    ..aOM<$3.Struct>(2, _omitFieldNames ? '' : 'data',
+        subBuilder: $3.Struct.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -193,15 +193,15 @@ class PluginAnnex extends $pb.GeneratedMessage {
   void clearApiKey() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Struct get data => $_getN(1);
+  $3.Struct get data => $_getN(1);
   @$pb.TagNumber(2)
-  set data($2.Struct value) => $_setField(2, value);
+  set data($3.Struct value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasData() => $_has(1);
   @$pb.TagNumber(2)
   void clearData() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Struct ensureData() => $_ensure(1);
+  $3.Struct ensureData() => $_ensure(1);
 }
 
 /// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
@@ -784,10 +784,156 @@ class SetActiveVersionReq extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(3);
 }
 
+/// 下载脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
+class DownloadScriptReq extends $pb.GeneratedMessage {
+  factory DownloadScriptReq({
+    $core.String? agent,
+    $core.String? uuid,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  DownloadScriptReq._();
+
+  factory DownloadScriptReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DownloadScriptReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DownloadScriptReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadScriptReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadScriptReq copyWith(void Function(DownloadScriptReq) updates) =>
+      super.copyWith((message) => updates(message as DownloadScriptReq))
+          as DownloadScriptReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DownloadScriptReq create() => DownloadScriptReq._();
+  @$core.override
+  DownloadScriptReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DownloadScriptReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DownloadScriptReq>(create);
+  static DownloadScriptReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+}
+
+class DownloadScriptResp extends $pb.GeneratedMessage {
+  factory DownloadScriptResp({
+    $core.List<$core.int>? content,
+    $core.String? name,
+  }) {
+    final result = create();
+    if (content != null) result.content = content;
+    if (name != null) result.name = name;
+    return result;
+  }
+
+  DownloadScriptResp._();
+
+  factory DownloadScriptResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DownloadScriptResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DownloadScriptResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadScriptResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadScriptResp copyWith(void Function(DownloadScriptResp) updates) =>
+      super.copyWith((message) => updates(message as DownloadScriptResp))
+          as DownloadScriptResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DownloadScriptResp create() => DownloadScriptResp._();
+  @$core.override
+  DownloadScriptResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DownloadScriptResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DownloadScriptResp>(create);
+  static DownloadScriptResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get content => $_getN(0);
+  @$pb.TagNumber(1)
+  set content($core.List<$core.int> value) => $_setBytes(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasContent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearContent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+}
+
 class ListPluginReq extends $pb.GeneratedMessage {
   factory ListPluginReq({
     $core.String? agent,
-    $3.Pagination? pagination,
+    $0.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -809,8 +955,8 @@ class ListPluginReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
+    ..aOM<$0.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $0.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -842,22 +988,22 @@ class ListPluginReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $3.Pagination get pagination => $_getN(1);
+  $0.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($3.Pagination value) => $_setField(2, value);
+  set pagination($0.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Pagination ensurePagination() => $_ensure(1);
+  $0.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListVersionsReq extends $pb.GeneratedMessage {
   factory ListVersionsReq({
     $core.String? agent,
     $core.String? uuid,
-    $3.Pagination? pagination,
+    $0.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -881,8 +1027,8 @@ class ListVersionsReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
-    ..aOM<$3.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
+    ..aOM<$0.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $0.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -923,15 +1069,15 @@ class ListVersionsReq extends $pb.GeneratedMessage {
   void clearUuid() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $3.Pagination get pagination => $_getN(2);
+  $0.Pagination get pagination => $_getN(2);
   @$pb.TagNumber(3)
-  set pagination($3.Pagination value) => $_setField(3, value);
+  set pagination($0.Pagination value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasPagination() => $_has(2);
   @$pb.TagNumber(3)
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
-  $3.Pagination ensurePagination() => $_ensure(2);
+  $0.Pagination ensurePagination() => $_ensure(2);
 }
 
 class ListPluginResp extends $pb.GeneratedMessage {

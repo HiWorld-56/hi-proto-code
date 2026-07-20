@@ -1145,6 +1145,27 @@ pub struct SetActiveVersionReq {
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
+/// 下载脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadScriptReq {
+    /// agent did(校验脚本归属)
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 脚本 id
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 留空=该 agent 的激活版本
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadScriptResp {
+    #[prost(bytes = "vec", tag = "1")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+    /// 建议的文件名
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListPluginReq {
     #[prost(string, tag = "1")]
@@ -1326,6 +1347,59 @@ pub mod plugin_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        /// ── 脚本包存取(hiai bucket,**私有**)──────────────────────────────
+        /// 脚本是 owner 私产、且是插件市场里的可交易资产,故 bucket 不开匿名读:
+        /// 拿到 url 也直接下不了,必须经 Download 走服务端凭据。
+        /// 上传与建插件解耦:先 UploadScript 拿 url,再把 url 放进 CreatePluginReq。
+        pub async fn upload_script(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::super::UploadStreamReq,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/UploadScript",
+            );
+            let mut req = request.into_streaming_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "UploadScript"));
+            self.inner.client_streaming(req, path, codec).await
+        }
+        pub async fn download_script(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DownloadScriptReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::DownloadScriptResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/DownloadScript",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Plugin", "DownloadScript"));
+            self.inner.unary(req, path, codec).await
         }
         pub async fn create(
             &mut self,

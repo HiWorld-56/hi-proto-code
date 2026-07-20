@@ -14,8 +14,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../ai/chat.pb.dart' as $1;
-import 'messaging.pb.dart' as $3;
+import '../ai/chat.pb.dart' as $2;
+import 'messaging.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -24,7 +24,7 @@ class CompleteReq extends $pb.GeneratedMessage {
   factory CompleteReq({
     $core.String? agent,
     $core.String? cid,
-    $core.Iterable<$3.Content>? conts,
+    $core.Iterable<$4.Content>? conts,
     $core.String? state,
     $core.String? custom,
   }) {
@@ -52,8 +52,8 @@ class CompleteReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'cid')
-    ..pPM<$3.Content>(3, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
+    ..pPM<$4.Content>(3, _omitFieldNames ? '' : 'conts',
+        subBuilder: $4.Content.create)
     ..aOS(4, _omitFieldNames ? '' : 'state')
     ..aOS(5, _omitFieldNames ? '' : 'custom')
     ..hasRequiredFields = false;
@@ -96,7 +96,7 @@ class CompleteReq extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $pb.PbList<$3.Content> get conts => $_getList(2);
+  $pb.PbList<$4.Content> get conts => $_getList(2);
 
   @$pb.TagNumber(4)
   $core.String get state => $_getSZ(3);
@@ -119,7 +119,7 @@ class CompleteReq extends $pb.GeneratedMessage {
 
 class QA extends $pb.GeneratedMessage {
   factory QA({
-    $core.Iterable<$3.Content>? q,
+    $core.Iterable<$4.Content>? q,
     $core.String? a,
   }) {
     final result = create();
@@ -141,8 +141,8 @@ class QA extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'QA',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<$3.Content>(1, _omitFieldNames ? '' : 'q',
-        subBuilder: $3.Content.create)
+    ..pPM<$4.Content>(1, _omitFieldNames ? '' : 'q',
+        subBuilder: $4.Content.create)
     ..aOS(2, _omitFieldNames ? '' : 'a')
     ..hasRequiredFields = false;
 
@@ -165,7 +165,7 @@ class QA extends $pb.GeneratedMessage {
   static QA? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$3.Content> get q => $_getList(0);
+  $pb.PbList<$4.Content> get q => $_getList(0);
 
   @$pb.TagNumber(2)
   $core.String get a => $_getSZ(1);
@@ -230,8 +230,8 @@ class ChatReq extends $pb.GeneratedMessage {
   factory ChatReq({
     $core.String? agent,
     $core.String? cid,
-    $core.Iterable<$3.Content>? conts,
-    $core.Iterable<$1.ToolSupply>? tools,
+    $core.Iterable<$4.Content>? conts,
+    $core.Iterable<$2.ToolSupply>? tools,
     $core.String? toolChoice,
     $core.String? custom,
     $core.String? state,
@@ -264,10 +264,10 @@ class ChatReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'cid')
-    ..pPM<$3.Content>(3, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
-    ..pPM<$1.ToolSupply>(4, _omitFieldNames ? '' : 'tools',
-        subBuilder: $1.ToolSupply.create)
+    ..pPM<$4.Content>(3, _omitFieldNames ? '' : 'conts',
+        subBuilder: $4.Content.create)
+    ..pPM<$2.ToolSupply>(4, _omitFieldNames ? '' : 'tools',
+        subBuilder: $2.ToolSupply.create)
     ..aOS(5, _omitFieldNames ? '' : 'toolChoice')
     ..aOS(6, _omitFieldNames ? '' : 'custom')
     ..aOS(7, _omitFieldNames ? '' : 'state')
@@ -311,10 +311,10 @@ class ChatReq extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $pb.PbList<$3.Content> get conts => $_getList(2);
+  $pb.PbList<$4.Content> get conts => $_getList(2);
 
   @$pb.TagNumber(4)
-  $pb.PbList<$1.ToolSupply> get tools => $_getList(3);
+  $pb.PbList<$2.ToolSupply> get tools => $_getList(3);
 
   @$pb.TagNumber(5)
   $core.String get toolChoice => $_getSZ(4);
@@ -356,7 +356,7 @@ class ChatReq extends $pb.GeneratedMessage {
 class ToolCallResult extends $pb.GeneratedMessage {
   factory ToolCallResult({
     $core.String? id,
-    $core.Iterable<$3.Content>? conts,
+    $core.Iterable<$4.Content>? conts,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -378,8 +378,8 @@ class ToolCallResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
-    ..pPM<$3.Content>(2, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
+    ..pPM<$4.Content>(2, _omitFieldNames ? '' : 'conts',
+        subBuilder: $4.Content.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -411,7 +411,7 @@ class ToolCallResult extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$3.Content> get conts => $_getList(1);
+  $pb.PbList<$4.Content> get conts => $_getList(1);
 }
 
 /// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。

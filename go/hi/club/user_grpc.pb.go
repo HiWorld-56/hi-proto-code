@@ -21,6 +21,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	User_UploadAvatar_FullMethodName           = "/hi.club.User/UploadAvatar"
 	User_GetCurrent_FullMethodName             = "/hi.club.User/GetCurrent"
 	User_Update_FullMethodName                 = "/hi.club.User/Update"
 	User_ListSystemMessages_FullMethodName     = "/hi.club.User/ListSystemMessages"
@@ -41,6 +42,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
+	// 传用户头像:**club 不自己存**,内部转发 hi.did.User.UploadAvatar,落 hidid bucket。
+	// 用户资料的权威在 hidid,存储也跟着走,避免两边各存一份。
+	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
 	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListSystemMessages(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error)
@@ -63,6 +67,16 @@ type userClient struct {
 
 func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 	return &userClient{cc}
+}
+
+func (c *userClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, User_UploadAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userClient) GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error) {
@@ -209,6 +223,9 @@ func (c *userClient) ListOnline(ctx context.Context, in *ListOnlineUserReq, opts
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
 type UserServer interface {
+	// 传用户头像:**club 不自己存**,内部转发 hi.did.User.UploadAvatar,落 hidid bucket。
+	// 用户资料的权威在 hidid,存储也跟着走,避免两边各存一份。
+	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error)
 	Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
 	ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error)
@@ -232,6 +249,9 @@ type UserServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServer struct{}
 
+func (UnimplementedUserServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
+}
 func (UnimplementedUserServer) GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCurrent not implemented")
 }
@@ -292,6 +312,24 @@ func RegisterUserServer(s grpc.ServiceRegistrar, srv UserServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&User_ServiceDesc, srv)
+}
+
+func _User_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UploadAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UploadAvatar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UploadAvatar(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _User_GetCurrent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -553,6 +591,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.club.User",
 	HandlerType: (*UserServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UploadAvatar",
+			Handler:    _User_UploadAvatar_Handler,
+		},
 		{
 			MethodName: "GetCurrent",
 			Handler:    _User_GetCurrent_Handler,

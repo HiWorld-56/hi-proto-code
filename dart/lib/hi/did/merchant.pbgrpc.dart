@@ -64,6 +64,14 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$update, request, options: options);
   }
 
+  /// 传商户 logo → hidid bucket 的 logo/。只回 url;写进配置仍走 Update。
+  $grpc.ResponseFuture<$2.UploadResp> uploadLogo(
+    $2.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadLogo, request, options: options);
+  }
+
   /// ── 商户管理其用户的扩展信息 ──
   /// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
   /// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
@@ -149,6 +157,10 @@ class MerchantClient extends $grpc.Client {
       '/hi.did.Merchant/Update',
       ($1.MerchantSetReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
+  static final _$uploadLogo = $grpc.ClientMethod<$2.UploadReq, $2.UploadResp>(
+      '/hi.did.Merchant/UploadLogo',
+      ($2.UploadReq value) => value.writeToBuffer(),
+      $2.UploadResp.fromBuffer);
   static final _$getUser =
       $grpc.ClientMethod<$1.GetUserReq, $1.UserExtensionUnit>(
           '/hi.did.Merchant/GetUser',
@@ -214,6 +226,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.MerchantSetReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.UploadReq, $2.UploadResp>(
+        'UploadLogo',
+        uploadLogo_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.UploadReq.fromBuffer(value),
+        ($2.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.GetUserReq, $1.UserExtensionUnit>(
         'GetUser',
         getUser_Pre,
@@ -301,6 +320,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> update(
       $grpc.ServiceCall call, $1.MerchantSetReq request);
+
+  $async.Future<$2.UploadResp> uploadLogo_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.UploadReq> $request) async {
+    return uploadLogo($call, await $request);
+  }
+
+  $async.Future<$2.UploadResp> uploadLogo(
+      $grpc.ServiceCall call, $2.UploadReq request);
 
   $async.Future<$1.UserExtensionUnit> getUser_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.GetUserReq> $request) async {

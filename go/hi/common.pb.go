@@ -7,6 +7,7 @@
 package hi
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -656,11 +657,256 @@ func (x *ServerVersionResp) GetEnv() string {
 	return ""
 }
 
+// ── 上传(各模块转发 hi-source 用)──────────────────────────────────────
+// 上传链路:客户端 → **业务模块**(在此鉴权)→ 内部转发 hi-source → 落对应 bucket。
+// hi-source 的上传端口只对内网开放,客户端不再直连。各模块用常量定义自己的 bucket/目录:
+//
+//	hidid  → hidid/avatar、hidid/logo        hiclub → hiclub/avatar、hiclub/background
+//	hiai   → hiai/plugin/<uuid>              聊天/AI 媒体 → temp/<YYYY_MM>(14 天过期)
+type UploadReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 原始文件名,仅用于取扩展名(存储侧会随机改名)
+	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UploadReq) Reset() {
+	*x = UploadReq{}
+	mi := &file_hi_common_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UploadReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UploadReq) ProtoMessage() {}
+
+func (x *UploadReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_common_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UploadReq.ProtoReflect.Descriptor instead.
+func (*UploadReq) Descriptor() ([]byte, []int) {
+	return file_hi_common_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *UploadReq) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UploadReq) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+// 分片上传:首包 meta,后续 chunk(大媒体/脚本包用)。
+type UploadStreamReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Data:
+	//
+	//	*UploadStreamReq_Meta
+	//	*UploadStreamReq_Chunk
+	Data          isUploadStreamReq_Data `protobuf_oneof:"data"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UploadStreamReq) Reset() {
+	*x = UploadStreamReq{}
+	mi := &file_hi_common_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UploadStreamReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UploadStreamReq) ProtoMessage() {}
+
+func (x *UploadStreamReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_common_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UploadStreamReq.ProtoReflect.Descriptor instead.
+func (*UploadStreamReq) Descriptor() ([]byte, []int) {
+	return file_hi_common_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *UploadStreamReq) GetData() isUploadStreamReq_Data {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *UploadStreamReq) GetMeta() *UploadMeta {
+	if x != nil {
+		if x, ok := x.Data.(*UploadStreamReq_Meta); ok {
+			return x.Meta
+		}
+	}
+	return nil
+}
+
+func (x *UploadStreamReq) GetChunk() []byte {
+	if x != nil {
+		if x, ok := x.Data.(*UploadStreamReq_Chunk); ok {
+			return x.Chunk
+		}
+	}
+	return nil
+}
+
+type isUploadStreamReq_Data interface {
+	isUploadStreamReq_Data()
+}
+
+type UploadStreamReq_Meta struct {
+	Meta *UploadMeta `protobuf:"bytes,1,opt,name=meta,proto3,oneof"`
+}
+
+type UploadStreamReq_Chunk struct {
+	Chunk []byte `protobuf:"bytes,2,opt,name=chunk,proto3,oneof"`
+}
+
+func (*UploadStreamReq_Meta) isUploadStreamReq_Data() {}
+
+func (*UploadStreamReq_Chunk) isUploadStreamReq_Data() {}
+
+type UploadMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Size          int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UploadMeta) Reset() {
+	*x = UploadMeta{}
+	mi := &file_hi_common_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UploadMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UploadMeta) ProtoMessage() {}
+
+func (x *UploadMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_common_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UploadMeta.ProtoReflect.Descriptor instead.
+func (*UploadMeta) Descriptor() ([]byte, []int) {
+	return file_hi_common_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *UploadMeta) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UploadMeta) GetSize() int64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+type UploadResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	ThumbUrl      *string                `protobuf:"bytes,2,opt,name=thumb_url,json=thumbUrl,proto3,oneof" json:"thumb_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UploadResp) Reset() {
+	*x = UploadResp{}
+	mi := &file_hi_common_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UploadResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UploadResp) ProtoMessage() {}
+
+func (x *UploadResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_common_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UploadResp.ProtoReflect.Descriptor instead.
+func (*UploadResp) Descriptor() ([]byte, []int) {
+	return file_hi_common_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *UploadResp) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *UploadResp) GetThumbUrl() string {
+	if x != nil && x.ThumbUrl != nil {
+		return *x.ThumbUrl
+	}
+	return ""
+}
+
 var File_hi_common_proto protoreflect.FileDescriptor
 
 const file_hi_common_proto_rawDesc = "" +
 	"\n" +
-	"\x0fhi/common.proto\x12\x02hi\x1a\x10hi/options.proto\">\n" +
+	"\x0fhi/common.proto\x12\x02hi\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\">\n" +
 	"\n" +
 	"SignedData\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\fR\x04data\x12\x1c\n" +
@@ -699,7 +945,24 @@ const file_hi_common_proto_rawDesc = "" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"Q\n" +
 	"\x11ServerVersionResp\x12\x1e\n" +
 	"\aversion\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\aversion\x12\x16\n" +
-	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01Bc\n" +
+	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01\"P\n" +
+	"\tUploadReq\x12 \n" +
+	"\x04name\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12!\n" +
+	"\acontent\x18\x02 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\"W\n" +
+	"\x0fUploadStreamReq\x12$\n" +
+	"\x04meta\x18\x01 \x01(\v2\x0e.hi.UploadMetaH\x00R\x04meta\x12\x16\n" +
+	"\x05chunk\x18\x02 \x01(\fH\x00R\x05chunkB\x06\n" +
+	"\x04data\"K\n" +
+	"\n" +
+	"UploadMeta\x12 \n" +
+	"\x04name\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12\x1b\n" +
+	"\x04size\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\"`\n" +
+	"\n" +
+	"UploadResp\x12\x16\n" +
+	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12&\n" +
+	"\tthumb_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
+	"\n" +
+	"_thumb_urlBc\n" +
 	"\x06com.hiB\vCommonProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (
@@ -714,7 +977,7 @@ func file_hi_common_proto_rawDescGZIP() []byte {
 	return file_hi_common_proto_rawDescData
 }
 
-var file_hi_common_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_hi_common_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_hi_common_proto_goTypes = []any{
 	(*SignedData)(nil),        // 0: hi.SignedData
 	(*DID)(nil),               // 1: hi.DID
@@ -728,13 +991,18 @@ var file_hi_common_proto_goTypes = []any{
 	(*ClientInfo)(nil),        // 9: hi.ClientInfo
 	(*Pagination)(nil),        // 10: hi.Pagination
 	(*ServerVersionResp)(nil), // 11: hi.ServerVersionResp
+	(*UploadReq)(nil),         // 12: hi.UploadReq
+	(*UploadStreamReq)(nil),   // 13: hi.UploadStreamReq
+	(*UploadMeta)(nil),        // 14: hi.UploadMeta
+	(*UploadResp)(nil),        // 15: hi.UploadResp
 }
 var file_hi_common_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	14, // 0: hi.UploadStreamReq.meta:type_name -> hi.UploadMeta
+	1,  // [1:1] is the sub-list for method output_type
+	1,  // [1:1] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_hi_common_proto_init() }
@@ -743,13 +1011,18 @@ func file_hi_common_proto_init() {
 		return
 	}
 	file_hi_options_proto_init()
+	file_hi_common_proto_msgTypes[13].OneofWrappers = []any{
+		(*UploadStreamReq_Meta)(nil),
+		(*UploadStreamReq_Chunk)(nil),
+	}
+	file_hi_common_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_common_proto_rawDesc), len(file_hi_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

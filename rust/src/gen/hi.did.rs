@@ -1298,6 +1298,31 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Update"));
             self.inner.unary(req, path, codec).await
         }
+        /// 传商户 logo → hidid bucket 的 logo/。只回 url;写进配置仍走 Update。
+        pub async fn upload_logo(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/UploadLogo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "UploadLogo"));
+            self.inner.unary(req, path, codec).await
+        }
         /// ── 商户管理其用户的扩展信息 ──
         /// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
         /// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
@@ -3717,6 +3742,30 @@ pub mod user_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        /// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
+        /// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
+        /// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
+        pub async fn upload_avatar(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.User/UploadAvatar");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.User", "UploadAvatar"));
+            self.inner.unary(req, path, codec).await
         }
         pub async fn edit(
             &mut self,

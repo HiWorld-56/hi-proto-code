@@ -1461,10 +1461,12 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"R\n" +
 	"\x0eOrderEventResp\x12\x1a\n" +
 	"\x05event\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05event\x12\x1e\n" +
-	"\apayload\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\apayload:\x04\x98\xb5\x18\x032\x9e\x06\n" +
+	"\apayload\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\apayload:\x04\x98\xb5\x18\x032\xd2\x06\n" +
 	"\bMerchant\x12=\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
-	"\x06Update\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\x06Update\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x122\n" +
+	"\n" +
+	"UploadLogo\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\aGetUser\x12\x12.hi.did.GetUserReq\x1a\x19.hi.did.UserExtensionUnit\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\tListUsers\x12\x14.hi.did.ListUsersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
 	"\x04List\x12\x18.hi.did.ListMerchantsReq\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
@@ -1533,7 +1535,9 @@ var file_hi_did_merchant_proto_goTypes = []any{
 	(*Coin)(nil),                  // 25: hi.did.Coin
 	(*hi.Pagination)(nil),         // 26: hi.Pagination
 	(*emptypb.Empty)(nil),         // 27: google.protobuf.Empty
-	(*hi.DID)(nil),                // 28: hi.DID
+	(*hi.UploadReq)(nil),          // 28: hi.UploadReq
+	(*hi.DID)(nil),                // 29: hi.DID
+	(*hi.UploadResp)(nil),         // 30: hi.UploadResp
 }
 var file_hi_did_merchant_proto_depIdxs = []int32{
 	24, // 0: hi.did.MerchantInfo.master:type_name -> hi.Entity
@@ -1553,44 +1557,46 @@ var file_hi_did_merchant_proto_depIdxs = []int32{
 	24, // 14: hi.did.MerchantPubServerResp.server:type_name -> hi.Entity
 	27, // 15: hi.did.Merchant.Get:input_type -> google.protobuf.Empty
 	2,  // 16: hi.did.Merchant.Update:input_type -> hi.did.MerchantSetReq
-	9,  // 17: hi.did.Merchant.GetUser:input_type -> hi.did.GetUserReq
-	10, // 18: hi.did.Merchant.ListUsers:input_type -> hi.did.ListUsersReq
-	15, // 19: hi.did.Merchant.List:input_type -> hi.did.ListMerchantsReq
-	12, // 20: hi.did.Merchant.SetUsers:input_type -> hi.did.SetUsersReq
-	13, // 21: hi.did.Merchant.AddUsers:input_type -> hi.did.AddUsersReq
-	14, // 22: hi.did.Merchant.RemoveUsers:input_type -> hi.did.RemoveUsersReq
-	16, // 23: hi.did.Merchant.GetUserMqtt:input_type -> hi.did.GetUserMqttReq
-	27, // 24: hi.did.Merchant.ListGrants:input_type -> google.protobuf.Empty
-	6,  // 25: hi.did.Merchant.AddGrant:input_type -> hi.did.GrantReq
-	6,  // 26: hi.did.Merchant.RemoveGrant:input_type -> hi.did.GrantReq
-	28, // 27: hi.did.MerchantPub.Scheme:input_type -> hi.DID
-	28, // 28: hi.did.MerchantPub.Server:input_type -> hi.DID
-	27, // 29: hi.did.MerchantOwner.GetExDB:input_type -> google.protobuf.Empty
-	27, // 30: hi.did.MerchantOwner.RefreshExDB:input_type -> google.protobuf.Empty
-	21, // 31: hi.did.MerchantOwner.SetServer:input_type -> hi.did.SetServerReq
-	28, // 32: hi.did.OrderEvent.Sub:input_type -> hi.DID
-	22, // 33: hi.did.OrderNotify.Send:input_type -> hi.did.MerchantNotifyReq
-	1,  // 34: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
-	27, // 35: hi.did.Merchant.Update:output_type -> google.protobuf.Empty
-	5,  // 36: hi.did.Merchant.GetUser:output_type -> hi.did.UserExtensionUnit
-	11, // 37: hi.did.Merchant.ListUsers:output_type -> hi.did.ListUsersResp
-	3,  // 38: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
-	27, // 39: hi.did.Merchant.SetUsers:output_type -> google.protobuf.Empty
-	27, // 40: hi.did.Merchant.AddUsers:output_type -> google.protobuf.Empty
-	27, // 41: hi.did.Merchant.RemoveUsers:output_type -> google.protobuf.Empty
-	17, // 42: hi.did.Merchant.GetUserMqtt:output_type -> hi.did.GetUserMqttResp
-	8,  // 43: hi.did.Merchant.ListGrants:output_type -> hi.did.ListGrantsResp
-	27, // 44: hi.did.Merchant.AddGrant:output_type -> google.protobuf.Empty
-	27, // 45: hi.did.Merchant.RemoveGrant:output_type -> google.protobuf.Empty
-	18, // 46: hi.did.MerchantPub.Scheme:output_type -> hi.did.MerchantPubSchemeResp
-	19, // 47: hi.did.MerchantPub.Server:output_type -> hi.did.MerchantPubServerResp
-	20, // 48: hi.did.MerchantOwner.GetExDB:output_type -> hi.did.MerchantExDBResp
-	20, // 49: hi.did.MerchantOwner.RefreshExDB:output_type -> hi.did.MerchantExDBResp
-	27, // 50: hi.did.MerchantOwner.SetServer:output_type -> google.protobuf.Empty
-	23, // 51: hi.did.OrderEvent.Sub:output_type -> hi.did.OrderEventResp
-	27, // 52: hi.did.OrderNotify.Send:output_type -> google.protobuf.Empty
-	34, // [34:53] is the sub-list for method output_type
-	15, // [15:34] is the sub-list for method input_type
+	28, // 17: hi.did.Merchant.UploadLogo:input_type -> hi.UploadReq
+	9,  // 18: hi.did.Merchant.GetUser:input_type -> hi.did.GetUserReq
+	10, // 19: hi.did.Merchant.ListUsers:input_type -> hi.did.ListUsersReq
+	15, // 20: hi.did.Merchant.List:input_type -> hi.did.ListMerchantsReq
+	12, // 21: hi.did.Merchant.SetUsers:input_type -> hi.did.SetUsersReq
+	13, // 22: hi.did.Merchant.AddUsers:input_type -> hi.did.AddUsersReq
+	14, // 23: hi.did.Merchant.RemoveUsers:input_type -> hi.did.RemoveUsersReq
+	16, // 24: hi.did.Merchant.GetUserMqtt:input_type -> hi.did.GetUserMqttReq
+	27, // 25: hi.did.Merchant.ListGrants:input_type -> google.protobuf.Empty
+	6,  // 26: hi.did.Merchant.AddGrant:input_type -> hi.did.GrantReq
+	6,  // 27: hi.did.Merchant.RemoveGrant:input_type -> hi.did.GrantReq
+	29, // 28: hi.did.MerchantPub.Scheme:input_type -> hi.DID
+	29, // 29: hi.did.MerchantPub.Server:input_type -> hi.DID
+	27, // 30: hi.did.MerchantOwner.GetExDB:input_type -> google.protobuf.Empty
+	27, // 31: hi.did.MerchantOwner.RefreshExDB:input_type -> google.protobuf.Empty
+	21, // 32: hi.did.MerchantOwner.SetServer:input_type -> hi.did.SetServerReq
+	29, // 33: hi.did.OrderEvent.Sub:input_type -> hi.DID
+	22, // 34: hi.did.OrderNotify.Send:input_type -> hi.did.MerchantNotifyReq
+	1,  // 35: hi.did.Merchant.Get:output_type -> hi.did.MerchantGetResp
+	27, // 36: hi.did.Merchant.Update:output_type -> google.protobuf.Empty
+	30, // 37: hi.did.Merchant.UploadLogo:output_type -> hi.UploadResp
+	5,  // 38: hi.did.Merchant.GetUser:output_type -> hi.did.UserExtensionUnit
+	11, // 39: hi.did.Merchant.ListUsers:output_type -> hi.did.ListUsersResp
+	3,  // 40: hi.did.Merchant.List:output_type -> hi.did.MerchantListResp
+	27, // 41: hi.did.Merchant.SetUsers:output_type -> google.protobuf.Empty
+	27, // 42: hi.did.Merchant.AddUsers:output_type -> google.protobuf.Empty
+	27, // 43: hi.did.Merchant.RemoveUsers:output_type -> google.protobuf.Empty
+	17, // 44: hi.did.Merchant.GetUserMqtt:output_type -> hi.did.GetUserMqttResp
+	8,  // 45: hi.did.Merchant.ListGrants:output_type -> hi.did.ListGrantsResp
+	27, // 46: hi.did.Merchant.AddGrant:output_type -> google.protobuf.Empty
+	27, // 47: hi.did.Merchant.RemoveGrant:output_type -> google.protobuf.Empty
+	18, // 48: hi.did.MerchantPub.Scheme:output_type -> hi.did.MerchantPubSchemeResp
+	19, // 49: hi.did.MerchantPub.Server:output_type -> hi.did.MerchantPubServerResp
+	20, // 50: hi.did.MerchantOwner.GetExDB:output_type -> hi.did.MerchantExDBResp
+	20, // 51: hi.did.MerchantOwner.RefreshExDB:output_type -> hi.did.MerchantExDBResp
+	27, // 52: hi.did.MerchantOwner.SetServer:output_type -> google.protobuf.Empty
+	23, // 53: hi.did.OrderEvent.Sub:output_type -> hi.did.OrderEventResp
+	27, // 54: hi.did.OrderNotify.Send:output_type -> google.protobuf.Empty
+	35, // [35:55] is the sub-list for method output_type
+	15, // [15:35] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name
 	15, // [15:15] is the sub-list for extension extendee
 	0,  // [0:15] is the sub-list for field type_name

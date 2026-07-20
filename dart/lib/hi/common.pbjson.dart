@@ -191,3 +191,83 @@ const ServerVersionResp$json = {
 final $typed_data.Uint8List serverVersionRespDescriptor = $convert.base64Decode(
     'ChFTZXJ2ZXJWZXJzaW9uUmVzcBIeCgd2ZXJzaW9uGAEgASgJQgSQtRgBUgd2ZXJzaW9uEhYKA2'
     'VudhgCIAEoCUIEkLUYAVIDZW52OgSYtRgB');
+
+@$core.Deprecated('Use uploadReqDescriptor instead')
+const UploadReq$json = {
+  '1': 'UploadReq',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'content', '3': 2, '4': 1, '5': 12, '8': {}, '10': 'content'},
+  ],
+};
+
+/// Descriptor for `UploadReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadReqDescriptor = $convert.base64Decode(
+    'CglVcGxvYWRSZXESIAoEbmFtZRgBIAEoCUIMukgJcgcyBV5cUyskUgRuYW1lEiEKB2NvbnRlbn'
+    'QYAiABKAxCB7pIBHoCEAFSB2NvbnRlbnQ=');
+
+@$core.Deprecated('Use uploadStreamReqDescriptor instead')
+const UploadStreamReq$json = {
+  '1': 'UploadStreamReq',
+  '2': [
+    {
+      '1': 'meta',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.UploadMeta',
+      '9': 0,
+      '10': 'meta'
+    },
+    {'1': 'chunk', '3': 2, '4': 1, '5': 12, '9': 0, '10': 'chunk'},
+  ],
+  '8': [
+    {'1': 'data'},
+  ],
+};
+
+/// Descriptor for `UploadStreamReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadStreamReqDescriptor = $convert.base64Decode(
+    'Cg9VcGxvYWRTdHJlYW1SZXESJAoEbWV0YRgBIAEoCzIOLmhpLlVwbG9hZE1ldGFIAFIEbWV0YR'
+    'IWCgVjaHVuaxgCIAEoDEgAUgVjaHVua0IGCgRkYXRh');
+
+@$core.Deprecated('Use uploadMetaDescriptor instead')
+const UploadMeta$json = {
+  '1': 'UploadMeta',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'size', '3': 2, '4': 1, '5': 3, '8': {}, '10': 'size'},
+  ],
+};
+
+/// Descriptor for `UploadMeta`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadMetaDescriptor = $convert.base64Decode(
+    'CgpVcGxvYWRNZXRhEiAKBG5hbWUYASABKAlCDLpICXIHMgVeXFMrJFIEbmFtZRIbCgRzaXplGA'
+    'IgASgDQge6SAQiAiAAUgRzaXpl');
+
+@$core.Deprecated('Use uploadRespDescriptor instead')
+const UploadResp$json = {
+  '1': 'UploadResp',
+  '2': [
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+    {
+      '1': 'thumb_url',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'thumbUrl',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_thumb_url'},
+  ],
+};
+
+/// Descriptor for `UploadResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadRespDescriptor = $convert.base64Decode(
+    'CgpVcGxvYWRSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiYKCXRodW1iX3VybBgCIAEoCU'
+    'IEkLUYAUgAUgh0aHVtYlVybIgBAToEmLUYAUIMCgpfdGh1bWJfdXJs');
