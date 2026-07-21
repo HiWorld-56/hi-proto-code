@@ -1,3 +1,7 @@
 **/target/
 **/Cargo.lock
 .dart_tool/
+
+# rust-gen 的中间产物:生成后立即 remove_file,git add -A 曾撞上这个瞬间报
+# "unable to stat" 而整个 CI 失败。它本就不该入库。
+rust/src/gen/hi_proto_descriptor.bin
