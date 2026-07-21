@@ -17,6 +17,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// 权限类型:固定闭集(四档),故用枚举而非魔法字符串。客户端有枚举即可显隐功能,不必再拉 ListTypes。
 /// 名为 PermissionType(不能叫 Permission —— 与 service Permission 同命名空间会撞)。
 class PermissionType extends $pb.ProtobufEnum {
+  /// ⚠️ **纯占位,不要赋予任何业务语义。** proto3 要求首值必须为 0,故这一行删不掉,
+  ///    但它不代表"全部"、也不代表"不过滤" —— 传它一律按无效参数拒绝。
+  ///    要列全部,传 PERMISSION_NORMAL:权限是 bit 位拼的,所有用户默认持有 normal 位,
+  ///    所以"列持有 normal 的人"天然就等于"列全部用户"。不需要再造一个"不过滤"的档。
   static const PermissionType PERMISSION_UNSPECIFIED =
       PermissionType._(0, _omitEnumNames ? '' : 'PERMISSION_UNSPECIFIED');
   static const PermissionType PERMISSION_NORMAL =

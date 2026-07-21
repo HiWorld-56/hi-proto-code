@@ -2706,7 +2706,7 @@ pub struct PermissionListReq {
     /// 可选:按 did 过滤
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    /// 可选:按权限类型过滤(UNSPECIFIED=全部)
+    /// **必填**,须是四档之一。列全部传 NORMAL(人人默认持有该位),不是 UNSPECIFIED
     #[prost(enumeration = "PermissionType", tag = "2")]
     pub r#type: i32,
     #[prost(message, optional, tag = "3")]
@@ -2752,7 +2752,10 @@ pub mod merchant_list_resp {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum PermissionType {
-    /// 占位 / 列表过滤时表示"全部"
+    /// ⚠️ **纯占位,不要赋予任何业务语义。** proto3 要求首值必须为 0,故这一行删不掉,
+    /// 但它不代表"全部"、也不代表"不过滤" —— 传它一律按无效参数拒绝。
+    /// 要列全部,传 PERMISSION_NORMAL:权限是 bit 位拼的,所有用户默认持有 normal 位,
+    /// 所以"列持有 normal 的人"天然就等于"列全部用户"。不需要再造一个"不过滤"的档。
     PermissionUnspecified = 0,
     /// 普通:自由度/系统提示词/用户提示词
     PermissionNormal = 1,
@@ -3856,6 +3859,129 @@ pub mod base_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Base/ServerVersion");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Base", "ServerVersion"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod super_admin_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 超管名单(转发 hidid)。与 hi.club.SuperAdmin 对称 —— hiai 的 web 登录后也要
+    /// 知道自己是不是超管,以决定显不显示内部菜单。
+    ///
+    /// ai 不留自己的表:名单唯一持有方是 hidid(此前 did/club/ai/media 四张表实测已
+    /// 漂移 11/14/15/3,一处撤权另一处不生效)。ai 作为 hidid 的商户,用自己的
+    /// ExtendToken 去取(didapi.ListSuperAdmins 早已存在,原先只有中间件在用,没对外暴露)。
+    ///
+    /// ⚠️ 档位 AUTH_MERCHANT 而**不是** AUTH_SUPERADMIN —— 否则成了"先得是超管,
+    /// 才能知道自己是不是超管"。hiai 的 web(token)与商户后台(apikey)都走这一档。
+    #[derive(Debug, Clone)]
+    pub struct SuperAdminClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SuperAdminClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SuperAdminClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SuperAdminClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SuperAdminClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::did::ListSuperAdminUsersResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.SuperAdmin/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.SuperAdmin", "List"));
             self.inner.unary(req, path, codec).await
         }
     }

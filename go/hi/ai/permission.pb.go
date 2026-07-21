@@ -28,7 +28,12 @@ const (
 type PermissionType int32
 
 const (
-	PermissionType_PERMISSION_UNSPECIFIED PermissionType = 0 // 占位 / 列表过滤时表示"全部"
+	// ⚠️ **纯占位,不要赋予任何业务语义。** proto3 要求首值必须为 0,故这一行删不掉,
+	//
+	//	但它不代表"全部"、也不代表"不过滤" —— 传它一律按无效参数拒绝。
+	//	要列全部,传 PERMISSION_NORMAL:权限是 bit 位拼的,所有用户默认持有 normal 位,
+	//	所以"列持有 normal 的人"天然就等于"列全部用户"。不需要再造一个"不过滤"的档。
+	PermissionType_PERMISSION_UNSPECIFIED PermissionType = 0
 	PermissionType_PERMISSION_NORMAL      PermissionType = 1 // 普通:自由度/系统提示词/用户提示词
 	PermissionType_PERMISSION_ADVANCED    PermissionType = 2 // 高级:上下文数/对话模型/嵌入模型/STT 模型
 	PermissionType_PERMISSION_MEM         PermissionType = 3 // 记忆:上传资料/训练记忆
@@ -344,7 +349,7 @@ func (x *PermissionEditReq) GetNote() string {
 type PermissionListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                              // 可选:按 did 过滤
-	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"` // 可选:按权限类型过滤(UNSPECIFIED=全部)
+	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"` // **必填**,须是四档之一。列全部传 NORMAL(人人默认持有该位),不是 UNSPECIFIED
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

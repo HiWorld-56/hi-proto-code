@@ -9,6 +9,7 @@ package ai
 import (
 	context "context"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -114,6 +115,128 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ServerVersion",
 			Handler:    _Base_ServerVersion_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/ai/base.proto",
+}
+
+const (
+	SuperAdmin_List_FullMethodName = "/hi.ai.SuperAdmin/List"
+)
+
+// SuperAdminClient is the client API for SuperAdmin service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 超管名单(转发 hidid)。与 hi.club.SuperAdmin 对称 —— hiai 的 web 登录后也要
+// 知道自己是不是超管,以决定显不显示内部菜单。
+//
+// ai 不留自己的表:名单唯一持有方是 hidid(此前 did/club/ai/media 四张表实测已
+// 漂移 11/14/15/3,一处撤权另一处不生效)。ai 作为 hidid 的商户,用自己的
+// ExtendToken 去取(didapi.ListSuperAdmins 早已存在,原先只有中间件在用,没对外暴露)。
+//
+// ⚠️ 档位 AUTH_MERCHANT 而**不是** AUTH_SUPERADMIN —— 否则成了"先得是超管,
+//
+//	才能知道自己是不是超管"。hiai 的 web(token)与商户后台(apikey)都走这一档。
+type SuperAdminClient interface {
+	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error)
+}
+
+type superAdminClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSuperAdminClient(cc grpc.ClientConnInterface) SuperAdminClient {
+	return &superAdminClient{cc}
+}
+
+func (c *superAdminClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListSuperAdminUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(did.ListSuperAdminUsersResp)
+	err := c.cc.Invoke(ctx, SuperAdmin_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SuperAdminServer is the server API for SuperAdmin service.
+// All implementations should embed UnimplementedSuperAdminServer
+// for forward compatibility.
+//
+// 超管名单(转发 hidid)。与 hi.club.SuperAdmin 对称 —— hiai 的 web 登录后也要
+// 知道自己是不是超管,以决定显不显示内部菜单。
+//
+// ai 不留自己的表:名单唯一持有方是 hidid(此前 did/club/ai/media 四张表实测已
+// 漂移 11/14/15/3,一处撤权另一处不生效)。ai 作为 hidid 的商户,用自己的
+// ExtendToken 去取(didapi.ListSuperAdmins 早已存在,原先只有中间件在用,没对外暴露)。
+//
+// ⚠️ 档位 AUTH_MERCHANT 而**不是** AUTH_SUPERADMIN —— 否则成了"先得是超管,
+//
+//	才能知道自己是不是超管"。hiai 的 web(token)与商户后台(apikey)都走这一档。
+type SuperAdminServer interface {
+	List(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error)
+}
+
+// UnimplementedSuperAdminServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedSuperAdminServer struct{}
+
+func (UnimplementedSuperAdminServer) List(context.Context, *emptypb.Empty) (*did.ListSuperAdminUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedSuperAdminServer) testEmbeddedByValue() {}
+
+// UnsafeSuperAdminServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SuperAdminServer will
+// result in compilation errors.
+type UnsafeSuperAdminServer interface {
+	mustEmbedUnimplementedSuperAdminServer()
+}
+
+func RegisterSuperAdminServer(s grpc.ServiceRegistrar, srv SuperAdminServer) {
+	// If the following call panics, it indicates UnimplementedSuperAdminServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&SuperAdmin_ServiceDesc, srv)
+}
+
+func _SuperAdmin_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SuperAdminServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SuperAdmin_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SuperAdminServer).List(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// SuperAdmin_ServiceDesc is the grpc.ServiceDesc for SuperAdmin service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var SuperAdmin_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.ai.SuperAdmin",
+	HandlerType: (*SuperAdminServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _SuperAdmin_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
