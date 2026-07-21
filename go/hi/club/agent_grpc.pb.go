@@ -51,8 +51,8 @@ type AgentClient interface {
 	GetUsage(ctx context.Context, in *ai.AgentUsageReq, opts ...grpc.CallOption) (*ai.AgentUsageResp, error)
 	GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DefaultConfigResp, error)
 	// ── club 自有:换绑主人 ──
-	BindMaster(ctx context.Context, in *BindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UnbindMaster(ctx context.Context, in *UnbindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	BindMaster(ctx context.Context, in *MasterBindReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UnbindMaster(ctx context.Context, in *MasterBindReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	BindStatus(ctx context.Context, in *BindStatusReq, opts ...grpc.CallOption) (*BindStatusResp, error)
 	Transfer(ctx context.Context, in *TransferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -135,7 +135,7 @@ func (c *agentClient) GetDefaultConfig(ctx context.Context, in *emptypb.Empty, o
 	return out, nil
 }
 
-func (c *agentClient) BindMaster(ctx context.Context, in *BindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *agentClient) BindMaster(ctx context.Context, in *MasterBindReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Agent_BindMaster_FullMethodName, in, out, cOpts...)
@@ -145,7 +145,7 @@ func (c *agentClient) BindMaster(ctx context.Context, in *BindMasterReq, opts ..
 	return out, nil
 }
 
-func (c *agentClient) UnbindMaster(ctx context.Context, in *UnbindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *agentClient) UnbindMaster(ctx context.Context, in *MasterBindReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Agent_UnbindMaster_FullMethodName, in, out, cOpts...)
@@ -192,8 +192,8 @@ type AgentServer interface {
 	GetUsage(context.Context, *ai.AgentUsageReq) (*ai.AgentUsageResp, error)
 	GetDefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error)
 	// ── club 自有:换绑主人 ──
-	BindMaster(context.Context, *BindMasterReq) (*emptypb.Empty, error)
-	UnbindMaster(context.Context, *UnbindMasterReq) (*emptypb.Empty, error)
+	BindMaster(context.Context, *MasterBindReq) (*emptypb.Empty, error)
+	UnbindMaster(context.Context, *MasterBindReq) (*emptypb.Empty, error)
 	BindStatus(context.Context, *BindStatusReq) (*BindStatusResp, error)
 	Transfer(context.Context, *TransferReq) (*emptypb.Empty, error)
 }
@@ -226,10 +226,10 @@ func (UnimplementedAgentServer) GetUsage(context.Context, *ai.AgentUsageReq) (*a
 func (UnimplementedAgentServer) GetDefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDefaultConfig not implemented")
 }
-func (UnimplementedAgentServer) BindMaster(context.Context, *BindMasterReq) (*emptypb.Empty, error) {
+func (UnimplementedAgentServer) BindMaster(context.Context, *MasterBindReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method BindMaster not implemented")
 }
-func (UnimplementedAgentServer) UnbindMaster(context.Context, *UnbindMasterReq) (*emptypb.Empty, error) {
+func (UnimplementedAgentServer) UnbindMaster(context.Context, *MasterBindReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UnbindMaster not implemented")
 }
 func (UnimplementedAgentServer) BindStatus(context.Context, *BindStatusReq) (*BindStatusResp, error) {
@@ -385,7 +385,7 @@ func _Agent_GetDefaultConfig_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _Agent_BindMaster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BindMasterReq)
+	in := new(MasterBindReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -397,13 +397,13 @@ func _Agent_BindMaster_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: Agent_BindMaster_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).BindMaster(ctx, req.(*BindMasterReq))
+		return srv.(AgentServer).BindMaster(ctx, req.(*MasterBindReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Agent_UnbindMaster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UnbindMasterReq)
+	in := new(MasterBindReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -415,7 +415,7 @@ func _Agent_UnbindMaster_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: Agent_UnbindMaster_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).UnbindMaster(ctx, req.(*UnbindMasterReq))
+		return srv.(AgentServer).UnbindMaster(ctx, req.(*MasterBindReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

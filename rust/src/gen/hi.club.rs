@@ -293,7 +293,7 @@ pub mod trade_client {
                 .insert(GrpcMethod::new("hi.club.Trade", "UpdateTransHash"));
             self.inner.unary(req, path, codec).await
         }
-        /// 查自己的交易(did 必填)。
+        /// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTradeReq>,
@@ -627,7 +627,9 @@ pub mod auth_client {
         }
     }
 }
-/// GetNotPulledPcOrders接口请求参数Data部分的数据结构
+/// Order.ListNotPulled 的**签名载荷 schema**(不是 rpc 参数):
+/// rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按"无引用"当死 message 删**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PcOrderData {
     #[prost(string, tag = "1")]
@@ -671,7 +673,7 @@ pub struct UpdatePulledPcOrder {
     #[prost(int64, tag = "4")]
     pub timestamp: i64,
 }
-/// UpdatePulledPcOrders接口请求参数Data部分数据结构
+/// Order.MarkPulled 的**签名载荷 schema**(同上,勿当死 message 删)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdatePulledPcOrderData {
     #[prost(string, tag = "1")]
@@ -1201,14 +1203,15 @@ pub mod speech_client {
 /// 别人的机器人。删掉字段后,"指定给谁绑"在类型上就说不出来。
 /// (同文件 Agent.List 早就写明"没有查谁的参数,主体永远是 token 里的人",
 /// 这两个**写**操作反而收了 master,不一致。)
+/// 绑定/解绑共用 —— 两者入参完全一致(只需定位机器人),没必要两份定义。
+///
+/// ⚠️ **没有 master 字段**:主人恒是 token 里的人。原先收 master 并校验
+/// `userDid != req.Master`,那是同义反复 —— 只拦"你填了别人的 did",
+/// 而攻击者填自己的就过,对安全零贡献;真正要拦的「这台机器人是不是别人的」
+/// 当时反而是漏的(见 validateBindMaster 的说明)。
+/// 字段存在 → 就得写校验 → 写了就显得有防护,而防护点其实全在别处。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BindMasterReq {
-    /// 机器人 did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UnbindMasterReq {
+pub struct MasterBindReq {
     /// 机器人 did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
@@ -1256,16 +1259,6 @@ pub struct ListOnlineResp {
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<super::Entity>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetAgentMasterReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetAgentMasterResp {
-    #[prost(message, optional, tag = "1")]
-    pub master: ::core::option::Option<super::Entity>,
 }
 /// 智能体(主体=智能体)。**用户 token 档**,全档一致。
 /// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
@@ -1542,7 +1535,7 @@ pub mod agent_client {
         /// ── club 自有:换绑主人 ──
         pub async fn bind_master(
             &mut self,
-            request: impl tonic::IntoRequest<super::BindMasterReq>,
+            request: impl tonic::IntoRequest<super::MasterBindReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -1560,7 +1553,7 @@ pub mod agent_client {
         }
         pub async fn unbind_master(
             &mut self,
-            request: impl tonic::IntoRequest<super::UnbindMasterReq>,
+            request: impl tonic::IntoRequest<super::MasterBindReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -3009,6 +3002,7 @@ pub struct Message {
     #[prost(message, optional, tag = "9")]
     pub prompt: ::core::option::Option<Prompt>,
 }
+/// ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Mention {
     #[prost(message, optional, tag = "1")]

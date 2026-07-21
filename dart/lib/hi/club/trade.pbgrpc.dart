@@ -61,7 +61,7 @@ class TradeClient extends $grpc.Client {
     return $createUnaryCall(_$updateTransHash, request, options: options);
   }
 
-  /// 查自己的交易(did 必填)。
+  /// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
   $grpc.ResponseFuture<$0.ListTradeResp> list(
     $0.ListTradeReq request, {
     $grpc.CallOptions? options,

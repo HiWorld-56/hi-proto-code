@@ -230,7 +230,7 @@ func local_request_Agent_GetDefaultConfig_0(ctx context.Context, marshaler runti
 
 func request_Agent_BindMaster_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq BindMasterReq
+		protoReq MasterBindReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -245,7 +245,7 @@ func request_Agent_BindMaster_0(ctx context.Context, marshaler runtime.Marshaler
 
 func local_request_Agent_BindMaster_0(ctx context.Context, marshaler runtime.Marshaler, server AgentServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq BindMasterReq
+		protoReq MasterBindReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -257,7 +257,7 @@ func local_request_Agent_BindMaster_0(ctx context.Context, marshaler runtime.Mar
 
 func request_Agent_UnbindMaster_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UnbindMasterReq
+		protoReq MasterBindReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -272,7 +272,7 @@ func request_Agent_UnbindMaster_0(ctx context.Context, marshaler runtime.Marshal
 
 func local_request_Agent_UnbindMaster_0(ctx context.Context, marshaler runtime.Marshaler, server AgentServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UnbindMasterReq
+		protoReq MasterBindReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

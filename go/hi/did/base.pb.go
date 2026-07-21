@@ -247,6 +247,8 @@ func (x *LatestVersionResp) GetReleaseTime() int64 {
 	return 0
 }
 
+// ⚠️ 超管 did 名单不是"任何人可见":三个 SuperAdmin.List(did/club/ai)分别是
+// USER+MERCHANT / USER / MERCHANT,没有一个是 AUTH_NONE,标 PUBLIC 与档位矛盾。
 type ListSuperAdminUsersResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	List          []string               `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
@@ -355,7 +357,7 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\achanges\x18\x04 \x03(\tB\x04\x90\xb5\x18\x01R\achanges\x12'\n" +
 	"\frelease_time\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01R\vreleaseTime:\x04\x98\xb5\x18\x01\"9\n" +
 	"\x17ListSuperAdminUsersResp\x12\x18\n" +
-	"\x04list\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"1\n" +
+	"\x04list\x18\x01 \x03(\tB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"1\n" +
 	"\rUserTotalResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total:\x04\x98\xb5\x18\x012\xa0\x02\n" +
 	"\x04Base\x12A\n" +

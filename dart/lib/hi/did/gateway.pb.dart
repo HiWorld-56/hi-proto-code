@@ -16,6 +16,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// ⚠️ 含 api_key(区块链节点凭证)—— 不是"任何人可见"的东西。
+/// Gateway.List 本就要 AUTH_USER/AUTH_MERCHANT 才能调,标 PUBLIC 与档位自相矛盾。
 class GatewayConfigUnit extends $pb.GeneratedMessage {
   factory GatewayConfigUnit({
     $core.String? name,

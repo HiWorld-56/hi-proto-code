@@ -112,8 +112,8 @@ const ListSuperAdminUsersResp$json = {
 /// Descriptor for `ListSuperAdminUsersResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listSuperAdminUsersRespDescriptor =
     $convert.base64Decode(
-        'ChdMaXN0U3VwZXJBZG1pblVzZXJzUmVzcBIYCgRsaXN0GAEgAygJQgSQtRgBUgRsaXN0OgSYtR'
-        'gB');
+        'ChdMaXN0U3VwZXJBZG1pblVzZXJzUmVzcBIYCgRsaXN0GAEgAygJQgSQtRgCUgRsaXN0OgSYtR'
+        'gC');
 
 @$core.Deprecated('Use userTotalRespDescriptor instead')
 const UserTotalResp$json = {

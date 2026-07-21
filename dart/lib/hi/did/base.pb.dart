@@ -293,6 +293,8 @@ class LatestVersionResp extends $pb.GeneratedMessage {
   void clearReleaseTime() => $_clearField(5);
 }
 
+/// ⚠️ 超管 did 名单不是"任何人可见":三个 SuperAdmin.List(did/club/ai)分别是
+/// USER+MERCHANT / USER / MERCHANT,没有一个是 AUTH_NONE,标 PUBLIC 与档位矛盾。
 class ListSuperAdminUsersResp extends $pb.GeneratedMessage {
   factory ListSuperAdminUsersResp({
     $core.Iterable<$core.String>? list,

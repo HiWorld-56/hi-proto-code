@@ -27,8 +27,15 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 ///    别人的机器人。删掉字段后,"指定给谁绑"在类型上就说不出来。
 ///    (同文件 Agent.List 早就写明"没有查谁的参数,主体永远是 token 里的人",
 ///     这两个**写**操作反而收了 master,不一致。)
-class BindMasterReq extends $pb.GeneratedMessage {
-  factory BindMasterReq({
+/// 绑定/解绑共用 —— 两者入参完全一致(只需定位机器人),没必要两份定义。
+///
+/// ⚠️ **没有 master 字段**:主人恒是 token 里的人。原先收 master 并校验
+///    `userDid != req.Master`,那是同义反复 —— 只拦"你填了别人的 did",
+///    而攻击者填自己的就过,对安全零贡献;真正要拦的「这台机器人是不是别人的」
+///    当时反而是漏的(见 validateBindMaster 的说明)。
+///    字段存在 → 就得写校验 → 写了就显得有防护,而防护点其实全在别处。
+class MasterBindReq extends $pb.GeneratedMessage {
+  factory MasterBindReq({
     $core.String? agent,
   }) {
     final result = create();
@@ -36,94 +43,40 @@ class BindMasterReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  BindMasterReq._();
+  MasterBindReq._();
 
-  factory BindMasterReq.fromBuffer($core.List<$core.int> data,
+  factory MasterBindReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory BindMasterReq.fromJson($core.String json,
+  factory MasterBindReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'BindMasterReq',
+      _omitMessageNames ? '' : 'MasterBindReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BindMasterReq clone() => deepCopy();
+  MasterBindReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BindMasterReq copyWith(void Function(BindMasterReq) updates) =>
-      super.copyWith((message) => updates(message as BindMasterReq))
-          as BindMasterReq;
+  MasterBindReq copyWith(void Function(MasterBindReq) updates) =>
+      super.copyWith((message) => updates(message as MasterBindReq))
+          as MasterBindReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static BindMasterReq create() => BindMasterReq._();
+  static MasterBindReq create() => MasterBindReq._();
   @$core.override
-  BindMasterReq createEmptyInstance() => create();
+  MasterBindReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static BindMasterReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<BindMasterReq>(create);
-  static BindMasterReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-}
-
-class UnbindMasterReq extends $pb.GeneratedMessage {
-  factory UnbindMasterReq({
-    $core.String? agent,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    return result;
-  }
-
-  UnbindMasterReq._();
-
-  factory UnbindMasterReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UnbindMasterReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UnbindMasterReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UnbindMasterReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UnbindMasterReq copyWith(void Function(UnbindMasterReq) updates) =>
-      super.copyWith((message) => updates(message as UnbindMasterReq))
-          as UnbindMasterReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UnbindMasterReq create() => UnbindMasterReq._();
-  @$core.override
-  UnbindMasterReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UnbindMasterReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UnbindMasterReq>(create);
-  static UnbindMasterReq? _defaultInstance;
+  static MasterBindReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MasterBindReq>(create);
+  static MasterBindReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -449,117 +402,6 @@ class ListOnlineResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<$3.Entity> get infos => $_getList(1);
-}
-
-class GetAgentMasterReq extends $pb.GeneratedMessage {
-  factory GetAgentMasterReq({
-    $core.String? agent,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    return result;
-  }
-
-  GetAgentMasterReq._();
-
-  factory GetAgentMasterReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory GetAgentMasterReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentMasterReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentMasterReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentMasterReq copyWith(void Function(GetAgentMasterReq) updates) =>
-      super.copyWith((message) => updates(message as GetAgentMasterReq))
-          as GetAgentMasterReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetAgentMasterReq create() => GetAgentMasterReq._();
-  @$core.override
-  GetAgentMasterReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static GetAgentMasterReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentMasterReq>(create);
-  static GetAgentMasterReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-}
-
-class GetAgentMasterResp extends $pb.GeneratedMessage {
-  factory GetAgentMasterResp({
-    $3.Entity? master,
-  }) {
-    final result = create();
-    if (master != null) result.master = master;
-    return result;
-  }
-
-  GetAgentMasterResp._();
-
-  factory GetAgentMasterResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory GetAgentMasterResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentMasterResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: $3.Entity.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentMasterResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentMasterResp copyWith(void Function(GetAgentMasterResp) updates) =>
-      super.copyWith((message) => updates(message as GetAgentMasterResp))
-          as GetAgentMasterResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetAgentMasterResp create() => GetAgentMasterResp._();
-  @$core.override
-  GetAgentMasterResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static GetAgentMasterResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentMasterResp>(create);
-  static GetAgentMasterResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $3.Entity get master => $_getN(0);
-  @$pb.TagNumber(1)
-  set master($3.Entity value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasMaster() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearMaster() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $3.Entity ensureMaster() => $_ensure(0);
 }
 
 /// 智能体(主体=智能体)。**用户 token 档**,全档一致。

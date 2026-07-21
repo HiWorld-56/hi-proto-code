@@ -316,6 +316,7 @@ func (x *AuthToken) GetRefreshToken() string {
 	return ""
 }
 
+// ⚠️ 被后端 Go 引用(pc_order/notify_pull_order 的签名载荷),proto 里无 rpc 引用,勿当死 message 删。
 type Nonce struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Nonce         string                 `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
@@ -404,6 +405,7 @@ func (x *RequestId) GetId() string {
 	return ""
 }
 
+// ⚠️ 被后端 Go 引用(chat),proto 里无 rpc 引用,勿当死 message 删。
 type State struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	State         bool                   `protobuf:"varint,1,opt,name=state,proto3" json:"state,omitempty"`
@@ -448,6 +450,7 @@ func (x *State) GetState() bool {
 	return false
 }
 
+// ⚠️ 被后端 Go 引用,proto 里无 rpc 引用,勿当死 message 删。
 type Number struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	N             int64                  `protobuf:"varint,1,opt,name=n,proto3" json:"n,omitempty"`

@@ -391,6 +391,7 @@ class AuthToken extends $pb.GeneratedMessage {
   void clearRefreshToken() => $_clearField(2);
 }
 
+/// ⚠️ 被后端 Go 引用(pc_order/notify_pull_order 的签名载荷),proto 里无 rpc 引用,勿当死 message 删。
 class Nonce extends $pb.GeneratedMessage {
   factory Nonce({
     $core.String? nonce,
@@ -497,6 +498,7 @@ class RequestId extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 }
 
+/// ⚠️ 被后端 Go 引用(chat),proto 里无 rpc 引用,勿当死 message 删。
 class State extends $pb.GeneratedMessage {
   factory State({
     $core.bool? state,
@@ -550,6 +552,7 @@ class State extends $pb.GeneratedMessage {
   void clearState() => $_clearField(1);
 }
 
+/// ⚠️ 被后端 Go 引用,proto 里无 rpc 引用,勿当死 message 删。
 class Number extends $pb.GeneratedMessage {
   factory Number({
     $fixnum.Int64? n,

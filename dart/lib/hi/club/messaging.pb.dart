@@ -540,6 +540,7 @@ class Message extends $pb.GeneratedMessage {
   Prompt ensurePrompt() => $_ensure(8);
 }
 
+/// ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。
 class Mention extends $pb.GeneratedMessage {
   factory Mention({
     $2.Entity? group,

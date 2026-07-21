@@ -23,7 +23,9 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// GetNotPulledPcOrders接口请求参数Data部分的数据结构
+// Order.ListNotPulled 的**签名载荷 schema**(不是 rpc 参数):
+// rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它。
+// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按"无引用"当死 message 删**。
 type PcOrderData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
@@ -289,7 +291,7 @@ func (x *UpdatePulledPcOrder) GetTimestamp() int64 {
 	return 0
 }
 
-// UpdatePulledPcOrders接口请求参数Data部分数据结构
+// Order.MarkPulled 的**签名载荷 schema**(同上,勿当死 message 删)。
 type UpdatePulledPcOrderData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`

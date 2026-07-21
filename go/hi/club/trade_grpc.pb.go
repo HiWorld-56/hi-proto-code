@@ -35,7 +35,7 @@ type TradeClient interface {
 	Get(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error)
 	Add(ctx context.Context, in *AddTradeReq, opts ...grpc.CallOption) (*AddTradeResp, error)
 	UpdateTransHash(ctx context.Context, in *UpdateTransHashReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 查自己的交易(did 必填)。
+	// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
 	List(ctx context.Context, in *ListTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error)
 }
 
@@ -105,7 +105,7 @@ type TradeServer interface {
 	Get(context.Context, *GetTradeReq) (*GetTradeResp, error)
 	Add(context.Context, *AddTradeReq) (*AddTradeResp, error)
 	UpdateTransHash(context.Context, *UpdateTransHashReq) (*emptypb.Empty, error)
-	// 查自己的交易(did 必填)。
+	// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
 	List(context.Context, *ListTradeReq) (*ListTradeResp, error)
 }
 

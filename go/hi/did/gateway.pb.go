@@ -23,6 +23,8 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// ⚠️ 含 api_key(区块链节点凭证)—— 不是"任何人可见"的东西。
+// Gateway.List 本就要 AUTH_USER/AUTH_MERCHANT 才能调,标 PUBLIC 与档位自相矛盾。
 type GatewayConfigUnit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` //aptos/bitcoin/ethereum/solana/tatum/tron-grpc/tron-http
@@ -179,9 +181,9 @@ const file_hi_did_gateway_proto_rawDesc = "" +
 	"\x11GatewayConfigUnit\x12\x18\n" +
 	"\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12\x16\n" +
 	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12\x1d\n" +
-	"\aapi_key\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x06apiKey:\x04\x98\xb5\x18\x01\"R\n" +
+	"\aapi_key\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x06apiKey:\x04\x98\xb5\x18\x02\"R\n" +
 	"\x15GatewayConfigListResp\x123\n" +
-	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"D\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"D\n" +
 	"\x13GatewayConfigSetReq\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2P\n" +
 	"\aGateway\x12E\n" +

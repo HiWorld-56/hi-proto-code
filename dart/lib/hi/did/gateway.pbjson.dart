@@ -29,7 +29,7 @@ const GatewayConfigUnit$json = {
 /// Descriptor for `GatewayConfigUnit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayConfigUnitDescriptor = $convert.base64Decode(
     'ChFHYXRld2F5Q29uZmlnVW5pdBIYCgRuYW1lGAEgASgJQgSQtRgBUgRuYW1lEhYKA3VybBgCIA'
-    'EoCUIEkLUYAVIDdXJsEh0KB2FwaV9rZXkYAyABKAlCBJC1GAFSBmFwaUtleToEmLUYAQ==');
+    'EoCUIEkLUYAVIDdXJsEh0KB2FwaV9rZXkYAyABKAlCBJC1GAJSBmFwaUtleToEmLUYAg==');
 
 @$core.Deprecated('Use gatewayConfigListRespDescriptor instead')
 const GatewayConfigListResp$json = {
@@ -51,7 +51,7 @@ const GatewayConfigListResp$json = {
 /// Descriptor for `GatewayConfigListResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayConfigListRespDescriptor = $convert.base64Decode(
     'ChVHYXRld2F5Q29uZmlnTGlzdFJlc3ASMwoEbGlzdBgBIAMoCzIZLmhpLmRpZC5HYXRld2F5Q2'
-    '9uZmlnVW5pdEIEkLUYAVIEbGlzdDoEmLUYAQ==');
+    '9uZmlnVW5pdEIEkLUYAlIEbGlzdDoEmLUYAg==');
 
 @$core.Deprecated('Use gatewayConfigSetReqDescriptor instead')
 const GatewayConfigSetReq$json = {

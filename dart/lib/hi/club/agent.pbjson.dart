@@ -15,29 +15,17 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use bindMasterReqDescriptor instead')
-const BindMasterReq$json = {
-  '1': 'BindMasterReq',
+@$core.Deprecated('Use masterBindReqDescriptor instead')
+const MasterBindReq$json = {
+  '1': 'MasterBindReq',
   '2': [
     {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
   ],
 };
 
-/// Descriptor for `BindMasterReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List bindMasterReqDescriptor = $convert.base64Decode(
-    'Cg1CaW5kTWFzdGVyUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50');
-
-@$core.Deprecated('Use unbindMasterReqDescriptor instead')
-const UnbindMasterReq$json = {
-  '1': 'UnbindMasterReq',
-  '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-  ],
-};
-
-/// Descriptor for `UnbindMasterReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List unbindMasterReqDescriptor = $convert.base64Decode(
-    'Cg9VbmJpbmRNYXN0ZXJSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQ=');
+/// Descriptor for `MasterBindReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List masterBindReqDescriptor = $convert.base64Decode(
+    'Cg1NYXN0ZXJCaW5kUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50');
 
 @$core.Deprecated('Use bindStatusReqDescriptor instead')
 const BindStatusReq$json = {
@@ -129,40 +117,6 @@ const ListOnlineResp$json = {
 final $typed_data.Uint8List listOnlineRespDescriptor = $convert.base64Decode(
     'Cg5MaXN0T25saW5lUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYAVIFdG90YWwSJgoFaW5mb3MYAi'
     'ADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBWluZm9zOgSYtRgB');
-
-@$core.Deprecated('Use getAgentMasterReqDescriptor instead')
-const GetAgentMasterReq$json = {
-  '1': 'GetAgentMasterReq',
-  '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-  ],
-};
-
-/// Descriptor for `GetAgentMasterReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getAgentMasterReqDescriptor = $convert
-    .base64Decode('ChFHZXRBZ2VudE1hc3RlclJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQ=');
-
-@$core.Deprecated('Use getAgentMasterRespDescriptor instead')
-const GetAgentMasterResp$json = {
-  '1': 'GetAgentMasterResp',
-  '2': [
-    {
-      '1': 'master',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Entity',
-      '8': {},
-      '10': 'master'
-    },
-  ],
-  '7': {},
-};
-
-/// Descriptor for `GetAgentMasterResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getAgentMasterRespDescriptor = $convert.base64Decode(
-    'ChJHZXRBZ2VudE1hc3RlclJlc3ASKAoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUg'
-    'ZtYXN0ZXI6BJi1GAE=');
 
 @$core.Deprecated('Use listMyAgentsReqDescriptor instead')
 const ListMyAgentsReq$json = {

@@ -33,6 +33,8 @@ pub struct LatestVersionResp {
     #[prost(int64, tag = "5")]
     pub release_time: i64,
 }
+/// ⚠️ 超管 did 名单不是"任何人可见":三个 SuperAdmin.List(did/club/ai)分别是
+/// USER+MERCHANT / USER / MERCHANT,没有一个是 AUTH_NONE,标 PUBLIC 与档位矛盾。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListSuperAdminUsersResp {
     #[prost(string, repeated, tag = "1")]
@@ -4386,6 +4388,8 @@ pub struct Notice {
     #[prost(string, tag = "5")]
     pub ex_type: ::prost::alloc::string::String,
 }
+/// ⚠️ 含 api_key(区块链节点凭证)—— 不是"任何人可见"的东西。
+/// Gateway.List 本就要 AUTH_USER/AUTH_MERCHANT 才能调,标 PUBLIC 与档位自相矛盾。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GatewayConfigUnit {
     /// aptos/bitcoin/ethereum/solana/tatum/tron-grpc/tron-http

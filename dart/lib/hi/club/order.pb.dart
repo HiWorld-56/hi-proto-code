@@ -17,7 +17,9 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// GetNotPulledPcOrders接口请求参数Data部分的数据结构
+/// Order.ListNotPulled 的**签名载荷 schema**(不是 rpc 参数):
+/// rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按"无引用"当死 message 删**。
 class PcOrderData extends $pb.GeneratedMessage {
   factory PcOrderData({
     $core.String? did,
@@ -362,7 +364,7 @@ class UpdatePulledPcOrder extends $pb.GeneratedMessage {
   void clearTimestamp() => $_clearField(4);
 }
 
-/// UpdatePulledPcOrders接口请求参数Data部分数据结构
+/// Order.MarkPulled 的**签名载荷 schema**(同上,勿当死 message 删)。
 class UpdatePulledPcOrderData extends $pb.GeneratedMessage {
   factory UpdatePulledPcOrderData({
     $core.String? did,

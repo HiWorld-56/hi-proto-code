@@ -187,6 +187,7 @@ pub struct AuthToken {
     #[prost(string, tag = "2")]
     pub refresh_token: ::prost::alloc::string::String,
 }
+/// ⚠️ 被后端 Go 引用(pc_order/notify_pull_order 的签名载荷),proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Nonce {
     #[prost(string, tag = "1")]
@@ -197,11 +198,13 @@ pub struct RequestId {
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
 }
+/// ⚠️ 被后端 Go 引用(chat),proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct State {
     #[prost(bool, tag = "1")]
     pub state: bool,
 }
+/// ⚠️ 被后端 Go 引用,proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Number {
     #[prost(int64, tag = "1")]

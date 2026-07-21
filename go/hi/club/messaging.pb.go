@@ -438,6 +438,7 @@ func (x *Message) GetPrompt() *Prompt {
 	return nil
 }
 
+// ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。
 type Mention struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Group         *hi.Entity             `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"`
