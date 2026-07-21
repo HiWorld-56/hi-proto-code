@@ -330,7 +330,7 @@ const ListAgentResp$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.ai.AgentBrief',
+      '6': '.hi.ai.AgentInfo',
       '8': {},
       '10': 'infos'
     },
@@ -340,29 +340,31 @@ const ListAgentResp$json = {
 
 /// Descriptor for `ListAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0QWdlbnRSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBItCgVpbmZvcxgCIA'
-    'MoCzIRLmhpLmFpLkFnZW50QnJpZWZCBJC1GANSBWluZm9zOgSYtRgD');
+    'Cg1MaXN0QWdlbnRSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIsCgVpbmZvcxgCIA'
+    'MoCzIQLmhpLmFpLkFnZW50SW5mb0IEkLUYA1IFaW5mb3M6BJi1GAM=');
 
-@$core.Deprecated('Use listAgentReqDescriptor instead')
-const ListAgentReq$json = {
-  '1': 'ListAgentReq',
+@$core.Deprecated('Use listAgentBriefRespDescriptor instead')
+const ListAgentBriefResp$json = {
+  '1': 'ListAgentBriefResp',
   '2': [
-    {'1': 'creators', '3': 1, '4': 3, '5': 9, '10': 'creators'},
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
-      '1': 'pagination',
+      '1': 'infos',
       '3': 2,
-      '4': 1,
+      '4': 3,
       '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
+      '6': '.hi.ai.AgentBrief',
+      '8': {},
+      '10': 'infos'
     },
   ],
+  '7': {},
 };
 
-/// Descriptor for `ListAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAgentReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0QWdlbnRSZXESGgoIY3JlYXRvcnMYASADKAlSCGNyZWF0b3JzEi4KCnBhZ2luYXRpb2'
-    '4YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+/// Descriptor for `ListAgentBriefResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentBriefRespDescriptor = $convert.base64Decode(
+    'ChJMaXN0QWdlbnRCcmllZlJlc3ASGgoFdG90YWwYASABKAVCBJC1GANSBXRvdGFsEi0KBWluZm'
+    '9zGAIgAygLMhEuaGkuYWkuQWdlbnRCcmllZkIEkLUYA1IFaW5mb3M6BJi1GAM=');
 
 @$core.Deprecated('Use getAgentsReqDescriptor instead')
 const GetAgentsReq$json = {

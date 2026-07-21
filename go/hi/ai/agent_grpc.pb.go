@@ -8,6 +8,7 @@ package ai
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,8 +28,6 @@ const (
 	Agent_Get_FullMethodName              = "/hi.ai.Agent/Get"
 	Agent_List_FullMethodName             = "/hi.ai.Agent/List"
 	Agent_GetAgents_FullMethodName        = "/hi.ai.Agent/GetAgents"
-	Agent_Mark_FullMethodName             = "/hi.ai.Agent/Mark"
-	Agent_ListMarks_FullMethodName        = "/hi.ai.Agent/ListMarks"
 	Agent_GetUsage_FullMethodName         = "/hi.ai.Agent/GetUsage"
 	Agent_GetDefaultConfig_FullMethodName = "/hi.ai.Agent/GetDefaultConfig"
 	Agent_ResetToDefault_FullMethodName   = "/hi.ai.Agent/ResetToDefault"
@@ -56,12 +55,19 @@ type AgentClient interface {
 	Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
-	List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	// List **只列自己的**,没有"查谁"的参数 —— 归属取自 apikey 解出的商户 did。
+	//
+	// ⚠️ 原签名是 List(ListAgentReq{creators}),creators 非空就直接按它查,**没有任何归属
+	//
+	//	校验** —— 任一商户传别人的 did,就能拿走对方名下机器人的完整 AgentInfo,里面含
+	//	AgentConfig 的 system_prompt/user_prompt/模型配置。而 AgentInfo 标着 VIS_SELF
+	//	"整条只发给 owner 本人"。这与当初删掉 club.AgentDirectory.List 是同一个病,
+	//	只是门槛从"匿名"变成"任一商户"。**别再把 creators 加回来**:跨商户列是超管的活,
+	//	走 AgentManage.List。
+	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error)
+	// 按机器人 did 批量取。**服务端强制只返回调用者名下的** —— 同上,原先不校验归属,
+	// 传任意 did 就能拿到别家的 prompt。兄弟服务(club)取的本就是自己名下的,不受影响。
 	GetAgents(ctx context.Context, in *GetAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
-	// Mark/ListMarks 保留在商户档,是给**兄弟服务代为转发**用的(如 club:超管在 club 侧鉴权,
-	// 再用 club 自己的 apikey 打到这里)。hiai 自己的 web 超管直接用 AgentManage 那套。
-	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error)
 	GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error)
 	ResetToDefault(ctx context.Context, in *ResetToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -125,7 +131,7 @@ func (c *agentClient) Get(ctx context.Context, in *GetAgentReq, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *agentClient) List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentResp)
 	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
@@ -139,26 +145,6 @@ func (c *agentClient) GetAgents(ctx context.Context, in *GetAgentsReq, opts ...g
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentResp)
 	err := c.cc.Invoke(ctx, Agent_GetAgents_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_Mark_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListMarks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -217,12 +203,19 @@ type AgentServer interface {
 	Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
-	List(context.Context, *ListAgentReq) (*ListAgentResp, error)
+	// List **只列自己的**,没有"查谁"的参数 —— 归属取自 apikey 解出的商户 did。
+	//
+	// ⚠️ 原签名是 List(ListAgentReq{creators}),creators 非空就直接按它查,**没有任何归属
+	//
+	//	校验** —— 任一商户传别人的 did,就能拿走对方名下机器人的完整 AgentInfo,里面含
+	//	AgentConfig 的 system_prompt/user_prompt/模型配置。而 AgentInfo 标着 VIS_SELF
+	//	"整条只发给 owner 本人"。这与当初删掉 club.AgentDirectory.List 是同一个病,
+	//	只是门槛从"匿名"变成"任一商户"。**别再把 creators 加回来**:跨商户列是超管的活,
+	//	走 AgentManage.List。
+	List(context.Context, *hi.Pagination) (*ListAgentResp, error)
+	// 按机器人 did 批量取。**服务端强制只返回调用者名下的** —— 同上,原先不校验归属,
+	// 传任意 did 就能拿到别家的 prompt。兄弟服务(club)取的本就是自己名下的,不受影响。
 	GetAgents(context.Context, *GetAgentsReq) (*ListAgentResp, error)
-	// Mark/ListMarks 保留在商户档,是给**兄弟服务代为转发**用的(如 club:超管在 club 侧鉴权,
-	// 再用 club 自己的 apikey 打到这里)。hiai 自己的 web 超管直接用 AgentManage 那套。
-	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
-	ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error)
 	GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error)
 	GetDefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error)
 	ResetToDefault(context.Context, *ResetToDefaultReq) (*emptypb.Empty, error)
@@ -250,17 +243,11 @@ func (UnimplementedAgentServer) Delete(context.Context, *DeleteAgentReq) (*empty
 func (UnimplementedAgentServer) Get(context.Context, *GetAgentReq) (*GetAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedAgentServer) List(context.Context, *ListAgentReq) (*ListAgentResp, error) {
+func (UnimplementedAgentServer) List(context.Context, *hi.Pagination) (*ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentServer) GetAgents(context.Context, *GetAgentsReq) (*ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAgents not implemented")
-}
-func (UnimplementedAgentServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
-}
-func (UnimplementedAgentServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
 func (UnimplementedAgentServer) GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUsage not implemented")
@@ -382,7 +369,7 @@ func _Agent_Get_Handler(srv interface{}, ctx context.Context, dec func(interface
 }
 
 func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAgentReq)
+	in := new(hi.Pagination)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -394,7 +381,7 @@ func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: Agent_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).List(ctx, req.(*ListAgentReq))
+		return srv.(AgentServer).List(ctx, req.(*hi.Pagination))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -413,42 +400,6 @@ func _Agent_GetAgents_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).GetAgents(ctx, req.(*GetAgentsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MarkAgentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).Mark(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_Mark_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).Mark(ctx, req.(*MarkAgentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMarksReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListMarks(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListMarks_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListMarks(ctx, req.(*ListMarksReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -543,14 +494,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_GetAgents_Handler,
 		},
 		{
-			MethodName: "Mark",
-			Handler:    _Agent_Mark_Handler,
-		},
-		{
-			MethodName: "ListMarks",
-			Handler:    _Agent_ListMarks_Handler,
-		},
-		{
 			MethodName: "GetUsage",
 			Handler:    _Agent_GetUsage_Handler,
 		},
@@ -584,9 +527,9 @@ const (
 // 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
 // "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
 type AgentManageClient interface {
-	List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error)
 	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error)
 }
 
 type agentManageClient struct {
@@ -597,9 +540,9 @@ func NewAgentManageClient(cc grpc.ClientConnInterface) AgentManageClient {
 	return &agentManageClient{cc}
 }
 
-func (c *agentManageClient) List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentManageClient) List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
+	out := new(ListAgentBriefResp)
 	err := c.cc.Invoke(ctx, AgentManage_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -617,9 +560,9 @@ func (c *agentManageClient) Mark(ctx context.Context, in *MarkAgentReq, opts ...
 	return out, nil
 }
 
-func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
+	out := new(ListAgentBriefResp)
 	err := c.cc.Invoke(ctx, AgentManage_ListMarks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -638,9 +581,9 @@ func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opt
 // 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
 // "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
 type AgentManageServer interface {
-	List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error)
+	List(context.Context, *ManageListAgentsReq) (*ListAgentBriefResp, error)
 	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
-	ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error)
+	ListMarks(context.Context, *ListMarksReq) (*ListAgentBriefResp, error)
 }
 
 // UnimplementedAgentManageServer should be embedded to have
@@ -650,13 +593,13 @@ type AgentManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentManageServer struct{}
 
-func (UnimplementedAgentManageServer) List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error) {
+func (UnimplementedAgentManageServer) List(context.Context, *ManageListAgentsReq) (*ListAgentBriefResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentManageServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
 }
-func (UnimplementedAgentManageServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error) {
+func (UnimplementedAgentManageServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentBriefResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
 func (UnimplementedAgentManageServer) testEmbeddedByValue() {}

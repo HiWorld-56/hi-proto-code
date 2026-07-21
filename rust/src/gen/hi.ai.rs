@@ -241,13 +241,15 @@ pub struct AgentInfo {
     #[prost(int64, tag = "6")]
     pub created_at: i64,
 }
-/// 列表项 = 机器人本身 + **看的人**对它的标记。
+/// 列表项 = 机器人本身 + 标记。**只用于超管档**。
 ///
 /// ⚠️ marked 原先是 AgentInfo 的字段(第 7 个),那是**错的**:标记不是机器人的属性,
 /// 而是观察者挂在机器人上的东西 —— 同一个机器人,不同的人看到的 marked 不一样。
 /// 放进 AgentInfo 就等于宣称"这个机器人被标记了"这件事对所有人成立,不成立。
-/// 各服务填各自视角的值:hiai 填 hiai 的标记,hiclub 填 hiclub 的,互不相干
-/// (关系不穿,只有机器人个体穿)。
+/// 但落到存储上,hi_ai_agent_favorites 的唯一键只有 agent_did(不含 user_did)——
+/// 一个机器人全局只能有一条标记,**表达不了"每个人各自的标记"**。所以标记只能是一个
+/// 全局概念,即超管给机器人置顶。商户档曾有 Mark/ListMarks,在这张表上语义是坏的
+/// (商户 A 标了 B 就撞唯一键;A 取消会把超管标的一起删掉),已删。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgentBrief {
     /// 机器人个体(assistant 软件 / robot 硬件)
@@ -312,29 +314,22 @@ pub struct EditAgentReq {
     #[prost(string, tag = "3")]
     pub note: ::prost::alloc::string::String,
 }
+/// 商户档的列表:**不带 marked**。标记是超管的概念(见 AgentBrief),
+/// 商户看自己的机器人不需要、也拿不到别人的标记。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAgentResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<AgentBrief>,
+    pub infos: ::prost::alloc::vec::Vec<AgentInfo>,
 }
-/// Agent 列表入参:**按归属列** —— 传的是主人(creator)的 did,返回这些人名下的机器人总和。
-///
-/// ⚠️ 原来字段叫 `agents`、注释又写 `dids`,两处都在说"按机器人 did 筛" ——
-/// 但返回体就是机器人列表,入参再传机器人 did 讲不通;真正的意图一直是"列这些人的机器人"。
-/// 实现也确实错了:非空分支查的是 `WHERE agent.did IN (...)`(按机器人筛),
-/// 与空分支的 `WHERE creator = 调用者`(按归属)完全是两根轴,一个方法两种语义。
-/// 统一成按 creator 归属,两个分支才是同一件事的"指定别人"与"默认自己"。
-///
-/// 用词随 hi.ai 自己的存储:归属字段叫 creator(见 AgentInfo.creator),不叫 master。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListAgentReq {
-    /// 主人的 did;空=列调用者自己的
-    #[prost(string, repeated, tag = "1")]
-    pub creators: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
+/// 超管档的列表:带 marked。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAgentBriefResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub infos: ::prost::alloc::vec::Vec<AgentBrief>,
 }
 /// 按**机器人 did** 批量取信息(与"按归属列"是两回事,故分开)。
 /// 用于"我已经知道是哪些机器人,补齐它们的信息" —— 如 club 的在线列表:
@@ -610,9 +605,17 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "Get"));
             self.inner.unary(req, path, codec).await
         }
+        /// List **只列自己的**,没有"查谁"的参数 —— 归属取自 apikey 解出的商户 did。
+        ///
+        /// ⚠️ 原签名是 List(ListAgentReq{creators}),creators 非空就直接按它查,**没有任何归属
+        /// 校验** —— 任一商户传别人的 did,就能拿走对方名下机器人的完整 AgentInfo,里面含
+        /// AgentConfig 的 system_prompt/user_prompt/模型配置。而 AgentInfo 标着 VIS_SELF
+        /// "整条只发给 owner 本人"。这与当初删掉 club.AgentDirectory.List 是同一个病,
+        /// 只是门槛从"匿名"变成"任一商户"。**别再把 creators 加回来**:跨商户列是超管的活,
+        /// 走 AgentManage.List。
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListAgentReq>,
+            request: impl tonic::IntoRequest<super::super::Pagination>,
         ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
             self.inner
                 .ready()
@@ -628,6 +631,8 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "List"));
             self.inner.unary(req, path, codec).await
         }
+        /// 按机器人 did 批量取。**服务端强制只返回调用者名下的** —— 同上,原先不校验归属,
+        /// 传任意 did 就能拿到别家的 prompt。兄弟服务(club)取的本就是自己名下的,不受影响。
         pub async fn get_agents(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAgentsReq>,
@@ -644,44 +649,6 @@ pub mod agent_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/GetAgents");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "GetAgents"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// Mark/ListMarks 保留在商户档,是给**兄弟服务代为转发**用的(如 club:超管在 club 侧鉴权,
-        /// 再用 club 自己的 apikey 打到这里)。hiai 自己的 web 超管直接用 AgentManage 那套。
-        pub async fn mark(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MarkAgentReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/Mark");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "Mark"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_marks(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListMarksReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/ListMarks");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "ListMarks"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn get_usage(
@@ -849,7 +816,10 @@ pub mod agent_manage_client {
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ManageListAgentsReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAgentBriefResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -885,7 +855,10 @@ pub mod agent_manage_client {
         pub async fn list_marks(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMarksReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAgentBriefResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await

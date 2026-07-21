@@ -500,13 +500,15 @@ class AgentInfo extends $pb.GeneratedMessage {
   void clearCreatedAt() => $_clearField(6);
 }
 
-/// 列表项 = 机器人本身 + **看的人**对它的标记。
+/// 列表项 = 机器人本身 + 标记。**只用于超管档**。
 ///
 /// ⚠️ marked 原先是 AgentInfo 的字段(第 7 个),那是**错的**:标记不是机器人的属性,
 ///    而是观察者挂在机器人上的东西 —— 同一个机器人,不同的人看到的 marked 不一样。
 ///    放进 AgentInfo 就等于宣称"这个机器人被标记了"这件事对所有人成立,不成立。
-///    各服务填各自视角的值:hiai 填 hiai 的标记,hiclub 填 hiclub 的,互不相干
-///    (关系不穿,只有机器人个体穿)。
+///    但落到存储上,hi_ai_agent_favorites 的唯一键只有 agent_did(不含 user_did)——
+///    一个机器人全局只能有一条标记,**表达不了"每个人各自的标记"**。所以标记只能是一个
+///    全局概念,即超管给机器人置顶。商户档曾有 Mark/ListMarks,在这张表上语义是坏的
+///    (商户 A 标了 B 就撞唯一键;A 取消会把超管标的一起删掉),已删。
 class AgentBrief extends $pb.GeneratedMessage {
   factory AgentBrief({
     AgentInfo? agent,
@@ -975,10 +977,12 @@ class EditAgentReq extends $pb.GeneratedMessage {
   void clearAvatar() => $_clearField(5);
 }
 
+/// 商户档的列表:**不带 marked**。标记是超管的概念(见 AgentBrief),
+/// 商户看自己的机器人不需要、也拿不到别人的标记。
 class ListAgentResp extends $pb.GeneratedMessage {
   factory ListAgentResp({
     $core.int? total,
-    $core.Iterable<AgentBrief>? infos,
+    $core.Iterable<AgentInfo>? infos,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -1000,8 +1004,8 @@ class ListAgentResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentBrief>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: AgentBrief.create)
+    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: AgentInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1033,79 +1037,69 @@ class ListAgentResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<AgentBrief> get infos => $_getList(1);
+  $pb.PbList<AgentInfo> get infos => $_getList(1);
 }
 
-/// Agent 列表入参:**按归属列** —— 传的是主人(creator)的 did,返回这些人名下的机器人总和。
-///
-/// ⚠️ 原来字段叫 `agents`、注释又写 `dids`,两处都在说"按机器人 did 筛" ——
-///    但返回体就是机器人列表,入参再传机器人 did 讲不通;真正的意图一直是"列这些人的机器人"。
-///    实现也确实错了:非空分支查的是 `WHERE agent.did IN (...)`(按机器人筛),
-///    与空分支的 `WHERE creator = 调用者`(按归属)完全是两根轴,一个方法两种语义。
-///    统一成按 creator 归属,两个分支才是同一件事的"指定别人"与"默认自己"。
-///
-/// 用词随 hi.ai 自己的存储:归属字段叫 creator(见 AgentInfo.creator),不叫 master。
-class ListAgentReq extends $pb.GeneratedMessage {
-  factory ListAgentReq({
-    $core.Iterable<$core.String>? creators,
-    $2.Pagination? pagination,
+/// 超管档的列表:带 marked。
+class ListAgentBriefResp extends $pb.GeneratedMessage {
+  factory ListAgentBriefResp({
+    $core.int? total,
+    $core.Iterable<AgentBrief>? infos,
   }) {
     final result = create();
-    if (creators != null) result.creators.addAll(creators);
-    if (pagination != null) result.pagination = pagination;
+    if (total != null) result.total = total;
+    if (infos != null) result.infos.addAll(infos);
     return result;
   }
 
-  ListAgentReq._();
+  ListAgentBriefResp._();
 
-  factory ListAgentReq.fromBuffer($core.List<$core.int> data,
+  factory ListAgentBriefResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAgentReq.fromJson($core.String json,
+  factory ListAgentBriefResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentReq',
+      _omitMessageNames ? '' : 'ListAgentBriefResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'creators')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<AgentBrief>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: AgentBrief.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentReq clone() => deepCopy();
+  ListAgentBriefResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentReq copyWith(void Function(ListAgentReq) updates) =>
-      super.copyWith((message) => updates(message as ListAgentReq))
-          as ListAgentReq;
+  ListAgentBriefResp copyWith(void Function(ListAgentBriefResp) updates) =>
+      super.copyWith((message) => updates(message as ListAgentBriefResp))
+          as ListAgentBriefResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAgentReq create() => ListAgentReq._();
+  static ListAgentBriefResp create() => ListAgentBriefResp._();
   @$core.override
-  ListAgentReq createEmptyInstance() => create();
+  ListAgentBriefResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentReq>(create);
-  static ListAgentReq? _defaultInstance;
+  static ListAgentBriefResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentBriefResp>(create);
+  static ListAgentBriefResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get creators => $_getList(0);
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $pb.PbList<AgentBrief> get infos => $_getList(1);
 }
 
 /// 按**机器人 did** 批量取信息(与"按归属列"是两回事,故分开)。
