@@ -1044,6 +1044,72 @@ class ListAgentReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
+/// 按**机器人 did** 批量取信息(与"按归属列"是两回事,故分开)。
+/// 用于"我已经知道是哪些机器人,补齐它们的信息" —— 如 club 的在线列表:
+/// presence 给出在线机器人的 did,再来这里补名字/头像。
+class GetAgentsReq extends $pb.GeneratedMessage {
+  factory GetAgentsReq({
+    $core.Iterable<$core.String>? agents,
+    $2.Pagination? pagination,
+  }) {
+    final result = create();
+    if (agents != null) result.agents.addAll(agents);
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  GetAgentsReq._();
+
+  factory GetAgentsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetAgentsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetAgentsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..pPS(1, _omitFieldNames ? '' : 'agents')
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAgentsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAgentsReq copyWith(void Function(GetAgentsReq) updates) =>
+      super.copyWith((message) => updates(message as GetAgentsReq))
+          as GetAgentsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetAgentsReq create() => GetAgentsReq._();
+  @$core.override
+  GetAgentsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetAgentsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetAgentsReq>(create);
+  static GetAgentsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get agents => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $2.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Pagination ensurePagination() => $_ensure(1);
+}
+
 /// 标记列表入参:查的是**调用者**打过标记的,必须有身份。
 class ListMarksReq extends $pb.GeneratedMessage {
   factory ListMarksReq({

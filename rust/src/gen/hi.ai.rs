@@ -322,6 +322,17 @@ pub struct ListAgentReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 按**机器人 did** 批量取信息(与"按归属列"是两回事,故分开)。
+/// 用于"我已经知道是哪些机器人,补齐它们的信息" —— 如 club 的在线列表:
+/// presence 给出在线机器人的 did,再来这里补名字/头像。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetAgentsReq {
+    /// 机器人 did,必填
+    #[prost(string, repeated, tag = "1")]
+    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 /// 标记列表入参:查的是**调用者**打过标记的,必须有身份。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListMarksReq {
@@ -591,6 +602,24 @@ pub mod agent_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_agents(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAgentsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/GetAgents");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "GetAgents"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn mark(

@@ -85,6 +85,13 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListAgentResp> getAgents(
+    $0.GetAgentsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getAgents, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> mark(
     $0.MarkAgentReq request, {
     $grpc.CallOptions? options,
@@ -148,6 +155,11 @@ class AgentClient extends $grpc.Client {
       '/hi.ai.Agent/List',
       ($0.ListAgentReq value) => value.writeToBuffer(),
       $0.ListAgentResp.fromBuffer);
+  static final _$getAgents =
+      $grpc.ClientMethod<$0.GetAgentsReq, $0.ListAgentResp>(
+          '/hi.ai.Agent/GetAgents',
+          ($0.GetAgentsReq value) => value.writeToBuffer(),
+          $0.ListAgentResp.fromBuffer);
   static final _$mark = $grpc.ClientMethod<$0.MarkAgentReq, $1.Empty>(
       '/hi.ai.Agent/Mark',
       ($0.MarkAgentReq value) => value.writeToBuffer(),
@@ -221,6 +233,13 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.ListAgentReq.fromBuffer(value),
+        ($0.ListAgentResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetAgentsReq, $0.ListAgentResp>(
+        'GetAgents',
+        getAgents_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetAgentsReq.fromBuffer(value),
         ($0.ListAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.MarkAgentReq, $1.Empty>(
         'Mark',
@@ -305,6 +324,14 @@ abstract class AgentServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListAgentResp> list(
       $grpc.ServiceCall call, $0.ListAgentReq request);
+
+  $async.Future<$0.ListAgentResp> getAgents_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetAgentsReq> $request) async {
+    return getAgents($call, await $request);
+  }
+
+  $async.Future<$0.ListAgentResp> getAgents(
+      $grpc.ServiceCall call, $0.GetAgentsReq request);
 
   $async.Future<$1.Empty> mark_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.MarkAgentReq> $request) async {

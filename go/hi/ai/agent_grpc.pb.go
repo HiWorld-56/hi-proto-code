@@ -26,6 +26,7 @@ const (
 	Agent_Delete_FullMethodName           = "/hi.ai.Agent/Delete"
 	Agent_Get_FullMethodName              = "/hi.ai.Agent/Get"
 	Agent_List_FullMethodName             = "/hi.ai.Agent/List"
+	Agent_GetAgents_FullMethodName        = "/hi.ai.Agent/GetAgents"
 	Agent_Mark_FullMethodName             = "/hi.ai.Agent/Mark"
 	Agent_ListMarks_FullMethodName        = "/hi.ai.Agent/ListMarks"
 	Agent_GetUsage_FullMethodName         = "/hi.ai.Agent/GetUsage"
@@ -56,6 +57,7 @@ type AgentClient interface {
 	Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
 	List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	GetAgents(ctx context.Context, in *GetAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error)
@@ -125,6 +127,16 @@ func (c *agentClient) List(ctx context.Context, in *ListAgentReq, opts ...grpc.C
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentResp)
 	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) GetAgents(ctx context.Context, in *GetAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentResp)
+	err := c.cc.Invoke(ctx, Agent_GetAgents_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -204,6 +216,7 @@ type AgentServer interface {
 	Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
 	List(context.Context, *ListAgentReq) (*ListAgentResp, error)
+	GetAgents(context.Context, *GetAgentsReq) (*ListAgentResp, error)
 	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
 	ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error)
 	GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error)
@@ -235,6 +248,9 @@ func (UnimplementedAgentServer) Get(context.Context, *GetAgentReq) (*GetAgentRes
 }
 func (UnimplementedAgentServer) List(context.Context, *ListAgentReq) (*ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedAgentServer) GetAgents(context.Context, *GetAgentsReq) (*ListAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAgents not implemented")
 }
 func (UnimplementedAgentServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
@@ -379,6 +395,24 @@ func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Agent_GetAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAgentsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetAgents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetAgents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetAgents(ctx, req.(*GetAgentsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Agent_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MarkAgentReq)
 	if err := dec(in); err != nil {
@@ -499,6 +533,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _Agent_List_Handler,
+		},
+		{
+			MethodName: "GetAgents",
+			Handler:    _Agent_GetAgents_Handler,
 		},
 		{
 			MethodName: "Mark",

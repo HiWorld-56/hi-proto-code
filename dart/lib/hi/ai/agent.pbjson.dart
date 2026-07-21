@@ -343,6 +343,27 @@ final $typed_data.Uint8List listAgentReqDescriptor = $convert.base64Decode(
     'CgxMaXN0QWdlbnRSZXESGgoIY3JlYXRvcnMYASADKAlSCGNyZWF0b3JzEi4KCnBhZ2luYXRpb2'
     '4YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
 
+@$core.Deprecated('Use getAgentsReqDescriptor instead')
+const GetAgentsReq$json = {
+  '1': 'GetAgentsReq',
+  '2': [
+    {'1': 'agents', '3': 1, '4': 3, '5': 9, '8': {}, '10': 'agents'},
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `GetAgentsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getAgentsReqDescriptor = $convert.base64Decode(
+    'CgxHZXRBZ2VudHNSZXESIAoGYWdlbnRzGAEgAygJQgi6SAWSAQIIAVIGYWdlbnRzEi4KCnBhZ2'
+    'luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+
 @$core.Deprecated('Use listMarksReqDescriptor instead')
 const ListMarksReq$json = {
   '1': 'ListMarksReq',
