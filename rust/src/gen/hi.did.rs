@@ -2347,6 +2347,13 @@ pub mod list_addresses_resp {
         pub address: ::prost::alloc::string::String,
     }
 }
+/// 计价币种:**只支持 cny / usd**,传其他值直接报错。
+///
+/// ⚠️ 原先服务端是「`currency == "cny"` 走人民币,**否则一律当美元**」——
+/// 传 eur、传空、拼错,都静默返回美元金额,调用方无从察觉。白名单放在 proto 上
+/// (protovalidate 已在 grpc 拦截器里启用),校验前置到入口,各端也能直接看到取值范围。
+///
+/// 不做成 enum 是有意的:币种要扩展时 enum 的增删比字符串麻烦得多。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TotalAssetsReq {
     #[prost(string, tag = "1")]

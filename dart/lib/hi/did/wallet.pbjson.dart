@@ -160,13 +160,15 @@ final $typed_data.Uint8List listAddressesRespDescriptor = $convert.base64Decode(
 const TotalAssetsReq$json = {
   '1': 'TotalAssetsReq',
   '2': [
-    {'1': 'currency', '3': 1, '4': 1, '5': 9, '10': 'currency'},
+    {'1': 'currency', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'currency'},
   ],
 };
 
 /// Descriptor for `TotalAssetsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List totalAssetsReqDescriptor = $convert.base64Decode(
-    'Cg5Ub3RhbEFzc2V0c1JlcRIaCghjdXJyZW5jeRgBIAEoCVIIY3VycmVuY3k=');
+    'Cg5Ub3RhbEFzc2V0c1JlcRJ3CghjdXJyZW5jeRgBIAEoCUJbukhYugFVChBjdXJyZW5jeS5pc2'
+    '80MjE3EhxjdXJyZW5jeSDlj6rmlK/mjIEgY255IC8gdXNkGiN0aGlzLmxvd2VyQXNjaWkoKSBp'
+    'biBbJ2NueScsICd1c2QnXVIIY3VycmVuY3k=');
 
 @$core.Deprecated('Use totalAssetsRespDescriptor instead')
 const TotalAssetsResp$json = {
@@ -185,7 +187,7 @@ final $typed_data.Uint8List totalAssetsRespDescriptor = $convert.base64Decode(
 const ListUsersAssetsReq$json = {
   '1': 'ListUsersAssetsReq',
   '2': [
-    {'1': 'currency', '3': 1, '4': 1, '5': 9, '10': 'currency'},
+    {'1': 'currency', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'currency'},
     {
       '1': 'pagination',
       '3': 2,
@@ -199,8 +201,10 @@ const ListUsersAssetsReq$json = {
 
 /// Descriptor for `ListUsersAssetsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listUsersAssetsReqDescriptor = $convert.base64Decode(
-    'ChJMaXN0VXNlcnNBc3NldHNSZXESGgoIY3VycmVuY3kYASABKAlSCGN1cnJlbmN5Ei4KCnBhZ2'
-    'luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+    'ChJMaXN0VXNlcnNBc3NldHNSZXESdwoIY3VycmVuY3kYASABKAlCW7pIWLoBVQoQY3VycmVuY3'
+    'kuaXNvNDIxNxIcY3VycmVuY3kg5Y+q5pSv5oyBIGNueSAvIHVzZBojdGhpcy5sb3dlckFzY2lp'
+    'KCkgaW4gWydjbnknLCAndXNkJ11SCGN1cnJlbmN5Ei4KCnBhZ2luYXRpb24YAiABKAsyDi5oaS'
+    '5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
 
 @$core.Deprecated('Use listUsersAssetsRespDescriptor instead')
 const ListUsersAssetsResp$json = {

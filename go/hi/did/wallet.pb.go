@@ -284,6 +284,14 @@ func (x *ListAddressesResp) GetList() []*ListAddressesResp_Unit {
 	return nil
 }
 
+// 计价币种:**只支持 cny / usd**,传其他值直接报错。
+//
+// ⚠️ 原先服务端是「`currency == "cny"` 走人民币,**否则一律当美元**」——
+//
+//	传 eur、传空、拼错,都静默返回美元金额,调用方无从察觉。白名单放在 proto 上
+//	(protovalidate 已在 grpc 拦截器里启用),校验前置到入口,各端也能直接看到取值范围。
+//
+// 不做成 enum 是有意的:币种要扩展时 enum 的增删比字符串麻烦得多。
 type TotalAssetsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Currency      string                 `protobuf:"bytes,1,opt,name=currency,proto3" json:"currency,omitempty"`
@@ -1007,13 +1015,15 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\x04Unit\x12\x16\n" +
 	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12\x1a\n" +
 	"\x05chain\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05chain\x12\x1e\n" +
-	"\aaddress\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\aaddress:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\",\n" +
-	"\x0eTotalAssetsReq\x12\x1a\n" +
-	"\bcurrency\x18\x01 \x01(\tR\bcurrency\"+\n" +
+	"\aaddress\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\aaddress:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"\x89\x01\n" +
+	"\x0eTotalAssetsReq\x12w\n" +
+	"\bcurrency\x18\x01 \x01(\tB[\xbaHX\xba\x01U\n" +
+	"\x10currency.iso4217\x12\x1ccurrency 只支持 cny / usd\x1a#this.lowerAscii() in ['cny', 'usd']R\bcurrency\"+\n" +
 	"\x0fTotalAssetsResp\x12\x12\n" +
-	"\x01n\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x01n:\x04\x98\xb5\x18\x01\"`\n" +
-	"\x12ListUsersAssetsReq\x12\x1a\n" +
-	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x12.\n" +
+	"\x01n\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x01n:\x04\x98\xb5\x18\x01\"\xbd\x01\n" +
+	"\x12ListUsersAssetsReq\x12w\n" +
+	"\bcurrency\x18\x01 \x01(\tB[\xbaHX\xba\x01U\n" +
+	"\x10currency.iso4217\x12\x1ccurrency 只支持 cny / usd\x1a#this.lowerAscii() in ['cny', 'usd']R\bcurrency\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"\xcb\x01\n" +
