@@ -577,6 +577,128 @@ class GetAgentMasterResp extends $pb.GeneratedMessage {
   $3.Entity ensureMaster() => $_ensure(0);
 }
 
+/// 智能体(主体=智能体)。**用户 token 档**,全档一致。
+/// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
+/// 列我的机器人。**没有"查谁"的参数** —— 主体永远是 token 里的人。
+class ListMyAgentsReq extends $pb.GeneratedMessage {
+  factory ListMyAgentsReq({
+    $3.Pagination? pagination,
+  }) {
+    final result = create();
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListMyAgentsReq._();
+
+  factory ListMyAgentsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListMyAgentsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListMyAgentsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$3.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMyAgentsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMyAgentsReq copyWith(void Function(ListMyAgentsReq) updates) =>
+      super.copyWith((message) => updates(message as ListMyAgentsReq))
+          as ListMyAgentsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListMyAgentsReq create() => ListMyAgentsReq._();
+  @$core.override
+  ListMyAgentsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListMyAgentsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListMyAgentsReq>(create);
+  static ListMyAgentsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $3.Pagination get pagination => $_getN(0);
+  @$pb.TagNumber(1)
+  set pagination($3.Pagination value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPagination() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPagination() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $3.Pagination ensurePagination() => $_ensure(0);
+}
+
+/// 只吐身份(Entity)。prompt/模型这些是 owner 的私密配置,要看走 ai 的 Agent 接口。
+class ListMyAgentsResp extends $pb.GeneratedMessage {
+  factory ListMyAgentsResp({
+    $core.int? total,
+    $core.Iterable<$3.Entity>? agents,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (agents != null) result.agents.addAll(agents);
+    return result;
+  }
+
+  ListMyAgentsResp._();
+
+  factory ListMyAgentsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListMyAgentsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListMyAgentsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<$3.Entity>(2, _omitFieldNames ? '' : 'agents',
+        subBuilder: $3.Entity.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMyAgentsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMyAgentsResp copyWith(void Function(ListMyAgentsResp) updates) =>
+      super.copyWith((message) => updates(message as ListMyAgentsResp))
+          as ListMyAgentsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListMyAgentsResp create() => ListMyAgentsResp._();
+  @$core.override
+  ListMyAgentsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListMyAgentsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListMyAgentsResp>(create);
+  static ListMyAgentsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$3.Entity> get agents => $_getList(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

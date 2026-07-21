@@ -21,6 +21,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	Agent_List_FullMethodName             = "/hi.club.Agent/List"
 	Agent_CreateAssistant_FullMethodName  = "/hi.club.Agent/CreateAssistant"
 	Agent_Edit_FullMethodName             = "/hi.club.Agent/Edit"
 	Agent_Delete_FullMethodName           = "/hi.club.Agent/Delete"
@@ -38,10 +39,12 @@ const (
 // AgentClient is the client API for Agent service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 智能体(主体=智能体)。**用户 token 档**,全档一致。
-// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
 type AgentClient interface {
+	// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
+	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
+	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
+	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
+	List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListMyAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
 	Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -64,6 +67,16 @@ type agentClient struct {
 
 func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
+}
+
+func (c *agentClient) List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListMyAgentsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListMyAgentsResp)
+	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *agentClient) CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error) {
@@ -189,10 +202,12 @@ func (c *agentClient) Transfer(ctx context.Context, in *TransferReq, opts ...grp
 // AgentServer is the server API for Agent service.
 // All implementations should embed UnimplementedAgentServer
 // for forward compatibility.
-//
-// 智能体(主体=智能体)。**用户 token 档**,全档一致。
-// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
 type AgentServer interface {
+	// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
+	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
+	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
+	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
+	List(context.Context, *ListMyAgentsReq) (*ListMyAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error)
 	Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error)
@@ -216,6 +231,9 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
+func (UnimplementedAgentServer) List(context.Context, *ListMyAgentsReq) (*ListMyAgentsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
 func (UnimplementedAgentServer) CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateAssistant not implemented")
 }
@@ -270,6 +288,24 @@ func RegisterAgentServer(s grpc.ServiceRegistrar, srv AgentServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Agent_ServiceDesc, srv)
+}
+
+func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyAgentsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).List(ctx, req.(*ListMyAgentsReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Agent_CreateAssistant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -496,6 +532,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AgentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "List",
+			Handler:    _Agent_List_Handler,
+		},
+		{
 			MethodName: "CreateAssistant",
 			Handler:    _Agent_CreateAssistant_Handler,
 		},
@@ -549,9 +589,7 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	AgentDirectory_List_FullMethodName           = "/hi.club.AgentDirectory/List"
-	AgentDirectory_ListOnline_FullMethodName     = "/hi.club.AgentDirectory/ListOnline"
-	AgentDirectory_GetAgentMaster_FullMethodName = "/hi.club.AgentDirectory/GetAgentMaster"
+	AgentDirectory_ListOnline_FullMethodName = "/hi.club.AgentDirectory/ListOnline"
 )
 
 // AgentDirectoryClient is the client API for AgentDirectory service.
@@ -560,10 +598,20 @@ const (
 //
 // 智能体目录(公开)。从 Agent 拆出 —— 原来这三个免鉴权方法混在 token 档的 Agent 里(混档)。
 // 供三方看板/未登录页面列机器人、查在线与主人。
+// 公开目录。**只放真正该公开的东西。**
+//
+// ⚠️ 这里曾有 List 与 GetAgentMaster,都已**删除**:
+//
+//	· List 转发 ai.Agent.List 且用 club 自己的 apikey —— 它查的是**hiai 里挂在 club 商户
+//	  名下的 agent**,与"club 用户的机器人列表"毫无关系(club 的机器人归属由 club 自己的
+//	  relation 管,不在 hiai)。而 hiai 里所有 club 机器人的 creator 都是 club 商户,
+//	  所以匿名调用者传空参数就能把**全部** club 机器人连同 AgentConfig 的 prompt/模型
+//	  一起拿走。这个方法从设计上就不成立,直接删,不是"改档位"能救的。
+//	· GetAgentMaster 让任何人都能反查某机器人的主人 —— 不该随便让人找到。
+//
+// (Agent.List 是**另起**的用户自服务方法,数据取自 club 自己的 relation,与上面这个无继承关系。)
 type AgentDirectoryClient interface {
-	List(ctx context.Context, in *ai.ListAgentReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
 	ListOnline(ctx context.Context, in *ListOnlineReq, opts ...grpc.CallOption) (*ListOnlineResp, error)
-	GetAgentMaster(ctx context.Context, in *GetAgentMasterReq, opts ...grpc.CallOption) (*GetAgentMasterResp, error)
 }
 
 type agentDirectoryClient struct {
@@ -572,16 +620,6 @@ type agentDirectoryClient struct {
 
 func NewAgentDirectoryClient(cc grpc.ClientConnInterface) AgentDirectoryClient {
 	return &agentDirectoryClient{cc}
-}
-
-func (c *agentDirectoryClient) List(ctx context.Context, in *ai.ListAgentReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListAgentResp)
-	err := c.cc.Invoke(ctx, AgentDirectory_List_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *agentDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineReq, opts ...grpc.CallOption) (*ListOnlineResp, error) {
@@ -594,26 +632,26 @@ func (c *agentDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineReq
 	return out, nil
 }
 
-func (c *agentDirectoryClient) GetAgentMaster(ctx context.Context, in *GetAgentMasterReq, opts ...grpc.CallOption) (*GetAgentMasterResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAgentMasterResp)
-	err := c.cc.Invoke(ctx, AgentDirectory_GetAgentMaster_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AgentDirectoryServer is the server API for AgentDirectory service.
 // All implementations should embed UnimplementedAgentDirectoryServer
 // for forward compatibility.
 //
 // 智能体目录(公开)。从 Agent 拆出 —— 原来这三个免鉴权方法混在 token 档的 Agent 里(混档)。
 // 供三方看板/未登录页面列机器人、查在线与主人。
+// 公开目录。**只放真正该公开的东西。**
+//
+// ⚠️ 这里曾有 List 与 GetAgentMaster,都已**删除**:
+//
+//	· List 转发 ai.Agent.List 且用 club 自己的 apikey —— 它查的是**hiai 里挂在 club 商户
+//	  名下的 agent**,与"club 用户的机器人列表"毫无关系(club 的机器人归属由 club 自己的
+//	  relation 管,不在 hiai)。而 hiai 里所有 club 机器人的 creator 都是 club 商户,
+//	  所以匿名调用者传空参数就能把**全部** club 机器人连同 AgentConfig 的 prompt/模型
+//	  一起拿走。这个方法从设计上就不成立,直接删,不是"改档位"能救的。
+//	· GetAgentMaster 让任何人都能反查某机器人的主人 —— 不该随便让人找到。
+//
+// (Agent.List 是**另起**的用户自服务方法,数据取自 club 自己的 relation,与上面这个无继承关系。)
 type AgentDirectoryServer interface {
-	List(context.Context, *ai.ListAgentReq) (*ai.ListAgentResp, error)
 	ListOnline(context.Context, *ListOnlineReq) (*ListOnlineResp, error)
-	GetAgentMaster(context.Context, *GetAgentMasterReq) (*GetAgentMasterResp, error)
 }
 
 // UnimplementedAgentDirectoryServer should be embedded to have
@@ -623,14 +661,8 @@ type AgentDirectoryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentDirectoryServer struct{}
 
-func (UnimplementedAgentDirectoryServer) List(context.Context, *ai.ListAgentReq) (*ai.ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
 func (UnimplementedAgentDirectoryServer) ListOnline(context.Context, *ListOnlineReq) (*ListOnlineResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListOnline not implemented")
-}
-func (UnimplementedAgentDirectoryServer) GetAgentMaster(context.Context, *GetAgentMasterReq) (*GetAgentMasterResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAgentMaster not implemented")
 }
 func (UnimplementedAgentDirectoryServer) testEmbeddedByValue() {}
 
@@ -652,24 +684,6 @@ func RegisterAgentDirectoryServer(s grpc.ServiceRegistrar, srv AgentDirectorySer
 	s.RegisterService(&AgentDirectory_ServiceDesc, srv)
 }
 
-func _AgentDirectory_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ListAgentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentDirectoryServer).List(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AgentDirectory_List_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentDirectoryServer).List(ctx, req.(*ai.ListAgentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AgentDirectory_ListOnline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListOnlineReq)
 	if err := dec(in); err != nil {
@@ -688,24 +702,6 @@ func _AgentDirectory_ListOnline_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AgentDirectory_GetAgentMaster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAgentMasterReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentDirectoryServer).GetAgentMaster(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AgentDirectory_GetAgentMaster_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentDirectoryServer).GetAgentMaster(ctx, req.(*GetAgentMasterReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // AgentDirectory_ServiceDesc is the grpc.ServiceDesc for AgentDirectory service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -714,16 +710,8 @@ var AgentDirectory_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AgentDirectoryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "List",
-			Handler:    _AgentDirectory_List_Handler,
-		},
-		{
 			MethodName: "ListOnline",
 			Handler:    _AgentDirectory_ListOnline_Handler,
-		},
-		{
-			MethodName: "GetAgentMaster",
-			Handler:    _AgentDirectory_GetAgentMaster_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1259,6 +1259,23 @@ pub struct GetAgentMasterResp {
     #[prost(message, optional, tag = "1")]
     pub master: ::core::option::Option<super::Entity>,
 }
+/// 智能体(主体=智能体)。**用户 token 档**,全档一致。
+/// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
+/// 列我的机器人。**没有"查谁"的参数** —— 主体永远是 token 里的人。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListMyAgentsReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// 只吐身份(Entity)。prompt/模型这些是 owner 的私密配置,要看走 ai 的 Agent 接口。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMyAgentsResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    /// assistant(软件)+ robot(硬件)
+    #[prost(message, repeated, tag = "2")]
+    pub agents: ::prost::alloc::vec::Vec<super::Entity>,
+}
 /// Generated client implementations.
 pub mod agent_client {
     #![allow(
@@ -1270,8 +1287,6 @@ pub mod agent_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 智能体(主体=智能体)。**用户 token 档**,全档一致。
-    /// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
     #[derive(Debug, Clone)]
     pub struct AgentClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1351,6 +1366,31 @@ pub mod agent_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        /// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
+        /// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
+        /// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
+        /// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListMyAgentsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListMyAgentsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "List"));
+            self.inner.unary(req, path, codec).await
         }
         /// ── hi.ai 门面(跟 ai 定稿改名)──
         pub async fn create_assistant(
@@ -1609,6 +1649,17 @@ pub mod agent_directory_client {
     use tonic::codegen::http::Uri;
     /// 智能体目录(公开)。从 Agent 拆出 —— 原来这三个免鉴权方法混在 token 档的 Agent 里(混档)。
     /// 供三方看板/未登录页面列机器人、查在线与主人。
+    /// 公开目录。**只放真正该公开的东西。**
+    ///
+    /// ⚠️ 这里曾有 List 与 GetAgentMaster,都已**删除**:
+    /// · List 转发 ai.Agent.List 且用 club 自己的 apikey —— 它查的是**hiai 里挂在 club 商户
+    /// 名下的 agent**,与"club 用户的机器人列表"毫无关系(club 的机器人归属由 club 自己的
+    /// relation 管,不在 hiai)。而 hiai 里所有 club 机器人的 creator 都是 club 商户,
+    /// 所以匿名调用者传空参数就能把**全部** club 机器人连同 AgentConfig 的 prompt/模型
+    /// 一起拿走。这个方法从设计上就不成立,直接删,不是"改档位"能救的。
+    /// · GetAgentMaster 让任何人都能反查某机器人的主人 —— 不该随便让人找到。
+    ///
+    /// (Agent.List 是**另起**的用户自服务方法,数据取自 club 自己的 relation,与上面这个无继承关系。)
     #[derive(Debug, Clone)]
     pub struct AgentDirectoryClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1689,30 +1740,6 @@ pub mod agent_directory_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::ListAgentReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListAgentResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.AgentDirectory/List",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.AgentDirectory", "List"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn list_online(
             &mut self,
             request: impl tonic::IntoRequest<super::ListOnlineReq>,
@@ -1732,30 +1759,6 @@ pub mod agent_directory_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.AgentDirectory", "ListOnline"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_agent_master(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAgentMasterReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAgentMasterResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.AgentDirectory/GetAgentMaster",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.AgentDirectory", "GetAgentMaster"));
             self.inner.unary(req, path, codec).await
         }
     }

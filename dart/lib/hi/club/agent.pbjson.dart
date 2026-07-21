@@ -167,3 +167,46 @@ const GetAgentMasterResp$json = {
 final $typed_data.Uint8List getAgentMasterRespDescriptor = $convert.base64Decode(
     'ChJHZXRBZ2VudE1hc3RlclJlc3ASKAoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUg'
     'ZtYXN0ZXI6BJi1GAE=');
+
+@$core.Deprecated('Use listMyAgentsReqDescriptor instead')
+const ListMyAgentsReq$json = {
+  '1': 'ListMyAgentsReq',
+  '2': [
+    {
+      '1': 'pagination',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListMyAgentsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listMyAgentsReqDescriptor = $convert.base64Decode(
+    'Cg9MaXN0TXlBZ2VudHNSZXESLgoKcGFnaW5hdGlvbhgBIAEoCzIOLmhpLlBhZ2luYXRpb25SCn'
+    'BhZ2luYXRpb24=');
+
+@$core.Deprecated('Use listMyAgentsRespDescriptor instead')
+const ListMyAgentsResp$json = {
+  '1': 'ListMyAgentsResp',
+  '2': [
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'agents',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'agents'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListMyAgentsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listMyAgentsRespDescriptor = $convert.base64Decode(
+    'ChBMaXN0TXlBZ2VudHNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIoCgZhZ2VudH'
+    'MYAiADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBmFnZW50czoEmLUYAw==');
