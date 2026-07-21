@@ -326,7 +326,7 @@ final $typed_data.Uint8List listAgentRespDescriptor = $convert.base64Decode(
 const ListAgentReq$json = {
   '1': 'ListAgentReq',
   '2': [
-    {'1': 'agents', '3': 1, '4': 3, '5': 9, '10': 'agents'},
+    {'1': 'creators', '3': 1, '4': 3, '5': 9, '10': 'creators'},
     {
       '1': 'pagination',
       '3': 2,
@@ -340,8 +340,8 @@ const ListAgentReq$json = {
 
 /// Descriptor for `ListAgentReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0QWdlbnRSZXESFgoGYWdlbnRzGAEgAygJUgZhZ2VudHMSLgoKcGFnaW5hdGlvbhgCIA'
-    'EoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+    'CgxMaXN0QWdlbnRSZXESGgoIY3JlYXRvcnMYASADKAlSCGNyZWF0b3JzEi4KCnBhZ2luYXRpb2'
+    '4YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
 
 @$core.Deprecated('Use listMarksReqDescriptor instead')
 const ListMarksReq$json = {

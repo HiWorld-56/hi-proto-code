@@ -740,10 +740,19 @@ func (x *ListAgentResp) GetInfos() []*AgentInfo {
 	return nil
 }
 
-// Agent 列表入参:dids 空=列调用者自己的;非空=按 did 列。
+// Agent 列表入参:**按归属列** —— 传的是主人(creator)的 did,返回这些人名下的机器人总和。
+//
+// ⚠️ 原来字段叫 `agents`、注释又写 `dids`,两处都在说"按机器人 did 筛" ——
+//
+//	但返回体就是机器人列表,入参再传机器人 did 讲不通;真正的意图一直是"列这些人的机器人"。
+//	实现也确实错了:非空分支查的是 `WHERE agent.did IN (...)`(按机器人筛),
+//	与空分支的 `WHERE creator = 调用者`(按归属)完全是两根轴,一个方法两种语义。
+//	统一成按 creator 归属,两个分支才是同一件事的"指定别人"与"默认自己"。
+//
+// 用词随 hi.ai 自己的存储:归属字段叫 creator(见 AgentInfo.creator),不叫 master。
 type ListAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agents        []string               `protobuf:"bytes,1,rep,name=agents,proto3" json:"agents,omitempty"` // 可选:只看这些 did;空=列自己的
+	Creators      []string               `protobuf:"bytes,1,rep,name=creators,proto3" json:"creators,omitempty"` // 主人的 did;空=列调用者自己的
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -779,9 +788,9 @@ func (*ListAgentReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_agent_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ListAgentReq) GetAgents() []string {
+func (x *ListAgentReq) GetCreators() []string {
 	if x != nil {
-		return x.Agents
+		return x.Creators
 	}
 	return nil
 }
@@ -1235,9 +1244,9 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04note\x18\x03 \x01(\tR\x04note\"_\n" +
 	"\rListAgentResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12,\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"V\n" +
-	"\fListAgentReq\x12\x16\n" +
-	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
+	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"Z\n" +
+	"\fListAgentReq\x12\x1a\n" +
+	"\bcreators\x18\x01 \x03(\tR\bcreators\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"V\n" +

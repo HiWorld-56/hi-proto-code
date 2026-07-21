@@ -972,14 +972,22 @@ class ListAgentResp extends $pb.GeneratedMessage {
   $pb.PbList<AgentInfo> get infos => $_getList(1);
 }
 
-/// Agent 列表入参:dids 空=列调用者自己的;非空=按 did 列。
+/// Agent 列表入参:**按归属列** —— 传的是主人(creator)的 did,返回这些人名下的机器人总和。
+///
+/// ⚠️ 原来字段叫 `agents`、注释又写 `dids`,两处都在说"按机器人 did 筛" ——
+///    但返回体就是机器人列表,入参再传机器人 did 讲不通;真正的意图一直是"列这些人的机器人"。
+///    实现也确实错了:非空分支查的是 `WHERE agent.did IN (...)`(按机器人筛),
+///    与空分支的 `WHERE creator = 调用者`(按归属)完全是两根轴,一个方法两种语义。
+///    统一成按 creator 归属,两个分支才是同一件事的"指定别人"与"默认自己"。
+///
+/// 用词随 hi.ai 自己的存储:归属字段叫 creator(见 AgentInfo.creator),不叫 master。
 class ListAgentReq extends $pb.GeneratedMessage {
   factory ListAgentReq({
-    $core.Iterable<$core.String>? agents,
+    $core.Iterable<$core.String>? creators,
     $2.Pagination? pagination,
   }) {
     final result = create();
-    if (agents != null) result.agents.addAll(agents);
+    if (creators != null) result.creators.addAll(creators);
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -997,7 +1005,7 @@ class ListAgentReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'agents')
+    ..pPS(1, _omitFieldNames ? '' : 'creators')
     ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
@@ -1022,7 +1030,7 @@ class ListAgentReq extends $pb.GeneratedMessage {
   static ListAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get agents => $_getList(0);
+  $pb.PbList<$core.String> get creators => $_getList(0);
 
   @$pb.TagNumber(2)
   $2.Pagination get pagination => $_getN(1);

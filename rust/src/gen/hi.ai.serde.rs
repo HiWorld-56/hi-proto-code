@@ -5507,15 +5507,15 @@ impl serde::Serialize for ListAgentReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agents.is_empty() {
+        if !self.creators.is_empty() {
             len += 1;
         }
         if self.pagination.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentReq", len)?;
-        if !self.agents.is_empty() {
-            struct_ser.serialize_field("agents", &self.agents)?;
+        if !self.creators.is_empty() {
+            struct_ser.serialize_field("creators", &self.creators)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -5530,13 +5530,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "agents",
+            "creators",
             "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Agents,
+            Creators,
             Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -5559,7 +5559,7 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "agents" => Ok(GeneratedField::Agents),
+                            "creators" => Ok(GeneratedField::Creators),
                             "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -5580,15 +5580,15 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut agents__ = None;
+                let mut creators__ = None;
                 let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Agents => {
-                            if agents__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agents"));
+                        GeneratedField::Creators => {
+                            if creators__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("creators"));
                             }
-                            agents__ = Some(map_.next_value()?);
+                            creators__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -5599,7 +5599,7 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
                     }
                 }
                 Ok(ListAgentReq {
-                    agents: agents__.unwrap_or_default(),
+                    creators: creators__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
