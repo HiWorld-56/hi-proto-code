@@ -131,8 +131,38 @@ final $typed_data.Uint8List pluginLoadedDescriptor = $convert.base64Decode(
 const CreatePluginReq$json = {
   '1': 'CreatePluginReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'root', '3': 2, '4': 1, '5': 9, '10': 'root'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {
+      '1': 'body',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ai.PluginBody',
+      '10': 'body'
+    },
+    {
+      '1': 'annex',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ai.PluginAnnex',
+      '10': 'annex'
+    },
+  ],
+};
+
+/// Descriptor for `CreatePluginReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createPluginReqDescriptor = $convert.base64Decode(
+    'Cg9DcmVhdGVQbHVnaW5SZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQSJQ'
+    'oEYm9keRgCIAEoCzIRLmhpLmFpLlBsdWdpbkJvZHlSBGJvZHkSKAoFYW5uZXgYAyABKAsyEi5o'
+    'aS5haS5QbHVnaW5Bbm5leFIFYW5uZXg=');
+
+@$core.Deprecated('Use createVersionReqDescriptor instead')
+const CreateVersionReq$json = {
+  '1': 'CreateVersionReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'root', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'root'},
     {
       '1': 'body',
       '3': 3,
@@ -152,11 +182,12 @@ const CreatePluginReq$json = {
   ],
 };
 
-/// Descriptor for `CreatePluginReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List createPluginReqDescriptor = $convert.base64Decode(
-    'Cg9DcmVhdGVQbHVnaW5SZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHJvb3QYAiABKAlSBH'
-    'Jvb3QSJQoEYm9keRgDIAEoCzIRLmhpLmFpLlBsdWdpbkJvZHlSBGJvZHkSKAoFYW5uZXgYBCAB'
-    'KAsyEi5oaS5haS5QbHVnaW5Bbm5leFIFYW5uZXg=');
+/// Descriptor for `CreateVersionReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createVersionReqDescriptor = $convert.base64Decode(
+    'ChBDcmVhdGVWZXJzaW9uUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50Ei'
+    'AKBHJvb3QYAiABKAlCDLpICXIHMgVeXFMrJFIEcm9vdBIlCgRib2R5GAMgASgLMhEuaGkuYWku'
+    'UGx1Z2luQm9keVIEYm9keRIoCgVhbm5leBgEIAEoCzISLmhpLmFpLlBsdWdpbkFubmV4UgVhbm'
+    '5leA==');
 
 @$core.Deprecated('Use createPluginRespDescriptor instead')
 const CreatePluginResp$json = {
@@ -381,16 +412,30 @@ final $typed_data.Uint8List getPluginRespDescriptor = $convert.base64Decode(
 const DeletePluginReq$json = {
   '1': 'DeletePluginReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'root', '3': 3, '4': 1, '5': 9, '10': 'root'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
   ],
 };
 
 /// Descriptor for `DeletePluginReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deletePluginReqDescriptor = $convert.base64Decode(
-    'Cg9EZWxldGVQbHVnaW5SZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHV1aWQYAiABKAlSBH'
-    'V1aWQSEgoEcm9vdBgDIAEoCVIEcm9vdA==');
+    'Cg9EZWxldGVQbHVnaW5SZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQSIA'
+    'oEdXVpZBgCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlk');
+
+@$core.Deprecated('Use deleteAllPluginVersionsReqDescriptor instead')
+const DeleteAllPluginVersionsReq$json = {
+  '1': 'DeleteAllPluginVersionsReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'root', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'root'},
+  ],
+};
+
+/// Descriptor for `DeleteAllPluginVersionsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteAllPluginVersionsReqDescriptor =
+    $convert.base64Decode(
+        'ChpEZWxldGVBbGxQbHVnaW5WZXJzaW9uc1JlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUy'
+        'skUgVhZ2VudBIgCgRyb290GAIgASgJQgy6SAlyBzIFXlxTKyRSBHJvb3Q=');
 
 @$core.Deprecated('Use deletePluginByAgentsReqDescriptor instead')
 const DeletePluginByAgentsReq$json = {

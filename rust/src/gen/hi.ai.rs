@@ -1245,8 +1245,12 @@ pub struct PluginLoaded {
     #[prost(bool, tag = "4")]
     pub enabled: bool,
 }
-/// 发布一个插件(= 脚本的一个版本)+ 建该机器人的 annex(source=original)。
-/// root 空=全新脚本(生成 主id+次id);非空=给该脚本加新版本(只生成次id,且版本号须大于现有最大)。
+/// 发布一个**全新脚本**(生成 主id+次id)+ 建该机器人的 annex(source=original)。
+///
+/// ⚠️ 与 CreateVersion(给已有脚本加新版本)**拆成两个方法**,不用"root 空/非空"分叉 ——
+/// 那是"创建一个新资源"与"往已有资源追加"两件事,连服务端的校验规则都不同
+/// (加版本要求版本号大于现有最大,建新脚本没有这条),必填字段也不同。
+///
 /// **uuid 已存在必拒**,发布即冻结。
 /// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1254,13 +1258,24 @@ pub struct CreatePluginReq {
     /// 装到哪个 agent
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 主id:**空=全新脚本**(后台生成 主id+次id);非空=给该脚本**加新版本**(只生成次id)
-    #[prost(string, tag = "2")]
-    pub root: ::prost::alloc::string::String,
     /// uuid 由后台生成并回填,调用方不要传;其余字段由用户/前端提供
-    #[prost(message, optional, tag = "3")]
+    #[prost(message, optional, tag = "2")]
     pub body: ::core::option::Option<PluginBody>,
     /// api_key 由 club 自动填、data 用户填
+    #[prost(message, optional, tag = "3")]
+    pub annex: ::core::option::Option<PluginAnnex>,
+}
+/// 给**已有脚本**加一个新版本(只生成次id)。
+/// 版本号须**大于该 root 下现有最大**(三级数字按数值比较,不限前导零)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateVersionReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 主id:给哪个脚本加版本
+    #[prost(string, tag = "2")]
+    pub root: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "3")]
+    pub body: ::core::option::Option<PluginBody>,
     #[prost(message, optional, tag = "4")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
@@ -1380,7 +1395,11 @@ pub struct GetPluginResp {
     #[prost(message, optional, tag = "1")]
     pub view: ::core::option::Option<PluginView>,
 }
-/// 删除。二选一:uuid=删这一个版本(**连同脚本文件一并删**);root=删该脚本全部版本。
+/// 删单个版本(**连同脚本文件一并删**)。
+///
+/// ⚠️ 与 DeleteAll(删整个脚本的所有版本)**拆成两个方法**,不用"uuid/root 二选一" ——
+/// 那两者破坏半径差一个数量级,却靠"哪个字段非空"分叉,且两个都传/都不传时行为未定义。
+///
 /// ⚠️ 允许**强删正被引用的插件** —— 引用方的 annex 不清理,指向随即失效;
 /// 调用时该 tool 返错给 LLM,但**不打断整体推理流程**。删前把 ref_count 摆给用户看。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1388,11 +1407,17 @@ pub struct DeletePluginReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 删单个版本
+    /// 插件 id(\<主id>\_\<次id>)
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 主id:删该脚本全部版本(与 uuid 二选一)
-    #[prost(string, tag = "3")]
+}
+/// 删整个脚本的**全部版本**。破坏半径远大于 Delete,故独立成方法。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteAllPluginVersionsReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 主id
+    #[prost(string, tag = "2")]
     pub root: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1630,6 +1655,30 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "Create"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn create_version(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateVersionReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreatePluginResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/CreateVersion",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Plugin", "CreateVersion"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn create_annex(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAnnexReq>,
@@ -1738,6 +1787,24 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/Delete");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn delete_all(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteAllPluginVersionsReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/DeleteAll");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DeleteAll"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete_by_agents(

@@ -2683,6 +2683,30 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "Create"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn create_version(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::CreateVersionReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::CreatePluginResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/CreateVersion",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "CreateVersion"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn create_annex(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::CreateAnnexReq>,
@@ -2804,6 +2828,26 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Plugin/Delete");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn delete_all(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::ai::DeleteAllPluginVersionsReq,
+            >,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Plugin/DeleteAll");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "DeleteAll"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete_by_agents(

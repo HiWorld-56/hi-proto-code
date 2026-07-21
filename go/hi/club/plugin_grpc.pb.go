@@ -25,12 +25,14 @@ const (
 	Plugin_UploadScript_FullMethodName   = "/hi.club.Plugin/UploadScript"
 	Plugin_DownloadScript_FullMethodName = "/hi.club.Plugin/DownloadScript"
 	Plugin_Create_FullMethodName         = "/hi.club.Plugin/Create"
+	Plugin_CreateVersion_FullMethodName  = "/hi.club.Plugin/CreateVersion"
 	Plugin_CreateAnnex_FullMethodName    = "/hi.club.Plugin/CreateAnnex"
 	Plugin_Edit_FullMethodName           = "/hi.club.Plugin/Edit"
 	Plugin_Get_FullMethodName            = "/hi.club.Plugin/Get"
 	Plugin_List_FullMethodName           = "/hi.club.Plugin/List"
 	Plugin_ListVersions_FullMethodName   = "/hi.club.Plugin/ListVersions"
 	Plugin_Delete_FullMethodName         = "/hi.club.Plugin/Delete"
+	Plugin_DeleteAll_FullMethodName      = "/hi.club.Plugin/DeleteAll"
 	Plugin_DeleteByAgents_FullMethodName = "/hi.club.Plugin/DeleteByAgents"
 	Plugin_SetActive_FullMethodName      = "/hi.club.Plugin/SetActive"
 	Plugin_SetEnabled_FullMethodName     = "/hi.club.Plugin/SetEnabled"
@@ -56,12 +58,14 @@ type PluginClient interface {
 	UploadScript(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
 	DownloadScript(ctx context.Context, in *ai.DownloadScriptReq, opts ...grpc.CallOption) (*ai.DownloadScriptResp, error)
 	Create(ctx context.Context, in *ai.CreatePluginReq, opts ...grpc.CallOption) (*ai.CreatePluginResp, error)
+	CreateVersion(ctx context.Context, in *ai.CreateVersionReq, opts ...grpc.CallOption) (*ai.CreatePluginResp, error)
 	CreateAnnex(ctx context.Context, in *ai.CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetPluginReq, opts ...grpc.CallOption) (*ai.GetPluginResp, error)
 	List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
 	ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
 	Delete(ctx context.Context, in *ai.DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteAll(ctx context.Context, in *ai.DeleteAllPluginVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActive(ctx context.Context, in *ai.SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -102,6 +106,16 @@ func (c *pluginClient) Create(ctx context.Context, in *ai.CreatePluginReq, opts 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.CreatePluginResp)
 	err := c.cc.Invoke(ctx, Plugin_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pluginClient) CreateVersion(ctx context.Context, in *ai.CreateVersionReq, opts ...grpc.CallOption) (*ai.CreatePluginResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ai.CreatePluginResp)
+	err := c.cc.Invoke(ctx, Plugin_CreateVersion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -168,6 +182,16 @@ func (c *pluginClient) Delete(ctx context.Context, in *ai.DeletePluginReq, opts 
 	return out, nil
 }
 
+func (c *pluginClient) DeleteAll(ctx context.Context, in *ai.DeleteAllPluginVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_DeleteAll_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -218,12 +242,14 @@ type PluginServer interface {
 	UploadScript(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
 	DownloadScript(context.Context, *ai.DownloadScriptReq) (*ai.DownloadScriptResp, error)
 	Create(context.Context, *ai.CreatePluginReq) (*ai.CreatePluginResp, error)
+	CreateVersion(context.Context, *ai.CreateVersionReq) (*ai.CreatePluginResp, error)
 	CreateAnnex(context.Context, *ai.CreateAnnexReq) (*emptypb.Empty, error)
 	Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error)
 	List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error)
 	ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListPluginResp, error)
 	Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error)
+	DeleteAll(context.Context, *ai.DeleteAllPluginVersionsReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActive(context.Context, *ai.SetActiveReq) (*emptypb.Empty, error)
 	SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error)
@@ -245,6 +271,9 @@ func (UnimplementedPluginServer) DownloadScript(context.Context, *ai.DownloadScr
 func (UnimplementedPluginServer) Create(context.Context, *ai.CreatePluginReq) (*ai.CreatePluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
+func (UnimplementedPluginServer) CreateVersion(context.Context, *ai.CreateVersionReq) (*ai.CreatePluginResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateVersion not implemented")
+}
 func (UnimplementedPluginServer) CreateAnnex(context.Context, *ai.CreateAnnexReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateAnnex not implemented")
 }
@@ -262,6 +291,9 @@ func (UnimplementedPluginServer) ListVersions(context.Context, *ai.ListVersionsR
 }
 func (UnimplementedPluginServer) Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedPluginServer) DeleteAll(context.Context, *ai.DeleteAllPluginVersionsReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteAll not implemented")
 }
 func (UnimplementedPluginServer) DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteByAgents not implemented")
@@ -331,6 +363,24 @@ func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PluginServer).Create(ctx, req.(*ai.CreatePluginReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Plugin_CreateVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.CreateVersionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).CreateVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_CreateVersion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).CreateVersion(ctx, req.(*ai.CreateVersionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -443,6 +493,24 @@ func _Plugin_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_DeleteAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.DeleteAllPluginVersionsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).DeleteAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_DeleteAll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).DeleteAll(ctx, req.(*ai.DeleteAllPluginVersionsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_DeleteByAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.DeletePluginByAgentsReq)
 	if err := dec(in); err != nil {
@@ -513,6 +581,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_Create_Handler,
 		},
 		{
+			MethodName: "CreateVersion",
+			Handler:    _Plugin_CreateVersion_Handler,
+		},
+		{
 			MethodName: "CreateAnnex",
 			Handler:    _Plugin_CreateAnnex_Handler,
 		},
@@ -535,6 +607,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _Plugin_Delete_Handler,
+		},
+		{
+			MethodName: "DeleteAll",
+			Handler:    _Plugin_DeleteAll_Handler,
 		},
 		{
 			MethodName: "DeleteByAgents",

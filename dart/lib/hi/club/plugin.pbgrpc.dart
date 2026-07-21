@@ -68,6 +68,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$create, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.CreatePluginResp> createVersion(
+    $1.CreateVersionReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createVersion, request, options: options);
+  }
+
   $grpc.ResponseFuture<$2.Empty> createAnnex(
     $1.CreateAnnexReq request, {
     $grpc.CallOptions? options,
@@ -110,6 +117,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
+  $grpc.ResponseFuture<$2.Empty> deleteAll(
+    $1.DeleteAllPluginVersionsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteAll, request, options: options);
+  }
+
   $grpc.ResponseFuture<$2.Empty> deleteByAgents(
     $1.DeletePluginByAgentsReq request, {
     $grpc.CallOptions? options,
@@ -148,6 +162,11 @@ class PluginClient extends $grpc.Client {
           '/hi.club.Plugin/Create',
           ($1.CreatePluginReq value) => value.writeToBuffer(),
           $1.CreatePluginResp.fromBuffer);
+  static final _$createVersion =
+      $grpc.ClientMethod<$1.CreateVersionReq, $1.CreatePluginResp>(
+          '/hi.club.Plugin/CreateVersion',
+          ($1.CreateVersionReq value) => value.writeToBuffer(),
+          $1.CreatePluginResp.fromBuffer);
   static final _$createAnnex = $grpc.ClientMethod<$1.CreateAnnexReq, $2.Empty>(
       '/hi.club.Plugin/CreateAnnex',
       ($1.CreateAnnexReq value) => value.writeToBuffer(),
@@ -173,6 +192,11 @@ class PluginClient extends $grpc.Client {
       '/hi.club.Plugin/Delete',
       ($1.DeletePluginReq value) => value.writeToBuffer(),
       $2.Empty.fromBuffer);
+  static final _$deleteAll =
+      $grpc.ClientMethod<$1.DeleteAllPluginVersionsReq, $2.Empty>(
+          '/hi.club.Plugin/DeleteAll',
+          ($1.DeleteAllPluginVersionsReq value) => value.writeToBuffer(),
+          $2.Empty.fromBuffer);
   static final _$deleteByAgents =
       $grpc.ClientMethod<$1.DeletePluginByAgentsReq, $2.Empty>(
           '/hi.club.Plugin/DeleteByAgents',
@@ -213,6 +237,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.CreatePluginReq.fromBuffer(value),
+        ($1.CreatePluginResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.CreateVersionReq, $1.CreatePluginResp>(
+        'CreateVersion',
+        createVersion_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.CreateVersionReq.fromBuffer(value),
         ($1.CreatePluginResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.CreateAnnexReq, $2.Empty>(
         'CreateAnnex',
@@ -255,6 +286,14 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.DeletePluginReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DeleteAllPluginVersionsReq, $2.Empty>(
+        'DeleteAll',
+        deleteAll_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.DeleteAllPluginVersionsReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.DeletePluginByAgentsReq, $2.Empty>(
         'DeleteByAgents',
@@ -299,6 +338,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.CreatePluginResp> create(
       $grpc.ServiceCall call, $1.CreatePluginReq request);
+
+  $async.Future<$1.CreatePluginResp> createVersion_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.CreateVersionReq> $request) async {
+    return createVersion($call, await $request);
+  }
+
+  $async.Future<$1.CreatePluginResp> createVersion(
+      $grpc.ServiceCall call, $1.CreateVersionReq request);
 
   $async.Future<$2.Empty> createAnnex_Pre($grpc.ServiceCall $call,
       $async.Future<$1.CreateAnnexReq> $request) async {
@@ -347,6 +394,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$2.Empty> delete(
       $grpc.ServiceCall call, $1.DeletePluginReq request);
+
+  $async.Future<$2.Empty> deleteAll_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.DeleteAllPluginVersionsReq> $request) async {
+    return deleteAll($call, await $request);
+  }
+
+  $async.Future<$2.Empty> deleteAll(
+      $grpc.ServiceCall call, $1.DeleteAllPluginVersionsReq request);
 
   $async.Future<$2.Empty> deleteByAgents_Pre($grpc.ServiceCall $call,
       $async.Future<$1.DeletePluginByAgentsReq> $request) async {
