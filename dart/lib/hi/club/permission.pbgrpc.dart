@@ -15,9 +15,9 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
-import '../ai/permission.pb.dart' as $1;
+import 'permission.pb.dart' as $0;
 
 export 'permission.pb.dart';
 
@@ -42,8 +42,8 @@ class PermissionClient extends $grpc.Client {
 
   PermissionClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.PermissionInfo> get(
-    $0.Empty request, {
+  $grpc.ResponseFuture<$0.PermissionInfo> get(
+    $0.GetAgentPermissionReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
@@ -51,10 +51,11 @@ class PermissionClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.Empty, $1.PermissionInfo>(
-      '/hi.club.Permission/Get',
-      ($0.Empty value) => value.writeToBuffer(),
-      $1.PermissionInfo.fromBuffer);
+  static final _$get =
+      $grpc.ClientMethod<$0.GetAgentPermissionReq, $0.PermissionInfo>(
+          '/hi.club.Permission/Get',
+          ($0.GetAgentPermissionReq value) => value.writeToBuffer(),
+          $0.PermissionInfo.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Permission')
@@ -62,25 +63,27 @@ abstract class PermissionServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Permission';
 
   PermissionServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.PermissionInfo>(
+    $addMethod($grpc.ServiceMethod<$0.GetAgentPermissionReq, $0.PermissionInfo>(
         'Get',
         get_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.PermissionInfo value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) =>
+            $0.GetAgentPermissionReq.fromBuffer(value),
+        ($0.PermissionInfo value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.PermissionInfo> get_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+  $async.Future<$0.PermissionInfo> get_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.GetAgentPermissionReq> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$1.PermissionInfo> get(
-      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.PermissionInfo> get(
+      $grpc.ServiceCall call, $0.GetAgentPermissionReq request);
 }
 
-/// 权限管理(超管)。转发 hi.ai.PermissionManage;club 侧还须执行自己的副作用(见文件头)。
+/// 权限管理(超管)。**club 自有存储,不转发 hi.ai** —— 权限各自单独管理。
+/// club 侧还须执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
 @$pb.GrpcServiceName('hi.club.PermissionManage')
 class PermissionManageClient extends $grpc.Client {
   /// The hostname for this service.
@@ -93,29 +96,29 @@ class PermissionManageClient extends $grpc.Client {
 
   PermissionManageClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.Empty> add(
-    $1.PermissionAddReq request, {
+  $grpc.ResponseFuture<$1.Empty> add(
+    $0.PermissionAddReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$add, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> delete(
-    $1.PermissionDeleteReq request, {
+  $grpc.ResponseFuture<$1.Empty> delete(
+    $0.PermissionDeleteReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> edit(
-    $1.PermissionEditReq request, {
+  $grpc.ResponseFuture<$1.Empty> edit(
+    $0.PermissionEditReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.PermissionListResp> list(
-    $1.PermissionListReq request, {
+  $grpc.ResponseFuture<$0.PermissionListResp> list(
+    $0.PermissionListReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
@@ -123,23 +126,23 @@ class PermissionManageClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$add = $grpc.ClientMethod<$1.PermissionAddReq, $0.Empty>(
+  static final _$add = $grpc.ClientMethod<$0.PermissionAddReq, $1.Empty>(
       '/hi.club.PermissionManage/Add',
-      ($1.PermissionAddReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$1.PermissionDeleteReq, $0.Empty>(
+      ($0.PermissionAddReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.PermissionDeleteReq, $1.Empty>(
       '/hi.club.PermissionManage/Delete',
-      ($1.PermissionDeleteReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$1.PermissionEditReq, $0.Empty>(
+      ($0.PermissionDeleteReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$edit = $grpc.ClientMethod<$0.PermissionEditReq, $1.Empty>(
       '/hi.club.PermissionManage/Edit',
-      ($1.PermissionEditReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
+      ($0.PermissionEditReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$list =
-      $grpc.ClientMethod<$1.PermissionListReq, $1.PermissionListResp>(
+      $grpc.ClientMethod<$0.PermissionListReq, $0.PermissionListResp>(
           '/hi.club.PermissionManage/List',
-          ($1.PermissionListReq value) => value.writeToBuffer(),
-          $1.PermissionListResp.fromBuffer);
+          ($0.PermissionListReq value) => value.writeToBuffer(),
+          $0.PermissionListResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.PermissionManage')
@@ -147,66 +150,66 @@ abstract class PermissionManageServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.PermissionManage';
 
   PermissionManageServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.PermissionAddReq, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.PermissionAddReq, $1.Empty>(
         'Add',
         add_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.PermissionAddReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.PermissionDeleteReq, $0.Empty>(
+        ($core.List<$core.int> value) => $0.PermissionAddReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PermissionDeleteReq, $1.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $1.PermissionDeleteReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.PermissionEditReq, $0.Empty>(
+            $0.PermissionDeleteReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PermissionEditReq, $1.Empty>(
         'Edit',
         edit_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.PermissionEditReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.PermissionListReq, $1.PermissionListResp>(
+        ($core.List<$core.int> value) => $0.PermissionEditReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PermissionListReq, $0.PermissionListResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.PermissionListReq.fromBuffer(value),
-        ($1.PermissionListResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.PermissionListReq.fromBuffer(value),
+        ($0.PermissionListResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Empty> add_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.PermissionAddReq> $request) async {
+  $async.Future<$1.Empty> add_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PermissionAddReq> $request) async {
     return add($call, await $request);
   }
 
-  $async.Future<$0.Empty> add(
-      $grpc.ServiceCall call, $1.PermissionAddReq request);
+  $async.Future<$1.Empty> add(
+      $grpc.ServiceCall call, $0.PermissionAddReq request);
 
-  $async.Future<$0.Empty> delete_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.PermissionDeleteReq> $request) async {
+  $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PermissionDeleteReq> $request) async {
     return delete($call, await $request);
   }
 
-  $async.Future<$0.Empty> delete(
-      $grpc.ServiceCall call, $1.PermissionDeleteReq request);
+  $async.Future<$1.Empty> delete(
+      $grpc.ServiceCall call, $0.PermissionDeleteReq request);
 
-  $async.Future<$0.Empty> edit_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.PermissionEditReq> $request) async {
+  $async.Future<$1.Empty> edit_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PermissionEditReq> $request) async {
     return edit($call, await $request);
   }
 
-  $async.Future<$0.Empty> edit(
-      $grpc.ServiceCall call, $1.PermissionEditReq request);
+  $async.Future<$1.Empty> edit(
+      $grpc.ServiceCall call, $0.PermissionEditReq request);
 
-  $async.Future<$1.PermissionListResp> list_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.PermissionListReq> $request) async {
+  $async.Future<$0.PermissionListResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PermissionListReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$1.PermissionListResp> list(
-      $grpc.ServiceCall call, $1.PermissionListReq request);
+  $async.Future<$0.PermissionListResp> list(
+      $grpc.ServiceCall call, $0.PermissionListReq request);
 }

@@ -7,12 +7,13 @@
 package club
 
 import (
-	_ "github.com/HiWorld-56/hi-proto/go/hi"
-	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
+	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -23,46 +24,545 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// ── 权限模型(club 自有)────────────────────────────────────────────────
+// **权限归 club 自己管**,类型定义也放在这里 —— 曾经复用 hi.ai 的,那是错的:
+// 两边模型相同但各存各的表、各判各的,不跨服务查(见 hi.ai.Permission 的说明)。
+//
+// 权限是 **bit 位**拼的,可组合。**授予的是实体本身(机器人),不从 master 继承** ——
+// 机器人的能力写在它自己身上,没有 master 也能独立运作。
+// 用途是**出问题时撤掉**(把瞎搞的机器人踢掉),不是逐步授予:建号即授全部。
+//
+// ⚠️ **人用户没有权限配置,只有机器人才有。**
+type PermissionType int32
+
+const (
+	// ⚠️ 纯占位。proto3 要求首值为 0,故删不掉,但**不代表"全部"或"不过滤"** ——
+	//
+	//	传它一律按无效参数拒绝。要列全部传 PERMISSION_NORMAL:所有机器人都持有
+	//	normal 位,按它筛天然等于不过滤,不需要另造一个"不过滤"的档。
+	PermissionType_PERMISSION_UNSPECIFIED PermissionType = 0
+	PermissionType_PERMISSION_NORMAL      PermissionType = 1 // 普通:自由度/系统提示词/用户提示词。**所有机器人默认持有**
+	PermissionType_PERMISSION_ADVANCED    PermissionType = 2 // 高级:上下文数/对话模型/嵌入模型/STT 模型
+	PermissionType_PERMISSION_MEM         PermissionType = 3 // 记忆:上传资料/训练记忆
+	PermissionType_PERMISSION_PLUGIN      PermissionType = 4 // 插件:启用插件
+)
+
+// Enum value maps for PermissionType.
+var (
+	PermissionType_name = map[int32]string{
+		0: "PERMISSION_UNSPECIFIED",
+		1: "PERMISSION_NORMAL",
+		2: "PERMISSION_ADVANCED",
+		3: "PERMISSION_MEM",
+		4: "PERMISSION_PLUGIN",
+	}
+	PermissionType_value = map[string]int32{
+		"PERMISSION_UNSPECIFIED": 0,
+		"PERMISSION_NORMAL":      1,
+		"PERMISSION_ADVANCED":    2,
+		"PERMISSION_MEM":         3,
+		"PERMISSION_PLUGIN":      4,
+	}
+)
+
+func (x PermissionType) Enum() *PermissionType {
+	p := new(PermissionType)
+	*p = x
+	return p
+}
+
+func (x PermissionType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PermissionType) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_club_permission_proto_enumTypes[0].Descriptor()
+}
+
+func (PermissionType) Type() protoreflect.EnumType {
+	return &file_hi_club_permission_proto_enumTypes[0]
+}
+
+func (x PermissionType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PermissionType.Descriptor instead.
+func (PermissionType) EnumDescriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{0}
+}
+
+// 查某台机器人的权限。
+//
+// ⚠️ 原先是 Get(Empty) 查"调用者自己" —— 而人用户根本没有权限配置,所以前端那三个
+//
+//	页面(robot_memory / robot_plugin / robot_setup)拿到的永远是空。它们真正要看的
+//	是**那台机器人**能干什么。归属校验走 CheckAgentAccess(自己 / master / 超管)。
+type GetAgentPermissionReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAgentPermissionReq) Reset() {
+	*x = GetAgentPermissionReq{}
+	mi := &file_hi_club_permission_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAgentPermissionReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAgentPermissionReq) ProtoMessage() {}
+
+func (x *GetAgentPermissionReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_permission_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAgentPermissionReq.ProtoReflect.Descriptor instead.
+func (*GetAgentPermissionReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GetAgentPermissionReq) GetAgent() string {
+	if x != nil {
+		return x.Agent
+	}
+	return ""
+}
+
+type PermissionInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Permissions   []PermissionType       `protobuf:"varint,2,rep,packed,name=permissions,proto3,enum=hi.club.PermissionType" json:"permissions,omitempty"`
+	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionInfo) Reset() {
+	*x = PermissionInfo{}
+	mi := &file_hi_club_permission_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionInfo) ProtoMessage() {}
+
+func (x *PermissionInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_permission_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionInfo.ProtoReflect.Descriptor instead.
+func (*PermissionInfo) Descriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PermissionInfo) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
+}
+
+func (x *PermissionInfo) GetPermissions() []PermissionType {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+func (x *PermissionInfo) GetNote() string {
+	if x != nil {
+		return x.Note
+	}
+	return ""
+}
+
+type PermissionAddReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 机器人 did
+	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.club.PermissionType" json:"type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionAddReq) Reset() {
+	*x = PermissionAddReq{}
+	mi := &file_hi_club_permission_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionAddReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionAddReq) ProtoMessage() {}
+
+func (x *PermissionAddReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_permission_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionAddReq.ProtoReflect.Descriptor instead.
+func (*PermissionAddReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PermissionAddReq) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
+}
+
+func (x *PermissionAddReq) GetType() PermissionType {
+	if x != nil {
+		return x.Type
+	}
+	return PermissionType_PERMISSION_UNSPECIFIED
+}
+
+type PermissionDeleteReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 机器人 did
+	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.club.PermissionType" json:"type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionDeleteReq) Reset() {
+	*x = PermissionDeleteReq{}
+	mi := &file_hi_club_permission_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionDeleteReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionDeleteReq) ProtoMessage() {}
+
+func (x *PermissionDeleteReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_permission_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionDeleteReq.ProtoReflect.Descriptor instead.
+func (*PermissionDeleteReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PermissionDeleteReq) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
+}
+
+func (x *PermissionDeleteReq) GetType() PermissionType {
+	if x != nil {
+		return x.Type
+	}
+	return PermissionType_PERMISSION_UNSPECIFIED
+}
+
+type PermissionEditReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Note          string                 `protobuf:"bytes,2,opt,name=note,proto3" json:"note,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionEditReq) Reset() {
+	*x = PermissionEditReq{}
+	mi := &file_hi_club_permission_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionEditReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionEditReq) ProtoMessage() {}
+
+func (x *PermissionEditReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_permission_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionEditReq.ProtoReflect.Descriptor instead.
+func (*PermissionEditReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PermissionEditReq) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
+}
+
+func (x *PermissionEditReq) GetNote() string {
+	if x != nil {
+		return x.Note
+	}
+	return ""
+}
+
+type PermissionListReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                                // 可选:按 did 过滤
+	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.club.PermissionType" json:"type,omitempty"` // **必填**,须是四档之一;列全部传 NORMAL,不是 UNSPECIFIED
+	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionListReq) Reset() {
+	*x = PermissionListReq{}
+	mi := &file_hi_club_permission_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionListReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionListReq) ProtoMessage() {}
+
+func (x *PermissionListReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_permission_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionListReq.ProtoReflect.Descriptor instead.
+func (*PermissionListReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PermissionListReq) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
+}
+
+func (x *PermissionListReq) GetType() PermissionType {
+	if x != nil {
+		return x.Type
+	}
+	return PermissionType_PERMISSION_UNSPECIFIED
+}
+
+func (x *PermissionListReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type PermissionListResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Infos         []*PermissionInfo      `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionListResp) Reset() {
+	*x = PermissionListResp{}
+	mi := &file_hi_club_permission_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionListResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionListResp) ProtoMessage() {}
+
+func (x *PermissionListResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_permission_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionListResp.ProtoReflect.Descriptor instead.
+func (*PermissionListResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_permission_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *PermissionListResp) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *PermissionListResp) GetInfos() []*PermissionInfo {
+	if x != nil {
+		return x.Infos
+	}
+	return nil
+}
+
 var File_hi_club_permission_proto protoreflect.FileDescriptor
 
 const file_hi_club_permission_proto_rawDesc = "" +
 	"\n" +
-	"\x18hi/club/permission.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16hi/ai/permission.proto\x1a\x10hi/options.proto2I\n" +
+	"\x18hi/club/permission.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\";\n" +
+	"\x15GetAgentPermissionReq\x12\"\n" +
+	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\"\x89\x01\n" +
+	"\x0ePermissionInfo\x12\x16\n" +
+	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12?\n" +
+	"\vpermissions\x18\x02 \x03(\x0e2\x17.hi.club.PermissionTypeB\x04\x90\xb5\x18\x03R\vpermissions\x12\x18\n" +
+	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04note:\x04\x98\xb5\x18\x03\"Q\n" +
+	"\x10PermissionAddReq\x12\x10\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12+\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x17.hi.club.PermissionTypeR\x04type\"T\n" +
+	"\x13PermissionDeleteReq\x12\x10\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12+\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x17.hi.club.PermissionTypeR\x04type\"9\n" +
+	"\x11PermissionEditReq\x12\x10\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
+	"\x04note\x18\x02 \x01(\tR\x04note\"\x82\x01\n" +
+	"\x11PermissionListReq\x12\x10\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12+\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x17.hi.club.PermissionTypeR\x04type\x12.\n" +
 	"\n" +
-	"Permission\x12;\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.PermissionInfo\"\x05\x8a\xb5\x18\x01\x022\x9b\x02\n" +
-	"\x10PermissionManage\x12=\n" +
-	"\x03Add\x12\x17.hi.ai.PermissionAddReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12C\n" +
-	"\x06Delete\x12\x1a.hi.ai.PermissionDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12?\n" +
-	"\x04Edit\x12\x18.hi.ai.PermissionEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
-	"\x04List\x12\x18.hi.ai.PermissionListReq\x1a\x19.hi.ai.PermissionListResp\"\x05\x8a\xb5\x18\x01\x04B\x86\x01\n" +
+	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\"k\n" +
+	"\x12PermissionListResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x123\n" +
+	"\x05infos\x18\x02 \x03(\v2\x17.hi.club.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03*\x87\x01\n" +
+	"\x0ePermissionType\x12\x1a\n" +
+	"\x16PERMISSION_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11PERMISSION_NORMAL\x10\x01\x12\x17\n" +
+	"\x13PERMISSION_ADVANCED\x10\x02\x12\x12\n" +
+	"\x0ePERMISSION_MEM\x10\x03\x12\x15\n" +
+	"\x11PERMISSION_PLUGIN\x10\x042S\n" +
+	"\n" +
+	"Permission\x12E\n" +
+	"\x03Get\x12\x1e.hi.club.GetAgentPermissionReq\x1a\x17.hi.club.PermissionInfo\"\x05\x8a\xb5\x18\x01\x022\xa5\x02\n" +
+	"\x10PermissionManage\x12?\n" +
+	"\x03Add\x12\x19.hi.club.PermissionAddReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12E\n" +
+	"\x06Delete\x12\x1c.hi.club.PermissionDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12A\n" +
+	"\x04Edit\x12\x1a.hi.club.PermissionEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12F\n" +
+	"\x04List\x12\x1a.hi.club.PermissionListReq\x1a\x1b.hi.club.PermissionListResp\"\x05\x8a\xb5\x18\x01\x04B\x86\x01\n" +
 	"\vcom.hi.clubB\x0fPermissionProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
+var (
+	file_hi_club_permission_proto_rawDescOnce sync.Once
+	file_hi_club_permission_proto_rawDescData []byte
+)
+
+func file_hi_club_permission_proto_rawDescGZIP() []byte {
+	file_hi_club_permission_proto_rawDescOnce.Do(func() {
+		file_hi_club_permission_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_hi_club_permission_proto_rawDesc), len(file_hi_club_permission_proto_rawDesc)))
+	})
+	return file_hi_club_permission_proto_rawDescData
+}
+
+var file_hi_club_permission_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_club_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_hi_club_permission_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),          // 0: google.protobuf.Empty
-	(*ai.PermissionAddReq)(nil),    // 1: hi.ai.PermissionAddReq
-	(*ai.PermissionDeleteReq)(nil), // 2: hi.ai.PermissionDeleteReq
-	(*ai.PermissionEditReq)(nil),   // 3: hi.ai.PermissionEditReq
-	(*ai.PermissionListReq)(nil),   // 4: hi.ai.PermissionListReq
-	(*ai.PermissionInfo)(nil),      // 5: hi.ai.PermissionInfo
-	(*ai.PermissionListResp)(nil),  // 6: hi.ai.PermissionListResp
+	(PermissionType)(0),           // 0: hi.club.PermissionType
+	(*GetAgentPermissionReq)(nil), // 1: hi.club.GetAgentPermissionReq
+	(*PermissionInfo)(nil),        // 2: hi.club.PermissionInfo
+	(*PermissionAddReq)(nil),      // 3: hi.club.PermissionAddReq
+	(*PermissionDeleteReq)(nil),   // 4: hi.club.PermissionDeleteReq
+	(*PermissionEditReq)(nil),     // 5: hi.club.PermissionEditReq
+	(*PermissionListReq)(nil),     // 6: hi.club.PermissionListReq
+	(*PermissionListResp)(nil),    // 7: hi.club.PermissionListResp
+	(*hi.Pagination)(nil),         // 8: hi.Pagination
+	(*emptypb.Empty)(nil),         // 9: google.protobuf.Empty
 }
 var file_hi_club_permission_proto_depIdxs = []int32{
-	0, // 0: hi.club.Permission.Get:input_type -> google.protobuf.Empty
-	1, // 1: hi.club.PermissionManage.Add:input_type -> hi.ai.PermissionAddReq
-	2, // 2: hi.club.PermissionManage.Delete:input_type -> hi.ai.PermissionDeleteReq
-	3, // 3: hi.club.PermissionManage.Edit:input_type -> hi.ai.PermissionEditReq
-	4, // 4: hi.club.PermissionManage.List:input_type -> hi.ai.PermissionListReq
-	5, // 5: hi.club.Permission.Get:output_type -> hi.ai.PermissionInfo
-	0, // 6: hi.club.PermissionManage.Add:output_type -> google.protobuf.Empty
-	0, // 7: hi.club.PermissionManage.Delete:output_type -> google.protobuf.Empty
-	0, // 8: hi.club.PermissionManage.Edit:output_type -> google.protobuf.Empty
-	6, // 9: hi.club.PermissionManage.List:output_type -> hi.ai.PermissionListResp
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,  // 0: hi.club.PermissionInfo.permissions:type_name -> hi.club.PermissionType
+	0,  // 1: hi.club.PermissionAddReq.type:type_name -> hi.club.PermissionType
+	0,  // 2: hi.club.PermissionDeleteReq.type:type_name -> hi.club.PermissionType
+	0,  // 3: hi.club.PermissionListReq.type:type_name -> hi.club.PermissionType
+	8,  // 4: hi.club.PermissionListReq.pagination:type_name -> hi.Pagination
+	2,  // 5: hi.club.PermissionListResp.infos:type_name -> hi.club.PermissionInfo
+	1,  // 6: hi.club.Permission.Get:input_type -> hi.club.GetAgentPermissionReq
+	3,  // 7: hi.club.PermissionManage.Add:input_type -> hi.club.PermissionAddReq
+	4,  // 8: hi.club.PermissionManage.Delete:input_type -> hi.club.PermissionDeleteReq
+	5,  // 9: hi.club.PermissionManage.Edit:input_type -> hi.club.PermissionEditReq
+	6,  // 10: hi.club.PermissionManage.List:input_type -> hi.club.PermissionListReq
+	2,  // 11: hi.club.Permission.Get:output_type -> hi.club.PermissionInfo
+	9,  // 12: hi.club.PermissionManage.Add:output_type -> google.protobuf.Empty
+	9,  // 13: hi.club.PermissionManage.Delete:output_type -> google.protobuf.Empty
+	9,  // 14: hi.club.PermissionManage.Edit:output_type -> google.protobuf.Empty
+	7,  // 15: hi.club.PermissionManage.List:output_type -> hi.club.PermissionListResp
+	11, // [11:16] is the sub-list for method output_type
+	6,  // [6:11] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_permission_proto_init() }
@@ -75,13 +575,15 @@ func file_hi_club_permission_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_permission_proto_rawDesc), len(file_hi_club_permission_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   0,
+			NumEnums:      1,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
 		GoTypes:           file_hi_club_permission_proto_goTypes,
 		DependencyIndexes: file_hi_club_permission_proto_depIdxs,
+		EnumInfos:         file_hi_club_permission_proto_enumTypes,
+		MessageInfos:      file_hi_club_permission_proto_msgTypes,
 	}.Build()
 	File_hi_club_permission_proto = out.File
 	file_hi_club_permission_proto_goTypes = nil

@@ -2660,563 +2660,6 @@ pub mod model_client {
         }
     }
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionGetReq {
-    /// 要查谁的权限
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-}
-/// 某 did 持有的权限清单,只发给主体本人(经商户代查)或超管后门。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionInfo {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    /// 该 did 持有的权限
-    #[prost(enumeration = "PermissionType", repeated, packed = "false", tag = "2")]
-    pub permissions: ::prost::alloc::vec::Vec<i32>,
-    #[prost(string, tag = "3")]
-    pub note: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionAddReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    /// 要授予的权限类型
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionDeleteReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    /// 要取消的权限类型
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionEditReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    /// 备注,给人看的
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionListReq {
-    /// 可选:按 did 过滤
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    /// **必填**,须是四档之一。列全部传 NORMAL(人人默认持有该位),不是 UNSPECIFIED
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
-    #[prost(message, optional, tag = "3")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PermissionListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
-}
-/// ── 商户目录 ─────────────────────────────────────────────────────────────
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MerchantListReq {
-    /// 可选:按 did 过滤
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MerchantListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<merchant_list_resp::Unit>,
-}
-/// Nested message and enum types in `MerchantListResp`.
-pub mod merchant_list_resp {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-    pub struct Unit {
-        /// hi.Entity 恒 PUBLIC
-        #[prost(message, optional, tag = "1")]
-        pub base: ::core::option::Option<super::super::Entity>,
-        /// 取本消息档
-        #[prost(int64, tag = "2")]
-        pub created_at: i64,
-    }
-}
-/// 权限类型:固定闭集(四档),故用枚举而非魔法字符串。客户端有枚举即可显隐功能,不必再拉 ListTypes。
-/// 名为 PermissionType(不能叫 Permission —— 与 service Permission 同命名空间会撞)。
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum PermissionType {
-    /// ⚠️ **纯占位,不要赋予任何业务语义。** proto3 要求首值必须为 0,故这一行删不掉,
-    /// 但它不代表"全部"、也不代表"不过滤" —— 传它一律按无效参数拒绝。
-    /// 要列全部,传 PERMISSION_NORMAL:权限是 bit 位拼的,所有用户默认持有 normal 位,
-    /// 所以"列持有 normal 的人"天然就等于"列全部用户"。不需要再造一个"不过滤"的档。
-    PermissionUnspecified = 0,
-    /// 普通:自由度/系统提示词/用户提示词
-    PermissionNormal = 1,
-    /// 高级:上下文数/对话模型/嵌入模型/STT 模型
-    PermissionAdvanced = 2,
-    /// 记忆:上传资料/训练记忆
-    PermissionMem = 3,
-    /// 插件:启用插件
-    PermissionPlugin = 4,
-}
-impl PermissionType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::PermissionUnspecified => "PERMISSION_UNSPECIFIED",
-            Self::PermissionNormal => "PERMISSION_NORMAL",
-            Self::PermissionAdvanced => "PERMISSION_ADVANCED",
-            Self::PermissionMem => "PERMISSION_MEM",
-            Self::PermissionPlugin => "PERMISSION_PLUGIN",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "PERMISSION_UNSPECIFIED" => Some(Self::PermissionUnspecified),
-            "PERMISSION_NORMAL" => Some(Self::PermissionNormal),
-            "PERMISSION_ADVANCED" => Some(Self::PermissionAdvanced),
-            "PERMISSION_MEM" => Some(Self::PermissionMem),
-            "PERMISSION_PLUGIN" => Some(Self::PermissionPlugin),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod permission_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// 权限查询(商户档)—— 查的是**商户自己在 hiai 的权限**,不是替谁代查。
-    ///
-    /// ⚠️ 原注释写着"club 作为 ai 的商户,替自己的用户查",**是错的**:
-    /// **权限各自单独管理,不跨服务查。** ai 与 club 的权限模型相同(同一套位掩码
-    /// normal/advanced/mem/plugin),但各存各的表、各判各的:
-    /// · hiai 侧:hi_ai_permission —— 里面给了 club 商户 did 全部权限(type=7),
-    /// 所以 club 能调 hiai 的插件/记忆/高级能力;
-    /// · club 侧:hi_chat_user_super —— club 用同一套模型管**自己的用户**,
-    /// hi.club.Permission.Get 查的是这张表,**从不转发到这里**(实测无任何调用)。
-    /// 权限授予 **master**:master 有插件权限,他名下所有机器人就都能用插件。
-    ///
-    /// **绝不能标超管**:这是普通用户页面的 getPermissions 链路(见文件头血泪)。
-    #[derive(Debug, Clone)]
-    pub struct PermissionClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl PermissionClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> PermissionClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PermissionClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            PermissionClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PermissionGetReq>,
-        ) -> std::result::Result<tonic::Response<super::PermissionInfo>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Permission/Get");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Permission", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod permission_manage_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// 权限管理(超管)。对应设计文档的"操作许可:特定用户"。
-    ///
-    /// ⚠️ **取消权限只翻位、不清数据**(见文件头):撤 mem/plugin/advanced 都**只关权限位**,
-    /// 资料/记忆/插件数据一律保留,由 use-side 判权限门控。club 侧的"群人数上限回落 300 并踢人"
-    /// 是 club 自己的产品行为(见 hi/club/permission.proto),与 ai 无关。
-    #[derive(Debug, Clone)]
-    pub struct PermissionManageClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl PermissionManageClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> PermissionManageClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PermissionManageClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            PermissionManageClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn add(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PermissionAddReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.PermissionManage/Add",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.PermissionManage", "Add"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn delete(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PermissionDeleteReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.PermissionManage/Delete",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.PermissionManage", "Delete"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn edit(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PermissionEditReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.PermissionManage/Edit",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.PermissionManage", "Edit"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PermissionListReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::PermissionListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.PermissionManage/List",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.PermissionManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod merchant_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// 商户目录(超管)。承接原 `UserACL.List(type="all")` —— 那查的是**注册用户/商户名录**,
-    /// 与"授权限"是两件事,混在一个方法里靠 type 分流,读的人看不懂,故拆出来。
-    /// 与 hi.did.MerchantManage.List 同形对齐(hiai 里没有普通用户,只有商户)。
-    #[derive(Debug, Clone)]
-    pub struct MerchantClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MerchantClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MerchantClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MerchantClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MerchantClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MerchantListReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::MerchantListResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Merchant/List");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Merchant", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
 /// Generated client implementations.
 pub mod auth_client {
     #![allow(
@@ -3593,6 +3036,151 @@ pub mod api_key_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.ApiKey/Delete");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.ApiKey", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// ── 商户目录 ─────────────────────────────────────────────────────────────
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantListReq {
+    /// 可选:按 did 过滤
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantListResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub infos: ::prost::alloc::vec::Vec<merchant_list_resp::Unit>,
+}
+/// Nested message and enum types in `MerchantListResp`.
+pub mod merchant_list_resp {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Unit {
+        /// hi.Entity 恒 PUBLIC
+        #[prost(message, optional, tag = "1")]
+        pub base: ::core::option::Option<super::super::Entity>,
+        /// 取本消息档
+        #[prost(int64, tag = "2")]
+        pub created_at: i64,
+    }
+}
+/// Generated client implementations.
+pub mod merchant_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 商户目录(超管)。承接原 `UserACL.List(type="all")` —— 那查的是**注册用户/商户名录**,
+    /// 与"授权限"是两件事,混在一个方法里靠 type 分流,读的人看不懂,故拆出来。
+    /// 与 hi.did.MerchantManage.List 同形对齐(hiai 里没有普通用户,只有商户)。
+    #[derive(Debug, Clone)]
+    pub struct MerchantClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MerchantClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MerchantClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MerchantClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MerchantClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantListReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Merchant/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Merchant", "List"));
             self.inner.unary(req, path, codec).await
         }
     }

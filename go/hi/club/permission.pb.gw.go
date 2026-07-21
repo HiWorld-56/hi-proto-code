@@ -14,7 +14,6 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/HiWorld-56/hi-proto/go/hi/ai"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -23,7 +22,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -39,7 +37,7 @@ var (
 
 func request_Permission_Get_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq GetAgentPermissionReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -54,7 +52,7 @@ func request_Permission_Get_0(ctx context.Context, marshaler runtime.Marshaler, 
 
 func local_request_Permission_Get_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq GetAgentPermissionReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -66,7 +64,7 @@ func local_request_Permission_Get_0(ctx context.Context, marshaler runtime.Marsh
 
 func request_PermissionManage_Add_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionAddReq
+		protoReq PermissionAddReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -81,7 +79,7 @@ func request_PermissionManage_Add_0(ctx context.Context, marshaler runtime.Marsh
 
 func local_request_PermissionManage_Add_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionAddReq
+		protoReq PermissionAddReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -93,7 +91,7 @@ func local_request_PermissionManage_Add_0(ctx context.Context, marshaler runtime
 
 func request_PermissionManage_Delete_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionDeleteReq
+		protoReq PermissionDeleteReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -108,7 +106,7 @@ func request_PermissionManage_Delete_0(ctx context.Context, marshaler runtime.Ma
 
 func local_request_PermissionManage_Delete_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionDeleteReq
+		protoReq PermissionDeleteReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -120,7 +118,7 @@ func local_request_PermissionManage_Delete_0(ctx context.Context, marshaler runt
 
 func request_PermissionManage_Edit_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionEditReq
+		protoReq PermissionEditReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -135,7 +133,7 @@ func request_PermissionManage_Edit_0(ctx context.Context, marshaler runtime.Mars
 
 func local_request_PermissionManage_Edit_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionEditReq
+		protoReq PermissionEditReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -147,7 +145,7 @@ func local_request_PermissionManage_Edit_0(ctx context.Context, marshaler runtim
 
 func request_PermissionManage_List_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionListReq
+		protoReq PermissionListReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -162,7 +160,7 @@ func request_PermissionManage_List_0(ctx context.Context, marshaler runtime.Mars
 
 func local_request_PermissionManage_List_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.PermissionListReq
+		protoReq PermissionListReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

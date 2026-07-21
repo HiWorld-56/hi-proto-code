@@ -2570,6 +2570,97 @@ impl<'de> serde::Deserialize<'de> for GetAgentMasterResp {
         deserializer.deserialize_struct("hi.club.GetAgentMasterResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for GetAgentPermissionReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.agent.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.GetAgentPermissionReq", len)?;
+        if !self.agent.is_empty() {
+            struct_ser.serialize_field("agent", &self.agent)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetAgentPermissionReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetAgentPermissionReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.GetAgentPermissionReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetAgentPermissionReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(GetAgentPermissionReq {
+                    agent: agent__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.GetAgentPermissionReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for GetGroupMemberTotalReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -8018,6 +8109,780 @@ impl<'de> serde::Deserialize<'de> for PcOrderData {
             }
         }
         deserializer.deserialize_struct("hi.club.PcOrderData", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PermissionAddReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if self.r#type != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PermissionAddReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if self.r#type != 0 {
+            let v = PermissionType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
+            struct_ser.serialize_field("type", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PermissionAddReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "type",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Type,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "type" => Ok(GeneratedField::Type),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PermissionAddReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PermissionAddReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PermissionAddReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut r#type__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Type => {
+                            if r#type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("type"));
+                            }
+                            r#type__ = Some(map_.next_value::<PermissionType>()? as i32);
+                        }
+                    }
+                }
+                Ok(PermissionAddReq {
+                    did: did__.unwrap_or_default(),
+                    r#type: r#type__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PermissionAddReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PermissionDeleteReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if self.r#type != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PermissionDeleteReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if self.r#type != 0 {
+            let v = PermissionType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
+            struct_ser.serialize_field("type", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PermissionDeleteReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "type",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Type,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "type" => Ok(GeneratedField::Type),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PermissionDeleteReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PermissionDeleteReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PermissionDeleteReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut r#type__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Type => {
+                            if r#type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("type"));
+                            }
+                            r#type__ = Some(map_.next_value::<PermissionType>()? as i32);
+                        }
+                    }
+                }
+                Ok(PermissionDeleteReq {
+                    did: did__.unwrap_or_default(),
+                    r#type: r#type__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PermissionDeleteReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PermissionEditReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if !self.note.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PermissionEditReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if !self.note.is_empty() {
+            struct_ser.serialize_field("note", &self.note)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PermissionEditReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "note",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Note,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "note" => Ok(GeneratedField::Note),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PermissionEditReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PermissionEditReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PermissionEditReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut note__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(PermissionEditReq {
+                    did: did__.unwrap_or_default(),
+                    note: note__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PermissionEditReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PermissionInfo {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if !self.permissions.is_empty() {
+            len += 1;
+        }
+        if !self.note.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PermissionInfo", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if !self.permissions.is_empty() {
+            let v = self.permissions.iter().cloned().map(|v| {
+                PermissionType::try_from(v)
+                    .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", v)))
+                }).collect::<std::result::Result<Vec<_>, _>>()?;
+            struct_ser.serialize_field("permissions", &v)?;
+        }
+        if !self.note.is_empty() {
+            struct_ser.serialize_field("note", &self.note)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PermissionInfo {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "permissions",
+            "note",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Permissions,
+            Note,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "permissions" => Ok(GeneratedField::Permissions),
+                            "note" => Ok(GeneratedField::Note),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PermissionInfo;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PermissionInfo")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PermissionInfo, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut permissions__ = None;
+                let mut note__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Permissions => {
+                            if permissions__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("permissions"));
+                            }
+                            permissions__ = Some(map_.next_value::<Vec<PermissionType>>()?.into_iter().map(|x| x as i32).collect());
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(PermissionInfo {
+                    did: did__.unwrap_or_default(),
+                    permissions: permissions__.unwrap_or_default(),
+                    note: note__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PermissionInfo", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PermissionListReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if self.r#type != 0 {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PermissionListReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if self.r#type != 0 {
+            let v = PermissionType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
+            struct_ser.serialize_field("type", &v)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PermissionListReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "type",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Type,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "type" => Ok(GeneratedField::Type),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PermissionListReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PermissionListReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PermissionListReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut r#type__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Type => {
+                            if r#type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("type"));
+                            }
+                            r#type__ = Some(map_.next_value::<PermissionType>()? as i32);
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PermissionListReq {
+                    did: did__.unwrap_or_default(),
+                    r#type: r#type__.unwrap_or_default(),
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PermissionListReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PermissionListResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.total != 0 {
+            len += 1;
+        }
+        if !self.infos.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PermissionListResp", len)?;
+        if self.total != 0 {
+            struct_ser.serialize_field("total", &self.total)?;
+        }
+        if !self.infos.is_empty() {
+            struct_ser.serialize_field("infos", &self.infos)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PermissionListResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "total",
+            "infos",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Total,
+            Infos,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "total" => Ok(GeneratedField::Total),
+                            "infos" => Ok(GeneratedField::Infos),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PermissionListResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PermissionListResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PermissionListResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut total__ = None;
+                let mut infos__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Infos => {
+                            if infos__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("infos"));
+                            }
+                            infos__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(PermissionListResp {
+                    total: total__.unwrap_or_default(),
+                    infos: infos__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PermissionListResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PermissionType {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::PermissionUnspecified => "PERMISSION_UNSPECIFIED",
+            Self::PermissionNormal => "PERMISSION_NORMAL",
+            Self::PermissionAdvanced => "PERMISSION_ADVANCED",
+            Self::PermissionMem => "PERMISSION_MEM",
+            Self::PermissionPlugin => "PERMISSION_PLUGIN",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for PermissionType {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "PERMISSION_UNSPECIFIED",
+            "PERMISSION_NORMAL",
+            "PERMISSION_ADVANCED",
+            "PERMISSION_MEM",
+            "PERMISSION_PLUGIN",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = PermissionType;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PERMISSION_UNSPECIFIED" => Ok(PermissionType::PermissionUnspecified),
+                    "PERMISSION_NORMAL" => Ok(PermissionType::PermissionNormal),
+                    "PERMISSION_ADVANCED" => Ok(PermissionType::PermissionAdvanced),
+                    "PERMISSION_MEM" => Ok(PermissionType::PermissionMem),
+                    "PERMISSION_PLUGIN" => Ok(PermissionType::PermissionPlugin),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for Prompt {
