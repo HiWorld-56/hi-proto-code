@@ -58,6 +58,8 @@ type AgentClient interface {
 	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
 	List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	GetAgents(ctx context.Context, in *GetAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	// Mark/ListMarks 保留在商户档,是给**兄弟服务代为转发**用的(如 club:超管在 club 侧鉴权,
+	// 再用 club 自己的 apikey 打到这里)。hiai 自己的 web 超管直接用 AgentManage 那套。
 	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error)
@@ -217,6 +219,8 @@ type AgentServer interface {
 	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
 	List(context.Context, *ListAgentReq) (*ListAgentResp, error)
 	GetAgents(context.Context, *GetAgentsReq) (*ListAgentResp, error)
+	// Mark/ListMarks 保留在商户档,是给**兄弟服务代为转发**用的(如 club:超管在 club 侧鉴权,
+	// 再用 club 自己的 apikey 打到这里)。hiai 自己的 web 超管直接用 AgentManage 那套。
 	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
 	ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error)
 	GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error)
@@ -557,6 +561,196 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetToDefault",
 			Handler:    _Agent_ResetToDefault_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/ai/agent.proto",
+}
+
+const (
+	AgentManage_List_FullMethodName      = "/hi.ai.AgentManage/List"
+	AgentManage_Mark_FullMethodName      = "/hi.ai.AgentManage/Mark"
+	AgentManage_ListMarks_FullMethodName = "/hi.ai.AgentManage/ListMarks"
+)
+
+// AgentManageClient is the client API for AgentManage service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 机器人管理(**超管**)。与 Agent(商户档)**主体不同,故拆 service** ——
+// 范式见本仓的 Permission/PermissionManage。
+//
+// 为什么不把 Agent 里的方法直接提档:那几个是商户对**自己名下**机器人的操作,
+// 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
+// "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
+type AgentManageClient interface {
+	List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+}
+
+type agentManageClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAgentManageClient(cc grpc.ClientConnInterface) AgentManageClient {
+	return &agentManageClient{cc}
+}
+
+func (c *agentManageClient) List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentResp)
+	err := c.cc.Invoke(ctx, AgentManage_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentManageClient) Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AgentManage_Mark_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentResp)
+	err := c.cc.Invoke(ctx, AgentManage_ListMarks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AgentManageServer is the server API for AgentManage service.
+// All implementations should embed UnimplementedAgentManageServer
+// for forward compatibility.
+//
+// 机器人管理(**超管**)。与 Agent(商户档)**主体不同,故拆 service** ——
+// 范式见本仓的 Permission/PermissionManage。
+//
+// 为什么不把 Agent 里的方法直接提档:那几个是商户对**自己名下**机器人的操作,
+// 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
+// "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
+type AgentManageServer interface {
+	List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error)
+	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
+	ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error)
+}
+
+// UnimplementedAgentManageServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedAgentManageServer struct{}
+
+func (UnimplementedAgentManageServer) List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedAgentManageServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
+}
+func (UnimplementedAgentManageServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
+}
+func (UnimplementedAgentManageServer) testEmbeddedByValue() {}
+
+// UnsafeAgentManageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AgentManageServer will
+// result in compilation errors.
+type UnsafeAgentManageServer interface {
+	mustEmbedUnimplementedAgentManageServer()
+}
+
+func RegisterAgentManageServer(s grpc.ServiceRegistrar, srv AgentManageServer) {
+	// If the following call panics, it indicates UnimplementedAgentManageServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&AgentManage_ServiceDesc, srv)
+}
+
+func _AgentManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ManageListAgentsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentManageServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentManage_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentManageServer).List(ctx, req.(*ManageListAgentsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AgentManage_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentManageServer).Mark(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentManage_Mark_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentManageServer).Mark(ctx, req.(*MarkAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AgentManage_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMarksReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentManageServer).ListMarks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentManage_ListMarks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentManageServer).ListMarks(ctx, req.(*ListMarksReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AgentManage_ServiceDesc is the grpc.ServiceDesc for AgentManage service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AgentManage_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.ai.AgentManage",
+	HandlerType: (*AgentManageServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _AgentManage_List_Handler,
+		},
+		{
+			MethodName: "Mark",
+			Handler:    _AgentManage_Mark_Handler,
+		},
+		{
+			MethodName: "ListMarks",
+			Handler:    _AgentManage_ListMarks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

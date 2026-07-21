@@ -384,6 +384,16 @@ pub struct MarkAgentReq {
     #[prost(bool, tag = "2")]
     pub marked: bool,
 }
+/// 超管按归属搜机器人(**可跨商户**)。creators 空 = 不过滤(全部)——
+/// 与 Agent.List 的"空=列调用者自己的"不同:超管没有"自己的机器人"这个概念。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ManageListAgentsReq {
+    /// 主人的 did;空=全部
+    #[prost(string, repeated, tag = "1")]
+    pub creators: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 /// Generated client implementations.
 pub mod agent_client {
     #![allow(
@@ -622,6 +632,8 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "GetAgents"));
             self.inner.unary(req, path, codec).await
         }
+        /// Mark/ListMarks 保留在商户档,是给**兄弟服务代为转发**用的(如 club:超管在 club 侧鉴权,
+        /// 再用 club 自己的 apikey 打到这里)。hiai 自己的 web 超管直接用 AgentManage 那套。
         pub async fn mark(
             &mut self,
             request: impl tonic::IntoRequest<super::MarkAgentReq>,
@@ -719,6 +731,162 @@ pub mod agent_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.Agent", "ResetToDefault"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod agent_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 机器人管理(**超管**)。与 Agent(商户档)**主体不同,故拆 service** ——
+    /// 范式见本仓的 Permission/PermissionManage。
+    ///
+    /// 为什么不把 Agent 里的方法直接提档:那几个是商户对**自己名下**机器人的操作,
+    /// 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
+    /// "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
+    #[derive(Debug, Clone)]
+    pub struct AgentManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl AgentManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> AgentManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AgentManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            AgentManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ManageListAgentsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.AgentManage/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.AgentManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn mark(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MarkAgentReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.AgentManage/Mark");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.AgentManage", "Mark"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_marks(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListMarksReq>,
+        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.AgentManage/ListMarks",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.AgentManage", "ListMarks"));
             self.inner.unary(req, path, codec).await
         }
     }

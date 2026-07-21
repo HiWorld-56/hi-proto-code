@@ -1236,6 +1236,60 @@ func (x *MarkAgentReq) GetMarked() bool {
 	return false
 }
 
+// 超管按归属搜机器人(**可跨商户**)。creators 空 = 不过滤(全部)——
+// 与 Agent.List 的"空=列调用者自己的"不同:超管没有"自己的机器人"这个概念。
+type ManageListAgentsReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Creators      []string               `protobuf:"bytes,1,rep,name=creators,proto3" json:"creators,omitempty"` // 主人的 did;空=全部
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ManageListAgentsReq) Reset() {
+	*x = ManageListAgentsReq{}
+	mi := &file_hi_ai_agent_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ManageListAgentsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ManageListAgentsReq) ProtoMessage() {}
+
+func (x *ManageListAgentsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_agent_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ManageListAgentsReq.ProtoReflect.Descriptor instead.
+func (*ManageListAgentsReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *ManageListAgentsReq) GetCreators() []string {
+	if x != nil {
+		return x.Creators
+	}
+	return nil
+}
+
+func (x *ManageListAgentsReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
 var File_hi_ai_agent_proto protoreflect.FileDescriptor
 
 const file_hi_ai_agent_proto_rawDesc = "" +
@@ -1330,7 +1384,12 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\"<\n" +
 	"\fMarkAgentReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x16\n" +
-	"\x06marked\x18\x02 \x01(\bR\x06marked2\x9c\x06\n" +
+	"\x06marked\x18\x02 \x01(\bR\x06marked\"a\n" +
+	"\x13ManageListAgentsReq\x12\x1a\n" +
+	"\bcreators\x18\x01 \x03(\tR\bcreators\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination2\x9c\x06\n" +
 	"\x05Agent\x12K\n" +
 	"\x0fCreateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12G\n" +
 	"\rRegisterRobot\x12\x17.hi.ai.RegisterRobotReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
@@ -1343,7 +1402,11 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\tListMarks\x12\x13.hi.ai.ListMarksReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
 	"\bGetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x03\x12K\n" +
 	"\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
-	"\x0eResetToDefault\x12\x18.hi.ai.ResetToDefaultReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03Bu\n" +
+	"\x0eResetToDefault\x12\x18.hi.ai.ResetToDefaultReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032\xc9\x01\n" +
+	"\vAgentManage\x12?\n" +
+	"\x04List\x12\x1a.hi.ai.ManageListAgentsReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x04\x12:\n" +
+	"\x04Mark\x12\x13.hi.ai.MarkAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12=\n" +
+	"\tListMarks\x12\x13.hi.ai.ListMarksReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x04Bu\n" +
 	"\tcom.hi.aiB\n" +
 	"AgentProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
@@ -1359,79 +1422,87 @@ func file_hi_ai_agent_proto_rawDescGZIP() []byte {
 	return file_hi_ai_agent_proto_rawDescData
 }
 
-var file_hi_ai_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_hi_ai_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_hi_ai_agent_proto_goTypes = []any{
-	(*Prompt)(nil),             // 0: hi.ai.Prompt
-	(*ModelSet)(nil),           // 1: hi.ai.ModelSet
-	(*AgentConfig)(nil),        // 2: hi.ai.AgentConfig
-	(*TokenUsage)(nil),         // 3: hi.ai.TokenUsage
-	(*AgentInfo)(nil),          // 4: hi.ai.AgentInfo
-	(*DefaultConfigResp)(nil),  // 5: hi.ai.DefaultConfigResp
-	(*CreateAssistantReq)(nil), // 6: hi.ai.CreateAssistantReq
-	(*RegisterRobotReq)(nil),   // 7: hi.ai.RegisterRobotReq
-	(*CreateAgentResp)(nil),    // 8: hi.ai.CreateAgentResp
-	(*EditAgentReq)(nil),       // 9: hi.ai.EditAgentReq
-	(*ListAgentResp)(nil),      // 10: hi.ai.ListAgentResp
-	(*ListAgentReq)(nil),       // 11: hi.ai.ListAgentReq
-	(*GetAgentsReq)(nil),       // 12: hi.ai.GetAgentsReq
-	(*ListMarksReq)(nil),       // 13: hi.ai.ListMarksReq
-	(*DeleteAgentReq)(nil),     // 14: hi.ai.DeleteAgentReq
-	(*GetAgentReq)(nil),        // 15: hi.ai.GetAgentReq
-	(*GetAgentResp)(nil),       // 16: hi.ai.GetAgentResp
-	(*AgentUsageReq)(nil),      // 17: hi.ai.AgentUsageReq
-	(*AgentUsageResp)(nil),     // 18: hi.ai.AgentUsageResp
-	(*ResetToDefaultReq)(nil),  // 19: hi.ai.ResetToDefaultReq
-	(*MarkAgentReq)(nil),       // 20: hi.ai.MarkAgentReq
-	(*hi.Entity)(nil),          // 21: hi.Entity
-	(*hi.Pagination)(nil),      // 22: hi.Pagination
-	(*emptypb.Empty)(nil),      // 23: google.protobuf.Empty
+	(*Prompt)(nil),              // 0: hi.ai.Prompt
+	(*ModelSet)(nil),            // 1: hi.ai.ModelSet
+	(*AgentConfig)(nil),         // 2: hi.ai.AgentConfig
+	(*TokenUsage)(nil),          // 3: hi.ai.TokenUsage
+	(*AgentInfo)(nil),           // 4: hi.ai.AgentInfo
+	(*DefaultConfigResp)(nil),   // 5: hi.ai.DefaultConfigResp
+	(*CreateAssistantReq)(nil),  // 6: hi.ai.CreateAssistantReq
+	(*RegisterRobotReq)(nil),    // 7: hi.ai.RegisterRobotReq
+	(*CreateAgentResp)(nil),     // 8: hi.ai.CreateAgentResp
+	(*EditAgentReq)(nil),        // 9: hi.ai.EditAgentReq
+	(*ListAgentResp)(nil),       // 10: hi.ai.ListAgentResp
+	(*ListAgentReq)(nil),        // 11: hi.ai.ListAgentReq
+	(*GetAgentsReq)(nil),        // 12: hi.ai.GetAgentsReq
+	(*ListMarksReq)(nil),        // 13: hi.ai.ListMarksReq
+	(*DeleteAgentReq)(nil),      // 14: hi.ai.DeleteAgentReq
+	(*GetAgentReq)(nil),         // 15: hi.ai.GetAgentReq
+	(*GetAgentResp)(nil),        // 16: hi.ai.GetAgentResp
+	(*AgentUsageReq)(nil),       // 17: hi.ai.AgentUsageReq
+	(*AgentUsageResp)(nil),      // 18: hi.ai.AgentUsageResp
+	(*ResetToDefaultReq)(nil),   // 19: hi.ai.ResetToDefaultReq
+	(*MarkAgentReq)(nil),        // 20: hi.ai.MarkAgentReq
+	(*ManageListAgentsReq)(nil), // 21: hi.ai.ManageListAgentsReq
+	(*hi.Entity)(nil),           // 22: hi.Entity
+	(*hi.Pagination)(nil),       // 23: hi.Pagination
+	(*emptypb.Empty)(nil),       // 24: google.protobuf.Empty
 }
 var file_hi_ai_agent_proto_depIdxs = []int32{
 	0,  // 0: hi.ai.AgentConfig.prompt:type_name -> hi.ai.Prompt
 	1,  // 1: hi.ai.AgentConfig.model:type_name -> hi.ai.ModelSet
-	21, // 2: hi.ai.AgentInfo.base:type_name -> hi.Entity
+	22, // 2: hi.ai.AgentInfo.base:type_name -> hi.Entity
 	2,  // 3: hi.ai.AgentInfo.config:type_name -> hi.ai.AgentConfig
 	3,  // 4: hi.ai.AgentInfo.token:type_name -> hi.ai.TokenUsage
 	2,  // 5: hi.ai.DefaultConfigResp.config:type_name -> hi.ai.AgentConfig
-	21, // 6: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
+	22, // 6: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
 	2,  // 7: hi.ai.CreateAgentResp.config:type_name -> hi.ai.AgentConfig
-	21, // 8: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
+	22, // 8: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
 	2,  // 9: hi.ai.EditAgentReq.config:type_name -> hi.ai.AgentConfig
 	4,  // 10: hi.ai.ListAgentResp.infos:type_name -> hi.ai.AgentInfo
-	22, // 11: hi.ai.ListAgentReq.pagination:type_name -> hi.Pagination
-	22, // 12: hi.ai.GetAgentsReq.pagination:type_name -> hi.Pagination
-	22, // 13: hi.ai.ListMarksReq.pagination:type_name -> hi.Pagination
+	23, // 11: hi.ai.ListAgentReq.pagination:type_name -> hi.Pagination
+	23, // 12: hi.ai.GetAgentsReq.pagination:type_name -> hi.Pagination
+	23, // 13: hi.ai.ListMarksReq.pagination:type_name -> hi.Pagination
 	4,  // 14: hi.ai.GetAgentResp.info:type_name -> hi.ai.AgentInfo
 	3,  // 15: hi.ai.AgentUsageResp.token:type_name -> hi.ai.TokenUsage
-	6,  // 16: hi.ai.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
-	7,  // 17: hi.ai.Agent.RegisterRobot:input_type -> hi.ai.RegisterRobotReq
-	9,  // 18: hi.ai.Agent.Edit:input_type -> hi.ai.EditAgentReq
-	14, // 19: hi.ai.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
-	15, // 20: hi.ai.Agent.Get:input_type -> hi.ai.GetAgentReq
-	11, // 21: hi.ai.Agent.List:input_type -> hi.ai.ListAgentReq
-	12, // 22: hi.ai.Agent.GetAgents:input_type -> hi.ai.GetAgentsReq
-	20, // 23: hi.ai.Agent.Mark:input_type -> hi.ai.MarkAgentReq
-	13, // 24: hi.ai.Agent.ListMarks:input_type -> hi.ai.ListMarksReq
-	17, // 25: hi.ai.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
-	23, // 26: hi.ai.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
-	19, // 27: hi.ai.Agent.ResetToDefault:input_type -> hi.ai.ResetToDefaultReq
-	8,  // 28: hi.ai.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
-	8,  // 29: hi.ai.Agent.RegisterRobot:output_type -> hi.ai.CreateAgentResp
-	23, // 30: hi.ai.Agent.Edit:output_type -> google.protobuf.Empty
-	23, // 31: hi.ai.Agent.Delete:output_type -> google.protobuf.Empty
-	16, // 32: hi.ai.Agent.Get:output_type -> hi.ai.GetAgentResp
-	10, // 33: hi.ai.Agent.List:output_type -> hi.ai.ListAgentResp
-	10, // 34: hi.ai.Agent.GetAgents:output_type -> hi.ai.ListAgentResp
-	23, // 35: hi.ai.Agent.Mark:output_type -> google.protobuf.Empty
-	10, // 36: hi.ai.Agent.ListMarks:output_type -> hi.ai.ListAgentResp
-	18, // 37: hi.ai.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
-	5,  // 38: hi.ai.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
-	23, // 39: hi.ai.Agent.ResetToDefault:output_type -> google.protobuf.Empty
-	28, // [28:40] is the sub-list for method output_type
-	16, // [16:28] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	23, // 16: hi.ai.ManageListAgentsReq.pagination:type_name -> hi.Pagination
+	6,  // 17: hi.ai.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
+	7,  // 18: hi.ai.Agent.RegisterRobot:input_type -> hi.ai.RegisterRobotReq
+	9,  // 19: hi.ai.Agent.Edit:input_type -> hi.ai.EditAgentReq
+	14, // 20: hi.ai.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
+	15, // 21: hi.ai.Agent.Get:input_type -> hi.ai.GetAgentReq
+	11, // 22: hi.ai.Agent.List:input_type -> hi.ai.ListAgentReq
+	12, // 23: hi.ai.Agent.GetAgents:input_type -> hi.ai.GetAgentsReq
+	20, // 24: hi.ai.Agent.Mark:input_type -> hi.ai.MarkAgentReq
+	13, // 25: hi.ai.Agent.ListMarks:input_type -> hi.ai.ListMarksReq
+	17, // 26: hi.ai.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
+	24, // 27: hi.ai.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
+	19, // 28: hi.ai.Agent.ResetToDefault:input_type -> hi.ai.ResetToDefaultReq
+	21, // 29: hi.ai.AgentManage.List:input_type -> hi.ai.ManageListAgentsReq
+	20, // 30: hi.ai.AgentManage.Mark:input_type -> hi.ai.MarkAgentReq
+	13, // 31: hi.ai.AgentManage.ListMarks:input_type -> hi.ai.ListMarksReq
+	8,  // 32: hi.ai.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
+	8,  // 33: hi.ai.Agent.RegisterRobot:output_type -> hi.ai.CreateAgentResp
+	24, // 34: hi.ai.Agent.Edit:output_type -> google.protobuf.Empty
+	24, // 35: hi.ai.Agent.Delete:output_type -> google.protobuf.Empty
+	16, // 36: hi.ai.Agent.Get:output_type -> hi.ai.GetAgentResp
+	10, // 37: hi.ai.Agent.List:output_type -> hi.ai.ListAgentResp
+	10, // 38: hi.ai.Agent.GetAgents:output_type -> hi.ai.ListAgentResp
+	24, // 39: hi.ai.Agent.Mark:output_type -> google.protobuf.Empty
+	10, // 40: hi.ai.Agent.ListMarks:output_type -> hi.ai.ListAgentResp
+	18, // 41: hi.ai.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
+	5,  // 42: hi.ai.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	24, // 43: hi.ai.Agent.ResetToDefault:output_type -> google.protobuf.Empty
+	10, // 44: hi.ai.AgentManage.List:output_type -> hi.ai.ListAgentResp
+	24, // 45: hi.ai.AgentManage.Mark:output_type -> google.protobuf.Empty
+	10, // 46: hi.ai.AgentManage.ListMarks:output_type -> hi.ai.ListAgentResp
+	32, // [32:47] is the sub-list for method output_type
+	17, // [17:32] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_agent_proto_init() }
@@ -1446,9 +1517,9 @@ func file_hi_ai_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_agent_proto_rawDesc), len(file_hi_ai_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   22,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_ai_agent_proto_goTypes,
 		DependencyIndexes: file_hi_ai_agent_proto_depIdxs,
