@@ -150,13 +150,6 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$setRemark, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.ListOnlineUserResp> listOnline(
-    $2.ListOnlineUserReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listOnline, request, options: options);
-  }
-
   // method descriptors
 
   static final _$uploadAvatar = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
@@ -227,11 +220,6 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/SetRemark',
       ($2.SetRemarkReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
-  static final _$listOnline =
-      $grpc.ClientMethod<$2.ListOnlineUserReq, $2.ListOnlineUserResp>(
-          '/hi.club.User/ListOnline',
-          ($2.ListOnlineUserReq value) => value.writeToBuffer(),
-          $2.ListOnlineUserResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.User')
@@ -347,13 +335,6 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.SetRemarkReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.ListOnlineUserReq, $2.ListOnlineUserResp>(
-        'ListOnline',
-        listOnline_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $2.ListOnlineUserReq.fromBuffer(value),
-        ($2.ListOnlineUserResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.UploadResp> uploadAvatar_Pre(
@@ -476,6 +457,56 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setRemark(
       $grpc.ServiceCall call, $2.SetRemarkReq request);
+}
+
+/// 在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——
+/// User 里每个方法都是"我对我自己"(改我的资料、我的好友、我的系统消息),
+/// 而这里是"查一批 did 谁在线",跟调用者是谁毫无关系,实现里也用不到调用者身份。
+///
+/// 对称范式:机器人那侧早就是 AgentDirectory.ListOnline(AUTH_NONE)。
+/// 原先它挂在 User 下、标 AUTH_USER,而返回体的 audience 一直写着 VIS_PUBLIC、
+/// 注释也写着"公开" —— 档位与数据定级自相矛盾。presence 本就是公开信息。
+@$pb.GrpcServiceName('hi.club.UserDirectory')
+class UserDirectoryClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  UserDirectoryClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$2.ListOnlineUserResp> listOnline(
+    $2.ListOnlineUserReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listOnline, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$listOnline =
+      $grpc.ClientMethod<$2.ListOnlineUserReq, $2.ListOnlineUserResp>(
+          '/hi.club.UserDirectory/ListOnline',
+          ($2.ListOnlineUserReq value) => value.writeToBuffer(),
+          $2.ListOnlineUserResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.club.UserDirectory')
+abstract class UserDirectoryServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.club.UserDirectory';
+
+  UserDirectoryServiceBase() {
+    $addMethod($grpc.ServiceMethod<$2.ListOnlineUserReq, $2.ListOnlineUserResp>(
+        'ListOnline',
+        listOnline_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.ListOnlineUserReq.fromBuffer(value),
+        ($2.ListOnlineUserResp value) => value.writeToBuffer()));
+  }
 
   $async.Future<$2.ListOnlineUserResp> listOnline_Pre($grpc.ServiceCall $call,
       $async.Future<$2.ListOnlineUserReq> $request) async {

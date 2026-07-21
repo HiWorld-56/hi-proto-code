@@ -4398,6 +4398,106 @@ pub mod user_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "SetRemark"));
             self.inner.unary(req, path, codec).await
         }
+    }
+}
+/// Generated client implementations.
+pub mod user_directory_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——
+    /// User 里每个方法都是"我对我自己"(改我的资料、我的好友、我的系统消息),
+    /// 而这里是"查一批 did 谁在线",跟调用者是谁毫无关系,实现里也用不到调用者身份。
+    ///
+    /// 对称范式:机器人那侧早就是 AgentDirectory.ListOnline(AUTH_NONE)。
+    /// 原先它挂在 User 下、标 AUTH_USER,而返回体的 audience 一直写着 VIS_PUBLIC、
+    /// 注释也写着"公开" —— 档位与数据定级自相矛盾。presence 本就是公开信息。
+    #[derive(Debug, Clone)]
+    pub struct UserDirectoryClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl UserDirectoryClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> UserDirectoryClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> UserDirectoryClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            UserDirectoryClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         pub async fn list_online(
             &mut self,
             request: impl tonic::IntoRequest<super::ListOnlineUserReq>,
@@ -4414,9 +4514,12 @@ pub mod user_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListOnline");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.UserDirectory/ListOnline",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListOnline"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.UserDirectory", "ListOnline"));
             self.inner.unary(req, path, codec).await
         }
     }

@@ -1014,7 +1014,7 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"!FRIEND_REQUEST_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eFRIEND_REQUEST_STATUS_REJECTED\x10\x01\x12\x1e\n" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
-	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\x84\t\n" +
+	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xb6\b\n" +
 	"\x04User\x124\n" +
 	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x121\n" +
 	"\tUploadLog\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
@@ -1033,9 +1033,10 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\bGetOther\x12\x13.hi.club.GetUserReq\x1a\n" +
 	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12\\\n" +
 	"\x16UnprocessedSysMsgCount\x12\x16.google.protobuf.Empty\x1a#.hi.club.UnprocessedSysMsgCountResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
-	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12L\n" +
+	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022]\n" +
+	"\rUserDirectory\x12L\n" +
 	"\n" +
-	"ListOnline\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
+	"ListOnline\x12\x1a.hi.club.ListOnlineUserReq\x1a\x1b.hi.club.ListOnlineUserResp\"\x05\x8a\xb5\x18\x01\x01B\x80\x01\n" +
 	"\vcom.hi.clubB\tUserProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -1104,7 +1105,7 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	12, // 21: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
 	23, // 22: hi.club.User.UnprocessedSysMsgCount:input_type -> google.protobuf.Empty
 	15, // 23: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
-	16, // 24: hi.club.User.ListOnline:input_type -> hi.club.ListOnlineUserReq
+	16, // 24: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUserReq
 	24, // 25: hi.club.User.UploadAvatar:output_type -> hi.UploadResp
 	24, // 26: hi.club.User.UploadLog:output_type -> hi.UploadResp
 	1,  // 27: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
@@ -1120,7 +1121,7 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	18, // 37: hi.club.User.GetOther:output_type -> hi.Entity
 	13, // 38: hi.club.User.UnprocessedSysMsgCount:output_type -> hi.club.UnprocessedSysMsgCountResp
 	23, // 39: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
-	17, // 40: hi.club.User.ListOnline:output_type -> hi.club.ListOnlineUserResp
+	17, // 40: hi.club.UserDirectory.ListOnline:output_type -> hi.club.ListOnlineUserResp
 	25, // [25:41] is the sub-list for method output_type
 	9,  // [9:25] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
@@ -1144,7 +1145,7 @@ func file_hi_club_user_proto_init() {
 			NumEnums:      1,
 			NumMessages:   17,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_club_user_proto_goTypes,
 		DependencyIndexes: file_hi_club_user_proto_depIdxs,

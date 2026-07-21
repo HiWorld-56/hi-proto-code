@@ -36,7 +36,6 @@ const (
 	User_GetOther_FullMethodName               = "/hi.club.User/GetOther"
 	User_UnprocessedSysMsgCount_FullMethodName = "/hi.club.User/UnprocessedSysMsgCount"
 	User_SetRemark_FullMethodName              = "/hi.club.User/SetRemark"
-	User_ListOnline_FullMethodName             = "/hi.club.User/ListOnline"
 )
 
 // UserClient is the client API for User service.
@@ -67,7 +66,6 @@ type UserClient interface {
 	GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*hi.Entity, error)
 	UnprocessedSysMsgCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(ctx context.Context, in *SetRemarkReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error)
 }
 
 type userClient struct {
@@ -228,16 +226,6 @@ func (c *userClient) SetRemark(ctx context.Context, in *SetRemarkReq, opts ...gr
 	return out, nil
 }
 
-func (c *userClient) ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListOnlineUserResp)
-	err := c.cc.Invoke(ctx, User_ListOnline_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
@@ -266,7 +254,6 @@ type UserServer interface {
 	GetOther(context.Context, *GetUserReq) (*hi.Entity, error)
 	UnprocessedSysMsgCount(context.Context, *emptypb.Empty) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error)
-	ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error)
 }
 
 // UnimplementedUserServer should be embedded to have
@@ -320,9 +307,6 @@ func (UnimplementedUserServer) UnprocessedSysMsgCount(context.Context, *emptypb.
 }
 func (UnimplementedUserServer) SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetRemark not implemented")
-}
-func (UnimplementedUserServer) ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListOnline not implemented")
 }
 func (UnimplementedUserServer) testEmbeddedByValue() {}
 
@@ -614,24 +598,6 @@ func _User_SetRemark_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_ListOnline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListOnlineUserReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).ListOnline(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_ListOnline_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListOnline(ctx, req.(*ListOnlineUserReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -699,9 +665,121 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "SetRemark",
 			Handler:    _User_SetRemark_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/user.proto",
+}
+
+const (
+	UserDirectory_ListOnline_FullMethodName = "/hi.club.UserDirectory/ListOnline"
+)
+
+// UserDirectoryClient is the client API for UserDirectory service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——
+// User 里每个方法都是"我对我自己"(改我的资料、我的好友、我的系统消息),
+// 而这里是"查一批 did 谁在线",跟调用者是谁毫无关系,实现里也用不到调用者身份。
+//
+// 对称范式:机器人那侧早就是 AgentDirectory.ListOnline(AUTH_NONE)。
+// 原先它挂在 User 下、标 AUTH_USER,而返回体的 audience 一直写着 VIS_PUBLIC、
+// 注释也写着"公开" —— 档位与数据定级自相矛盾。presence 本就是公开信息。
+type UserDirectoryClient interface {
+	ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error)
+}
+
+type userDirectoryClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUserDirectoryClient(cc grpc.ClientConnInterface) UserDirectoryClient {
+	return &userDirectoryClient{cc}
+}
+
+func (c *userDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListOnlineUserResp)
+	err := c.cc.Invoke(ctx, UserDirectory_ListOnline_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UserDirectoryServer is the server API for UserDirectory service.
+// All implementations should embed UnimplementedUserDirectoryServer
+// for forward compatibility.
+//
+// 在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——
+// User 里每个方法都是"我对我自己"(改我的资料、我的好友、我的系统消息),
+// 而这里是"查一批 did 谁在线",跟调用者是谁毫无关系,实现里也用不到调用者身份。
+//
+// 对称范式:机器人那侧早就是 AgentDirectory.ListOnline(AUTH_NONE)。
+// 原先它挂在 User 下、标 AUTH_USER,而返回体的 audience 一直写着 VIS_PUBLIC、
+// 注释也写着"公开" —— 档位与数据定级自相矛盾。presence 本就是公开信息。
+type UserDirectoryServer interface {
+	ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error)
+}
+
+// UnimplementedUserDirectoryServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedUserDirectoryServer struct{}
+
+func (UnimplementedUserDirectoryServer) ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListOnline not implemented")
+}
+func (UnimplementedUserDirectoryServer) testEmbeddedByValue() {}
+
+// UnsafeUserDirectoryServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserDirectoryServer will
+// result in compilation errors.
+type UnsafeUserDirectoryServer interface {
+	mustEmbedUnimplementedUserDirectoryServer()
+}
+
+func RegisterUserDirectoryServer(s grpc.ServiceRegistrar, srv UserDirectoryServer) {
+	// If the following call panics, it indicates UnimplementedUserDirectoryServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&UserDirectory_ServiceDesc, srv)
+}
+
+func _UserDirectory_ListOnline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOnlineUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDirectoryServer).ListOnline(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserDirectory_ListOnline_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDirectoryServer).ListOnline(ctx, req.(*ListOnlineUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// UserDirectory_ServiceDesc is the grpc.ServiceDesc for UserDirectory service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UserDirectory_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.UserDirectory",
+	HandlerType: (*UserDirectoryServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ListOnline",
-			Handler:    _User_ListOnline_Handler,
+			Handler:    _UserDirectory_ListOnline_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
