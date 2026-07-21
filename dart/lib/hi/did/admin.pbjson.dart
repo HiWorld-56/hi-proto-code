@@ -15,6 +15,20 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use merchantPermissionDescriptor instead')
+const MerchantPermission$json = {
+  '1': 'MerchantPermission',
+  '2': [
+    {'1': 'MERCHANT_PERM_UNSPECIFIED', '2': 0},
+    {'1': 'MERCHANT_PERM_MQTT', '2': 1},
+  ],
+};
+
+/// Descriptor for `MerchantPermission`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List merchantPermissionDescriptor = $convert.base64Decode(
+    'ChJNZXJjaGFudFBlcm1pc3Npb24SHQoZTUVSQ0hBTlRfUEVSTV9VTlNQRUNJRklFRBAAEhYKEk'
+    '1FUkNIQU5UX1BFUk1fTVFUVBAB');
+
 @$core.Deprecated('Use inviteCodeCreateRespDescriptor instead')
 const InviteCodeCreateResp$json = {
   '1': 'InviteCodeCreateResp',
@@ -302,6 +316,15 @@ const MerchantManageListResp_Unit$json = {
       '10': 'base'
     },
     {'1': 'comment', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'comment'},
+    {
+      '1': 'permissions',
+      '3': 3,
+      '4': 3,
+      '5': 14,
+      '6': '.hi.did.MerchantPermission',
+      '8': {},
+      '10': 'permissions'
+    },
   ],
   '7': {},
 };
@@ -310,8 +333,10 @@ const MerchantManageListResp_Unit$json = {
 final $typed_data.Uint8List merchantManageListRespDescriptor = $convert.base64Decode(
     'ChZNZXJjaGFudE1hbmFnZUxpc3RSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBI9Cg'
     'RsaXN0GAIgAygLMiMuaGkuZGlkLk1lcmNoYW50TWFuYWdlTGlzdFJlc3AuVW5pdEIEkLUYA1IE'
-    'bGlzdBpcCgRVbml0Ei4KBGJhc2UYASABKAsyFC5oaS5kaWQuTWVyY2hhbnRJbmZvQgSQtRgCUg'
-    'RiYXNlEh4KB2NvbW1lbnQYAiABKAlCBJC1GANSB2NvbW1lbnQ6BJi1GAM6BJi1GAM=');
+    'bGlzdBqgAQoEVW5pdBIuCgRiYXNlGAEgASgLMhQuaGkuZGlkLk1lcmNoYW50SW5mb0IEkLUYAl'
+    'IEYmFzZRIeCgdjb21tZW50GAIgASgJQgSQtRgDUgdjb21tZW50EkIKC3Blcm1pc3Npb25zGAMg'
+    'AygOMhouaGkuZGlkLk1lcmNoYW50UGVybWlzc2lvbkIEkLUYA1ILcGVybWlzc2lvbnM6BJi1GA'
+    'M6BJi1GAM=');
 
 @$core.Deprecated('Use merchantManageEditReqDescriptor instead')
 const MerchantManageEditReq$json = {
@@ -326,3 +351,26 @@ const MerchantManageEditReq$json = {
 final $typed_data.Uint8List merchantManageEditReqDescriptor = $convert.base64Decode(
     'ChVNZXJjaGFudE1hbmFnZUVkaXRSZXESEAoDZGlkGAEgASgJUgNkaWQSGAoHY29tbWVudBgCIA'
     'EoCVIHY29tbWVudA==');
+
+@$core.Deprecated('Use merchantSetPermissionReqDescriptor instead')
+const MerchantSetPermissionReq$json = {
+  '1': 'MerchantSetPermissionReq',
+  '2': [
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
+    {
+      '1': 'perm',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.did.MerchantPermission',
+      '10': 'perm'
+    },
+    {'1': 'granted', '3': 3, '4': 1, '5': 8, '10': 'granted'},
+  ],
+};
+
+/// Descriptor for `MerchantSetPermissionReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantSetPermissionReqDescriptor = $convert.base64Decode(
+    'ChhNZXJjaGFudFNldFBlcm1pc3Npb25SZXESHgoDZGlkGAEgASgJQgy6SAlyBzIFXlxTKyRSA2'
+    'RpZBIuCgRwZXJtGAIgASgOMhouaGkuZGlkLk1lcmNoYW50UGVybWlzc2lvblIEcGVybRIYCgdn'
+    'cmFudGVkGAMgASgIUgdncmFudGVk');

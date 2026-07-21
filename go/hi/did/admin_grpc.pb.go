@@ -785,9 +785,10 @@ var DAppAdmin_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	MerchantManage_List_FullMethodName   = "/hi.did.MerchantManage/List"
-	MerchantManage_Delete_FullMethodName = "/hi.did.MerchantManage/Delete"
-	MerchantManage_Edit_FullMethodName   = "/hi.did.MerchantManage/Edit"
+	MerchantManage_List_FullMethodName          = "/hi.did.MerchantManage/List"
+	MerchantManage_Delete_FullMethodName        = "/hi.did.MerchantManage/Delete"
+	MerchantManage_Edit_FullMethodName          = "/hi.did.MerchantManage/Edit"
+	MerchantManage_SetPermission_FullMethodName = "/hi.did.MerchantManage/SetPermission"
 )
 
 // MerchantManageClient is the client API for MerchantManage service.
@@ -801,6 +802,7 @@ type MerchantManageClient interface {
 	List(ctx context.Context, in *MerchantManageListReq, opts ...grpc.CallOption) (*MerchantManageListResp, error)
 	Delete(ctx context.Context, in *hi.DID, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *MerchantManageEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetPermission(ctx context.Context, in *MerchantSetPermissionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type merchantManageClient struct {
@@ -841,6 +843,16 @@ func (c *merchantManageClient) Edit(ctx context.Context, in *MerchantManageEditR
 	return out, nil
 }
 
+func (c *merchantManageClient) SetPermission(ctx context.Context, in *MerchantSetPermissionReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, MerchantManage_SetPermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MerchantManageServer is the server API for MerchantManage service.
 // All implementations should embed UnimplementedMerchantManageServer
 // for forward compatibility.
@@ -852,6 +864,7 @@ type MerchantManageServer interface {
 	List(context.Context, *MerchantManageListReq) (*MerchantManageListResp, error)
 	Delete(context.Context, *hi.DID) (*emptypb.Empty, error)
 	Edit(context.Context, *MerchantManageEditReq) (*emptypb.Empty, error)
+	SetPermission(context.Context, *MerchantSetPermissionReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedMerchantManageServer should be embedded to have
@@ -869,6 +882,9 @@ func (UnimplementedMerchantManageServer) Delete(context.Context, *hi.DID) (*empt
 }
 func (UnimplementedMerchantManageServer) Edit(context.Context, *MerchantManageEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedMerchantManageServer) SetPermission(context.Context, *MerchantSetPermissionReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetPermission not implemented")
 }
 func (UnimplementedMerchantManageServer) testEmbeddedByValue() {}
 
@@ -944,6 +960,24 @@ func _MerchantManage_Edit_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MerchantManage_SetPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MerchantSetPermissionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantManageServer).SetPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantManage_SetPermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantManageServer).SetPermission(ctx, req.(*MerchantSetPermissionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MerchantManage_ServiceDesc is the grpc.ServiceDesc for MerchantManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -962,6 +996,10 @@ var MerchantManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Edit",
 			Handler:    _MerchantManage_Edit_Handler,
+		},
+		{
+			MethodName: "SetPermission",
+			Handler:    _MerchantManage_SetPermission_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -2963,6 +2963,14 @@ pub mod merchant_manage_list_resp {
         pub base: ::core::option::Option<super::MerchantInfo>,
         #[prost(string, tag = "2")]
         pub comment: ::prost::alloc::string::String,
+        /// 该商户持有的权限位(仅超管可见)。空=普通商户,什么附加能力都没有。
+        #[prost(
+            enumeration = "super::MerchantPermission",
+            repeated,
+            packed = "false",
+            tag = "3"
+        )]
+        pub permissions: ::prost::alloc::vec::Vec<i32>,
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -2971,6 +2979,58 @@ pub struct MerchantManageEditReq {
     pub did: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub comment: ::prost::alloc::string::String,
+}
+/// 超管给商户提权/降权。
+///
+/// ⚠️ 为什么 mqtt 认证信息要单独一个权限位:GetUserMqtt 返回的是用户的
+/// **mqtt 用户名+密码**,拿到就能直连 broker 订阅该用户的单聊 topic,
+/// 绕过所有 RPC 层鉴权。它比"读业务数据"高一档,不能所有商户默认都有。
+/// club 需要它是因为要把通知转发到自己的用户端(hidid 发通知 → 机器人订阅
+/// 对应 topic 即可收到,不必各自维护一条到 hidid 的登录态)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantSetPermissionReq {
+    /// 目标商户
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    /// 要改的权限位
+    #[prost(enumeration = "MerchantPermission", tag = "2")]
+    pub perm: i32,
+    /// true=授予,false=撤销
+    #[prost(bool, tag = "3")]
+    pub granted: bool,
+}
+/// 商户权限位。**仅超管可读写**(提权/降权),商户自己看不到也改不了。
+///
+/// 邀请码注册进来的是普通商户,权限字段默认 0 —— 什么附加能力都没有,
+/// 要什么由超管一项项给。这与 club 侧"机器人建号即全给、出事再撤"的方向相反,
+/// 是有意的:那边管的是自家机器人的能力,这边管的是**别家商户能拿到什么数据**。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum MerchantPermission {
+    /// 占位,无业务语义
+    MerchantPermUnspecified = 0,
+    /// bit0:可读用户的 mqtt 认证信息(GetUserMqtt)
+    MerchantPermMqtt = 1,
+}
+impl MerchantPermission {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::MerchantPermUnspecified => "MERCHANT_PERM_UNSPECIFIED",
+            Self::MerchantPermMqtt => "MERCHANT_PERM_MQTT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MERCHANT_PERM_UNSPECIFIED" => Some(Self::MerchantPermUnspecified),
+            "MERCHANT_PERM_MQTT" => Some(Self::MerchantPermMqtt),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod invite_code_client {
@@ -3761,6 +3821,27 @@ pub mod merchant_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.MerchantManage", "Edit"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_permission(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantSetPermissionReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantManage/SetPermission",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantManage", "SetPermission"));
             self.inner.unary(req, path, codec).await
         }
     }

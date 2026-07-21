@@ -16,9 +16,12 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
+import 'admin.pbenum.dart';
 import 'merchant.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'admin.pbenum.dart';
 
 class InviteCodeCreateResp extends $pb.GeneratedMessage {
   factory InviteCodeCreateResp({
@@ -1012,10 +1015,12 @@ class MerchantManageListResp_Unit extends $pb.GeneratedMessage {
   factory MerchantManageListResp_Unit({
     $3.MerchantInfo? base,
     $core.String? comment,
+    $core.Iterable<MerchantPermission>? permissions,
   }) {
     final result = create();
     if (base != null) result.base = base;
     if (comment != null) result.comment = comment;
+    if (permissions != null) result.permissions.addAll(permissions);
     return result;
   }
 
@@ -1035,6 +1040,11 @@ class MerchantManageListResp_Unit extends $pb.GeneratedMessage {
     ..aOM<$3.MerchantInfo>(1, _omitFieldNames ? '' : 'base',
         subBuilder: $3.MerchantInfo.create)
     ..aOS(2, _omitFieldNames ? '' : 'comment')
+    ..pc<MerchantPermission>(
+        3, _omitFieldNames ? '' : 'permissions', $pb.PbFieldType.KE,
+        valueOf: MerchantPermission.valueOf,
+        enumValues: MerchantPermission.values,
+        defaultEnumValue: MerchantPermission.MERCHANT_PERM_UNSPECIFIED)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1078,6 +1088,10 @@ class MerchantManageListResp_Unit extends $pb.GeneratedMessage {
   $core.bool hasComment() => $_has(1);
   @$pb.TagNumber(2)
   void clearComment() => $_clearField(2);
+
+  /// 该商户持有的权限位(仅超管可见)。空=普通商户,什么附加能力都没有。
+  @$pb.TagNumber(3)
+  $pb.PbList<MerchantPermission> get permissions => $_getList(2);
 }
 
 class MerchantManageListResp extends $pb.GeneratedMessage {
@@ -1207,6 +1221,93 @@ class MerchantManageEditReq extends $pb.GeneratedMessage {
   $core.bool hasComment() => $_has(1);
   @$pb.TagNumber(2)
   void clearComment() => $_clearField(2);
+}
+
+/// 超管给商户提权/降权。
+///
+/// ⚠️ 为什么 mqtt 认证信息要单独一个权限位:GetUserMqtt 返回的是用户的
+///    **mqtt 用户名+密码**,拿到就能直连 broker 订阅该用户的单聊 topic,
+///    绕过所有 RPC 层鉴权。它比"读业务数据"高一档,不能所有商户默认都有。
+///    club 需要它是因为要把通知转发到自己的用户端(hidid 发通知 → 机器人订阅
+///    对应 topic 即可收到,不必各自维护一条到 hidid 的登录态)。
+class MerchantSetPermissionReq extends $pb.GeneratedMessage {
+  factory MerchantSetPermissionReq({
+    $core.String? did,
+    MerchantPermission? perm,
+    $core.bool? granted,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    if (perm != null) result.perm = perm;
+    if (granted != null) result.granted = granted;
+    return result;
+  }
+
+  MerchantSetPermissionReq._();
+
+  factory MerchantSetPermissionReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantSetPermissionReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantSetPermissionReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aE<MerchantPermission>(2, _omitFieldNames ? '' : 'perm',
+        enumValues: MerchantPermission.values)
+    ..aOB(3, _omitFieldNames ? '' : 'granted')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantSetPermissionReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantSetPermissionReq copyWith(
+          void Function(MerchantSetPermissionReq) updates) =>
+      super.copyWith((message) => updates(message as MerchantSetPermissionReq))
+          as MerchantSetPermissionReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantSetPermissionReq create() => MerchantSetPermissionReq._();
+  @$core.override
+  MerchantSetPermissionReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantSetPermissionReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantSetPermissionReq>(create);
+  static MerchantSetPermissionReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get did => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set did($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  MerchantPermission get perm => $_getN(1);
+  @$pb.TagNumber(2)
+  set perm(MerchantPermission value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPerm() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPerm() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get granted => $_getBF(2);
+  @$pb.TagNumber(3)
+  set granted($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasGranted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearGranted() => $_clearField(3);
 }
 
 const $core.bool _omitFieldNames =

@@ -503,6 +503,13 @@ class MerchantManageClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Empty> setPermission(
+    $1.MerchantSetPermissionReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setPermission, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list =
@@ -518,6 +525,11 @@ class MerchantManageClient extends $grpc.Client {
       '/hi.did.MerchantManage/Edit',
       ($1.MerchantManageEditReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
+  static final _$setPermission =
+      $grpc.ClientMethod<$1.MerchantSetPermissionReq, $0.Empty>(
+          '/hi.did.MerchantManage/SetPermission',
+          ($1.MerchantSetPermissionReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.MerchantManage')
@@ -549,6 +561,14 @@ abstract class MerchantManageServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.MerchantManageEditReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.MerchantSetPermissionReq, $0.Empty>(
+        'SetPermission',
+        setPermission_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.MerchantSetPermissionReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.MerchantManageListResp> list_Pre($grpc.ServiceCall $call,
@@ -573,4 +593,12 @@ abstract class MerchantManageServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> edit(
       $grpc.ServiceCall call, $1.MerchantManageEditReq request);
+
+  $async.Future<$0.Empty> setPermission_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.MerchantSetPermissionReq> $request) async {
+    return setPermission($call, await $request);
+  }
+
+  $async.Future<$0.Empty> setPermission(
+      $grpc.ServiceCall call, $1.MerchantSetPermissionReq request);
 }
