@@ -129,3 +129,67 @@ abstract class BaseServiceBase extends $grpc.Service {
   $async.Future<$2.ServerVersionResp> serverVersion(
       $grpc.ServiceCall call, $0.Empty request);
 }
+
+/// 超管名单(转发 hidid)。
+///
+/// club **不留自己的表** —— 名单的唯一持有方是 hidid,这里只是替 club 的 web 前端
+/// 转一道:前端登录后拿它比对自己的 did,决定显不显示"内部使用"菜单。
+/// 此前 did/club/ai/media 各留一张表,实测四份已漂移(11/14/15/3),
+/// 且在一处撤权另一处不生效,故统一穿透。
+///
+/// ⚠️ 档位是 AUTH_USER 而**不是** AUTH_SUPERADMIN —— 否则就成了"先得是超管,
+///    才能知道自己是不是超管"。与 hi.did.SuperAdmin.List 同理(那边是 USER+MERCHANT
+///    双档,因为还要给兄弟服务穿透用;club 这边只服务前端,单 USER 档即可)。
+///
+/// club 后端调 hidid 用的是自己的 ExtendToken,那只用于**取名单**;
+/// "谁是超管"的判定另走 requireSuperAdmin,比对的是调用者本人的 did,两者不能混。
+@$pb.GrpcServiceName('hi.club.SuperAdmin')
+class SuperAdminClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  SuperAdminClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.ListSuperAdminUsersResp> list(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$list =
+      $grpc.ClientMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
+          '/hi.club.SuperAdmin/List',
+          ($0.Empty value) => value.writeToBuffer(),
+          $1.ListSuperAdminUsersResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.club.SuperAdmin')
+abstract class SuperAdminServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.club.SuperAdmin';
+
+  SuperAdminServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListSuperAdminUsersResp>(
+        'List',
+        list_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListSuperAdminUsersResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.ListSuperAdminUsersResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return list($call, await $request);
+  }
+
+  $async.Future<$1.ListSuperAdminUsersResp> list(
+      $grpc.ServiceCall call, $0.Empty request);
+}

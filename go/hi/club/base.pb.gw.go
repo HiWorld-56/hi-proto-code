@@ -126,6 +126,27 @@ func local_request_Base_ServerVersion_0(ctx context.Context, marshaler runtime.M
 	return msg, metadata, err
 }
 
+func request_SuperAdmin_List_0(ctx context.Context, marshaler runtime.Marshaler, client SuperAdminClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq emptypb.Empty
+		metadata runtime.ServerMetadata
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.List(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_SuperAdmin_List_0(ctx context.Context, marshaler runtime.Marshaler, server SuperAdminServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq emptypb.Empty
+		metadata runtime.ServerMetadata
+	)
+	msg, err := server.List(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 // RegisterBaseHandlerServer registers the http handlers for service Base to "mux".
 // UnaryRPC     :call BaseServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -191,6 +212,36 @@ func RegisterBaseHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 			return
 		}
 		forward_Base_ServerVersion_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	return nil
+}
+
+// RegisterSuperAdminHandlerServer registers the http handlers for service SuperAdmin to "mux".
+// UnaryRPC     :call SuperAdminServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterSuperAdminHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
+func RegisterSuperAdminHandlerServer(ctx context.Context, mux *runtime.ServeMux, server SuperAdminServer) error {
+	mux.Handle(http.MethodGet, pattern_SuperAdmin_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.SuperAdmin/List", runtime.WithHTTPPathPattern("/api/v1/super_admin/list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_SuperAdmin_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_SuperAdmin_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -296,4 +347,68 @@ var (
 	forward_Base_ListCoins_0     = runtime.ForwardResponseMessage
 	forward_Base_LatestVersion_0 = runtime.ForwardResponseMessage
 	forward_Base_ServerVersion_0 = runtime.ForwardResponseMessage
+)
+
+// RegisterSuperAdminHandlerFromEndpoint is same as RegisterSuperAdminHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterSuperAdminHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.NewClient(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+	return RegisterSuperAdminHandler(ctx, mux, conn)
+}
+
+// RegisterSuperAdminHandler registers the http handlers for service SuperAdmin to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterSuperAdminHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterSuperAdminHandlerClient(ctx, mux, NewSuperAdminClient(conn))
+}
+
+// RegisterSuperAdminHandlerClient registers the http handlers for service SuperAdmin
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "SuperAdminClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "SuperAdminClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "SuperAdminClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterSuperAdminHandlerClient(ctx context.Context, mux *runtime.ServeMux, client SuperAdminClient) error {
+	mux.Handle(http.MethodGet, pattern_SuperAdmin_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.SuperAdmin/List", runtime.WithHTTPPathPattern("/api/v1/super_admin/list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_SuperAdmin_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_SuperAdmin_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	return nil
+}
+
+var (
+	pattern_SuperAdmin_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "super_admin", "list"}, ""))
+)
+
+var (
+	forward_SuperAdmin_List_0 = runtime.ForwardResponseMessage
 )
