@@ -1267,9 +1267,20 @@ pub struct ListMyAgentsReq {
     #[prost(message, optional, tag = "1")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
-/// 只吐身份(Entity)。prompt/模型这些是 owner 的私密配置,要看走 ai 的 Agent 接口。
+/// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——
+/// 与"空=换一种语义"不同,这里两种情况是同一根轴上的"筛/不筛"。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListAgentsByUsersReq {
+    /// 用户 did;空=全部
+    #[prost(string, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// 机器人列表:**只吐身份(Entity)**。prompt/模型是 owner 的私密配置,要看走 ai 的 Agent 接口。
+/// Agent.List(我的)与 AgentManage.List(超管按用户搜)共用 —— 返回形状本就该一样。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMyAgentsResp {
+pub struct ListAgentsResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     /// assistant(软件)+ robot(硬件)
@@ -1374,10 +1385,7 @@ pub mod agent_client {
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMyAgentsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListMyAgentsResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1493,45 +1501,6 @@ pub mod agent_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/GetUsage");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "GetUsage"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn mark(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::MarkAgentReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/Mark");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "Mark"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_marks(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::ListMarksReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListAgentResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/ListMarks");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "ListMarks"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn get_default_config(
@@ -1759,6 +1728,164 @@ pub mod agent_directory_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.AgentDirectory", "ListOnline"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod agent_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
+    /// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+    ///
+    /// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
+    /// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+    #[derive(Debug, Clone)]
+    pub struct AgentManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl AgentManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> AgentManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AgentManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            AgentManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAgentsByUsersReq>,
+        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.AgentManage/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.AgentManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn mark(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::MarkAgentReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.AgentManage/Mark");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.AgentManage", "Mark"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_marks(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::ListMarksReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::ListAgentResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.AgentManage/ListMarks",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.AgentManage", "ListMarks"));
             self.inner.unary(req, path, codec).await
         }
     }

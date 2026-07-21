@@ -38,7 +38,7 @@ class AgentClient extends $grpc.Client {
   /// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
   /// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
   /// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
-  $grpc.ResponseFuture<$0.ListMyAgentsResp> list(
+  $grpc.ResponseFuture<$0.ListAgentsResp> list(
     $0.ListMyAgentsReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -81,20 +81,6 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$getUsage, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> mark(
-    $1.MarkAgentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$mark, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.ListAgentResp> listMarks(
-    $1.ListMarksReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listMarks, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.DefaultConfigResp> getDefaultConfig(
     $2.Empty request, {
     $grpc.CallOptions? options,
@@ -134,10 +120,10 @@ class AgentClient extends $grpc.Client {
   // method descriptors
 
   static final _$list =
-      $grpc.ClientMethod<$0.ListMyAgentsReq, $0.ListMyAgentsResp>(
+      $grpc.ClientMethod<$0.ListMyAgentsReq, $0.ListAgentsResp>(
           '/hi.club.Agent/List',
           ($0.ListMyAgentsReq value) => value.writeToBuffer(),
-          $0.ListMyAgentsResp.fromBuffer);
+          $0.ListAgentsResp.fromBuffer);
   static final _$createAssistant =
       $grpc.ClientMethod<$1.CreateAssistantReq, $1.CreateAgentResp>(
           '/hi.club.Agent/CreateAssistant',
@@ -160,15 +146,6 @@ class AgentClient extends $grpc.Client {
           '/hi.club.Agent/GetUsage',
           ($1.AgentUsageReq value) => value.writeToBuffer(),
           $1.AgentUsageResp.fromBuffer);
-  static final _$mark = $grpc.ClientMethod<$1.MarkAgentReq, $2.Empty>(
-      '/hi.club.Agent/Mark',
-      ($1.MarkAgentReq value) => value.writeToBuffer(),
-      $2.Empty.fromBuffer);
-  static final _$listMarks =
-      $grpc.ClientMethod<$1.ListMarksReq, $1.ListAgentResp>(
-          '/hi.club.Agent/ListMarks',
-          ($1.ListMarksReq value) => value.writeToBuffer(),
-          $1.ListAgentResp.fromBuffer);
   static final _$getDefaultConfig =
       $grpc.ClientMethod<$2.Empty, $1.DefaultConfigResp>(
           '/hi.club.Agent/GetDefaultConfig',
@@ -199,13 +176,13 @@ abstract class AgentServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Agent';
 
   AgentServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.ListMyAgentsReq, $0.ListMyAgentsResp>(
+    $addMethod($grpc.ServiceMethod<$0.ListMyAgentsReq, $0.ListAgentsResp>(
         'List',
         list_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.ListMyAgentsReq.fromBuffer(value),
-        ($0.ListMyAgentsResp value) => value.writeToBuffer()));
+        ($0.ListAgentsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.CreateAssistantReq, $1.CreateAgentResp>(
         'CreateAssistant',
         createAssistant_Pre,
@@ -242,20 +219,6 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.AgentUsageReq.fromBuffer(value),
         ($1.AgentUsageResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.MarkAgentReq, $2.Empty>(
-        'Mark',
-        mark_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.MarkAgentReq.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ListMarksReq, $1.ListAgentResp>(
-        'ListMarks',
-        listMarks_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.ListMarksReq.fromBuffer(value),
-        ($1.ListAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.Empty, $1.DefaultConfigResp>(
         'GetDefaultConfig',
         getDefaultConfig_Pre,
@@ -293,12 +256,12 @@ abstract class AgentServiceBase extends $grpc.Service {
         ($2.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ListMyAgentsResp> list_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.ListAgentsResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListMyAgentsReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListMyAgentsResp> list(
+  $async.Future<$0.ListAgentsResp> list(
       $grpc.ServiceCall call, $0.ListMyAgentsReq request);
 
   $async.Future<$1.CreateAgentResp> createAssistant_Pre($grpc.ServiceCall $call,
@@ -339,21 +302,6 @@ abstract class AgentServiceBase extends $grpc.Service {
 
   $async.Future<$1.AgentUsageResp> getUsage(
       $grpc.ServiceCall call, $1.AgentUsageReq request);
-
-  $async.Future<$2.Empty> mark_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.MarkAgentReq> $request) async {
-    return mark($call, await $request);
-  }
-
-  $async.Future<$2.Empty> mark($grpc.ServiceCall call, $1.MarkAgentReq request);
-
-  $async.Future<$1.ListAgentResp> listMarks_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.ListMarksReq> $request) async {
-    return listMarks($call, await $request);
-  }
-
-  $async.Future<$1.ListAgentResp> listMarks(
-      $grpc.ServiceCall call, $1.ListMarksReq request);
 
   $async.Future<$1.DefaultConfigResp> getDefaultConfig_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
@@ -458,4 +406,113 @@ abstract class AgentDirectoryServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListOnlineResp> listOnline(
       $grpc.ServiceCall call, $0.ListOnlineReq request);
+}
+
+/// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
+/// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+///
+/// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
+/// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+@$pb.GrpcServiceName('hi.club.AgentManage')
+class AgentManageClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  AgentManageClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$0.ListAgentsResp> list(
+    $0.ListAgentsByUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$2.Empty> mark(
+    $1.MarkAgentReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$mark, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListAgentResp> listMarks(
+    $1.ListMarksReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listMarks, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$list =
+      $grpc.ClientMethod<$0.ListAgentsByUsersReq, $0.ListAgentsResp>(
+          '/hi.club.AgentManage/List',
+          ($0.ListAgentsByUsersReq value) => value.writeToBuffer(),
+          $0.ListAgentsResp.fromBuffer);
+  static final _$mark = $grpc.ClientMethod<$1.MarkAgentReq, $2.Empty>(
+      '/hi.club.AgentManage/Mark',
+      ($1.MarkAgentReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$listMarks =
+      $grpc.ClientMethod<$1.ListMarksReq, $1.ListAgentResp>(
+          '/hi.club.AgentManage/ListMarks',
+          ($1.ListMarksReq value) => value.writeToBuffer(),
+          $1.ListAgentResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.club.AgentManage')
+abstract class AgentManageServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.club.AgentManage';
+
+  AgentManageServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.ListAgentsByUsersReq, $0.ListAgentsResp>(
+        'List',
+        list_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListAgentsByUsersReq.fromBuffer(value),
+        ($0.ListAgentsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.MarkAgentReq, $2.Empty>(
+        'Mark',
+        mark_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.MarkAgentReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListMarksReq, $1.ListAgentResp>(
+        'ListMarks',
+        listMarks_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ListMarksReq.fromBuffer(value),
+        ($1.ListAgentResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.ListAgentsResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListAgentsByUsersReq> $request) async {
+    return list($call, await $request);
+  }
+
+  $async.Future<$0.ListAgentsResp> list(
+      $grpc.ServiceCall call, $0.ListAgentsByUsersReq request);
+
+  $async.Future<$2.Empty> mark_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.MarkAgentReq> $request) async {
+    return mark($call, await $request);
+  }
+
+  $async.Future<$2.Empty> mark($grpc.ServiceCall call, $1.MarkAgentReq request);
+
+  $async.Future<$1.ListAgentResp> listMarks_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.ListMarksReq> $request) async {
+    return listMarks($call, await $request);
+  }
+
+  $async.Future<$1.ListAgentResp> listMarks(
+      $grpc.ServiceCall call, $1.ListMarksReq request);
 }

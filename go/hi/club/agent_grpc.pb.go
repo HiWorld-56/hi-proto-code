@@ -27,8 +27,6 @@ const (
 	Agent_Delete_FullMethodName           = "/hi.club.Agent/Delete"
 	Agent_Get_FullMethodName              = "/hi.club.Agent/Get"
 	Agent_GetUsage_FullMethodName         = "/hi.club.Agent/GetUsage"
-	Agent_Mark_FullMethodName             = "/hi.club.Agent/Mark"
-	Agent_ListMarks_FullMethodName        = "/hi.club.Agent/ListMarks"
 	Agent_GetDefaultConfig_FullMethodName = "/hi.club.Agent/GetDefaultConfig"
 	Agent_BindMaster_FullMethodName       = "/hi.club.Agent/BindMaster"
 	Agent_UnbindMaster_FullMethodName     = "/hi.club.Agent/UnbindMaster"
@@ -44,15 +42,13 @@ type AgentClient interface {
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
 	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
-	List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListMyAgentsResp, error)
+	List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
 	Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *ai.DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetAgentReq, opts ...grpc.CallOption) (*ai.GetAgentResp, error)
 	GetUsage(ctx context.Context, in *ai.AgentUsageReq, opts ...grpc.CallOption) (*ai.AgentUsageResp, error)
-	Mark(ctx context.Context, in *ai.MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMarks(ctx context.Context, in *ai.ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
 	GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.DefaultConfigResp, error)
 	// ── club 自有:换绑主人 ──
 	BindMaster(ctx context.Context, in *BindMasterReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -69,9 +65,9 @@ func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
 }
 
-func (c *agentClient) List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListMyAgentsResp, error) {
+func (c *agentClient) List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListMyAgentsResp)
+	out := new(ListAgentsResp)
 	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -123,26 +119,6 @@ func (c *agentClient) GetUsage(ctx context.Context, in *ai.AgentUsageReq, opts .
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.AgentUsageResp)
 	err := c.cc.Invoke(ctx, Agent_GetUsage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) Mark(ctx context.Context, in *ai.MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Agent_Mark_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) ListMarks(ctx context.Context, in *ai.ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListAgentResp)
-	err := c.cc.Invoke(ctx, Agent_ListMarks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -207,15 +183,13 @@ type AgentServer interface {
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
 	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
-	List(context.Context, *ListMyAgentsReq) (*ListMyAgentsResp, error)
+	List(context.Context, *ListMyAgentsReq) (*ListAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error)
 	Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error)
 	Delete(context.Context, *ai.DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetAgentReq) (*ai.GetAgentResp, error)
 	GetUsage(context.Context, *ai.AgentUsageReq) (*ai.AgentUsageResp, error)
-	Mark(context.Context, *ai.MarkAgentReq) (*emptypb.Empty, error)
-	ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error)
 	GetDefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error)
 	// ── club 自有:换绑主人 ──
 	BindMaster(context.Context, *BindMasterReq) (*emptypb.Empty, error)
@@ -231,7 +205,7 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
-func (UnimplementedAgentServer) List(context.Context, *ListMyAgentsReq) (*ListMyAgentsResp, error) {
+func (UnimplementedAgentServer) List(context.Context, *ListMyAgentsReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentServer) CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error) {
@@ -248,12 +222,6 @@ func (UnimplementedAgentServer) Get(context.Context, *ai.GetAgentReq) (*ai.GetAg
 }
 func (UnimplementedAgentServer) GetUsage(context.Context, *ai.AgentUsageReq) (*ai.AgentUsageResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUsage not implemented")
-}
-func (UnimplementedAgentServer) Mark(context.Context, *ai.MarkAgentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
-}
-func (UnimplementedAgentServer) ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
 func (UnimplementedAgentServer) GetDefaultConfig(context.Context, *emptypb.Empty) (*ai.DefaultConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDefaultConfig not implemented")
@@ -398,42 +366,6 @@ func _Agent_GetUsage_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.MarkAgentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).Mark(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_Mark_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).Mark(ctx, req.(*ai.MarkAgentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ListMarksReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ListMarks(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ListMarks_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListMarks(ctx, req.(*ai.ListMarksReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_GetDefaultConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -554,14 +486,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUsage",
 			Handler:    _Agent_GetUsage_Handler,
-		},
-		{
-			MethodName: "Mark",
-			Handler:    _Agent_Mark_Handler,
-		},
-		{
-			MethodName: "ListMarks",
-			Handler:    _Agent_ListMarks_Handler,
 		},
 		{
 			MethodName: "GetDefaultConfig",
@@ -712,6 +636,194 @@ var AgentDirectory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListOnline",
 			Handler:    _AgentDirectory_ListOnline_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/agent.proto",
+}
+
+const (
+	AgentManage_List_FullMethodName      = "/hi.club.AgentManage/List"
+	AgentManage_Mark_FullMethodName      = "/hi.club.AgentManage/Mark"
+	AgentManage_ListMarks_FullMethodName = "/hi.club.AgentManage/ListMarks"
+)
+
+// AgentManageClient is the client API for AgentManage service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
+// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+//
+// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
+// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+type AgentManageClient interface {
+	List(ctx context.Context, in *ListAgentsByUsersReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
+	Mark(ctx context.Context, in *ai.MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListMarks(ctx context.Context, in *ai.ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
+}
+
+type agentManageClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAgentManageClient(cc grpc.ClientConnInterface) AgentManageClient {
+	return &agentManageClient{cc}
+}
+
+func (c *agentManageClient) List(ctx context.Context, in *ListAgentsByUsersReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentsResp)
+	err := c.cc.Invoke(ctx, AgentManage_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentManageClient) Mark(ctx context.Context, in *ai.MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AgentManage_Mark_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentManageClient) ListMarks(ctx context.Context, in *ai.ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ai.ListAgentResp)
+	err := c.cc.Invoke(ctx, AgentManage_ListMarks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AgentManageServer is the server API for AgentManage service.
+// All implementations should embed UnimplementedAgentManageServer
+// for forward compatibility.
+//
+// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
+// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+//
+// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
+// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+type AgentManageServer interface {
+	List(context.Context, *ListAgentsByUsersReq) (*ListAgentsResp, error)
+	Mark(context.Context, *ai.MarkAgentReq) (*emptypb.Empty, error)
+	ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error)
+}
+
+// UnimplementedAgentManageServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedAgentManageServer struct{}
+
+func (UnimplementedAgentManageServer) List(context.Context, *ListAgentsByUsersReq) (*ListAgentsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedAgentManageServer) Mark(context.Context, *ai.MarkAgentReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
+}
+func (UnimplementedAgentManageServer) ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
+}
+func (UnimplementedAgentManageServer) testEmbeddedByValue() {}
+
+// UnsafeAgentManageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AgentManageServer will
+// result in compilation errors.
+type UnsafeAgentManageServer interface {
+	mustEmbedUnimplementedAgentManageServer()
+}
+
+func RegisterAgentManageServer(s grpc.ServiceRegistrar, srv AgentManageServer) {
+	// If the following call panics, it indicates UnimplementedAgentManageServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&AgentManage_ServiceDesc, srv)
+}
+
+func _AgentManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAgentsByUsersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentManageServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentManage_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentManageServer).List(ctx, req.(*ListAgentsByUsersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AgentManage_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.MarkAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentManageServer).Mark(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentManage_Mark_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentManageServer).Mark(ctx, req.(*ai.MarkAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AgentManage_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.ListMarksReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentManageServer).ListMarks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentManage_ListMarks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentManageServer).ListMarks(ctx, req.(*ai.ListMarksReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AgentManage_ServiceDesc is the grpc.ServiceDesc for AgentManage service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AgentManage_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.AgentManage",
+	HandlerType: (*AgentManageServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _AgentManage_List_Handler,
+		},
+		{
+			MethodName: "Mark",
+			Handler:    _AgentManage_Mark_Handler,
+		},
+		{
+			MethodName: "ListMarks",
+			Handler:    _AgentManage_ListMarks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

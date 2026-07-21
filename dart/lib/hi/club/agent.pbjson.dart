@@ -188,9 +188,30 @@ final $typed_data.Uint8List listMyAgentsReqDescriptor = $convert.base64Decode(
     'Cg9MaXN0TXlBZ2VudHNSZXESLgoKcGFnaW5hdGlvbhgBIAEoCzIOLmhpLlBhZ2luYXRpb25SCn'
     'BhZ2luYXRpb24=');
 
-@$core.Deprecated('Use listMyAgentsRespDescriptor instead')
-const ListMyAgentsResp$json = {
-  '1': 'ListMyAgentsResp',
+@$core.Deprecated('Use listAgentsByUsersReqDescriptor instead')
+const ListAgentsByUsersReq$json = {
+  '1': 'ListAgentsByUsersReq',
+  '2': [
+    {'1': 'users', '3': 1, '4': 3, '5': 9, '10': 'users'},
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListAgentsByUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentsByUsersReqDescriptor = $convert.base64Decode(
+    'ChRMaXN0QWdlbnRzQnlVc2Vyc1JlcRIUCgV1c2VycxgBIAMoCVIFdXNlcnMSLgoKcGFnaW5hdG'
+    'lvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+
+@$core.Deprecated('Use listAgentsRespDescriptor instead')
+const ListAgentsResp$json = {
+  '1': 'ListAgentsResp',
   '2': [
     {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
@@ -206,7 +227,7 @@ const ListMyAgentsResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListMyAgentsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listMyAgentsRespDescriptor = $convert.base64Decode(
-    'ChBMaXN0TXlBZ2VudHNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIoCgZhZ2VudH'
-    'MYAiADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBmFnZW50czoEmLUYAw==');
+/// Descriptor for `ListAgentsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentsRespDescriptor = $convert.base64Decode(
+    'Cg5MaXN0QWdlbnRzUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYA1IFdG90YWwSKAoGYWdlbnRzGA'
+    'IgAygLMgouaGkuRW50aXR5QgSQtRgBUgZhZ2VudHM6BJi1GAM=');
