@@ -24,7 +24,6 @@ const (
 	Training_Start_FullMethodName         = "/hi.club.Training/Start"
 	Training_Status_FullMethodName        = "/hi.club.Training/Status"
 	Training_Clear_FullMethodName         = "/hi.club.Training/Clear"
-	Training_UploadFile_FullMethodName    = "/hi.club.Training/UploadFile"
 	Training_ListFiles_FullMethodName     = "/hi.club.Training/ListFiles"
 	Training_GetFile_FullMethodName       = "/hi.club.Training/GetFile"
 	Training_DeleteFiles_FullMethodName   = "/hi.club.Training/DeleteFiles"
@@ -47,7 +46,6 @@ type TrainingClient interface {
 	Status(ctx context.Context, in *ai.StatusReq, opts ...grpc.CallOption) (*ai.StatusResp, error)
 	Clear(ctx context.Context, in *ai.ClearReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 训练文件 ──
-	UploadFile(ctx context.Context, in *ai.UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListFiles(ctx context.Context, in *ai.ListFilesReq, opts ...grpc.CallOption) (*ai.ListFilesResp, error)
 	GetFile(ctx context.Context, in *ai.GetFileReq, opts ...grpc.CallOption) (*ai.GetFileResp, error)
 	DeleteFiles(ctx context.Context, in *ai.DeleteFilesReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -89,16 +87,6 @@ func (c *trainingClient) Clear(ctx context.Context, in *ai.ClearReq, opts ...grp
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Training_Clear_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *trainingClient) UploadFile(ctx context.Context, in *ai.UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Training_UploadFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +167,6 @@ type TrainingServer interface {
 	Status(context.Context, *ai.StatusReq) (*ai.StatusResp, error)
 	Clear(context.Context, *ai.ClearReq) (*emptypb.Empty, error)
 	// ── 训练文件 ──
-	UploadFile(context.Context, *ai.UploadFileReq) (*emptypb.Empty, error)
 	ListFiles(context.Context, *ai.ListFilesReq) (*ai.ListFilesResp, error)
 	GetFile(context.Context, *ai.GetFileReq) (*ai.GetFileResp, error)
 	DeleteFiles(context.Context, *ai.DeleteFilesReq) (*emptypb.Empty, error)
@@ -204,9 +191,6 @@ func (UnimplementedTrainingServer) Status(context.Context, *ai.StatusReq) (*ai.S
 }
 func (UnimplementedTrainingServer) Clear(context.Context, *ai.ClearReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Clear not implemented")
-}
-func (UnimplementedTrainingServer) UploadFile(context.Context, *ai.UploadFileReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UploadFile not implemented")
 }
 func (UnimplementedTrainingServer) ListFiles(context.Context, *ai.ListFilesReq) (*ai.ListFilesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListFiles not implemented")
@@ -296,24 +280,6 @@ func _Training_Clear_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TrainingServer).Clear(ctx, req.(*ai.ClearReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Training_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.UploadFileReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TrainingServer).UploadFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Training_UploadFile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrainingServer).UploadFile(ctx, req.(*ai.UploadFileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -444,10 +410,6 @@ var Training_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Clear",
 			Handler:    _Training_Clear_Handler,
-		},
-		{
-			MethodName: "UploadFile",
-			Handler:    _Training_UploadFile_Handler,
 		},
 		{
 			MethodName: "ListFiles",

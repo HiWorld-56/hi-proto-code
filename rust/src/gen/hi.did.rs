@@ -1237,18 +1237,6 @@ pub struct ListUsersResp {
     #[prost(message, repeated, tag = "2")]
     pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
 }
-/// 商户给名下某用户传头像。user 必须在该商户名下。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UploadUserAvatarReq {
-    /// 用户 did
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
-    /// 原始文件名(取扩展名用)
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(bytes = "vec", tag = "3")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
-}
 /// 批量写用户的资料与扩展。
 ///
 /// ⚠️ **入参不复用 UserExtensionUnit** —— 那是**返回类型**(GetUser/ListUsers 用),
@@ -1507,31 +1495,6 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "Update"));
             self.inner.unary(req, path, codec).await
         }
-        /// 传商户 logo → hidid bucket 的 logo/。只回 url;写进配置仍走 Update。
-        pub async fn upload_logo(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/UploadLogo",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "UploadLogo"));
-            self.inner.unary(req, path, codec).await
-        }
         /// ── 管理**自己名下**用户的扩展信息(免 grant)──
         /// 跨商户读走 MerchantGranted,那边整个 service 都要 requireGrant。
         /// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
@@ -1679,34 +1642,6 @@ pub mod merchant_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Merchant", "RemoveUsers"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// 给自己名下的用户传头像 → hidid bucket 的 avatar/。**档位必须是 AUTH_MERCHANT** ——
-        /// 链路是 app --用户token--> club后端 --ExtendToken--> did后端,club 手里只有商户凭证,
-        /// 调不了 User.UploadAvatar(那是用户档,给持 did 用户 token 的端用的)。
-        /// 只回 url;写进资料仍走 SetUsers(与现有 SetUserProfile 一致)。
-        pub async fn upload_user_avatar(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UploadUserAvatarReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Merchant/UploadUserAvatar",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Merchant", "UploadUserAvatar"));
             self.inner.unary(req, path, codec).await
         }
         /// ── 用户 mqtt 凭证(基础信息,商户可见)──
@@ -4047,6 +3982,253 @@ pub mod merchant_manage_client {
         }
     }
 }
+/// Generated client implementations.
+pub mod source_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Source —— hidid 侧直接搬运二进制的方法。分法见 hi/club/source.proto 的说明。
+    ///
+    /// **所有身份实体的头像都落 hidid/avatar/**:用户、商户(logo 即商户头像)、机器人,
+    /// 不再按实体分目录 —— 它们在存储上是同一类东西,分开只是徒增分支。
+    /// 以前不分家(全塞 upload 的按月目录)出过批量误删头像的事故,那是"不该合的合了";
+    /// 这里是"不该分的分了",两回事。
+    ///
+    /// ⚠️ 只回 url,**不改资料** —— 落库分别走 `User.Edit` / `Merchant.Update` /
+    /// `Merchant.SetUsers`,上传与落库解耦(这个约定原先就是这样,只是方法搬了家)。
+    #[derive(Debug, Clone)]
+    pub struct SourceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SourceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SourceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SourceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SourceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn upload_avatar(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Source/UploadAvatar",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Source", "UploadAvatar"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod merchant_source_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// MerchantSource —— 同样是传头像,但**调用主体是商户**(商户给名下用户传)。
+    ///
+    /// 拆成独立 service 而不是在 Source 里加一个方法:`hi.auth` 要求同一 service 内档位
+    /// 一致,商户档与用户档不能混。这也正是 Merchant / MerchantGranted 的拆法。
+    #[derive(Debug, Clone)]
+    pub struct MerchantSourceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MerchantSourceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MerchantSourceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MerchantSourceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MerchantSourceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn upload_avatar(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantSource/UploadAvatar",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantSource", "UploadAvatar"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// 用户自己的资料(用户主体,token)。Total(用户总数,公开)已并入 Base。
 /// 改自己的资料。
 ///
@@ -4157,27 +4339,6 @@ pub mod user_client {
         /// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
         /// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
         /// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
-        pub async fn upload_avatar(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.User/UploadAvatar");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.User", "UploadAvatar"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn edit(
             &mut self,
             request: impl tonic::IntoRequest<super::EditProfileReq>,

@@ -25,6 +25,7 @@ const (
 	File_PutStream_FullMethodName      = "/hi.source.File/PutStream"
 	File_Download_FullMethodName       = "/hi.source.File/Download"
 	File_DownloadStream_FullMethodName = "/hi.source.File/DownloadStream"
+	File_Delete_FullMethodName         = "/hi.source.File/Delete"
 )
 
 // FileClient is the client API for File service.
@@ -35,6 +36,7 @@ type FileClient interface {
 	PutStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[PutStreamReq, PutResp], error)
 	Download(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownloadResp, error)
 	DownloadStream(ctx context.Context, in *DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadStreamResp], error)
+	Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type fileClient struct {
@@ -97,6 +99,16 @@ func (c *fileClient) DownloadStream(ctx context.Context, in *DownloadStreamReq, 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type File_DownloadStreamClient = grpc.ServerStreamingClient[DownloadStreamResp]
 
+func (c *fileClient) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, File_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileServer is the server API for File service.
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
@@ -105,6 +117,7 @@ type FileServer interface {
 	PutStream(grpc.ClientStreamingServer[PutStreamReq, PutResp]) error
 	Download(context.Context, *DownloadReq) (*DownloadResp, error)
 	DownloadStream(*DownloadStreamReq, grpc.ServerStreamingServer[DownloadStreamResp]) error
+	Delete(context.Context, *DeleteReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedFileServer should be embedded to have
@@ -125,6 +138,9 @@ func (UnimplementedFileServer) Download(context.Context, *DownloadReq) (*Downloa
 }
 func (UnimplementedFileServer) DownloadStream(*DownloadStreamReq, grpc.ServerStreamingServer[DownloadStreamResp]) error {
 	return status.Error(codes.Unimplemented, "method DownloadStream not implemented")
+}
+func (UnimplementedFileServer) Delete(context.Context, *DeleteReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedFileServer) testEmbeddedByValue() {}
 
@@ -200,6 +216,24 @@ func _File_DownloadStream_Handler(srv interface{}, stream grpc.ServerStream) err
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type File_DownloadStreamServer = grpc.ServerStreamingServer[DownloadStreamResp]
 
+func _File_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: File_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServer).Delete(ctx, req.(*DeleteReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // File_ServiceDesc is the grpc.ServiceDesc for File service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -214,6 +248,10 @@ var File_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Download",
 			Handler:    _File_Download_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _File_Delete_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

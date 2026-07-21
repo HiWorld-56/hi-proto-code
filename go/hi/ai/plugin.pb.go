@@ -1607,10 +1607,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl*G\n" +
 	"\fPluginSource\x12\x1a\n" +
 	"\x16PLUGIN_SOURCE_ORIGINAL\x10\x00\x12\x1b\n" +
-	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\xc2\a\n" +
-	"\x06Plugin\x12<\n" +
-	"\fUploadScript\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03(\x01\x12L\n" +
-	"\x0eDownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
+	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\xb6\x06\n" +
+	"\x06Plugin\x12@\n" +
 	"\x06Create\x12\x16.hi.ai.CreatePluginReq\x1a\x17.hi.ai.CreatePluginResp\"\x05\x8a\xb5\x18\x01\x03\x12H\n" +
 	"\rCreateVersion\x12\x17.hi.ai.CreateVersionReq\x1a\x17.hi.ai.CreatePluginResp\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
 	"\vCreateAnnex\x12\x15.hi.ai.CreateAnnexReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
@@ -1672,9 +1670,7 @@ var file_hi_ai_plugin_proto_goTypes = []any{
 	(*structpb.Struct)(nil),            // 25: google.protobuf.Struct
 	(*hi.Pagination)(nil),              // 26: hi.Pagination
 	(*Content)(nil),                    // 27: hi.ai.Content
-	(*hi.UploadStreamReq)(nil),         // 28: hi.UploadStreamReq
-	(*hi.UploadResp)(nil),              // 29: hi.UploadResp
-	(*emptypb.Empty)(nil),              // 30: google.protobuf.Empty
+	(*emptypb.Empty)(nil),              // 28: google.protobuf.Empty
 }
 var file_hi_ai_plugin_proto_depIdxs = []int32{
 	25, // 0: hi.ai.PluginAnnex.data:type_name -> google.protobuf.Struct
@@ -1692,40 +1688,36 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	3,  // 12: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
 	2,  // 13: hi.ai.RunReq.annex:type_name -> hi.ai.PluginAnnex
 	27, // 14: hi.ai.RunResp.conts:type_name -> hi.ai.Content
-	28, // 15: hi.ai.Plugin.UploadScript:input_type -> hi.UploadStreamReq
-	12, // 16: hi.ai.Plugin.DownloadScript:input_type -> hi.ai.DownloadScriptReq
-	5,  // 17: hi.ai.Plugin.Create:input_type -> hi.ai.CreatePluginReq
-	6,  // 18: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
-	8,  // 19: hi.ai.Plugin.CreateAnnex:input_type -> hi.ai.CreateAnnexReq
-	9,  // 20: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	17, // 21: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	14, // 22: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginReq
-	15, // 23: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
-	19, // 24: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
-	20, // 25: hi.ai.Plugin.DeleteAll:input_type -> hi.ai.DeleteAllPluginVersionsReq
-	21, // 26: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	11, // 27: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
-	10, // 28: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
-	22, // 29: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
-	24, // 30: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
-	29, // 31: hi.ai.Plugin.UploadScript:output_type -> hi.UploadResp
-	13, // 32: hi.ai.Plugin.DownloadScript:output_type -> hi.ai.DownloadScriptResp
-	7,  // 33: hi.ai.Plugin.Create:output_type -> hi.ai.CreatePluginResp
-	7,  // 34: hi.ai.Plugin.CreateVersion:output_type -> hi.ai.CreatePluginResp
-	30, // 35: hi.ai.Plugin.CreateAnnex:output_type -> google.protobuf.Empty
-	30, // 36: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	18, // 37: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	16, // 38: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginResp
-	16, // 39: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginResp
-	30, // 40: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	30, // 41: hi.ai.Plugin.DeleteAll:output_type -> google.protobuf.Empty
-	30, // 42: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	30, // 43: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
-	30, // 44: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
-	23, // 45: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
-	30, // 46: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
-	31, // [31:47] is the sub-list for method output_type
-	15, // [15:31] is the sub-list for method input_type
+	5,  // 15: hi.ai.Plugin.Create:input_type -> hi.ai.CreatePluginReq
+	6,  // 16: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
+	8,  // 17: hi.ai.Plugin.CreateAnnex:input_type -> hi.ai.CreateAnnexReq
+	9,  // 18: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	17, // 19: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
+	14, // 20: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginReq
+	15, // 21: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
+	19, // 22: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
+	20, // 23: hi.ai.Plugin.DeleteAll:input_type -> hi.ai.DeleteAllPluginVersionsReq
+	21, // 24: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
+	11, // 25: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
+	10, // 26: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	22, // 27: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
+	24, // 28: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
+	7,  // 29: hi.ai.Plugin.Create:output_type -> hi.ai.CreatePluginResp
+	7,  // 30: hi.ai.Plugin.CreateVersion:output_type -> hi.ai.CreatePluginResp
+	28, // 31: hi.ai.Plugin.CreateAnnex:output_type -> google.protobuf.Empty
+	28, // 32: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	18, // 33: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	16, // 34: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginResp
+	16, // 35: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginResp
+	28, // 36: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	28, // 37: hi.ai.Plugin.DeleteAll:output_type -> google.protobuf.Empty
+	28, // 38: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
+	28, // 39: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
+	28, // 40: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	23, // 41: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
+	28, // 42: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
+	29, // [29:43] is the sub-list for method output_type
+	15, // [15:29] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name
 	15, // [15:15] is the sub-list for extension extendee
 	0,  // [0:15] is the sub-list for field type_name

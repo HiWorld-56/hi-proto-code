@@ -438,22 +438,6 @@ final $typed_data.Uint8List listUsersRespDescriptor = $convert.base64Decode(
     'Cg1MaXN0VXNlcnNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgCUgV0b3RhbBI1CgV1bml0cxgCIA'
     'MoCzIZLmhpLmRpZC5Vc2VyRXh0ZW5zaW9uVW5pdEIEkLUYAlIFdW5pdHM6BJi1GAI=');
 
-@$core.Deprecated('Use uploadUserAvatarReqDescriptor instead')
-const UploadUserAvatarReq$json = {
-  '1': 'UploadUserAvatarReq',
-  '2': [
-    {'1': 'user', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'user'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'content', '3': 3, '4': 1, '5': 12, '8': {}, '10': 'content'},
-  ],
-};
-
-/// Descriptor for `UploadUserAvatarReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List uploadUserAvatarReqDescriptor = $convert.base64Decode(
-    'ChNVcGxvYWRVc2VyQXZhdGFyUmVxEiAKBHVzZXIYASABKAlCDLpICXIHMgVeXFMrJFIEdXNlch'
-    'IgCgRuYW1lGAIgASgJQgy6SAlyBzIFXlxTKyRSBG5hbWUSIQoHY29udGVudBgDIAEoDEIHukgE'
-    'egIQAVIHY29udGVudA==');
-
 @$core.Deprecated('Use setUserUnitDescriptor instead')
 const SetUserUnit$json = {
   '1': 'SetUserUnit',

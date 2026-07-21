@@ -64,6 +64,13 @@ class FileClient extends $grpc.Client {
         options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> delete(
+    $0.DeleteReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$delete, request, options: options);
+  }
+
   // method descriptors
 
   static final _$put = $grpc.ClientMethod<$0.PutReq, $0.PutResp>(
@@ -83,6 +90,10 @@ class FileClient extends $grpc.Client {
           '/hi.source.File/DownloadStream',
           ($0.DownloadStreamReq value) => value.writeToBuffer(),
           $0.DownloadStreamResp.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.DeleteReq, $1.Empty>(
+      '/hi.source.File/Delete',
+      ($0.DeleteReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.source.File')
@@ -118,6 +129,13 @@ abstract class FileServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.DownloadStreamReq.fromBuffer(value),
         ($0.DownloadStreamResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteReq, $1.Empty>(
+        'Delete',
+        delete_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DeleteReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.PutResp> put_Pre(
@@ -146,6 +164,13 @@ abstract class FileServiceBase extends $grpc.Service {
 
   $async.Stream<$0.DownloadStreamResp> downloadStream(
       $grpc.ServiceCall call, $0.DownloadStreamReq request);
+
+  $async.Future<$1.Empty> delete_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.DeleteReq> $request) async {
+    return delete($call, await $request);
+  }
+
+  $async.Future<$1.Empty> delete($grpc.ServiceCall call, $0.DeleteReq request);
 }
 
 @$pb.GrpcServiceName('hi.source.Base')

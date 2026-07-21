@@ -605,6 +605,57 @@ func (x *PutMeta) GetThumbnail() bool {
 	return false
 }
 
+// 删除。**补这个是因为原先根本没有** —— 各业务模块把文件交给 hi-source 之后就再也
+// 删不掉了:用户在业务侧删掉记录,对象永远留在桶里。temp 桶有 14 天 lifecycle 兜底,
+// 永久桶和私有桶没有,只会一直涨。
+//
+// ⚠️ 幂等:对象不存在也返回成功 —— 调用方多半是"删库记录顺带删对象",
+//
+//	对象早没了不该让整个删除操作失败。
+type DeleteReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"` // 完整 url,bucket/对象名从中解析
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteReq) Reset() {
+	*x = DeleteReq{}
+	mi := &file_hi_source_source_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteReq) ProtoMessage() {}
+
+func (x *DeleteReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteReq.ProtoReflect.Descriptor instead.
+func (*DeleteReq) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteReq) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
 var File_hi_source_source_proto protoreflect.FileDescriptor
 
 const file_hi_source_source_proto_rawDesc = "" +
@@ -644,16 +695,19 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x03dir\x18\x02 \x01(\tR\x03dir\x12 \n" +
 	"\x04name\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12\x1b\n" +
 	"\x04size\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\x12\x1c\n" +
-	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail*>\n" +
+	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\"+\n" +
+	"\tDeleteReq\x12\x1e\n" +
+	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url*>\n" +
 	"\bNameMode\x12\x0f\n" +
 	"\vNAME_RANDOM\x10\x00\x12\x12\n" +
 	"\x0eNAME_TIMESTAMP\x10\x01\x12\r\n" +
-	"\tNAME_KEEP\x10\x022\x9a\x02\n" +
+	"\tNAME_KEEP\x10\x022\xd9\x02\n" +
 	"\x04File\x123\n" +
 	"\x03Put\x12\x11.hi.source.PutReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
 	"\tPutStream\x12\x17.hi.source.PutStreamReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12B\n" +
 	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
-	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x05\x8a\xb5\x18\x01\x010\x012M\n" +
+	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x05\x8a\xb5\x18\x01\x010\x01\x12=\n" +
+	"\x06Delete\x12\x14.hi.source.DeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x012M\n" +
 	"\x04Base\x12E\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01B\x8e\x01\n" +
 	"\rcom.hi.sourceB\vSourceProtoP\x01Z+github.com/HiWorld-56/hi-proto/go/hi/source\xa2\x02\x03HSX\xaa\x02\tHi.Source\xca\x02\tHi\\Source\xe2\x02\x15Hi\\Source\\GPBMetadata\xea\x02\n" +
@@ -672,7 +726,7 @@ func file_hi_source_source_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_source_source_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_hi_source_source_proto_goTypes = []any{
 	(NameMode)(0),                // 0: hi.source.NameMode
 	(*DownloadReq)(nil),          // 1: hi.source.DownloadReq
@@ -683,8 +737,9 @@ var file_hi_source_source_proto_goTypes = []any{
 	(*PutResp)(nil),              // 6: hi.source.PutResp
 	(*PutStreamReq)(nil),         // 7: hi.source.PutStreamReq
 	(*PutMeta)(nil),              // 8: hi.source.PutMeta
-	(*emptypb.Empty)(nil),        // 9: google.protobuf.Empty
-	(*hi.ServerVersionResp)(nil), // 10: hi.ServerVersionResp
+	(*DeleteReq)(nil),            // 9: hi.source.DeleteReq
+	(*emptypb.Empty)(nil),        // 10: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil), // 11: hi.ServerVersionResp
 }
 var file_hi_source_source_proto_depIdxs = []int32{
 	0,  // 0: hi.source.PutReq.name_mode:type_name -> hi.source.NameMode
@@ -693,14 +748,16 @@ var file_hi_source_source_proto_depIdxs = []int32{
 	7,  // 3: hi.source.File.PutStream:input_type -> hi.source.PutStreamReq
 	1,  // 4: hi.source.File.Download:input_type -> hi.source.DownloadReq
 	4,  // 5: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
-	9,  // 6: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
-	6,  // 7: hi.source.File.Put:output_type -> hi.source.PutResp
-	6,  // 8: hi.source.File.PutStream:output_type -> hi.source.PutResp
-	2,  // 9: hi.source.File.Download:output_type -> hi.source.DownloadResp
-	3,  // 10: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	10, // 11: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	7,  // [7:12] is the sub-list for method output_type
-	2,  // [2:7] is the sub-list for method input_type
+	9,  // 6: hi.source.File.Delete:input_type -> hi.source.DeleteReq
+	10, // 7: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
+	6,  // 8: hi.source.File.Put:output_type -> hi.source.PutResp
+	6,  // 9: hi.source.File.PutStream:output_type -> hi.source.PutResp
+	2,  // 10: hi.source.File.Download:output_type -> hi.source.DownloadResp
+	3,  // 11: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
+	10, // 12: hi.source.File.Delete:output_type -> google.protobuf.Empty
+	11, // 13: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	8,  // [8:14] is the sub-list for method output_type
+	2,  // [2:8] is the sub-list for method input_type
 	2,  // [2:2] is the sub-list for extension type_name
 	2,  // [2:2] is the sub-list for extension extendee
 	0,  // [0:2] is the sub-list for field type_name
@@ -722,7 +779,7 @@ func file_hi_source_source_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_source_source_proto_rawDesc), len(file_hi_source_source_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

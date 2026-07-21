@@ -679,6 +679,65 @@ class PutMeta extends $pb.GeneratedMessage {
   void clearThumbnail() => $_clearField(5);
 }
 
+/// 删除。**补这个是因为原先根本没有** —— 各业务模块把文件交给 hi-source 之后就再也
+/// 删不掉了:用户在业务侧删掉记录,对象永远留在桶里。temp 桶有 14 天 lifecycle 兜底,
+/// 永久桶和私有桶没有,只会一直涨。
+///
+/// ⚠️ 幂等:对象不存在也返回成功 —— 调用方多半是"删库记录顺带删对象",
+///    对象早没了不该让整个删除操作失败。
+class DeleteReq extends $pb.GeneratedMessage {
+  factory DeleteReq({
+    $core.String? url,
+  }) {
+    final result = create();
+    if (url != null) result.url = url;
+    return result;
+  }
+
+  DeleteReq._();
+
+  factory DeleteReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteReq copyWith(void Function(DeleteReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteReq)) as DeleteReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteReq create() => DeleteReq._();
+  @$core.override
+  DeleteReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DeleteReq>(create);
+  static DeleteReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get url => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set url($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUrl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUrl() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

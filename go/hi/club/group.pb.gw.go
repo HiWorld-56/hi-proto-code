@@ -14,7 +14,6 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/HiWorld-56/hi-proto/go/hi"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -35,60 +34,6 @@ var (
 	_ = utilities.NewDoubleArray
 	_ = metadata.Join
 )
-
-func request_Group_UploadAvatar_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq hi.UploadReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.UploadAvatar(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Group_UploadAvatar_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq hi.UploadReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.UploadAvatar(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_Group_UploadBackground_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq hi.UploadReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.UploadBackground(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_Group_UploadBackground_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq hi.UploadReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.UploadBackground(ctx, &protoReq)
-	return msg, metadata, err
-}
 
 func request_Group_Get_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
@@ -501,46 +446,6 @@ func local_request_Group_MuteMembers_0(ctx context.Context, marshaler runtime.Ma
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterGroupHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterGroupHandlerServer(ctx context.Context, mux *runtime.ServeMux, server GroupServer) error {
-	mux.Handle(http.MethodPost, pattern_Group_UploadAvatar_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Group/UploadAvatar", runtime.WithHTTPPathPattern("/hi.club.Group/UploadAvatar"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Group_UploadAvatar_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_UploadAvatar_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Group_UploadBackground_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Group/UploadBackground", runtime.WithHTTPPathPattern("/hi.club.Group/UploadBackground"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_Group_UploadBackground_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_UploadBackground_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Group_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -881,40 +786,6 @@ func RegisterGroupHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "GroupClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterGroupHandlerClient(ctx context.Context, mux *runtime.ServeMux, client GroupClient) error {
-	mux.Handle(http.MethodPost, pattern_Group_UploadAvatar_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Group/UploadAvatar", runtime.WithHTTPPathPattern("/hi.club.Group/UploadAvatar"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Group_UploadAvatar_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_UploadAvatar_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_Group_UploadBackground_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Group/UploadBackground", runtime.WithHTTPPathPattern("/hi.club.Group/UploadBackground"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_Group_UploadBackground_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_Group_UploadBackground_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	mux.Handle(http.MethodPost, pattern_Group_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1174,41 +1045,37 @@ func RegisterGroupHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Group_UploadAvatar_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "UploadAvatar"}, ""))
-	pattern_Group_UploadBackground_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "UploadBackground"}, ""))
-	pattern_Group_Get_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Get"}, ""))
-	pattern_Group_Create_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Create"}, ""))
-	pattern_Group_CreateSingle_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "CreateSingle"}, ""))
-	pattern_Group_Update_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Update"}, ""))
-	pattern_Group_ListMembers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMembers"}, ""))
-	pattern_Group_GetMemberTotal_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetMemberTotal"}, ""))
-	pattern_Group_Invite_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Invite"}, ""))
-	pattern_Group_Join_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Join"}, ""))
-	pattern_Group_Quit_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Quit"}, ""))
-	pattern_Group_Remove_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Remove"}, ""))
-	pattern_Group_ListMessages_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMessages"}, ""))
-	pattern_Group_SetRole_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "SetRole"}, ""))
-	pattern_Group_GetRole_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetRole"}, ""))
-	pattern_Group_SetDnd_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "SetDnd"}, ""))
-	pattern_Group_MuteMembers_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "MuteMembers"}, ""))
+	pattern_Group_Get_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Get"}, ""))
+	pattern_Group_Create_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Create"}, ""))
+	pattern_Group_CreateSingle_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "CreateSingle"}, ""))
+	pattern_Group_Update_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Update"}, ""))
+	pattern_Group_ListMembers_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMembers"}, ""))
+	pattern_Group_GetMemberTotal_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetMemberTotal"}, ""))
+	pattern_Group_Invite_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Invite"}, ""))
+	pattern_Group_Join_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Join"}, ""))
+	pattern_Group_Quit_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Quit"}, ""))
+	pattern_Group_Remove_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "Remove"}, ""))
+	pattern_Group_ListMessages_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "ListMessages"}, ""))
+	pattern_Group_SetRole_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "SetRole"}, ""))
+	pattern_Group_GetRole_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "GetRole"}, ""))
+	pattern_Group_SetDnd_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "SetDnd"}, ""))
+	pattern_Group_MuteMembers_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Group", "MuteMembers"}, ""))
 )
 
 var (
-	forward_Group_UploadAvatar_0     = runtime.ForwardResponseMessage
-	forward_Group_UploadBackground_0 = runtime.ForwardResponseMessage
-	forward_Group_Get_0              = runtime.ForwardResponseMessage
-	forward_Group_Create_0           = runtime.ForwardResponseMessage
-	forward_Group_CreateSingle_0     = runtime.ForwardResponseMessage
-	forward_Group_Update_0           = runtime.ForwardResponseMessage
-	forward_Group_ListMembers_0      = runtime.ForwardResponseMessage
-	forward_Group_GetMemberTotal_0   = runtime.ForwardResponseMessage
-	forward_Group_Invite_0           = runtime.ForwardResponseMessage
-	forward_Group_Join_0             = runtime.ForwardResponseMessage
-	forward_Group_Quit_0             = runtime.ForwardResponseMessage
-	forward_Group_Remove_0           = runtime.ForwardResponseMessage
-	forward_Group_ListMessages_0     = runtime.ForwardResponseMessage
-	forward_Group_SetRole_0          = runtime.ForwardResponseMessage
-	forward_Group_GetRole_0          = runtime.ForwardResponseMessage
-	forward_Group_SetDnd_0           = runtime.ForwardResponseMessage
-	forward_Group_MuteMembers_0      = runtime.ForwardResponseMessage
+	forward_Group_Get_0            = runtime.ForwardResponseMessage
+	forward_Group_Create_0         = runtime.ForwardResponseMessage
+	forward_Group_CreateSingle_0   = runtime.ForwardResponseMessage
+	forward_Group_Update_0         = runtime.ForwardResponseMessage
+	forward_Group_ListMembers_0    = runtime.ForwardResponseMessage
+	forward_Group_GetMemberTotal_0 = runtime.ForwardResponseMessage
+	forward_Group_Invite_0         = runtime.ForwardResponseMessage
+	forward_Group_Join_0           = runtime.ForwardResponseMessage
+	forward_Group_Quit_0           = runtime.ForwardResponseMessage
+	forward_Group_Remove_0         = runtime.ForwardResponseMessage
+	forward_Group_ListMessages_0   = runtime.ForwardResponseMessage
+	forward_Group_SetRole_0        = runtime.ForwardResponseMessage
+	forward_Group_GetRole_0        = runtime.ForwardResponseMessage
+	forward_Group_SetDnd_0         = runtime.ForwardResponseMessage
+	forward_Group_MuteMembers_0    = runtime.ForwardResponseMessage
 )

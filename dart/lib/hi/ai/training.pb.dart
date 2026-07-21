@@ -777,6 +777,141 @@ class DeleteFilesByAgentsReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get agents => $_getList(0);
 }
 
+/// 下载训练文件原件。训练资料存**私有桶**(商户私产,不公开读),所以拿不到可直下的 url,
+/// 必须经这里带归属校验取字节 —— 与插件脚本的 DownloadScript 同一套路。
+class DownloadFileReq extends $pb.GeneratedMessage {
+  factory DownloadFileReq({
+    $core.String? agent,
+    $core.String? uuid,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    return result;
+  }
+
+  DownloadFileReq._();
+
+  factory DownloadFileReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DownloadFileReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DownloadFileReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadFileReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadFileReq copyWith(void Function(DownloadFileReq) updates) =>
+      super.copyWith((message) => updates(message as DownloadFileReq))
+          as DownloadFileReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DownloadFileReq create() => DownloadFileReq._();
+  @$core.override
+  DownloadFileReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DownloadFileReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DownloadFileReq>(create);
+  static DownloadFileReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+}
+
+class DownloadFileResp extends $pb.GeneratedMessage {
+  factory DownloadFileResp({
+    $core.List<$core.int>? content,
+    $core.String? name,
+  }) {
+    final result = create();
+    if (content != null) result.content = content;
+    if (name != null) result.name = name;
+    return result;
+  }
+
+  DownloadFileResp._();
+
+  factory DownloadFileResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DownloadFileResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DownloadFileResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadFileResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DownloadFileResp copyWith(void Function(DownloadFileResp) updates) =>
+      super.copyWith((message) => updates(message as DownloadFileResp))
+          as DownloadFileResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DownloadFileResp create() => DownloadFileResp._();
+  @$core.override
+  DownloadFileResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DownloadFileResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DownloadFileResp>(create);
+  static DownloadFileResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get content => $_getN(0);
+  @$pb.TagNumber(1)
+  set content($core.List<$core.int> value) => $_setBytes(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasContent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearContent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+}
+
 class GetFileReq extends $pb.GeneratedMessage {
   factory GetFileReq({
     $core.String? uuid,

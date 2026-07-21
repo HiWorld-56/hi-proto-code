@@ -13,9 +13,9 @@
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $3;
+import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
-import '../common.pb.dart' as $0;
+import '../common.pb.dart' as $3;
 import 'chat.pb.dart' as $4;
 import 'plugin.pbenum.dart';
 
@@ -162,7 +162,7 @@ class PluginBody extends $pb.GeneratedMessage {
 class PluginAnnex extends $pb.GeneratedMessage {
   factory PluginAnnex({
     $core.String? apiKey,
-    $3.Struct? data,
+    $2.Struct? data,
   }) {
     final result = create();
     if (apiKey != null) result.apiKey = apiKey;
@@ -184,8 +184,8 @@ class PluginAnnex extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'apiKey')
-    ..aOM<$3.Struct>(2, _omitFieldNames ? '' : 'data',
-        subBuilder: $3.Struct.create)
+    ..aOM<$2.Struct>(2, _omitFieldNames ? '' : 'data',
+        subBuilder: $2.Struct.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -217,15 +217,15 @@ class PluginAnnex extends $pb.GeneratedMessage {
   void clearApiKey() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $3.Struct get data => $_getN(1);
+  $2.Struct get data => $_getN(1);
   @$pb.TagNumber(2)
-  set data($3.Struct value) => $_setField(2, value);
+  set data($2.Struct value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasData() => $_has(1);
   @$pb.TagNumber(2)
   void clearData() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Struct ensureData() => $_ensure(1);
+  $2.Struct ensureData() => $_ensure(1);
 }
 
 /// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
@@ -1134,7 +1134,7 @@ class DownloadScriptResp extends $pb.GeneratedMessage {
 class ListPluginReq extends $pb.GeneratedMessage {
   factory ListPluginReq({
     $core.String? agent,
-    $0.Pagination? pagination,
+    $3.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1156,8 +1156,8 @@ class ListPluginReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOM<$0.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $0.Pagination.create)
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1189,22 +1189,22 @@ class ListPluginReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $0.Pagination get pagination => $_getN(1);
+  $3.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($0.Pagination value) => $_setField(2, value);
+  set pagination($3.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $0.Pagination ensurePagination() => $_ensure(1);
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListVersionsReq extends $pb.GeneratedMessage {
   factory ListVersionsReq({
     $core.String? agent,
     $core.String? root,
-    $0.Pagination? pagination,
+    $3.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1228,8 +1228,8 @@ class ListVersionsReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'root')
-    ..aOM<$0.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $0.Pagination.create)
+    ..aOM<$3.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1270,15 +1270,15 @@ class ListVersionsReq extends $pb.GeneratedMessage {
   void clearRoot() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $0.Pagination get pagination => $_getN(2);
+  $3.Pagination get pagination => $_getN(2);
   @$pb.TagNumber(3)
-  set pagination($0.Pagination value) => $_setField(3, value);
+  set pagination($3.Pagination value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasPagination() => $_has(2);
   @$pb.TagNumber(3)
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
-  $0.Pagination ensurePagination() => $_ensure(2);
+  $3.Pagination ensurePagination() => $_ensure(2);
 }
 
 class ListPluginResp extends $pb.GeneratedMessage {

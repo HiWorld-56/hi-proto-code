@@ -1052,6 +1052,332 @@ pub mod api_key_client {
     }
 }
 /// Generated client implementations.
+pub mod source_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Source —— **所有直接搬运二进制的方法**都收在这里。
+    ///
+    /// 分法是**按资源类别**(落哪个桶、留多久、公开还是私有),不是按实体。
+    /// 原先散在 User/Group/Chat/Plugin/Training 五个 service 里,找一个上传口要翻半天,
+    /// 每加一种资源就得在某个业务 service 里再塞一个 Upload\*。
+    ///
+    /// ⚠️ **上传不做归属校验,也不需要**:上传只把字节换成一个 32 位随机 url,
+    /// url 本身不构成任何权限。真正决定"这张图能不能挂到这个群上"的仍是
+    /// `Group.Update` 的 owner/admin 校验 —— 那层一点没动。
+    /// 所以这里也**不校验 url 属于哪个桶**:调用方拿临时桶的 url 去设群头像,
+    /// 顶多是自己的图 14 天后失效,伤不到别人。
+    ///
+    /// ⚠️ **用户头像不在这里** —— 头像归 hidid 管,直接调 `hi.did.Source.UploadAvatar`。
+    /// club 原先的 `User.UploadAvatar` 只是一层转发,拆开后与群头像撞名,故删掉转发。
+    /// 本 service 的 `UploadAvatar` 指的是**群头像**(club 自己的实体只有群有头像)。
+    #[derive(Debug, Clone)]
+    pub struct SourceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SourceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SourceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SourceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SourceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+        pub async fn upload_avatar(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadAvatar",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadAvatar"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_background(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadBackground",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadBackground"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
+        pub async fn upload_temp(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadTemp",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Source", "UploadTemp"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_temp_stream(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::super::UploadStreamReq,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadTempStream",
+            );
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadTempStream"));
+            self.inner.client_streaming(req, path, codec).await
+        }
+        /// ── 日志:log 桶(私有),对象名固定为 <did>.log,**同一设备覆盖同一份** ──
+        /// 随机改名的话,845 次/48h 的上传频率会瞬间堆出上万个对象。
+        pub async fn upload_log(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Source/UploadLog");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Source", "UploadLog"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 永久私有:商户私产,不公开读,取用必须经 Download 带归属校验 ──
+        pub async fn upload_script(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::super::UploadStreamReq,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadScript",
+            );
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadScript"));
+            self.inner.client_streaming(req, path, codec).await
+        }
+        pub async fn download_script(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::DownloadScriptReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::DownloadScriptResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/DownloadScript",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "DownloadScript"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_training_file(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::UploadFileReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadTrainingFile",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadTrainingFile"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn download_training_file(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::DownloadFileReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::DownloadFileResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/DownloadTrainingFile",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "DownloadTrainingFile"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
 pub mod speech_client {
     #![allow(
         unused_variables,
@@ -2612,56 +2938,6 @@ pub mod plugin_client {
             self
         }
         /// 脚本包存取:纯透传 hi.ai.Plugin(club 侧只做用户鉴权 + CheckBotOwnership)。
-        pub async fn upload_script(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::super::UploadStreamReq,
-            >,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/UploadScript",
-            );
-            let mut req = request.into_streaming_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "UploadScript"));
-            self.inner.client_streaming(req, path, codec).await
-        }
-        pub async fn download_script(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::DownloadScriptReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::DownloadScriptResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/DownloadScript",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "DownloadScript"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn create(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::CreatePluginReq>,
@@ -3504,54 +3780,6 @@ pub mod group_client {
             self
         }
         /// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
-        pub async fn upload_avatar(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Group/UploadAvatar",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Group", "UploadAvatar"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn upload_background(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Group/UploadBackground",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Group", "UploadBackground"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGroupReq>,
@@ -4114,59 +4342,11 @@ pub mod user_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 传用户头像:**club 不自己存**,内部转发 did,落 hidid bucket。
-        /// 链路 app --用户token--> club后端 --ExtendToken--> did后端,故 club 调的是
-        /// **hi.did.Merchant.UploadUserAvatar**(商户档),不是 User.UploadAvatar(用户档)。
-        /// app 不该感知头像"穿"到 did 这件事 —— 那是 club 与 did 之间的事,分层不能搅浑。
-        pub async fn upload_avatar(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/UploadAvatar",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "UploadAvatar"));
-            self.inner.unary(req, path, codec).await
-        }
         /// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
         ///
         /// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
         /// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
         /// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
-        pub async fn upload_log(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.User/UploadLog");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "UploadLog"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn get_current(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -4707,27 +4887,6 @@ pub mod training_client {
             self.inner.unary(req, path, codec).await
         }
         /// ── 训练文件 ──
-        pub async fn upload_file(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::UploadFileReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Training/UploadFile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Training", "UploadFile"));
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn list_files(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::ListFilesReq>,
@@ -5023,53 +5182,6 @@ pub mod chat_client {
         /// 传聊天媒体(图/语音/视频/文件)→ **temp bucket,14 天后自动过期**。
         /// 媒体是临时资产:redis 消息历史也只留 14 天,两者对齐;客户端收到即缓存到本地,
         /// 故过期不影响本地历史回看。**头像/群头像不要走这里** —— 那是永固资产,各有归属 bucket。
-        pub async fn upload_media(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/UploadMedia");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "UploadMedia"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn upload_media_stream(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::super::UploadStreamReq,
-            >,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/UploadMediaStream",
-            );
-            let mut req = request.into_streaming_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Chat", "UploadMediaStream"));
-            self.inner.client_streaming(req, path, codec).await
-        }
         /// ── 会话管理 ──
         pub async fn new_session(
             &mut self,

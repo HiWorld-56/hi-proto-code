@@ -108,6 +108,18 @@ pub struct PutMeta {
     #[prost(bool, tag = "5")]
     pub thumbnail: bool,
 }
+/// 删除。**补这个是因为原先根本没有** —— 各业务模块把文件交给 hi-source 之后就再也
+/// 删不掉了:用户在业务侧删掉记录,对象永远留在桶里。temp 桶有 14 天 lifecycle 兜底,
+/// 永久桶和私有桶没有,只会一直涨。
+///
+/// ⚠️ 幂等:对象不存在也返回成功 —— 调用方多半是"删库记录顺带删对象",
+/// 对象早没了不该让整个删除操作失败。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteReq {
+    /// 完整 url,bucket/对象名从中解析
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+}
 /// 对象命名方式。
 ///
 /// ⚠️ **红线**:公开 bucket 的用户内容一律用 NAME_RANDOM。那些 bucket 的安全性正是靠
@@ -313,6 +325,24 @@ pub mod file_client {
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.source.File", "DownloadStream"));
             self.inner.server_streaming(req, path, codec).await
+        }
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.source.File/Delete");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "Delete"));
+            self.inner.unary(req, path, codec).await
         }
     }
 }

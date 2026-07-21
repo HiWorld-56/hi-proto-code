@@ -1300,10 +1300,8 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
 	"background\x18\x04 \x01(\tR\n" +
 	"background\x12\x18\n" +
-	"\aprivate\x18\x05 \x01(\bR\aprivate2\xf1\b\n" +
-	"\x05Group\x124\n" +
-	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x128\n" +
-	"\x10UploadBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\aprivate\x18\x05 \x01(\bR\aprivate2\x81\b\n" +
+	"\x05Group\x12<\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x18.hi.club.GroupMemberView\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
 	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
@@ -1362,9 +1360,7 @@ var file_hi_club_group_proto_goTypes = []any{
 	(*hi.Entity)(nil),               // 23: hi.Entity
 	(*Packet)(nil),                  // 24: hi.club.Packet
 	(*hi.Pagination)(nil),           // 25: hi.Pagination
-	(*hi.UploadReq)(nil),            // 26: hi.UploadReq
-	(*hi.UploadResp)(nil),           // 27: hi.UploadResp
-	(*emptypb.Empty)(nil),           // 28: google.protobuf.Empty
+	(*emptypb.Empty)(nil),           // 26: google.protobuf.Empty
 }
 var file_hi_club_group_proto_depIdxs = []int32{
 	23, // 0: hi.club.GroupBase.base:type_name -> hi.Entity
@@ -1376,42 +1372,38 @@ var file_hi_club_group_proto_depIdxs = []int32{
 	1,  // 6: hi.club.GroupMemberView.attr:type_name -> hi.club.GroupMemberAttr
 	24, // 7: hi.club.ListGroupMessageResp.list:type_name -> hi.club.Packet
 	25, // 8: hi.club.ListGroupMemberReq.pagination:type_name -> hi.Pagination
-	26, // 9: hi.club.Group.UploadAvatar:input_type -> hi.UploadReq
-	26, // 10: hi.club.Group.UploadBackground:input_type -> hi.UploadReq
-	5,  // 11: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
-	6,  // 12: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
-	7,  // 13: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
-	22, // 14: hi.club.Group.Update:input_type -> hi.club.UpdateGroupReq
-	10, // 15: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMemberReq
-	11, // 16: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
-	13, // 17: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
-	14, // 18: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
-	15, // 19: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
-	16, // 20: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
-	8,  // 21: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessageReq
-	17, // 22: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
-	18, // 23: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
-	20, // 24: hi.club.Group.SetDnd:input_type -> hi.club.SetDndReq
-	21, // 25: hi.club.Group.MuteMembers:input_type -> hi.club.MuteMembersReq
-	27, // 26: hi.club.Group.UploadAvatar:output_type -> hi.UploadResp
-	27, // 27: hi.club.Group.UploadBackground:output_type -> hi.UploadResp
-	4,  // 28: hi.club.Group.Get:output_type -> hi.club.GroupMemberView
-	0,  // 29: hi.club.Group.Create:output_type -> hi.club.GroupBase
-	0,  // 30: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
-	28, // 31: hi.club.Group.Update:output_type -> google.protobuf.Empty
-	3,  // 32: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
-	12, // 33: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
-	28, // 34: hi.club.Group.Invite:output_type -> google.protobuf.Empty
-	28, // 35: hi.club.Group.Join:output_type -> google.protobuf.Empty
-	28, // 36: hi.club.Group.Quit:output_type -> google.protobuf.Empty
-	28, // 37: hi.club.Group.Remove:output_type -> google.protobuf.Empty
-	9,  // 38: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessageResp
-	28, // 39: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
-	19, // 40: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
-	28, // 41: hi.club.Group.SetDnd:output_type -> google.protobuf.Empty
-	28, // 42: hi.club.Group.MuteMembers:output_type -> google.protobuf.Empty
-	26, // [26:43] is the sub-list for method output_type
-	9,  // [9:26] is the sub-list for method input_type
+	5,  // 9: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
+	6,  // 10: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
+	7,  // 11: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
+	22, // 12: hi.club.Group.Update:input_type -> hi.club.UpdateGroupReq
+	10, // 13: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMemberReq
+	11, // 14: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
+	13, // 15: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
+	14, // 16: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
+	15, // 17: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
+	16, // 18: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
+	8,  // 19: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessageReq
+	17, // 20: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
+	18, // 21: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
+	20, // 22: hi.club.Group.SetDnd:input_type -> hi.club.SetDndReq
+	21, // 23: hi.club.Group.MuteMembers:input_type -> hi.club.MuteMembersReq
+	4,  // 24: hi.club.Group.Get:output_type -> hi.club.GroupMemberView
+	0,  // 25: hi.club.Group.Create:output_type -> hi.club.GroupBase
+	0,  // 26: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
+	26, // 27: hi.club.Group.Update:output_type -> google.protobuf.Empty
+	3,  // 28: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
+	12, // 29: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
+	26, // 30: hi.club.Group.Invite:output_type -> google.protobuf.Empty
+	26, // 31: hi.club.Group.Join:output_type -> google.protobuf.Empty
+	26, // 32: hi.club.Group.Quit:output_type -> google.protobuf.Empty
+	26, // 33: hi.club.Group.Remove:output_type -> google.protobuf.Empty
+	9,  // 34: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessageResp
+	26, // 35: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
+	19, // 36: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
+	26, // 37: hi.club.Group.SetDnd:output_type -> google.protobuf.Empty
+	26, // 38: hi.club.Group.MuteMembers:output_type -> google.protobuf.Empty
+	24, // [24:39] is the sub-list for method output_type
+	9,  // [9:24] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
 	9,  // [9:9] is the sub-list for extension extendee
 	0,  // [0:9] is the sub-list for field type_name

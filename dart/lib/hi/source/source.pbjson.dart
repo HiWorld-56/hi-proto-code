@@ -185,3 +185,15 @@ final $typed_data.Uint8List putMetaDescriptor = $convert.base64Decode(
     'CgdQdXRNZXRhEiQKBmJ1Y2tldBgBIAEoCUIMukgJcgcyBV5cUyskUgZidWNrZXQSEAoDZGlyGA'
     'IgASgJUgNkaXISIAoEbmFtZRgDIAEoCUIMukgJcgcyBV5cUyskUgRuYW1lEhsKBHNpemUYBCAB'
     'KANCB7pIBCICIABSBHNpemUSHAoJdGh1bWJuYWlsGAUgASgIUgl0aHVtYm5haWw=');
+
+@$core.Deprecated('Use deleteReqDescriptor instead')
+const DeleteReq$json = {
+  '1': 'DeleteReq',
+  '2': [
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+  ],
+};
+
+/// Descriptor for `DeleteReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteReqDescriptor = $convert.base64Decode(
+    'CglEZWxldGVSZXESHgoDdXJsGAEgASgJQgy6SAlyBzIFXlxTKyRSA3VybA==');

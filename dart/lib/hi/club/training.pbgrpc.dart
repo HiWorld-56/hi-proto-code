@@ -60,13 +60,6 @@ class TrainingClient extends $grpc.Client {
   }
 
   /// ── 训练文件 ──
-  $grpc.ResponseFuture<$1.Empty> uploadFile(
-    $0.UploadFileReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$uploadFile, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.ListFilesResp> listFiles(
     $0.ListFilesReq request, {
     $grpc.CallOptions? options,
@@ -124,10 +117,6 @@ class TrainingClient extends $grpc.Client {
       '/hi.club.Training/Clear',
       ($0.ClearReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
-  static final _$uploadFile = $grpc.ClientMethod<$0.UploadFileReq, $1.Empty>(
-      '/hi.club.Training/UploadFile',
-      ($0.UploadFileReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
   static final _$listFiles =
       $grpc.ClientMethod<$0.ListFilesReq, $0.ListFilesResp>(
           '/hi.club.Training/ListFiles',
@@ -182,13 +171,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.ClearReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UploadFileReq, $1.Empty>(
-        'UploadFile',
-        uploadFile_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.UploadFileReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListFilesReq, $0.ListFilesResp>(
         'ListFiles',
@@ -255,14 +237,6 @@ abstract class TrainingServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.Empty> clear($grpc.ServiceCall call, $0.ClearReq request);
-
-  $async.Future<$1.Empty> uploadFile_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.UploadFileReq> $request) async {
-    return uploadFile($call, await $request);
-  }
-
-  $async.Future<$1.Empty> uploadFile(
-      $grpc.ServiceCall call, $0.UploadFileReq request);
 
   $async.Future<$0.ListFilesResp> listFiles_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListFilesReq> $request) async {

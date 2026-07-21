@@ -8,7 +8,6 @@ package ai
 
 import (
 	context "context"
-	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,8 +20,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Plugin_UploadScript_FullMethodName   = "/hi.ai.Plugin/UploadScript"
-	Plugin_DownloadScript_FullMethodName = "/hi.ai.Plugin/DownloadScript"
 	Plugin_Create_FullMethodName         = "/hi.ai.Plugin/Create"
 	Plugin_CreateVersion_FullMethodName  = "/hi.ai.Plugin/CreateVersion"
 	Plugin_CreateAnnex_FullMethodName    = "/hi.ai.Plugin/CreateAnnex"
@@ -48,8 +45,6 @@ type PluginClient interface {
 	// 脚本是 owner 私产、且是插件市场里的可交易资产,故 bucket 不开匿名读:
 	// 拿到 url 也直接下不了,必须经 Download 走服务端凭据。
 	// 上传与建插件解耦:先 UploadScript 拿 url,再把 url 放进 CreatePluginReq。
-	UploadScript(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
-	DownloadScript(ctx context.Context, in *DownloadScriptReq, opts ...grpc.CallOption) (*DownloadScriptResp, error)
 	Create(ctx context.Context, in *CreatePluginReq, opts ...grpc.CallOption) (*CreatePluginResp, error)
 	CreateVersion(ctx context.Context, in *CreateVersionReq, opts ...grpc.CallOption) (*CreatePluginResp, error)
 	CreateAnnex(ctx context.Context, in *CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -70,29 +65,6 @@ type pluginClient struct {
 
 func NewPluginClient(cc grpc.ClientConnInterface) PluginClient {
 	return &pluginClient{cc}
-}
-
-func (c *pluginClient) UploadScript(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Plugin_ServiceDesc.Streams[0], Plugin_UploadScript_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[hi.UploadStreamReq, hi.UploadResp]{ClientStream: stream}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Plugin_UploadScriptClient = grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp]
-
-func (c *pluginClient) DownloadScript(ctx context.Context, in *DownloadScriptReq, opts ...grpc.CallOption) (*DownloadScriptResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DownloadScriptResp)
-	err := c.cc.Invoke(ctx, Plugin_DownloadScript_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *pluginClient) Create(ctx context.Context, in *CreatePluginReq, opts ...grpc.CallOption) (*CreatePluginResp, error) {
@@ -226,8 +198,6 @@ type PluginServer interface {
 	// 脚本是 owner 私产、且是插件市场里的可交易资产,故 bucket 不开匿名读:
 	// 拿到 url 也直接下不了,必须经 Download 走服务端凭据。
 	// 上传与建插件解耦:先 UploadScript 拿 url,再把 url 放进 CreatePluginReq。
-	UploadScript(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
-	DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error)
 	Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error)
 	CreateVersion(context.Context, *CreateVersionReq) (*CreatePluginResp, error)
 	CreateAnnex(context.Context, *CreateAnnexReq) (*emptypb.Empty, error)
@@ -249,12 +219,6 @@ type PluginServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPluginServer struct{}
 
-func (UnimplementedPluginServer) UploadScript(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error {
-	return status.Error(codes.Unimplemented, "method UploadScript not implemented")
-}
-func (UnimplementedPluginServer) DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method DownloadScript not implemented")
-}
 func (UnimplementedPluginServer) Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
@@ -309,31 +273,6 @@ func RegisterPluginServer(s grpc.ServiceRegistrar, srv PluginServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Plugin_ServiceDesc, srv)
-}
-
-func _Plugin_UploadScript_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(PluginServer).UploadScript(&grpc.GenericServerStream[hi.UploadStreamReq, hi.UploadResp]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Plugin_UploadScriptServer = grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]
-
-func _Plugin_DownloadScript_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DownloadScriptReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).DownloadScript(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_DownloadScript_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).DownloadScript(ctx, req.(*DownloadScriptReq))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -560,10 +499,6 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PluginServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "DownloadScript",
-			Handler:    _Plugin_DownloadScript_Handler,
-		},
-		{
 			MethodName: "Create",
 			Handler:    _Plugin_Create_Handler,
 		},
@@ -612,13 +547,7 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_SetEnabled_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "UploadScript",
-			Handler:       _Plugin_UploadScript_Handler,
-			ClientStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "hi/ai/plugin.proto",
 }
 

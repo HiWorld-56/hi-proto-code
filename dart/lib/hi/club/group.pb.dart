@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $0;
+import '../common.pb.dart' as $2;
 import 'messaging.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -23,7 +23,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// base.update 供前端判断缓存新鲜度。
 class GroupBase extends $pb.GeneratedMessage {
   factory GroupBase({
-    $0.Entity? base,
+    $2.Entity? base,
     $core.String? background,
     $core.bool? private,
   }) {
@@ -47,8 +47,8 @@ class GroupBase extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GroupBase',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $0.Entity.create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: $2.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'background')
     ..aOB(3, _omitFieldNames ? '' : 'private')
     ..hasRequiredFields = false;
@@ -72,15 +72,15 @@ class GroupBase extends $pb.GeneratedMessage {
   static GroupBase? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.Entity get base => $_getN(0);
+  $2.Entity get base => $_getN(0);
   @$pb.TagNumber(1)
-  set base($0.Entity value) => $_setField(1, value);
+  set base($2.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBase() => $_has(0);
   @$pb.TagNumber(1)
   void clearBase() => $_clearField(1);
   @$pb.TagNumber(1)
-  $0.Entity ensureBase() => $_ensure(0);
+  $2.Entity ensureBase() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get background => $_getSZ(1);
@@ -170,7 +170,7 @@ class GroupMemberAttr extends $pb.GeneratedMessage {
 
 class GroupMember extends $pb.GeneratedMessage {
   factory GroupMember({
-    $0.Entity? base,
+    $2.Entity? base,
     GroupMemberAttr? attr,
   }) {
     final result = create();
@@ -192,8 +192,8 @@ class GroupMember extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GroupMember',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $0.Entity.create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: $2.Entity.create)
     ..aOM<GroupMemberAttr>(2, _omitFieldNames ? '' : 'attr',
         subBuilder: GroupMemberAttr.create)
     ..hasRequiredFields = false;
@@ -218,15 +218,15 @@ class GroupMember extends $pb.GeneratedMessage {
   static GroupMember? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.Entity get base => $_getN(0);
+  $2.Entity get base => $_getN(0);
   @$pb.TagNumber(1)
-  set base($0.Entity value) => $_setField(1, value);
+  set base($2.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBase() => $_has(0);
   @$pb.TagNumber(1)
   void clearBase() => $_clearField(1);
   @$pb.TagNumber(1)
-  $0.Entity ensureBase() => $_ensure(0);
+  $2.Entity ensureBase() => $_ensure(0);
 
   @$pb.TagNumber(2)
   GroupMemberAttr get attr => $_getN(1);
@@ -672,7 +672,7 @@ class ListGroupMessageResp extends $pb.GeneratedMessage {
 class ListGroupMemberReq extends $pb.GeneratedMessage {
   factory ListGroupMemberReq({
     $core.String? code,
-    $0.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (code != null) result.code = code;
@@ -694,8 +694,8 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
-    ..aOM<$0.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $0.Pagination.create)
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -727,15 +727,15 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
   void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $0.Pagination get pagination => $_getN(1);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($0.Pagination value) => $_setField(2, value);
+  set pagination($2.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $0.Pagination ensurePagination() => $_ensure(1);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class GetGroupMemberTotalReq extends $pb.GeneratedMessage {

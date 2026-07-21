@@ -27,13 +27,11 @@ var File_hi_club_training_proto protoreflect.FileDescriptor
 
 const file_hi_club_training_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto\x1a\x10hi/options.proto2\x89\x05\n" +
+	"\x16hi/club/training.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/ai/training.proto\x1a\x10hi/options.proto2\xc6\x04\n" +
 	"\bTraining\x127\n" +
 	"\x05Start\x12\x0f.hi.ai.StartReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
 	"\x06Status\x12\x10.hi.ai.StatusReq\x1a\x11.hi.ai.StatusResp\"\x05\x8a\xb5\x18\x01\x02\x127\n" +
-	"\x05Clear\x12\x0f.hi.ai.ClearReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
-	"\n" +
-	"UploadFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\x05Clear\x12\x0f.hi.ai.ClearReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
 	"\tListFiles\x12\x13.hi.ai.ListFilesReq\x1a\x14.hi.ai.ListFilesResp\"\x05\x8a\xb5\x18\x01\x02\x127\n" +
 	"\aGetFile\x12\x11.hi.ai.GetFileReq\x1a\x12.hi.ai.GetFileResp\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
 	"\vDeleteFiles\x12\x15.hi.ai.DeleteFilesReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
@@ -47,42 +45,39 @@ var file_hi_club_training_proto_goTypes = []any{
 	(*ai.StartReq)(nil),          // 0: hi.ai.StartReq
 	(*ai.StatusReq)(nil),         // 1: hi.ai.StatusReq
 	(*ai.ClearReq)(nil),          // 2: hi.ai.ClearReq
-	(*ai.UploadFileReq)(nil),     // 3: hi.ai.UploadFileReq
-	(*ai.ListFilesReq)(nil),      // 4: hi.ai.ListFilesReq
-	(*ai.GetFileReq)(nil),        // 5: hi.ai.GetFileReq
-	(*ai.DeleteFilesReq)(nil),    // 6: hi.ai.DeleteFilesReq
-	(*ai.CreateContentReq)(nil),  // 7: hi.ai.CreateContentReq
-	(*ai.UpdateContentReq)(nil),  // 8: hi.ai.UpdateContentReq
-	(*ai.EditDigestReq)(nil),     // 9: hi.ai.EditDigestReq
-	(*emptypb.Empty)(nil),        // 10: google.protobuf.Empty
-	(*ai.StatusResp)(nil),        // 11: hi.ai.StatusResp
-	(*ai.ListFilesResp)(nil),     // 12: hi.ai.ListFilesResp
-	(*ai.GetFileResp)(nil),       // 13: hi.ai.GetFileResp
-	(*ai.CreateContentResp)(nil), // 14: hi.ai.CreateContentResp
+	(*ai.ListFilesReq)(nil),      // 3: hi.ai.ListFilesReq
+	(*ai.GetFileReq)(nil),        // 4: hi.ai.GetFileReq
+	(*ai.DeleteFilesReq)(nil),    // 5: hi.ai.DeleteFilesReq
+	(*ai.CreateContentReq)(nil),  // 6: hi.ai.CreateContentReq
+	(*ai.UpdateContentReq)(nil),  // 7: hi.ai.UpdateContentReq
+	(*ai.EditDigestReq)(nil),     // 8: hi.ai.EditDigestReq
+	(*emptypb.Empty)(nil),        // 9: google.protobuf.Empty
+	(*ai.StatusResp)(nil),        // 10: hi.ai.StatusResp
+	(*ai.ListFilesResp)(nil),     // 11: hi.ai.ListFilesResp
+	(*ai.GetFileResp)(nil),       // 12: hi.ai.GetFileResp
+	(*ai.CreateContentResp)(nil), // 13: hi.ai.CreateContentResp
 }
 var file_hi_club_training_proto_depIdxs = []int32{
 	0,  // 0: hi.club.Training.Start:input_type -> hi.ai.StartReq
 	1,  // 1: hi.club.Training.Status:input_type -> hi.ai.StatusReq
 	2,  // 2: hi.club.Training.Clear:input_type -> hi.ai.ClearReq
-	3,  // 3: hi.club.Training.UploadFile:input_type -> hi.ai.UploadFileReq
-	4,  // 4: hi.club.Training.ListFiles:input_type -> hi.ai.ListFilesReq
-	5,  // 5: hi.club.Training.GetFile:input_type -> hi.ai.GetFileReq
-	6,  // 6: hi.club.Training.DeleteFiles:input_type -> hi.ai.DeleteFilesReq
-	7,  // 7: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
-	8,  // 8: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
-	9,  // 9: hi.club.Training.EditDigest:input_type -> hi.ai.EditDigestReq
-	10, // 10: hi.club.Training.Start:output_type -> google.protobuf.Empty
-	11, // 11: hi.club.Training.Status:output_type -> hi.ai.StatusResp
-	10, // 12: hi.club.Training.Clear:output_type -> google.protobuf.Empty
-	10, // 13: hi.club.Training.UploadFile:output_type -> google.protobuf.Empty
-	12, // 14: hi.club.Training.ListFiles:output_type -> hi.ai.ListFilesResp
-	13, // 15: hi.club.Training.GetFile:output_type -> hi.ai.GetFileResp
-	10, // 16: hi.club.Training.DeleteFiles:output_type -> google.protobuf.Empty
-	14, // 17: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
-	10, // 18: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
-	10, // 19: hi.club.Training.EditDigest:output_type -> google.protobuf.Empty
-	10, // [10:20] is the sub-list for method output_type
-	0,  // [0:10] is the sub-list for method input_type
+	3,  // 3: hi.club.Training.ListFiles:input_type -> hi.ai.ListFilesReq
+	4,  // 4: hi.club.Training.GetFile:input_type -> hi.ai.GetFileReq
+	5,  // 5: hi.club.Training.DeleteFiles:input_type -> hi.ai.DeleteFilesReq
+	6,  // 6: hi.club.Training.CreateContent:input_type -> hi.ai.CreateContentReq
+	7,  // 7: hi.club.Training.UpdateContent:input_type -> hi.ai.UpdateContentReq
+	8,  // 8: hi.club.Training.EditDigest:input_type -> hi.ai.EditDigestReq
+	9,  // 9: hi.club.Training.Start:output_type -> google.protobuf.Empty
+	10, // 10: hi.club.Training.Status:output_type -> hi.ai.StatusResp
+	9,  // 11: hi.club.Training.Clear:output_type -> google.protobuf.Empty
+	11, // 12: hi.club.Training.ListFiles:output_type -> hi.ai.ListFilesResp
+	12, // 13: hi.club.Training.GetFile:output_type -> hi.ai.GetFileResp
+	9,  // 14: hi.club.Training.DeleteFiles:output_type -> google.protobuf.Empty
+	13, // 15: hi.club.Training.CreateContent:output_type -> hi.ai.CreateContentResp
+	9,  // 16: hi.club.Training.UpdateContent:output_type -> google.protobuf.Empty
+	9,  // 17: hi.club.Training.EditDigest:output_type -> google.protobuf.Empty
+	9,  // [9:18] is the sub-list for method output_type
+	0,  // [0:9] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

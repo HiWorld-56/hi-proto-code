@@ -193,6 +193,35 @@ final $typed_data.Uint8List deleteFilesByAgentsReqDescriptor =
     $convert.base64Decode(
         'ChZEZWxldGVGaWxlc0J5QWdlbnRzUmVxEhYKBmFnZW50cxgBIAMoCVIGYWdlbnRz');
 
+@$core.Deprecated('Use downloadFileReqDescriptor instead')
+const DownloadFileReq$json = {
+  '1': 'DownloadFileReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+  ],
+};
+
+/// Descriptor for `DownloadFileReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List downloadFileReqDescriptor = $convert.base64Decode(
+    'Cg9Eb3dubG9hZEZpbGVSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQSIA'
+    'oEdXVpZBgCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlk');
+
+@$core.Deprecated('Use downloadFileRespDescriptor instead')
+const DownloadFileResp$json = {
+  '1': 'DownloadFileResp',
+  '2': [
+    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `DownloadFileResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List downloadFileRespDescriptor = $convert.base64Decode(
+    'ChBEb3dubG9hZEZpbGVSZXNwEh4KB2NvbnRlbnQYASABKAxCBJC1GANSB2NvbnRlbnQSGAoEbm'
+    'FtZRgCIAEoCUIEkLUYA1IEbmFtZToEmLUYAw==');
+
 @$core.Deprecated('Use getFileReqDescriptor instead')
 const GetFileReq$json = {
   '1': 'GetFileReq',
