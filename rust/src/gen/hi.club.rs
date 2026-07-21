@@ -1277,15 +1277,44 @@ pub struct ListAgentsByUsersReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
-/// 机器人列表:**只吐身份(Entity)**。prompt/模型是 owner 的私密配置,要看走 ai 的 Agent 接口。
-/// Agent.List(我的)与 AgentManage.List(超管按用户搜)共用 —— 返回形状本就该一样。
+/// 列表项:身份 + club 自己的关系数据。
+/// prompt/模型是 owner 的私密配置,不在这里,要看走 ai 的 Agent 接口。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentBrief {
+    /// 机器人个体(assistant 软件 / robot 硬件)
+    #[prost(message, optional, tag = "1")]
+    pub base: ::core::option::Option<super::Entity>,
+    /// 是否被超管标记(显示靠前)
+    #[prost(bool, tag = "2")]
+    pub marked: bool,
+}
+/// 机器人列表。Agent.List(我的)与 AgentManage.List(超管按用户搜)共用。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAgentsResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
-    /// assistant(软件)+ robot(硬件)
     #[prost(message, repeated, tag = "2")]
-    pub agents: ::prost::alloc::vec::Vec<super::Entity>,
+    pub agents: ::prost::alloc::vec::Vec<AgentBrief>,
+}
+/// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
+/// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+///
+/// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
+/// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+/// 标记(显示靠前),不是收藏。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarkAgentReq {
+    /// 机器人 did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// true=打标记,false=取消
+    #[prost(bool, tag = "2")]
+    pub marked: bool,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListMarksReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
 }
 /// Generated client implementations.
 pub mod agent_client {
@@ -1743,11 +1772,11 @@ pub mod agent_manage_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-    /// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
-    ///
-    /// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
-    /// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+    /// ⚠️ **关系不穿,只有机器人个体穿。**
+    /// 机器人这个"个体"(did/name/avatar)是跨服务共享的实体;但**围绕它的关系数据**
+    /// —— 谁拥有它(master)、谁标记了它(mark)—— 各服务自己管,不跨服务查、不互相转发。
+    /// 所以这里的 Mark 用 club 自己的存储,**不再转发 ai**:
+    /// 原先用 club 的 apikey 打到 ai,标记会被记成"club 这个商户打的",毫无意义。
     #[derive(Debug, Clone)]
     pub struct AgentManageClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1848,7 +1877,7 @@ pub mod agent_manage_client {
         }
         pub async fn mark(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::MarkAgentReq>,
+            request: impl tonic::IntoRequest<super::MarkAgentReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -1866,11 +1895,8 @@ pub mod agent_manage_client {
         }
         pub async fn list_marks(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::ListMarksReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListAgentResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::ListMarksReq>,
+        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await

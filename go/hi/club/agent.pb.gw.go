@@ -392,7 +392,7 @@ func local_request_AgentManage_List_0(ctx context.Context, marshaler runtime.Mar
 
 func request_AgentManage_Mark_0(ctx context.Context, marshaler runtime.Marshaler, client AgentManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.MarkAgentReq
+		protoReq MarkAgentReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -407,7 +407,7 @@ func request_AgentManage_Mark_0(ctx context.Context, marshaler runtime.Marshaler
 
 func local_request_AgentManage_Mark_0(ctx context.Context, marshaler runtime.Marshaler, server AgentManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.MarkAgentReq
+		protoReq MarkAgentReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -419,7 +419,7 @@ func local_request_AgentManage_Mark_0(ctx context.Context, marshaler runtime.Mar
 
 func request_AgentManage_ListMarks_0(ctx context.Context, marshaler runtime.Marshaler, client AgentManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.ListMarksReq
+		protoReq ListMarksReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -434,7 +434,7 @@ func request_AgentManage_ListMarks_0(ctx context.Context, marshaler runtime.Mars
 
 func local_request_AgentManage_ListMarks_0(ctx context.Context, marshaler runtime.Marshaler, server AgentManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ai.ListMarksReq
+		protoReq ListMarksReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

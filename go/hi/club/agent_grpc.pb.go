@@ -652,15 +652,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
-//
-// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
-// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+// ⚠️ **关系不穿,只有机器人个体穿。**
+// 机器人这个"个体"(did/name/avatar)是跨服务共享的实体;但**围绕它的关系数据**
+// —— 谁拥有它(master)、谁标记了它(mark)—— 各服务自己管,不跨服务查、不互相转发。
+// 所以这里的 Mark 用 club 自己的存储,**不再转发 ai**:
+// 原先用 club 的 apikey 打到 ai,标记会被记成"club 这个商户打的",毫无意义。
 type AgentManageClient interface {
 	List(ctx context.Context, in *ListAgentsByUsersReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
-	Mark(ctx context.Context, in *ai.MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMarks(ctx context.Context, in *ai.ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
+	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
 }
 
 type agentManageClient struct {
@@ -681,7 +681,7 @@ func (c *agentManageClient) List(ctx context.Context, in *ListAgentsByUsersReq, 
 	return out, nil
 }
 
-func (c *agentManageClient) Mark(ctx context.Context, in *ai.MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *agentManageClient) Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, AgentManage_Mark_FullMethodName, in, out, cOpts...)
@@ -691,9 +691,9 @@ func (c *agentManageClient) Mark(ctx context.Context, in *ai.MarkAgentReq, opts 
 	return out, nil
 }
 
-func (c *agentManageClient) ListMarks(ctx context.Context, in *ai.ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error) {
+func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListAgentResp)
+	out := new(ListAgentsResp)
 	err := c.cc.Invoke(ctx, AgentManage_ListMarks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -705,15 +705,15 @@ func (c *agentManageClient) ListMarks(ctx context.Context, in *ai.ListMarksReq, 
 // All implementations should embed UnimplementedAgentManageServer
 // for forward compatibility.
 //
-// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
-//
-// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
-// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
+// ⚠️ **关系不穿,只有机器人个体穿。**
+// 机器人这个"个体"(did/name/avatar)是跨服务共享的实体;但**围绕它的关系数据**
+// —— 谁拥有它(master)、谁标记了它(mark)—— 各服务自己管,不跨服务查、不互相转发。
+// 所以这里的 Mark 用 club 自己的存储,**不再转发 ai**:
+// 原先用 club 的 apikey 打到 ai,标记会被记成"club 这个商户打的",毫无意义。
 type AgentManageServer interface {
 	List(context.Context, *ListAgentsByUsersReq) (*ListAgentsResp, error)
-	Mark(context.Context, *ai.MarkAgentReq) (*emptypb.Empty, error)
-	ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error)
+	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
+	ListMarks(context.Context, *ListMarksReq) (*ListAgentsResp, error)
 }
 
 // UnimplementedAgentManageServer should be embedded to have
@@ -726,10 +726,10 @@ type UnimplementedAgentManageServer struct{}
 func (UnimplementedAgentManageServer) List(context.Context, *ListAgentsByUsersReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedAgentManageServer) Mark(context.Context, *ai.MarkAgentReq) (*emptypb.Empty, error) {
+func (UnimplementedAgentManageServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
 }
-func (UnimplementedAgentManageServer) ListMarks(context.Context, *ai.ListMarksReq) (*ai.ListAgentResp, error) {
+func (UnimplementedAgentManageServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
 func (UnimplementedAgentManageServer) testEmbeddedByValue() {}
@@ -771,7 +771,7 @@ func _AgentManage_List_Handler(srv interface{}, ctx context.Context, dec func(in
 }
 
 func _AgentManage_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.MarkAgentReq)
+	in := new(MarkAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -783,13 +783,13 @@ func _AgentManage_Mark_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: AgentManage_Mark_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentManageServer).Mark(ctx, req.(*ai.MarkAgentReq))
+		return srv.(AgentManageServer).Mark(ctx, req.(*MarkAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AgentManage_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ListMarksReq)
+	in := new(ListMarksReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -801,7 +801,7 @@ func _AgentManage_ListMarks_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AgentManage_ListMarks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentManageServer).ListMarks(ctx, req.(*ai.ListMarksReq))
+		return srv.(AgentManageServer).ListMarks(ctx, req.(*ListMarksReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
