@@ -905,6 +905,51 @@ func (x *UploadResp) GetThumbUrl() string {
 	return ""
 }
 
+// 删除一个已上传的资源对象。各模块的 Source.Delete 共用。
+type DeleteResourceReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"` // 上传时拿到的完整 url
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteResourceReq) Reset() {
+	*x = DeleteResourceReq{}
+	mi := &file_hi_common_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteResourceReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteResourceReq) ProtoMessage() {}
+
+func (x *DeleteResourceReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_common_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteResourceReq.ProtoReflect.Descriptor instead.
+func (*DeleteResourceReq) Descriptor() ([]byte, []int) {
+	return file_hi_common_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *DeleteResourceReq) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
 var File_hi_common_proto protoreflect.FileDescriptor
 
 const file_hi_common_proto_rawDesc = "" +
@@ -965,7 +1010,9 @@ const file_hi_common_proto_rawDesc = "" +
 	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12&\n" +
 	"\tthumb_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
 	"\n" +
-	"_thumb_urlBc\n" +
+	"_thumb_url\"3\n" +
+	"\x11DeleteResourceReq\x12\x1e\n" +
+	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03urlBc\n" +
 	"\x06com.hiB\vCommonProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (
@@ -980,7 +1027,7 @@ func file_hi_common_proto_rawDescGZIP() []byte {
 	return file_hi_common_proto_rawDescData
 }
 
-var file_hi_common_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_hi_common_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_hi_common_proto_goTypes = []any{
 	(*SignedData)(nil),        // 0: hi.SignedData
 	(*DID)(nil),               // 1: hi.DID
@@ -998,6 +1045,7 @@ var file_hi_common_proto_goTypes = []any{
 	(*UploadStreamReq)(nil),   // 13: hi.UploadStreamReq
 	(*UploadMeta)(nil),        // 14: hi.UploadMeta
 	(*UploadResp)(nil),        // 15: hi.UploadResp
+	(*DeleteResourceReq)(nil), // 16: hi.DeleteResourceReq
 }
 var file_hi_common_proto_depIdxs = []int32{
 	14, // 0: hi.UploadStreamReq.meta:type_name -> hi.UploadMeta
@@ -1025,7 +1073,7 @@ func file_hi_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_common_proto_rawDesc), len(file_hi_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -10,6 +10,7 @@ import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -25,23 +26,24 @@ var File_hi_did_source_proto protoreflect.FileDescriptor
 
 const file_hi_did_source_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/did/source.proto\x12\x06hi.did\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2>\n" +
+	"\x13hi/did/source.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2~\n" +
 	"\x06Source\x124\n" +
-	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x022F\n" +
-	"\x0eMerchantSource\x124\n" +
-	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03B|\n" +
+	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\x06Delete\x12\x15.hi.DeleteResourceReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B|\n" +
 	"\n" +
 	"com.hi.didB\vSourceProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
 var file_hi_did_source_proto_goTypes = []any{
-	(*hi.UploadReq)(nil),  // 0: hi.UploadReq
-	(*hi.UploadResp)(nil), // 1: hi.UploadResp
+	(*hi.UploadReq)(nil),         // 0: hi.UploadReq
+	(*hi.DeleteResourceReq)(nil), // 1: hi.DeleteResourceReq
+	(*hi.UploadResp)(nil),        // 2: hi.UploadResp
+	(*emptypb.Empty)(nil),        // 3: google.protobuf.Empty
 }
 var file_hi_did_source_proto_depIdxs = []int32{
 	0, // 0: hi.did.Source.UploadAvatar:input_type -> hi.UploadReq
-	0, // 1: hi.did.MerchantSource.UploadAvatar:input_type -> hi.UploadReq
-	1, // 2: hi.did.Source.UploadAvatar:output_type -> hi.UploadResp
-	1, // 3: hi.did.MerchantSource.UploadAvatar:output_type -> hi.UploadResp
+	1, // 1: hi.did.Source.Delete:input_type -> hi.DeleteResourceReq
+	2, // 2: hi.did.Source.UploadAvatar:output_type -> hi.UploadResp
+	3, // 3: hi.did.Source.Delete:output_type -> google.protobuf.Empty
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -62,7 +64,7 @@ func file_hi_did_source_proto_init() {
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   1,
 		},
 		GoTypes:           file_hi_did_source_proto_goTypes,
 		DependencyIndexes: file_hi_did_source_proto_depIdxs,

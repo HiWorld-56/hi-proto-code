@@ -1104,6 +1104,61 @@ class UploadResp extends $pb.GeneratedMessage {
   void clearThumbUrl() => $_clearField(2);
 }
 
+/// 删除一个已上传的资源对象。各模块的 Source.Delete 共用。
+class DeleteResourceReq extends $pb.GeneratedMessage {
+  factory DeleteResourceReq({
+    $core.String? url,
+  }) {
+    final result = create();
+    if (url != null) result.url = url;
+    return result;
+  }
+
+  DeleteResourceReq._();
+
+  factory DeleteResourceReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteResourceReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteResourceReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteResourceReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteResourceReq copyWith(void Function(DeleteResourceReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteResourceReq))
+          as DeleteResourceReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteResourceReq create() => DeleteResourceReq._();
+  @$core.override
+  DeleteResourceReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteResourceReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteResourceReq>(create);
+  static DeleteResourceReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get url => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set url($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUrl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUrl() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

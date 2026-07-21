@@ -4002,6 +4002,9 @@ pub mod source_client {
     ///
     /// ⚠️ 只回 url,**不改资料** —— 落库分别走 `User.Edit` / `Merchant.Update` /
     /// `Merchant.SetUsers`,上传与落库解耦(这个约定原先就是这样,只是方法搬了家)。
+    /// ⚠️ **没有商户档的上传口**,也不需要:资源的消耗方不关心资源由谁上传。
+    /// 商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
+    /// `Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
     #[derive(Debug, Clone)]
     pub struct SourceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -4106,110 +4109,21 @@ pub mod source_client {
                 .insert(GrpcMethod::new("hi.did.Source", "UploadAvatar"));
             self.inner.unary(req, path, codec).await
         }
-    }
-}
-/// Generated client implementations.
-pub mod merchant_source_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// MerchantSource —— 同样是传头像,但**调用主体是商户**(商户给名下用户传)。
-    ///
-    /// 拆成独立 service 而不是在 Source 里加一个方法:`hi.auth` 要求同一 service 内档位
-    /// 一致,商户档与用户档不能混。这也正是 Merchant / MerchantGranted 的拆法。
-    #[derive(Debug, Clone)]
-    pub struct MerchantSourceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MerchantSourceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MerchantSourceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MerchantSourceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MerchantSourceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
+        /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
         ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
+        /// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
+        /// 那个对象就成了无主文件,永久桶又没有 lifecycle 兜底。约定:
         ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
+        /// ```text
+        /// 上传 → 拿 url 调设置方法 → 设置失败 → **立即调 Delete**
+        /// ```
         ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn upload_avatar(
+        /// ⚠️ 不做归属校验,和上传对称 —— url 是 32 位随机名,知道 url 本身就是凭据。
+        /// 这也意味着**它删得掉任何你知道 url 的对象**,别把 url 泄漏出去。
+        pub async fn delete(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::super::DeleteResourceReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4219,12 +4133,9 @@ pub mod merchant_source_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.MerchantSource/UploadAvatar",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Source/Delete");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.MerchantSource", "UploadAvatar"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Source", "Delete"));
             self.inner.unary(req, path, codec).await
         }
     }

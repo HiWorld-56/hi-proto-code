@@ -25,6 +25,7 @@ const (
 	Source_DownloadScript_FullMethodName       = "/hi.ai.Source/DownloadScript"
 	Source_UploadTrainingFile_FullMethodName   = "/hi.ai.Source/UploadTrainingFile"
 	Source_DownloadTrainingFile_FullMethodName = "/hi.ai.Source/DownloadTrainingFile"
+	Source_Delete_FullMethodName               = "/hi.ai.Source/Delete"
 )
 
 // SourceClient is the client API for Source service.
@@ -41,6 +42,17 @@ type SourceClient interface {
 	DownloadScript(ctx context.Context, in *DownloadScriptReq, opts ...grpc.CallOption) (*DownloadScriptResp, error)
 	UploadTrainingFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DownloadTrainingFile(ctx context.Context, in *DownloadFileReq, opts ...grpc.CallOption) (*DownloadFileResp, error)
+	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
+	//
+	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
+	// 那个对象就成了无主文件,永久桶又没有 lifecycle 兜底。约定:
+	//
+	//	上传 → 拿 url 调设置方法 → 设置失败 → **立即调 Delete**
+	//
+	// ⚠️ 不做归属校验,和上传对称 —— url 是 32 位随机名,知道 url 本身就是凭据。
+	//
+	//	这也意味着**它删得掉任何你知道 url 的对象**,别把 url 泄漏出去。
+	Delete(ctx context.Context, in *hi.DeleteResourceReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type sourceClient struct {
@@ -94,6 +106,16 @@ func (c *sourceClient) DownloadTrainingFile(ctx context.Context, in *DownloadFil
 	return out, nil
 }
 
+func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Source_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SourceServer is the server API for Source service.
 // All implementations should embed UnimplementedSourceServer
 // for forward compatibility.
@@ -108,6 +130,17 @@ type SourceServer interface {
 	DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error)
 	UploadTrainingFile(context.Context, *UploadFileReq) (*emptypb.Empty, error)
 	DownloadTrainingFile(context.Context, *DownloadFileReq) (*DownloadFileResp, error)
+	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
+	//
+	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
+	// 那个对象就成了无主文件,永久桶又没有 lifecycle 兜底。约定:
+	//
+	//	上传 → 拿 url 调设置方法 → 设置失败 → **立即调 Delete**
+	//
+	// ⚠️ 不做归属校验,和上传对称 —— url 是 32 位随机名,知道 url 本身就是凭据。
+	//
+	//	这也意味着**它删得掉任何你知道 url 的对象**,别把 url 泄漏出去。
+	Delete(context.Context, *hi.DeleteResourceReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedSourceServer should be embedded to have
@@ -128,6 +161,9 @@ func (UnimplementedSourceServer) UploadTrainingFile(context.Context, *UploadFile
 }
 func (UnimplementedSourceServer) DownloadTrainingFile(context.Context, *DownloadFileReq) (*DownloadFileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DownloadTrainingFile not implemented")
+}
+func (UnimplementedSourceServer) Delete(context.Context, *hi.DeleteResourceReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedSourceServer) testEmbeddedByValue() {}
 
@@ -210,6 +246,24 @@ func _Source_DownloadTrainingFile_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Source_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.DeleteResourceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).Delete(ctx, req.(*hi.DeleteResourceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Source_ServiceDesc is the grpc.ServiceDesc for Source service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +282,10 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadTrainingFile",
 			Handler:    _Source_DownloadTrainingFile_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _Source_Delete_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

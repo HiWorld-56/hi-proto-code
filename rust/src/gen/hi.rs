@@ -282,3 +282,10 @@ pub struct UploadResp {
     #[prost(string, optional, tag = "2")]
     pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 删除一个已上传的资源对象。各模块的 Source.Delete 共用。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteResourceReq {
+    /// 上传时拿到的完整 url
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+}

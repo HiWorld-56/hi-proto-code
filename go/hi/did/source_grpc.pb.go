@@ -12,6 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -21,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Source_UploadAvatar_FullMethodName = "/hi.did.Source/UploadAvatar"
+	Source_Delete_FullMethodName       = "/hi.did.Source/Delete"
 )
 
 // SourceClient is the client API for Source service.
@@ -37,8 +39,24 @@ const (
 // ⚠️ 只回 url,**不改资料** —— 落库分别走 `User.Edit` / `Merchant.Update` /
 //
 //	`Merchant.SetUsers`,上传与落库解耦(这个约定原先就是这样,只是方法搬了家)。
+//
+// ⚠️ **没有商户档的上传口**,也不需要:资源的消耗方不关心资源由谁上传。
+//
+//	商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
+//	`Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
 type SourceClient interface {
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
+	//
+	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
+	// 那个对象就成了无主文件,永久桶又没有 lifecycle 兜底。约定:
+	//
+	//	上传 → 拿 url 调设置方法 → 设置失败 → **立即调 Delete**
+	//
+	// ⚠️ 不做归属校验,和上传对称 —— url 是 32 位随机名,知道 url 本身就是凭据。
+	//
+	//	这也意味着**它删得掉任何你知道 url 的对象**,别把 url 泄漏出去。
+	Delete(ctx context.Context, in *hi.DeleteResourceReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type sourceClient struct {
@@ -59,6 +77,16 @@ func (c *sourceClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts 
 	return out, nil
 }
 
+func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Source_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SourceServer is the server API for Source service.
 // All implementations should embed UnimplementedSourceServer
 // for forward compatibility.
@@ -73,8 +101,24 @@ func (c *sourceClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts 
 // ⚠️ 只回 url,**不改资料** —— 落库分别走 `User.Edit` / `Merchant.Update` /
 //
 //	`Merchant.SetUsers`,上传与落库解耦(这个约定原先就是这样,只是方法搬了家)。
+//
+// ⚠️ **没有商户档的上传口**,也不需要:资源的消耗方不关心资源由谁上传。
+//
+//	商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
+//	`Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
 type SourceServer interface {
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
+	//
+	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
+	// 那个对象就成了无主文件,永久桶又没有 lifecycle 兜底。约定:
+	//
+	//	上传 → 拿 url 调设置方法 → 设置失败 → **立即调 Delete**
+	//
+	// ⚠️ 不做归属校验,和上传对称 —— url 是 32 位随机名,知道 url 本身就是凭据。
+	//
+	//	这也意味着**它删得掉任何你知道 url 的对象**,别把 url 泄漏出去。
+	Delete(context.Context, *hi.DeleteResourceReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedSourceServer should be embedded to have
@@ -86,6 +130,9 @@ type UnimplementedSourceServer struct{}
 
 func (UnimplementedSourceServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
+}
+func (UnimplementedSourceServer) Delete(context.Context, *hi.DeleteResourceReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedSourceServer) testEmbeddedByValue() {}
 
@@ -125,6 +172,24 @@ func _Source_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Source_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.DeleteResourceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).Delete(ctx, req.(*hi.DeleteResourceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Source_ServiceDesc is the grpc.ServiceDesc for Source service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -136,115 +201,9 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "UploadAvatar",
 			Handler:    _Source_UploadAvatar_Handler,
 		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "hi/did/source.proto",
-}
-
-const (
-	MerchantSource_UploadAvatar_FullMethodName = "/hi.did.MerchantSource/UploadAvatar"
-)
-
-// MerchantSourceClient is the client API for MerchantSource service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// MerchantSource —— 同样是传头像,但**调用主体是商户**(商户给名下用户传)。
-//
-// 拆成独立 service 而不是在 Source 里加一个方法:`hi.auth` 要求同一 service 内档位
-// 一致,商户档与用户档不能混。这也正是 Merchant / MerchantGranted 的拆法。
-type MerchantSourceClient interface {
-	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
-}
-
-type merchantSourceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewMerchantSourceClient(cc grpc.ClientConnInterface) MerchantSourceClient {
-	return &merchantSourceClient{cc}
-}
-
-func (c *merchantSourceClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.UploadResp)
-	err := c.cc.Invoke(ctx, MerchantSource_UploadAvatar_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// MerchantSourceServer is the server API for MerchantSource service.
-// All implementations should embed UnimplementedMerchantSourceServer
-// for forward compatibility.
-//
-// MerchantSource —— 同样是传头像,但**调用主体是商户**(商户给名下用户传)。
-//
-// 拆成独立 service 而不是在 Source 里加一个方法:`hi.auth` 要求同一 service 内档位
-// 一致,商户档与用户档不能混。这也正是 Merchant / MerchantGranted 的拆法。
-type MerchantSourceServer interface {
-	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
-}
-
-// UnimplementedMerchantSourceServer should be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedMerchantSourceServer struct{}
-
-func (UnimplementedMerchantSourceServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
-}
-func (UnimplementedMerchantSourceServer) testEmbeddedByValue() {}
-
-// UnsafeMerchantSourceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MerchantSourceServer will
-// result in compilation errors.
-type UnsafeMerchantSourceServer interface {
-	mustEmbedUnimplementedMerchantSourceServer()
-}
-
-func RegisterMerchantSourceServer(s grpc.ServiceRegistrar, srv MerchantSourceServer) {
-	// If the following call panics, it indicates UnimplementedMerchantSourceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&MerchantSource_ServiceDesc, srv)
-}
-
-func _MerchantSource_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.UploadReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MerchantSourceServer).UploadAvatar(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MerchantSource_UploadAvatar_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantSourceServer).UploadAvatar(ctx, req.(*hi.UploadReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// MerchantSource_ServiceDesc is the grpc.ServiceDesc for MerchantSource service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var MerchantSource_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.MerchantSource",
-	HandlerType: (*MerchantSourceServer)(nil),
-	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UploadAvatar",
-			Handler:    _MerchantSource_UploadAvatar_Handler,
+			MethodName: "Delete",
+			Handler:    _Source_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

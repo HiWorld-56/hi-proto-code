@@ -271,3 +271,15 @@ const UploadResp$json = {
 final $typed_data.Uint8List uploadRespDescriptor = $convert.base64Decode(
     'CgpVcGxvYWRSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiYKCXRodW1iX3VybBgCIAEoCU'
     'IEkLUYAUgAUgh0aHVtYlVybIgBAToEmLUYAUIMCgpfdGh1bWJfdXJs');
+
+@$core.Deprecated('Use deleteResourceReqDescriptor instead')
+const DeleteResourceReq$json = {
+  '1': 'DeleteResourceReq',
+  '2': [
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+  ],
+};
+
+/// Descriptor for `DeleteResourceReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteResourceReqDescriptor = $convert.base64Decode(
+    'ChFEZWxldGVSZXNvdXJjZVJlcRIeCgN1cmwYASABKAlCDLpICXIHMgVeXFMrJFIDdXJs');

@@ -120,6 +120,22 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$downloadTrainingFile, request, options: options);
   }
 
+  /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
+  ///
+  /// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
+  /// 那个对象就成了无主文件,永久桶又没有 lifecycle 兜底。约定:
+  ///
+  ///     上传 → 拿 url 调设置方法 → 设置失败 → **立即调 Delete**
+  ///
+  /// ⚠️ 不做归属校验,和上传对称 —— url 是 32 位随机名,知道 url 本身就是凭据。
+  ///    这也意味着**它删得掉任何你知道 url 的对象**,别把 url 泄漏出去。
+  $grpc.ResponseFuture<$3.Empty> delete(
+    $0.DeleteResourceReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$delete, request, options: options);
+  }
+
   // method descriptors
 
   static final _$uploadAvatar = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
@@ -164,6 +180,10 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/DownloadTrainingFile',
           ($2.DownloadFileReq value) => value.writeToBuffer(),
           $2.DownloadFileResp.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.DeleteResourceReq, $3.Empty>(
+      '/hi.club.Source/Delete',
+      ($0.DeleteResourceReq value) => value.writeToBuffer(),
+      $3.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Source')
@@ -234,6 +254,13 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.DownloadFileReq.fromBuffer(value),
         ($2.DownloadFileResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteResourceReq, $3.Empty>(
+        'Delete',
+        delete_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DeleteResourceReq.fromBuffer(value),
+        ($3.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.UploadResp> uploadAvatar_Pre(
@@ -299,4 +326,12 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Future<$2.DownloadFileResp> downloadTrainingFile(
       $grpc.ServiceCall call, $2.DownloadFileReq request);
+
+  $async.Future<$3.Empty> delete_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeleteResourceReq> $request) async {
+    return delete($call, await $request);
+  }
+
+  $async.Future<$3.Empty> delete(
+      $grpc.ServiceCall call, $0.DeleteResourceReq request);
 }
