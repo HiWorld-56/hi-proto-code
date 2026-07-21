@@ -27,8 +27,19 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 权限查询(商户档)。club 作为 ai 的商户,替自己的用户查"有哪些权限"以显隐前端功能。
-// **这是普通用户页面的 getPermissions 链路,绝不能标超管**(见文件头血泪)。
+// 权限查询(商户档)—— 查的是**商户自己在 hiai 的权限**,不是替谁代查。
+//
+// ⚠️ 原注释写着"club 作为 ai 的商户,替自己的用户查",**是错的**:
+//
+//	**权限各自单独管理,不跨服务查。** ai 与 club 的权限模型相同(同一套位掩码
+//	normal/advanced/mem/plugin),但各存各的表、各判各的:
+//	  · hiai 侧:hi_ai_permission —— 里面给了 club 商户 did 全部权限(type=7),
+//	    所以 club 能调 hiai 的插件/记忆/高级能力;
+//	  · club 侧:hi_chat_user_super —— club 用同一套模型管**自己的用户**,
+//	    hi.club.Permission.Get 查的是这张表,**从不转发到这里**(实测无任何调用)。
+//	权限授予 **master**:master 有插件权限,他名下所有机器人就都能用插件。
+//
+// **绝不能标超管**:这是普通用户页面的 getPermissions 链路(见文件头血泪)。
 type PermissionClient interface {
 	Get(ctx context.Context, in *PermissionGetReq, opts ...grpc.CallOption) (*PermissionInfo, error)
 }
@@ -55,8 +66,19 @@ func (c *permissionClient) Get(ctx context.Context, in *PermissionGetReq, opts .
 // All implementations should embed UnimplementedPermissionServer
 // for forward compatibility.
 //
-// 权限查询(商户档)。club 作为 ai 的商户,替自己的用户查"有哪些权限"以显隐前端功能。
-// **这是普通用户页面的 getPermissions 链路,绝不能标超管**(见文件头血泪)。
+// 权限查询(商户档)—— 查的是**商户自己在 hiai 的权限**,不是替谁代查。
+//
+// ⚠️ 原注释写着"club 作为 ai 的商户,替自己的用户查",**是错的**:
+//
+//	**权限各自单独管理,不跨服务查。** ai 与 club 的权限模型相同(同一套位掩码
+//	normal/advanced/mem/plugin),但各存各的表、各判各的:
+//	  · hiai 侧:hi_ai_permission —— 里面给了 club 商户 did 全部权限(type=7),
+//	    所以 club 能调 hiai 的插件/记忆/高级能力;
+//	  · club 侧:hi_chat_user_super —— club 用同一套模型管**自己的用户**,
+//	    hi.club.Permission.Get 查的是这张表,**从不转发到这里**(实测无任何调用)。
+//	权限授予 **master**:master 有插件权限,他名下所有机器人就都能用插件。
+//
+// **绝不能标超管**:这是普通用户页面的 getPermissions 链路(见文件头血泪)。
 type PermissionServer interface {
 	Get(context.Context, *PermissionGetReq) (*PermissionInfo, error)
 }
