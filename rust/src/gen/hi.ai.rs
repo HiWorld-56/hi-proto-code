@@ -223,6 +223,7 @@ pub struct TokenUsage {
     #[prost(int32, tag = "3")]
     pub mem: i32,
 }
+/// 机器人本身的信息。**只放机器人的属性** —— 观察者相关的东西不在这里(见 AgentBrief)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgentInfo {
     /// hi.Entity 恒 PUBLIC
@@ -239,8 +240,21 @@ pub struct AgentInfo {
     pub token: ::core::option::Option<TokenUsage>,
     #[prost(int64, tag = "6")]
     pub created_at: i64,
-    /// 是否被打了标记(带标记的显示靠前);原 favorited
-    #[prost(bool, tag = "7")]
+}
+/// 列表项 = 机器人本身 + **看的人**对它的标记。
+///
+/// ⚠️ marked 原先是 AgentInfo 的字段(第 7 个),那是**错的**:标记不是机器人的属性,
+/// 而是观察者挂在机器人上的东西 —— 同一个机器人,不同的人看到的 marked 不一样。
+/// 放进 AgentInfo 就等于宣称"这个机器人被标记了"这件事对所有人成立,不成立。
+/// 各服务填各自视角的值:hiai 填 hiai 的标记,hiclub 填 hiclub 的,互不相干
+/// (关系不穿,只有机器人个体穿)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AgentBrief {
+    /// 机器人个体(assistant 软件 / robot 硬件)
+    #[prost(message, optional, tag = "1")]
+    pub agent: ::core::option::Option<AgentInfo>,
+    /// 看的人有没有标记它(标记的显示靠前)
+    #[prost(bool, tag = "2")]
     pub marked: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -303,7 +317,7 @@ pub struct ListAgentResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<AgentInfo>,
+    pub infos: ::prost::alloc::vec::Vec<AgentBrief>,
 }
 /// Agent 列表入参:**按归属列** —— 传的是主人(creator)的 did,返回这些人名下的机器人总和。
 ///

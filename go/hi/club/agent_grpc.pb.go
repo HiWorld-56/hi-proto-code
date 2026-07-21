@@ -42,7 +42,7 @@ type AgentClient interface {
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
 	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
-	List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
+	List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
 	Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -65,9 +65,9 @@ func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
 }
 
-func (c *agentClient) List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
+func (c *agentClient) List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentsResp)
+	out := new(ai.ListAgentResp)
 	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -183,7 +183,7 @@ type AgentServer interface {
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
 	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
-	List(context.Context, *ListMyAgentsReq) (*ListAgentsResp, error)
+	List(context.Context, *ListMyAgentsReq) (*ai.ListAgentResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error)
 	Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error)
@@ -205,7 +205,7 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
-func (UnimplementedAgentServer) List(context.Context, *ListMyAgentsReq) (*ListAgentsResp, error) {
+func (UnimplementedAgentServer) List(context.Context, *ListMyAgentsReq) (*ai.ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentServer) CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error) {
@@ -658,9 +658,9 @@ const (
 // 所以这里的 Mark 用 club 自己的存储,**不再转发 ai**:
 // 原先用 club 的 apikey 打到 ai,标记会被记成"club 这个商户打的",毫无意义。
 type AgentManageClient interface {
-	List(ctx context.Context, in *ListAgentsByUsersReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
+	List(ctx context.Context, in *ListAgentsByUsersReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
 	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
+	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error)
 }
 
 type agentManageClient struct {
@@ -671,9 +671,9 @@ func NewAgentManageClient(cc grpc.ClientConnInterface) AgentManageClient {
 	return &agentManageClient{cc}
 }
 
-func (c *agentManageClient) List(ctx context.Context, in *ListAgentsByUsersReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
+func (c *agentManageClient) List(ctx context.Context, in *ListAgentsByUsersReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentsResp)
+	out := new(ai.ListAgentResp)
 	err := c.cc.Invoke(ctx, AgentManage_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -691,9 +691,9 @@ func (c *agentManageClient) Mark(ctx context.Context, in *MarkAgentReq, opts ...
 	return out, nil
 }
 
-func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
+func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ai.ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentsResp)
+	out := new(ai.ListAgentResp)
 	err := c.cc.Invoke(ctx, AgentManage_ListMarks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -711,9 +711,9 @@ func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opt
 // 所以这里的 Mark 用 club 自己的存储,**不再转发 ai**:
 // 原先用 club 的 apikey 打到 ai,标记会被记成"club 这个商户打的",毫无意义。
 type AgentManageServer interface {
-	List(context.Context, *ListAgentsByUsersReq) (*ListAgentsResp, error)
+	List(context.Context, *ListAgentsByUsersReq) (*ai.ListAgentResp, error)
 	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
-	ListMarks(context.Context, *ListMarksReq) (*ListAgentsResp, error)
+	ListMarks(context.Context, *ListMarksReq) (*ai.ListAgentResp, error)
 }
 
 // UnimplementedAgentManageServer should be embedded to have
@@ -723,13 +723,13 @@ type AgentManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentManageServer struct{}
 
-func (UnimplementedAgentManageServer) List(context.Context, *ListAgentsByUsersReq) (*ListAgentsResp, error) {
+func (UnimplementedAgentManageServer) List(context.Context, *ListAgentsByUsersReq) (*ai.ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentManageServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
 }
-func (UnimplementedAgentManageServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentsResp, error) {
+func (UnimplementedAgentManageServer) ListMarks(context.Context, *ListMarksReq) (*ai.ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
 func (UnimplementedAgentManageServer) testEmbeddedByValue() {}

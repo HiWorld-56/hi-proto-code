@@ -1277,25 +1277,6 @@ pub struct ListAgentsByUsersReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
-/// 列表项:身份 + club 自己的关系数据。
-/// prompt/模型是 owner 的私密配置,不在这里,要看走 ai 的 Agent 接口。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct AgentBrief {
-    /// 机器人个体(assistant 软件 / robot 硬件)
-    #[prost(message, optional, tag = "1")]
-    pub base: ::core::option::Option<super::Entity>,
-    /// 是否被超管标记(显示靠前)
-    #[prost(bool, tag = "2")]
-    pub marked: bool,
-}
-/// 机器人列表。Agent.List(我的)与 AgentManage.List(超管按用户搜)共用。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAgentsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub agents: ::prost::alloc::vec::Vec<AgentBrief>,
-}
 /// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
 /// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
 ///
@@ -1414,7 +1395,10 @@ pub mod agent_client {
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMyAgentsReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::ListAgentResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1860,7 +1844,10 @@ pub mod agent_manage_client {
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAgentsByUsersReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::ListAgentResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1896,7 +1883,10 @@ pub mod agent_manage_client {
         pub async fn list_marks(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMarksReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::ListAgentResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2144,7 +2134,7 @@ pub mod wallet_client {
         }
     }
 }
-/// 列某商户名下的 greeter(扩展表 level > 0)。
+/// 列某商户名下的 greeter(扩展表 level >= 8)。
 ///
 /// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"空=自己",因为调用者本身
 /// 就是商户(ExtendToken 解出);club 的调用者是普通用户、不是商户,"自己"无从谈起。

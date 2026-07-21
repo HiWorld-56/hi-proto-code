@@ -920,8 +920,10 @@ class ListUsersReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(2);
 }
 
-/// 列某商户名下的 greeter —— 即扩展表里 level > 0 的用户。
-/// level 由商户自己在扩展信息(UserExtensionInfo.level)里打,未设/0 = 普通用户。
+/// 列某商户名下的 greeter —— 即扩展表里 level >= 8 的用户。
+/// level 由商户自己在扩展信息(UserExtensionInfo.level)里打;未设(NULL)或低于门槛 = 普通用户。
+/// 门槛在服务端是常量(repo.GreeterMinLevel),不由调用方传 —— greeter 是一类固定人群,
+/// 让调用方自选门槛就变成了通用筛选,那是 ListUsers 的活。
 ///
 /// 与 ListUsers 分开而不是加个 level 过滤参数:这是一类**有业务含义的固定人群**
 /// (club 用来展示可接待的人),不是通用筛选。合成一个方法就又要靠"参数传没传"分支。

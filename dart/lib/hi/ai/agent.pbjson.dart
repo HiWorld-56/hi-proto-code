@@ -168,7 +168,6 @@ const AgentInfo$json = {
       '10': 'token'
     },
     {'1': 'created_at', '3': 6, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
-    {'1': 'marked', '3': 7, '4': 1, '5': 8, '8': {}, '10': 'marked'},
   ],
   '7': {},
 };
@@ -179,8 +178,30 @@ final $typed_data.Uint8List agentInfoDescriptor = $convert.base64Decode(
     '5maWcYAiABKAsyEi5oaS5haS5BZ2VudENvbmZpZ0IEkLUYA1IGY29uZmlnEh4KB2NyZWF0b3IY'
     'AyABKAlCBJC1GANSB2NyZWF0b3ISGAoEbm90ZRgEIAEoCUIEkLUYA1IEbm90ZRItCgV0b2tlbh'
     'gFIAEoCzIRLmhpLmFpLlRva2VuVXNhZ2VCBJC1GANSBXRva2VuEiMKCmNyZWF0ZWRfYXQYBiAB'
-    'KANCBJC1GANSCWNyZWF0ZWRBdBIcCgZtYXJrZWQYByABKAhCBJC1GANSBm1hcmtlZDoEmLUYAw'
-    '==');
+    'KANCBJC1GANSCWNyZWF0ZWRBdDoEmLUYAw==');
+
+@$core.Deprecated('Use agentBriefDescriptor instead')
+const AgentBrief$json = {
+  '1': 'AgentBrief',
+  '2': [
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ai.AgentInfo',
+      '8': {},
+      '10': 'agent'
+    },
+    {'1': 'marked', '3': 2, '4': 1, '5': 8, '8': {}, '10': 'marked'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `AgentBrief`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List agentBriefDescriptor = $convert.base64Decode(
+    'CgpBZ2VudEJyaWVmEiwKBWFnZW50GAEgASgLMhAuaGkuYWkuQWdlbnRJbmZvQgSQtRgDUgVhZ2'
+    'VudBIcCgZtYXJrZWQYAiABKAhCBJC1GANSBm1hcmtlZDoEmLUYAw==');
 
 @$core.Deprecated('Use defaultConfigRespDescriptor instead')
 const DefaultConfigResp$json = {
@@ -309,7 +330,7 @@ const ListAgentResp$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.ai.AgentInfo',
+      '6': '.hi.ai.AgentBrief',
       '8': {},
       '10': 'infos'
     },
@@ -319,8 +340,8 @@ const ListAgentResp$json = {
 
 /// Descriptor for `ListAgentResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0QWdlbnRSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIsCgVpbmZvcxgCIA'
-    'MoCzIQLmhpLmFpLkFnZW50SW5mb0IEkLUYA1IFaW5mb3M6BJi1GAM=');
+    'Cg1MaXN0QWdlbnRSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBItCgVpbmZvcxgCIA'
+    'MoCzIRLmhpLmFpLkFnZW50QnJpZWZCBJC1GANSBWluZm9zOgSYtRgD');
 
 @$core.Deprecated('Use listAgentReqDescriptor instead')
 const ListAgentReq$json = {

@@ -25,7 +25,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 列某商户名下的 greeter(扩展表 level > 0)。
+// 列某商户名下的 greeter(扩展表 level >= 8)。
 //
 // ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"空=自己",因为调用者本身
 //

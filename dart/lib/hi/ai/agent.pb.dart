@@ -377,6 +377,7 @@ class TokenUsage extends $pb.GeneratedMessage {
   void clearMem() => $_clearField(3);
 }
 
+/// 机器人本身的信息。**只放机器人的属性** —— 观察者相关的东西不在这里(见 AgentBrief)。
 class AgentInfo extends $pb.GeneratedMessage {
   factory AgentInfo({
     $2.Entity? base,
@@ -385,7 +386,6 @@ class AgentInfo extends $pb.GeneratedMessage {
     $core.String? note,
     TokenUsage? token,
     $fixnum.Int64? createdAt,
-    $core.bool? marked,
   }) {
     final result = create();
     if (base != null) result.base = base;
@@ -394,7 +394,6 @@ class AgentInfo extends $pb.GeneratedMessage {
     if (note != null) result.note = note;
     if (token != null) result.token = token;
     if (createdAt != null) result.createdAt = createdAt;
-    if (marked != null) result.marked = marked;
     return result;
   }
 
@@ -420,7 +419,6 @@ class AgentInfo extends $pb.GeneratedMessage {
     ..aOM<TokenUsage>(5, _omitFieldNames ? '' : 'token',
         subBuilder: TokenUsage.create)
     ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
-    ..aOB(7, _omitFieldNames ? '' : 'marked')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -500,15 +498,81 @@ class AgentInfo extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(5);
   @$pb.TagNumber(6)
   void clearCreatedAt() => $_clearField(6);
+}
 
-  @$pb.TagNumber(7)
-  $core.bool get marked => $_getBF(6);
-  @$pb.TagNumber(7)
-  set marked($core.bool value) => $_setBool(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasMarked() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearMarked() => $_clearField(7);
+/// 列表项 = 机器人本身 + **看的人**对它的标记。
+///
+/// ⚠️ marked 原先是 AgentInfo 的字段(第 7 个),那是**错的**:标记不是机器人的属性,
+///    而是观察者挂在机器人上的东西 —— 同一个机器人,不同的人看到的 marked 不一样。
+///    放进 AgentInfo 就等于宣称"这个机器人被标记了"这件事对所有人成立,不成立。
+///    各服务填各自视角的值:hiai 填 hiai 的标记,hiclub 填 hiclub 的,互不相干
+///    (关系不穿,只有机器人个体穿)。
+class AgentBrief extends $pb.GeneratedMessage {
+  factory AgentBrief({
+    AgentInfo? agent,
+    $core.bool? marked,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (marked != null) result.marked = marked;
+    return result;
+  }
+
+  AgentBrief._();
+
+  factory AgentBrief.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AgentBrief.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AgentBrief',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOM<AgentInfo>(1, _omitFieldNames ? '' : 'agent',
+        subBuilder: AgentInfo.create)
+    ..aOB(2, _omitFieldNames ? '' : 'marked')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AgentBrief clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AgentBrief copyWith(void Function(AgentBrief) updates) =>
+      super.copyWith((message) => updates(message as AgentBrief)) as AgentBrief;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AgentBrief create() => AgentBrief._();
+  @$core.override
+  AgentBrief createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AgentBrief getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AgentBrief>(create);
+  static AgentBrief? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  AgentInfo get agent => $_getN(0);
+  @$pb.TagNumber(1)
+  set agent(AgentInfo value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+  @$pb.TagNumber(1)
+  AgentInfo ensureAgent() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.bool get marked => $_getBF(1);
+  @$pb.TagNumber(2)
+  set marked($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMarked() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMarked() => $_clearField(2);
 }
 
 class DefaultConfigResp extends $pb.GeneratedMessage {
@@ -914,7 +978,7 @@ class EditAgentReq extends $pb.GeneratedMessage {
 class ListAgentResp extends $pb.GeneratedMessage {
   factory ListAgentResp({
     $core.int? total,
-    $core.Iterable<AgentInfo>? infos,
+    $core.Iterable<AgentBrief>? infos,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -936,8 +1000,8 @@ class ListAgentResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: AgentInfo.create)
+    ..pPM<AgentBrief>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: AgentBrief.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -969,7 +1033,7 @@ class ListAgentResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<AgentInfo> get infos => $_getList(1);
+  $pb.PbList<AgentBrief> get infos => $_getList(1);
 }
 
 /// Agent 列表入参:**按归属列** —— 传的是主人(creator)的 did,返回这些人名下的机器人总和。
