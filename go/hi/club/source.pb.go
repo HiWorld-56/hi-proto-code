@@ -7,12 +7,14 @@
 package club
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
+	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -23,14 +25,107 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type DownloadResourceReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DownloadResourceReq) Reset() {
+	*x = DownloadResourceReq{}
+	mi := &file_hi_club_source_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DownloadResourceReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DownloadResourceReq) ProtoMessage() {}
+
+func (x *DownloadResourceReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_source_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DownloadResourceReq.ProtoReflect.Descriptor instead.
+func (*DownloadResourceReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_source_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *DownloadResourceReq) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+type DownloadResourceResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DownloadResourceResp) Reset() {
+	*x = DownloadResourceResp{}
+	mi := &file_hi_club_source_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DownloadResourceResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DownloadResourceResp) ProtoMessage() {}
+
+func (x *DownloadResourceResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_source_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DownloadResourceResp.ProtoReflect.Descriptor instead.
+func (*DownloadResourceResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_source_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *DownloadResourceResp) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
 var File_hi_club_source_proto protoreflect.FileDescriptor
 
 const file_hi_club_source_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/source.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x14hi/ai/training.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2\x88\x05\n" +
+	"\x14hi/club/source.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x14hi/ai/training.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"5\n" +
+	"\x13DownloadResourceReq\x12\x1e\n" +
+	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\"<\n" +
+	"\x14DownloadResourceResp\x12\x1e\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01R\acontent:\x04\x98\xb5\x18\x012\xd8\x05\n" +
 	"\x06Source\x124\n" +
 	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x128\n" +
-	"\x10UploadBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
+	"\x10UploadBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
+	"\bDownload\x12\x1c.hi.club.DownloadResourceReq\x1a\x1d.hi.club.DownloadResourceResp\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
 	"\n" +
 	"UploadTemp\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x10UploadTempStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x121\n" +
@@ -42,41 +137,58 @@ const file_hi_club_source_proto_rawDesc = "" +
 	"\x06Delete\x12\x15.hi.DeleteResourceReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x82\x01\n" +
 	"\vcom.hi.clubB\vSourceProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
+var (
+	file_hi_club_source_proto_rawDescOnce sync.Once
+	file_hi_club_source_proto_rawDescData []byte
+)
+
+func file_hi_club_source_proto_rawDescGZIP() []byte {
+	file_hi_club_source_proto_rawDescOnce.Do(func() {
+		file_hi_club_source_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_hi_club_source_proto_rawDesc), len(file_hi_club_source_proto_rawDesc)))
+	})
+	return file_hi_club_source_proto_rawDescData
+}
+
+var file_hi_club_source_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_club_source_proto_goTypes = []any{
-	(*hi.UploadReq)(nil),          // 0: hi.UploadReq
-	(*hi.UploadStreamReq)(nil),    // 1: hi.UploadStreamReq
-	(*ai.DownloadScriptReq)(nil),  // 2: hi.ai.DownloadScriptReq
-	(*ai.UploadFileReq)(nil),      // 3: hi.ai.UploadFileReq
-	(*ai.DownloadFileReq)(nil),    // 4: hi.ai.DownloadFileReq
-	(*hi.DeleteResourceReq)(nil),  // 5: hi.DeleteResourceReq
-	(*hi.UploadResp)(nil),         // 6: hi.UploadResp
-	(*ai.DownloadScriptResp)(nil), // 7: hi.ai.DownloadScriptResp
-	(*emptypb.Empty)(nil),         // 8: google.protobuf.Empty
-	(*ai.DownloadFileResp)(nil),   // 9: hi.ai.DownloadFileResp
+	(*DownloadResourceReq)(nil),   // 0: hi.club.DownloadResourceReq
+	(*DownloadResourceResp)(nil),  // 1: hi.club.DownloadResourceResp
+	(*hi.UploadReq)(nil),          // 2: hi.UploadReq
+	(*hi.UploadStreamReq)(nil),    // 3: hi.UploadStreamReq
+	(*ai.DownloadScriptReq)(nil),  // 4: hi.ai.DownloadScriptReq
+	(*ai.UploadFileReq)(nil),      // 5: hi.ai.UploadFileReq
+	(*ai.DownloadFileReq)(nil),    // 6: hi.ai.DownloadFileReq
+	(*hi.DeleteResourceReq)(nil),  // 7: hi.DeleteResourceReq
+	(*hi.UploadResp)(nil),         // 8: hi.UploadResp
+	(*ai.DownloadScriptResp)(nil), // 9: hi.ai.DownloadScriptResp
+	(*emptypb.Empty)(nil),         // 10: google.protobuf.Empty
+	(*ai.DownloadFileResp)(nil),   // 11: hi.ai.DownloadFileResp
 }
 var file_hi_club_source_proto_depIdxs = []int32{
-	0,  // 0: hi.club.Source.UploadAvatar:input_type -> hi.UploadReq
-	0,  // 1: hi.club.Source.UploadBackground:input_type -> hi.UploadReq
-	0,  // 2: hi.club.Source.UploadTemp:input_type -> hi.UploadReq
-	1,  // 3: hi.club.Source.UploadTempStream:input_type -> hi.UploadStreamReq
-	0,  // 4: hi.club.Source.UploadLog:input_type -> hi.UploadReq
-	1,  // 5: hi.club.Source.UploadScript:input_type -> hi.UploadStreamReq
-	2,  // 6: hi.club.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
-	3,  // 7: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
-	4,  // 8: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
-	5,  // 9: hi.club.Source.Delete:input_type -> hi.DeleteResourceReq
-	6,  // 10: hi.club.Source.UploadAvatar:output_type -> hi.UploadResp
-	6,  // 11: hi.club.Source.UploadBackground:output_type -> hi.UploadResp
-	6,  // 12: hi.club.Source.UploadTemp:output_type -> hi.UploadResp
-	6,  // 13: hi.club.Source.UploadTempStream:output_type -> hi.UploadResp
-	6,  // 14: hi.club.Source.UploadLog:output_type -> hi.UploadResp
-	6,  // 15: hi.club.Source.UploadScript:output_type -> hi.UploadResp
-	7,  // 16: hi.club.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
-	8,  // 17: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
-	9,  // 18: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
-	8,  // 19: hi.club.Source.Delete:output_type -> google.protobuf.Empty
-	10, // [10:20] is the sub-list for method output_type
-	0,  // [0:10] is the sub-list for method input_type
+	2,  // 0: hi.club.Source.UploadAvatar:input_type -> hi.UploadReq
+	2,  // 1: hi.club.Source.UploadBackground:input_type -> hi.UploadReq
+	0,  // 2: hi.club.Source.Download:input_type -> hi.club.DownloadResourceReq
+	2,  // 3: hi.club.Source.UploadTemp:input_type -> hi.UploadReq
+	3,  // 4: hi.club.Source.UploadTempStream:input_type -> hi.UploadStreamReq
+	2,  // 5: hi.club.Source.UploadLog:input_type -> hi.UploadReq
+	3,  // 6: hi.club.Source.UploadScript:input_type -> hi.UploadStreamReq
+	4,  // 7: hi.club.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
+	5,  // 8: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
+	6,  // 9: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
+	7,  // 10: hi.club.Source.Delete:input_type -> hi.DeleteResourceReq
+	8,  // 11: hi.club.Source.UploadAvatar:output_type -> hi.UploadResp
+	8,  // 12: hi.club.Source.UploadBackground:output_type -> hi.UploadResp
+	1,  // 13: hi.club.Source.Download:output_type -> hi.club.DownloadResourceResp
+	8,  // 14: hi.club.Source.UploadTemp:output_type -> hi.UploadResp
+	8,  // 15: hi.club.Source.UploadTempStream:output_type -> hi.UploadResp
+	8,  // 16: hi.club.Source.UploadLog:output_type -> hi.UploadResp
+	8,  // 17: hi.club.Source.UploadScript:output_type -> hi.UploadResp
+	9,  // 18: hi.club.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
+	10, // 19: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
+	11, // 20: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
+	10, // 21: hi.club.Source.Delete:output_type -> google.protobuf.Empty
+	11, // [11:22] is the sub-list for method output_type
+	0,  // [0:11] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -93,12 +205,13 @@ func file_hi_club_source_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_source_proto_rawDesc), len(file_hi_club_source_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   0,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_hi_club_source_proto_goTypes,
 		DependencyIndexes: file_hi_club_source_proto_depIdxs,
+		MessageInfos:      file_hi_club_source_proto_msgTypes,
 	}.Build()
 	File_hi_club_source_proto = out.File
 	file_hi_club_source_proto_goTypes = nil

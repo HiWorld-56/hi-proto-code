@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Source_UploadAvatar_FullMethodName         = "/hi.club.Source/UploadAvatar"
 	Source_UploadBackground_FullMethodName     = "/hi.club.Source/UploadBackground"
+	Source_Download_FullMethodName             = "/hi.club.Source/Download"
 	Source_UploadTemp_FullMethodName           = "/hi.club.Source/UploadTemp"
 	Source_UploadTempStream_FullMethodName     = "/hi.club.Source/UploadTempStream"
 	Source_UploadLog_FullMethodName            = "/hi.club.Source/UploadLog"
@@ -59,6 +60,16 @@ type SourceClient interface {
 	// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadBackground(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	// Download 按 url 取**公开桶**媒体(聊天/AI 媒体)。给 brain 这类没有浏览器、
+	// 却持有 hiclub grpc 通道的设备端用 —— app/web 直接 http GET 公开 url,不走这里。
+	//
+	// ⚠️ **只放公开桶**(temp/hiclub/hidid):hi-source 的 Download 带 minio 凭据、
+	//
+	//	能读私有桶,若在这里无条件转发,任意用户拿个 hiai/… 的脚本 url 就绕过了
+	//	DownloadScript 的 ORIGINAL 门禁。私有资源一律走 DownloadScript /
+	//	DownloadTrainingFile,那里有归属校验。这不是"靠校验保安全",是划定方法边界:
+	//	本方法只对"本就人人可匿名 GET"的对象开放,grpc 只是省掉设备端的 http 栈。
+	Download(ctx context.Context, in *DownloadResourceReq, opts ...grpc.CallOption) (*DownloadResourceResp, error)
 	// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
 	UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadTempStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
@@ -106,6 +117,16 @@ func (c *sourceClient) UploadBackground(ctx context.Context, in *hi.UploadReq, o
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.UploadResp)
 	err := c.cc.Invoke(ctx, Source_UploadBackground_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sourceClient) Download(ctx context.Context, in *DownloadResourceReq, opts ...grpc.CallOption) (*DownloadResourceResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DownloadResourceResp)
+	err := c.cc.Invoke(ctx, Source_Download_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -223,6 +244,16 @@ type SourceServer interface {
 	// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	// Download 按 url 取**公开桶**媒体(聊天/AI 媒体)。给 brain 这类没有浏览器、
+	// 却持有 hiclub grpc 通道的设备端用 —— app/web 直接 http GET 公开 url,不走这里。
+	//
+	// ⚠️ **只放公开桶**(temp/hiclub/hidid):hi-source 的 Download 带 minio 凭据、
+	//
+	//	能读私有桶,若在这里无条件转发,任意用户拿个 hiai/… 的脚本 url 就绕过了
+	//	DownloadScript 的 ORIGINAL 门禁。私有资源一律走 DownloadScript /
+	//	DownloadTrainingFile,那里有归属校验。这不是"靠校验保安全",是划定方法边界:
+	//	本方法只对"本就人人可匿名 GET"的对象开放,grpc 只是省掉设备端的 http 栈。
+	Download(context.Context, *DownloadResourceReq) (*DownloadResourceResp, error)
 	// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
 	UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadTempStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
@@ -260,6 +291,9 @@ func (UnimplementedSourceServer) UploadAvatar(context.Context, *hi.UploadReq) (*
 }
 func (UnimplementedSourceServer) UploadBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadBackground not implemented")
+}
+func (UnimplementedSourceServer) Download(context.Context, *DownloadResourceReq) (*DownloadResourceResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Download not implemented")
 }
 func (UnimplementedSourceServer) UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadTemp not implemented")
@@ -337,6 +371,24 @@ func _Source_UploadBackground_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SourceServer).UploadBackground(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Source_Download_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DownloadResourceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).Download(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_Download_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).Download(ctx, req.(*DownloadResourceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -477,6 +529,10 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadBackground",
 			Handler:    _Source_UploadBackground_Handler,
+		},
+		{
+			MethodName: "Download",
+			Handler:    _Source_Download_Handler,
 		},
 		{
 			MethodName: "UploadTemp",

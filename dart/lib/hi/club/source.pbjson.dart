@@ -14,3 +14,29 @@
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use downloadResourceReqDescriptor instead')
+const DownloadResourceReq$json = {
+  '1': 'DownloadResourceReq',
+  '2': [
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+  ],
+};
+
+/// Descriptor for `DownloadResourceReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List downloadResourceReqDescriptor = $convert.base64Decode(
+    'ChNEb3dubG9hZFJlc291cmNlUmVxEh4KA3VybBgBIAEoCUIMukgJcgcyBV5cUyskUgN1cmw=');
+
+@$core.Deprecated('Use downloadResourceRespDescriptor instead')
+const DownloadResourceResp$json = {
+  '1': 'DownloadResourceResp',
+  '2': [
+    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `DownloadResourceResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List downloadResourceRespDescriptor = $convert.base64Decode(
+    'ChREb3dubG9hZFJlc291cmNlUmVzcBIeCgdjb250ZW50GAEgASgMQgSQtRgBUgdjb250ZW50Og'
+    'SYtRgB');

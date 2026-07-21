@@ -1051,6 +1051,16 @@ pub mod api_key_client {
         }
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadResourceReq {
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadResourceResp {
+    #[prost(bytes = "vec", tag = "1")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+}
 /// Generated client implementations.
 pub mod source_client {
     #![allow(
@@ -1204,6 +1214,35 @@ pub mod source_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Source", "UploadBackground"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// Download 按 url 取**公开桶**媒体(聊天/AI 媒体)。给 brain 这类没有浏览器、
+        /// 却持有 hiclub grpc 通道的设备端用 —— app/web 直接 http GET 公开 url,不走这里。
+        ///
+        /// ⚠️ **只放公开桶**(temp/hiclub/hidid):hi-source 的 Download 带 minio 凭据、
+        /// 能读私有桶,若在这里无条件转发,任意用户拿个 hiai/… 的脚本 url 就绕过了
+        /// DownloadScript 的 ORIGINAL 门禁。私有资源一律走 DownloadScript /
+        /// DownloadTrainingFile,那里有归属校验。这不是"靠校验保安全",是划定方法边界:
+        /// 本方法只对"本就人人可匿名 GET"的对象开放,grpc 只是省掉设备端的 http 栈。
+        pub async fn download(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DownloadResourceReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::DownloadResourceResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Source/Download");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Source", "Download"));
             self.inner.unary(req, path, codec).await
         }
         /// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
