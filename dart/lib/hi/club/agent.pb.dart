@@ -14,6 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../ai/agent.pb.dart' as $1;
 import '../common.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -702,133 +703,75 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
   $3.Pagination ensurePagination() => $_ensure(1);
 }
 
-/// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-/// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+/// 机器人列表。**列表项直接用 hi.ai.AgentInfo,不自定义** ——
+/// club 的 Agent 里 Get/Edit/CreateAssistant/GetDefaultConfig 一直直接用 hi.ai 的类型,
+/// 唯独 List 自造过一个只吐 Entity 的结构,缺 config/token/note/created_at 一大票字段,
+/// 前端拿完列表还得逐个再调 Get。
 ///
-/// Mark/ListMarks 原先挂在 Agent 下、标 AUTH_USER,但它们本就是 hiclub web 的超管功能
-/// (给机器人打标记让它显示靠前)—— 普通用户不该能改别人机器人的排序权重。
-/// 标记(显示靠前),不是收藏。
-class MarkAgentReq extends $pb.GeneratedMessage {
-  factory MarkAgentReq({
-    $core.String? agent,
-    $core.bool? marked,
+/// 用 AgentInfo 而不是 hi.ai.AgentBrief:Brief = AgentInfo + marked,而 club 没有标记
+/// 功能,那个 marked 会恒为 false。这里只是换个容器,列表项本身仍是完整的 AgentInfo。
+///
+/// 穿过来的只是**机器人个体**(prompt/模型/用量);归属仍是 club 自己的数据,
+/// 由 club 把 master 填进 AgentInfo.creator —— 关系不穿,各服务填各自视角的值。
+class ListAgentsResp extends $pb.GeneratedMessage {
+  factory ListAgentsResp({
+    $core.int? total,
+    $core.Iterable<$1.AgentInfo>? agents,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
-    if (marked != null) result.marked = marked;
+    if (total != null) result.total = total;
+    if (agents != null) result.agents.addAll(agents);
     return result;
   }
 
-  MarkAgentReq._();
+  ListAgentsResp._();
 
-  factory MarkAgentReq.fromBuffer($core.List<$core.int> data,
+  factory ListAgentsResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MarkAgentReq.fromJson($core.String json,
+  factory ListAgentsResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MarkAgentReq',
+      _omitMessageNames ? '' : 'ListAgentsResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOB(2, _omitFieldNames ? '' : 'marked')
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<$1.AgentInfo>(2, _omitFieldNames ? '' : 'agents',
+        subBuilder: $1.AgentInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarkAgentReq clone() => deepCopy();
+  ListAgentsResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarkAgentReq copyWith(void Function(MarkAgentReq) updates) =>
-      super.copyWith((message) => updates(message as MarkAgentReq))
-          as MarkAgentReq;
+  ListAgentsResp copyWith(void Function(ListAgentsResp) updates) =>
+      super.copyWith((message) => updates(message as ListAgentsResp))
+          as ListAgentsResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MarkAgentReq create() => MarkAgentReq._();
+  static ListAgentsResp create() => ListAgentsResp._();
   @$core.override
-  MarkAgentReq createEmptyInstance() => create();
+  ListAgentsResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MarkAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MarkAgentReq>(create);
-  static MarkAgentReq? _defaultInstance;
+  static ListAgentsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentsResp>(create);
+  static ListAgentsResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $core.int get total => $_getIZ(0);
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
+  set total($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
+  $core.bool hasTotal() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.bool get marked => $_getBF(1);
-  @$pb.TagNumber(2)
-  set marked($core.bool value) => $_setBool(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMarked() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMarked() => $_clearField(2);
-}
-
-class ListMarksReq extends $pb.GeneratedMessage {
-  factory ListMarksReq({
-    $3.Pagination? pagination,
-  }) {
-    final result = create();
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListMarksReq._();
-
-  factory ListMarksReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListMarksReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMarksReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOM<$3.Pagination>(1, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMarksReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMarksReq copyWith(void Function(ListMarksReq) updates) =>
-      super.copyWith((message) => updates(message as ListMarksReq))
-          as ListMarksReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListMarksReq create() => ListMarksReq._();
-  @$core.override
-  ListMarksReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListMarksReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMarksReq>(create);
-  static ListMarksReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $3.Pagination get pagination => $_getN(0);
-  @$pb.TagNumber(1)
-  set pagination($3.Pagination value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasPagination() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearPagination() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $3.Pagination ensurePagination() => $_ensure(0);
+  $pb.PbList<$1.AgentInfo> get agents => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =
