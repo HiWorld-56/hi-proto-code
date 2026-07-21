@@ -334,6 +334,102 @@ class PluginView extends $pb.GeneratedMessage {
   void clearRefCount() => $_clearField(5);
 }
 
+/// 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
+///
+/// ⚠️ 别再往通知里塞 PluginView:它是 VIS_SELF(body.url 是私有 bucket 的脚本包地址,
+///    脚本是 owner 私产、且是可交易资产),而 hi.club.Notice 是 VIS_PARTICIPANT ——
+///    SELF 装进 PARTICIPANT 本该被可见性 lint 拦下,只因中间隔了个 google.protobuf.Any
+///    才没拦住。**Any 是那套 lint 唯一的结构性缺口**,往里塞什么要自己把关。
+class PluginLoaded extends $pb.GeneratedMessage {
+  factory PluginLoaded({
+    $core.String? uuid,
+    $core.String? name,
+    $core.String? version,
+    $core.bool? enabled,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (name != null) result.name = name;
+    if (version != null) result.version = version;
+    if (enabled != null) result.enabled = enabled;
+    return result;
+  }
+
+  PluginLoaded._();
+
+  factory PluginLoaded.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PluginLoaded.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PluginLoaded',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..aOB(4, _omitFieldNames ? '' : 'enabled')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginLoaded clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginLoaded copyWith(void Function(PluginLoaded) updates) =>
+      super.copyWith((message) => updates(message as PluginLoaded))
+          as PluginLoaded;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PluginLoaded create() => PluginLoaded._();
+  @$core.override
+  PluginLoaded createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PluginLoaded getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginLoaded>(create);
+  static PluginLoaded? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get enabled => $_getBF(3);
+  @$pb.TagNumber(4)
+  set enabled($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEnabled() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEnabled() => $_clearField(4);
+}
+
 /// 发布一个插件(= 脚本的一个版本)+ 建该机器人的 annex(source=original)。
 /// root 空=全新脚本(生成 主id+次id);非空=给该脚本加新版本(只生成次id,且版本号须大于现有最大)。
 /// **uuid 已存在必拒**,发布即冻结。

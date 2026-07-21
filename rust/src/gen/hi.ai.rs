@@ -1226,6 +1226,25 @@ pub struct PluginView {
     #[prost(int32, tag = "5")]
     pub ref_count: i32,
 }
+/// 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
+///
+/// ⚠️ 别再往通知里塞 PluginView:它是 VIS_SELF(body.url 是私有 bucket 的脚本包地址,
+/// 脚本是 owner 私产、且是可交易资产),而 hi.club.Notice 是 VIS_PARTICIPANT ——
+/// SELF 装进 PARTICIPANT 本该被可见性 lint 拦下,只因中间隔了个 google.protobuf.Any
+/// 才没拦住。**Any 是那套 lint 唯一的结构性缺口**,往里塞什么要自己把关。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginLoaded {
+    /// 插件 id(\<主id>\_\<次id>)
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+    /// 是否参与推理
+    #[prost(bool, tag = "4")]
+    pub enabled: bool,
+}
 /// 发布一个插件(= 脚本的一个版本)+ 建该机器人的 annex(source=original)。
 /// root 空=全新脚本(生成 主id+次id);非空=给该脚本加新版本(只生成次id,且版本号须大于现有最大)。
 /// **uuid 已存在必拒**,发布即冻结。

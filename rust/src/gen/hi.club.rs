@@ -2900,7 +2900,7 @@ pub mod packet {
 /// robot-bind            robot(硬件机器人)绑定完成
 /// robot-unbind          robot(硬件机器人)解绑完成
 /// robot-update          robot(硬件机器人)资料更新              / hi.Entity
-/// plugin-load           插件/脚本加载完成                      / hi.ai.PluginView
+/// plugin-load           插件/脚本加载完成                      / hi.ai.PluginLoaded
 ///
 /// ex_type: 附加类型
 /// 扩充主类型，避免主类型产生过多分支。
@@ -2927,6 +2927,11 @@ pub struct Notice {
     pub expiration: i64,
     #[prost(string, tag = "6")]
     pub status: ::prost::alloc::string::String,
+    /// ⚠️ **Any 是可见性 lint 唯一的结构性缺口**:装进去的真实类型 lint 看不见,
+    /// 于是 `level(field.visibility) <= level(message.audience)` 这条规则在这里失效。
+    /// 往里塞的类型**必须自己是 VIS_PARTICIPANT 或更宽**,别塞 VIS_SELF 的东西 ——
+    /// plugin-load 曾塞 hi.ai.PluginView(SELF,body.url 是私有 bucket 的脚本地址),
+    /// 已换成专门的公开摘要 hi.ai.PluginLoaded。合法载荷见上面的类型表。
     #[prost(message, optional, tag = "7")]
     pub extra: ::core::option::Option<::pbjson_types::Any>,
     #[prost(string, tag = "8")]

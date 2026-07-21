@@ -109,6 +109,24 @@ final $typed_data.Uint8List pluginViewDescriptor = $convert.base64Decode(
     'B2VuYWJsZWQSMQoGc291cmNlGAQgASgOMhMuaGkuYWkuUGx1Z2luU291cmNlQgSQtRgDUgZzb3'
     'VyY2USIQoJcmVmX2NvdW50GAUgASgFQgSQtRgDUghyZWZDb3VudDoEmLUYAw==');
 
+@$core.Deprecated('Use pluginLoadedDescriptor instead')
+const PluginLoaded$json = {
+  '1': 'PluginLoaded',
+  '2': [
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'version', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'version'},
+    {'1': 'enabled', '3': 4, '4': 1, '5': 8, '8': {}, '10': 'enabled'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `PluginLoaded`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pluginLoadedDescriptor = $convert.base64Decode(
+    'CgxQbHVnaW5Mb2FkZWQSGAoEdXVpZBgBIAEoCUIEkLUYAlIEdXVpZBIYCgRuYW1lGAIgASgJQg'
+    'SQtRgCUgRuYW1lEh4KB3ZlcnNpb24YAyABKAlCBJC1GAJSB3ZlcnNpb24SHgoHZW5hYmxlZBgE'
+    'IAEoCEIEkLUYAlIHZW5hYmxlZDoEmLUYAg==');
+
 @$core.Deprecated('Use createPluginReqDescriptor instead')
 const CreatePluginReq$json = {
   '1': 'CreatePluginReq',

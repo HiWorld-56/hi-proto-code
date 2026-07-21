@@ -126,7 +126,7 @@ func (*Packet_Message) isPacket_Kind() {}
 // robot-bind            robot(硬件机器人)绑定完成
 // robot-unbind          robot(硬件机器人)解绑完成
 // robot-update          robot(硬件机器人)资料更新              / hi.Entity
-// plugin-load           插件/脚本加载完成                      / hi.ai.PluginView
+// plugin-load           插件/脚本加载完成                      / hi.ai.PluginLoaded
 //
 // ex_type: 附加类型
 // 扩充主类型，避免主类型产生过多分支。
@@ -139,15 +139,21 @@ func (*Packet_Message) isPacket_Kind() {}
 // type: group-update  + ex_type: base.name;private      群名字与私有性更新
 // ...
 type Notice struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	From          *hi.Entity             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // Entity=公开门面
-	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Expiration    int64                  `protobuf:"varint,5,opt,name=expiration,proto3" json:"expiration,omitempty"`
-	Status        string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
-	Extra         *anypb.Any             `protobuf:"bytes,7,opt,name=extra,proto3" json:"extra,omitempty"`
-	ExType        string                 `protobuf:"bytes,8,opt,name=ex_type,json=exType,proto3" json:"ex_type,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Uuid       string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Type       string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	From       *hi.Entity             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // Entity=公开门面
+	Timestamp  int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Expiration int64                  `protobuf:"varint,5,opt,name=expiration,proto3" json:"expiration,omitempty"`
+	Status     string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	// ⚠️ **Any 是可见性 lint 唯一的结构性缺口**:装进去的真实类型 lint 看不见,
+	//
+	//	于是 `level(field.visibility) <= level(message.audience)` 这条规则在这里失效。
+	//	往里塞的类型**必须自己是 VIS_PARTICIPANT 或更宽**,别塞 VIS_SELF 的东西 ——
+	//	plugin-load 曾塞 hi.ai.PluginView(SELF,body.url 是私有 bucket 的脚本地址),
+	//	已换成专门的公开摘要 hi.ai.PluginLoaded。合法载荷见上面的类型表。
+	Extra         *anypb.Any `protobuf:"bytes,7,opt,name=extra,proto3" json:"extra,omitempty"`
+	ExType        string     `protobuf:"bytes,8,opt,name=ex_type,json=exType,proto3" json:"ex_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
