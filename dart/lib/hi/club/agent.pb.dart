@@ -27,6 +27,9 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 ///    别人的机器人。删掉字段后,"指定给谁绑"在类型上就说不出来。
 ///    (同文件 Agent.List 早就写明"没有查谁的参数,主体永远是 token 里的人",
 ///     这两个**写**操作反而收了 master,不一致。)
+///    ⚠️ agent **保持字段号 2**,不复用已删的 master=1 —— 复用编号是隐形破坏:
+///       字段名没变,各仓编译全过,但没升级的仓按老编号编码、新版按新编号解析,
+///       收到空值,编译期零提示。(did 侧 GetUserReq 真踩过这个。)
 class BindMasterReq extends $pb.GeneratedMessage {
   factory BindMasterReq({
     $core.String? agent,
@@ -49,7 +52,7 @@ class BindMasterReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BindMasterReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -71,14 +74,14 @@ class BindMasterReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<BindMasterReq>(create);
   static BindMasterReq? _defaultInstance;
 
-  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  @$pb.TagNumber(2)
+  void clearAgent() => $_clearField(2);
 }
 
 class UnbindMasterReq extends $pb.GeneratedMessage {
@@ -103,7 +106,7 @@ class UnbindMasterReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UnbindMasterReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -125,14 +128,14 @@ class UnbindMasterReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UnbindMasterReq>(create);
   static UnbindMasterReq? _defaultInstance;
 
-  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  @$pb.TagNumber(2)
+  void clearAgent() => $_clearField(2);
 }
 
 class BindStatusReq extends $pb.GeneratedMessage {
