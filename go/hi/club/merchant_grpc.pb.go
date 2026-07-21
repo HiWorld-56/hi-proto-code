@@ -22,7 +22,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Merchant_List_FullMethodName = "/hi.club.Merchant/List"
+	Merchant_List_FullMethodName         = "/hi.club.Merchant/List"
+	Merchant_ListGreeters_FullMethodName = "/hi.club.Merchant/ListGreeters"
 )
 
 // MerchantClient is the client API for Merchant service.
@@ -32,6 +33,11 @@ const (
 // 商户(用户档)。**club 侧目前没有商户的概念** —— 本 service 只是**转发 hidid 的商户方法**。
 type MerchantClient interface {
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.MerchantListResp, error)
+	// 链路:club 用户 --用户token--> club后台 --ExtendToken--> did后台。
+	// club 手里只有自己的商户凭证,所以到了 did 侧是"club 这个商户要读**别家商户**的用户扩展",
+	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
+	// club 侧不再叠鉴权:所有登录用户都能调。
+	ListGreeters(ctx context.Context, in *ListGreetersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error)
 }
 
 type merchantClient struct {
@@ -52,6 +58,16 @@ func (c *merchantClient) List(ctx context.Context, in *emptypb.Empty, opts ...gr
 	return out, nil
 }
 
+func (c *merchantClient) ListGreeters(ctx context.Context, in *ListGreetersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(did.ListUsersResp)
+	err := c.cc.Invoke(ctx, Merchant_ListGreeters_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MerchantServer is the server API for Merchant service.
 // All implementations should embed UnimplementedMerchantServer
 // for forward compatibility.
@@ -59,6 +75,11 @@ func (c *merchantClient) List(ctx context.Context, in *emptypb.Empty, opts ...gr
 // 商户(用户档)。**club 侧目前没有商户的概念** —— 本 service 只是**转发 hidid 的商户方法**。
 type MerchantServer interface {
 	List(context.Context, *emptypb.Empty) (*did.MerchantListResp, error)
+	// 链路:club 用户 --用户token--> club后台 --ExtendToken--> did后台。
+	// club 手里只有自己的商户凭证,所以到了 did 侧是"club 这个商户要读**别家商户**的用户扩展",
+	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
+	// club 侧不再叠鉴权:所有登录用户都能调。
+	ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error)
 }
 
 // UnimplementedMerchantServer should be embedded to have
@@ -70,6 +91,9 @@ type UnimplementedMerchantServer struct{}
 
 func (UnimplementedMerchantServer) List(context.Context, *emptypb.Empty) (*did.MerchantListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedMerchantServer) ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListGreeters not implemented")
 }
 func (UnimplementedMerchantServer) testEmbeddedByValue() {}
 
@@ -109,6 +133,24 @@ func _Merchant_List_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_ListGreeters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListGreetersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).ListGreeters(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_ListGreeters_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).ListGreeters(ctx, req.(*ListGreetersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Merchant_ServiceDesc is the grpc.ServiceDesc for Merchant service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -119,6 +161,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _Merchant_List_Handler,
+		},
+		{
+			MethodName: "ListGreeters",
+			Handler:    _Merchant_ListGreeters_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

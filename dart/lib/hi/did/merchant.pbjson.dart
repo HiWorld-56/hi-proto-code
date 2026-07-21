@@ -339,6 +339,27 @@ final $typed_data.Uint8List listUsersReqDescriptor = $convert.base64Decode(
     'CgxMaXN0VXNlcnNSZXESGgoIbWVyY2hhbnQYASABKAlSCG1lcmNoYW50EhIKBHVzZXIYAiABKA'
     'lSBHVzZXISLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
+@$core.Deprecated('Use listGreetersReqDescriptor instead')
+const ListGreetersReq$json = {
+  '1': 'ListGreetersReq',
+  '2': [
+    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '10': 'merchant'},
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListGreetersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listGreetersReqDescriptor = $convert.base64Decode(
+    'Cg9MaXN0R3JlZXRlcnNSZXESGgoIbWVyY2hhbnQYASABKAlSCG1lcmNoYW50Ei4KCnBhZ2luYX'
+    'Rpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+
 @$core.Deprecated('Use listUsersRespDescriptor instead')
 const ListUsersResp$json = {
   '1': 'ListUsersResp',

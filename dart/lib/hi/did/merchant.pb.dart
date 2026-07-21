@@ -920,6 +920,80 @@ class ListUsersReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(2);
 }
 
+/// 列某商户名下的 greeter —— 即扩展表里 level > 0 的用户。
+/// level 由商户自己在扩展信息(UserExtensionInfo.level)里打,未设/0 = 普通用户。
+///
+/// 与 ListUsers 分开而不是加个 level 过滤参数:这是一类**有业务含义的固定人群**
+/// (club 用来展示可接待的人),不是通用筛选。合成一个方法就又要靠"参数传没传"分支。
+class ListGreetersReq extends $pb.GeneratedMessage {
+  factory ListGreetersReq({
+    $core.String? merchant,
+    $2.Pagination? pagination,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListGreetersReq._();
+
+  factory ListGreetersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListGreetersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListGreetersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGreetersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGreetersReq copyWith(void Function(ListGreetersReq) updates) =>
+      super.copyWith((message) => updates(message as ListGreetersReq))
+          as ListGreetersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListGreetersReq create() => ListGreetersReq._();
+  @$core.override
+  ListGreetersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListGreetersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGreetersReq>(create);
+  static ListGreetersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get merchant => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set merchant($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMerchant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMerchant() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Pagination ensurePagination() => $_ensure(1);
+}
+
 class ListUsersResp extends $pb.GeneratedMessage {
   factory ListUsersResp({
     $core.int? total,

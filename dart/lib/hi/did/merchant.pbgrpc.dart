@@ -89,6 +89,15 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$listUsers, request, options: options);
   }
 
+  /// 返回体复用 ListUsersResp —— 同样是 List<Entity + 扩展字段>,没有一个字段不同。
+  /// (复用的是**返回**类型;入参另立 ListGreetersReq,不与 ListUsersReq 混。)
+  $grpc.ResponseFuture<$1.ListUsersResp> listGreeters(
+    $1.ListGreetersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listGreeters, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.MerchantListResp> list(
     $1.ListMerchantsReq request, {
     $grpc.CallOptions? options,
@@ -182,6 +191,11 @@ class MerchantClient extends $grpc.Client {
           '/hi.did.Merchant/ListUsers',
           ($1.ListUsersReq value) => value.writeToBuffer(),
           $1.ListUsersResp.fromBuffer);
+  static final _$listGreeters =
+      $grpc.ClientMethod<$1.ListGreetersReq, $1.ListUsersResp>(
+          '/hi.did.Merchant/ListGreeters',
+          ($1.ListGreetersReq value) => value.writeToBuffer(),
+          $1.ListUsersResp.fromBuffer);
   static final _$list =
       $grpc.ClientMethod<$1.ListMerchantsReq, $1.MerchantListResp>(
           '/hi.did.Merchant/List',
@@ -262,6 +276,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.ListUsersReq.fromBuffer(value),
+        ($1.ListUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListGreetersReq, $1.ListUsersResp>(
+        'ListGreeters',
+        listGreeters_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ListGreetersReq.fromBuffer(value),
         ($1.ListUsersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListMerchantsReq, $1.MerchantListResp>(
         'List',
@@ -368,6 +389,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListUsersResp> listUsers(
       $grpc.ServiceCall call, $1.ListUsersReq request);
+
+  $async.Future<$1.ListUsersResp> listGreeters_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ListGreetersReq> $request) async {
+    return listGreeters($call, await $request);
+  }
+
+  $async.Future<$1.ListUsersResp> listGreeters(
+      $grpc.ServiceCall call, $1.ListGreetersReq request);
 
   $async.Future<$1.MerchantListResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$1.ListMerchantsReq> $request) async {

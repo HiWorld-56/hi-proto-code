@@ -17,8 +17,9 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $3;
 import '../did/merchant.pb.dart' as $1;
+import 'merchant.pb.dart' as $2;
 
 export 'merchant.pb.dart';
 
@@ -42,12 +43,28 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  /// 链路:club 用户 --用户token--> club后台 --ExtendToken--> did后台。
+  /// club 手里只有自己的商户凭证,所以到了 did 侧是"club 这个商户要读**别家商户**的用户扩展",
+  /// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
+  /// club 侧不再叠鉴权:所有登录用户都能调。
+  $grpc.ResponseFuture<$1.ListUsersResp> listGreeters(
+    $2.ListGreetersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listGreeters, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list = $grpc.ClientMethod<$0.Empty, $1.MerchantListResp>(
       '/hi.club.Merchant/List',
       ($0.Empty value) => value.writeToBuffer(),
       $1.MerchantListResp.fromBuffer);
+  static final _$listGreeters =
+      $grpc.ClientMethod<$2.ListGreetersReq, $1.ListUsersResp>(
+          '/hi.club.Merchant/ListGreeters',
+          ($2.ListGreetersReq value) => value.writeToBuffer(),
+          $1.ListUsersResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Merchant')
@@ -62,6 +79,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.MerchantListResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.ListGreetersReq, $1.ListUsersResp>(
+        'ListGreeters',
+        listGreeters_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.ListGreetersReq.fromBuffer(value),
+        ($1.ListUsersResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.MerchantListResp> list_Pre(
@@ -71,6 +95,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$1.MerchantListResp> list(
       $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$1.ListUsersResp> listGreeters_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ListGreetersReq> $request) async {
+    return listGreeters($call, await $request);
+  }
+
+  $async.Future<$1.ListUsersResp> listGreeters(
+      $grpc.ServiceCall call, $2.ListGreetersReq request);
 }
 
 /// 商户管理(超管)。原 `Merchant.ListAll` —— 超管方法蹲在用户面 service 里(混档),
@@ -89,7 +121,7 @@ class MerchantManageClient extends $grpc.Client {
   MerchantManageClient(super.channel, {super.options, super.interceptors});
 
   $grpc.ResponseFuture<$1.MerchantListResp> list(
-    $2.Pagination request, {
+    $3.Pagination request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
@@ -97,9 +129,9 @@ class MerchantManageClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$list = $grpc.ClientMethod<$2.Pagination, $1.MerchantListResp>(
+  static final _$list = $grpc.ClientMethod<$3.Pagination, $1.MerchantListResp>(
       '/hi.club.MerchantManage/List',
-      ($2.Pagination value) => value.writeToBuffer(),
+      ($3.Pagination value) => value.writeToBuffer(),
       $1.MerchantListResp.fromBuffer);
 }
 
@@ -108,20 +140,20 @@ abstract class MerchantManageServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.MerchantManage';
 
   MerchantManageServiceBase() {
-    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.MerchantListResp>(
+    $addMethod($grpc.ServiceMethod<$3.Pagination, $1.MerchantListResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
+        ($core.List<$core.int> value) => $3.Pagination.fromBuffer(value),
         ($1.MerchantListResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.MerchantListResp> list_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$3.Pagination> $request) async {
     return list($call, await $request);
   }
 
   $async.Future<$1.MerchantListResp> list(
-      $grpc.ServiceCall call, $2.Pagination request);
+      $grpc.ServiceCall call, $3.Pagination request);
 }

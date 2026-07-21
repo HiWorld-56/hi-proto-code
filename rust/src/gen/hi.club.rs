@@ -2144,6 +2144,19 @@ pub mod wallet_client {
         }
     }
 }
+/// 列某商户名下的 greeter(扩展表 level > 0)。
+///
+/// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"空=自己",因为调用者本身
+/// 就是商户(ExtendToken 解出);club 的调用者是普通用户、不是商户,"自己"无从谈起。
+/// 故这里不照搬 hi.did.ListGreetersReq —— 同名字段两种语义,是最容易出事的复用。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListGreetersReq {
+    /// 目标商户 did
+    #[prost(string, tag = "1")]
+    pub merchant: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 /// Generated client implementations.
 pub mod merchant_client {
     #![allow(
@@ -2255,6 +2268,34 @@ pub mod merchant_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Merchant/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Merchant", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 链路:club 用户 --用户token--> club后台 --ExtendToken--> did后台。
+        /// club 手里只有自己的商户凭证,所以到了 did 侧是"club 这个商户要读**别家商户**的用户扩展",
+        /// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
+        /// club 侧不再叠鉴权:所有登录用户都能调。
+        pub async fn list_greeters(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListGreetersReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::did::ListUsersResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Merchant/ListGreeters",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Merchant", "ListGreeters"));
             self.inner.unary(req, path, codec).await
         }
     }

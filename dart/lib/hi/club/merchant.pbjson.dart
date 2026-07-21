@@ -14,3 +14,24 @@
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use listGreetersReqDescriptor instead')
+const ListGreetersReq$json = {
+  '1': 'ListGreetersReq',
+  '2': [
+    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'merchant'},
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListGreetersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listGreetersReqDescriptor = $convert.base64Decode(
+    'Cg9MaXN0R3JlZXRlcnNSZXESKAoIbWVyY2hhbnQYASABKAlCDLpICXIHMgVeXFMrJFIIbWVyY2'
+    'hhbnQSLgoKcGFnaW5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');

@@ -1186,6 +1186,19 @@ pub struct ListUsersReq {
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 列某商户名下的 greeter —— 即扩展表里 level > 0 的用户。
+/// level 由商户自己在扩展信息(UserExtensionInfo.level)里打,未设/0 = 普通用户。
+///
+/// 与 ListUsers 分开而不是加个 level 过滤参数:这是一类**有业务含义的固定人群**
+/// (club 用来展示可接待的人),不是通用筛选。合成一个方法就又要靠"参数传没传"分支。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListGreetersReq {
+    /// 空=自己;非空=指定商户(须先获授权,同 ListUsers)
+    #[prost(string, tag = "1")]
+    pub merchant: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListUsersResp {
     #[prost(int32, tag = "1")]
@@ -1530,6 +1543,29 @@ pub mod merchant_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "ListUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 返回体复用 ListUsersResp —— 同样是 List\<Entity + 扩展字段>,没有一个字段不同。
+        /// (复用的是**返回**类型;入参另立 ListGreetersReq,不与 ListUsersReq 混。)
+        pub async fn list_greeters(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListGreetersReq>,
+        ) -> std::result::Result<tonic::Response<super::ListUsersResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/ListGreeters",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "ListGreeters"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list(
