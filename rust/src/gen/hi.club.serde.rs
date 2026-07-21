@@ -536,16 +536,10 @@ impl serde::Serialize for BindMasterReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.master.is_empty() {
-            len += 1;
-        }
         if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.BindMasterReq", len)?;
-        if !self.master.is_empty() {
-            struct_ser.serialize_field("master", &self.master)?;
-        }
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
@@ -559,13 +553,11 @@ impl<'de> serde::Deserialize<'de> for BindMasterReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "master",
             "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Master,
             Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -588,7 +580,6 @@ impl<'de> serde::Deserialize<'de> for BindMasterReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "master" => Ok(GeneratedField::Master),
                             "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -609,16 +600,9 @@ impl<'de> serde::Deserialize<'de> for BindMasterReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut master__ = None;
                 let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Master => {
-                            if master__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("master"));
-                            }
-                            master__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Agent => {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
@@ -628,7 +612,6 @@ impl<'de> serde::Deserialize<'de> for BindMasterReq {
                     }
                 }
                 Ok(BindMasterReq {
-                    master: master__.unwrap_or_default(),
                     agent: agent__.unwrap_or_default(),
                 })
             }
@@ -11257,16 +11240,10 @@ impl serde::Serialize for UnbindMasterReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.master.is_empty() {
-            len += 1;
-        }
         if !self.agent.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.UnbindMasterReq", len)?;
-        if !self.master.is_empty() {
-            struct_ser.serialize_field("master", &self.master)?;
-        }
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
@@ -11280,13 +11257,11 @@ impl<'de> serde::Deserialize<'de> for UnbindMasterReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "master",
             "agent",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Master,
             Agent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -11309,7 +11284,6 @@ impl<'de> serde::Deserialize<'de> for UnbindMasterReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "master" => Ok(GeneratedField::Master),
                             "agent" => Ok(GeneratedField::Agent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -11330,16 +11304,9 @@ impl<'de> serde::Deserialize<'de> for UnbindMasterReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut master__ = None;
                 let mut agent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Master => {
-                            if master__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("master"));
-                            }
-                            master__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Agent => {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
@@ -11349,7 +11316,6 @@ impl<'de> serde::Deserialize<'de> for UnbindMasterReq {
                     }
                 }
                 Ok(UnbindMasterReq {
-                    master: master__.unwrap_or_default(),
                     agent: agent__.unwrap_or_default(),
                 })
             }

@@ -774,13 +774,19 @@ class ListGrantsResp extends $pb.GeneratedMessage {
 
 /// ── 商户管理用户(扩展数据)的入参 ───────────────────────────────────
 /// merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权,requireGrant)。
+/// ── 读自己名下的用户(Merchant,免 grant)──
+/// **没有 merchant 字段** —— 商户身份恒取自 ExtendToken。
+///
+/// ⚠️ 原先这三个入参都有 `merchant`,注释写「空=自己;非空=指定商户,须先获授权」。
+///    那不是同一根轴上的"筛/不筛",而是**空/非空走两条不同的鉴权分支** ——
+///    一旦 handler 里 `if merchant == ""` 与 requireGrant 的分支写岔,就是静默跨商户读。
+///    按既有范式(Merchant/MerchantManage、Gateway/GatewayAdmin)拆成两个 service:
+///    读自己的在这里,跨商户的在 MerchantGranted(整个 service 走 requireGrant)。
 class GetUserReq extends $pb.GeneratedMessage {
   factory GetUserReq({
-    $core.String? merchant,
     $core.String? user,
   }) {
     final result = create();
-    if (merchant != null) result.merchant = merchant;
     if (user != null) result.user = user;
     return result;
   }
@@ -798,8 +804,7 @@ class GetUserReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetUserReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'merchant')
-    ..aOS(2, _omitFieldNames ? '' : 'user')
+    ..aOS(1, _omitFieldNames ? '' : 'user')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -821,32 +826,21 @@ class GetUserReq extends $pb.GeneratedMessage {
   static GetUserReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get merchant => $_getSZ(0);
+  $core.String get user => $_getSZ(0);
   @$pb.TagNumber(1)
-  set merchant($core.String value) => $_setString(0, value);
+  set user($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasMerchant() => $_has(0);
+  $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
-  void clearMerchant() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get user => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set user($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasUser() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearUser() => $_clearField(2);
+  void clearUser() => $_clearField(1);
 }
 
 class ListUsersReq extends $pb.GeneratedMessage {
   factory ListUsersReq({
-    $core.String? merchant,
     $core.String? user,
     $2.Pagination? pagination,
   }) {
     final result = create();
-    if (merchant != null) result.merchant = merchant;
     if (user != null) result.user = user;
     if (pagination != null) result.pagination = pagination;
     return result;
@@ -865,9 +859,8 @@ class ListUsersReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListUsersReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'merchant')
-    ..aOS(2, _omitFieldNames ? '' : 'user')
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -889,6 +882,146 @@ class ListUsersReq extends $pb.GeneratedMessage {
   static ListUsersReq getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ListUsersReq>(create);
   static ListUsersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get user => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set user($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUser() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Pagination ensurePagination() => $_ensure(1);
+}
+
+/// ── 读**别家商户**名下的用户(MerchantGranted,整个 service 走 requireGrant)──
+/// merchant 必填 —— 这个 service 存在的意义就是跨商户,省掉它就没得跨。
+class GrantedGetUserReq extends $pb.GeneratedMessage {
+  factory GrantedGetUserReq({
+    $core.String? merchant,
+    $core.String? user,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    if (user != null) result.user = user;
+    return result;
+  }
+
+  GrantedGetUserReq._();
+
+  factory GrantedGetUserReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GrantedGetUserReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GrantedGetUserReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..aOS(2, _omitFieldNames ? '' : 'user')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedGetUserReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedGetUserReq copyWith(void Function(GrantedGetUserReq) updates) =>
+      super.copyWith((message) => updates(message as GrantedGetUserReq))
+          as GrantedGetUserReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GrantedGetUserReq create() => GrantedGetUserReq._();
+  @$core.override
+  GrantedGetUserReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GrantedGetUserReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GrantedGetUserReq>(create);
+  static GrantedGetUserReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get merchant => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set merchant($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMerchant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMerchant() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get user => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set user($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUser() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUser() => $_clearField(2);
+}
+
+class GrantedListUsersReq extends $pb.GeneratedMessage {
+  factory GrantedListUsersReq({
+    $core.String? merchant,
+    $core.String? user,
+    $2.Pagination? pagination,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    if (user != null) result.user = user;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  GrantedListUsersReq._();
+
+  factory GrantedListUsersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GrantedListUsersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GrantedListUsersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..aOS(2, _omitFieldNames ? '' : 'user')
+    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedListUsersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedListUsersReq copyWith(void Function(GrantedListUsersReq) updates) =>
+      super.copyWith((message) => updates(message as GrantedListUsersReq))
+          as GrantedListUsersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GrantedListUsersReq create() => GrantedListUsersReq._();
+  @$core.override
+  GrantedListUsersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GrantedListUsersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GrantedListUsersReq>(create);
+  static GrantedListUsersReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get merchant => $_getSZ(0);
@@ -920,6 +1053,76 @@ class ListUsersReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(2);
 }
 
+class GrantedListGreetersReq extends $pb.GeneratedMessage {
+  factory GrantedListGreetersReq({
+    $core.String? merchant,
+    $2.Pagination? pagination,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  GrantedListGreetersReq._();
+
+  factory GrantedListGreetersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GrantedListGreetersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GrantedListGreetersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedListGreetersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedListGreetersReq copyWith(
+          void Function(GrantedListGreetersReq) updates) =>
+      super.copyWith((message) => updates(message as GrantedListGreetersReq))
+          as GrantedListGreetersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GrantedListGreetersReq create() => GrantedListGreetersReq._();
+  @$core.override
+  GrantedListGreetersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GrantedListGreetersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GrantedListGreetersReq>(create);
+  static GrantedListGreetersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get merchant => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set merchant($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMerchant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMerchant() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Pagination ensurePagination() => $_ensure(1);
+}
+
 /// 列某商户名下的 greeter —— 即扩展表里 level >= 8 的用户。
 /// level 由商户自己在扩展信息(UserExtensionInfo.level)里打;未设(NULL)或低于门槛 = 普通用户。
 /// 门槛在服务端是常量(repo.GreeterMinLevel),不由调用方传 —— greeter 是一类固定人群,
@@ -929,11 +1132,9 @@ class ListUsersReq extends $pb.GeneratedMessage {
 /// (club 用来展示可接待的人),不是通用筛选。合成一个方法就又要靠"参数传没传"分支。
 class ListGreetersReq extends $pb.GeneratedMessage {
   factory ListGreetersReq({
-    $core.String? merchant,
     $2.Pagination? pagination,
   }) {
     final result = create();
-    if (merchant != null) result.merchant = merchant;
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -951,8 +1152,7 @@ class ListGreetersReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListGreetersReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'merchant')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -976,24 +1176,15 @@ class ListGreetersReq extends $pb.GeneratedMessage {
   static ListGreetersReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get merchant => $_getSZ(0);
+  $2.Pagination get pagination => $_getN(0);
   @$pb.TagNumber(1)
-  set merchant($core.String value) => $_setString(0, value);
+  set pagination($2.Pagination value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasMerchant() => $_has(0);
+  $core.bool hasPagination() => $_has(0);
   @$pb.TagNumber(1)
-  void clearMerchant() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  void clearPagination() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $2.Pagination ensurePagination() => $_ensure(0);
 }
 
 class ListUsersResp extends $pb.GeneratedMessage {

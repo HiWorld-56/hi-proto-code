@@ -307,21 +307,54 @@ final $typed_data.Uint8List listGrantsRespDescriptor = $convert.base64Decode(
 const GetUserReq$json = {
   '1': 'GetUserReq',
   '2': [
-    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '10': 'merchant'},
-    {'1': 'user', '3': 2, '4': 1, '5': 9, '10': 'user'},
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'user'},
   ],
 };
 
 /// Descriptor for `GetUserReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getUserReqDescriptor = $convert.base64Decode(
-    'CgpHZXRVc2VyUmVxEhoKCG1lcmNoYW50GAEgASgJUghtZXJjaGFudBISCgR1c2VyGAIgASgJUg'
-    'R1c2Vy');
+    'CgpHZXRVc2VyUmVxEiAKBHVzZXIYASABKAlCDLpICXIHMgVeXFMrJFIEdXNlcg==');
 
 @$core.Deprecated('Use listUsersReqDescriptor instead')
 const ListUsersReq$json = {
   '1': 'ListUsersReq',
   '2': [
-    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '10': 'merchant'},
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listUsersReqDescriptor = $convert.base64Decode(
+    'CgxMaXN0VXNlcnNSZXESEgoEdXNlchgBIAEoCVIEdXNlchIuCgpwYWdpbmF0aW9uGAIgASgLMg'
+    '4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+
+@$core.Deprecated('Use grantedGetUserReqDescriptor instead')
+const GrantedGetUserReq$json = {
+  '1': 'GrantedGetUserReq',
+  '2': [
+    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'merchant'},
+    {'1': 'user', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'user'},
+  ],
+};
+
+/// Descriptor for `GrantedGetUserReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List grantedGetUserReqDescriptor = $convert.base64Decode(
+    'ChFHcmFudGVkR2V0VXNlclJlcRIoCghtZXJjaGFudBgBIAEoCUIMukgJcgcyBV5cUyskUghtZX'
+    'JjaGFudBIgCgR1c2VyGAIgASgJQgy6SAlyBzIFXlxTKyRSBHVzZXI=');
+
+@$core.Deprecated('Use grantedListUsersReqDescriptor instead')
+const GrantedListUsersReq$json = {
+  '1': 'GrantedListUsersReq',
+  '2': [
+    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'merchant'},
     {'1': 'user', '3': 2, '4': 1, '5': 9, '10': 'user'},
     {
       '1': 'pagination',
@@ -334,16 +367,17 @@ const ListUsersReq$json = {
   ],
 };
 
-/// Descriptor for `ListUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listUsersReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0VXNlcnNSZXESGgoIbWVyY2hhbnQYASABKAlSCG1lcmNoYW50EhIKBHVzZXIYAiABKA'
-    'lSBHVzZXISLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+/// Descriptor for `GrantedListUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List grantedListUsersReqDescriptor = $convert.base64Decode(
+    'ChNHcmFudGVkTGlzdFVzZXJzUmVxEigKCG1lcmNoYW50GAEgASgJQgy6SAlyBzIFXlxTKyRSCG'
+    '1lcmNoYW50EhIKBHVzZXIYAiABKAlSBHVzZXISLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBh'
+    'Z2luYXRpb25SCnBhZ2luYXRpb24=');
 
-@$core.Deprecated('Use listGreetersReqDescriptor instead')
-const ListGreetersReq$json = {
-  '1': 'ListGreetersReq',
+@$core.Deprecated('Use grantedListGreetersReqDescriptor instead')
+const GrantedListGreetersReq$json = {
+  '1': 'GrantedListGreetersReq',
   '2': [
-    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '10': 'merchant'},
+    {'1': 'merchant', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'merchant'},
     {
       '1': 'pagination',
       '3': 2,
@@ -355,10 +389,31 @@ const ListGreetersReq$json = {
   ],
 };
 
+/// Descriptor for `GrantedListGreetersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List grantedListGreetersReqDescriptor = $convert.base64Decode(
+    'ChZHcmFudGVkTGlzdEdyZWV0ZXJzUmVxEigKCG1lcmNoYW50GAEgASgJQgy6SAlyBzIFXlxTKy'
+    'RSCG1lcmNoYW50Ei4KCnBhZ2luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0'
+    'aW9u');
+
+@$core.Deprecated('Use listGreetersReqDescriptor instead')
+const ListGreetersReq$json = {
+  '1': 'ListGreetersReq',
+  '2': [
+    {
+      '1': 'pagination',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
 /// Descriptor for `ListGreetersReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGreetersReqDescriptor = $convert.base64Decode(
-    'Cg9MaXN0R3JlZXRlcnNSZXESGgoIbWVyY2hhbnQYASABKAlSCG1lcmNoYW50Ei4KCnBhZ2luYX'
-    'Rpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+    'Cg9MaXN0R3JlZXRlcnNSZXESLgoKcGFnaW5hdGlvbhgBIAEoCzIOLmhpLlBhZ2luYXRpb25SCn'
+    'BhZ2luYXRpb24=');
 
 @$core.Deprecated('Use listUsersRespDescriptor instead')
 const ListUsersResp$json = {

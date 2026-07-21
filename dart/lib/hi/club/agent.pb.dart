@@ -19,13 +19,19 @@ import '../common.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// 绑定/解绑机器人的主人。
+///
+/// ⚠️ **没有 master 字段** —— 主人恒是 token 里的人。原先收 `master` 并靠 handler
+///    校验 `userDid != req.Master` 才拒;守卫是有的,但接口形状在撒谎:调用方有理由
+///    以为传 master 管用,而这类"靠 handler 记得校验"的写法,漏一次就是强塞/解绑
+///    别人的机器人。删掉字段后,"指定给谁绑"在类型上就说不出来。
+///    (同文件 Agent.List 早就写明"没有查谁的参数,主体永远是 token 里的人",
+///     这两个**写**操作反而收了 master,不一致。)
 class BindMasterReq extends $pb.GeneratedMessage {
   factory BindMasterReq({
-    $core.String? master,
     $core.String? agent,
   }) {
     final result = create();
-    if (master != null) result.master = master;
     if (agent != null) result.agent = agent;
     return result;
   }
@@ -43,8 +49,7 @@ class BindMasterReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BindMasterReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'master')
-    ..aOS(2, _omitFieldNames ? '' : 'agent')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -67,31 +72,20 @@ class BindMasterReq extends $pb.GeneratedMessage {
   static BindMasterReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get master => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set master($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasMaster() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearMaster() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get agent => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set agent($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAgent() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAgent() => $_clearField(2);
+  void clearAgent() => $_clearField(1);
 }
 
 class UnbindMasterReq extends $pb.GeneratedMessage {
   factory UnbindMasterReq({
-    $core.String? master,
     $core.String? agent,
   }) {
     final result = create();
-    if (master != null) result.master = master;
     if (agent != null) result.agent = agent;
     return result;
   }
@@ -109,8 +103,7 @@ class UnbindMasterReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UnbindMasterReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'master')
-    ..aOS(2, _omitFieldNames ? '' : 'agent')
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -133,22 +126,13 @@ class UnbindMasterReq extends $pb.GeneratedMessage {
   static UnbindMasterReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get master => $_getSZ(0);
+  $core.String get agent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set master($core.String value) => $_setString(0, value);
+  set agent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasMaster() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearMaster() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get agent => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set agent($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAgent() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAgent() => $_clearField(2);
+  void clearAgent() => $_clearField(1);
 }
 
 class BindStatusReq extends $pb.GeneratedMessage {

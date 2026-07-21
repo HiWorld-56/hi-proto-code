@@ -25,10 +25,18 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 绑定/解绑机器人的主人。
+//
+// ⚠️ **没有 master 字段** —— 主人恒是 token 里的人。原先收 `master` 并靠 handler
+//
+//	校验 `userDid != req.Master` 才拒;守卫是有的,但接口形状在撒谎:调用方有理由
+//	以为传 master 管用,而这类"靠 handler 记得校验"的写法,漏一次就是强塞/解绑
+//	别人的机器人。删掉字段后,"指定给谁绑"在类型上就说不出来。
+//	(同文件 Agent.List 早就写明"没有查谁的参数,主体永远是 token 里的人",
+//	 这两个**写**操作反而收了 master,不一致。)
 type BindMasterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Master        string                 `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`
-	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -63,13 +71,6 @@ func (*BindMasterReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_agent_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *BindMasterReq) GetMaster() string {
-	if x != nil {
-		return x.Master
-	}
-	return ""
-}
-
 func (x *BindMasterReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
@@ -79,8 +80,7 @@ func (x *BindMasterReq) GetAgent() string {
 
 type UnbindMasterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Master        string                 `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`
-	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -113,13 +113,6 @@ func (x *UnbindMasterReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UnbindMasterReq.ProtoReflect.Descriptor instead.
 func (*UnbindMasterReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_agent_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *UnbindMasterReq) GetMaster() string {
-	if x != nil {
-		return x.Master
-	}
-	return ""
 }
 
 func (x *UnbindMasterReq) GetAgent() string {
@@ -637,13 +630,11 @@ var File_hi_club_agent_proto protoreflect.FileDescriptor
 
 const file_hi_club_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/agent.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"=\n" +
-	"\rBindMasterReq\x12\x16\n" +
-	"\x06master\x18\x01 \x01(\tR\x06master\x12\x14\n" +
-	"\x05agent\x18\x02 \x01(\tR\x05agent\"?\n" +
-	"\x0fUnbindMasterReq\x12\x16\n" +
-	"\x06master\x18\x01 \x01(\tR\x06master\x12\x14\n" +
-	"\x05agent\x18\x02 \x01(\tR\x05agent\"%\n" +
+	"\x13hi/club/agent.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"3\n" +
+	"\rBindMasterReq\x12\"\n" +
+	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\"5\n" +
+	"\x0fUnbindMasterReq\x12\"\n" +
+	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\"%\n" +
 	"\rBindStatusReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"@\n" +
 	"\x0eBindStatusResp\x12(\n" +

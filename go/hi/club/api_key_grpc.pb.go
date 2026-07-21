@@ -31,6 +31,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiKeyClient interface {
 	Create(ctx context.Context, in *CreateApiKeyReq, opts ...grpc.CallOption) (*CreateApiKeyResp, error)
+	// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
+	// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
 	Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
 	List(ctx context.Context, in *ListApiKeysReq, opts ...grpc.CallOption) (*ListApiKeysResp, error)
 	Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -89,6 +91,8 @@ func (c *apiKeyClient) Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...
 // for forward compatibility.
 type ApiKeyServer interface {
 	Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error)
+	// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
+	// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
 	Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error)
 	List(context.Context, *ListApiKeysReq) (*ListApiKeysResp, error)
 	Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error)

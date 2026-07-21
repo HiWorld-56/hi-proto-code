@@ -2813,8 +2813,9 @@ pub mod api_key_client {
     /// 直接带 apikey 鉴权 —— 那种情况就用 apikey 反查商户 did(与 token 反查 did 对称)。
     /// 故 token 与 apikey 都要收。
     ///
-    /// ⚠️ 后端接线必修:Edit/Delete 现在按 req.api_key 直接操作、**不校验归属** → 任何登录者
-    /// 可改/删他人 apikey。须校验 apikey.did == 当前商户 did。
+    /// ⚠️ Edit/Delete 必须校验归属(apikey.did == 当前商户 did)—— 否则任何登录者传别人的
+    /// api_key 就能改/删。**已落地**(handler 里比对 apikey 的 did 与调用者),这条留作
+    /// 约束说明:后续新增按 api_key 定位的方法,同样要带这个守卫。
     #[derive(Debug, Clone)]
     pub struct ApiKeyClient<T> {
         inner: tonic::client::Grpc<T>,

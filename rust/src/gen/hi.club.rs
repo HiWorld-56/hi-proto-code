@@ -988,6 +988,8 @@ pub mod api_key_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.ApiKey", "Create"));
             self.inner.unary(req, path, codec).await
         }
+        /// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
+        /// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
         pub async fn edit(
             &mut self,
             request: impl tonic::IntoRequest<super::EditApiKeyReq>,
@@ -1191,18 +1193,24 @@ pub mod speech_client {
         }
     }
 }
+/// 绑定/解绑机器人的主人。
+///
+/// ⚠️ **没有 master 字段** —— 主人恒是 token 里的人。原先收 `master` 并靠 handler
+/// 校验 `userDid != req.Master` 才拒;守卫是有的,但接口形状在撒谎:调用方有理由
+/// 以为传 master 管用,而这类"靠 handler 记得校验"的写法,漏一次就是强塞/解绑
+/// 别人的机器人。删掉字段后,"指定给谁绑"在类型上就说不出来。
+/// (同文件 Agent.List 早就写明"没有查谁的参数,主体永远是 token 里的人",
+/// 这两个**写**操作反而收了 master,不一致。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BindMasterReq {
+    /// 机器人 did
     #[prost(string, tag = "1")]
-    pub master: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
     pub agent: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UnbindMasterReq {
+    /// 机器人 did
     #[prost(string, tag = "1")]
-    pub master: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
     pub agent: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

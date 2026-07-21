@@ -66,14 +66,19 @@ type MerchantClient interface {
 	Update(ctx context.Context, in *MerchantSetReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 传商户 logo → hidid bucket 的 logo/。只回 url;写进配置仍走 Update。
 	UploadLogo(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
-	// ── 商户管理其用户的扩展信息 ──
-	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+	// ── 管理**自己名下**用户的扩展信息(免 grant)──
+	// 跨商户读走 MerchantGranted,那边整个 service 都要 requireGrant。
 	// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
 	GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error)
 	ListUsers(ctx context.Context, in *ListUsersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
 	// 返回体复用 ListUsersResp —— 同样是 List<Entity + 扩展字段>,没有一个字段不同。
 	// (复用的是**返回**类型;入参另立 ListGreetersReq,不与 ListUsersReq 混。)
 	ListGreeters(ctx context.Context, in *ListGreetersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
+	// ⚠️ 守卫:**user 必须在调用者名下**。否则任一商户传任意 did 即可枚举"这个人挂在
+	//
+	//	哪些商户下",既泄露用户的商业关系图,也泄露其他商户的 endpoint/master。
+	//	真实用法是 club 替自己的用户查(用户登录 club,club 列出他的全部商户归属),
+	//	那个前提下这条守卫天然满足。
 	List(ctx context.Context, in *ListMerchantsReq, opts ...grpc.CallOption) (*MerchantListResp, error)
 	SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddUsers(ctx context.Context, in *AddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -277,14 +282,19 @@ type MerchantServer interface {
 	Update(context.Context, *MerchantSetReq) (*emptypb.Empty, error)
 	// 传商户 logo → hidid bucket 的 logo/。只回 url;写进配置仍走 Update。
 	UploadLogo(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
-	// ── 商户管理其用户的扩展信息 ──
-	// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+	// ── 管理**自己名下**用户的扩展信息(免 grant)──
+	// 跨商户读走 MerchantGranted,那边整个 service 都要 requireGrant。
 	// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
 	GetUser(context.Context, *GetUserReq) (*UserExtensionUnit, error)
 	ListUsers(context.Context, *ListUsersReq) (*ListUsersResp, error)
 	// 返回体复用 ListUsersResp —— 同样是 List<Entity + 扩展字段>,没有一个字段不同。
 	// (复用的是**返回**类型;入参另立 ListGreetersReq,不与 ListUsersReq 混。)
 	ListGreeters(context.Context, *ListGreetersReq) (*ListUsersResp, error)
+	// ⚠️ 守卫:**user 必须在调用者名下**。否则任一商户传任意 did 即可枚举"这个人挂在
+	//
+	//	哪些商户下",既泄露用户的商业关系图,也泄露其他商户的 endpoint/master。
+	//	真实用法是 club 替自己的用户查(用户登录 club,club 列出他的全部商户归属),
+	//	那个前提下这条守卫天然满足。
 	List(context.Context, *ListMerchantsReq) (*MerchantListResp, error)
 	SetUsers(context.Context, *SetUsersReq) (*emptypb.Empty, error)
 	AddUsers(context.Context, *AddUsersReq) (*emptypb.Empty, error)
@@ -1293,6 +1303,202 @@ var OrderNotify_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Send",
 			Handler:    _OrderNotify_Send_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/merchant.proto",
+}
+
+const (
+	MerchantGranted_GetUser_FullMethodName      = "/hi.did.MerchantGranted/GetUser"
+	MerchantGranted_ListUsers_FullMethodName    = "/hi.did.MerchantGranted/ListUsers"
+	MerchantGranted_ListGreeters_FullMethodName = "/hi.did.MerchantGranted/ListGreeters"
+)
+
+// MerchantGrantedClient is the client API for MerchantGranted service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+//
+// 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
+// grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
+// 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
+// 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
+//
+// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+type MerchantGrantedClient interface {
+	GetUser(ctx context.Context, in *GrantedGetUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error)
+	ListUsers(ctx context.Context, in *GrantedListUsersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
+	ListGreeters(ctx context.Context, in *GrantedListGreetersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
+}
+
+type merchantGrantedClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMerchantGrantedClient(cc grpc.ClientConnInterface) MerchantGrantedClient {
+	return &merchantGrantedClient{cc}
+}
+
+func (c *merchantGrantedClient) GetUser(ctx context.Context, in *GrantedGetUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserExtensionUnit)
+	err := c.cc.Invoke(ctx, MerchantGranted_GetUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchantGrantedClient) ListUsers(ctx context.Context, in *GrantedListUsersReq, opts ...grpc.CallOption) (*ListUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUsersResp)
+	err := c.cc.Invoke(ctx, MerchantGranted_ListUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchantGrantedClient) ListGreeters(ctx context.Context, in *GrantedListGreetersReq, opts ...grpc.CallOption) (*ListUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUsersResp)
+	err := c.cc.Invoke(ctx, MerchantGranted_ListGreeters_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MerchantGrantedServer is the server API for MerchantGranted service.
+// All implementations should embed UnimplementedMerchantGrantedServer
+// for forward compatibility.
+//
+// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+//
+// 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
+// grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
+// 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
+// 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
+//
+// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+type MerchantGrantedServer interface {
+	GetUser(context.Context, *GrantedGetUserReq) (*UserExtensionUnit, error)
+	ListUsers(context.Context, *GrantedListUsersReq) (*ListUsersResp, error)
+	ListGreeters(context.Context, *GrantedListGreetersReq) (*ListUsersResp, error)
+}
+
+// UnimplementedMerchantGrantedServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedMerchantGrantedServer struct{}
+
+func (UnimplementedMerchantGrantedServer) GetUser(context.Context, *GrantedGetUserReq) (*UserExtensionUnit, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedMerchantGrantedServer) ListUsers(context.Context, *GrantedListUsersReq) (*ListUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
+}
+func (UnimplementedMerchantGrantedServer) ListGreeters(context.Context, *GrantedListGreetersReq) (*ListUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListGreeters not implemented")
+}
+func (UnimplementedMerchantGrantedServer) testEmbeddedByValue() {}
+
+// UnsafeMerchantGrantedServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MerchantGrantedServer will
+// result in compilation errors.
+type UnsafeMerchantGrantedServer interface {
+	mustEmbedUnimplementedMerchantGrantedServer()
+}
+
+func RegisterMerchantGrantedServer(s grpc.ServiceRegistrar, srv MerchantGrantedServer) {
+	// If the following call panics, it indicates UnimplementedMerchantGrantedServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&MerchantGranted_ServiceDesc, srv)
+}
+
+func _MerchantGranted_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantedGetUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantGrantedServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantGranted_GetUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantGrantedServer).GetUser(ctx, req.(*GrantedGetUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MerchantGranted_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantedListUsersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantGrantedServer).ListUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantGranted_ListUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantGrantedServer).ListUsers(ctx, req.(*GrantedListUsersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MerchantGranted_ListGreeters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantedListGreetersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantGrantedServer).ListGreeters(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantGranted_ListGreeters_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantGrantedServer).ListGreeters(ctx, req.(*GrantedListGreetersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// MerchantGranted_ServiceDesc is the grpc.ServiceDesc for MerchantGranted service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var MerchantGranted_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.MerchantGranted",
+	HandlerType: (*MerchantGrantedServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetUser",
+			Handler:    _MerchantGranted_GetUser_Handler,
+		},
+		{
+			MethodName: "ListUsers",
+			Handler:    _MerchantGranted_ListUsers_Handler,
+		},
+		{
+			MethodName: "ListGreeters",
+			Handler:    _MerchantGranted_ListGreeters_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

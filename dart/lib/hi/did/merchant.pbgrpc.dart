@@ -72,8 +72,8 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$uploadLogo, request, options: options);
   }
 
-  /// ── 商户管理其用户的扩展信息 ──
-  /// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+  /// ── 管理**自己名下**用户的扩展信息(免 grant)──
+  /// 跨商户读走 MerchantGranted,那边整个 service 都要 requireGrant。
   /// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
   $grpc.ResponseFuture<$1.UserExtensionUnit> getUser(
     $1.GetUserReq request, {
@@ -98,6 +98,10 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$listGreeters, request, options: options);
   }
 
+  /// ⚠️ 守卫:**user 必须在调用者名下**。否则任一商户传任意 did 即可枚举"这个人挂在
+  ///    哪些商户下",既泄露用户的商业关系图,也泄露其他商户的 endpoint/master。
+  ///    真实用法是 club 替自己的用户查(用户登录 club,club 列出他的全部商户归属),
+  ///    那个前提下这条守卫天然满足。
   $grpc.ResponseFuture<$1.MerchantListResp> list(
     $1.ListMerchantsReq request, {
     $grpc.CallOptions? options,
@@ -775,4 +779,120 @@ abstract class OrderNotifyServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> send(
       $grpc.ServiceCall call, $1.MerchantNotifyReq request);
+}
+
+/// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+///
+/// 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
+/// grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
+/// 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
+/// 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
+///
+/// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+/// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+@$pb.GrpcServiceName('hi.did.MerchantGranted')
+class MerchantGrantedClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  MerchantGrantedClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.UserExtensionUnit> getUser(
+    $1.GrantedGetUserReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getUser, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListUsersResp> listUsers(
+    $1.GrantedListUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listUsers, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListUsersResp> listGreeters(
+    $1.GrantedListGreetersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listGreeters, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$getUser =
+      $grpc.ClientMethod<$1.GrantedGetUserReq, $1.UserExtensionUnit>(
+          '/hi.did.MerchantGranted/GetUser',
+          ($1.GrantedGetUserReq value) => value.writeToBuffer(),
+          $1.UserExtensionUnit.fromBuffer);
+  static final _$listUsers =
+      $grpc.ClientMethod<$1.GrantedListUsersReq, $1.ListUsersResp>(
+          '/hi.did.MerchantGranted/ListUsers',
+          ($1.GrantedListUsersReq value) => value.writeToBuffer(),
+          $1.ListUsersResp.fromBuffer);
+  static final _$listGreeters =
+      $grpc.ClientMethod<$1.GrantedListGreetersReq, $1.ListUsersResp>(
+          '/hi.did.MerchantGranted/ListGreeters',
+          ($1.GrantedListGreetersReq value) => value.writeToBuffer(),
+          $1.ListUsersResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.MerchantGranted')
+abstract class MerchantGrantedServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.MerchantGranted';
+
+  MerchantGrantedServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.GrantedGetUserReq, $1.UserExtensionUnit>(
+        'GetUser',
+        getUser_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.GrantedGetUserReq.fromBuffer(value),
+        ($1.UserExtensionUnit value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GrantedListUsersReq, $1.ListUsersResp>(
+        'ListUsers',
+        listUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.GrantedListUsersReq.fromBuffer(value),
+        ($1.ListUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GrantedListGreetersReq, $1.ListUsersResp>(
+        'ListGreeters',
+        listGreeters_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.GrantedListGreetersReq.fromBuffer(value),
+        ($1.ListUsersResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.UserExtensionUnit> getUser_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.GrantedGetUserReq> $request) async {
+    return getUser($call, await $request);
+  }
+
+  $async.Future<$1.UserExtensionUnit> getUser(
+      $grpc.ServiceCall call, $1.GrantedGetUserReq request);
+
+  $async.Future<$1.ListUsersResp> listUsers_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.GrantedListUsersReq> $request) async {
+    return listUsers($call, await $request);
+  }
+
+  $async.Future<$1.ListUsersResp> listUsers(
+      $grpc.ServiceCall call, $1.GrantedListUsersReq request);
+
+  $async.Future<$1.ListUsersResp> listGreeters_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.GrantedListGreetersReq> $request) async {
+    return listGreeters($call, await $request);
+  }
+
+  $async.Future<$1.ListUsersResp> listGreeters(
+      $grpc.ServiceCall call, $1.GrantedListGreetersReq request);
 }

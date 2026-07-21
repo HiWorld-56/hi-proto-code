@@ -1166,24 +1166,53 @@ pub struct ListGrantsResp {
 }
 /// ── 商户管理用户(扩展数据)的入参 ───────────────────────────────────
 /// merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权,requireGrant)。
+/// ── 读自己名下的用户(Merchant,免 grant)──
+/// **没有 merchant 字段** —— 商户身份恒取自 ExtendToken。
+///
+/// ⚠️ 原先这三个入参都有 `merchant`,注释写「空=自己;非空=指定商户,须先获授权」。
+/// 那不是同一根轴上的"筛/不筛",而是**空/非空走两条不同的鉴权分支** ——
+/// 一旦 handler 里 `if merchant == ""` 与 requireGrant 的分支写岔,就是静默跨商户读。
+/// 按既有范式(Merchant/MerchantManage、Gateway/GatewayAdmin)拆成两个 service:
+/// 读自己的在这里,跨商户的在 MerchantGranted(整个 service 走 requireGrant)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetUserReq {
-    /// 商户 did;空=自己
-    #[prost(string, tag = "1")]
-    pub merchant: ::prost::alloc::string::String,
     /// 用户 did
-    #[prost(string, tag = "2")]
+    #[prost(string, tag = "1")]
     pub user: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListUsersReq {
-    /// 空=自己;非空=指定商户(须先获授权)
+    /// 可选:按用户 did 过滤
+    #[prost(string, tag = "1")]
+    pub user: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// ── 读**别家商户**名下的用户(MerchantGranted,整个 service 走 requireGrant)──
+/// merchant 必填 —— 这个 service 存在的意义就是跨商户,省掉它就没得跨。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantedGetUserReq {
+    /// 目标商户(须先授权给我)
+    #[prost(string, tag = "1")]
+    pub merchant: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub user: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantedListUsersReq {
     #[prost(string, tag = "1")]
     pub merchant: ::prost::alloc::string::String,
     /// 可选:按用户 did 过滤
     #[prost(string, tag = "2")]
     pub user: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantedListGreetersReq {
+    #[prost(string, tag = "1")]
+    pub merchant: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 /// 列某商户名下的 greeter —— 即扩展表里 level >= 8 的用户。
@@ -1193,12 +1222,10 @@ pub struct ListUsersReq {
 ///
 /// 与 ListUsers 分开而不是加个 level 过滤参数:这是一类**有业务含义的固定人群**
 /// (club 用来展示可接待的人),不是通用筛选。合成一个方法就又要靠"参数传没传"分支。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGreetersReq {
-    /// 空=自己;非空=指定商户(须先获授权,同 ListUsers)
-    #[prost(string, tag = "1")]
-    pub merchant: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
+    /// 列**自己**名下的 greeter;跨商户走 MerchantGranted.ListGreeters
+    #[prost(message, optional, tag = "1")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1503,8 +1530,8 @@ pub mod merchant_client {
                 .insert(GrpcMethod::new("hi.did.Merchant", "UploadLogo"));
             self.inner.unary(req, path, codec).await
         }
-        /// ── 商户管理其用户的扩展信息 ──
-        /// GetUser/ListUsers:merchant 空=自己(免 grant);非空=指定商户(走 grant)。
+        /// ── 管理**自己名下**用户的扩展信息(免 grant)──
+        /// 跨商户读走 MerchantGranted,那边整个 service 都要 requireGrant。
         /// GetUser 的 resp.user 须始终有 name/avatar(取自全局 user 表),即使无扩展行 —— club 靠它显示。
         pub async fn get_user(
             &mut self,
@@ -1570,6 +1597,10 @@ pub mod merchant_client {
                 .insert(GrpcMethod::new("hi.did.Merchant", "ListGreeters"));
             self.inner.unary(req, path, codec).await
         }
+        /// ⚠️ 守卫:**user 必须在调用者名下**。否则任一商户传任意 did 即可枚举"这个人挂在
+        /// 哪些商户下",既泄露用户的商业关系图,也泄露其他商户的 endpoint/master。
+        /// 真实用法是 club 替自己的用户查(用户登录 club,club 列出他的全部商户归属),
+        /// 那个前提下这条守卫天然满足。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMerchantsReq>,
@@ -2313,6 +2344,174 @@ pub mod order_notify_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.OrderNotify/Send");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.OrderNotify", "Send"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod merchant_granted_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+    ///
+    /// 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
+    /// grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
+    /// 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
+    /// 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
+    ///
+    /// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+    /// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+    #[derive(Debug, Clone)]
+    pub struct MerchantGrantedClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MerchantGrantedClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MerchantGrantedClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MerchantGrantedClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MerchantGrantedClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn get_user(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantedGetUserReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::UserExtensionUnit>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantGranted/GetUser",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantGranted", "GetUser"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantedListUsersReq>,
+        ) -> std::result::Result<tonic::Response<super::ListUsersResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantGranted/ListUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantGranted", "ListUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_greeters(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantedListGreetersReq>,
+        ) -> std::result::Result<tonic::Response<super::ListUsersResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantGranted/ListGreeters",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantGranted", "ListGreeters"));
             self.inner.unary(req, path, codec).await
         }
     }
