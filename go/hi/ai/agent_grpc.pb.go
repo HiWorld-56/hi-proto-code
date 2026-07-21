@@ -8,7 +8,6 @@ package ai
 
 import (
 	context "context"
-	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,7 +26,6 @@ const (
 	Agent_Delete_FullMethodName           = "/hi.ai.Agent/Delete"
 	Agent_Get_FullMethodName              = "/hi.ai.Agent/Get"
 	Agent_List_FullMethodName             = "/hi.ai.Agent/List"
-	Agent_GetAgents_FullMethodName        = "/hi.ai.Agent/GetAgents"
 	Agent_GetUsage_FullMethodName         = "/hi.ai.Agent/GetUsage"
 	Agent_GetDefaultConfig_FullMethodName = "/hi.ai.Agent/GetDefaultConfig"
 	Agent_ResetToDefault_FullMethodName   = "/hi.ai.Agent/ResetToDefault"
@@ -55,19 +53,9 @@ type AgentClient interface {
 	Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
-	// List **只列自己的**,没有"查谁"的参数 —— 归属取自 apikey 解出的商户 did。
-	//
-	// ⚠️ 原签名是 List(ListAgentReq{creators}),creators 非空就直接按它查,**没有任何归属
-	//
-	//	校验** —— 任一商户传别人的 did,就能拿走对方名下机器人的完整 AgentInfo,里面含
-	//	AgentConfig 的 system_prompt/user_prompt/模型配置。而 AgentInfo 标着 VIS_SELF
-	//	"整条只发给 owner 本人"。这与当初删掉 club.AgentDirectory.List 是同一个病,
-	//	只是门槛从"匿名"变成"任一商户"。**别再把 creators 加回来**:跨商户列是超管的活,
-	//	走 AgentManage.List。
-	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error)
-	// 按机器人 did 批量取。**服务端强制只返回调用者名下的** —— 同上,原先不校验归属,
-	// 传任意 did 就能拿到别家的 prompt。兄弟服务(club)取的本就是自己名下的,不受影响。
-	GetAgents(ctx context.Context, in *GetAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentReq 的说明)。
+	// 归属恒取自 apikey 解出的商户 did,守卫下沉在 SQL,不靠 handler 记得过滤。
+	List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 	GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error)
 	GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error)
 	ResetToDefault(ctx context.Context, in *ResetToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -131,20 +119,10 @@ func (c *agentClient) Get(ctx context.Context, in *GetAgentReq, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *agentClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentClient) List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentResp)
 	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) GetAgents(ctx context.Context, in *GetAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
-	err := c.cc.Invoke(ctx, Agent_GetAgents_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -203,19 +181,9 @@ type AgentServer interface {
 	Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
-	// List **只列自己的**,没有"查谁"的参数 —— 归属取自 apikey 解出的商户 did。
-	//
-	// ⚠️ 原签名是 List(ListAgentReq{creators}),creators 非空就直接按它查,**没有任何归属
-	//
-	//	校验** —— 任一商户传别人的 did,就能拿走对方名下机器人的完整 AgentInfo,里面含
-	//	AgentConfig 的 system_prompt/user_prompt/模型配置。而 AgentInfo 标着 VIS_SELF
-	//	"整条只发给 owner 本人"。这与当初删掉 club.AgentDirectory.List 是同一个病,
-	//	只是门槛从"匿名"变成"任一商户"。**别再把 creators 加回来**:跨商户列是超管的活,
-	//	走 AgentManage.List。
-	List(context.Context, *hi.Pagination) (*ListAgentResp, error)
-	// 按机器人 did 批量取。**服务端强制只返回调用者名下的** —— 同上,原先不校验归属,
-	// 传任意 did 就能拿到别家的 prompt。兄弟服务(club)取的本就是自己名下的,不受影响。
-	GetAgents(context.Context, *GetAgentsReq) (*ListAgentResp, error)
+	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentReq 的说明)。
+	// 归属恒取自 apikey 解出的商户 did,守卫下沉在 SQL,不靠 handler 记得过滤。
+	List(context.Context, *ListAgentReq) (*ListAgentResp, error)
 	GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error)
 	GetDefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error)
 	ResetToDefault(context.Context, *ResetToDefaultReq) (*emptypb.Empty, error)
@@ -243,11 +211,8 @@ func (UnimplementedAgentServer) Delete(context.Context, *DeleteAgentReq) (*empty
 func (UnimplementedAgentServer) Get(context.Context, *GetAgentReq) (*GetAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedAgentServer) List(context.Context, *hi.Pagination) (*ListAgentResp, error) {
+func (UnimplementedAgentServer) List(context.Context, *ListAgentReq) (*ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
-func (UnimplementedAgentServer) GetAgents(context.Context, *GetAgentsReq) (*ListAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAgents not implemented")
 }
 func (UnimplementedAgentServer) GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUsage not implemented")
@@ -369,7 +334,7 @@ func _Agent_Get_Handler(srv interface{}, ctx context.Context, dec func(interface
 }
 
 func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.Pagination)
+	in := new(ListAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -381,25 +346,7 @@ func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: Agent_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).List(ctx, req.(*hi.Pagination))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_GetAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAgentsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).GetAgents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_GetAgents_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).GetAgents(ctx, req.(*GetAgentsReq))
+		return srv.(AgentServer).List(ctx, req.(*ListAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -488,10 +435,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _Agent_List_Handler,
-		},
-		{
-			MethodName: "GetAgents",
-			Handler:    _Agent_GetAgents_Handler,
 		},
 		{
 			MethodName: "GetUsage",

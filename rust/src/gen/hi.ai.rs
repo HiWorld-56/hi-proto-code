@@ -331,12 +331,20 @@ pub struct ListAgentBriefResp {
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<AgentBrief>,
 }
-/// 按**机器人 did** 批量取信息(与"按归属列"是两回事,故分开)。
-/// 用于"我已经知道是哪些机器人,补齐它们的信息" —— 如 club 的在线列表:
-/// presence 给出在线机器人的 did,再来这里补名字/头像。
+/// 列**调用者名下**的机器人。范围恒是自己名下,agents 只是在这个范围内再筛。
+///
+/// ⚠️ agents 是**过滤条件**:空=不筛(名下全部),非空=只要这几个。这与"空=换一种
+/// 语义"不同 —— 两种情况是同一根轴上的"筛/不筛",所以合并成一个方法是对的。
+///
+/// ⚠️ 这个字段曾叫 creators(按主人筛),那是**另一根轴**且没有归属校验:
+/// 任一商户传别人的 did 就能拿走对方机器人的完整 AgentInfo(含 prompt)。已删。
+/// 跨商户列是超管的活,走 AgentManage.List。**别再把 creators 加回来。**
+///
+/// 也曾另有一个按 did 批量取的方法与本方法并存 —— 加上归属校验后两者范围完全相同
+/// (都是"自己名下"),只剩筛不筛之别,是同一个方法,已合并至此。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetAgentsReq {
-    /// 机器人 did,必填
+pub struct ListAgentReq {
+    /// 可选:按机器人 did 筛;空=名下全部
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
@@ -605,17 +613,11 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "Get"));
             self.inner.unary(req, path, codec).await
         }
-        /// List **只列自己的**,没有"查谁"的参数 —— 归属取自 apikey 解出的商户 did。
-        ///
-        /// ⚠️ 原签名是 List(ListAgentReq{creators}),creators 非空就直接按它查,**没有任何归属
-        /// 校验** —— 任一商户传别人的 did,就能拿走对方名下机器人的完整 AgentInfo,里面含
-        /// AgentConfig 的 system_prompt/user_prompt/模型配置。而 AgentInfo 标着 VIS_SELF
-        /// "整条只发给 owner 本人"。这与当初删掉 club.AgentDirectory.List 是同一个病,
-        /// 只是门槛从"匿名"变成"任一商户"。**别再把 creators 加回来**:跨商户列是超管的活,
-        /// 走 AgentManage.List。
+        /// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentReq 的说明)。
+        /// 归属恒取自 apikey 解出的商户 did,守卫下沉在 SQL,不靠 handler 记得过滤。
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::Pagination>,
+            request: impl tonic::IntoRequest<super::ListAgentReq>,
         ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
             self.inner
                 .ready()
@@ -629,26 +631,6 @@ pub mod agent_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// 按机器人 did 批量取。**服务端强制只返回调用者名下的** —— 同上,原先不校验归属,
-        /// 传任意 did 就能拿到别家的 prompt。兄弟服务(club)取的本就是自己名下的,不受影响。
-        pub async fn get_agents(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAgentsReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Agent/GetAgents");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "GetAgents"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn get_usage(

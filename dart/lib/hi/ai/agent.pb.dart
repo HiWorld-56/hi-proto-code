@@ -1102,11 +1102,19 @@ class ListAgentBriefResp extends $pb.GeneratedMessage {
   $pb.PbList<AgentBrief> get infos => $_getList(1);
 }
 
-/// 按**机器人 did** 批量取信息(与"按归属列"是两回事,故分开)。
-/// 用于"我已经知道是哪些机器人,补齐它们的信息" —— 如 club 的在线列表:
-/// presence 给出在线机器人的 did,再来这里补名字/头像。
-class GetAgentsReq extends $pb.GeneratedMessage {
-  factory GetAgentsReq({
+/// 列**调用者名下**的机器人。范围恒是自己名下,agents 只是在这个范围内再筛。
+///
+/// ⚠️ agents 是**过滤条件**:空=不筛(名下全部),非空=只要这几个。这与"空=换一种
+///    语义"不同 —— 两种情况是同一根轴上的"筛/不筛",所以合并成一个方法是对的。
+///
+/// ⚠️ 这个字段曾叫 creators(按主人筛),那是**另一根轴**且没有归属校验:
+///    任一商户传别人的 did 就能拿走对方机器人的完整 AgentInfo(含 prompt)。已删。
+///    跨商户列是超管的活,走 AgentManage.List。**别再把 creators 加回来。**
+///
+/// 也曾另有一个按 did 批量取的方法与本方法并存 —— 加上归属校验后两者范围完全相同
+/// (都是"自己名下"),只剩筛不筛之别,是同一个方法,已合并至此。
+class ListAgentReq extends $pb.GeneratedMessage {
+  factory ListAgentReq({
     $core.Iterable<$core.String>? agents,
     $2.Pagination? pagination,
   }) {
@@ -1116,17 +1124,17 @@ class GetAgentsReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetAgentsReq._();
+  ListAgentReq._();
 
-  factory GetAgentsReq.fromBuffer($core.List<$core.int> data,
+  factory ListAgentReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetAgentsReq.fromJson($core.String json,
+  factory ListAgentReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentsReq',
+      _omitMessageNames ? '' : 'ListAgentReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'agents')
@@ -1135,23 +1143,23 @@ class GetAgentsReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentsReq clone() => deepCopy();
+  ListAgentReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentsReq copyWith(void Function(GetAgentsReq) updates) =>
-      super.copyWith((message) => updates(message as GetAgentsReq))
-          as GetAgentsReq;
+  ListAgentReq copyWith(void Function(ListAgentReq) updates) =>
+      super.copyWith((message) => updates(message as ListAgentReq))
+          as ListAgentReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetAgentsReq create() => GetAgentsReq._();
+  static ListAgentReq create() => ListAgentReq._();
   @$core.override
-  GetAgentsReq createEmptyInstance() => create();
+  ListAgentReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetAgentsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentsReq>(create);
-  static GetAgentsReq? _defaultInstance;
+  static ListAgentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentReq>(create);
+  static ListAgentReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get agents => $_getList(0);
