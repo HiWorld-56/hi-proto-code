@@ -223,7 +223,12 @@ pub struct TokenUsage {
     #[prost(int32, tag = "3")]
     pub mem: i32,
 }
-/// 机器人本身的信息。**只放机器人的属性** —— 观察者相关的东西不在这里(见 AgentBrief)。
+/// 机器人本身的信息。
+///
+/// ⚠️ 曾经有个 marked 字段(以及配套的 AgentBrief / Mark / ListMarks),用来给机器人打
+/// 标记让它在列表里显示靠前。已整体删除:实际没什么用,而且它从一开始就是错位的 ——
+/// 标记不是机器人的属性,是观察者挂在机器人上的东西,同一台机器人不同的人看到的
+/// 应该不一样,而存储上(唯一键只有 agent_did)根本表达不了这件事。**别再加回来。**
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgentInfo {
     /// hi.Entity 恒 PUBLIC
@@ -240,24 +245,6 @@ pub struct AgentInfo {
     pub token: ::core::option::Option<TokenUsage>,
     #[prost(int64, tag = "6")]
     pub created_at: i64,
-}
-/// 列表项 = 机器人本身 + 标记。**只用于超管档**。
-///
-/// ⚠️ marked 原先是 AgentInfo 的字段(第 7 个),那是**错的**:标记不是机器人的属性,
-/// 而是观察者挂在机器人上的东西 —— 同一个机器人,不同的人看到的 marked 不一样。
-/// 放进 AgentInfo 就等于宣称"这个机器人被标记了"这件事对所有人成立,不成立。
-/// 但落到存储上,hi_ai_agent_favorites 的唯一键只有 agent_did(不含 user_did)——
-/// 一个机器人全局只能有一条标记,**表达不了"每个人各自的标记"**。所以标记只能是一个
-/// 全局概念,即超管给机器人置顶。商户档曾有 Mark/ListMarks,在这张表上语义是坏的
-/// (商户 A 标了 B 就撞唯一键;A 取消会把超管标的一起删掉),已删。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AgentBrief {
-    /// 机器人个体(assistant 软件 / robot 硬件)
-    #[prost(message, optional, tag = "1")]
-    pub agent: ::core::option::Option<AgentInfo>,
-    /// 看的人有没有标记它(标记的显示靠前)
-    #[prost(bool, tag = "2")]
-    pub marked: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DefaultConfigResp {
@@ -323,14 +310,6 @@ pub struct ListAgentResp {
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<AgentInfo>,
 }
-/// 超管档的列表:带 marked。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAgentBriefResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<AgentBrief>,
-}
 /// 列**调用者名下**的机器人。范围恒是自己名下,agents 只是在这个范围内再筛。
 ///
 /// ⚠️ agents 是**过滤条件**:空=不筛(名下全部),非空=只要这几个。这与"空=换一种
@@ -345,15 +324,6 @@ pub struct ListAgentBriefResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListAgentReq {
     /// 可选:按机器人 did 筛;空=名下全部
-    #[prost(string, repeated, tag = "1")]
-    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
-/// 标记列表入参:查的是**调用者**打过标记的,必须有身份。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListMarksReq {
-    /// 可选:在我的标记里再按 did 过滤
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
@@ -391,15 +361,6 @@ pub struct AgentUsageResp {
 pub struct ResetToDefaultReq {
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// 给机器人打/取消标记。**不是收藏** —— 带标记的机器人在显示时靠前。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MarkAgentReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    /// true=打标记(显示靠前),false=取消(与 AgentInfo.marked 对称)
-    #[prost(bool, tag = "2")]
-    pub marked: bool,
 }
 /// 超管按归属搜机器人(**可跨商户**)。creators 空 = 不过滤(全部)——
 /// 与 Agent.List 的"空=列调用者自己的"不同:超管没有"自己的机器人"这个概念。
@@ -798,10 +759,7 @@ pub mod agent_manage_client {
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ManageListAgentsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListAgentBriefResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -814,48 +772,6 @@ pub mod agent_manage_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.AgentManage/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.AgentManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn mark(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MarkAgentReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.AgentManage/Mark");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.AgentManage", "Mark"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_marks(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListMarksReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListAgentBriefResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.AgentManage/ListMarks",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.AgentManage", "ListMarks"));
             self.inner.unary(req, path, codec).await
         }
     }

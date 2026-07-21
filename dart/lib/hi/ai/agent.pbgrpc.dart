@@ -314,43 +314,20 @@ class AgentManageClient extends $grpc.Client {
 
   AgentManageClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.ListAgentBriefResp> list(
+  $grpc.ResponseFuture<$0.ListAgentResp> list(
     $0.ManageListAgentsReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> mark(
-    $0.MarkAgentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$mark, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.ListAgentBriefResp> listMarks(
-    $0.ListMarksReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$listMarks, request, options: options);
-  }
-
   // method descriptors
 
   static final _$list =
-      $grpc.ClientMethod<$0.ManageListAgentsReq, $0.ListAgentBriefResp>(
+      $grpc.ClientMethod<$0.ManageListAgentsReq, $0.ListAgentResp>(
           '/hi.ai.AgentManage/List',
           ($0.ManageListAgentsReq value) => value.writeToBuffer(),
-          $0.ListAgentBriefResp.fromBuffer);
-  static final _$mark = $grpc.ClientMethod<$0.MarkAgentReq, $1.Empty>(
-      '/hi.ai.AgentManage/Mark',
-      ($0.MarkAgentReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$listMarks =
-      $grpc.ClientMethod<$0.ListMarksReq, $0.ListAgentBriefResp>(
-          '/hi.ai.AgentManage/ListMarks',
-          ($0.ListMarksReq value) => value.writeToBuffer(),
-          $0.ListAgentBriefResp.fromBuffer);
+          $0.ListAgentResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.AgentManage')
@@ -358,51 +335,21 @@ abstract class AgentManageServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.AgentManage';
 
   AgentManageServiceBase() {
-    $addMethod(
-        $grpc.ServiceMethod<$0.ManageListAgentsReq, $0.ListAgentBriefResp>(
-            'List',
-            list_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.ManageListAgentsReq.fromBuffer(value),
-            ($0.ListAgentBriefResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.MarkAgentReq, $1.Empty>(
-        'Mark',
-        mark_Pre,
+    $addMethod($grpc.ServiceMethod<$0.ManageListAgentsReq, $0.ListAgentResp>(
+        'List',
+        list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.MarkAgentReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListMarksReq, $0.ListAgentBriefResp>(
-        'ListMarks',
-        listMarks_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListMarksReq.fromBuffer(value),
-        ($0.ListAgentBriefResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) =>
+            $0.ManageListAgentsReq.fromBuffer(value),
+        ($0.ListAgentResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ListAgentBriefResp> list_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.ListAgentResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ManageListAgentsReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListAgentBriefResp> list(
+  $async.Future<$0.ListAgentResp> list(
       $grpc.ServiceCall call, $0.ManageListAgentsReq request);
-
-  $async.Future<$1.Empty> mark_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.MarkAgentReq> $request) async {
-    return mark($call, await $request);
-  }
-
-  $async.Future<$1.Empty> mark($grpc.ServiceCall call, $0.MarkAgentReq request);
-
-  $async.Future<$0.ListAgentBriefResp> listMarks_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.ListMarksReq> $request) async {
-    return listMarks($call, await $request);
-  }
-
-  $async.Future<$0.ListAgentBriefResp> listMarks(
-      $grpc.ServiceCall call, $0.ListMarksReq request);
 }

@@ -411,11 +411,9 @@ abstract class AgentDirectoryServiceBase extends $grpc.Service {
 /// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
 /// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
 ///
-/// ⚠️ **club 没有"标记"功能** —— 标记(显示靠前)只在 hiai 侧由超管打。
-///    club 侧单个用户的机器人数量根本不足以需要排序权重,曾短暂加过 Mark/ListMarks
-///    与 hi_chat_agent_mark 表,已连同表一并删除。别再加回来。
-///    也因此 club 的列表返回 AgentInfo 而不是 hi.ai.AgentBrief:后者的 marked
-///    在 club 侧永远是 false,留着就是个骗人的字段。
+/// ⚠️ **没有"标记"功能** —— 曾在 club 加过 Mark/ListMarks + hi_chat_agent_mark 表,
+///    后来 hiai 侧的同类功能也整体删除了(实际没什么用,且标记本就不该是机器人的属性)。
+///    别再加回来。
 @$pb.GrpcServiceName('hi.club.AgentManage')
 class AgentManageClient extends $grpc.Client {
   /// The hostname for this service.

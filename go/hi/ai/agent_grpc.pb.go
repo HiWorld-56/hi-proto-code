@@ -454,9 +454,7 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	AgentManage_List_FullMethodName      = "/hi.ai.AgentManage/List"
-	AgentManage_Mark_FullMethodName      = "/hi.ai.AgentManage/Mark"
-	AgentManage_ListMarks_FullMethodName = "/hi.ai.AgentManage/ListMarks"
+	AgentManage_List_FullMethodName = "/hi.ai.AgentManage/List"
 )
 
 // AgentManageClient is the client API for AgentManage service.
@@ -470,9 +468,7 @@ const (
 // 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
 // "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
 type AgentManageClient interface {
-	List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error)
-	Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error)
+	List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
 }
 
 type agentManageClient struct {
@@ -483,30 +479,10 @@ func NewAgentManageClient(cc grpc.ClientConnInterface) AgentManageClient {
 	return &agentManageClient{cc}
 }
 
-func (c *agentManageClient) List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error) {
+func (c *agentManageClient) List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentBriefResp)
+	out := new(ListAgentResp)
 	err := c.cc.Invoke(ctx, AgentManage_List_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentManageClient) Mark(ctx context.Context, in *MarkAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, AgentManage_Mark_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opts ...grpc.CallOption) (*ListAgentBriefResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentBriefResp)
-	err := c.cc.Invoke(ctx, AgentManage_ListMarks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -524,9 +500,7 @@ func (c *agentManageClient) ListMarks(ctx context.Context, in *ListMarksReq, opt
 // 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
 // "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
 type AgentManageServer interface {
-	List(context.Context, *ManageListAgentsReq) (*ListAgentBriefResp, error)
-	Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error)
-	ListMarks(context.Context, *ListMarksReq) (*ListAgentBriefResp, error)
+	List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error)
 }
 
 // UnimplementedAgentManageServer should be embedded to have
@@ -536,14 +510,8 @@ type AgentManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentManageServer struct{}
 
-func (UnimplementedAgentManageServer) List(context.Context, *ManageListAgentsReq) (*ListAgentBriefResp, error) {
+func (UnimplementedAgentManageServer) List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
-func (UnimplementedAgentManageServer) Mark(context.Context, *MarkAgentReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Mark not implemented")
-}
-func (UnimplementedAgentManageServer) ListMarks(context.Context, *ListMarksReq) (*ListAgentBriefResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListMarks not implemented")
 }
 func (UnimplementedAgentManageServer) testEmbeddedByValue() {}
 
@@ -583,42 +551,6 @@ func _AgentManage_List_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AgentManage_Mark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MarkAgentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentManageServer).Mark(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AgentManage_Mark_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentManageServer).Mark(ctx, req.(*MarkAgentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AgentManage_ListMarks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMarksReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentManageServer).ListMarks(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AgentManage_ListMarks_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentManageServer).ListMarks(ctx, req.(*ListMarksReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // AgentManage_ServiceDesc is the grpc.ServiceDesc for AgentManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -629,14 +561,6 @@ var AgentManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _AgentManage_List_Handler,
-		},
-		{
-			MethodName: "Mark",
-			Handler:    _AgentManage_Mark_Handler,
-		},
-		{
-			MethodName: "ListMarks",
-			Handler:    _AgentManage_ListMarks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

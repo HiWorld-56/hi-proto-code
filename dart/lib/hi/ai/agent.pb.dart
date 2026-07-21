@@ -377,7 +377,12 @@ class TokenUsage extends $pb.GeneratedMessage {
   void clearMem() => $_clearField(3);
 }
 
-/// 机器人本身的信息。**只放机器人的属性** —— 观察者相关的东西不在这里(见 AgentBrief)。
+/// 机器人本身的信息。
+///
+/// ⚠️ 曾经有个 marked 字段(以及配套的 AgentBrief / Mark / ListMarks),用来给机器人打
+///    标记让它在列表里显示靠前。已整体删除:实际没什么用,而且它从一开始就是错位的 ——
+///    标记不是机器人的属性,是观察者挂在机器人上的东西,同一台机器人不同的人看到的
+///    应该不一样,而存储上(唯一键只有 agent_did)根本表达不了这件事。**别再加回来。**
 class AgentInfo extends $pb.GeneratedMessage {
   factory AgentInfo({
     $2.Entity? base,
@@ -498,83 +503,6 @@ class AgentInfo extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(5);
   @$pb.TagNumber(6)
   void clearCreatedAt() => $_clearField(6);
-}
-
-/// 列表项 = 机器人本身 + 标记。**只用于超管档**。
-///
-/// ⚠️ marked 原先是 AgentInfo 的字段(第 7 个),那是**错的**:标记不是机器人的属性,
-///    而是观察者挂在机器人上的东西 —— 同一个机器人,不同的人看到的 marked 不一样。
-///    放进 AgentInfo 就等于宣称"这个机器人被标记了"这件事对所有人成立,不成立。
-///    但落到存储上,hi_ai_agent_favorites 的唯一键只有 agent_did(不含 user_did)——
-///    一个机器人全局只能有一条标记,**表达不了"每个人各自的标记"**。所以标记只能是一个
-///    全局概念,即超管给机器人置顶。商户档曾有 Mark/ListMarks,在这张表上语义是坏的
-///    (商户 A 标了 B 就撞唯一键;A 取消会把超管标的一起删掉),已删。
-class AgentBrief extends $pb.GeneratedMessage {
-  factory AgentBrief({
-    AgentInfo? agent,
-    $core.bool? marked,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (marked != null) result.marked = marked;
-    return result;
-  }
-
-  AgentBrief._();
-
-  factory AgentBrief.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AgentBrief.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AgentBrief',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOM<AgentInfo>(1, _omitFieldNames ? '' : 'agent',
-        subBuilder: AgentInfo.create)
-    ..aOB(2, _omitFieldNames ? '' : 'marked')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentBrief clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AgentBrief copyWith(void Function(AgentBrief) updates) =>
-      super.copyWith((message) => updates(message as AgentBrief)) as AgentBrief;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AgentBrief create() => AgentBrief._();
-  @$core.override
-  AgentBrief createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static AgentBrief getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AgentBrief>(create);
-  static AgentBrief? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  AgentInfo get agent => $_getN(0);
-  @$pb.TagNumber(1)
-  set agent(AgentInfo value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-  @$pb.TagNumber(1)
-  AgentInfo ensureAgent() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $core.bool get marked => $_getBF(1);
-  @$pb.TagNumber(2)
-  set marked($core.bool value) => $_setBool(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMarked() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMarked() => $_clearField(2);
 }
 
 class DefaultConfigResp extends $pb.GeneratedMessage {
@@ -1040,68 +968,6 @@ class ListAgentResp extends $pb.GeneratedMessage {
   $pb.PbList<AgentInfo> get infos => $_getList(1);
 }
 
-/// 超管档的列表:带 marked。
-class ListAgentBriefResp extends $pb.GeneratedMessage {
-  factory ListAgentBriefResp({
-    $core.int? total,
-    $core.Iterable<AgentBrief>? infos,
-  }) {
-    final result = create();
-    if (total != null) result.total = total;
-    if (infos != null) result.infos.addAll(infos);
-    return result;
-  }
-
-  ListAgentBriefResp._();
-
-  factory ListAgentBriefResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListAgentBriefResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentBriefResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentBrief>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: AgentBrief.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentBriefResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentBriefResp copyWith(void Function(ListAgentBriefResp) updates) =>
-      super.copyWith((message) => updates(message as ListAgentBriefResp))
-          as ListAgentBriefResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListAgentBriefResp create() => ListAgentBriefResp._();
-  @$core.override
-  ListAgentBriefResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListAgentBriefResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentBriefResp>(create);
-  static ListAgentBriefResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get total => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set total($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTotal() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTotal() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<AgentBrief> get infos => $_getList(1);
-}
-
 /// 列**调用者名下**的机器人。范围恒是自己名下,agents 只是在这个范围内再筛。
 ///
 /// ⚠️ agents 是**过滤条件**:空=不筛(名下全部),非空=只要这几个。这与"空=换一种
@@ -1160,70 +1026,6 @@ class ListAgentReq extends $pb.GeneratedMessage {
   static ListAgentReq getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ListAgentReq>(create);
   static ListAgentReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get agents => $_getList(0);
-
-  @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
-}
-
-/// 标记列表入参:查的是**调用者**打过标记的,必须有身份。
-class ListMarksReq extends $pb.GeneratedMessage {
-  factory ListMarksReq({
-    $core.Iterable<$core.String>? agents,
-    $2.Pagination? pagination,
-  }) {
-    final result = create();
-    if (agents != null) result.agents.addAll(agents);
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListMarksReq._();
-
-  factory ListMarksReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListMarksReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMarksReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'agents')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMarksReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMarksReq copyWith(void Function(ListMarksReq) updates) =>
-      super.copyWith((message) => updates(message as ListMarksReq))
-          as ListMarksReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListMarksReq create() => ListMarksReq._();
-  @$core.override
-  ListMarksReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListMarksReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMarksReq>(create);
-  static ListMarksReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get agents => $_getList(0);
@@ -1575,73 +1377,6 @@ class ResetToDefaultReq extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get agents => $_getList(0);
-}
-
-/// 给机器人打/取消标记。**不是收藏** —— 带标记的机器人在显示时靠前。
-class MarkAgentReq extends $pb.GeneratedMessage {
-  factory MarkAgentReq({
-    $core.String? agent,
-    $core.bool? marked,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (marked != null) result.marked = marked;
-    return result;
-  }
-
-  MarkAgentReq._();
-
-  factory MarkAgentReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory MarkAgentReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MarkAgentReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOB(2, _omitFieldNames ? '' : 'marked')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarkAgentReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarkAgentReq copyWith(void Function(MarkAgentReq) updates) =>
-      super.copyWith((message) => updates(message as MarkAgentReq))
-          as MarkAgentReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static MarkAgentReq create() => MarkAgentReq._();
-  @$core.override
-  MarkAgentReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static MarkAgentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MarkAgentReq>(create);
-  static MarkAgentReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.bool get marked => $_getBF(1);
-  @$pb.TagNumber(2)
-  set marked($core.bool value) => $_setBool(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMarked() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMarked() => $_clearField(2);
 }
 
 /// 超管按归属搜机器人(**可跨商户**)。creators 空 = 不过滤(全部)——

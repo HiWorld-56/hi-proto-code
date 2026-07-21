@@ -297,7 +297,13 @@ func (x *TokenUsage) GetMem() int32 {
 	return 0
 }
 
-// 机器人本身的信息。**只放机器人的属性** —— 观察者相关的东西不在这里(见 AgentBrief)。
+// 机器人本身的信息。
+//
+// ⚠️ 曾经有个 marked 字段(以及配套的 AgentBrief / Mark / ListMarks),用来给机器人打
+//
+//	标记让它在列表里显示靠前。已整体删除:实际没什么用,而且它从一开始就是错位的 ——
+//	标记不是机器人的属性,是观察者挂在机器人上的东西,同一台机器人不同的人看到的
+//	应该不一样,而存储上(唯一键只有 agent_did)根本表达不了这件事。**别再加回来。**
 type AgentInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"` // hi.Entity 恒 PUBLIC
@@ -382,68 +388,6 @@ func (x *AgentInfo) GetCreatedAt() int64 {
 	return 0
 }
 
-// 列表项 = 机器人本身 + 标记。**只用于超管档**。
-//
-// ⚠️ marked 原先是 AgentInfo 的字段(第 7 个),那是**错的**:标记不是机器人的属性,
-//
-//	而是观察者挂在机器人上的东西 —— 同一个机器人,不同的人看到的 marked 不一样。
-//	放进 AgentInfo 就等于宣称"这个机器人被标记了"这件事对所有人成立,不成立。
-//	但落到存储上,hi_ai_agent_favorites 的唯一键只有 agent_did(不含 user_did)——
-//	一个机器人全局只能有一条标记,**表达不了"每个人各自的标记"**。所以标记只能是一个
-//	全局概念,即超管给机器人置顶。商户档曾有 Mark/ListMarks,在这张表上语义是坏的
-//	(商户 A 标了 B 就撞唯一键;A 取消会把超管标的一起删掉),已删。
-type AgentBrief struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         *AgentInfo             `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`    // 机器人个体(assistant 软件 / robot 硬件)
-	Marked        bool                   `protobuf:"varint,2,opt,name=marked,proto3" json:"marked,omitempty"` // 看的人有没有标记它(标记的显示靠前)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AgentBrief) Reset() {
-	*x = AgentBrief{}
-	mi := &file_hi_ai_agent_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AgentBrief) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AgentBrief) ProtoMessage() {}
-
-func (x *AgentBrief) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AgentBrief.ProtoReflect.Descriptor instead.
-func (*AgentBrief) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *AgentBrief) GetAgent() *AgentInfo {
-	if x != nil {
-		return x.Agent
-	}
-	return nil
-}
-
-func (x *AgentBrief) GetMarked() bool {
-	if x != nil {
-		return x.Marked
-	}
-	return false
-}
-
 type DefaultConfigResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Config        *AgentConfig           `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"` // 全局默认配置(建 agent 用的模板,与具体 agent 无关)
@@ -453,7 +397,7 @@ type DefaultConfigResp struct {
 
 func (x *DefaultConfigResp) Reset() {
 	*x = DefaultConfigResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[6]
+	mi := &file_hi_ai_agent_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -465,7 +409,7 @@ func (x *DefaultConfigResp) String() string {
 func (*DefaultConfigResp) ProtoMessage() {}
 
 func (x *DefaultConfigResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[6]
+	mi := &file_hi_ai_agent_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -478,7 +422,7 @@ func (x *DefaultConfigResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DefaultConfigResp.ProtoReflect.Descriptor instead.
 func (*DefaultConfigResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{6}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DefaultConfigResp) GetConfig() *AgentConfig {
@@ -499,7 +443,7 @@ type CreateAssistantReq struct {
 
 func (x *CreateAssistantReq) Reset() {
 	*x = CreateAssistantReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[7]
+	mi := &file_hi_ai_agent_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -511,7 +455,7 @@ func (x *CreateAssistantReq) String() string {
 func (*CreateAssistantReq) ProtoMessage() {}
 
 func (x *CreateAssistantReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[7]
+	mi := &file_hi_ai_agent_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -524,7 +468,7 @@ func (x *CreateAssistantReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAssistantReq.ProtoReflect.Descriptor instead.
 func (*CreateAssistantReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{7}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CreateAssistantReq) GetName() string {
@@ -557,7 +501,7 @@ type RegisterRobotReq struct {
 
 func (x *RegisterRobotReq) Reset() {
 	*x = RegisterRobotReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[8]
+	mi := &file_hi_ai_agent_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -569,7 +513,7 @@ func (x *RegisterRobotReq) String() string {
 func (*RegisterRobotReq) ProtoMessage() {}
 
 func (x *RegisterRobotReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[8]
+	mi := &file_hi_ai_agent_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -582,7 +526,7 @@ func (x *RegisterRobotReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRobotReq.ProtoReflect.Descriptor instead.
 func (*RegisterRobotReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{8}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *RegisterRobotReq) GetDid() string {
@@ -617,7 +561,7 @@ type CreateAgentResp struct {
 
 func (x *CreateAgentResp) Reset() {
 	*x = CreateAgentResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[9]
+	mi := &file_hi_ai_agent_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -629,7 +573,7 @@ func (x *CreateAgentResp) String() string {
 func (*CreateAgentResp) ProtoMessage() {}
 
 func (x *CreateAgentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[9]
+	mi := &file_hi_ai_agent_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -642,7 +586,7 @@ func (x *CreateAgentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAgentResp.ProtoReflect.Descriptor instead.
 func (*CreateAgentResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{9}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreateAgentResp) GetBase() *hi.Entity {
@@ -680,7 +624,7 @@ type EditAgentReq struct {
 
 func (x *EditAgentReq) Reset() {
 	*x = EditAgentReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[10]
+	mi := &file_hi_ai_agent_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -692,7 +636,7 @@ func (x *EditAgentReq) String() string {
 func (*EditAgentReq) ProtoMessage() {}
 
 func (x *EditAgentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[10]
+	mi := &file_hi_ai_agent_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -705,7 +649,7 @@ func (x *EditAgentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditAgentReq.ProtoReflect.Descriptor instead.
 func (*EditAgentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{10}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *EditAgentReq) GetAgent() string {
@@ -755,7 +699,7 @@ type ListAgentResp struct {
 
 func (x *ListAgentResp) Reset() {
 	*x = ListAgentResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[11]
+	mi := &file_hi_ai_agent_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -767,7 +711,7 @@ func (x *ListAgentResp) String() string {
 func (*ListAgentResp) ProtoMessage() {}
 
 func (x *ListAgentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[11]
+	mi := &file_hi_ai_agent_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -780,7 +724,7 @@ func (x *ListAgentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentResp.ProtoReflect.Descriptor instead.
 func (*ListAgentResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{11}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListAgentResp) GetTotal() int32 {
@@ -791,59 +735,6 @@ func (x *ListAgentResp) GetTotal() int32 {
 }
 
 func (x *ListAgentResp) GetInfos() []*AgentInfo {
-	if x != nil {
-		return x.Infos
-	}
-	return nil
-}
-
-// 超管档的列表:带 marked。
-type ListAgentBriefResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Infos         []*AgentBrief          `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListAgentBriefResp) Reset() {
-	*x = ListAgentBriefResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListAgentBriefResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListAgentBriefResp) ProtoMessage() {}
-
-func (x *ListAgentBriefResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListAgentBriefResp.ProtoReflect.Descriptor instead.
-func (*ListAgentBriefResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *ListAgentBriefResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *ListAgentBriefResp) GetInfos() []*AgentBrief {
 	if x != nil {
 		return x.Infos
 	}
@@ -873,7 +764,7 @@ type ListAgentReq struct {
 
 func (x *ListAgentReq) Reset() {
 	*x = ListAgentReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[13]
+	mi := &file_hi_ai_agent_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -885,7 +776,7 @@ func (x *ListAgentReq) String() string {
 func (*ListAgentReq) ProtoMessage() {}
 
 func (x *ListAgentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[13]
+	mi := &file_hi_ai_agent_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -898,7 +789,7 @@ func (x *ListAgentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentReq.ProtoReflect.Descriptor instead.
 func (*ListAgentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{13}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ListAgentReq) GetAgents() []string {
@@ -915,59 +806,6 @@ func (x *ListAgentReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-// 标记列表入参:查的是**调用者**打过标记的,必须有身份。
-type ListMarksReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agents        []string               `protobuf:"bytes,1,rep,name=agents,proto3" json:"agents,omitempty"` // 可选:在我的标记里再按 did 过滤
-	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListMarksReq) Reset() {
-	*x = ListMarksReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListMarksReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListMarksReq) ProtoMessage() {}
-
-func (x *ListMarksReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListMarksReq.ProtoReflect.Descriptor instead.
-func (*ListMarksReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *ListMarksReq) GetAgents() []string {
-	if x != nil {
-		return x.Agents
-	}
-	return nil
-}
-
-func (x *ListMarksReq) GetPagination() *hi.Pagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
 type DeleteAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
@@ -977,7 +815,7 @@ type DeleteAgentReq struct {
 
 func (x *DeleteAgentReq) Reset() {
 	*x = DeleteAgentReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[15]
+	mi := &file_hi_ai_agent_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -989,7 +827,7 @@ func (x *DeleteAgentReq) String() string {
 func (*DeleteAgentReq) ProtoMessage() {}
 
 func (x *DeleteAgentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[15]
+	mi := &file_hi_ai_agent_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1002,7 +840,7 @@ func (x *DeleteAgentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAgentReq.ProtoReflect.Descriptor instead.
 func (*DeleteAgentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{15}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DeleteAgentReq) GetAgent() string {
@@ -1021,7 +859,7 @@ type GetAgentReq struct {
 
 func (x *GetAgentReq) Reset() {
 	*x = GetAgentReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[16]
+	mi := &file_hi_ai_agent_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1033,7 +871,7 @@ func (x *GetAgentReq) String() string {
 func (*GetAgentReq) ProtoMessage() {}
 
 func (x *GetAgentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[16]
+	mi := &file_hi_ai_agent_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1046,7 +884,7 @@ func (x *GetAgentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentReq.ProtoReflect.Descriptor instead.
 func (*GetAgentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{16}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetAgentReq) GetAgent() string {
@@ -1065,7 +903,7 @@ type GetAgentResp struct {
 
 func (x *GetAgentResp) Reset() {
 	*x = GetAgentResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[17]
+	mi := &file_hi_ai_agent_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1077,7 +915,7 @@ func (x *GetAgentResp) String() string {
 func (*GetAgentResp) ProtoMessage() {}
 
 func (x *GetAgentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[17]
+	mi := &file_hi_ai_agent_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1090,7 +928,7 @@ func (x *GetAgentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentResp.ProtoReflect.Descriptor instead.
 func (*GetAgentResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{17}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetAgentResp) GetInfo() *AgentInfo {
@@ -1109,7 +947,7 @@ type AgentUsageReq struct {
 
 func (x *AgentUsageReq) Reset() {
 	*x = AgentUsageReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[18]
+	mi := &file_hi_ai_agent_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1121,7 +959,7 @@ func (x *AgentUsageReq) String() string {
 func (*AgentUsageReq) ProtoMessage() {}
 
 func (x *AgentUsageReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[18]
+	mi := &file_hi_ai_agent_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1134,7 +972,7 @@ func (x *AgentUsageReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentUsageReq.ProtoReflect.Descriptor instead.
 func (*AgentUsageReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{18}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *AgentUsageReq) GetAgent() string {
@@ -1155,7 +993,7 @@ type AgentUsageResp struct {
 
 func (x *AgentUsageResp) Reset() {
 	*x = AgentUsageResp{}
-	mi := &file_hi_ai_agent_proto_msgTypes[19]
+	mi := &file_hi_ai_agent_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1167,7 +1005,7 @@ func (x *AgentUsageResp) String() string {
 func (*AgentUsageResp) ProtoMessage() {}
 
 func (x *AgentUsageResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[19]
+	mi := &file_hi_ai_agent_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1180,7 +1018,7 @@ func (x *AgentUsageResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentUsageResp.ProtoReflect.Descriptor instead.
 func (*AgentUsageResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{19}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *AgentUsageResp) GetMessageCount() int32 {
@@ -1206,7 +1044,7 @@ type ResetToDefaultReq struct {
 
 func (x *ResetToDefaultReq) Reset() {
 	*x = ResetToDefaultReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[20]
+	mi := &file_hi_ai_agent_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1218,7 +1056,7 @@ func (x *ResetToDefaultReq) String() string {
 func (*ResetToDefaultReq) ProtoMessage() {}
 
 func (x *ResetToDefaultReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[20]
+	mi := &file_hi_ai_agent_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1231,7 +1069,7 @@ func (x *ResetToDefaultReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResetToDefaultReq.ProtoReflect.Descriptor instead.
 func (*ResetToDefaultReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{20}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ResetToDefaultReq) GetAgents() []string {
@@ -1239,59 +1077,6 @@ func (x *ResetToDefaultReq) GetAgents() []string {
 		return x.Agents
 	}
 	return nil
-}
-
-// 给机器人打/取消标记。**不是收藏** —— 带标记的机器人在显示时靠前。
-type MarkAgentReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Marked        bool                   `protobuf:"varint,2,opt,name=marked,proto3" json:"marked,omitempty"` // true=打标记(显示靠前),false=取消(与 AgentInfo.marked 对称)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *MarkAgentReq) Reset() {
-	*x = MarkAgentReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MarkAgentReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MarkAgentReq) ProtoMessage() {}
-
-func (x *MarkAgentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use MarkAgentReq.ProtoReflect.Descriptor instead.
-func (*MarkAgentReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *MarkAgentReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
-	}
-	return ""
-}
-
-func (x *MarkAgentReq) GetMarked() bool {
-	if x != nil {
-		return x.Marked
-	}
-	return false
 }
 
 // 超管按归属搜机器人(**可跨商户**)。creators 空 = 不过滤(全部)——
@@ -1306,7 +1091,7 @@ type ManageListAgentsReq struct {
 
 func (x *ManageListAgentsReq) Reset() {
 	*x = ManageListAgentsReq{}
-	mi := &file_hi_ai_agent_proto_msgTypes[22]
+	mi := &file_hi_ai_agent_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1318,7 +1103,7 @@ func (x *ManageListAgentsReq) String() string {
 func (*ManageListAgentsReq) ProtoMessage() {}
 
 func (x *ManageListAgentsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_agent_proto_msgTypes[22]
+	mi := &file_hi_ai_agent_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1331,7 +1116,7 @@ func (x *ManageListAgentsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ManageListAgentsReq.ProtoReflect.Descriptor instead.
 func (*ManageListAgentsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_agent_proto_rawDescGZIP(), []int{22}
+	return file_hi_ai_agent_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ManageListAgentsReq) GetCreators() []string {
@@ -1386,11 +1171,7 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12-\n" +
 	"\x05token\x18\x05 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token\x12#\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"^\n" +
-	"\n" +
-	"AgentBrief\x12,\n" +
-	"\x05agent\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x05agent\x12\x1c\n" +
-	"\x06marked\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03R\x06marked:\x04\x98\xb5\x18\x03\"K\n" +
+	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"K\n" +
 	"\x11DefaultConfigResp\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config:\x04\x98\xb5\x18\x03\"@\n" +
 	"\x12CreateAssistantReq\x12\x12\n" +
@@ -1414,16 +1195,8 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04note\x18\x03 \x01(\tR\x04note\"_\n" +
 	"\rListAgentResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12,\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"e\n" +
-	"\x12ListAgentBriefResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12-\n" +
-	"\x05infos\x18\x02 \x03(\v2\x11.hi.ai.AgentBriefB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"V\n" +
+	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"V\n" +
 	"\fListAgentReq\x12\x16\n" +
-	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
-	"\n" +
-	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"V\n" +
-	"\fListMarksReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
@@ -1440,10 +1213,7 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\rmessage_count\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\fmessageCount\x12-\n" +
 	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token:\x04\x98\xb5\x18\x03\"+\n" +
 	"\x11ResetToDefaultReq\x12\x16\n" +
-	"\x06agents\x18\x01 \x03(\tR\x06agents\"<\n" +
-	"\fMarkAgentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x16\n" +
-	"\x06marked\x18\x02 \x01(\bR\x06marked\"a\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\"a\n" +
 	"\x13ManageListAgentsReq\x12\x1a\n" +
 	"\bcreators\x18\x01 \x03(\tR\bcreators\x12.\n" +
 	"\n" +
@@ -1458,11 +1228,9 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04List\x12\x13.hi.ai.ListAgentReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
 	"\bGetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x03\x12K\n" +
 	"\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
-	"\x0eResetToDefault\x12\x18.hi.ai.ResetToDefaultReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032\xd3\x01\n" +
-	"\vAgentManage\x12D\n" +
-	"\x04List\x12\x1a.hi.ai.ManageListAgentsReq\x1a\x19.hi.ai.ListAgentBriefResp\"\x05\x8a\xb5\x18\x01\x04\x12:\n" +
-	"\x04Mark\x12\x13.hi.ai.MarkAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
-	"\tListMarks\x12\x13.hi.ai.ListMarksReq\x1a\x19.hi.ai.ListAgentBriefResp\"\x05\x8a\xb5\x18\x01\x04Bu\n" +
+	"\x0eResetToDefault\x12\x18.hi.ai.ResetToDefaultReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032N\n" +
+	"\vAgentManage\x12?\n" +
+	"\x04List\x12\x1a.hi.ai.ManageListAgentsReq\x1a\x14.hi.ai.ListAgentResp\"\x05\x8a\xb5\x18\x01\x04Bu\n" +
 	"\tcom.hi.aiB\n" +
 	"AgentProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
@@ -1478,83 +1246,72 @@ func file_hi_ai_agent_proto_rawDescGZIP() []byte {
 	return file_hi_ai_agent_proto_rawDescData
 }
 
-var file_hi_ai_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_hi_ai_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_hi_ai_agent_proto_goTypes = []any{
 	(*Prompt)(nil),              // 0: hi.ai.Prompt
 	(*ModelSet)(nil),            // 1: hi.ai.ModelSet
 	(*AgentConfig)(nil),         // 2: hi.ai.AgentConfig
 	(*TokenUsage)(nil),          // 3: hi.ai.TokenUsage
 	(*AgentInfo)(nil),           // 4: hi.ai.AgentInfo
-	(*AgentBrief)(nil),          // 5: hi.ai.AgentBrief
-	(*DefaultConfigResp)(nil),   // 6: hi.ai.DefaultConfigResp
-	(*CreateAssistantReq)(nil),  // 7: hi.ai.CreateAssistantReq
-	(*RegisterRobotReq)(nil),    // 8: hi.ai.RegisterRobotReq
-	(*CreateAgentResp)(nil),     // 9: hi.ai.CreateAgentResp
-	(*EditAgentReq)(nil),        // 10: hi.ai.EditAgentReq
-	(*ListAgentResp)(nil),       // 11: hi.ai.ListAgentResp
-	(*ListAgentBriefResp)(nil),  // 12: hi.ai.ListAgentBriefResp
-	(*ListAgentReq)(nil),        // 13: hi.ai.ListAgentReq
-	(*ListMarksReq)(nil),        // 14: hi.ai.ListMarksReq
-	(*DeleteAgentReq)(nil),      // 15: hi.ai.DeleteAgentReq
-	(*GetAgentReq)(nil),         // 16: hi.ai.GetAgentReq
-	(*GetAgentResp)(nil),        // 17: hi.ai.GetAgentResp
-	(*AgentUsageReq)(nil),       // 18: hi.ai.AgentUsageReq
-	(*AgentUsageResp)(nil),      // 19: hi.ai.AgentUsageResp
-	(*ResetToDefaultReq)(nil),   // 20: hi.ai.ResetToDefaultReq
-	(*MarkAgentReq)(nil),        // 21: hi.ai.MarkAgentReq
-	(*ManageListAgentsReq)(nil), // 22: hi.ai.ManageListAgentsReq
-	(*hi.Entity)(nil),           // 23: hi.Entity
-	(*hi.Pagination)(nil),       // 24: hi.Pagination
-	(*emptypb.Empty)(nil),       // 25: google.protobuf.Empty
+	(*DefaultConfigResp)(nil),   // 5: hi.ai.DefaultConfigResp
+	(*CreateAssistantReq)(nil),  // 6: hi.ai.CreateAssistantReq
+	(*RegisterRobotReq)(nil),    // 7: hi.ai.RegisterRobotReq
+	(*CreateAgentResp)(nil),     // 8: hi.ai.CreateAgentResp
+	(*EditAgentReq)(nil),        // 9: hi.ai.EditAgentReq
+	(*ListAgentResp)(nil),       // 10: hi.ai.ListAgentResp
+	(*ListAgentReq)(nil),        // 11: hi.ai.ListAgentReq
+	(*DeleteAgentReq)(nil),      // 12: hi.ai.DeleteAgentReq
+	(*GetAgentReq)(nil),         // 13: hi.ai.GetAgentReq
+	(*GetAgentResp)(nil),        // 14: hi.ai.GetAgentResp
+	(*AgentUsageReq)(nil),       // 15: hi.ai.AgentUsageReq
+	(*AgentUsageResp)(nil),      // 16: hi.ai.AgentUsageResp
+	(*ResetToDefaultReq)(nil),   // 17: hi.ai.ResetToDefaultReq
+	(*ManageListAgentsReq)(nil), // 18: hi.ai.ManageListAgentsReq
+	(*hi.Entity)(nil),           // 19: hi.Entity
+	(*hi.Pagination)(nil),       // 20: hi.Pagination
+	(*emptypb.Empty)(nil),       // 21: google.protobuf.Empty
 }
 var file_hi_ai_agent_proto_depIdxs = []int32{
 	0,  // 0: hi.ai.AgentConfig.prompt:type_name -> hi.ai.Prompt
 	1,  // 1: hi.ai.AgentConfig.model:type_name -> hi.ai.ModelSet
-	23, // 2: hi.ai.AgentInfo.base:type_name -> hi.Entity
+	19, // 2: hi.ai.AgentInfo.base:type_name -> hi.Entity
 	2,  // 3: hi.ai.AgentInfo.config:type_name -> hi.ai.AgentConfig
 	3,  // 4: hi.ai.AgentInfo.token:type_name -> hi.ai.TokenUsage
-	4,  // 5: hi.ai.AgentBrief.agent:type_name -> hi.ai.AgentInfo
-	2,  // 6: hi.ai.DefaultConfigResp.config:type_name -> hi.ai.AgentConfig
-	23, // 7: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
-	2,  // 8: hi.ai.CreateAgentResp.config:type_name -> hi.ai.AgentConfig
-	23, // 9: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
-	2,  // 10: hi.ai.EditAgentReq.config:type_name -> hi.ai.AgentConfig
-	4,  // 11: hi.ai.ListAgentResp.infos:type_name -> hi.ai.AgentInfo
-	5,  // 12: hi.ai.ListAgentBriefResp.infos:type_name -> hi.ai.AgentBrief
-	24, // 13: hi.ai.ListAgentReq.pagination:type_name -> hi.Pagination
-	24, // 14: hi.ai.ListMarksReq.pagination:type_name -> hi.Pagination
-	4,  // 15: hi.ai.GetAgentResp.info:type_name -> hi.ai.AgentInfo
-	3,  // 16: hi.ai.AgentUsageResp.token:type_name -> hi.ai.TokenUsage
-	24, // 17: hi.ai.ManageListAgentsReq.pagination:type_name -> hi.Pagination
-	7,  // 18: hi.ai.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
-	8,  // 19: hi.ai.Agent.RegisterRobot:input_type -> hi.ai.RegisterRobotReq
-	10, // 20: hi.ai.Agent.Edit:input_type -> hi.ai.EditAgentReq
-	15, // 21: hi.ai.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
-	16, // 22: hi.ai.Agent.Get:input_type -> hi.ai.GetAgentReq
-	13, // 23: hi.ai.Agent.List:input_type -> hi.ai.ListAgentReq
-	18, // 24: hi.ai.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
-	25, // 25: hi.ai.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
-	20, // 26: hi.ai.Agent.ResetToDefault:input_type -> hi.ai.ResetToDefaultReq
-	22, // 27: hi.ai.AgentManage.List:input_type -> hi.ai.ManageListAgentsReq
-	21, // 28: hi.ai.AgentManage.Mark:input_type -> hi.ai.MarkAgentReq
-	14, // 29: hi.ai.AgentManage.ListMarks:input_type -> hi.ai.ListMarksReq
-	9,  // 30: hi.ai.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
-	9,  // 31: hi.ai.Agent.RegisterRobot:output_type -> hi.ai.CreateAgentResp
-	25, // 32: hi.ai.Agent.Edit:output_type -> google.protobuf.Empty
-	25, // 33: hi.ai.Agent.Delete:output_type -> google.protobuf.Empty
-	17, // 34: hi.ai.Agent.Get:output_type -> hi.ai.GetAgentResp
-	11, // 35: hi.ai.Agent.List:output_type -> hi.ai.ListAgentResp
-	19, // 36: hi.ai.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
-	6,  // 37: hi.ai.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
-	25, // 38: hi.ai.Agent.ResetToDefault:output_type -> google.protobuf.Empty
-	12, // 39: hi.ai.AgentManage.List:output_type -> hi.ai.ListAgentBriefResp
-	25, // 40: hi.ai.AgentManage.Mark:output_type -> google.protobuf.Empty
-	12, // 41: hi.ai.AgentManage.ListMarks:output_type -> hi.ai.ListAgentBriefResp
-	30, // [30:42] is the sub-list for method output_type
-	18, // [18:30] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	2,  // 5: hi.ai.DefaultConfigResp.config:type_name -> hi.ai.AgentConfig
+	19, // 6: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
+	2,  // 7: hi.ai.CreateAgentResp.config:type_name -> hi.ai.AgentConfig
+	19, // 8: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
+	2,  // 9: hi.ai.EditAgentReq.config:type_name -> hi.ai.AgentConfig
+	4,  // 10: hi.ai.ListAgentResp.infos:type_name -> hi.ai.AgentInfo
+	20, // 11: hi.ai.ListAgentReq.pagination:type_name -> hi.Pagination
+	4,  // 12: hi.ai.GetAgentResp.info:type_name -> hi.ai.AgentInfo
+	3,  // 13: hi.ai.AgentUsageResp.token:type_name -> hi.ai.TokenUsage
+	20, // 14: hi.ai.ManageListAgentsReq.pagination:type_name -> hi.Pagination
+	6,  // 15: hi.ai.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
+	7,  // 16: hi.ai.Agent.RegisterRobot:input_type -> hi.ai.RegisterRobotReq
+	9,  // 17: hi.ai.Agent.Edit:input_type -> hi.ai.EditAgentReq
+	12, // 18: hi.ai.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
+	13, // 19: hi.ai.Agent.Get:input_type -> hi.ai.GetAgentReq
+	11, // 20: hi.ai.Agent.List:input_type -> hi.ai.ListAgentReq
+	15, // 21: hi.ai.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
+	21, // 22: hi.ai.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
+	17, // 23: hi.ai.Agent.ResetToDefault:input_type -> hi.ai.ResetToDefaultReq
+	18, // 24: hi.ai.AgentManage.List:input_type -> hi.ai.ManageListAgentsReq
+	8,  // 25: hi.ai.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
+	8,  // 26: hi.ai.Agent.RegisterRobot:output_type -> hi.ai.CreateAgentResp
+	21, // 27: hi.ai.Agent.Edit:output_type -> google.protobuf.Empty
+	21, // 28: hi.ai.Agent.Delete:output_type -> google.protobuf.Empty
+	14, // 29: hi.ai.Agent.Get:output_type -> hi.ai.GetAgentResp
+	10, // 30: hi.ai.Agent.List:output_type -> hi.ai.ListAgentResp
+	16, // 31: hi.ai.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
+	5,  // 32: hi.ai.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	21, // 33: hi.ai.Agent.ResetToDefault:output_type -> google.protobuf.Empty
+	10, // 34: hi.ai.AgentManage.List:output_type -> hi.ai.ListAgentResp
+	25, // [25:35] is the sub-list for method output_type
+	15, // [15:25] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_agent_proto_init() }
@@ -1569,7 +1326,7 @@ func file_hi_ai_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_agent_proto_rawDesc), len(file_hi_ai_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

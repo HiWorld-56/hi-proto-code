@@ -708,8 +708,6 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
 /// 唯独 List 自造过一个只吐 Entity 的结构,缺 config/token/note/created_at 一大票字段,
 /// 前端拿完列表还得逐个再调 Get。
 ///
-/// 用 AgentInfo 而不是 hi.ai.AgentBrief:Brief = AgentInfo + marked,而 club 没有标记
-/// 功能,那个 marked 会恒为 false。这里只是换个容器,列表项本身仍是完整的 AgentInfo。
 ///
 /// 穿过来的只是**机器人个体**(prompt/模型/用量);归属仍是 club 自己的数据,
 /// 由 club 把 master 填进 AgentInfo.creator —— 关系不穿,各服务填各自视角的值。
