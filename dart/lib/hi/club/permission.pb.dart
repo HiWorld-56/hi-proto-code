@@ -21,64 +21,110 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'permission.pbenum.dart';
 
-/// 查某台机器人的权限。
+/// 批量查机器人的权限。**调用者必须是这些机器人的 master**,否则报错
+/// (超管同样放行 —— 不管有没有 master 都能管,见 CheckAgentAccess)。
 ///
-/// ⚠️ 原先是 Get(Empty) 查"调用者自己" —— 而人用户根本没有权限配置,所以前端那三个
-///    页面(robot_memory / robot_plugin / robot_setup)拿到的永远是空。它们真正要看的
-///    是**那台机器人**能干什么。归属校验走 CheckAgentAccess(自己 / master / 超管)。
-class GetAgentPermissionReq extends $pb.GeneratedMessage {
-  factory GetAgentPermissionReq({
-    $core.String? agent,
+/// 与 Get() 的分工:
+///   Get()          机器人**查自己** —— 无参数,身份取自 token/apikey。
+///                  插件运行时拿的就是机器人自己的 apikey,走的正是这条。
+///   List(agents)   master 在 web 上**批量查自己名下机器人**的权限。
+class ListAgentPermissionsReq extends $pb.GeneratedMessage {
+  factory ListAgentPermissionsReq({
+    $core.Iterable<$core.String>? agents,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
+    if (agents != null) result.agents.addAll(agents);
     return result;
   }
 
-  GetAgentPermissionReq._();
+  ListAgentPermissionsReq._();
 
-  factory GetAgentPermissionReq.fromBuffer($core.List<$core.int> data,
+  factory ListAgentPermissionsReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetAgentPermissionReq.fromJson($core.String json,
+  factory ListAgentPermissionsReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetAgentPermissionReq',
+      _omitMessageNames ? '' : 'ListAgentPermissionsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..pPS(1, _omitFieldNames ? '' : 'agents')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentPermissionReq clone() => deepCopy();
+  ListAgentPermissionsReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetAgentPermissionReq copyWith(
-          void Function(GetAgentPermissionReq) updates) =>
-      super.copyWith((message) => updates(message as GetAgentPermissionReq))
-          as GetAgentPermissionReq;
+  ListAgentPermissionsReq copyWith(
+          void Function(ListAgentPermissionsReq) updates) =>
+      super.copyWith((message) => updates(message as ListAgentPermissionsReq))
+          as ListAgentPermissionsReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetAgentPermissionReq create() => GetAgentPermissionReq._();
+  static ListAgentPermissionsReq create() => ListAgentPermissionsReq._();
   @$core.override
-  GetAgentPermissionReq createEmptyInstance() => create();
+  ListAgentPermissionsReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetAgentPermissionReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetAgentPermissionReq>(create);
-  static GetAgentPermissionReq? _defaultInstance;
+  static ListAgentPermissionsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentPermissionsReq>(create);
+  static ListAgentPermissionsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $pb.PbList<$core.String> get agents => $_getList(0);
+}
+
+class ListAgentPermissionsResp extends $pb.GeneratedMessage {
+  factory ListAgentPermissionsResp({
+    $core.Iterable<PermissionInfo>? infos,
+  }) {
+    final result = create();
+    if (infos != null) result.infos.addAll(infos);
+    return result;
+  }
+
+  ListAgentPermissionsResp._();
+
+  factory ListAgentPermissionsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListAgentPermissionsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListAgentPermissionsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<PermissionInfo>(1, _omitFieldNames ? '' : 'infos',
+        subBuilder: PermissionInfo.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAgentPermissionsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAgentPermissionsResp copyWith(
+          void Function(ListAgentPermissionsResp) updates) =>
+      super.copyWith((message) => updates(message as ListAgentPermissionsResp))
+          as ListAgentPermissionsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListAgentPermissionsResp create() => ListAgentPermissionsResp._();
+  @$core.override
+  ListAgentPermissionsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListAgentPermissionsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentPermissionsResp>(create);
+  static ListAgentPermissionsResp? _defaultInstance;
+
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  $pb.PbList<PermissionInfo> get infos => $_getList(0);
 }
 
 class PermissionInfo extends $pb.GeneratedMessage {

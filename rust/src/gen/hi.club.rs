@@ -5766,16 +5766,23 @@ pub mod model_client {
         }
     }
 }
-/// 查某台机器人的权限。
+/// 批量查机器人的权限。**调用者必须是这些机器人的 master**,否则报错
+/// (超管同样放行 —— 不管有没有 master 都能管,见 CheckAgentAccess)。
 ///
-/// ⚠️ 原先是 Get(Empty) 查"调用者自己" —— 而人用户根本没有权限配置,所以前端那三个
-/// 页面(robot_memory / robot_plugin / robot_setup)拿到的永远是空。它们真正要看的
-/// 是**那台机器人**能干什么。归属校验走 CheckAgentAccess(自己 / master / 超管)。
+/// 与 Get() 的分工:
+/// Get()          机器人**查自己** —— 无参数,身份取自 token/apikey。
+/// 插件运行时拿的就是机器人自己的 apikey,走的正是这条。
+/// List(agents)   master 在 web 上**批量查自己名下机器人**的权限。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetAgentPermissionReq {
-    /// 机器人 did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+pub struct ListAgentPermissionsReq {
+    /// 机器人 did 列表
+    #[prost(string, repeated, tag = "1")]
+    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAgentPermissionsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PermissionInfo {
@@ -5978,9 +5985,14 @@ pub mod permission_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// 机器人查**自己**的权限。无参数 —— 身份取自 token/apikey,不接受入参指定。
+        ///
+        /// ⚠️ 人用户没有权限配置,只有机器人才有。前端那三个页面
+        /// (robot_memory / robot_plugin / robot_setup)要看的是机器人能干什么:
+        /// 机器人自己调 Get,master 代查走 List。
         pub async fn get(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetAgentPermissionReq>,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<tonic::Response<super::PermissionInfo>, tonic::Status> {
             self.inner
                 .ready()
@@ -5994,6 +6006,27 @@ pub mod permission_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Permission/Get");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Permission", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAgentPermissionsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListAgentPermissionsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Permission/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Permission", "List"));
             self.inner.unary(req, path, codec).await
         }
     }

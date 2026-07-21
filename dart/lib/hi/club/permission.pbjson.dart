@@ -33,18 +33,41 @@ final $typed_data.Uint8List permissionTypeDescriptor = $convert.base64Decode(
     'lPTl9OT1JNQUwQARIXChNQRVJNSVNTSU9OX0FEVkFOQ0VEEAISEgoOUEVSTUlTU0lPTl9NRU0Q'
     'AxIVChFQRVJNSVNTSU9OX1BMVUdJThAE');
 
-@$core.Deprecated('Use getAgentPermissionReqDescriptor instead')
-const GetAgentPermissionReq$json = {
-  '1': 'GetAgentPermissionReq',
+@$core.Deprecated('Use listAgentPermissionsReqDescriptor instead')
+const ListAgentPermissionsReq$json = {
+  '1': 'ListAgentPermissionsReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'agents', '3': 1, '4': 3, '5': 9, '10': 'agents'},
   ],
 };
 
-/// Descriptor for `GetAgentPermissionReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getAgentPermissionReqDescriptor = $convert.base64Decode(
-    'ChVHZXRBZ2VudFBlcm1pc3Npb25SZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYW'
-    'dlbnQ=');
+/// Descriptor for `ListAgentPermissionsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentPermissionsReqDescriptor =
+    $convert.base64Decode(
+        'ChdMaXN0QWdlbnRQZXJtaXNzaW9uc1JlcRIWCgZhZ2VudHMYASADKAlSBmFnZW50cw==');
+
+@$core.Deprecated('Use listAgentPermissionsRespDescriptor instead')
+const ListAgentPermissionsResp$json = {
+  '1': 'ListAgentPermissionsResp',
+  '2': [
+    {
+      '1': 'infos',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.PermissionInfo',
+      '8': {},
+      '10': 'infos'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListAgentPermissionsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentPermissionsRespDescriptor =
+    $convert.base64Decode(
+        'ChhMaXN0QWdlbnRQZXJtaXNzaW9uc1Jlc3ASMwoFaW5mb3MYASADKAsyFy5oaS5jbHViLlBlcm'
+        '1pc3Npb25JbmZvQgSQtRgDUgVpbmZvczoEmLUYAw==');
 
 @$core.Deprecated('Use permissionInfoDescriptor instead')
 const PermissionInfo$json = {

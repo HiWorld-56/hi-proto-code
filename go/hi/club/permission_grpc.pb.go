@@ -20,7 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Permission_Get_FullMethodName = "/hi.club.Permission/Get"
+	Permission_Get_FullMethodName  = "/hi.club.Permission/Get"
+	Permission_List_FullMethodName = "/hi.club.Permission/List"
 )
 
 // PermissionClient is the client API for Permission service.
@@ -39,7 +40,14 @@ const (
 //	**传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
 //	与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
 type PermissionClient interface {
-	Get(ctx context.Context, in *GetAgentPermissionReq, opts ...grpc.CallOption) (*PermissionInfo, error)
+	// 机器人查**自己**的权限。无参数 —— 身份取自 token/apikey,不接受入参指定。
+	//
+	// ⚠️ 人用户没有权限配置,只有机器人才有。前端那三个页面
+	//
+	//	(robot_memory / robot_plugin / robot_setup)要看的是机器人能干什么:
+	//	机器人自己调 Get,master 代查走 List。
+	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionInfo, error)
+	List(ctx context.Context, in *ListAgentPermissionsReq, opts ...grpc.CallOption) (*ListAgentPermissionsResp, error)
 }
 
 type permissionClient struct {
@@ -50,10 +58,20 @@ func NewPermissionClient(cc grpc.ClientConnInterface) PermissionClient {
 	return &permissionClient{cc}
 }
 
-func (c *permissionClient) Get(ctx context.Context, in *GetAgentPermissionReq, opts ...grpc.CallOption) (*PermissionInfo, error) {
+func (c *permissionClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PermissionInfo)
 	err := c.cc.Invoke(ctx, Permission_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionClient) List(ctx context.Context, in *ListAgentPermissionsReq, opts ...grpc.CallOption) (*ListAgentPermissionsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentPermissionsResp)
+	err := c.cc.Invoke(ctx, Permission_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +94,14 @@ func (c *permissionClient) Get(ctx context.Context, in *GetAgentPermissionReq, o
 //	**传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
 //	与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
 type PermissionServer interface {
-	Get(context.Context, *GetAgentPermissionReq) (*PermissionInfo, error)
+	// 机器人查**自己**的权限。无参数 —— 身份取自 token/apikey,不接受入参指定。
+	//
+	// ⚠️ 人用户没有权限配置,只有机器人才有。前端那三个页面
+	//
+	//	(robot_memory / robot_plugin / robot_setup)要看的是机器人能干什么:
+	//	机器人自己调 Get,master 代查走 List。
+	Get(context.Context, *emptypb.Empty) (*PermissionInfo, error)
+	List(context.Context, *ListAgentPermissionsReq) (*ListAgentPermissionsResp, error)
 }
 
 // UnimplementedPermissionServer should be embedded to have
@@ -86,8 +111,11 @@ type PermissionServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPermissionServer struct{}
 
-func (UnimplementedPermissionServer) Get(context.Context, *GetAgentPermissionReq) (*PermissionInfo, error) {
+func (UnimplementedPermissionServer) Get(context.Context, *emptypb.Empty) (*PermissionInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedPermissionServer) List(context.Context, *ListAgentPermissionsReq) (*ListAgentPermissionsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedPermissionServer) testEmbeddedByValue() {}
 
@@ -110,7 +138,7 @@ func RegisterPermissionServer(s grpc.ServiceRegistrar, srv PermissionServer) {
 }
 
 func _Permission_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAgentPermissionReq)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -122,7 +150,25 @@ func _Permission_Get_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: Permission_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServer).Get(ctx, req.(*GetAgentPermissionReq))
+		return srv.(PermissionServer).Get(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Permission_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAgentPermissionsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Permission_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServer).List(ctx, req.(*ListAgentPermissionsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -137,6 +183,10 @@ var Permission_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _Permission_Get_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _Permission_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
