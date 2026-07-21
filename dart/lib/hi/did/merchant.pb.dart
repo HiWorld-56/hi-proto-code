@@ -782,11 +782,6 @@ class ListGrantsResp extends $pb.GeneratedMessage {
 ///    一旦 handler 里 `if merchant == ""` 与 requireGrant 的分支写岔,就是静默跨商户读。
 ///    按既有范式(Merchant/MerchantManage、Gateway/GatewayAdmin)拆成两个 service:
 ///    读自己的在这里,跨商户的在 MerchantGranted(整个 service 走 requireGrant)。
-/// ⚠️ **字段号保持原样,不因删字段而挪位**(user 仍是 2,不复用已删的 merchant=1)。
-///    复用编号是隐形破坏:字段名没变 → 各仓编译全过,但没升级的那个仓按老编号编码,
-///    新版按新编号解析,收到的是空值。**编译期零提示,只有线上行为错**。
-///    真踩过:ai 停在旧版时,它编码 user=2、did 解析 field 1,于是拿到空 user,
-///    CreateAssistant 整条链路挂掉,报错却指向 validate 的 pattern 不匹配。
 class GetUserReq extends $pb.GeneratedMessage {
   factory GetUserReq({
     $core.String? user,
@@ -809,7 +804,7 @@ class GetUserReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetUserReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(2, _omitFieldNames ? '' : 'user')
+    ..aOS(1, _omitFieldNames ? '' : 'user')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -830,14 +825,14 @@ class GetUserReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<GetUserReq>(create);
   static GetUserReq? _defaultInstance;
 
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.String get user => $_getSZ(0);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   set user($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.bool hasUser() => $_has(0);
-  @$pb.TagNumber(2)
-  void clearUser() => $_clearField(2);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
 }
 
 class ListUsersReq extends $pb.GeneratedMessage {
@@ -864,8 +859,8 @@ class ListUsersReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListUsersReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(2, _omitFieldNames ? '' : 'user')
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -888,24 +883,24 @@ class ListUsersReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListUsersReq>(create);
   static ListUsersReq? _defaultInstance;
 
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.String get user => $_getSZ(0);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   set user($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.bool hasUser() => $_has(0);
-  @$pb.TagNumber(2)
-  void clearUser() => $_clearField(2);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
 
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
   $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(3)
-  set pagination($2.Pagination value) => $_setField(3, value);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(3)
-  void clearPagination() => $_clearField(3);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
@@ -1157,7 +1152,7 @@ class ListGreetersReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListGreetersReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -1180,16 +1175,15 @@ class ListGreetersReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListGreetersReq>(create);
   static ListGreetersReq? _defaultInstance;
 
-  /// 字段号保持原样(不复用已删的 merchant=1),理由见 GetUserReq。
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $2.Pagination get pagination => $_getN(0);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
+  set pagination($2.Pagination value) => $_setField(1, value);
+  @$pb.TagNumber(1)
   $core.bool hasPagination() => $_has(0);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
+  void clearPagination() => $_clearField(1);
+  @$pb.TagNumber(1)
   $2.Pagination ensurePagination() => $_ensure(0);
 }
 

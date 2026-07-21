@@ -19,25 +19,25 @@ import 'dart:typed_data' as $typed_data;
 const BindMasterReq$json = {
   '1': 'BindMasterReq',
   '2': [
-    {'1': 'agent', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
   ],
 };
 
 /// Descriptor for `BindMasterReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List bindMasterReqDescriptor = $convert.base64Decode(
-    'Cg1CaW5kTWFzdGVyUmVxEiIKBWFnZW50GAIgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50');
+    'Cg1CaW5kTWFzdGVyUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50');
 
 @$core.Deprecated('Use unbindMasterReqDescriptor instead')
 const UnbindMasterReq$json = {
   '1': 'UnbindMasterReq',
   '2': [
-    {'1': 'agent', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
   ],
 };
 
 /// Descriptor for `UnbindMasterReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List unbindMasterReqDescriptor = $convert.base64Decode(
-    'Cg9VbmJpbmRNYXN0ZXJSZXESIgoFYWdlbnQYAiABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQ=');
+    'Cg9VbmJpbmRNYXN0ZXJSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQ=');
 
 @$core.Deprecated('Use bindStatusReqDescriptor instead')
 const BindStatusReq$json = {
