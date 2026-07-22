@@ -554,8 +554,8 @@ class CreateSingleReq extends $pb.GeneratedMessage {
 }
 
 /// 组聊天消息列表参数
-class ListGroupMessageReq extends $pb.GeneratedMessage {
-  factory ListGroupMessageReq({
+class ListGroupMessagesReq extends $pb.GeneratedMessage {
+  factory ListGroupMessagesReq({
     $core.String? lastUuid,
     $core.String? code,
   }) {
@@ -565,17 +565,17 @@ class ListGroupMessageReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListGroupMessageReq._();
+  ListGroupMessagesReq._();
 
-  factory ListGroupMessageReq.fromBuffer($core.List<$core.int> data,
+  factory ListGroupMessagesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListGroupMessageReq.fromJson($core.String json,
+  factory ListGroupMessagesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListGroupMessageReq',
+      _omitMessageNames ? '' : 'ListGroupMessagesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'lastUuid')
@@ -583,23 +583,23 @@ class ListGroupMessageReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupMessageReq clone() => deepCopy();
+  ListGroupMessagesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupMessageReq copyWith(void Function(ListGroupMessageReq) updates) =>
-      super.copyWith((message) => updates(message as ListGroupMessageReq))
-          as ListGroupMessageReq;
+  ListGroupMessagesReq copyWith(void Function(ListGroupMessagesReq) updates) =>
+      super.copyWith((message) => updates(message as ListGroupMessagesReq))
+          as ListGroupMessagesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListGroupMessageReq create() => ListGroupMessageReq._();
+  static ListGroupMessagesReq create() => ListGroupMessagesReq._();
   @$core.override
-  ListGroupMessageReq createEmptyInstance() => create();
+  ListGroupMessagesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListGroupMessageReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListGroupMessageReq>(create);
-  static ListGroupMessageReq? _defaultInstance;
+  static ListGroupMessagesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGroupMessagesReq>(create);
+  static ListGroupMessagesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get lastUuid => $_getSZ(0);
@@ -620,8 +620,8 @@ class ListGroupMessageReq extends $pb.GeneratedMessage {
   void clearCode() => $_clearField(2);
 }
 
-class ListGroupMessageResp extends $pb.GeneratedMessage {
-  factory ListGroupMessageResp({
+class ListGroupMessagesResp extends $pb.GeneratedMessage {
+  factory ListGroupMessagesResp({
     $core.Iterable<$3.Packet>? list,
   }) {
     final result = create();
@@ -629,17 +629,17 @@ class ListGroupMessageResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListGroupMessageResp._();
+  ListGroupMessagesResp._();
 
-  factory ListGroupMessageResp.fromBuffer($core.List<$core.int> data,
+  factory ListGroupMessagesResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListGroupMessageResp.fromJson($core.String json,
+  factory ListGroupMessagesResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListGroupMessageResp',
+      _omitMessageNames ? '' : 'ListGroupMessagesResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPM<$3.Packet>(1, _omitFieldNames ? '' : 'list',
@@ -647,30 +647,31 @@ class ListGroupMessageResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupMessageResp clone() => deepCopy();
+  ListGroupMessagesResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupMessageResp copyWith(void Function(ListGroupMessageResp) updates) =>
-      super.copyWith((message) => updates(message as ListGroupMessageResp))
-          as ListGroupMessageResp;
+  ListGroupMessagesResp copyWith(
+          void Function(ListGroupMessagesResp) updates) =>
+      super.copyWith((message) => updates(message as ListGroupMessagesResp))
+          as ListGroupMessagesResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListGroupMessageResp create() => ListGroupMessageResp._();
+  static ListGroupMessagesResp create() => ListGroupMessagesResp._();
   @$core.override
-  ListGroupMessageResp createEmptyInstance() => create();
+  ListGroupMessagesResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListGroupMessageResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListGroupMessageResp>(create);
-  static ListGroupMessageResp? _defaultInstance;
+  static ListGroupMessagesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGroupMessagesResp>(create);
+  static ListGroupMessagesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$3.Packet> get list => $_getList(0);
 }
 
-class ListGroupMemberReq extends $pb.GeneratedMessage {
-  factory ListGroupMemberReq({
+class ListGroupMembersReq extends $pb.GeneratedMessage {
+  factory ListGroupMembersReq({
     $core.String? code,
     $2.Pagination? pagination,
   }) {
@@ -680,17 +681,17 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListGroupMemberReq._();
+  ListGroupMembersReq._();
 
-  factory ListGroupMemberReq.fromBuffer($core.List<$core.int> data,
+  factory ListGroupMembersReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListGroupMemberReq.fromJson($core.String json,
+  factory ListGroupMembersReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListGroupMemberReq',
+      _omitMessageNames ? '' : 'ListGroupMembersReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
@@ -699,23 +700,23 @@ class ListGroupMemberReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupMemberReq clone() => deepCopy();
+  ListGroupMembersReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupMemberReq copyWith(void Function(ListGroupMemberReq) updates) =>
-      super.copyWith((message) => updates(message as ListGroupMemberReq))
-          as ListGroupMemberReq;
+  ListGroupMembersReq copyWith(void Function(ListGroupMembersReq) updates) =>
+      super.copyWith((message) => updates(message as ListGroupMembersReq))
+          as ListGroupMembersReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListGroupMemberReq create() => ListGroupMemberReq._();
+  static ListGroupMembersReq create() => ListGroupMembersReq._();
   @$core.override
-  ListGroupMemberReq createEmptyInstance() => create();
+  ListGroupMembersReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListGroupMemberReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListGroupMemberReq>(create);
-  static ListGroupMemberReq? _defaultInstance;
+  static ListGroupMembersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGroupMembersReq>(create);
+  static ListGroupMembersReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);

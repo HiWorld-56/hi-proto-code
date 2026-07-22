@@ -37,7 +37,7 @@ var (
 
 func request_AgentBench_List_0(ctx context.Context, marshaler runtime.Marshaler, client AgentBenchClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListAgentDelayReq
+		protoReq ListAgentDelaysReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -52,7 +52,7 @@ func request_AgentBench_List_0(ctx context.Context, marshaler runtime.Marshaler,
 
 func local_request_AgentBench_List_0(ctx context.Context, marshaler runtime.Marshaler, server AgentBenchServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListAgentDelayReq
+		protoReq ListAgentDelaysReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

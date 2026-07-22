@@ -57,8 +57,8 @@ type PluginClient interface {
 	CreateAnnex(ctx context.Context, in *ai.CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetPluginReq, opts ...grpc.CallOption) (*ai.GetPluginResp, error)
-	List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
-	ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error)
+	List(ctx context.Context, in *ai.ListPluginsReq, opts ...grpc.CallOption) (*ai.ListPluginsResp, error)
+	ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListPluginsResp, error)
 	Delete(ctx context.Context, in *ai.DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAll(ctx context.Context, in *ai.DeleteAllPluginVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -124,9 +124,9 @@ func (c *pluginClient) Get(ctx context.Context, in *ai.GetPluginReq, opts ...grp
 	return out, nil
 }
 
-func (c *pluginClient) List(ctx context.Context, in *ai.ListPluginReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error) {
+func (c *pluginClient) List(ctx context.Context, in *ai.ListPluginsReq, opts ...grpc.CallOption) (*ai.ListPluginsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListPluginResp)
+	out := new(ai.ListPluginsResp)
 	err := c.cc.Invoke(ctx, Plugin_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -134,9 +134,9 @@ func (c *pluginClient) List(ctx context.Context, in *ai.ListPluginReq, opts ...g
 	return out, nil
 }
 
-func (c *pluginClient) ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListPluginResp, error) {
+func (c *pluginClient) ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListPluginsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListPluginResp)
+	out := new(ai.ListPluginsResp)
 	err := c.cc.Invoke(ctx, Plugin_ListVersions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -216,8 +216,8 @@ type PluginServer interface {
 	CreateAnnex(context.Context, *ai.CreateAnnexReq) (*emptypb.Empty, error)
 	Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error)
-	List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error)
-	ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListPluginResp, error)
+	List(context.Context, *ai.ListPluginsReq) (*ai.ListPluginsResp, error)
+	ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListPluginsResp, error)
 	Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error)
 	DeleteAll(context.Context, *ai.DeleteAllPluginVersionsReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error)
@@ -247,10 +247,10 @@ func (UnimplementedPluginServer) Edit(context.Context, *ai.EditPluginReq) (*empt
 func (UnimplementedPluginServer) Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedPluginServer) List(context.Context, *ai.ListPluginReq) (*ai.ListPluginResp, error) {
+func (UnimplementedPluginServer) List(context.Context, *ai.ListPluginsReq) (*ai.ListPluginsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedPluginServer) ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListPluginResp, error) {
+func (UnimplementedPluginServer) ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListPluginsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListVersions not implemented")
 }
 func (UnimplementedPluginServer) Delete(context.Context, *ai.DeletePluginReq) (*emptypb.Empty, error) {
@@ -379,7 +379,7 @@ func _Plugin_Get_Handler(srv interface{}, ctx context.Context, dec func(interfac
 }
 
 func _Plugin_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ListPluginReq)
+	in := new(ai.ListPluginsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -391,7 +391,7 @@ func _Plugin_List_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: Plugin_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).List(ctx, req.(*ai.ListPluginReq))
+		return srv.(PluginServer).List(ctx, req.(*ai.ListPluginsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

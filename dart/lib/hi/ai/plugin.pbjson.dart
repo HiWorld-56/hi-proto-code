@@ -306,9 +306,9 @@ final $typed_data.Uint8List downloadScriptRespDescriptor = $convert.base64Decode
     'ChJEb3dubG9hZFNjcmlwdFJlc3ASHgoHY29udGVudBgBIAEoDEIEkLUYA1IHY29udGVudBIYCg'
     'RuYW1lGAIgASgJQgSQtRgDUgRuYW1lOgSYtRgD');
 
-@$core.Deprecated('Use listPluginReqDescriptor instead')
-const ListPluginReq$json = {
-  '1': 'ListPluginReq',
+@$core.Deprecated('Use listPluginsReqDescriptor instead')
+const ListPluginsReq$json = {
+  '1': 'ListPluginsReq',
   '2': [
     {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
     {
@@ -322,10 +322,10 @@ const ListPluginReq$json = {
   ],
 };
 
-/// Descriptor for `ListPluginReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listPluginReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0UGx1Z2luUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBIuCgpwYWdpbmF0aW9uGAIgAS'
-    'gLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+/// Descriptor for `ListPluginsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPluginsReqDescriptor = $convert.base64Decode(
+    'Cg5MaXN0UGx1Z2luc1JlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSLgoKcGFnaW5hdGlvbhgCIA'
+    'EoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
 @$core.Deprecated('Use listVersionsReqDescriptor instead')
 const ListVersionsReq$json = {
@@ -349,9 +349,9 @@ final $typed_data.Uint8List listVersionsReqDescriptor = $convert.base64Decode(
     'Cg9MaXN0VmVyc2lvbnNSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHJvb3QYAiABKAlSBH'
     'Jvb3QSLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
-@$core.Deprecated('Use listPluginRespDescriptor instead')
-const ListPluginResp$json = {
-  '1': 'ListPluginResp',
+@$core.Deprecated('Use listPluginsRespDescriptor instead')
+const ListPluginsResp$json = {
+  '1': 'ListPluginsResp',
   '2': [
     {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
@@ -367,10 +367,10 @@ const ListPluginResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListPluginResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listPluginRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0UGx1Z2luUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYA1IFdG90YWwSKwoEbGlzdBgCIA'
-    'MoCzIRLmhpLmFpLlBsdWdpblZpZXdCBJC1GANSBGxpc3Q6BJi1GAM=');
+/// Descriptor for `ListPluginsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPluginsRespDescriptor = $convert.base64Decode(
+    'Cg9MaXN0UGx1Z2luc1Jlc3ASGgoFdG90YWwYASABKAVCBJC1GANSBXRvdGFsEisKBGxpc3QYAi'
+    'ADKAsyES5oaS5haS5QbHVnaW5WaWV3QgSQtRgDUgRsaXN0OgSYtRgD');
 
 @$core.Deprecated('Use getPluginReqDescriptor instead')
 const GetPluginReq$json = {

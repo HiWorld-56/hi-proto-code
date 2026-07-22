@@ -66,9 +66,9 @@ final $typed_data.Uint8List userInfoDescriptor = $convert.base64Decode(
     'QgSQtRgDUgx2ZXJpZnlQb2xpY3kSHAoGbW9tZW50GAQgASgJQgSQtRgCUgZtb21lbnQ6BJi1GA'
     'M=');
 
-@$core.Deprecated('Use listSystemMessageReqDescriptor instead')
-const ListSystemMessageReq$json = {
-  '1': 'ListSystemMessageReq',
+@$core.Deprecated('Use listSystemMessagesReqDescriptor instead')
+const ListSystemMessagesReq$json = {
+  '1': 'ListSystemMessagesReq',
   '2': [
     {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
     {
@@ -82,10 +82,10 @@ const ListSystemMessageReq$json = {
   ],
 };
 
-/// Descriptor for `ListSystemMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listSystemMessageReqDescriptor = $convert.base64Decode(
-    'ChRMaXN0U3lzdGVtTWVzc2FnZVJlcRIWCgZzdGF0dXMYASABKAlSBnN0YXR1cxIuCgpwYWdpbm'
-    'F0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+/// Descriptor for `ListSystemMessagesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listSystemMessagesReqDescriptor = $convert.base64Decode(
+    'ChVMaXN0U3lzdGVtTWVzc2FnZXNSZXESFgoGc3RhdHVzGAEgASgJUgZzdGF0dXMSLgoKcGFnaW'
+    '5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
 @$core.Deprecated('Use systemMessagesDescriptor instead')
 const SystemMessages$json = {
@@ -244,9 +244,9 @@ const DeleteFriendReq$json = {
 final $typed_data.Uint8List deleteFriendReqDescriptor =
     $convert.base64Decode('Cg9EZWxldGVGcmllbmRSZXESEAoDZGlkGAEgASgJUgNkaWQ=');
 
-@$core.Deprecated('Use listGroupRespDescriptor instead')
-const ListGroupResp$json = {
-  '1': 'ListGroupResp',
+@$core.Deprecated('Use listGroupsRespDescriptor instead')
+const ListGroupsResp$json = {
+  '1': 'ListGroupsResp',
   '2': [
     {
       '1': 'list',
@@ -261,10 +261,10 @@ const ListGroupResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListGroupResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listGroupRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0R3JvdXBSZXNwEiwKBGxpc3QYASADKAsyEi5oaS5jbHViLkdyb3VwQmFzZUIEkLUYAV'
-    'IEbGlzdDoEmLUYAw==');
+/// Descriptor for `ListGroupsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listGroupsRespDescriptor = $convert.base64Decode(
+    'Cg5MaXN0R3JvdXBzUmVzcBIsCgRsaXN0GAEgAygLMhIuaGkuY2x1Yi5Hcm91cEJhc2VCBJC1GA'
+    'FSBGxpc3Q6BJi1GAM=');
 
 @$core.Deprecated('Use getUserReqDescriptor instead')
 const GetUserReq$json = {
@@ -327,21 +327,21 @@ final $typed_data.Uint8List setRemarkReqDescriptor = $convert.base64Decode(
     'CgxTZXRSZW1hcmtSZXESEgoEdXNlchgBIAEoCVIEdXNlchIWCgZyZW1hcmsYAiABKAlSBnJlbW'
     'Fyaw==');
 
-@$core.Deprecated('Use listOnlineUserReqDescriptor instead')
-const ListOnlineUserReq$json = {
-  '1': 'ListOnlineUserReq',
+@$core.Deprecated('Use listOnlineUsersReqDescriptor instead')
+const ListOnlineUsersReq$json = {
+  '1': 'ListOnlineUsersReq',
   '2': [
     {'1': 'users', '3': 1, '4': 3, '5': 9, '10': 'users'},
   ],
 };
 
-/// Descriptor for `ListOnlineUserReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listOnlineUserReqDescriptor = $convert
-    .base64Decode('ChFMaXN0T25saW5lVXNlclJlcRIUCgV1c2VycxgBIAMoCVIFdXNlcnM=');
+/// Descriptor for `ListOnlineUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listOnlineUsersReqDescriptor = $convert
+    .base64Decode('ChJMaXN0T25saW5lVXNlcnNSZXESFAoFdXNlcnMYASADKAlSBXVzZXJz');
 
-@$core.Deprecated('Use listOnlineUserRespDescriptor instead')
-const ListOnlineUserResp$json = {
-  '1': 'ListOnlineUserResp',
+@$core.Deprecated('Use listOnlineUsersRespDescriptor instead')
+const ListOnlineUsersResp$json = {
+  '1': 'ListOnlineUsersResp',
   '2': [
     {
       '1': 'list',
@@ -356,7 +356,7 @@ const ListOnlineUserResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListOnlineUserResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listOnlineUserRespDescriptor = $convert.base64Decode(
-    'ChJMaXN0T25saW5lVXNlclJlc3ASJAoEbGlzdBgBIAMoCzIKLmhpLkVudGl0eUIEkLUYAVIEbG'
-    'lzdDoEmLUYAQ==');
+/// Descriptor for `ListOnlineUsersResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listOnlineUsersRespDescriptor = $convert.base64Decode(
+    'ChNMaXN0T25saW5lVXNlcnNSZXNwEiQKBGxpc3QYASADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBG'
+    'xpc3Q6BJi1GAE=');

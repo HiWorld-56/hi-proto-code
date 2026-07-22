@@ -53,9 +53,9 @@ type AgentClient interface {
 	Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
-	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentReq 的说明)。
+	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentsReq 的说明)。
 	// 归属恒取自 apikey 解出的商户 did,守卫下沉在 SQL,不靠 handler 记得过滤。
-	List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	List(ctx context.Context, in *ListAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
 	GetUsage(ctx context.Context, in *AgentUsageReq, opts ...grpc.CallOption) (*AgentUsageResp, error)
 	GetDefaultConfig(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DefaultConfigResp, error)
 	ResetToDefault(ctx context.Context, in *ResetToDefaultReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -119,9 +119,9 @@ func (c *agentClient) Get(ctx context.Context, in *GetAgentReq, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *agentClient) List(ctx context.Context, in *ListAgentReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentClient) List(ctx context.Context, in *ListAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
+	out := new(ListAgentsResp)
 	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -181,9 +181,9 @@ type AgentServer interface {
 	Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
-	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentReq 的说明)。
+	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentsReq 的说明)。
 	// 归属恒取自 apikey 解出的商户 did,守卫下沉在 SQL,不靠 handler 记得过滤。
-	List(context.Context, *ListAgentReq) (*ListAgentResp, error)
+	List(context.Context, *ListAgentsReq) (*ListAgentsResp, error)
 	GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error)
 	GetDefaultConfig(context.Context, *emptypb.Empty) (*DefaultConfigResp, error)
 	ResetToDefault(context.Context, *ResetToDefaultReq) (*emptypb.Empty, error)
@@ -211,7 +211,7 @@ func (UnimplementedAgentServer) Delete(context.Context, *DeleteAgentReq) (*empty
 func (UnimplementedAgentServer) Get(context.Context, *GetAgentReq) (*GetAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedAgentServer) List(context.Context, *ListAgentReq) (*ListAgentResp, error) {
+func (UnimplementedAgentServer) List(context.Context, *ListAgentsReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentServer) GetUsage(context.Context, *AgentUsageReq) (*AgentUsageResp, error) {
@@ -334,7 +334,7 @@ func _Agent_Get_Handler(srv interface{}, ctx context.Context, dec func(interface
 }
 
 func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAgentReq)
+	in := new(ListAgentsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -346,7 +346,7 @@ func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: Agent_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).List(ctx, req.(*ListAgentReq))
+		return srv.(AgentServer).List(ctx, req.(*ListAgentsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -468,7 +468,7 @@ const (
 // 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
 // "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
 type AgentManageClient interface {
-	List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error)
+	List(ctx context.Context, in *AgentManageListReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
 }
 
 type agentManageClient struct {
@@ -479,9 +479,9 @@ func NewAgentManageClient(cc grpc.ClientConnInterface) AgentManageClient {
 	return &agentManageClient{cc}
 }
 
-func (c *agentManageClient) List(ctx context.Context, in *ManageListAgentsReq, opts ...grpc.CallOption) (*ListAgentResp, error) {
+func (c *agentManageClient) List(ctx context.Context, in *AgentManageListReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentResp)
+	out := new(ListAgentsResp)
 	err := c.cc.Invoke(ctx, AgentManage_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -500,7 +500,7 @@ func (c *agentManageClient) List(ctx context.Context, in *ManageListAgentsReq, o
 // 超管是**跨商户**的另一个主体。混在一个 service 里,就只能靠"入参空不空"或
 // "运行时查是不是超管"来分叉 —— 那正是最容易搞混、也最容易漏判的写法。
 type AgentManageServer interface {
-	List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error)
+	List(context.Context, *AgentManageListReq) (*ListAgentsResp, error)
 }
 
 // UnimplementedAgentManageServer should be embedded to have
@@ -510,7 +510,7 @@ type AgentManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentManageServer struct{}
 
-func (UnimplementedAgentManageServer) List(context.Context, *ManageListAgentsReq) (*ListAgentResp, error) {
+func (UnimplementedAgentManageServer) List(context.Context, *AgentManageListReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentManageServer) testEmbeddedByValue() {}
@@ -534,7 +534,7 @@ func RegisterAgentManageServer(s grpc.ServiceRegistrar, srv AgentManageServer) {
 }
 
 func _AgentManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ManageListAgentsReq)
+	in := new(AgentManageListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -546,7 +546,7 @@ func _AgentManage_List_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: AgentManage_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentManageServer).List(ctx, req.(*ManageListAgentsReq))
+		return srv.(AgentManageServer).List(ctx, req.(*AgentManageListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

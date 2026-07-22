@@ -587,6 +587,114 @@ impl<'de> serde::Deserialize<'de> for AgentInfo {
         deserializer.deserialize_struct("hi.ai.AgentInfo", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for AgentManageListReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.creators.is_empty() {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.AgentManageListReq", len)?;
+        if !self.creators.is_empty() {
+            struct_ser.serialize_field("creators", &self.creators)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AgentManageListReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "creators",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Creators,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "creators" => Ok(GeneratedField::Creators),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AgentManageListReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.AgentManageListReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AgentManageListReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut creators__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Creators => {
+                            if creators__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("creators"));
+                            }
+                            creators__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(AgentManageListReq {
+                    creators: creators__.unwrap_or_default(),
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.AgentManageListReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for AgentUsageReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -5683,7 +5791,7 @@ impl<'de> serde::Deserialize<'de> for GetPluginResp {
         deserializer.deserialize_struct("hi.ai.GetPluginResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListAgentDelayReq {
+impl serde::Serialize for ListAgentDelaysReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5700,7 +5808,7 @@ impl serde::Serialize for ListAgentDelayReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentDelayReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentDelaysReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
@@ -5713,7 +5821,7 @@ impl serde::Serialize for ListAgentDelayReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListAgentDelayReq {
+impl<'de> serde::Deserialize<'de> for ListAgentDelaysReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5763,13 +5871,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentDelayReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListAgentDelayReq;
+            type Value = ListAgentDelaysReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListAgentDelayReq")
+                formatter.write_str("struct hi.ai.ListAgentDelaysReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentDelayReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentDelaysReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5798,17 +5906,17 @@ impl<'de> serde::Deserialize<'de> for ListAgentDelayReq {
                         }
                     }
                 }
-                Ok(ListAgentDelayReq {
+                Ok(ListAgentDelaysReq {
                     agent: agent__.unwrap_or_default(),
                     r#type: r#type__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListAgentDelayReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListAgentDelaysReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListAgentDelayResp {
+impl serde::Serialize for ListAgentDelaysResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5822,7 +5930,7 @@ impl serde::Serialize for ListAgentDelayResp {
         if !self.units.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentDelayResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentDelaysResp", len)?;
         if self.total != 0 {
             struct_ser.serialize_field("total", &self.total)?;
         }
@@ -5832,7 +5940,7 @@ impl serde::Serialize for ListAgentDelayResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListAgentDelayResp {
+impl<'de> serde::Deserialize<'de> for ListAgentDelaysResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5879,13 +5987,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentDelayResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListAgentDelayResp;
+            type Value = ListAgentDelaysResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListAgentDelayResp")
+                formatter.write_str("struct hi.ai.ListAgentDelaysResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentDelayResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentDelaysResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5909,16 +6017,16 @@ impl<'de> serde::Deserialize<'de> for ListAgentDelayResp {
                         }
                     }
                 }
-                Ok(ListAgentDelayResp {
+                Ok(ListAgentDelaysResp {
                     total: total__.unwrap_or_default(),
                     units: units__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListAgentDelayResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListAgentDelaysResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListAgentReq {
+impl serde::Serialize for ListAgentsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5932,7 +6040,7 @@ impl serde::Serialize for ListAgentReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentsReq", len)?;
         if !self.agents.is_empty() {
             struct_ser.serialize_field("agents", &self.agents)?;
         }
@@ -5942,7 +6050,7 @@ impl serde::Serialize for ListAgentReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListAgentReq {
+impl<'de> serde::Deserialize<'de> for ListAgentsReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5989,13 +6097,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListAgentReq;
+            type Value = ListAgentsReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListAgentReq")
+                formatter.write_str("struct hi.ai.ListAgentsReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentsReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6017,16 +6125,16 @@ impl<'de> serde::Deserialize<'de> for ListAgentReq {
                         }
                     }
                 }
-                Ok(ListAgentReq {
+                Ok(ListAgentsReq {
                     agents: agents__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListAgentReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListAgentsReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListAgentResp {
+impl serde::Serialize for ListAgentsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6040,7 +6148,7 @@ impl serde::Serialize for ListAgentResp {
         if !self.infos.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentsResp", len)?;
         if self.total != 0 {
             struct_ser.serialize_field("total", &self.total)?;
         }
@@ -6050,7 +6158,7 @@ impl serde::Serialize for ListAgentResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListAgentResp {
+impl<'de> serde::Deserialize<'de> for ListAgentsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6097,13 +6205,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListAgentResp;
+            type Value = ListAgentsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListAgentResp")
+                formatter.write_str("struct hi.ai.ListAgentsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6127,13 +6235,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentResp {
                         }
                     }
                 }
-                Ok(ListAgentResp {
+                Ok(ListAgentsResp {
                     total: total__.unwrap_or_default(),
                     infos: infos__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListAgentResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListAgentsResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListApiKeysResp {
@@ -6481,7 +6589,7 @@ impl<'de> serde::Deserialize<'de> for ListFilesResp {
         deserializer.deserialize_struct("hi.ai.ListFilesResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListPluginReq {
+impl serde::Serialize for ListPluginsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6495,7 +6603,7 @@ impl serde::Serialize for ListPluginReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListPluginReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListPluginsReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
@@ -6505,7 +6613,7 @@ impl serde::Serialize for ListPluginReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListPluginReq {
+impl<'de> serde::Deserialize<'de> for ListPluginsReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6552,13 +6660,13 @@ impl<'de> serde::Deserialize<'de> for ListPluginReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListPluginReq;
+            type Value = ListPluginsReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListPluginReq")
+                formatter.write_str("struct hi.ai.ListPluginsReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListPluginReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListPluginsReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6580,16 +6688,16 @@ impl<'de> serde::Deserialize<'de> for ListPluginReq {
                         }
                     }
                 }
-                Ok(ListPluginReq {
+                Ok(ListPluginsReq {
                     agent: agent__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListPluginReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListPluginsReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListPluginResp {
+impl serde::Serialize for ListPluginsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6603,7 +6711,7 @@ impl serde::Serialize for ListPluginResp {
         if !self.list.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListPluginResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListPluginsResp", len)?;
         if self.total != 0 {
             struct_ser.serialize_field("total", &self.total)?;
         }
@@ -6613,7 +6721,7 @@ impl serde::Serialize for ListPluginResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListPluginResp {
+impl<'de> serde::Deserialize<'de> for ListPluginsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6660,13 +6768,13 @@ impl<'de> serde::Deserialize<'de> for ListPluginResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListPluginResp;
+            type Value = ListPluginsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListPluginResp")
+                formatter.write_str("struct hi.ai.ListPluginsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListPluginResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListPluginsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6690,13 +6798,13 @@ impl<'de> serde::Deserialize<'de> for ListPluginResp {
                         }
                     }
                 }
-                Ok(ListPluginResp {
+                Ok(ListPluginsResp {
                     total: total__.unwrap_or_default(),
                     list: list__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListPluginResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListPluginsResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListSttResp {
@@ -6930,114 +7038,6 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
             }
         }
         deserializer.deserialize_struct("hi.ai.ListVersionsReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ManageListAgentsReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.creators.is_empty() {
-            len += 1;
-        }
-        if self.pagination.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ManageListAgentsReq", len)?;
-        if !self.creators.is_empty() {
-            struct_ser.serialize_field("creators", &self.creators)?;
-        }
-        if let Some(v) = self.pagination.as_ref() {
-            struct_ser.serialize_field("pagination", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ManageListAgentsReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "creators",
-            "pagination",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Creators,
-            Pagination,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "creators" => Ok(GeneratedField::Creators),
-                            "pagination" => Ok(GeneratedField::Pagination),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ManageListAgentsReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ManageListAgentsReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ManageListAgentsReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut creators__ = None;
-                let mut pagination__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Creators => {
-                            if creators__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("creators"));
-                            }
-                            creators__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Pagination => {
-                            if pagination__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("pagination"));
-                            }
-                            pagination__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(ManageListAgentsReq {
-                    creators: creators__.unwrap_or_default(),
-                    pagination: pagination__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.ManageListAgentsReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for MerchantListReq {

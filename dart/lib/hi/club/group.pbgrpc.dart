@@ -63,7 +63,7 @@ class GroupClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$0.GroupInfo> listMembers(
-    $0.ListGroupMemberReq request, {
+    $0.ListGroupMembersReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listMembers, request, options: options);
@@ -104,8 +104,8 @@ class GroupClient extends $grpc.Client {
     return $createUnaryCall(_$remove, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListGroupMessageResp> listMessages(
-    $0.ListGroupMessageReq request, {
+  $grpc.ResponseFuture<$0.ListGroupMessagesResp> listMessages(
+    $0.ListGroupMessagesReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listMessages, request, options: options);
@@ -159,9 +159,9 @@ class GroupClient extends $grpc.Client {
       ($0.UpdateGroupReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
   static final _$listMembers =
-      $grpc.ClientMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
+      $grpc.ClientMethod<$0.ListGroupMembersReq, $0.GroupInfo>(
           '/hi.club.Group/ListMembers',
-          ($0.ListGroupMemberReq value) => value.writeToBuffer(),
+          ($0.ListGroupMembersReq value) => value.writeToBuffer(),
           $0.GroupInfo.fromBuffer);
   static final _$getMemberTotal =
       $grpc.ClientMethod<$0.GetGroupMemberTotalReq, $0.GetGroupMemberTotalResp>(
@@ -185,10 +185,10 @@ class GroupClient extends $grpc.Client {
       ($0.RemoveGroupReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
   static final _$listMessages =
-      $grpc.ClientMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
+      $grpc.ClientMethod<$0.ListGroupMessagesReq, $0.ListGroupMessagesResp>(
           '/hi.club.Group/ListMessages',
-          ($0.ListGroupMessageReq value) => value.writeToBuffer(),
-          $0.ListGroupMessageResp.fromBuffer);
+          ($0.ListGroupMessagesReq value) => value.writeToBuffer(),
+          $0.ListGroupMessagesResp.fromBuffer);
   static final _$setRole = $grpc.ClientMethod<$0.SetRoleReq, $1.Empty>(
       '/hi.club.Group/SetRole',
       ($0.SetRoleReq value) => value.writeToBuffer(),
@@ -240,13 +240,13 @@ abstract class GroupServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UpdateGroupReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListGroupMemberReq, $0.GroupInfo>(
+    $addMethod($grpc.ServiceMethod<$0.ListGroupMembersReq, $0.GroupInfo>(
         'ListMembers',
         listMembers_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ListGroupMemberReq.fromBuffer(value),
+            $0.ListGroupMembersReq.fromBuffer(value),
         ($0.GroupInfo value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetGroupMemberTotalReq,
             $0.GetGroupMemberTotalResp>(
@@ -286,14 +286,14 @@ abstract class GroupServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.RemoveGroupReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.ListGroupMessageReq, $0.ListGroupMessageResp>(
+        $grpc.ServiceMethod<$0.ListGroupMessagesReq, $0.ListGroupMessagesResp>(
             'ListMessages',
             listMessages_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.ListGroupMessageReq.fromBuffer(value),
-            ($0.ListGroupMessageResp value) => value.writeToBuffer()));
+                $0.ListGroupMessagesReq.fromBuffer(value),
+            ($0.ListGroupMessagesResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetRoleReq, $1.Empty>(
         'SetRole',
         setRole_Pre,
@@ -357,12 +357,12 @@ abstract class GroupServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.UpdateGroupReq request);
 
   $async.Future<$0.GroupInfo> listMembers_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListGroupMemberReq> $request) async {
+      $async.Future<$0.ListGroupMembersReq> $request) async {
     return listMembers($call, await $request);
   }
 
   $async.Future<$0.GroupInfo> listMembers(
-      $grpc.ServiceCall call, $0.ListGroupMemberReq request);
+      $grpc.ServiceCall call, $0.ListGroupMembersReq request);
 
   $async.Future<$0.GetGroupMemberTotalResp> getMemberTotal_Pre(
       $grpc.ServiceCall $call,
@@ -403,14 +403,14 @@ abstract class GroupServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> remove(
       $grpc.ServiceCall call, $0.RemoveGroupReq request);
 
-  $async.Future<$0.ListGroupMessageResp> listMessages_Pre(
+  $async.Future<$0.ListGroupMessagesResp> listMessages_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ListGroupMessageReq> $request) async {
+      $async.Future<$0.ListGroupMessagesReq> $request) async {
     return listMessages($call, await $request);
   }
 
-  $async.Future<$0.ListGroupMessageResp> listMessages(
-      $grpc.ServiceCall call, $0.ListGroupMessageReq request);
+  $async.Future<$0.ListGroupMessagesResp> listMessages(
+      $grpc.ServiceCall call, $0.ListGroupMessagesReq request);
 
   $async.Future<$1.Empty> setRole_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SetRoleReq> $request) async {

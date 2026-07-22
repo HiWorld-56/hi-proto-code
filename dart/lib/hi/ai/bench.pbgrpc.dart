@@ -39,8 +39,8 @@ class AgentBenchClient extends $grpc.Client {
 
   AgentBenchClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.ListAgentDelayResp> list(
-    $0.ListAgentDelayReq request, {
+  $grpc.ResponseFuture<$0.ListAgentDelaysResp> list(
+    $0.ListAgentDelaysReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
@@ -49,10 +49,10 @@ class AgentBenchClient extends $grpc.Client {
   // method descriptors
 
   static final _$list =
-      $grpc.ClientMethod<$0.ListAgentDelayReq, $0.ListAgentDelayResp>(
+      $grpc.ClientMethod<$0.ListAgentDelaysReq, $0.ListAgentDelaysResp>(
           '/hi.ai.AgentBench/List',
-          ($0.ListAgentDelayReq value) => value.writeToBuffer(),
-          $0.ListAgentDelayResp.fromBuffer);
+          ($0.ListAgentDelaysReq value) => value.writeToBuffer(),
+          $0.ListAgentDelaysResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.AgentBench')
@@ -60,20 +60,22 @@ abstract class AgentBenchServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.AgentBench';
 
   AgentBenchServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.ListAgentDelayReq, $0.ListAgentDelayResp>(
-        'List',
-        list_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ListAgentDelayReq.fromBuffer(value),
-        ($0.ListAgentDelayResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ListAgentDelaysReq, $0.ListAgentDelaysResp>(
+            'List',
+            list_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ListAgentDelaysReq.fromBuffer(value),
+            ($0.ListAgentDelaysResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ListAgentDelayResp> list_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListAgentDelayReq> $request) async {
+  $async.Future<$0.ListAgentDelaysResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListAgentDelaysReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListAgentDelayResp> list(
-      $grpc.ServiceCall call, $0.ListAgentDelayReq request);
+  $async.Future<$0.ListAgentDelaysResp> list(
+      $grpc.ServiceCall call, $0.ListAgentDelaysReq request);
 }

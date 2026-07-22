@@ -580,7 +580,7 @@ pub struct DownloadScriptResp {
     pub name: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListPluginReq {
+pub struct ListPluginsReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
@@ -598,7 +598,7 @@ pub struct ListVersionsReq {
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPluginResp {
+pub struct ListPluginsResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
@@ -909,8 +909,11 @@ pub mod plugin_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListPluginReq>,
-        ) -> std::result::Result<tonic::Response<super::ListPluginResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::ListPluginsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListPluginsResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -928,7 +931,10 @@ pub mod plugin_client {
         pub async fn list_versions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListVersionsReq>,
-        ) -> std::result::Result<tonic::Response<super::ListPluginResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListPluginsResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1955,7 +1961,7 @@ pub struct EditAgentReq {
 /// 商户档的列表:**不带 marked**。标记是超管的概念(见 AgentBrief),
 /// 商户看自己的机器人不需要、也拿不到别人的标记。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAgentResp {
+pub struct ListAgentsResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
@@ -1973,7 +1979,7 @@ pub struct ListAgentResp {
 /// 也曾另有一个按 did 批量取的方法与本方法并存 —— 加上归属校验后两者范围完全相同
 /// (都是"自己名下"),只剩筛不筛之别,是同一个方法,已合并至此。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListAgentReq {
+pub struct ListAgentsReq {
     /// 可选:按机器人 did 筛;空=名下全部
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -2016,7 +2022,7 @@ pub struct ResetToDefaultReq {
 /// 超管按归属搜机器人(**可跨商户**)。creators 空 = 不过滤(全部)——
 /// 与 Agent.List 的"空=列调用者自己的"不同:超管没有"自己的机器人"这个概念。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ManageListAgentsReq {
+pub struct AgentManageListReq {
     /// 主人的 did;空=全部
     #[prost(string, repeated, tag = "1")]
     pub creators: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -2225,12 +2231,12 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "Get"));
             self.inner.unary(req, path, codec).await
         }
-        /// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentReq 的说明)。
+        /// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentsReq 的说明)。
         /// 归属恒取自 apikey 解出的商户 did,守卫下沉在 SQL,不靠 handler 记得过滤。
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListAgentReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::ListAgentsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2409,8 +2415,8 @@ pub mod agent_manage_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ManageListAgentsReq>,
-        ) -> std::result::Result<tonic::Response<super::ListAgentResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::AgentManageListReq>,
+        ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4072,7 +4078,7 @@ pub struct AgentDelayUnit {
     pub test_time: i64,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListAgentDelayReq {
+pub struct ListAgentDelaysReq {
     /// 可选:按 agent 过滤
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
@@ -4083,7 +4089,7 @@ pub struct ListAgentDelayReq {
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAgentDelayResp {
+pub struct ListAgentDelaysResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
@@ -4189,9 +4195,9 @@ pub mod agent_bench_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListAgentDelayReq>,
+            request: impl tonic::IntoRequest<super::ListAgentDelaysReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListAgentDelayResp>,
+            tonic::Response<super::ListAgentDelaysResp>,
             tonic::Status,
         > {
             self.inner

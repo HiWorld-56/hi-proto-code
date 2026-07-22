@@ -145,7 +145,7 @@ func local_request_Group_Update_0(ctx context.Context, marshaler runtime.Marshal
 
 func request_Group_ListMembers_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListGroupMemberReq
+		protoReq ListGroupMembersReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -160,7 +160,7 @@ func request_Group_ListMembers_0(ctx context.Context, marshaler runtime.Marshale
 
 func local_request_Group_ListMembers_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListGroupMemberReq
+		protoReq ListGroupMembersReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -307,7 +307,7 @@ func local_request_Group_Remove_0(ctx context.Context, marshaler runtime.Marshal
 
 func request_Group_ListMessages_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListGroupMessageReq
+		protoReq ListGroupMessagesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -322,7 +322,7 @@ func request_Group_ListMessages_0(ctx context.Context, marshaler runtime.Marshal
 
 func local_request_Group_ListMessages_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListGroupMessageReq
+		protoReq ListGroupMessagesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

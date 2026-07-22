@@ -4841,114 +4841,6 @@ impl<'de> serde::Deserialize<'de> for ListAgentsResp {
         deserializer.deserialize_struct("hi.club.ListAgentsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListAllTradeReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.id.is_empty() {
-            len += 1;
-        }
-        if self.pagination.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListAllTradeReq", len)?;
-        if !self.id.is_empty() {
-            struct_ser.serialize_field("id", &self.id)?;
-        }
-        if let Some(v) = self.pagination.as_ref() {
-            struct_ser.serialize_field("pagination", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ListAllTradeReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "id",
-            "pagination",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Id,
-            Pagination,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "id" => Ok(GeneratedField::Id),
-                            "pagination" => Ok(GeneratedField::Pagination),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListAllTradeReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListAllTradeReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAllTradeReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut id__ = None;
-                let mut pagination__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Id => {
-                            if id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("id"));
-                            }
-                            id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Pagination => {
-                            if pagination__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("pagination"));
-                            }
-                            pagination__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(ListAllTradeReq {
-                    id: id__.unwrap_or_default(),
-                    pagination: pagination__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.club.ListAllTradeReq", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for ListApiKeysReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -5275,7 +5167,7 @@ impl<'de> serde::Deserialize<'de> for ListGreetersReq {
         deserializer.deserialize_struct("hi.club.ListGreetersReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListGroupMemberReq {
+impl serde::Serialize for ListGroupMembersReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5289,7 +5181,7 @@ impl serde::Serialize for ListGroupMemberReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupMemberReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupMembersReq", len)?;
         if !self.code.is_empty() {
             struct_ser.serialize_field("code", &self.code)?;
         }
@@ -5299,7 +5191,7 @@ impl serde::Serialize for ListGroupMemberReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListGroupMemberReq {
+impl<'de> serde::Deserialize<'de> for ListGroupMembersReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5346,13 +5238,13 @@ impl<'de> serde::Deserialize<'de> for ListGroupMemberReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListGroupMemberReq;
+            type Value = ListGroupMembersReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListGroupMemberReq")
+                formatter.write_str("struct hi.club.ListGroupMembersReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupMemberReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupMembersReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5374,16 +5266,16 @@ impl<'de> serde::Deserialize<'de> for ListGroupMemberReq {
                         }
                     }
                 }
-                Ok(ListGroupMemberReq {
+                Ok(ListGroupMembersReq {
                     code: code__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListGroupMemberReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListGroupMembersReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListGroupMessageReq {
+impl serde::Serialize for ListGroupMessagesReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5397,7 +5289,7 @@ impl serde::Serialize for ListGroupMessageReq {
         if !self.code.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupMessageReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupMessagesReq", len)?;
         if !self.last_uuid.is_empty() {
             struct_ser.serialize_field("lastUuid", &self.last_uuid)?;
         }
@@ -5407,7 +5299,7 @@ impl serde::Serialize for ListGroupMessageReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListGroupMessageReq {
+impl<'de> serde::Deserialize<'de> for ListGroupMessagesReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5455,13 +5347,13 @@ impl<'de> serde::Deserialize<'de> for ListGroupMessageReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListGroupMessageReq;
+            type Value = ListGroupMessagesReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListGroupMessageReq")
+                formatter.write_str("struct hi.club.ListGroupMessagesReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupMessageReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupMessagesReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5483,16 +5375,16 @@ impl<'de> serde::Deserialize<'de> for ListGroupMessageReq {
                         }
                     }
                 }
-                Ok(ListGroupMessageReq {
+                Ok(ListGroupMessagesReq {
                     last_uuid: last_uuid__.unwrap_or_default(),
                     code: code__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListGroupMessageReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListGroupMessagesReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListGroupMessageResp {
+impl serde::Serialize for ListGroupMessagesResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5503,14 +5395,14 @@ impl serde::Serialize for ListGroupMessageResp {
         if !self.list.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupMessageResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupMessagesResp", len)?;
         if !self.list.is_empty() {
             struct_ser.serialize_field("list", &self.list)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListGroupMessageResp {
+impl<'de> serde::Deserialize<'de> for ListGroupMessagesResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5554,13 +5446,13 @@ impl<'de> serde::Deserialize<'de> for ListGroupMessageResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListGroupMessageResp;
+            type Value = ListGroupMessagesResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListGroupMessageResp")
+                formatter.write_str("struct hi.club.ListGroupMessagesResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupMessageResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupMessagesResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5575,15 +5467,15 @@ impl<'de> serde::Deserialize<'de> for ListGroupMessageResp {
                         }
                     }
                 }
-                Ok(ListGroupMessageResp {
+                Ok(ListGroupMessagesResp {
                     list: list__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListGroupMessageResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListGroupMessagesResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListGroupResp {
+impl serde::Serialize for ListGroupsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5594,14 +5486,14 @@ impl serde::Serialize for ListGroupResp {
         if !self.list.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListGroupsResp", len)?;
         if !self.list.is_empty() {
             struct_ser.serialize_field("list", &self.list)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListGroupResp {
+impl<'de> serde::Deserialize<'de> for ListGroupsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5645,13 +5537,13 @@ impl<'de> serde::Deserialize<'de> for ListGroupResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListGroupResp;
+            type Value = ListGroupsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListGroupResp")
+                formatter.write_str("struct hi.club.ListGroupsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListGroupsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -5666,12 +5558,12 @@ impl<'de> serde::Deserialize<'de> for ListGroupResp {
                         }
                     }
                 }
-                Ok(ListGroupResp {
+                Ok(ListGroupsResp {
                     list: list__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListGroupResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListGroupsResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListMyAgentsReq {
@@ -5984,7 +5876,7 @@ impl<'de> serde::Deserialize<'de> for ListOnlineResp {
         deserializer.deserialize_struct("hi.club.ListOnlineResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListOnlineUserReq {
+impl serde::Serialize for ListOnlineUsersReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5995,14 +5887,14 @@ impl serde::Serialize for ListOnlineUserReq {
         if !self.users.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListOnlineUserReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListOnlineUsersReq", len)?;
         if !self.users.is_empty() {
             struct_ser.serialize_field("users", &self.users)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListOnlineUserReq {
+impl<'de> serde::Deserialize<'de> for ListOnlineUsersReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6046,13 +5938,13 @@ impl<'de> serde::Deserialize<'de> for ListOnlineUserReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListOnlineUserReq;
+            type Value = ListOnlineUsersReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListOnlineUserReq")
+                formatter.write_str("struct hi.club.ListOnlineUsersReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListOnlineUserReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListOnlineUsersReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6067,15 +5959,15 @@ impl<'de> serde::Deserialize<'de> for ListOnlineUserReq {
                         }
                     }
                 }
-                Ok(ListOnlineUserReq {
+                Ok(ListOnlineUsersReq {
                     users: users__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListOnlineUserReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListOnlineUsersReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListOnlineUserResp {
+impl serde::Serialize for ListOnlineUsersResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6086,14 +5978,14 @@ impl serde::Serialize for ListOnlineUserResp {
         if !self.list.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListOnlineUserResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListOnlineUsersResp", len)?;
         if !self.list.is_empty() {
             struct_ser.serialize_field("list", &self.list)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListOnlineUserResp {
+impl<'de> serde::Deserialize<'de> for ListOnlineUsersResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6137,13 +6029,13 @@ impl<'de> serde::Deserialize<'de> for ListOnlineUserResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListOnlineUserResp;
+            type Value = ListOnlineUsersResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListOnlineUserResp")
+                formatter.write_str("struct hi.club.ListOnlineUsersResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListOnlineUserResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListOnlineUsersResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6158,12 +6050,12 @@ impl<'de> serde::Deserialize<'de> for ListOnlineUserResp {
                         }
                     }
                 }
-                Ok(ListOnlineUserResp {
+                Ok(ListOnlineUsersResp {
                     list: list__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListOnlineUserResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListOnlineUsersResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListRelationsResp {
@@ -6274,7 +6166,7 @@ impl<'de> serde::Deserialize<'de> for ListRelationsResp {
         deserializer.deserialize_struct("hi.club.ListRelationsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListSystemMessageReq {
+impl serde::Serialize for ListSystemMessagesReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6288,7 +6180,7 @@ impl serde::Serialize for ListSystemMessageReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListSystemMessageReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListSystemMessagesReq", len)?;
         if !self.status.is_empty() {
             struct_ser.serialize_field("status", &self.status)?;
         }
@@ -6298,7 +6190,7 @@ impl serde::Serialize for ListSystemMessageReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListSystemMessageReq {
+impl<'de> serde::Deserialize<'de> for ListSystemMessagesReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6345,13 +6237,13 @@ impl<'de> serde::Deserialize<'de> for ListSystemMessageReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListSystemMessageReq;
+            type Value = ListSystemMessagesReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListSystemMessageReq")
+                formatter.write_str("struct hi.club.ListSystemMessagesReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListSystemMessageReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListSystemMessagesReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6373,16 +6265,16 @@ impl<'de> serde::Deserialize<'de> for ListSystemMessageReq {
                         }
                     }
                 }
-                Ok(ListSystemMessageReq {
+                Ok(ListSystemMessagesReq {
                     status: status__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListSystemMessageReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListSystemMessagesReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListTradeReq {
+impl serde::Serialize for ListTradesReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6396,7 +6288,7 @@ impl serde::Serialize for ListTradeReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListTradeReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListTradesReq", len)?;
         if !self.id.is_empty() {
             struct_ser.serialize_field("id", &self.id)?;
         }
@@ -6406,7 +6298,7 @@ impl serde::Serialize for ListTradeReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListTradeReq {
+impl<'de> serde::Deserialize<'de> for ListTradesReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6453,13 +6345,13 @@ impl<'de> serde::Deserialize<'de> for ListTradeReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListTradeReq;
+            type Value = ListTradesReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListTradeReq")
+                formatter.write_str("struct hi.club.ListTradesReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListTradeReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListTradesReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6481,16 +6373,16 @@ impl<'de> serde::Deserialize<'de> for ListTradeReq {
                         }
                     }
                 }
-                Ok(ListTradeReq {
+                Ok(ListTradesReq {
                     id: id__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListTradeReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListTradesReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListTradeResp {
+impl serde::Serialize for ListTradesResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6504,7 +6396,7 @@ impl serde::Serialize for ListTradeResp {
         if !self.list.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListTradeResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListTradesResp", len)?;
         if self.total != 0 {
             struct_ser.serialize_field("total", &self.total)?;
         }
@@ -6514,7 +6406,7 @@ impl serde::Serialize for ListTradeResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListTradeResp {
+impl<'de> serde::Deserialize<'de> for ListTradesResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6561,13 +6453,13 @@ impl<'de> serde::Deserialize<'de> for ListTradeResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListTradeResp;
+            type Value = ListTradesResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListTradeResp")
+                formatter.write_str("struct hi.club.ListTradesResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListTradeResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListTradesResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6591,13 +6483,13 @@ impl<'de> serde::Deserialize<'de> for ListTradeResp {
                         }
                     }
                 }
-                Ok(ListTradeResp {
+                Ok(ListTradesResp {
                     total: total__.unwrap_or_default(),
                     list: list__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListTradeResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListTradesResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for LoginResp {
@@ -10821,6 +10713,114 @@ impl<'de> serde::Deserialize<'de> for TradeDetail {
             }
         }
         deserializer.deserialize_struct("hi.club.TradeDetail", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TradeManageListReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.id.is_empty() {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.TradeManageListReq", len)?;
+        if !self.id.is_empty() {
+            struct_ser.serialize_field("id", &self.id)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TradeManageListReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "id",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Id,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "id" => Ok(GeneratedField::Id),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TradeManageListReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.TradeManageListReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TradeManageListReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut id__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Id => {
+                            if id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("id"));
+                            }
+                            id__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TradeManageListReq {
+                    id: id__.unwrap_or_default(),
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.TradeManageListReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for TradeTrans {

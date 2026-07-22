@@ -186,23 +186,23 @@ const CreateSingleReq$json = {
 final $typed_data.Uint8List createSingleReqDescriptor =
     $convert.base64Decode('Cg9DcmVhdGVTaW5nbGVSZXESEAoDZGlkGAEgASgJUgNkaWQ=');
 
-@$core.Deprecated('Use listGroupMessageReqDescriptor instead')
-const ListGroupMessageReq$json = {
-  '1': 'ListGroupMessageReq',
+@$core.Deprecated('Use listGroupMessagesReqDescriptor instead')
+const ListGroupMessagesReq$json = {
+  '1': 'ListGroupMessagesReq',
   '2': [
     {'1': 'last_uuid', '3': 1, '4': 1, '5': 9, '10': 'lastUuid'},
     {'1': 'code', '3': 2, '4': 1, '5': 9, '10': 'code'},
   ],
 };
 
-/// Descriptor for `ListGroupMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listGroupMessageReqDescriptor = $convert.base64Decode(
-    'ChNMaXN0R3JvdXBNZXNzYWdlUmVxEhsKCWxhc3RfdXVpZBgBIAEoCVIIbGFzdFV1aWQSEgoEY2'
-    '9kZRgCIAEoCVIEY29kZQ==');
+/// Descriptor for `ListGroupMessagesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listGroupMessagesReqDescriptor = $convert.base64Decode(
+    'ChRMaXN0R3JvdXBNZXNzYWdlc1JlcRIbCglsYXN0X3V1aWQYASABKAlSCGxhc3RVdWlkEhIKBG'
+    'NvZGUYAiABKAlSBGNvZGU=');
 
-@$core.Deprecated('Use listGroupMessageRespDescriptor instead')
-const ListGroupMessageResp$json = {
-  '1': 'ListGroupMessageResp',
+@$core.Deprecated('Use listGroupMessagesRespDescriptor instead')
+const ListGroupMessagesResp$json = {
+  '1': 'ListGroupMessagesResp',
   '2': [
     {
       '1': 'list',
@@ -217,14 +217,14 @@ const ListGroupMessageResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListGroupMessageResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listGroupMessageRespDescriptor = $convert.base64Decode(
-    'ChRMaXN0R3JvdXBNZXNzYWdlUmVzcBIpCgRsaXN0GAEgAygLMg8uaGkuY2x1Yi5QYWNrZXRCBJ'
-    'C1GAJSBGxpc3Q6BJi1GAI=');
+/// Descriptor for `ListGroupMessagesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listGroupMessagesRespDescriptor = $convert.base64Decode(
+    'ChVMaXN0R3JvdXBNZXNzYWdlc1Jlc3ASKQoEbGlzdBgBIAMoCzIPLmhpLmNsdWIuUGFja2V0Qg'
+    'SQtRgCUgRsaXN0OgSYtRgC');
 
-@$core.Deprecated('Use listGroupMemberReqDescriptor instead')
-const ListGroupMemberReq$json = {
-  '1': 'ListGroupMemberReq',
+@$core.Deprecated('Use listGroupMembersReqDescriptor instead')
+const ListGroupMembersReq$json = {
+  '1': 'ListGroupMembersReq',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {
@@ -238,10 +238,10 @@ const ListGroupMemberReq$json = {
   ],
 };
 
-/// Descriptor for `ListGroupMemberReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listGroupMemberReqDescriptor = $convert.base64Decode(
-    'ChJMaXN0R3JvdXBNZW1iZXJSZXESEgoEY29kZRgBIAEoCVIEY29kZRIuCgpwYWdpbmF0aW9uGA'
-    'IgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+/// Descriptor for `ListGroupMembersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listGroupMembersReqDescriptor = $convert.base64Decode(
+    'ChNMaXN0R3JvdXBNZW1iZXJzUmVxEhIKBGNvZGUYASABKAlSBGNvZGUSLgoKcGFnaW5hdGlvbh'
+    'gCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
 @$core.Deprecated('Use getGroupMemberTotalReqDescriptor instead')
 const GetGroupMemberTotalReq$json = {

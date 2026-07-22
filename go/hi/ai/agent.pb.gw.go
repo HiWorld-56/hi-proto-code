@@ -181,7 +181,7 @@ func local_request_Agent_Get_0(ctx context.Context, marshaler runtime.Marshaler,
 
 func request_Agent_List_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListAgentReq
+		protoReq ListAgentsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -196,7 +196,7 @@ func request_Agent_List_0(ctx context.Context, marshaler runtime.Marshaler, clie
 
 func local_request_Agent_List_0(ctx context.Context, marshaler runtime.Marshaler, server AgentServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListAgentReq
+		protoReq ListAgentsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -283,7 +283,7 @@ func local_request_Agent_ResetToDefault_0(ctx context.Context, marshaler runtime
 
 func request_AgentManage_List_0(ctx context.Context, marshaler runtime.Marshaler, client AgentManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ManageListAgentsReq
+		protoReq AgentManageListReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -298,7 +298,7 @@ func request_AgentManage_List_0(ctx context.Context, marshaler runtime.Marshaler
 
 func local_request_AgentManage_List_0(ctx context.Context, marshaler runtime.Marshaler, server AgentManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ManageListAgentsReq
+		protoReq AgentManageListReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

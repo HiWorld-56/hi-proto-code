@@ -34,7 +34,7 @@ const (
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type AgentBenchClient interface {
-	List(ctx context.Context, in *ListAgentDelayReq, opts ...grpc.CallOption) (*ListAgentDelayResp, error)
+	List(ctx context.Context, in *ListAgentDelaysReq, opts ...grpc.CallOption) (*ListAgentDelaysResp, error)
 }
 
 type agentBenchClient struct {
@@ -45,9 +45,9 @@ func NewAgentBenchClient(cc grpc.ClientConnInterface) AgentBenchClient {
 	return &agentBenchClient{cc}
 }
 
-func (c *agentBenchClient) List(ctx context.Context, in *ListAgentDelayReq, opts ...grpc.CallOption) (*ListAgentDelayResp, error) {
+func (c *agentBenchClient) List(ctx context.Context, in *ListAgentDelaysReq, opts ...grpc.CallOption) (*ListAgentDelaysResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAgentDelayResp)
+	out := new(ListAgentDelaysResp)
 	err := c.cc.Invoke(ctx, AgentBench_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (c *agentBenchClient) List(ctx context.Context, in *ListAgentDelayReq, opts
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type AgentBenchServer interface {
-	List(context.Context, *ListAgentDelayReq) (*ListAgentDelayResp, error)
+	List(context.Context, *ListAgentDelaysReq) (*ListAgentDelaysResp, error)
 }
 
 // UnimplementedAgentBenchServer should be embedded to have
@@ -77,7 +77,7 @@ type AgentBenchServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentBenchServer struct{}
 
-func (UnimplementedAgentBenchServer) List(context.Context, *ListAgentDelayReq) (*ListAgentDelayResp, error) {
+func (UnimplementedAgentBenchServer) List(context.Context, *ListAgentDelaysReq) (*ListAgentDelaysResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentBenchServer) testEmbeddedByValue() {}
@@ -101,7 +101,7 @@ func RegisterAgentBenchServer(s grpc.ServiceRegistrar, srv AgentBenchServer) {
 }
 
 func _AgentBench_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAgentDelayReq)
+	in := new(ListAgentDelaysReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func _AgentBench_List_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: AgentBench_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentBenchServer).List(ctx, req.(*ListAgentDelayReq))
+		return srv.(AgentBenchServer).List(ctx, req.(*ListAgentDelaysReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

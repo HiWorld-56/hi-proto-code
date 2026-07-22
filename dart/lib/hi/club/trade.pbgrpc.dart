@@ -62,8 +62,8 @@ class TradeClient extends $grpc.Client {
   }
 
   /// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
-  $grpc.ResponseFuture<$0.ListTradeResp> list(
-    $0.ListTradeReq request, {
+  $grpc.ResponseFuture<$0.ListTradesResp> list(
+    $0.ListTradesReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
@@ -89,10 +89,10 @@ class TradeClient extends $grpc.Client {
           '/hi.club.Trade/UpdateTransHash',
           ($0.UpdateTransHashReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$list = $grpc.ClientMethod<$0.ListTradeReq, $0.ListTradeResp>(
+  static final _$list = $grpc.ClientMethod<$0.ListTradesReq, $0.ListTradesResp>(
       '/hi.club.Trade/List',
-      ($0.ListTradeReq value) => value.writeToBuffer(),
-      $0.ListTradeResp.fromBuffer);
+      ($0.ListTradesReq value) => value.writeToBuffer(),
+      $0.ListTradesResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Trade')
@@ -129,13 +129,13 @@ abstract class TradeServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.UpdateTransHashReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListTradeReq, $0.ListTradeResp>(
+    $addMethod($grpc.ServiceMethod<$0.ListTradesReq, $0.ListTradesResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListTradeReq.fromBuffer(value),
-        ($0.ListTradeResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.ListTradesReq.fromBuffer(value),
+        ($0.ListTradesResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.GetTradeFeeResp> getFee_Pre($grpc.ServiceCall $call,
@@ -170,13 +170,13 @@ abstract class TradeServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> updateTransHash(
       $grpc.ServiceCall call, $0.UpdateTransHashReq request);
 
-  $async.Future<$0.ListTradeResp> list_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.ListTradeReq> $request) async {
+  $async.Future<$0.ListTradesResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListTradesReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListTradeResp> list(
-      $grpc.ServiceCall call, $0.ListTradeReq request);
+  $async.Future<$0.ListTradesResp> list(
+      $grpc.ServiceCall call, $0.ListTradesReq request);
 }
 
 /// 交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
@@ -197,8 +197,8 @@ class TradeManageClient extends $grpc.Client {
 
   TradeManageClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.ListTradeResp> list(
-    $0.ListAllTradeReq request, {
+  $grpc.ResponseFuture<$0.ListTradesResp> list(
+    $0.TradeManageListReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
@@ -207,10 +207,10 @@ class TradeManageClient extends $grpc.Client {
   // method descriptors
 
   static final _$list =
-      $grpc.ClientMethod<$0.ListAllTradeReq, $0.ListTradeResp>(
+      $grpc.ClientMethod<$0.TradeManageListReq, $0.ListTradesResp>(
           '/hi.club.TradeManage/List',
-          ($0.ListAllTradeReq value) => value.writeToBuffer(),
-          $0.ListTradeResp.fromBuffer);
+          ($0.TradeManageListReq value) => value.writeToBuffer(),
+          $0.ListTradesResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.TradeManage')
@@ -218,20 +218,21 @@ abstract class TradeManageServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.TradeManage';
 
   TradeManageServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.ListAllTradeReq, $0.ListTradeResp>(
+    $addMethod($grpc.ServiceMethod<$0.TradeManageListReq, $0.ListTradesResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListAllTradeReq.fromBuffer(value),
-        ($0.ListTradeResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) =>
+            $0.TradeManageListReq.fromBuffer(value),
+        ($0.ListTradesResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ListTradeResp> list_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListAllTradeReq> $request) async {
+  $async.Future<$0.ListTradesResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.TradeManageListReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListTradeResp> list(
-      $grpc.ServiceCall call, $0.ListAllTradeReq request);
+  $async.Future<$0.ListTradesResp> list(
+      $grpc.ServiceCall call, $0.TradeManageListReq request);
 }

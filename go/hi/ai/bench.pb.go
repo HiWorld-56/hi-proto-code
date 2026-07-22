@@ -132,7 +132,7 @@ func (x *AgentDelayUnit) GetTestTime() int64 {
 	return 0
 }
 
-type ListAgentDelayReq struct {
+type ListAgentDelaysReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 可选:按 agent 过滤
 	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`   // 可选:按类型过滤
@@ -141,20 +141,20 @@ type ListAgentDelayReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAgentDelayReq) Reset() {
-	*x = ListAgentDelayReq{}
+func (x *ListAgentDelaysReq) Reset() {
+	*x = ListAgentDelaysReq{}
 	mi := &file_hi_ai_bench_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAgentDelayReq) String() string {
+func (x *ListAgentDelaysReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAgentDelayReq) ProtoMessage() {}
+func (*ListAgentDelaysReq) ProtoMessage() {}
 
-func (x *ListAgentDelayReq) ProtoReflect() protoreflect.Message {
+func (x *ListAgentDelaysReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_bench_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -166,33 +166,33 @@ func (x *ListAgentDelayReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAgentDelayReq.ProtoReflect.Descriptor instead.
-func (*ListAgentDelayReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListAgentDelaysReq.ProtoReflect.Descriptor instead.
+func (*ListAgentDelaysReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_bench_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListAgentDelayReq) GetAgent() string {
+func (x *ListAgentDelaysReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
 	}
 	return ""
 }
 
-func (x *ListAgentDelayReq) GetType() string {
+func (x *ListAgentDelaysReq) GetType() string {
 	if x != nil {
 		return x.Type
 	}
 	return ""
 }
 
-func (x *ListAgentDelayReq) GetPagination() *hi.Pagination {
+func (x *ListAgentDelaysReq) GetPagination() *hi.Pagination {
 	if x != nil {
 		return x.Pagination
 	}
 	return nil
 }
 
-type ListAgentDelayResp struct {
+type ListAgentDelaysResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
 	Units         []*AgentDelayUnit      `protobuf:"bytes,2,rep,name=units,proto3" json:"units,omitempty"`
@@ -200,20 +200,20 @@ type ListAgentDelayResp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAgentDelayResp) Reset() {
-	*x = ListAgentDelayResp{}
+func (x *ListAgentDelaysResp) Reset() {
+	*x = ListAgentDelaysResp{}
 	mi := &file_hi_ai_bench_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAgentDelayResp) String() string {
+func (x *ListAgentDelaysResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAgentDelayResp) ProtoMessage() {}
+func (*ListAgentDelaysResp) ProtoMessage() {}
 
-func (x *ListAgentDelayResp) ProtoReflect() protoreflect.Message {
+func (x *ListAgentDelaysResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_bench_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -225,19 +225,19 @@ func (x *ListAgentDelayResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAgentDelayResp.ProtoReflect.Descriptor instead.
-func (*ListAgentDelayResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListAgentDelaysResp.ProtoReflect.Descriptor instead.
+func (*ListAgentDelaysResp) Descriptor() ([]byte, []int) {
 	return file_hi_ai_bench_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ListAgentDelayResp) GetTotal() int32 {
+func (x *ListAgentDelaysResp) GetTotal() int32 {
 	if x != nil {
 		return x.Total
 	}
 	return 0
 }
 
-func (x *ListAgentDelayResp) GetUnits() []*AgentDelayUnit {
+func (x *ListAgentDelaysResp) GetUnits() []*AgentDelayUnit {
 	if x != nil {
 		return x.Units
 	}
@@ -258,19 +258,19 @@ const file_hi_ai_bench_proto_rawDesc = "" +
 	"\x03stt\x18\x06 \x01(\x05B\x04\x90\xb5\x18\x03R\x03stt\x12\x16\n" +
 	"\x03tts\x18\a \x01(\x05B\x04\x90\xb5\x18\x03R\x03tts\x12)\n" +
 	"\rfunction_call\x18\b \x01(\x05B\x04\x90\xb5\x18\x03R\ffunctionCall\x12!\n" +
-	"\ttest_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03R\btestTime:\x04\x98\xb5\x18\x03\"m\n" +
-	"\x11ListAgentDelayReq\x12\x14\n" +
+	"\ttest_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03R\btestTime:\x04\x98\xb5\x18\x03\"n\n" +
+	"\x12ListAgentDelaysReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04type\x18\x02 \x01(\tR\x04type\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"i\n" +
-	"\x12ListAgentDelayResp\x12\x1a\n" +
+	"pagination\"j\n" +
+	"\x13ListAgentDelaysResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x121\n" +
-	"\x05units\x18\x02 \x03(\v2\x15.hi.ai.AgentDelayUnitB\x04\x90\xb5\x18\x03R\x05units:\x04\x98\xb5\x18\x032P\n" +
+	"\x05units\x18\x02 \x03(\v2\x15.hi.ai.AgentDelayUnitB\x04\x90\xb5\x18\x03R\x05units:\x04\x98\xb5\x18\x032R\n" +
 	"\n" +
-	"AgentBench\x12B\n" +
-	"\x04List\x12\x18.hi.ai.ListAgentDelayReq\x1a\x19.hi.ai.ListAgentDelayResp\"\x05\x8a\xb5\x18\x01\x03Bu\n" +
+	"AgentBench\x12D\n" +
+	"\x04List\x12\x19.hi.ai.ListAgentDelaysReq\x1a\x1a.hi.ai.ListAgentDelaysResp\"\x05\x8a\xb5\x18\x01\x03Bu\n" +
 	"\tcom.hi.aiB\n" +
 	"BenchProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
@@ -288,16 +288,16 @@ func file_hi_ai_bench_proto_rawDescGZIP() []byte {
 
 var file_hi_ai_bench_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_hi_ai_bench_proto_goTypes = []any{
-	(*AgentDelayUnit)(nil),     // 0: hi.ai.AgentDelayUnit
-	(*ListAgentDelayReq)(nil),  // 1: hi.ai.ListAgentDelayReq
-	(*ListAgentDelayResp)(nil), // 2: hi.ai.ListAgentDelayResp
-	(*hi.Pagination)(nil),      // 3: hi.Pagination
+	(*AgentDelayUnit)(nil),      // 0: hi.ai.AgentDelayUnit
+	(*ListAgentDelaysReq)(nil),  // 1: hi.ai.ListAgentDelaysReq
+	(*ListAgentDelaysResp)(nil), // 2: hi.ai.ListAgentDelaysResp
+	(*hi.Pagination)(nil),       // 3: hi.Pagination
 }
 var file_hi_ai_bench_proto_depIdxs = []int32{
-	3, // 0: hi.ai.ListAgentDelayReq.pagination:type_name -> hi.Pagination
-	0, // 1: hi.ai.ListAgentDelayResp.units:type_name -> hi.ai.AgentDelayUnit
-	1, // 2: hi.ai.AgentBench.List:input_type -> hi.ai.ListAgentDelayReq
-	2, // 3: hi.ai.AgentBench.List:output_type -> hi.ai.ListAgentDelayResp
+	3, // 0: hi.ai.ListAgentDelaysReq.pagination:type_name -> hi.Pagination
+	0, // 1: hi.ai.ListAgentDelaysResp.units:type_name -> hi.ai.AgentDelayUnit
+	1, // 2: hi.ai.AgentBench.List:input_type -> hi.ai.ListAgentDelaysReq
+	2, // 3: hi.ai.AgentBench.List:output_type -> hi.ai.ListAgentDelaysResp
 	3, // [3:4] is the sub-list for method output_type
 	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

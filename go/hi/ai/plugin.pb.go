@@ -920,7 +920,7 @@ func (x *DownloadScriptResp) GetName() string {
 	return ""
 }
 
-type ListPluginReq struct {
+type ListPluginsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -928,20 +928,20 @@ type ListPluginReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListPluginReq) Reset() {
-	*x = ListPluginReq{}
+func (x *ListPluginsReq) Reset() {
+	*x = ListPluginsReq{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListPluginReq) String() string {
+func (x *ListPluginsReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListPluginReq) ProtoMessage() {}
+func (*ListPluginsReq) ProtoMessage() {}
 
-func (x *ListPluginReq) ProtoReflect() protoreflect.Message {
+func (x *ListPluginsReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -953,19 +953,19 @@ func (x *ListPluginReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListPluginReq.ProtoReflect.Descriptor instead.
-func (*ListPluginReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListPluginsReq.ProtoReflect.Descriptor instead.
+func (*ListPluginsReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *ListPluginReq) GetAgent() string {
+func (x *ListPluginsReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
 	}
 	return ""
 }
 
-func (x *ListPluginReq) GetPagination() *hi.Pagination {
+func (x *ListPluginsReq) GetPagination() *hi.Pagination {
 	if x != nil {
 		return x.Pagination
 	}
@@ -1032,7 +1032,7 @@ func (x *ListVersionsReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-type ListPluginResp struct {
+type ListPluginsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
 	List          []*PluginView          `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
@@ -1040,20 +1040,20 @@ type ListPluginResp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListPluginResp) Reset() {
-	*x = ListPluginResp{}
+func (x *ListPluginsResp) Reset() {
+	*x = ListPluginsResp{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListPluginResp) String() string {
+func (x *ListPluginsResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListPluginResp) ProtoMessage() {}
+func (*ListPluginsResp) ProtoMessage() {}
 
-func (x *ListPluginResp) ProtoReflect() protoreflect.Message {
+func (x *ListPluginsResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1065,19 +1065,19 @@ func (x *ListPluginResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListPluginResp.ProtoReflect.Descriptor instead.
-func (*ListPluginResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListPluginsResp.ProtoReflect.Descriptor instead.
+func (*ListPluginsResp) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *ListPluginResp) GetTotal() int32 {
+func (x *ListPluginsResp) GetTotal() int32 {
 	if x != nil {
 		return x.Total
 	}
 	return 0
 }
 
-func (x *ListPluginResp) GetList() []*PluginView {
+func (x *ListPluginsResp) GetList() []*PluginView {
 	if x != nil {
 		return x.List
 	}
@@ -1565,8 +1565,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"T\n" +
 	"\x12DownloadScriptResp\x12\x1e\n" +
 	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x03R\acontent\x12\x18\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name:\x04\x98\xb5\x18\x03\"U\n" +
-	"\rListPluginReq\x12\x14\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name:\x04\x98\xb5\x18\x03\"V\n" +
+	"\x0eListPluginsReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
@@ -1576,8 +1576,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04root\x18\x02 \x01(\tR\x04root\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"_\n" +
-	"\x0eListPluginResp\x12\x1a\n" +
+	"pagination\"`\n" +
+	"\x0fListPluginsResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12+\n" +
 	"\x04list\x18\x02 \x03(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +
 	"\fGetPluginReq\x12\x14\n" +
@@ -1607,15 +1607,15 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl*G\n" +
 	"\fPluginSource\x12\x1a\n" +
 	"\x16PLUGIN_SOURCE_ORIGINAL\x10\x00\x12\x1b\n" +
-	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\xb6\x06\n" +
+	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\xb9\x06\n" +
 	"\x06Plugin\x12@\n" +
 	"\x06Create\x12\x16.hi.ai.CreatePluginReq\x1a\x17.hi.ai.CreatePluginResp\"\x05\x8a\xb5\x18\x01\x03\x12H\n" +
 	"\rCreateVersion\x12\x17.hi.ai.CreateVersionReq\x1a\x17.hi.ai.CreatePluginResp\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
 	"\vCreateAnnex\x12\x15.hi.ai.CreateAnnexReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
 	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x127\n" +
-	"\x03Get\x12\x13.hi.ai.GetPluginReq\x1a\x14.hi.ai.GetPluginResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
-	"\x04List\x12\x14.hi.ai.ListPluginReq\x1a\x15.hi.ai.ListPluginResp\"\x05\x8a\xb5\x18\x01\x03\x12D\n" +
-	"\fListVersions\x12\x16.hi.ai.ListVersionsReq\x1a\x15.hi.ai.ListPluginResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
+	"\x03Get\x12\x13.hi.ai.GetPluginReq\x1a\x14.hi.ai.GetPluginResp\"\x05\x8a\xb5\x18\x01\x03\x12<\n" +
+	"\x04List\x12\x15.hi.ai.ListPluginsReq\x1a\x16.hi.ai.ListPluginsResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
+	"\fListVersions\x12\x16.hi.ai.ListVersionsReq\x1a\x16.hi.ai.ListPluginsResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12M\n" +
 	"\tDeleteAll\x12!.hi.ai.DeleteAllPluginVersionsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12O\n" +
 	"\x0eDeleteByAgents\x12\x1e.hi.ai.DeletePluginByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
@@ -1656,9 +1656,9 @@ var file_hi_ai_plugin_proto_goTypes = []any{
 	(*SetActiveReq)(nil),               // 11: hi.ai.SetActiveReq
 	(*DownloadScriptReq)(nil),          // 12: hi.ai.DownloadScriptReq
 	(*DownloadScriptResp)(nil),         // 13: hi.ai.DownloadScriptResp
-	(*ListPluginReq)(nil),              // 14: hi.ai.ListPluginReq
+	(*ListPluginsReq)(nil),             // 14: hi.ai.ListPluginsReq
 	(*ListVersionsReq)(nil),            // 15: hi.ai.ListVersionsReq
-	(*ListPluginResp)(nil),             // 16: hi.ai.ListPluginResp
+	(*ListPluginsResp)(nil),            // 16: hi.ai.ListPluginsResp
 	(*GetPluginReq)(nil),               // 17: hi.ai.GetPluginReq
 	(*GetPluginResp)(nil),              // 18: hi.ai.GetPluginResp
 	(*DeletePluginReq)(nil),            // 19: hi.ai.DeletePluginReq
@@ -1682,9 +1682,9 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	2,  // 6: hi.ai.CreateVersionReq.annex:type_name -> hi.ai.PluginAnnex
 	2,  // 7: hi.ai.CreateAnnexReq.annex:type_name -> hi.ai.PluginAnnex
 	2,  // 8: hi.ai.EditPluginReq.annex:type_name -> hi.ai.PluginAnnex
-	26, // 9: hi.ai.ListPluginReq.pagination:type_name -> hi.Pagination
+	26, // 9: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
 	26, // 10: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
-	3,  // 11: hi.ai.ListPluginResp.list:type_name -> hi.ai.PluginView
+	3,  // 11: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
 	3,  // 12: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
 	2,  // 13: hi.ai.RunReq.annex:type_name -> hi.ai.PluginAnnex
 	27, // 14: hi.ai.RunResp.conts:type_name -> hi.ai.Content
@@ -1693,7 +1693,7 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	8,  // 17: hi.ai.Plugin.CreateAnnex:input_type -> hi.ai.CreateAnnexReq
 	9,  // 18: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
 	17, // 19: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	14, // 20: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginReq
+	14, // 20: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
 	15, // 21: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
 	19, // 22: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
 	20, // 23: hi.ai.Plugin.DeleteAll:input_type -> hi.ai.DeleteAllPluginVersionsReq
@@ -1707,8 +1707,8 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	28, // 31: hi.ai.Plugin.CreateAnnex:output_type -> google.protobuf.Empty
 	28, // 32: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
 	18, // 33: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	16, // 34: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginResp
-	16, // 35: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginResp
+	16, // 34: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
+	16, // 35: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginsResp
 	28, // 36: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
 	28, // 37: hi.ai.Plugin.DeleteAll:output_type -> google.protobuf.Empty
 	28, // 38: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty

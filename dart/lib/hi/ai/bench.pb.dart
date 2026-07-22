@@ -171,8 +171,8 @@ class AgentDelayUnit extends $pb.GeneratedMessage {
   void clearTestTime() => $_clearField(9);
 }
 
-class ListAgentDelayReq extends $pb.GeneratedMessage {
-  factory ListAgentDelayReq({
+class ListAgentDelaysReq extends $pb.GeneratedMessage {
+  factory ListAgentDelaysReq({
     $core.String? agent,
     $core.String? type,
     $1.Pagination? pagination,
@@ -184,17 +184,17 @@ class ListAgentDelayReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListAgentDelayReq._();
+  ListAgentDelaysReq._();
 
-  factory ListAgentDelayReq.fromBuffer($core.List<$core.int> data,
+  factory ListAgentDelaysReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAgentDelayReq.fromJson($core.String json,
+  factory ListAgentDelaysReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentDelayReq',
+      _omitMessageNames ? '' : 'ListAgentDelaysReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
@@ -204,23 +204,23 @@ class ListAgentDelayReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayReq clone() => deepCopy();
+  ListAgentDelaysReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayReq copyWith(void Function(ListAgentDelayReq) updates) =>
-      super.copyWith((message) => updates(message as ListAgentDelayReq))
-          as ListAgentDelayReq;
+  ListAgentDelaysReq copyWith(void Function(ListAgentDelaysReq) updates) =>
+      super.copyWith((message) => updates(message as ListAgentDelaysReq))
+          as ListAgentDelaysReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAgentDelayReq create() => ListAgentDelayReq._();
+  static ListAgentDelaysReq create() => ListAgentDelaysReq._();
   @$core.override
-  ListAgentDelayReq createEmptyInstance() => create();
+  ListAgentDelaysReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAgentDelayReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentDelayReq>(create);
-  static ListAgentDelayReq? _defaultInstance;
+  static ListAgentDelaysReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentDelaysReq>(create);
+  static ListAgentDelaysReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -252,8 +252,8 @@ class ListAgentDelayReq extends $pb.GeneratedMessage {
   $1.Pagination ensurePagination() => $_ensure(2);
 }
 
-class ListAgentDelayResp extends $pb.GeneratedMessage {
-  factory ListAgentDelayResp({
+class ListAgentDelaysResp extends $pb.GeneratedMessage {
+  factory ListAgentDelaysResp({
     $core.int? total,
     $core.Iterable<AgentDelayUnit>? units,
   }) {
@@ -263,17 +263,17 @@ class ListAgentDelayResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListAgentDelayResp._();
+  ListAgentDelaysResp._();
 
-  factory ListAgentDelayResp.fromBuffer($core.List<$core.int> data,
+  factory ListAgentDelaysResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAgentDelayResp.fromJson($core.String json,
+  factory ListAgentDelaysResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentDelayResp',
+      _omitMessageNames ? '' : 'ListAgentDelaysResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
@@ -282,23 +282,23 @@ class ListAgentDelayResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayResp clone() => deepCopy();
+  ListAgentDelaysResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentDelayResp copyWith(void Function(ListAgentDelayResp) updates) =>
-      super.copyWith((message) => updates(message as ListAgentDelayResp))
-          as ListAgentDelayResp;
+  ListAgentDelaysResp copyWith(void Function(ListAgentDelaysResp) updates) =>
+      super.copyWith((message) => updates(message as ListAgentDelaysResp))
+          as ListAgentDelaysResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAgentDelayResp create() => ListAgentDelayResp._();
+  static ListAgentDelaysResp create() => ListAgentDelaysResp._();
   @$core.override
-  ListAgentDelayResp createEmptyInstance() => create();
+  ListAgentDelaysResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAgentDelayResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentDelayResp>(create);
-  static ListAgentDelayResp? _defaultInstance;
+  static ListAgentDelaysResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentDelaysResp>(create);
+  static ListAgentDelaysResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);

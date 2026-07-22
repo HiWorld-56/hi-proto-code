@@ -292,9 +292,9 @@ final $typed_data.Uint8List updateTransHashReqDescriptor = $convert.base64Decode
     'ChJVcGRhdGVUcmFuc0hhc2hSZXESDgoCaWQYASABKAlSAmlkEhIKBGhhc2gYAiABKAlSBGhhc2'
     'g=');
 
-@$core.Deprecated('Use listTradeReqDescriptor instead')
-const ListTradeReq$json = {
-  '1': 'ListTradeReq',
+@$core.Deprecated('Use listTradesReqDescriptor instead')
+const ListTradesReq$json = {
+  '1': 'ListTradesReq',
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     {
@@ -308,14 +308,14 @@ const ListTradeReq$json = {
   ],
 };
 
-/// Descriptor for `ListTradeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listTradeReqDescriptor = $convert.base64Decode(
-    'CgxMaXN0VHJhZGVSZXESDgoCaWQYASABKAlSAmlkEi4KCnBhZ2luYXRpb24YAiABKAsyDi5oaS'
-    '5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+/// Descriptor for `ListTradesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listTradesReqDescriptor = $convert.base64Decode(
+    'Cg1MaXN0VHJhZGVzUmVxEg4KAmlkGAEgASgJUgJpZBIuCgpwYWdpbmF0aW9uGAIgASgLMg4uaG'
+    'kuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
 
-@$core.Deprecated('Use listAllTradeReqDescriptor instead')
-const ListAllTradeReq$json = {
-  '1': 'ListAllTradeReq',
+@$core.Deprecated('Use tradeManageListReqDescriptor instead')
+const TradeManageListReq$json = {
+  '1': 'TradeManageListReq',
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     {
@@ -329,14 +329,14 @@ const ListAllTradeReq$json = {
   ],
 };
 
-/// Descriptor for `ListAllTradeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAllTradeReqDescriptor = $convert.base64Decode(
-    'Cg9MaXN0QWxsVHJhZGVSZXESDgoCaWQYASABKAlSAmlkEi4KCnBhZ2luYXRpb24YAiABKAsyDi'
-    '5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
+/// Descriptor for `TradeManageListReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List tradeManageListReqDescriptor = $convert.base64Decode(
+    'ChJUcmFkZU1hbmFnZUxpc3RSZXESDgoCaWQYASABKAlSAmlkEi4KCnBhZ2luYXRpb24YAiABKA'
+    'syDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
 
-@$core.Deprecated('Use listTradeRespDescriptor instead')
-const ListTradeResp$json = {
-  '1': 'ListTradeResp',
+@$core.Deprecated('Use listTradesRespDescriptor instead')
+const ListTradesResp$json = {
+  '1': 'ListTradesResp',
   '2': [
     {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
@@ -352,7 +352,7 @@ const ListTradeResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListTradeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listTradeRespDescriptor = $convert.base64Decode(
-    'Cg1MaXN0VHJhZGVSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIuCgRsaXN0GAIgAy'
-    'gLMhQuaGkuY2x1Yi5UcmFkZURldGFpbEIEkLUYA1IEbGlzdDoEmLUYAw==');
+/// Descriptor for `ListTradesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listTradesRespDescriptor = $convert.base64Decode(
+    'Cg5MaXN0VHJhZGVzUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYA1IFdG90YWwSLgoEbGlzdBgCIA'
+    'MoCzIULmhpLmNsdWIuVHJhZGVEZXRhaWxCBJC1GANSBGxpc3Q6BJi1GAM=');

@@ -56,7 +56,7 @@ pub struct TradeTrans {
     #[prost(int64, tag = "4")]
     pub timestamp: i64,
 }
-/// 我的交易详情:仅被 SELF 壳(GetTradeResp/AddTradeResp/ListTradeResp)引用 → SELF。
+/// 我的交易详情:仅被 SELF 壳(GetTradeResp/AddTradeResp/ListTradesResp)引用 → SELF。
 /// 里面放 PARTICIPANT 的 TradeUnit 合法(2\<=3)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TradeDetail {
@@ -100,7 +100,7 @@ pub struct UpdateTransHashReq {
 }
 /// 查自己的交易。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListTradeReq {
+pub struct ListTradesReq {
     /// 可选:只看该交易。查询主体(用户)从 token 取,不接受 did 入参(越权)
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
@@ -109,7 +109,7 @@ pub struct ListTradeReq {
 }
 /// 交易统计(内部使用)。id 为空 = 全量。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListAllTradeReq {
+pub struct TradeManageListReq {
     /// 可选:只看该交易;空=全量
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
@@ -118,7 +118,7 @@ pub struct ListAllTradeReq {
 }
 /// 我的交易列表壳:SELF 壳收窄整体私密性,元素放 SELF 的 TradeDetail。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTradeResp {
+pub struct ListTradesResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
@@ -296,8 +296,8 @@ pub mod trade_client {
         /// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListTradeReq>,
-        ) -> std::result::Result<tonic::Response<super::ListTradeResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::ListTradesReq>,
+        ) -> std::result::Result<tonic::Response<super::ListTradesResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -413,8 +413,8 @@ pub mod trade_manage_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListAllTradeReq>,
-        ) -> std::result::Result<tonic::Response<super::ListTradeResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::TradeManageListReq>,
+        ) -> std::result::Result<tonic::Response<super::ListTradesResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3113,9 +3113,9 @@ pub mod plugin_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::ListPluginReq>,
+            request: impl tonic::IntoRequest<super::super::ai::ListPluginsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListPluginResp>,
+            tonic::Response<super::super::ai::ListPluginsResp>,
             tonic::Status,
         > {
             self.inner
@@ -3136,7 +3136,7 @@ pub mod plugin_client {
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::ListVersionsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListPluginResp>,
+            tonic::Response<super::super::ai::ListPluginsResp>,
             tonic::Status,
         > {
             self.inner
@@ -3634,7 +3634,7 @@ pub struct CreateSingleReq {
 }
 /// 组聊天消息列表参数
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListGroupMessageReq {
+pub struct ListGroupMessagesReq {
     #[prost(string, tag = "1")]
     pub last_uuid: ::prost::alloc::string::String,
     /// 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type
@@ -3642,13 +3642,13 @@ pub struct ListGroupMessageReq {
     pub code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGroupMessageResp {
+pub struct ListGroupMessagesResp {
     /// Packet=PARTICIPANT
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Packet>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListGroupMemberReq {
+pub struct ListGroupMembersReq {
     #[prost(string, tag = "1")]
     pub code: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
@@ -3928,7 +3928,7 @@ pub mod group_client {
         }
         pub async fn list_members(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListGroupMemberReq>,
+            request: impl tonic::IntoRequest<super::ListGroupMembersReq>,
         ) -> std::result::Result<tonic::Response<super::GroupInfo>, tonic::Status> {
             self.inner
                 .ready()
@@ -4044,9 +4044,9 @@ pub mod group_client {
         }
         pub async fn list_messages(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListGroupMessageReq>,
+            request: impl tonic::IntoRequest<super::ListGroupMessagesReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListGroupMessageResp>,
+            tonic::Response<super::ListGroupMessagesResp>,
             tonic::Status,
         > {
             self.inner
@@ -4158,7 +4158,7 @@ pub struct UserInfo {
     pub moment: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListSystemMessageReq {
+pub struct ListSystemMessagesReq {
     #[prost(string, tag = "1")]
     pub status: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
@@ -4226,7 +4226,7 @@ pub struct DeleteFriendReq {
     pub did: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGroupResp {
+pub struct ListGroupsResp {
     /// 每个 GroupBase 本身公开(GroupBase=PUBLIC)
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<GroupBase>,
@@ -4272,13 +4272,13 @@ pub struct SetRemarkReq {
     pub remark: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListOnlineUserReq {
+pub struct ListOnlineUsersReq {
     /// 用户did列表
     #[prost(string, repeated, tag = "1")]
     pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListOnlineUserResp {
+pub struct ListOnlineUsersResp {
     /// 在线的用户列表(Entity=PUBLIC)
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<super::Entity>,
@@ -4453,7 +4453,7 @@ pub mod user_client {
         }
         pub async fn list_system_messages(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListSystemMessageReq>,
+            request: impl tonic::IntoRequest<super::ListSystemMessagesReq>,
         ) -> std::result::Result<tonic::Response<super::SystemMessages>, tonic::Status> {
             self.inner
                 .ready()
@@ -4600,7 +4600,7 @@ pub mod user_client {
         pub async fn list_groups(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ListGroupResp>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ListGroupsResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4777,9 +4777,9 @@ pub mod user_directory_client {
         }
         pub async fn list_online(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListOnlineUserReq>,
+            request: impl tonic::IntoRequest<super::ListOnlineUsersReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListOnlineUserResp>,
+            tonic::Response<super::ListOnlineUsersResp>,
             tonic::Status,
         > {
             self.inner

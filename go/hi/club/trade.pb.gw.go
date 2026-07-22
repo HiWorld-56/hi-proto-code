@@ -153,7 +153,7 @@ func local_request_Trade_UpdateTransHash_0(ctx context.Context, marshaler runtim
 
 func request_Trade_List_0(ctx context.Context, marshaler runtime.Marshaler, client TradeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListTradeReq
+		protoReq ListTradesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -168,7 +168,7 @@ func request_Trade_List_0(ctx context.Context, marshaler runtime.Marshaler, clie
 
 func local_request_Trade_List_0(ctx context.Context, marshaler runtime.Marshaler, server TradeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListTradeReq
+		protoReq ListTradesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -180,7 +180,7 @@ func local_request_Trade_List_0(ctx context.Context, marshaler runtime.Marshaler
 
 func request_TradeManage_List_0(ctx context.Context, marshaler runtime.Marshaler, client TradeManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListAllTradeReq
+		protoReq TradeManageListReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -195,7 +195,7 @@ func request_TradeManage_List_0(ctx context.Context, marshaler runtime.Marshaler
 
 func local_request_TradeManage_List_0(ctx context.Context, marshaler runtime.Marshaler, server TradeManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListAllTradeReq
+		protoReq TradeManageListReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

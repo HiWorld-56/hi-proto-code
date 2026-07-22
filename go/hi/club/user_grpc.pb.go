@@ -47,14 +47,14 @@ type UserClient interface {
 	// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
 	GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
 	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListSystemMessages(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error)
+	ListSystemMessages(ctx context.Context, in *ListSystemMessagesReq, opts ...grpc.CallOption) (*SystemMessages, error)
 	DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	HandleSystemMessage(ctx context.Context, in *HandleSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListRelations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListRelationsResp, error)
 	AddFriend(ctx context.Context, in *AddFriendReq, opts ...grpc.CallOption) (*AddFriendResp, error)
 	DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupResp, error)
+	ListGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupsResp, error)
 	GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*hi.Entity, error)
 	UnprocessedSysMsgCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(ctx context.Context, in *SetRemarkReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -88,7 +88,7 @@ func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc
 	return out, nil
 }
 
-func (c *userClient) ListSystemMessages(ctx context.Context, in *ListSystemMessageReq, opts ...grpc.CallOption) (*SystemMessages, error) {
+func (c *userClient) ListSystemMessages(ctx context.Context, in *ListSystemMessagesReq, opts ...grpc.CallOption) (*SystemMessages, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SystemMessages)
 	err := c.cc.Invoke(ctx, User_ListSystemMessages_FullMethodName, in, out, cOpts...)
@@ -158,9 +158,9 @@ func (c *userClient) DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts
 	return out, nil
 }
 
-func (c *userClient) ListGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupResp, error) {
+func (c *userClient) ListGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListGroupResp)
+	out := new(ListGroupsResp)
 	err := c.cc.Invoke(ctx, User_ListGroups_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -209,14 +209,14 @@ type UserServer interface {
 	// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
 	GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error)
 	Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
-	ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error)
+	ListSystemMessages(context.Context, *ListSystemMessagesReq) (*SystemMessages, error)
 	DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error)
 	ListRelations(context.Context, *emptypb.Empty) (*ListRelationsResp, error)
 	AddFriend(context.Context, *AddFriendReq) (*AddFriendResp, error)
 	DeleteFriend(context.Context, *DeleteFriendReq) (*emptypb.Empty, error)
-	ListGroups(context.Context, *emptypb.Empty) (*ListGroupResp, error)
+	ListGroups(context.Context, *emptypb.Empty) (*ListGroupsResp, error)
 	GetOther(context.Context, *GetUserReq) (*hi.Entity, error)
 	UnprocessedSysMsgCount(context.Context, *emptypb.Empty) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error)
@@ -235,7 +235,7 @@ func (UnimplementedUserServer) GetCurrent(context.Context, *emptypb.Empty) (*Use
 func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedUserServer) ListSystemMessages(context.Context, *ListSystemMessageReq) (*SystemMessages, error) {
+func (UnimplementedUserServer) ListSystemMessages(context.Context, *ListSystemMessagesReq) (*SystemMessages, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSystemMessages not implemented")
 }
 func (UnimplementedUserServer) DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error) {
@@ -256,7 +256,7 @@ func (UnimplementedUserServer) AddFriend(context.Context, *AddFriendReq) (*AddFr
 func (UnimplementedUserServer) DeleteFriend(context.Context, *DeleteFriendReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteFriend not implemented")
 }
-func (UnimplementedUserServer) ListGroups(context.Context, *emptypb.Empty) (*ListGroupResp, error) {
+func (UnimplementedUserServer) ListGroups(context.Context, *emptypb.Empty) (*ListGroupsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGroups not implemented")
 }
 func (UnimplementedUserServer) GetOther(context.Context, *GetUserReq) (*hi.Entity, error) {
@@ -325,7 +325,7 @@ func _User_Update_Handler(srv interface{}, ctx context.Context, dec func(interfa
 }
 
 func _User_ListSystemMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListSystemMessageReq)
+	in := new(ListSystemMessagesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -337,7 +337,7 @@ func _User_ListSystemMessages_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: User_ListSystemMessages_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListSystemMessages(ctx, req.(*ListSystemMessageReq))
+		return srv.(UserServer).ListSystemMessages(ctx, req.(*ListSystemMessagesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -602,7 +602,7 @@ const (
 // 原先它挂在 User 下、标 AUTH_USER,而返回体的 audience 一直写着 VIS_PUBLIC、
 // 注释也写着"公开" —— 档位与数据定级自相矛盾。presence 本就是公开信息。
 type UserDirectoryClient interface {
-	ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error)
+	ListOnline(ctx context.Context, in *ListOnlineUsersReq, opts ...grpc.CallOption) (*ListOnlineUsersResp, error)
 }
 
 type userDirectoryClient struct {
@@ -613,9 +613,9 @@ func NewUserDirectoryClient(cc grpc.ClientConnInterface) UserDirectoryClient {
 	return &userDirectoryClient{cc}
 }
 
-func (c *userDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineUserReq, opts ...grpc.CallOption) (*ListOnlineUserResp, error) {
+func (c *userDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineUsersReq, opts ...grpc.CallOption) (*ListOnlineUsersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListOnlineUserResp)
+	out := new(ListOnlineUsersResp)
 	err := c.cc.Invoke(ctx, UserDirectory_ListOnline_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -635,7 +635,7 @@ func (c *userDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineUser
 // 原先它挂在 User 下、标 AUTH_USER,而返回体的 audience 一直写着 VIS_PUBLIC、
 // 注释也写着"公开" —— 档位与数据定级自相矛盾。presence 本就是公开信息。
 type UserDirectoryServer interface {
-	ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error)
+	ListOnline(context.Context, *ListOnlineUsersReq) (*ListOnlineUsersResp, error)
 }
 
 // UnimplementedUserDirectoryServer should be embedded to have
@@ -645,7 +645,7 @@ type UserDirectoryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserDirectoryServer struct{}
 
-func (UnimplementedUserDirectoryServer) ListOnline(context.Context, *ListOnlineUserReq) (*ListOnlineUserResp, error) {
+func (UnimplementedUserDirectoryServer) ListOnline(context.Context, *ListOnlineUsersReq) (*ListOnlineUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListOnline not implemented")
 }
 func (UnimplementedUserDirectoryServer) testEmbeddedByValue() {}
@@ -669,7 +669,7 @@ func RegisterUserDirectoryServer(s grpc.ServiceRegistrar, srv UserDirectoryServe
 }
 
 func _UserDirectory_ListOnline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListOnlineUserReq)
+	in := new(ListOnlineUsersReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -681,7 +681,7 @@ func _UserDirectory_ListOnline_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: UserDirectory_ListOnline_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserDirectoryServer).ListOnline(ctx, req.(*ListOnlineUserReq))
+		return srv.(UserDirectoryServer).ListOnline(ctx, req.(*ListOnlineUsersReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

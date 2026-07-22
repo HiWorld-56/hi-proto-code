@@ -109,8 +109,8 @@ class UserInfo extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(4);
 }
 
-class ListSystemMessageReq extends $pb.GeneratedMessage {
-  factory ListSystemMessageReq({
+class ListSystemMessagesReq extends $pb.GeneratedMessage {
+  factory ListSystemMessagesReq({
     $core.String? status,
     $2.Pagination? pagination,
   }) {
@@ -120,17 +120,17 @@ class ListSystemMessageReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListSystemMessageReq._();
+  ListSystemMessagesReq._();
 
-  factory ListSystemMessageReq.fromBuffer($core.List<$core.int> data,
+  factory ListSystemMessagesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListSystemMessageReq.fromJson($core.String json,
+  factory ListSystemMessagesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListSystemMessageReq',
+      _omitMessageNames ? '' : 'ListSystemMessagesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'status')
@@ -139,23 +139,24 @@ class ListSystemMessageReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListSystemMessageReq clone() => deepCopy();
+  ListSystemMessagesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListSystemMessageReq copyWith(void Function(ListSystemMessageReq) updates) =>
-      super.copyWith((message) => updates(message as ListSystemMessageReq))
-          as ListSystemMessageReq;
+  ListSystemMessagesReq copyWith(
+          void Function(ListSystemMessagesReq) updates) =>
+      super.copyWith((message) => updates(message as ListSystemMessagesReq))
+          as ListSystemMessagesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListSystemMessageReq create() => ListSystemMessageReq._();
+  static ListSystemMessagesReq create() => ListSystemMessagesReq._();
   @$core.override
-  ListSystemMessageReq createEmptyInstance() => create();
+  ListSystemMessagesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListSystemMessageReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListSystemMessageReq>(create);
-  static ListSystemMessageReq? _defaultInstance;
+  static ListSystemMessagesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSystemMessagesReq>(create);
+  static ListSystemMessagesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get status => $_getSZ(0);
@@ -686,8 +687,8 @@ class DeleteFriendReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 }
 
-class ListGroupResp extends $pb.GeneratedMessage {
-  factory ListGroupResp({
+class ListGroupsResp extends $pb.GeneratedMessage {
+  factory ListGroupsResp({
     $core.Iterable<$4.GroupBase>? list,
   }) {
     final result = create();
@@ -695,17 +696,17 @@ class ListGroupResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListGroupResp._();
+  ListGroupsResp._();
 
-  factory ListGroupResp.fromBuffer($core.List<$core.int> data,
+  factory ListGroupsResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListGroupResp.fromJson($core.String json,
+  factory ListGroupsResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListGroupResp',
+      _omitMessageNames ? '' : 'ListGroupsResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPM<$4.GroupBase>(1, _omitFieldNames ? '' : 'list',
@@ -713,23 +714,23 @@ class ListGroupResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupResp clone() => deepCopy();
+  ListGroupsResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListGroupResp copyWith(void Function(ListGroupResp) updates) =>
-      super.copyWith((message) => updates(message as ListGroupResp))
-          as ListGroupResp;
+  ListGroupsResp copyWith(void Function(ListGroupsResp) updates) =>
+      super.copyWith((message) => updates(message as ListGroupsResp))
+          as ListGroupsResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListGroupResp create() => ListGroupResp._();
+  static ListGroupsResp create() => ListGroupsResp._();
   @$core.override
-  ListGroupResp createEmptyInstance() => create();
+  ListGroupsResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListGroupResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListGroupResp>(create);
-  static ListGroupResp? _defaultInstance;
+  static ListGroupsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGroupsResp>(create);
+  static ListGroupsResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$4.GroupBase> get list => $_getList(0);
@@ -1005,8 +1006,8 @@ class SetRemarkReq extends $pb.GeneratedMessage {
   void clearRemark() => $_clearField(2);
 }
 
-class ListOnlineUserReq extends $pb.GeneratedMessage {
-  factory ListOnlineUserReq({
+class ListOnlineUsersReq extends $pb.GeneratedMessage {
+  factory ListOnlineUsersReq({
     $core.Iterable<$core.String>? users,
   }) {
     final result = create();
@@ -1014,47 +1015,47 @@ class ListOnlineUserReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListOnlineUserReq._();
+  ListOnlineUsersReq._();
 
-  factory ListOnlineUserReq.fromBuffer($core.List<$core.int> data,
+  factory ListOnlineUsersReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListOnlineUserReq.fromJson($core.String json,
+  factory ListOnlineUsersReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListOnlineUserReq',
+      _omitMessageNames ? '' : 'ListOnlineUsersReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'users')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListOnlineUserReq clone() => deepCopy();
+  ListOnlineUsersReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListOnlineUserReq copyWith(void Function(ListOnlineUserReq) updates) =>
-      super.copyWith((message) => updates(message as ListOnlineUserReq))
-          as ListOnlineUserReq;
+  ListOnlineUsersReq copyWith(void Function(ListOnlineUsersReq) updates) =>
+      super.copyWith((message) => updates(message as ListOnlineUsersReq))
+          as ListOnlineUsersReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListOnlineUserReq create() => ListOnlineUserReq._();
+  static ListOnlineUsersReq create() => ListOnlineUsersReq._();
   @$core.override
-  ListOnlineUserReq createEmptyInstance() => create();
+  ListOnlineUsersReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListOnlineUserReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListOnlineUserReq>(create);
-  static ListOnlineUserReq? _defaultInstance;
+  static ListOnlineUsersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListOnlineUsersReq>(create);
+  static ListOnlineUsersReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get users => $_getList(0);
 }
 
-class ListOnlineUserResp extends $pb.GeneratedMessage {
-  factory ListOnlineUserResp({
+class ListOnlineUsersResp extends $pb.GeneratedMessage {
+  factory ListOnlineUsersResp({
     $core.Iterable<$2.Entity>? list,
   }) {
     final result = create();
@@ -1062,17 +1063,17 @@ class ListOnlineUserResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListOnlineUserResp._();
+  ListOnlineUsersResp._();
 
-  factory ListOnlineUserResp.fromBuffer($core.List<$core.int> data,
+  factory ListOnlineUsersResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListOnlineUserResp.fromJson($core.String json,
+  factory ListOnlineUsersResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListOnlineUserResp',
+      _omitMessageNames ? '' : 'ListOnlineUsersResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPM<$2.Entity>(1, _omitFieldNames ? '' : 'list',
@@ -1080,23 +1081,23 @@ class ListOnlineUserResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListOnlineUserResp clone() => deepCopy();
+  ListOnlineUsersResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListOnlineUserResp copyWith(void Function(ListOnlineUserResp) updates) =>
-      super.copyWith((message) => updates(message as ListOnlineUserResp))
-          as ListOnlineUserResp;
+  ListOnlineUsersResp copyWith(void Function(ListOnlineUsersResp) updates) =>
+      super.copyWith((message) => updates(message as ListOnlineUsersResp))
+          as ListOnlineUsersResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListOnlineUserResp create() => ListOnlineUserResp._();
+  static ListOnlineUsersResp create() => ListOnlineUsersResp._();
   @$core.override
-  ListOnlineUserResp createEmptyInstance() => create();
+  ListOnlineUsersResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListOnlineUserResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListOnlineUserResp>(create);
-  static ListOnlineUserResp? _defaultInstance;
+  static ListOnlineUsersResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListOnlineUsersResp>(create);
+  static ListOnlineUsersResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$2.Entity> get list => $_getList(0);

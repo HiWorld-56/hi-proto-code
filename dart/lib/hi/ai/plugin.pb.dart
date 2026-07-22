@@ -1131,8 +1131,8 @@ class DownloadScriptResp extends $pb.GeneratedMessage {
   void clearName() => $_clearField(2);
 }
 
-class ListPluginReq extends $pb.GeneratedMessage {
-  factory ListPluginReq({
+class ListPluginsReq extends $pb.GeneratedMessage {
+  factory ListPluginsReq({
     $core.String? agent,
     $3.Pagination? pagination,
   }) {
@@ -1142,17 +1142,17 @@ class ListPluginReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListPluginReq._();
+  ListPluginsReq._();
 
-  factory ListPluginReq.fromBuffer($core.List<$core.int> data,
+  factory ListPluginsReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListPluginReq.fromJson($core.String json,
+  factory ListPluginsReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListPluginReq',
+      _omitMessageNames ? '' : 'ListPluginsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
@@ -1161,23 +1161,23 @@ class ListPluginReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListPluginReq clone() => deepCopy();
+  ListPluginsReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListPluginReq copyWith(void Function(ListPluginReq) updates) =>
-      super.copyWith((message) => updates(message as ListPluginReq))
-          as ListPluginReq;
+  ListPluginsReq copyWith(void Function(ListPluginsReq) updates) =>
+      super.copyWith((message) => updates(message as ListPluginsReq))
+          as ListPluginsReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListPluginReq create() => ListPluginReq._();
+  static ListPluginsReq create() => ListPluginsReq._();
   @$core.override
-  ListPluginReq createEmptyInstance() => create();
+  ListPluginsReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListPluginReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListPluginReq>(create);
-  static ListPluginReq? _defaultInstance;
+  static ListPluginsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPluginsReq>(create);
+  static ListPluginsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -1281,8 +1281,8 @@ class ListVersionsReq extends $pb.GeneratedMessage {
   $3.Pagination ensurePagination() => $_ensure(2);
 }
 
-class ListPluginResp extends $pb.GeneratedMessage {
-  factory ListPluginResp({
+class ListPluginsResp extends $pb.GeneratedMessage {
+  factory ListPluginsResp({
     $core.int? total,
     $core.Iterable<PluginView>? list,
   }) {
@@ -1292,17 +1292,17 @@ class ListPluginResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListPluginResp._();
+  ListPluginsResp._();
 
-  factory ListPluginResp.fromBuffer($core.List<$core.int> data,
+  factory ListPluginsResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListPluginResp.fromJson($core.String json,
+  factory ListPluginsResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListPluginResp',
+      _omitMessageNames ? '' : 'ListPluginsResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
@@ -1311,23 +1311,23 @@ class ListPluginResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListPluginResp clone() => deepCopy();
+  ListPluginsResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListPluginResp copyWith(void Function(ListPluginResp) updates) =>
-      super.copyWith((message) => updates(message as ListPluginResp))
-          as ListPluginResp;
+  ListPluginsResp copyWith(void Function(ListPluginsResp) updates) =>
+      super.copyWith((message) => updates(message as ListPluginsResp))
+          as ListPluginsResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListPluginResp create() => ListPluginResp._();
+  static ListPluginsResp create() => ListPluginsResp._();
   @$core.override
-  ListPluginResp createEmptyInstance() => create();
+  ListPluginsResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListPluginResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListPluginResp>(create);
-  static ListPluginResp? _defaultInstance;
+  static ListPluginsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPluginsResp>(create);
+  static ListPluginsResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);

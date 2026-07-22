@@ -46,13 +46,13 @@ type GroupClient interface {
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
 	Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMembers(ctx context.Context, in *ListGroupMemberReq, opts ...grpc.CallOption) (*GroupInfo, error)
+	ListMembers(ctx context.Context, in *ListGroupMembersReq, opts ...grpc.CallOption) (*GroupInfo, error)
 	GetMemberTotal(ctx context.Context, in *GetGroupMemberTotalReq, opts ...grpc.CallOption) (*GetGroupMemberTotalResp, error)
 	Invite(ctx context.Context, in *InviteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Join(ctx context.Context, in *JoinGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Quit(ctx context.Context, in *QuitGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Remove(ctx context.Context, in *RemoveGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListMessages(ctx context.Context, in *ListGroupMessageReq, opts ...grpc.CallOption) (*ListGroupMessageResp, error)
+	ListMessages(ctx context.Context, in *ListGroupMessagesReq, opts ...grpc.CallOption) (*ListGroupMessagesResp, error)
 	SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*GetRoleResp, error)
 	SetDnd(ctx context.Context, in *SetDndReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -107,7 +107,7 @@ func (c *groupClient) Update(ctx context.Context, in *UpdateGroupReq, opts ...gr
 	return out, nil
 }
 
-func (c *groupClient) ListMembers(ctx context.Context, in *ListGroupMemberReq, opts ...grpc.CallOption) (*GroupInfo, error) {
+func (c *groupClient) ListMembers(ctx context.Context, in *ListGroupMembersReq, opts ...grpc.CallOption) (*GroupInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GroupInfo)
 	err := c.cc.Invoke(ctx, Group_ListMembers_FullMethodName, in, out, cOpts...)
@@ -167,9 +167,9 @@ func (c *groupClient) Remove(ctx context.Context, in *RemoveGroupReq, opts ...gr
 	return out, nil
 }
 
-func (c *groupClient) ListMessages(ctx context.Context, in *ListGroupMessageReq, opts ...grpc.CallOption) (*ListGroupMessageResp, error) {
+func (c *groupClient) ListMessages(ctx context.Context, in *ListGroupMessagesReq, opts ...grpc.CallOption) (*ListGroupMessagesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListGroupMessageResp)
+	out := new(ListGroupMessagesResp)
 	err := c.cc.Invoke(ctx, Group_ListMessages_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -226,13 +226,13 @@ type GroupServer interface {
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
 	Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error)
-	ListMembers(context.Context, *ListGroupMemberReq) (*GroupInfo, error)
+	ListMembers(context.Context, *ListGroupMembersReq) (*GroupInfo, error)
 	GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error)
 	Invite(context.Context, *InviteGroupReq) (*emptypb.Empty, error)
 	Join(context.Context, *JoinGroupReq) (*emptypb.Empty, error)
 	Quit(context.Context, *QuitGroupReq) (*emptypb.Empty, error)
 	Remove(context.Context, *RemoveGroupReq) (*emptypb.Empty, error)
-	ListMessages(context.Context, *ListGroupMessageReq) (*ListGroupMessageResp, error)
+	ListMessages(context.Context, *ListGroupMessagesReq) (*ListGroupMessagesResp, error)
 	SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error)
 	GetRole(context.Context, *GetRoleReq) (*GetRoleResp, error)
 	SetDnd(context.Context, *SetDndReq) (*emptypb.Empty, error)
@@ -258,7 +258,7 @@ func (UnimplementedGroupServer) CreateSingle(context.Context, *CreateSingleReq) 
 func (UnimplementedGroupServer) Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedGroupServer) ListMembers(context.Context, *ListGroupMemberReq) (*GroupInfo, error) {
+func (UnimplementedGroupServer) ListMembers(context.Context, *ListGroupMembersReq) (*GroupInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMembers not implemented")
 }
 func (UnimplementedGroupServer) GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error) {
@@ -276,7 +276,7 @@ func (UnimplementedGroupServer) Quit(context.Context, *QuitGroupReq) (*emptypb.E
 func (UnimplementedGroupServer) Remove(context.Context, *RemoveGroupReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Remove not implemented")
 }
-func (UnimplementedGroupServer) ListMessages(context.Context, *ListGroupMessageReq) (*ListGroupMessageResp, error) {
+func (UnimplementedGroupServer) ListMessages(context.Context, *ListGroupMessagesReq) (*ListGroupMessagesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMessages not implemented")
 }
 func (UnimplementedGroupServer) SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error) {
@@ -384,7 +384,7 @@ func _Group_Update_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _Group_ListMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListGroupMemberReq)
+	in := new(ListGroupMembersReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -396,7 +396,7 @@ func _Group_ListMembers_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: Group_ListMembers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).ListMembers(ctx, req.(*ListGroupMemberReq))
+		return srv.(GroupServer).ListMembers(ctx, req.(*ListGroupMembersReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -492,7 +492,7 @@ func _Group_Remove_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _Group_ListMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListGroupMessageReq)
+	in := new(ListGroupMessagesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -504,7 +504,7 @@ func _Group_ListMessages_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: Group_ListMessages_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).ListMessages(ctx, req.(*ListGroupMessageReq))
+		return srv.(GroupServer).ListMessages(ctx, req.(*ListGroupMessagesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

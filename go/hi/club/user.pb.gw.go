@@ -92,7 +92,7 @@ func local_request_User_Update_0(ctx context.Context, marshaler runtime.Marshale
 
 func request_User_ListSystemMessages_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListSystemMessageReq
+		protoReq ListSystemMessagesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -107,7 +107,7 @@ func request_User_ListSystemMessages_0(ctx context.Context, marshaler runtime.Ma
 
 func local_request_User_ListSystemMessages_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListSystemMessageReq
+		protoReq ListSystemMessagesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -389,7 +389,7 @@ func local_request_User_SetRemark_0(ctx context.Context, marshaler runtime.Marsh
 
 func request_UserDirectory_ListOnline_0(ctx context.Context, marshaler runtime.Marshaler, client UserDirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListOnlineUserReq
+		protoReq ListOnlineUsersReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -404,7 +404,7 @@ func request_UserDirectory_ListOnline_0(ctx context.Context, marshaler runtime.M
 
 func local_request_UserDirectory_ListOnline_0(ctx context.Context, marshaler runtime.Marshaler, server UserDirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListOnlineUserReq
+		protoReq ListOnlineUsersReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

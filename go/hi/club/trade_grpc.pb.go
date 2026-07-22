@@ -36,7 +36,7 @@ type TradeClient interface {
 	Add(ctx context.Context, in *AddTradeReq, opts ...grpc.CallOption) (*AddTradeResp, error)
 	UpdateTransHash(ctx context.Context, in *UpdateTransHashReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
-	List(ctx context.Context, in *ListTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error)
+	List(ctx context.Context, in *ListTradesReq, opts ...grpc.CallOption) (*ListTradesResp, error)
 }
 
 type tradeClient struct {
@@ -87,9 +87,9 @@ func (c *tradeClient) UpdateTransHash(ctx context.Context, in *UpdateTransHashRe
 	return out, nil
 }
 
-func (c *tradeClient) List(ctx context.Context, in *ListTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error) {
+func (c *tradeClient) List(ctx context.Context, in *ListTradesReq, opts ...grpc.CallOption) (*ListTradesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListTradeResp)
+	out := new(ListTradesResp)
 	err := c.cc.Invoke(ctx, Trade_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ type TradeServer interface {
 	Add(context.Context, *AddTradeReq) (*AddTradeResp, error)
 	UpdateTransHash(context.Context, *UpdateTransHashReq) (*emptypb.Empty, error)
 	// 查自己的交易 —— **没有 did 入参**,主体取自 token(见字段注释;传 did 是越权)。
-	List(context.Context, *ListTradeReq) (*ListTradeResp, error)
+	List(context.Context, *ListTradesReq) (*ListTradesResp, error)
 }
 
 // UnimplementedTradeServer should be embedded to have
@@ -128,7 +128,7 @@ func (UnimplementedTradeServer) Add(context.Context, *AddTradeReq) (*AddTradeRes
 func (UnimplementedTradeServer) UpdateTransHash(context.Context, *UpdateTransHashReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateTransHash not implemented")
 }
-func (UnimplementedTradeServer) List(context.Context, *ListTradeReq) (*ListTradeResp, error) {
+func (UnimplementedTradeServer) List(context.Context, *ListTradesReq) (*ListTradesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedTradeServer) testEmbeddedByValue() {}
@@ -224,7 +224,7 @@ func _Trade_UpdateTransHash_Handler(srv interface{}, ctx context.Context, dec fu
 }
 
 func _Trade_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListTradeReq)
+	in := new(ListTradesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -236,7 +236,7 @@ func _Trade_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: Trade_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TradeServer).List(ctx, req.(*ListTradeReq))
+		return srv.(TradeServer).List(ctx, req.(*ListTradesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -289,7 +289,7 @@ const (
 //	二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",
 //	**把 filter 值变成越权入口**。拆成两个 service 后,这个坑物理上不存在了。
 type TradeManageClient interface {
-	List(ctx context.Context, in *ListAllTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error)
+	List(ctx context.Context, in *TradeManageListReq, opts ...grpc.CallOption) (*ListTradesResp, error)
 }
 
 type tradeManageClient struct {
@@ -300,9 +300,9 @@ func NewTradeManageClient(cc grpc.ClientConnInterface) TradeManageClient {
 	return &tradeManageClient{cc}
 }
 
-func (c *tradeManageClient) List(ctx context.Context, in *ListAllTradeReq, opts ...grpc.CallOption) (*ListTradeResp, error) {
+func (c *tradeManageClient) List(ctx context.Context, in *TradeManageListReq, opts ...grpc.CallOption) (*ListTradesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListTradeResp)
+	out := new(ListTradesResp)
 	err := c.cc.Invoke(ctx, TradeManage_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -322,7 +322,7 @@ func (c *tradeManageClient) List(ctx context.Context, in *ListAllTradeReq, opts 
 //	二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",
 //	**把 filter 值变成越权入口**。拆成两个 service 后,这个坑物理上不存在了。
 type TradeManageServer interface {
-	List(context.Context, *ListAllTradeReq) (*ListTradeResp, error)
+	List(context.Context, *TradeManageListReq) (*ListTradesResp, error)
 }
 
 // UnimplementedTradeManageServer should be embedded to have
@@ -332,7 +332,7 @@ type TradeManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTradeManageServer struct{}
 
-func (UnimplementedTradeManageServer) List(context.Context, *ListAllTradeReq) (*ListTradeResp, error) {
+func (UnimplementedTradeManageServer) List(context.Context, *TradeManageListReq) (*ListTradesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedTradeManageServer) testEmbeddedByValue() {}
@@ -356,7 +356,7 @@ func RegisterTradeManageServer(s grpc.ServiceRegistrar, srv TradeManageServer) {
 }
 
 func _TradeManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAllTradeReq)
+	in := new(TradeManageListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -368,7 +368,7 @@ func _TradeManage_List_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: TradeManage_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TradeManageServer).List(ctx, req.(*ListAllTradeReq))
+		return srv.(TradeManageServer).List(ctx, req.(*TradeManageListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

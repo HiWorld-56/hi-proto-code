@@ -440,7 +440,7 @@ func (x *CreateSingleReq) GetDid() string {
 }
 
 // 组聊天消息列表参数
-type ListGroupMessageReq struct {
+type ListGroupMessagesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	LastUuid      string                 `protobuf:"bytes,1,opt,name=last_uuid,json=lastUuid,proto3" json:"last_uuid,omitempty"`
 	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"` // 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type
@@ -448,20 +448,20 @@ type ListGroupMessageReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListGroupMessageReq) Reset() {
-	*x = ListGroupMessageReq{}
+func (x *ListGroupMessagesReq) Reset() {
+	*x = ListGroupMessagesReq{}
 	mi := &file_hi_club_group_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListGroupMessageReq) String() string {
+func (x *ListGroupMessagesReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListGroupMessageReq) ProtoMessage() {}
+func (*ListGroupMessagesReq) ProtoMessage() {}
 
-func (x *ListGroupMessageReq) ProtoReflect() protoreflect.Message {
+func (x *ListGroupMessagesReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_group_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -473,46 +473,46 @@ func (x *ListGroupMessageReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListGroupMessageReq.ProtoReflect.Descriptor instead.
-func (*ListGroupMessageReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListGroupMessagesReq.ProtoReflect.Descriptor instead.
+func (*ListGroupMessagesReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_group_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListGroupMessageReq) GetLastUuid() string {
+func (x *ListGroupMessagesReq) GetLastUuid() string {
 	if x != nil {
 		return x.LastUuid
 	}
 	return ""
 }
 
-func (x *ListGroupMessageReq) GetCode() string {
+func (x *ListGroupMessagesReq) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-type ListGroupMessageResp struct {
+type ListGroupMessagesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	List          []*Packet              `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // Packet=PARTICIPANT
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListGroupMessageResp) Reset() {
-	*x = ListGroupMessageResp{}
+func (x *ListGroupMessagesResp) Reset() {
+	*x = ListGroupMessagesResp{}
 	mi := &file_hi_club_group_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListGroupMessageResp) String() string {
+func (x *ListGroupMessagesResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListGroupMessageResp) ProtoMessage() {}
+func (*ListGroupMessagesResp) ProtoMessage() {}
 
-func (x *ListGroupMessageResp) ProtoReflect() protoreflect.Message {
+func (x *ListGroupMessagesResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_group_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -524,19 +524,19 @@ func (x *ListGroupMessageResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListGroupMessageResp.ProtoReflect.Descriptor instead.
-func (*ListGroupMessageResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListGroupMessagesResp.ProtoReflect.Descriptor instead.
+func (*ListGroupMessagesResp) Descriptor() ([]byte, []int) {
 	return file_hi_club_group_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListGroupMessageResp) GetList() []*Packet {
+func (x *ListGroupMessagesResp) GetList() []*Packet {
 	if x != nil {
 		return x.List
 	}
 	return nil
 }
 
-type ListGroupMemberReq struct {
+type ListGroupMembersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -544,20 +544,20 @@ type ListGroupMemberReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListGroupMemberReq) Reset() {
-	*x = ListGroupMemberReq{}
+func (x *ListGroupMembersReq) Reset() {
+	*x = ListGroupMembersReq{}
 	mi := &file_hi_club_group_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListGroupMemberReq) String() string {
+func (x *ListGroupMembersReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListGroupMemberReq) ProtoMessage() {}
+func (*ListGroupMembersReq) ProtoMessage() {}
 
-func (x *ListGroupMemberReq) ProtoReflect() protoreflect.Message {
+func (x *ListGroupMembersReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_group_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -569,19 +569,19 @@ func (x *ListGroupMemberReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListGroupMemberReq.ProtoReflect.Descriptor instead.
-func (*ListGroupMemberReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListGroupMembersReq.ProtoReflect.Descriptor instead.
+func (*ListGroupMembersReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_group_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *ListGroupMemberReq) GetCode() string {
+func (x *ListGroupMembersReq) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-func (x *ListGroupMemberReq) GetPagination() *hi.Pagination {
+func (x *ListGroupMembersReq) GetPagination() *hi.Pagination {
 	if x != nil {
 		return x.Pagination
 	}
@@ -1251,13 +1251,13 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x0eCreateGroupReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"#\n" +
 	"\x0fCreateSingleReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"F\n" +
-	"\x13ListGroupMessageReq\x12\x1b\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\"G\n" +
+	"\x14ListGroupMessagesReq\x12\x1b\n" +
 	"\tlast_uuid\x18\x01 \x01(\tR\blastUuid\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\"G\n" +
-	"\x14ListGroupMessageResp\x12)\n" +
-	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"X\n" +
-	"\x12ListGroupMemberReq\x12\x12\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\"H\n" +
+	"\x15ListGroupMessagesResp\x12)\n" +
+	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"Y\n" +
+	"\x13ListGroupMembersReq\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
@@ -1300,19 +1300,19 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
 	"background\x18\x04 \x01(\tR\n" +
 	"background\x12\x18\n" +
-	"\aprivate\x18\x05 \x01(\bR\aprivate2\x81\b\n" +
+	"\aprivate\x18\x05 \x01(\bR\aprivate2\x84\b\n" +
 	"\x05Group\x12<\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x18.hi.club.GroupMemberView\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
 	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
-	"\x06Update\x12\x17.hi.club.UpdateGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
-	"\vListMembers\x12\x1b.hi.club.ListGroupMemberReq\x1a\x12.hi.club.GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
+	"\x06Update\x12\x17.hi.club.UpdateGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
+	"\vListMembers\x12\x1c.hi.club.ListGroupMembersReq\x1a\x12.hi.club.GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
 	"\x0eGetMemberTotal\x12\x1f.hi.club.GetGroupMemberTotalReq\x1a .hi.club.GetGroupMemberTotalResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x06Invite\x12\x17.hi.club.InviteGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Join\x12\x15.hi.club.JoinGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Quit\x12\x15.hi.club.QuitGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
-	"\x06Remove\x12\x17.hi.club.RemoveGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12R\n" +
-	"\fListMessages\x12\x1c.hi.club.ListGroupMessageReq\x1a\x1d.hi.club.ListGroupMessageResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\x06Remove\x12\x17.hi.club.RemoveGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
+	"\fListMessages\x12\x1d.hi.club.ListGroupMessagesReq\x1a\x1e.hi.club.ListGroupMessagesResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
 	"\aSetRole\x12\x13.hi.club.SetRoleReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
 	"\aGetRole\x12\x13.hi.club.GetRoleReq\x1a\x14.hi.club.GetRoleResp\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
 	"\x06SetDnd\x12\x12.hi.club.SetDndReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
@@ -1342,9 +1342,9 @@ var file_hi_club_group_proto_goTypes = []any{
 	(*GetGroupReq)(nil),             // 5: hi.club.GetGroupReq
 	(*CreateGroupReq)(nil),          // 6: hi.club.CreateGroupReq
 	(*CreateSingleReq)(nil),         // 7: hi.club.CreateSingleReq
-	(*ListGroupMessageReq)(nil),     // 8: hi.club.ListGroupMessageReq
-	(*ListGroupMessageResp)(nil),    // 9: hi.club.ListGroupMessageResp
-	(*ListGroupMemberReq)(nil),      // 10: hi.club.ListGroupMemberReq
+	(*ListGroupMessagesReq)(nil),    // 8: hi.club.ListGroupMessagesReq
+	(*ListGroupMessagesResp)(nil),   // 9: hi.club.ListGroupMessagesResp
+	(*ListGroupMembersReq)(nil),     // 10: hi.club.ListGroupMembersReq
 	(*GetGroupMemberTotalReq)(nil),  // 11: hi.club.GetGroupMemberTotalReq
 	(*GetGroupMemberTotalResp)(nil), // 12: hi.club.GetGroupMemberTotalResp
 	(*InviteGroupReq)(nil),          // 13: hi.club.InviteGroupReq
@@ -1370,19 +1370,19 @@ var file_hi_club_group_proto_depIdxs = []int32{
 	2,  // 4: hi.club.GroupInfo.list:type_name -> hi.club.GroupMember
 	0,  // 5: hi.club.GroupMemberView.base:type_name -> hi.club.GroupBase
 	1,  // 6: hi.club.GroupMemberView.attr:type_name -> hi.club.GroupMemberAttr
-	24, // 7: hi.club.ListGroupMessageResp.list:type_name -> hi.club.Packet
-	25, // 8: hi.club.ListGroupMemberReq.pagination:type_name -> hi.Pagination
+	24, // 7: hi.club.ListGroupMessagesResp.list:type_name -> hi.club.Packet
+	25, // 8: hi.club.ListGroupMembersReq.pagination:type_name -> hi.Pagination
 	5,  // 9: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
 	6,  // 10: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
 	7,  // 11: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
 	22, // 12: hi.club.Group.Update:input_type -> hi.club.UpdateGroupReq
-	10, // 13: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMemberReq
+	10, // 13: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMembersReq
 	11, // 14: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
 	13, // 15: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
 	14, // 16: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
 	15, // 17: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
 	16, // 18: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
-	8,  // 19: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessageReq
+	8,  // 19: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessagesReq
 	17, // 20: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
 	18, // 21: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
 	20, // 22: hi.club.Group.SetDnd:input_type -> hi.club.SetDndReq
@@ -1397,7 +1397,7 @@ var file_hi_club_group_proto_depIdxs = []int32{
 	26, // 31: hi.club.Group.Join:output_type -> google.protobuf.Empty
 	26, // 32: hi.club.Group.Quit:output_type -> google.protobuf.Empty
 	26, // 33: hi.club.Group.Remove:output_type -> google.protobuf.Empty
-	9,  // 34: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessageResp
+	9,  // 34: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessagesResp
 	26, // 35: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
 	19, // 36: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
 	26, // 37: hi.club.Group.SetDnd:output_type -> google.protobuf.Empty

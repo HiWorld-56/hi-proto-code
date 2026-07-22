@@ -48,9 +48,9 @@ final $typed_data.Uint8List agentDelayUnitDescriptor = $convert.base64Decode(
     'A1IMZnVuY3Rpb25DYWxsEiEKCXRlc3RfdGltZRgJIAEoA0IEkLUYA1IIdGVzdFRpbWU6BJi1GA'
     'M=');
 
-@$core.Deprecated('Use listAgentDelayReqDescriptor instead')
-const ListAgentDelayReq$json = {
-  '1': 'ListAgentDelayReq',
+@$core.Deprecated('Use listAgentDelaysReqDescriptor instead')
+const ListAgentDelaysReq$json = {
+  '1': 'ListAgentDelaysReq',
   '2': [
     {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
     {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
@@ -65,14 +65,14 @@ const ListAgentDelayReq$json = {
   ],
 };
 
-/// Descriptor for `ListAgentDelayReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAgentDelayReqDescriptor = $convert.base64Decode(
-    'ChFMaXN0QWdlbnREZWxheVJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEgoEdHlwZRgCIAEoCV'
-    'IEdHlwZRIuCgpwYWdpbmF0aW9uGAMgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+/// Descriptor for `ListAgentDelaysReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentDelaysReqDescriptor = $convert.base64Decode(
+    'ChJMaXN0QWdlbnREZWxheXNSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHR5cGUYAiABKA'
+    'lSBHR5cGUSLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
 
-@$core.Deprecated('Use listAgentDelayRespDescriptor instead')
-const ListAgentDelayResp$json = {
-  '1': 'ListAgentDelayResp',
+@$core.Deprecated('Use listAgentDelaysRespDescriptor instead')
+const ListAgentDelaysResp$json = {
+  '1': 'ListAgentDelaysResp',
   '2': [
     {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
@@ -88,7 +88,7 @@ const ListAgentDelayResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListAgentDelayResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAgentDelayRespDescriptor = $convert.base64Decode(
-    'ChJMaXN0QWdlbnREZWxheVJlc3ASGgoFdG90YWwYASABKAVCBJC1GANSBXRvdGFsEjEKBXVuaX'
-    'RzGAIgAygLMhUuaGkuYWkuQWdlbnREZWxheVVuaXRCBJC1GANSBXVuaXRzOgSYtRgD');
+/// Descriptor for `ListAgentDelaysResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentDelaysRespDescriptor = $convert.base64Decode(
+    'ChNMaXN0QWdlbnREZWxheXNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIxCgV1bm'
+    'l0cxgCIAMoCzIVLmhpLmFpLkFnZW50RGVsYXlVbml0QgSQtRgDUgV1bml0czoEmLUYAw==');

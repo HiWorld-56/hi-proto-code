@@ -480,7 +480,7 @@ class TradeTrans extends $pb.GeneratedMessage {
   void clearTimestamp() => $_clearField(4);
 }
 
-/// 我的交易详情:仅被 SELF 壳(GetTradeResp/AddTradeResp/ListTradeResp)引用 → SELF。
+/// 我的交易详情:仅被 SELF 壳(GetTradeResp/AddTradeResp/ListTradesResp)引用 → SELF。
 /// 里面放 PARTICIPANT 的 TradeUnit 合法(2<=3)。
 class TradeDetail extends $pb.GeneratedMessage {
   factory TradeDetail({
@@ -841,8 +841,8 @@ class UpdateTransHashReq extends $pb.GeneratedMessage {
 }
 
 /// 查自己的交易。
-class ListTradeReq extends $pb.GeneratedMessage {
-  factory ListTradeReq({
+class ListTradesReq extends $pb.GeneratedMessage {
+  factory ListTradesReq({
     $core.String? id,
     $3.Pagination? pagination,
   }) {
@@ -852,17 +852,17 @@ class ListTradeReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListTradeReq._();
+  ListTradesReq._();
 
-  factory ListTradeReq.fromBuffer($core.List<$core.int> data,
+  factory ListTradesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListTradeReq.fromJson($core.String json,
+  factory ListTradesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListTradeReq',
+      _omitMessageNames ? '' : 'ListTradesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
@@ -871,23 +871,23 @@ class ListTradeReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTradeReq clone() => deepCopy();
+  ListTradesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTradeReq copyWith(void Function(ListTradeReq) updates) =>
-      super.copyWith((message) => updates(message as ListTradeReq))
-          as ListTradeReq;
+  ListTradesReq copyWith(void Function(ListTradesReq) updates) =>
+      super.copyWith((message) => updates(message as ListTradesReq))
+          as ListTradesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListTradeReq create() => ListTradeReq._();
+  static ListTradesReq create() => ListTradesReq._();
   @$core.override
-  ListTradeReq createEmptyInstance() => create();
+  ListTradesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListTradeReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListTradeReq>(create);
-  static ListTradeReq? _defaultInstance;
+  static ListTradesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListTradesReq>(create);
+  static ListTradesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get id => $_getSZ(0);
@@ -911,8 +911,8 @@ class ListTradeReq extends $pb.GeneratedMessage {
 }
 
 /// 交易统计(内部使用)。id 为空 = 全量。
-class ListAllTradeReq extends $pb.GeneratedMessage {
-  factory ListAllTradeReq({
+class TradeManageListReq extends $pb.GeneratedMessage {
+  factory TradeManageListReq({
     $core.String? id,
     $3.Pagination? pagination,
   }) {
@@ -922,17 +922,17 @@ class ListAllTradeReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListAllTradeReq._();
+  TradeManageListReq._();
 
-  factory ListAllTradeReq.fromBuffer($core.List<$core.int> data,
+  factory TradeManageListReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListAllTradeReq.fromJson($core.String json,
+  factory TradeManageListReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAllTradeReq',
+      _omitMessageNames ? '' : 'TradeManageListReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
@@ -941,23 +941,23 @@ class ListAllTradeReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAllTradeReq clone() => deepCopy();
+  TradeManageListReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAllTradeReq copyWith(void Function(ListAllTradeReq) updates) =>
-      super.copyWith((message) => updates(message as ListAllTradeReq))
-          as ListAllTradeReq;
+  TradeManageListReq copyWith(void Function(TradeManageListReq) updates) =>
+      super.copyWith((message) => updates(message as TradeManageListReq))
+          as TradeManageListReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListAllTradeReq create() => ListAllTradeReq._();
+  static TradeManageListReq create() => TradeManageListReq._();
   @$core.override
-  ListAllTradeReq createEmptyInstance() => create();
+  TradeManageListReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListAllTradeReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAllTradeReq>(create);
-  static ListAllTradeReq? _defaultInstance;
+  static TradeManageListReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TradeManageListReq>(create);
+  static TradeManageListReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get id => $_getSZ(0);
@@ -981,8 +981,8 @@ class ListAllTradeReq extends $pb.GeneratedMessage {
 }
 
 /// 我的交易列表壳:SELF 壳收窄整体私密性,元素放 SELF 的 TradeDetail。
-class ListTradeResp extends $pb.GeneratedMessage {
-  factory ListTradeResp({
+class ListTradesResp extends $pb.GeneratedMessage {
+  factory ListTradesResp({
     $core.int? total,
     $core.Iterable<TradeDetail>? list,
   }) {
@@ -992,17 +992,17 @@ class ListTradeResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListTradeResp._();
+  ListTradesResp._();
 
-  factory ListTradeResp.fromBuffer($core.List<$core.int> data,
+  factory ListTradesResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListTradeResp.fromJson($core.String json,
+  factory ListTradesResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListTradeResp',
+      _omitMessageNames ? '' : 'ListTradesResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
@@ -1011,23 +1011,23 @@ class ListTradeResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTradeResp clone() => deepCopy();
+  ListTradesResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListTradeResp copyWith(void Function(ListTradeResp) updates) =>
-      super.copyWith((message) => updates(message as ListTradeResp))
-          as ListTradeResp;
+  ListTradesResp copyWith(void Function(ListTradesResp) updates) =>
+      super.copyWith((message) => updates(message as ListTradesResp))
+          as ListTradesResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListTradeResp create() => ListTradeResp._();
+  static ListTradesResp create() => ListTradesResp._();
   @$core.override
-  ListTradeResp createEmptyInstance() => create();
+  ListTradesResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListTradeResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListTradeResp>(create);
-  static ListTradeResp? _defaultInstance;
+  static ListTradesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListTradesResp>(create);
+  static ListTradesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);

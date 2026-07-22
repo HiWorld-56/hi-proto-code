@@ -80,14 +80,14 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListPluginResp> list(
-    $0.ListPluginReq request, {
+  $grpc.ResponseFuture<$0.ListPluginsResp> list(
+    $0.ListPluginsReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListPluginResp> listVersions(
+  $grpc.ResponseFuture<$0.ListPluginsResp> listVersions(
     $0.ListVersionsReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -153,15 +153,16 @@ class PluginClient extends $grpc.Client {
       '/hi.club.Plugin/Get',
       ($0.GetPluginReq value) => value.writeToBuffer(),
       $0.GetPluginResp.fromBuffer);
-  static final _$list = $grpc.ClientMethod<$0.ListPluginReq, $0.ListPluginResp>(
-      '/hi.club.Plugin/List',
-      ($0.ListPluginReq value) => value.writeToBuffer(),
-      $0.ListPluginResp.fromBuffer);
+  static final _$list =
+      $grpc.ClientMethod<$0.ListPluginsReq, $0.ListPluginsResp>(
+          '/hi.club.Plugin/List',
+          ($0.ListPluginsReq value) => value.writeToBuffer(),
+          $0.ListPluginsResp.fromBuffer);
   static final _$listVersions =
-      $grpc.ClientMethod<$0.ListVersionsReq, $0.ListPluginResp>(
+      $grpc.ClientMethod<$0.ListVersionsReq, $0.ListPluginsResp>(
           '/hi.club.Plugin/ListVersions',
           ($0.ListVersionsReq value) => value.writeToBuffer(),
-          $0.ListPluginResp.fromBuffer);
+          $0.ListPluginsResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$0.DeletePluginReq, $1.Empty>(
       '/hi.club.Plugin/Delete',
       ($0.DeletePluginReq value) => value.writeToBuffer(),
@@ -226,20 +227,20 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetPluginReq.fromBuffer(value),
         ($0.GetPluginResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListPluginReq, $0.ListPluginResp>(
+    $addMethod($grpc.ServiceMethod<$0.ListPluginsReq, $0.ListPluginsResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListPluginReq.fromBuffer(value),
-        ($0.ListPluginResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListVersionsReq, $0.ListPluginResp>(
+        ($core.List<$core.int> value) => $0.ListPluginsReq.fromBuffer(value),
+        ($0.ListPluginsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListVersionsReq, $0.ListPluginsResp>(
         'ListVersions',
         listVersions_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.ListVersionsReq.fromBuffer(value),
-        ($0.ListPluginResp value) => value.writeToBuffer()));
+        ($0.ListPluginsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeletePluginReq, $1.Empty>(
         'Delete',
         delete_Pre,
@@ -319,20 +320,20 @@ abstract class PluginServiceBase extends $grpc.Service {
   $async.Future<$0.GetPluginResp> get(
       $grpc.ServiceCall call, $0.GetPluginReq request);
 
-  $async.Future<$0.ListPluginResp> list_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.ListPluginReq> $request) async {
+  $async.Future<$0.ListPluginsResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListPluginsReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListPluginResp> list(
-      $grpc.ServiceCall call, $0.ListPluginReq request);
+  $async.Future<$0.ListPluginsResp> list(
+      $grpc.ServiceCall call, $0.ListPluginsReq request);
 
-  $async.Future<$0.ListPluginResp> listVersions_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.ListPluginsResp> listVersions_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListVersionsReq> $request) async {
     return listVersions($call, await $request);
   }
 
-  $async.Future<$0.ListPluginResp> listVersions(
+  $async.Future<$0.ListPluginsResp> listVersions(
       $grpc.ServiceCall call, $0.ListVersionsReq request);
 
   $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
