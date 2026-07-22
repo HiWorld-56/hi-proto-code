@@ -327,7 +327,7 @@ func RegisterTradeManageHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.TradeManage/List", runtime.WithHTTPPathPattern("/hi.club.TradeManage/List"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.TradeManage/List", runtime.WithHTTPPathPattern("/api/v1/trade_manage/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -525,7 +525,7 @@ func RegisterTradeManageHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.TradeManage/List", runtime.WithHTTPPathPattern("/hi.club.TradeManage/List"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.TradeManage/List", runtime.WithHTTPPathPattern("/api/v1/trade_manage/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -542,7 +542,7 @@ func RegisterTradeManageHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_TradeManage_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.TradeManage", "List"}, ""))
+	pattern_TradeManage_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "trade_manage", "list"}, ""))
 )
 
 var (
