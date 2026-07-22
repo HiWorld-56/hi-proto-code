@@ -346,27 +346,30 @@ func (x *ListOnlineResp) GetInfos() []*hi.Entity {
 // 智能体(主体=智能体)。**用户 token 档**,全档一致。
 // 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
 // 列我的机器人。**没有"查谁"的参数** —— 主体永远是 token 里的人。
-type ListMyAgentsReq struct {
+// 与 hi.ai.ListAgentsReq 结构对齐:agents 可选按 did 过滤(空=名下全部),
+// 传别人的 did 得空(交集即归属守卫,不报错)。
+type ListAgentsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Agents        []string               `protobuf:"bytes,1,rep,name=agents,proto3" json:"agents,omitempty"` // 可选:按机器人 did 筛;空=名下全部
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListMyAgentsReq) Reset() {
-	*x = ListMyAgentsReq{}
+func (x *ListAgentsReq) Reset() {
+	*x = ListAgentsReq{}
 	mi := &file_hi_club_agent_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListMyAgentsReq) String() string {
+func (x *ListAgentsReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListMyAgentsReq) ProtoMessage() {}
+func (*ListAgentsReq) ProtoMessage() {}
 
-func (x *ListMyAgentsReq) ProtoReflect() protoreflect.Message {
+func (x *ListAgentsReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_agent_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -378,12 +381,19 @@ func (x *ListMyAgentsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListMyAgentsReq.ProtoReflect.Descriptor instead.
-func (*ListMyAgentsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListAgentsReq.ProtoReflect.Descriptor instead.
+func (*ListAgentsReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_agent_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListMyAgentsReq) GetPagination() *hi.Pagination {
+func (x *ListAgentsReq) GetAgents() []string {
+	if x != nil {
+		return x.Agents
+	}
+	return nil
+}
+
+func (x *ListAgentsReq) GetPagination() *hi.Pagination {
 	if x != nil {
 		return x.Pagination
 	}
@@ -526,10 +536,11 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x0eListOnlineResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x12&\n" +
 	"\x05infos\x18\x02 \x03(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\"A\n" +
-	"\x0fListMyAgentsReq\x12.\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\"W\n" +
+	"\rListAgentsReq\x12\x16\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
 	"\n" +
-	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"\\\n" +
 	"\x14ListAgentsByUsersReq\x12\x14\n" +
 	"\x05users\x18\x01 \x03(\tR\x05users\x12.\n" +
@@ -538,9 +549,9 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"pagination\"b\n" +
 	"\x0eListAgentsResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
-	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x032\xe9\x05\n" +
-	"\x05Agent\x12@\n" +
-	"\x04List\x12\x18.hi.club.ListMyAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
+	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x032\xe7\x05\n" +
+	"\x05Agent\x12>\n" +
+	"\x04List\x12\x16.hi.club.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
 	"\x0fCreateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
 	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x06Delete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x125\n" +
@@ -581,7 +592,7 @@ var file_hi_club_agent_proto_goTypes = []any{
 	(*TransferReq)(nil),           // 3: hi.club.TransferReq
 	(*ListOnlineReq)(nil),         // 4: hi.club.ListOnlineReq
 	(*ListOnlineResp)(nil),        // 5: hi.club.ListOnlineResp
-	(*ListMyAgentsReq)(nil),       // 6: hi.club.ListMyAgentsReq
+	(*ListAgentsReq)(nil),         // 6: hi.club.ListAgentsReq
 	(*ListAgentsByUsersReq)(nil),  // 7: hi.club.ListAgentsByUsersReq
 	(*ListAgentsResp)(nil),        // 8: hi.club.ListAgentsResp
 	(*hi.Entity)(nil),             // 9: hi.Entity
@@ -602,10 +613,10 @@ var file_hi_club_agent_proto_depIdxs = []int32{
 	9,  // 0: hi.club.BindStatusResp.master:type_name -> hi.Entity
 	10, // 1: hi.club.ListOnlineReq.pagination:type_name -> hi.Pagination
 	9,  // 2: hi.club.ListOnlineResp.infos:type_name -> hi.Entity
-	10, // 3: hi.club.ListMyAgentsReq.pagination:type_name -> hi.Pagination
+	10, // 3: hi.club.ListAgentsReq.pagination:type_name -> hi.Pagination
 	10, // 4: hi.club.ListAgentsByUsersReq.pagination:type_name -> hi.Pagination
 	11, // 5: hi.club.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
-	6,  // 6: hi.club.Agent.List:input_type -> hi.club.ListMyAgentsReq
+	6,  // 6: hi.club.Agent.List:input_type -> hi.club.ListAgentsReq
 	12, // 7: hi.club.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
 	13, // 8: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
 	14, // 9: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq

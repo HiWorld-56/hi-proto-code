@@ -42,7 +42,7 @@ type AgentClient interface {
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
 	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
-	List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
+	List(ctx context.Context, in *ListAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
 	Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -65,7 +65,7 @@ func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
 }
 
-func (c *agentClient) List(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
+func (c *agentClient) List(ctx context.Context, in *ListAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAgentsResp)
 	err := c.cc.Invoke(ctx, Agent_List_FullMethodName, in, out, cOpts...)
@@ -183,7 +183,7 @@ type AgentServer interface {
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
 	// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
-	List(context.Context, *ListMyAgentsReq) (*ListAgentsResp, error)
+	List(context.Context, *ListAgentsReq) (*ListAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error)
 	Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error)
@@ -205,7 +205,7 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
-func (UnimplementedAgentServer) List(context.Context, *ListMyAgentsReq) (*ListAgentsResp, error) {
+func (UnimplementedAgentServer) List(context.Context, *ListAgentsReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAgentServer) CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error) {
@@ -259,7 +259,7 @@ func RegisterAgentServer(s grpc.ServiceRegistrar, srv AgentServer) {
 }
 
 func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMyAgentsReq)
+	in := new(ListAgentsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -271,7 +271,7 @@ func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: Agent_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).List(ctx, req.(*ListMyAgentsReq))
+		return srv.(AgentServer).List(ctx, req.(*ListAgentsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

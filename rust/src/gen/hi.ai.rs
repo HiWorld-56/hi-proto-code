@@ -1964,8 +1964,9 @@ pub struct EditAgentReq {
 pub struct ListAgentsResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
+    /// 与 hi.club.ListAgentsResp 对齐(原 infos)
     #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<AgentInfo>,
+    pub agents: ::prost::alloc::vec::Vec<AgentInfo>,
 }
 /// 列**调用者名下**的机器人。范围恒是自己名下,agents 只是在这个范围内再筛。
 ///

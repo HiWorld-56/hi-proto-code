@@ -39,7 +39,7 @@ class AgentClient extends $grpc.Client {
   /// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
   /// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
   $grpc.ResponseFuture<$0.ListAgentsResp> list(
-    $0.ListMyAgentsReq request, {
+    $0.ListAgentsReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
@@ -119,11 +119,10 @@ class AgentClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$list =
-      $grpc.ClientMethod<$0.ListMyAgentsReq, $0.ListAgentsResp>(
-          '/hi.club.Agent/List',
-          ($0.ListMyAgentsReq value) => value.writeToBuffer(),
-          $0.ListAgentsResp.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$0.ListAgentsReq, $0.ListAgentsResp>(
+      '/hi.club.Agent/List',
+      ($0.ListAgentsReq value) => value.writeToBuffer(),
+      $0.ListAgentsResp.fromBuffer);
   static final _$createAssistant =
       $grpc.ClientMethod<$1.CreateAssistantReq, $1.CreateAgentResp>(
           '/hi.club.Agent/CreateAssistant',
@@ -175,12 +174,12 @@ abstract class AgentServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Agent';
 
   AgentServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.ListMyAgentsReq, $0.ListAgentsResp>(
+    $addMethod($grpc.ServiceMethod<$0.ListAgentsReq, $0.ListAgentsResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListMyAgentsReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.ListAgentsReq.fromBuffer(value),
         ($0.ListAgentsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.CreateAssistantReq, $1.CreateAgentResp>(
         'CreateAssistant',
@@ -255,13 +254,13 @@ abstract class AgentServiceBase extends $grpc.Service {
         ($2.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ListAgentsResp> list_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListMyAgentsReq> $request) async {
+  $async.Future<$0.ListAgentsResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListAgentsReq> $request) async {
     return list($call, await $request);
   }
 
   $async.Future<$0.ListAgentsResp> list(
-      $grpc.ServiceCall call, $0.ListMyAgentsReq request);
+      $grpc.ServiceCall call, $0.ListAgentsReq request);
 
   $async.Future<$1.CreateAgentResp> createAssistant_Pre($grpc.ServiceCall $call,
       $async.Future<$1.CreateAssistantReq> $request) async {

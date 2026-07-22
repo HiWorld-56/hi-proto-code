@@ -1657,9 +1657,14 @@ pub struct ListOnlineResp {
 /// 智能体(主体=智能体)。**用户 token 档**,全档一致。
 /// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
 /// 列我的机器人。**没有"查谁"的参数** —— 主体永远是 token 里的人。
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListMyAgentsReq {
-    #[prost(message, optional, tag = "1")]
+/// 与 hi.ai.ListAgentsReq 结构对齐:agents 可选按 did 过滤(空=名下全部),
+/// 传别人的 did 得空(交集即归属守卫,不报错)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListAgentsReq {
+    /// 可选:按机器人 did 筛;空=名下全部
+    #[prost(string, repeated, tag = "1")]
+    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 /// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——
@@ -1783,7 +1788,7 @@ pub mod agent_client {
         /// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListMyAgentsReq>,
+            request: impl tonic::IntoRequest<super::ListAgentsReq>,
         ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
             self.inner
                 .ready()

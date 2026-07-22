@@ -910,11 +910,11 @@ class EditAgentReq extends $pb.GeneratedMessage {
 class ListAgentsResp extends $pb.GeneratedMessage {
   factory ListAgentsResp({
     $core.int? total,
-    $core.Iterable<AgentInfo>? infos,
+    $core.Iterable<AgentInfo>? agents,
   }) {
     final result = create();
     if (total != null) result.total = total;
-    if (infos != null) result.infos.addAll(infos);
+    if (agents != null) result.agents.addAll(agents);
     return result;
   }
 
@@ -932,7 +932,7 @@ class ListAgentsResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'infos',
+    ..pPM<AgentInfo>(2, _omitFieldNames ? '' : 'agents',
         subBuilder: AgentInfo.create)
     ..hasRequiredFields = false;
 
@@ -965,7 +965,7 @@ class ListAgentsResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<AgentInfo> get infos => $_getList(1);
+  $pb.PbList<AgentInfo> get agents => $_getList(1);
 }
 
 /// 列**调用者名下**的机器人。范围恒是自己名下,agents 只是在这个范围内再筛。

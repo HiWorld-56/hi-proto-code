@@ -407,61 +407,69 @@ class ListOnlineResp extends $pb.GeneratedMessage {
 /// 智能体(主体=智能体)。**用户 token 档**,全档一致。
 /// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
 /// 列我的机器人。**没有"查谁"的参数** —— 主体永远是 token 里的人。
-class ListMyAgentsReq extends $pb.GeneratedMessage {
-  factory ListMyAgentsReq({
+/// 与 hi.ai.ListAgentsReq 结构对齐:agents 可选按 did 过滤(空=名下全部),
+/// 传别人的 did 得空(交集即归属守卫,不报错)。
+class ListAgentsReq extends $pb.GeneratedMessage {
+  factory ListAgentsReq({
+    $core.Iterable<$core.String>? agents,
     $3.Pagination? pagination,
   }) {
     final result = create();
+    if (agents != null) result.agents.addAll(agents);
     if (pagination != null) result.pagination = pagination;
     return result;
   }
 
-  ListMyAgentsReq._();
+  ListAgentsReq._();
 
-  factory ListMyAgentsReq.fromBuffer($core.List<$core.int> data,
+  factory ListAgentsReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListMyAgentsReq.fromJson($core.String json,
+  factory ListAgentsReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMyAgentsReq',
+      _omitMessageNames ? '' : 'ListAgentsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$3.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+    ..pPS(1, _omitFieldNames ? '' : 'agents')
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMyAgentsReq clone() => deepCopy();
+  ListAgentsReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMyAgentsReq copyWith(void Function(ListMyAgentsReq) updates) =>
-      super.copyWith((message) => updates(message as ListMyAgentsReq))
-          as ListMyAgentsReq;
+  ListAgentsReq copyWith(void Function(ListAgentsReq) updates) =>
+      super.copyWith((message) => updates(message as ListAgentsReq))
+          as ListAgentsReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListMyAgentsReq create() => ListMyAgentsReq._();
+  static ListAgentsReq create() => ListAgentsReq._();
   @$core.override
-  ListMyAgentsReq createEmptyInstance() => create();
+  ListAgentsReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListMyAgentsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMyAgentsReq>(create);
-  static ListMyAgentsReq? _defaultInstance;
+  static ListAgentsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentsReq>(create);
+  static ListAgentsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.Pagination get pagination => $_getN(0);
-  @$pb.TagNumber(1)
-  set pagination($3.Pagination value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasPagination() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearPagination() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $3.Pagination ensurePagination() => $_ensure(0);
+  $pb.PbList<$core.String> get agents => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $3.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($3.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 /// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——

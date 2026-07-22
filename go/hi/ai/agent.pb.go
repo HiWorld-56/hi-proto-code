@@ -692,7 +692,7 @@ func (x *EditAgentReq) GetNote() string {
 type ListAgentsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Infos         []*AgentInfo           `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
+	Agents        []*AgentInfo           `protobuf:"bytes,2,rep,name=agents,proto3" json:"agents,omitempty"` // 与 hi.club.ListAgentsResp 对齐(原 infos)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -734,9 +734,9 @@ func (x *ListAgentsResp) GetTotal() int32 {
 	return 0
 }
 
-func (x *ListAgentsResp) GetInfos() []*AgentInfo {
+func (x *ListAgentsResp) GetAgents() []*AgentInfo {
 	if x != nil {
-		return x.Infos
+		return x.Agents
 	}
 	return nil
 }
@@ -1192,10 +1192,10 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x16\n" +
 	"\x06avatar\x18\x05 \x01(\tR\x06avatar\x12*\n" +
 	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\x12\x12\n" +
-	"\x04note\x18\x03 \x01(\tR\x04note\"`\n" +
+	"\x04note\x18\x03 \x01(\tR\x04note\"b\n" +
 	"\x0eListAgentsResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12,\n" +
-	"\x05infos\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"W\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
+	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x03\"W\n" +
 	"\rListAgentsReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
 	"\n" +
@@ -1282,7 +1282,7 @@ var file_hi_ai_agent_proto_depIdxs = []int32{
 	2,  // 7: hi.ai.CreateAgentResp.config:type_name -> hi.ai.AgentConfig
 	19, // 8: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
 	2,  // 9: hi.ai.EditAgentReq.config:type_name -> hi.ai.AgentConfig
-	4,  // 10: hi.ai.ListAgentsResp.infos:type_name -> hi.ai.AgentInfo
+	4,  // 10: hi.ai.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
 	20, // 11: hi.ai.ListAgentsReq.pagination:type_name -> hi.Pagination
 	4,  // 12: hi.ai.GetAgentResp.info:type_name -> hi.ai.AgentInfo
 	3,  // 13: hi.ai.AgentUsageResp.token:type_name -> hi.ai.TokenUsage

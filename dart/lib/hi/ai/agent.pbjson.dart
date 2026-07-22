@@ -303,13 +303,13 @@ const ListAgentsResp$json = {
   '2': [
     {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
     {
-      '1': 'infos',
+      '1': 'agents',
       '3': 2,
       '4': 3,
       '5': 11,
       '6': '.hi.ai.AgentInfo',
       '8': {},
-      '10': 'infos'
+      '10': 'agents'
     },
   ],
   '7': {},
@@ -317,8 +317,8 @@ const ListAgentsResp$json = {
 
 /// Descriptor for `ListAgentsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentsRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0QWdlbnRzUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYA1IFdG90YWwSLAoFaW5mb3MYAi'
-    'ADKAsyEC5oaS5haS5BZ2VudEluZm9CBJC1GANSBWluZm9zOgSYtRgD');
+    'Cg5MaXN0QWdlbnRzUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYA1IFdG90YWwSLgoGYWdlbnRzGA'
+    'IgAygLMhAuaGkuYWkuQWdlbnRJbmZvQgSQtRgDUgZhZ2VudHM6BJi1GAM=');
 
 @$core.Deprecated('Use listAgentsReqDescriptor instead')
 const ListAgentsReq$json = {
