@@ -374,7 +374,7 @@ func RegisterSourceHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadAvatar", runtime.WithHTTPPathPattern("/hi.club.Source/UploadAvatar"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadAvatar", runtime.WithHTTPPathPattern("/api/v1/source/upload_avatar"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -394,7 +394,7 @@ func RegisterSourceHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadBackground", runtime.WithHTTPPathPattern("/hi.club.Source/UploadBackground"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadBackground", runtime.WithHTTPPathPattern("/api/v1/source/upload_background"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -434,7 +434,7 @@ func RegisterSourceHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadTemp", runtime.WithHTTPPathPattern("/hi.club.Source/UploadTemp"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadTemp", runtime.WithHTTPPathPattern("/api/v1/source/upload_temp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -461,7 +461,7 @@ func RegisterSourceHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadLog", runtime.WithHTTPPathPattern("/hi.club.Source/UploadLog"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/UploadLog", runtime.WithHTTPPathPattern("/api/v1/source/upload_log"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -606,7 +606,7 @@ func RegisterSourceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadAvatar", runtime.WithHTTPPathPattern("/hi.club.Source/UploadAvatar"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadAvatar", runtime.WithHTTPPathPattern("/api/v1/source/upload_avatar"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -623,7 +623,7 @@ func RegisterSourceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadBackground", runtime.WithHTTPPathPattern("/hi.club.Source/UploadBackground"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadBackground", runtime.WithHTTPPathPattern("/api/v1/source/upload_background"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -657,7 +657,7 @@ func RegisterSourceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadTemp", runtime.WithHTTPPathPattern("/hi.club.Source/UploadTemp"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadTemp", runtime.WithHTTPPathPattern("/api/v1/source/upload_temp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -691,7 +691,7 @@ func RegisterSourceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadLog", runtime.WithHTTPPathPattern("/hi.club.Source/UploadLog"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/UploadLog", runtime.WithHTTPPathPattern("/api/v1/source/upload_log"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -793,12 +793,12 @@ func RegisterSourceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
-	pattern_Source_UploadAvatar_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadAvatar"}, ""))
-	pattern_Source_UploadBackground_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadBackground"}, ""))
+	pattern_Source_UploadAvatar_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_avatar"}, ""))
+	pattern_Source_UploadBackground_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_background"}, ""))
 	pattern_Source_Download_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "Download"}, ""))
-	pattern_Source_UploadTemp_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadTemp"}, ""))
+	pattern_Source_UploadTemp_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_temp"}, ""))
 	pattern_Source_UploadTempStream_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadTempStream"}, ""))
-	pattern_Source_UploadLog_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadLog"}, ""))
+	pattern_Source_UploadLog_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_log"}, ""))
 	pattern_Source_UploadScript_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadScript"}, ""))
 	pattern_Source_DownloadScript_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "DownloadScript"}, ""))
 	pattern_Source_UploadTrainingFile_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_training_file"}, ""))
