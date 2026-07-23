@@ -20,8 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Setting_Get_FullMethodName  = "/hi.ai.Setting/Get"
-	Setting_Edit_FullMethodName = "/hi.ai.Setting/Edit"
+	Setting_Get_FullMethodName            = "/hi.ai.Setting/Get"
+	Setting_Edit_FullMethodName           = "/hi.ai.Setting/Edit"
+	Setting_ResetToDefault_FullMethodName = "/hi.ai.Setting/ResetToDefault"
 )
 
 // SettingClient is the client API for Setting service.
@@ -36,6 +37,7 @@ const (
 type SettingClient interface {
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SettingGetResp, error)
 	Edit(ctx context.Context, in *SettingEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ResetToDefault(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type settingClient struct {
@@ -66,6 +68,16 @@ func (c *settingClient) Edit(ctx context.Context, in *SettingEditReq, opts ...gr
 	return out, nil
 }
 
+func (c *settingClient) ResetToDefault(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Setting_ResetToDefault_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SettingServer is the server API for Setting service.
 // All implementations should embed UnimplementedSettingServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ func (c *settingClient) Edit(ctx context.Context, in *SettingEditReq, opts ...gr
 type SettingServer interface {
 	Get(context.Context, *emptypb.Empty) (*SettingGetResp, error)
 	Edit(context.Context, *SettingEditReq) (*emptypb.Empty, error)
+	ResetToDefault(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 }
 
 // UnimplementedSettingServer should be embedded to have
@@ -92,6 +105,9 @@ func (UnimplementedSettingServer) Get(context.Context, *emptypb.Empty) (*Setting
 }
 func (UnimplementedSettingServer) Edit(context.Context, *SettingEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedSettingServer) ResetToDefault(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ResetToDefault not implemented")
 }
 func (UnimplementedSettingServer) testEmbeddedByValue() {}
 
@@ -149,6 +165,24 @@ func _Setting_Edit_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Setting_ResetToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingServer).ResetToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Setting_ResetToDefault_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingServer).ResetToDefault(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Setting_ServiceDesc is the grpc.ServiceDesc for Setting service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -163,6 +197,10 @@ var Setting_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Edit",
 			Handler:    _Setting_Edit_Handler,
+		},
+		{
+			MethodName: "ResetToDefault",
+			Handler:    _Setting_ResetToDefault_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

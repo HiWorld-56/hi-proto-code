@@ -52,6 +52,13 @@ class SettingClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Empty> resetToDefault(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$resetToDefault, request, options: options);
+  }
+
   // method descriptors
 
   static final _$get = $grpc.ClientMethod<$0.Empty, $1.SettingGetResp>(
@@ -61,6 +68,10 @@ class SettingClient extends $grpc.Client {
   static final _$edit = $grpc.ClientMethod<$1.SettingEditReq, $0.Empty>(
       '/hi.ai.Setting/Edit',
       ($1.SettingEditReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$resetToDefault = $grpc.ClientMethod<$0.Empty, $0.Empty>(
+      '/hi.ai.Setting/ResetToDefault',
+      ($0.Empty value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
 }
 
@@ -83,6 +94,13 @@ abstract class SettingServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.SettingEditReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Empty>(
+        'ResetToDefault',
+        resetToDefault_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.SettingGetResp> get_Pre(
@@ -100,4 +118,12 @@ abstract class SettingServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> edit(
       $grpc.ServiceCall call, $1.SettingEditReq request);
+
+  $async.Future<$0.Empty> resetToDefault_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return resetToDefault($call, await $request);
+  }
+
+  $async.Future<$0.Empty> resetToDefault(
+      $grpc.ServiceCall call, $0.Empty request);
 }

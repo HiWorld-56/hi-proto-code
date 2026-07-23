@@ -3526,6 +3526,27 @@ pub mod setting_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Setting", "Edit"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn reset_to_default(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Setting/ResetToDefault",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Setting", "ResetToDefault"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated client implementations.

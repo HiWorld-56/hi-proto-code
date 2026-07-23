@@ -195,10 +195,11 @@ const file_hi_ai_setting_proto_rawDesc = "" +
 	"\x0eSettingEditReq\x12&\n" +
 	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info\"D\n" +
 	"\x0eSettingGetResp\x12,\n" +
-	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x032\x84\x01\n" +
+	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x032\xcd\x01\n" +
 	"\aSetting\x12;\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetResp\"\x05\x8a\xb5\x18\x01\x04\x12<\n" +
-	"\x04Edit\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04Bw\n" +
+	"\x04Edit\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12G\n" +
+	"\x0eResetToDefault\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04Bw\n" +
 	"\tcom.hi.aiB\fSettingProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
@@ -225,10 +226,12 @@ var file_hi_ai_setting_proto_depIdxs = []int32{
 	0, // 1: hi.ai.SettingGetResp.info:type_name -> hi.ai.SettingInfo
 	3, // 2: hi.ai.Setting.Get:input_type -> google.protobuf.Empty
 	1, // 3: hi.ai.Setting.Edit:input_type -> hi.ai.SettingEditReq
-	2, // 4: hi.ai.Setting.Get:output_type -> hi.ai.SettingGetResp
-	3, // 5: hi.ai.Setting.Edit:output_type -> google.protobuf.Empty
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
+	3, // 4: hi.ai.Setting.ResetToDefault:input_type -> google.protobuf.Empty
+	2, // 5: hi.ai.Setting.Get:output_type -> hi.ai.SettingGetResp
+	3, // 6: hi.ai.Setting.Edit:output_type -> google.protobuf.Empty
+	3, // 7: hi.ai.Setting.ResetToDefault:output_type -> google.protobuf.Empty
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
