@@ -52,6 +52,13 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$uploadAvatar, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.UploadResp> uploadLog(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadLog, request, options: options);
+  }
+
   /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
   ///
   /// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
@@ -74,6 +81,10 @@ class SourceClient extends $grpc.Client {
       '/hi.did.Source/UploadAvatar',
       ($0.UploadReq value) => value.writeToBuffer(),
       $0.UploadResp.fromBuffer);
+  static final _$uploadLog = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.did.Source/UploadLog',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$0.DeleteResourceReq, $1.Empty>(
       '/hi.did.Source/Delete',
       ($0.DeleteResourceReq value) => value.writeToBuffer(),
@@ -88,6 +99,13 @@ abstract class SourceServiceBase extends $grpc.Service {
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadAvatar',
         uploadAvatar_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadLog',
+        uploadLog_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
@@ -107,6 +125,14 @@ abstract class SourceServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.UploadResp> uploadAvatar(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadLog_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadLog($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadLog(
       $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,

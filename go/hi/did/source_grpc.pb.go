@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Source_UploadAvatar_FullMethodName = "/hi.did.Source/UploadAvatar"
+	Source_UploadLog_FullMethodName    = "/hi.did.Source/UploadLog"
 	Source_Delete_FullMethodName       = "/hi.did.Source/Delete"
 )
 
@@ -46,6 +47,7 @@ const (
 //	`Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
 type SourceClient interface {
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	UploadLog(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
 	//
 	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
@@ -71,6 +73,16 @@ func (c *sourceClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.UploadResp)
 	err := c.cc.Invoke(ctx, Source_UploadAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sourceClient) UploadLog(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Source_UploadLog_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,6 +120,7 @@ func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opt
 //	`Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
 type SourceServer interface {
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	UploadLog(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
 	//
 	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
@@ -130,6 +143,9 @@ type UnimplementedSourceServer struct{}
 
 func (UnimplementedSourceServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
+}
+func (UnimplementedSourceServer) UploadLog(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadLog not implemented")
 }
 func (UnimplementedSourceServer) Delete(context.Context, *hi.DeleteResourceReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
@@ -172,6 +188,24 @@ func _Source_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Source_UploadLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadLog(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Source_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.DeleteResourceReq)
 	if err := dec(in); err != nil {
@@ -200,6 +234,10 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadAvatar",
 			Handler:    _Source_UploadAvatar_Handler,
+		},
+		{
+			MethodName: "UploadLog",
+			Handler:    _Source_UploadLog_Handler,
 		},
 		{
 			MethodName: "Delete",

@@ -4109,6 +4109,27 @@ pub mod source_client {
                 .insert(GrpcMethod::new("hi.did.Source", "UploadAvatar"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn upload_log(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Source/UploadLog");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Source", "UploadLog"));
+            self.inner.unary(req, path, codec).await
+        }
         /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
         ///
         /// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
