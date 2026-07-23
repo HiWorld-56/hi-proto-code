@@ -3014,8 +3014,11 @@ pub mod source_client {
     /// Source —— hi.ai 侧直接搬运二进制的方法(club 的同名 service 是它的门面)。
     /// 分法见 hi/club/source.proto 的说明:按资源类别,不按实体。
     ///
-    /// hi.ai 的资源只有一类:**商户私产**(插件脚本、训练资料),一律落 hiai 私有桶,
-    /// 不公开读,取用必须经 Download 带归属校验。
+    /// hi.ai 的资源分两类:
+    ///
+    /// 1. **商户私产**(插件脚本、训练资料):落 hiai 私有桶,不公开读,取用经 Download 带归属校验;
+    /// 1. **临时媒体**(聊天/AI 产出的图等):落共享 temp 桶,14 天自动过期、公开读,与 hiclub 同桶。
+    ///   桶/目录/命名是 handler 内部封装,对 hi-source 只用其原子 Put(不外泄 hi-source 的接口)。
     #[derive(Debug, Clone)]
     pub struct SourceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3188,6 +3191,27 @@ pub mod source_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.Source", "DownloadTrainingFile"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_temp(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Source/UploadTemp");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Source", "UploadTemp"));
             self.inner.unary(req, path, codec).await
         }
         /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。

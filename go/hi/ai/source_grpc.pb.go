@@ -25,6 +25,7 @@ const (
 	Source_DownloadScript_FullMethodName       = "/hi.ai.Source/DownloadScript"
 	Source_UploadTrainingFile_FullMethodName   = "/hi.ai.Source/UploadTrainingFile"
 	Source_DownloadTrainingFile_FullMethodName = "/hi.ai.Source/DownloadTrainingFile"
+	Source_UploadTemp_FullMethodName           = "/hi.ai.Source/UploadTemp"
 	Source_Delete_FullMethodName               = "/hi.ai.Source/Delete"
 )
 
@@ -35,13 +36,17 @@ const (
 // Source —— hi.ai 侧直接搬运二进制的方法(club 的同名 service 是它的门面)。
 // 分法见 hi/club/source.proto 的说明:按资源类别,不按实体。
 //
-// hi.ai 的资源只有一类:**商户私产**(插件脚本、训练资料),一律落 hiai 私有桶,
-// 不公开读,取用必须经 Download 带归属校验。
+// hi.ai 的资源分两类:
+//  1. **商户私产**(插件脚本、训练资料):落 hiai 私有桶,不公开读,取用经 Download 带归属校验;
+//  2. **临时媒体**(聊天/AI 产出的图等):落共享 temp 桶,14 天自动过期、公开读,与 hiclub 同桶。
+//
+// 桶/目录/命名是 handler 内部封装,对 hi-source 只用其原子 Put(不外泄 hi-source 的接口)。
 type SourceClient interface {
 	UploadScript(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
 	DownloadScript(ctx context.Context, in *DownloadScriptReq, opts ...grpc.CallOption) (*DownloadScriptResp, error)
 	UploadTrainingFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DownloadTrainingFile(ctx context.Context, in *DownloadFileReq, opts ...grpc.CallOption) (*DownloadFileResp, error)
+	UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
 	//
 	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
@@ -106,6 +111,16 @@ func (c *sourceClient) DownloadTrainingFile(ctx context.Context, in *DownloadFil
 	return out, nil
 }
 
+func (c *sourceClient) UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Source_UploadTemp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -123,13 +138,17 @@ func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opt
 // Source —— hi.ai 侧直接搬运二进制的方法(club 的同名 service 是它的门面)。
 // 分法见 hi/club/source.proto 的说明:按资源类别,不按实体。
 //
-// hi.ai 的资源只有一类:**商户私产**(插件脚本、训练资料),一律落 hiai 私有桶,
-// 不公开读,取用必须经 Download 带归属校验。
+// hi.ai 的资源分两类:
+//  1. **商户私产**(插件脚本、训练资料):落 hiai 私有桶,不公开读,取用经 Download 带归属校验;
+//  2. **临时媒体**(聊天/AI 产出的图等):落共享 temp 桶,14 天自动过期、公开读,与 hiclub 同桶。
+//
+// 桶/目录/命名是 handler 内部封装,对 hi-source 只用其原子 Put(不外泄 hi-source 的接口)。
 type SourceServer interface {
 	UploadScript(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
 	DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error)
 	UploadTrainingFile(context.Context, *UploadFileReq) (*emptypb.Empty, error)
 	DownloadTrainingFile(context.Context, *DownloadFileReq) (*DownloadFileResp, error)
+	UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
 	//
 	// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
@@ -161,6 +180,9 @@ func (UnimplementedSourceServer) UploadTrainingFile(context.Context, *UploadFile
 }
 func (UnimplementedSourceServer) DownloadTrainingFile(context.Context, *DownloadFileReq) (*DownloadFileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DownloadTrainingFile not implemented")
+}
+func (UnimplementedSourceServer) UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadTemp not implemented")
 }
 func (UnimplementedSourceServer) Delete(context.Context, *hi.DeleteResourceReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
@@ -246,6 +268,24 @@ func _Source_DownloadTrainingFile_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Source_UploadTemp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadTemp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadTemp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadTemp(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Source_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.DeleteResourceReq)
 	if err := dec(in); err != nil {
@@ -282,6 +322,10 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadTrainingFile",
 			Handler:    _Source_DownloadTrainingFile_Handler,
+		},
+		{
+			MethodName: "UploadTemp",
+			Handler:    _Source_UploadTemp_Handler,
 		},
 		{
 			MethodName: "Delete",

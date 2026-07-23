@@ -26,8 +26,10 @@ export 'source.pb.dart';
 /// Source —— hi.ai 侧直接搬运二进制的方法(club 的同名 service 是它的门面)。
 /// 分法见 hi/club/source.proto 的说明:按资源类别,不按实体。
 ///
-/// hi.ai 的资源只有一类:**商户私产**(插件脚本、训练资料),一律落 hiai 私有桶,
-/// 不公开读,取用必须经 Download 带归属校验。
+/// hi.ai 的资源分两类:
+///   1. **商户私产**(插件脚本、训练资料):落 hiai 私有桶,不公开读,取用经 Download 带归属校验;
+///   2. **临时媒体**(聊天/AI 产出的图等):落共享 temp 桶,14 天自动过期、公开读,与 hiclub 同桶。
+/// 桶/目录/命名是 handler 内部封装,对 hi-source 只用其原子 Put(不外泄 hi-source 的接口)。
 @$pb.GrpcServiceName('hi.ai.Source')
 class SourceClient extends $grpc.Client {
   /// The hostname for this service.
@@ -69,6 +71,13 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$downloadTrainingFile, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.UploadResp> uploadTemp(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadTemp, request, options: options);
+  }
+
   /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
   ///
   /// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
@@ -107,6 +116,10 @@ class SourceClient extends $grpc.Client {
           '/hi.ai.Source/DownloadTrainingFile',
           ($2.DownloadFileReq value) => value.writeToBuffer(),
           $2.DownloadFileResp.fromBuffer);
+  static final _$uploadTemp = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.ai.Source/UploadTemp',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$0.DeleteResourceReq, $3.Empty>(
       '/hi.ai.Source/Delete',
       ($0.DeleteResourceReq value) => value.writeToBuffer(),
@@ -146,6 +159,13 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.DownloadFileReq.fromBuffer(value),
         ($2.DownloadFileResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadTemp',
+        uploadTemp_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteResourceReq, $3.Empty>(
         'Delete',
         delete_Pre,
@@ -183,6 +203,14 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Future<$2.DownloadFileResp> downloadTrainingFile(
       $grpc.ServiceCall call, $2.DownloadFileReq request);
+
+  $async.Future<$0.UploadResp> uploadTemp_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadTemp($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadTemp(
+      $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$3.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteResourceReq> $request) async {
