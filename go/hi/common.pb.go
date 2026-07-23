@@ -668,7 +668,7 @@ func (x *ServerVersionResp) GetEnv() string {
 //	hiai   → hiai/plugin/<uuid>              聊天/AI 媒体 → temp/<YYYY_MM>(14 天过期)
 type UploadReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 原始文件名,仅用于取扩展名(存储侧会随机改名)
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 原始文件名(允许空格等,仅用于取扩展名;存储侧随机改名)
 	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -803,7 +803,7 @@ func (*UploadStreamReq_Chunk) isUploadStreamReq_Data() {}
 
 type UploadMeta struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 允许空格等,仅用于取扩展名
 	Size          int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -993,17 +993,17 @@ const file_hi_common_proto_rawDesc = "" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"Q\n" +
 	"\x11ServerVersionResp\x12\x1e\n" +
 	"\aversion\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\aversion\x12\x16\n" +
-	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01\"P\n" +
-	"\tUploadReq\x12 \n" +
-	"\x04name\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12!\n" +
+	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01\"K\n" +
+	"\tUploadReq\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12!\n" +
 	"\acontent\x18\x02 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\"W\n" +
 	"\x0fUploadStreamReq\x12$\n" +
 	"\x04meta\x18\x01 \x01(\v2\x0e.hi.UploadMetaH\x00R\x04meta\x12\x16\n" +
 	"\x05chunk\x18\x02 \x01(\fH\x00R\x05chunkB\x06\n" +
-	"\x04data\"K\n" +
+	"\x04data\"F\n" +
 	"\n" +
-	"UploadMeta\x12 \n" +
-	"\x04name\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12\x1b\n" +
+	"UploadMeta\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12\x1b\n" +
 	"\x04size\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\"`\n" +
 	"\n" +
 	"UploadResp\x12\x16\n" +

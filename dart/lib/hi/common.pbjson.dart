@@ -203,8 +203,8 @@ const UploadReq$json = {
 
 /// Descriptor for `UploadReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List uploadReqDescriptor = $convert.base64Decode(
-    'CglVcGxvYWRSZXESIAoEbmFtZRgBIAEoCUIMukgJcgcyBV5cUyskUgRuYW1lEiEKB2NvbnRlbn'
-    'QYAiABKAxCB7pIBHoCEAFSB2NvbnRlbnQ=');
+    'CglVcGxvYWRSZXESGwoEbmFtZRgBIAEoCUIHukgEcgIQAVIEbmFtZRIhCgdjb250ZW50GAIgAS'
+    'gMQge6SAR6AhABUgdjb250ZW50');
 
 @$core.Deprecated('Use uploadStreamReqDescriptor instead')
 const UploadStreamReq$json = {
@@ -242,8 +242,8 @@ const UploadMeta$json = {
 
 /// Descriptor for `UploadMeta`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List uploadMetaDescriptor = $convert.base64Decode(
-    'CgpVcGxvYWRNZXRhEiAKBG5hbWUYASABKAlCDLpICXIHMgVeXFMrJFIEbmFtZRIbCgRzaXplGA'
-    'IgASgDQge6SAQiAiAAUgRzaXpl');
+    'CgpVcGxvYWRNZXRhEhsKBG5hbWUYASABKAlCB7pIBHICEAFSBG5hbWUSGwoEc2l6ZRgCIAEoA0'
+    'IHukgEIgIgAFIEc2l6ZQ==');
 
 @$core.Deprecated('Use uploadRespDescriptor instead')
 const UploadResp$json = {

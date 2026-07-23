@@ -246,7 +246,7 @@ pub struct ServerVersionResp {
 /// hiai   → hiai/plugin/<uuid>              聊天/AI 媒体 → temp/\<YYYY_MM>(14 天过期)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadReq {
-    /// 原始文件名,仅用于取扩展名(存储侧会随机改名)
+    /// 原始文件名(允许空格等,仅用于取扩展名;存储侧随机改名)
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     #[prost(bytes = "vec", tag = "2")]
@@ -270,6 +270,7 @@ pub mod upload_stream_req {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadMeta {
+    /// 允许空格等,仅用于取扩展名
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     #[prost(int64, tag = "2")]
