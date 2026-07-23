@@ -33,7 +33,7 @@ const (
 type NameMode int32
 
 const (
-	NameMode_NAME_RANDOM    NameMode = 0 // <32位随机>_<原名>。默认,用户内容必须用它
+	NameMode_NAME_RANDOM    NameMode = 0 // <32位随机><扩展名>。默认,用户内容必须用它;不带原名(原名可能含空格/特殊字符)
 	NameMode_NAME_TIMESTAMP NameMode = 1 // <原名主干>_<UTC纳秒时间戳><扩展名>。名字可读、天然有序,每次新对象 —— 日志用
 	NameMode_NAME_KEEP      NameMode = 2 // 原样用 name。**同一对象反复覆盖,只留最新一份**,会丢历史,慎用
 )
@@ -315,7 +315,7 @@ type PutReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"` // 目标 bucket
 	Dir           string                 `protobuf:"bytes,2,opt,name=dir,proto3" json:"dir,omitempty"`       // bucket 内逻辑目录,如 "avatar" / "plugin/<uuid>";空=根
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`     // 原始文件名,仅用于取扩展名(hi-source 会随机改名)
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`     // 原始文件名(允许空格等,仅用于取扩展名;NAME_RANDOM 只保留扩展名,不带原名)
 	Content       []byte                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"`                                       // 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
 	NameMode      NameMode               `protobuf:"varint,6,opt,name=name_mode,json=nameMode,proto3,enum=hi.source.NameMode" json:"name_mode,omitempty"` // 对象命名方式,默认随机
@@ -533,7 +533,7 @@ type PutMeta struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
 	Dir           string                 `protobuf:"bytes,2,opt,name=dir,proto3" json:"dir,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"` // 允许空格等,仅用于取扩展名
 	Size          int64                  `protobuf:"varint,4,opt,name=size,proto3" json:"size,omitempty"`
 	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -673,11 +673,11 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x11DownloadStreamReq\x12\x1e\n" +
 	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\x12\x1f\n" +
 	"\x06offset\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x06offset\x12\x1d\n" +
-	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"\xd5\x01\n" +
+	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"\xd0\x01\n" +
 	"\x06PutReq\x12$\n" +
 	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12\x10\n" +
-	"\x03dir\x18\x02 \x01(\tR\x03dir\x12 \n" +
-	"\x04name\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12!\n" +
+	"\x03dir\x18\x02 \x01(\tR\x03dir\x12\x1b\n" +
+	"\x04name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12!\n" +
 	"\acontent\x18\x04 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\x12\x1c\n" +
 	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\x120\n" +
 	"\tname_mode\x18\x06 \x01(\x0e2\x13.hi.source.NameModeR\bnameMode\"]\n" +
@@ -689,11 +689,11 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\fPutStreamReq\x12(\n" +
 	"\x04meta\x18\x01 \x01(\v2\x12.hi.source.PutMetaH\x00R\x04meta\x12\x16\n" +
 	"\x05chunk\x18\x02 \x01(\fH\x00R\x05chunkB\x06\n" +
-	"\x04data\"\x9e\x01\n" +
+	"\x04data\"\x99\x01\n" +
 	"\aPutMeta\x12$\n" +
 	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12\x10\n" +
-	"\x03dir\x18\x02 \x01(\tR\x03dir\x12 \n" +
-	"\x04name\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04name\x12\x1b\n" +
+	"\x03dir\x18\x02 \x01(\tR\x03dir\x12\x1b\n" +
+	"\x04name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12\x1b\n" +
 	"\x04size\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\x12\x1c\n" +
 	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\"+\n" +
 	"\tDeleteReq\x12\x1e\n" +

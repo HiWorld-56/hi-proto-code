@@ -112,9 +112,9 @@ const PutReq$json = {
 /// Descriptor for `PutReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List putReqDescriptor = $convert.base64Decode(
     'CgZQdXRSZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2tldBIQCgNkaXIYAi'
-    'ABKAlSA2RpchIgCgRuYW1lGAMgASgJQgy6SAlyBzIFXlxTKyRSBG5hbWUSIQoHY29udGVudBgE'
-    'IAEoDEIHukgEegIQAVIHY29udGVudBIcCgl0aHVtYm5haWwYBSABKAhSCXRodW1ibmFpbBIwCg'
-    'luYW1lX21vZGUYBiABKA4yEy5oaS5zb3VyY2UuTmFtZU1vZGVSCG5hbWVNb2Rl');
+    'ABKAlSA2RpchIbCgRuYW1lGAMgASgJQge6SARyAhABUgRuYW1lEiEKB2NvbnRlbnQYBCABKAxC'
+    'B7pIBHoCEAFSB2NvbnRlbnQSHAoJdGh1bWJuYWlsGAUgASgIUgl0aHVtYm5haWwSMAoJbmFtZV'
+    '9tb2RlGAYgASgOMhMuaGkuc291cmNlLk5hbWVNb2RlUghuYW1lTW9kZQ==');
 
 @$core.Deprecated('Use putRespDescriptor instead')
 const PutResp$json = {
@@ -183,8 +183,8 @@ const PutMeta$json = {
 /// Descriptor for `PutMeta`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List putMetaDescriptor = $convert.base64Decode(
     'CgdQdXRNZXRhEiQKBmJ1Y2tldBgBIAEoCUIMukgJcgcyBV5cUyskUgZidWNrZXQSEAoDZGlyGA'
-    'IgASgJUgNkaXISIAoEbmFtZRgDIAEoCUIMukgJcgcyBV5cUyskUgRuYW1lEhsKBHNpemUYBCAB'
-    'KANCB7pIBCICIABSBHNpemUSHAoJdGh1bWJuYWlsGAUgASgIUgl0aHVtYm5haWw=');
+    'IgASgJUgNkaXISGwoEbmFtZRgDIAEoCUIHukgEcgIQAVIEbmFtZRIbCgRzaXplGAQgASgDQge6'
+    'SAQiAiAAUgRzaXplEhwKCXRodW1ibmFpbBgFIAEoCFIJdGh1bWJuYWls');
 
 @$core.Deprecated('Use deleteReqDescriptor instead')
 const DeleteReq$json = {

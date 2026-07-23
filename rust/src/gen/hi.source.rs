@@ -58,7 +58,7 @@ pub struct PutReq {
     /// bucket 内逻辑目录,如 "avatar" / "plugin/<uuid>";空=根
     #[prost(string, tag = "2")]
     pub dir: ::prost::alloc::string::String,
-    /// 原始文件名,仅用于取扩展名(hi-source 会随机改名)
+    /// 原始文件名(允许空格等,仅用于取扩展名;NAME_RANDOM 只保留扩展名,不带原名)
     #[prost(string, tag = "3")]
     pub name: ::prost::alloc::string::String,
     #[prost(bytes = "vec", tag = "4")]
@@ -101,6 +101,7 @@ pub struct PutMeta {
     pub bucket: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub dir: ::prost::alloc::string::String,
+    /// 允许空格等,仅用于取扩展名
     #[prost(string, tag = "3")]
     pub name: ::prost::alloc::string::String,
     #[prost(int64, tag = "4")]
@@ -128,7 +129,7 @@ pub struct DeleteReq {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum NameMode {
-    /// \<32位随机>\_\<原名>。默认,用户内容必须用它
+    /// \<32位随机>\<扩展名>。默认,用户内容必须用它;不带原名(原名可能含空格/特殊字符)
     NameRandom = 0,
     /// \<原名主干>\_\<UTC纳秒时间戳>\<扩展名>。名字可读、天然有序,每次新对象 —— 日志用
     NameTimestamp = 1,
