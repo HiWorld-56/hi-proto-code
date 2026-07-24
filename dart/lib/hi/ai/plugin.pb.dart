@@ -1656,7 +1656,7 @@ class GetPluginResp extends $pb.GeneratedMessage {
   PluginView ensureView() => $_ensure(0);
 }
 
-/// 删单个版本(b 该行 + 全部 agent 的 d 该版本行 + 脚本文件)。
+/// 删单个版本(b 该行 + 全部 agent 的 d 该版本行 + 脚本文件)。**仅创建者(c.source=original)可删** —— 版本是共享本体。
 class DeleteVersionReq extends $pb.GeneratedMessage {
   factory DeleteVersionReq({
     $core.String? agent,
@@ -1733,6 +1733,98 @@ class DeleteVersionReq extends $pb.GeneratedMessage {
   $core.bool hasVersion() => $_has(2);
   @$pb.TagNumber(3)
   void clearVersion() => $_clearField(3);
+}
+
+/// 批量删版本:删该插件在 **[min_version, max_version] 范围内**(按三级版本号数值比较,含端点)的全部版本。
+/// min_version 空=不设下界,max_version 空=不设上界(两者都空=全部版本)。**仅创建者可删**。
+class DeleteVersionsReq extends $pb.GeneratedMessage {
+  factory DeleteVersionsReq({
+    $core.String? agent,
+    $core.String? uuid,
+    $core.String? minVersion,
+    $core.String? maxVersion,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    if (minVersion != null) result.minVersion = minVersion;
+    if (maxVersion != null) result.maxVersion = maxVersion;
+    return result;
+  }
+
+  DeleteVersionsReq._();
+
+  factory DeleteVersionsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteVersionsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteVersionsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'minVersion')
+    ..aOS(4, _omitFieldNames ? '' : 'maxVersion')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteVersionsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteVersionsReq copyWith(void Function(DeleteVersionsReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteVersionsReq))
+          as DeleteVersionsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteVersionsReq create() => DeleteVersionsReq._();
+  @$core.override
+  DeleteVersionsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteVersionsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteVersionsReq>(create);
+  static DeleteVersionsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get minVersion => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set minVersion($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMinVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMinVersion() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get maxVersion => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set maxVersion($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMaxVersion() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMaxVersion() => $_clearField(4);
 }
 
 /// 从某机器人移除插件。**按归属分别处理**:该 agent 是创建者(c.source=original)→ 删整个插件

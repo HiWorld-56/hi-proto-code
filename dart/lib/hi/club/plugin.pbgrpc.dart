@@ -100,6 +100,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> deleteVersions(
+    $0.DeleteVersionsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteVersions, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> deleteShell(
     $0.DeleteShellReq request, {
     $grpc.CallOptions? options,
@@ -173,6 +180,11 @@ class PluginClient extends $grpc.Client {
       '/hi.club.Plugin/Delete',
       ($0.DeleteVersionReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$deleteVersions =
+      $grpc.ClientMethod<$0.DeleteVersionsReq, $1.Empty>(
+          '/hi.club.Plugin/DeleteVersions',
+          ($0.DeleteVersionsReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
   static final _$deleteShell = $grpc.ClientMethod<$0.DeleteShellReq, $1.Empty>(
       '/hi.club.Plugin/DeleteShell',
       ($0.DeleteShellReq value) => value.writeToBuffer(),
@@ -257,6 +269,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.DeleteVersionReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteVersionsReq, $1.Empty>(
+        'DeleteVersions',
+        deleteVersions_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DeleteVersionsReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteShellReq, $1.Empty>(
         'DeleteShell',
@@ -359,6 +378,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> delete(
       $grpc.ServiceCall call, $0.DeleteVersionReq request);
+
+  $async.Future<$1.Empty> deleteVersions_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeleteVersionsReq> $request) async {
+    return deleteVersions($call, await $request);
+  }
+
+  $async.Future<$1.Empty> deleteVersions(
+      $grpc.ServiceCall call, $0.DeleteVersionsReq request);
 
   $async.Future<$1.Empty> deleteShell_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteShellReq> $request) async {

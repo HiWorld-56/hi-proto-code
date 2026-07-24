@@ -532,6 +532,23 @@ final $typed_data.Uint8List deleteVersionReqDescriptor = $convert.base64Decode(
     'AKBHV1aWQYAiABKAlCDLpICXIHMgVeXFMrJFIEdXVpZBImCgd2ZXJzaW9uGAMgASgJQgy6SAly'
     'BzIFXlxTKyRSB3ZlcnNpb24=');
 
+@$core.Deprecated('Use deleteVersionsReqDescriptor instead')
+const DeleteVersionsReq$json = {
+  '1': 'DeleteVersionsReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'min_version', '3': 3, '4': 1, '5': 9, '10': 'minVersion'},
+    {'1': 'max_version', '3': 4, '4': 1, '5': 9, '10': 'maxVersion'},
+  ],
+};
+
+/// Descriptor for `DeleteVersionsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteVersionsReqDescriptor = $convert.base64Decode(
+    'ChFEZWxldGVWZXJzaW9uc1JlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudB'
+    'IgCgR1dWlkGAIgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQSHwoLbWluX3ZlcnNpb24YAyABKAlS'
+    'Cm1pblZlcnNpb24SHwoLbWF4X3ZlcnNpb24YBCABKAlSCm1heFZlcnNpb24=');
+
 @$core.Deprecated('Use deleteShellReqDescriptor instead')
 const DeleteShellReq$json = {
   '1': 'DeleteShellReq',

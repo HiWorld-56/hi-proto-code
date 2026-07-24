@@ -29,6 +29,7 @@ const (
 	Plugin_List_FullMethodName           = "/hi.club.Plugin/List"
 	Plugin_ListVersions_FullMethodName   = "/hi.club.Plugin/ListVersions"
 	Plugin_Delete_FullMethodName         = "/hi.club.Plugin/Delete"
+	Plugin_DeleteVersions_FullMethodName = "/hi.club.Plugin/DeleteVersions"
 	Plugin_DeleteShell_FullMethodName    = "/hi.club.Plugin/DeleteShell"
 	Plugin_DeleteShells_FullMethodName   = "/hi.club.Plugin/DeleteShells"
 	Plugin_DeleteByAgents_FullMethodName = "/hi.club.Plugin/DeleteByAgents"
@@ -60,6 +61,7 @@ type PluginClient interface {
 	List(ctx context.Context, in *ai.ListPluginsReq, opts ...grpc.CallOption) (*ai.ListPluginsResp, error)
 	ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListVersionsResp, error)
 	Delete(ctx context.Context, in *ai.DeleteVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteVersions(ctx context.Context, in *ai.DeleteVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteShell(ctx context.Context, in *ai.DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteShells(ctx context.Context, in *ai.DeleteShellsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -155,6 +157,16 @@ func (c *pluginClient) Delete(ctx context.Context, in *ai.DeleteVersionReq, opts
 	return out, nil
 }
 
+func (c *pluginClient) DeleteVersions(ctx context.Context, in *ai.DeleteVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_DeleteVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) DeleteShell(ctx context.Context, in *ai.DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -229,6 +241,7 @@ type PluginServer interface {
 	List(context.Context, *ai.ListPluginsReq) (*ai.ListPluginsResp, error)
 	ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListVersionsResp, error)
 	Delete(context.Context, *ai.DeleteVersionReq) (*emptypb.Empty, error)
+	DeleteVersions(context.Context, *ai.DeleteVersionsReq) (*emptypb.Empty, error)
 	DeleteShell(context.Context, *ai.DeleteShellReq) (*emptypb.Empty, error)
 	DeleteShells(context.Context, *ai.DeleteShellsReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error)
@@ -266,6 +279,9 @@ func (UnimplementedPluginServer) ListVersions(context.Context, *ai.ListVersionsR
 }
 func (UnimplementedPluginServer) Delete(context.Context, *ai.DeleteVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedPluginServer) DeleteVersions(context.Context, *ai.DeleteVersionsReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteVersions not implemented")
 }
 func (UnimplementedPluginServer) DeleteShell(context.Context, *ai.DeleteShellReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteShell not implemented")
@@ -446,6 +462,24 @@ func _Plugin_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_DeleteVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.DeleteVersionsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).DeleteVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_DeleteVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).DeleteVersions(ctx, req.(*ai.DeleteVersionsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_DeleteShell_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.DeleteShellReq)
 	if err := dec(in); err != nil {
@@ -574,6 +608,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _Plugin_Delete_Handler,
+		},
+		{
+			MethodName: "DeleteVersions",
+			Handler:    _Plugin_DeleteVersions_Handler,
 		},
 		{
 			MethodName: "DeleteShell",

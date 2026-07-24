@@ -27,7 +27,7 @@ var File_hi_club_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_club_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto2\xfa\x06\n" +
+	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto2\xc5\a\n" +
 	"\x06Plugin\x12C\n" +
 	"\vCreateShell\x12\x15.hi.ai.CreateShellReq\x1a\x16.hi.ai.CreateShellResp\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
 	"\rCreateVersion\x12\x17.hi.ai.CreateVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
@@ -36,7 +36,8 @@ const file_hi_club_plugin_proto_rawDesc = "" +
 	"\x03Get\x12\x13.hi.ai.GetPluginReq\x1a\x14.hi.ai.GetPluginResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04List\x12\x15.hi.ai.ListPluginsReq\x1a\x16.hi.ai.ListPluginsResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
 	"\fListVersions\x12\x16.hi.ai.ListVersionsReq\x1a\x17.hi.ai.ListVersionsResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
-	"\x06Delete\x12\x17.hi.ai.DeleteVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\x06Delete\x12\x17.hi.ai.DeleteVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
+	"\x0eDeleteVersions\x12\x18.hi.ai.DeleteVersionsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
 	"\vDeleteShell\x12\x15.hi.ai.DeleteShellReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
 	"\fDeleteShells\x12\x16.hi.ai.DeleteShellsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
 	"\x0eDeleteByAgents\x12\x1e.hi.ai.DeletePluginByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
@@ -54,16 +55,17 @@ var file_hi_club_plugin_proto_goTypes = []any{
 	(*ai.ListPluginsReq)(nil),          // 5: hi.ai.ListPluginsReq
 	(*ai.ListVersionsReq)(nil),         // 6: hi.ai.ListVersionsReq
 	(*ai.DeleteVersionReq)(nil),        // 7: hi.ai.DeleteVersionReq
-	(*ai.DeleteShellReq)(nil),          // 8: hi.ai.DeleteShellReq
-	(*ai.DeleteShellsReq)(nil),         // 9: hi.ai.DeleteShellsReq
-	(*ai.DeletePluginByAgentsReq)(nil), // 10: hi.ai.DeletePluginByAgentsReq
-	(*ai.SetActiveReq)(nil),            // 11: hi.ai.SetActiveReq
-	(*ai.SetEnabledReq)(nil),           // 12: hi.ai.SetEnabledReq
-	(*ai.CreateShellResp)(nil),         // 13: hi.ai.CreateShellResp
-	(*emptypb.Empty)(nil),              // 14: google.protobuf.Empty
-	(*ai.GetPluginResp)(nil),           // 15: hi.ai.GetPluginResp
-	(*ai.ListPluginsResp)(nil),         // 16: hi.ai.ListPluginsResp
-	(*ai.ListVersionsResp)(nil),        // 17: hi.ai.ListVersionsResp
+	(*ai.DeleteVersionsReq)(nil),       // 8: hi.ai.DeleteVersionsReq
+	(*ai.DeleteShellReq)(nil),          // 9: hi.ai.DeleteShellReq
+	(*ai.DeleteShellsReq)(nil),         // 10: hi.ai.DeleteShellsReq
+	(*ai.DeletePluginByAgentsReq)(nil), // 11: hi.ai.DeletePluginByAgentsReq
+	(*ai.SetActiveReq)(nil),            // 12: hi.ai.SetActiveReq
+	(*ai.SetEnabledReq)(nil),           // 13: hi.ai.SetEnabledReq
+	(*ai.CreateShellResp)(nil),         // 14: hi.ai.CreateShellResp
+	(*emptypb.Empty)(nil),              // 15: google.protobuf.Empty
+	(*ai.GetPluginResp)(nil),           // 16: hi.ai.GetPluginResp
+	(*ai.ListPluginsResp)(nil),         // 17: hi.ai.ListPluginsResp
+	(*ai.ListVersionsResp)(nil),        // 18: hi.ai.ListVersionsResp
 }
 var file_hi_club_plugin_proto_depIdxs = []int32{
 	0,  // 0: hi.club.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
@@ -74,26 +76,28 @@ var file_hi_club_plugin_proto_depIdxs = []int32{
 	5,  // 5: hi.club.Plugin.List:input_type -> hi.ai.ListPluginsReq
 	6,  // 6: hi.club.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
 	7,  // 7: hi.club.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
-	8,  // 8: hi.club.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
-	9,  // 9: hi.club.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
-	10, // 10: hi.club.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	11, // 11: hi.club.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
-	12, // 12: hi.club.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
-	13, // 13: hi.club.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
-	14, // 14: hi.club.Plugin.CreateVersion:output_type -> google.protobuf.Empty
-	14, // 15: hi.club.Plugin.CreateUsing:output_type -> google.protobuf.Empty
-	14, // 16: hi.club.Plugin.Edit:output_type -> google.protobuf.Empty
-	15, // 17: hi.club.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	16, // 18: hi.club.Plugin.List:output_type -> hi.ai.ListPluginsResp
-	17, // 19: hi.club.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
-	14, // 20: hi.club.Plugin.Delete:output_type -> google.protobuf.Empty
-	14, // 21: hi.club.Plugin.DeleteShell:output_type -> google.protobuf.Empty
-	14, // 22: hi.club.Plugin.DeleteShells:output_type -> google.protobuf.Empty
-	14, // 23: hi.club.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	14, // 24: hi.club.Plugin.SetActive:output_type -> google.protobuf.Empty
-	14, // 25: hi.club.Plugin.SetEnabled:output_type -> google.protobuf.Empty
-	13, // [13:26] is the sub-list for method output_type
-	0,  // [0:13] is the sub-list for method input_type
+	8,  // 8: hi.club.Plugin.DeleteVersions:input_type -> hi.ai.DeleteVersionsReq
+	9,  // 9: hi.club.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
+	10, // 10: hi.club.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
+	11, // 11: hi.club.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
+	12, // 12: hi.club.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
+	13, // 13: hi.club.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	14, // 14: hi.club.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
+	15, // 15: hi.club.Plugin.CreateVersion:output_type -> google.protobuf.Empty
+	15, // 16: hi.club.Plugin.CreateUsing:output_type -> google.protobuf.Empty
+	15, // 17: hi.club.Plugin.Edit:output_type -> google.protobuf.Empty
+	16, // 18: hi.club.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	17, // 19: hi.club.Plugin.List:output_type -> hi.ai.ListPluginsResp
+	18, // 20: hi.club.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
+	15, // 21: hi.club.Plugin.Delete:output_type -> google.protobuf.Empty
+	15, // 22: hi.club.Plugin.DeleteVersions:output_type -> google.protobuf.Empty
+	15, // 23: hi.club.Plugin.DeleteShell:output_type -> google.protobuf.Empty
+	15, // 24: hi.club.Plugin.DeleteShells:output_type -> google.protobuf.Empty
+	15, // 25: hi.club.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
+	15, // 26: hi.club.Plugin.SetActive:output_type -> google.protobuf.Empty
+	15, // 27: hi.club.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	14, // [14:28] is the sub-list for method output_type
+	0,  // [0:14] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
