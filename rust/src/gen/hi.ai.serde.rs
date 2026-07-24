@@ -8452,6 +8452,12 @@ impl serde::Serialize for PluginView {
         if self.ref_count != 0 {
             len += 1;
         }
+        if !self.api_key.is_empty() {
+            len += 1;
+        }
+        if self.data.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginView", len)?;
         if let Some(v) = self.shell.as_ref() {
             struct_ser.serialize_field("shell", v)?;
@@ -8470,6 +8476,12 @@ impl serde::Serialize for PluginView {
         if self.ref_count != 0 {
             struct_ser.serialize_field("refCount", &self.ref_count)?;
         }
+        if !self.api_key.is_empty() {
+            struct_ser.serialize_field("apiKey", &self.api_key)?;
+        }
+        if let Some(v) = self.data.as_ref() {
+            struct_ser.serialize_field("data", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -8486,6 +8498,9 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             "source",
             "ref_count",
             "refCount",
+            "api_key",
+            "apiKey",
+            "data",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -8495,6 +8510,8 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             Enabled,
             Source,
             RefCount,
+            ApiKey,
+            Data,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8521,6 +8538,8 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                             "enabled" => Ok(GeneratedField::Enabled),
                             "source" => Ok(GeneratedField::Source),
                             "refCount" | "ref_count" => Ok(GeneratedField::RefCount),
+                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
+                            "data" => Ok(GeneratedField::Data),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8545,6 +8564,8 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                 let mut enabled__ = None;
                 let mut source__ = None;
                 let mut ref_count__ = None;
+                let mut api_key__ = None;
+                let mut data__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Shell => {
@@ -8579,6 +8600,18 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                                 Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
+                        GeneratedField::ApiKey => {
+                            if api_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiKey"));
+                            }
+                            api_key__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Data => {
+                            if data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("data"));
+                            }
+                            data__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(PluginView {
@@ -8587,6 +8620,8 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                     enabled: enabled__.unwrap_or_default(),
                     source: source__.unwrap_or_default(),
                     ref_count: ref_count__.unwrap_or_default(),
+                    api_key: api_key__.unwrap_or_default(),
+                    data: data__,
                 })
             }
         }

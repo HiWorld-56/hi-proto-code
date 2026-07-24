@@ -214,9 +214,13 @@ func (x *PluginVersion) GetDescription() string {
 }
 
 // plugin_annex:某 agent 对某壳的**运行期附件**。运行期以字典全局变量 plugin_annex 注入执行环境。
+//
+// ⚠️ **api_key 是"载入方"这个机器人自己的 club-apikey**(club 在建壳/引用时自动取该 agent 第一个 key)。
+//
+//	引用别家插件时**不借被引方 owner 的 key** —— 取的是我(载入方)这个机器人的 key,以我的身份跑脚本。
 type PluginAnnex struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // agent 的 club-apikey(club 上传时自动取第一个;鉴权范围 ≤ token)
+	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // **载入方 agent 自己的** club-apikey(club 自动填;引用不借被引方的)
 	Data          *structpb.Struct       `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`                   // 用户填的运行时扩展数据
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -266,7 +270,10 @@ func (x *PluginAnnex) GetData() *structpb.Struct {
 	return nil
 }
 
-// 某 agent 视角的一个插件:壳 + 该 agent 激活的版本 + 绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+// 某 agent 视角的一个插件:壳(共享)+ **该 agent 自己的 annex**(每机器人各一份)+ 引用计数。
+// **每个机器人各不相同的正是这几项 annex**:激活版本 / 是否启用 / api_key / 附加数据 ——
+// 这就是壳+版本(共享本体)与 using(每机器人各一份)分开的意义。api_key 是该机器人**自己的** key,
+// 非敏感借来物,随 View 一并回给持有者(持有者本就能在 apikey 管理页看到自己机器人的 key)。
 type PluginView struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Shell         *PluginShell           `protobuf:"bytes,1,opt,name=shell,proto3" json:"shell,omitempty"`
@@ -274,6 +281,8 @@ type PluginView struct {
 	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"`                       // 该 agent 是否启用此插件参与推理
 	Source        PluginSource           `protobuf:"varint,4,opt,name=source,proto3,enum=hi.ai.PluginSource" json:"source,omitempty"` // 来源:主人直接上传 or 经授权引用
 	RefCount      int32                  `protobuf:"varint,5,opt,name=ref_count,json=refCount,proto3" json:"ref_count,omitempty"`     // 被多少机器人引用(实时 COUNT,**不落库**)
+	ApiKey        string                 `protobuf:"bytes,6,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`            // 该 agent 载入此插件用的 club-apikey(该 agent 自己的)
+	Data          *structpb.Struct       `protobuf:"bytes,7,opt,name=data,proto3" json:"data,omitempty"`                              // 该 agent 填的运行时扩展数据
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -341,6 +350,20 @@ func (x *PluginView) GetRefCount() int32 {
 		return x.RefCount
 	}
 	return 0
+}
+
+func (x *PluginView) GetApiKey() string {
+	if x != nil {
+		return x.ApiKey
+	}
+	return ""
+}
+
+func (x *PluginView) GetData() *structpb.Struct {
+	if x != nil {
+		return x.Data
+	}
+	return nil
 }
 
 // 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
@@ -1595,14 +1618,16 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\vdescription\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\vdescription:\x04\x98\xb5\x18\x03\"S\n" +
 	"\vPluginAnnex\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12+\n" +
-	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xec\x01\n" +
+	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xbe\x02\n" +
 	"\n" +
 	"PluginView\x12.\n" +
 	"\x05shell\x18\x01 \x01(\v2\x12.hi.ai.PluginShellB\x04\x90\xb5\x18\x03R\x05shell\x122\n" +
 	"\x06active\x18\x02 \x01(\v2\x14.hi.ai.PluginVersionB\x04\x90\xb5\x18\x03R\x06active\x12\x1e\n" +
 	"\aenabled\x18\x03 \x01(\bB\x04\x90\xb5\x18\x03R\aenabled\x121\n" +
 	"\x06source\x18\x04 \x01(\x0e2\x13.hi.ai.PluginSourceB\x04\x90\xb5\x18\x03R\x06source\x12!\n" +
-	"\tref_count\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03R\brefCount:\x04\x98\xb5\x18\x03\"\x88\x01\n" +
+	"\tref_count\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03R\brefCount\x12\x1d\n" +
+	"\aapi_key\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x06apiKey\x121\n" +
+	"\x04data\x18\a \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data:\x04\x98\xb5\x18\x03\"\x88\x01\n" +
 	"\fPluginLoaded\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04uuid\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x04name\x12\x1e\n" +
@@ -1758,50 +1783,51 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	1,  // 1: hi.ai.PluginView.shell:type_name -> hi.ai.PluginShell
 	2,  // 2: hi.ai.PluginView.active:type_name -> hi.ai.PluginVersion
 	0,  // 3: hi.ai.PluginView.source:type_name -> hi.ai.PluginSource
-	3,  // 4: hi.ai.CreateShellReq.annex:type_name -> hi.ai.PluginAnnex
-	2,  // 5: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
-	3,  // 6: hi.ai.CreateUsingReq.annex:type_name -> hi.ai.PluginAnnex
-	3,  // 7: hi.ai.EditPluginReq.annex:type_name -> hi.ai.PluginAnnex
-	28, // 8: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
-	28, // 9: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
-	4,  // 10: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
-	2,  // 11: hi.ai.ListVersionsResp.list:type_name -> hi.ai.PluginVersion
-	4,  // 12: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
-	3,  // 13: hi.ai.RunReq.annex:type_name -> hi.ai.PluginAnnex
-	29, // 14: hi.ai.RunResp.conts:type_name -> hi.ai.Content
-	6,  // 15: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
-	8,  // 16: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
-	9,  // 17: hi.ai.Plugin.CreateUsing:input_type -> hi.ai.CreateUsingReq
-	10, // 18: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	19, // 19: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	15, // 20: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
-	16, // 21: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
-	21, // 22: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
-	22, // 23: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
-	23, // 24: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	12, // 25: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
-	11, // 26: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
-	24, // 27: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
-	26, // 28: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
-	7,  // 29: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
-	30, // 30: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
-	30, // 31: hi.ai.Plugin.CreateUsing:output_type -> google.protobuf.Empty
-	30, // 32: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	20, // 33: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	17, // 34: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
-	18, // 35: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
-	30, // 36: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	30, // 37: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
-	30, // 38: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	30, // 39: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
-	30, // 40: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
-	25, // 41: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
-	30, // 42: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
-	29, // [29:43] is the sub-list for method output_type
-	15, // [15:29] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	27, // 4: hi.ai.PluginView.data:type_name -> google.protobuf.Struct
+	3,  // 5: hi.ai.CreateShellReq.annex:type_name -> hi.ai.PluginAnnex
+	2,  // 6: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
+	3,  // 7: hi.ai.CreateUsingReq.annex:type_name -> hi.ai.PluginAnnex
+	3,  // 8: hi.ai.EditPluginReq.annex:type_name -> hi.ai.PluginAnnex
+	28, // 9: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
+	28, // 10: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
+	4,  // 11: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
+	2,  // 12: hi.ai.ListVersionsResp.list:type_name -> hi.ai.PluginVersion
+	4,  // 13: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
+	3,  // 14: hi.ai.RunReq.annex:type_name -> hi.ai.PluginAnnex
+	29, // 15: hi.ai.RunResp.conts:type_name -> hi.ai.Content
+	6,  // 16: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
+	8,  // 17: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
+	9,  // 18: hi.ai.Plugin.CreateUsing:input_type -> hi.ai.CreateUsingReq
+	10, // 19: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	19, // 20: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
+	15, // 21: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
+	16, // 22: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
+	21, // 23: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
+	22, // 24: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
+	23, // 25: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
+	12, // 26: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
+	11, // 27: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	24, // 28: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
+	26, // 29: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
+	7,  // 30: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
+	30, // 31: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
+	30, // 32: hi.ai.Plugin.CreateUsing:output_type -> google.protobuf.Empty
+	30, // 33: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	20, // 34: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	17, // 35: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
+	18, // 36: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
+	30, // 37: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	30, // 38: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
+	30, // 39: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
+	30, // 40: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
+	30, // 41: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	25, // 42: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
+	30, // 43: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
+	30, // [30:44] is the sub-list for method output_type
+	16, // [16:30] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_proto_init() }

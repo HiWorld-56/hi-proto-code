@@ -206,6 +206,9 @@ class PluginVersion extends $pb.GeneratedMessage {
 }
 
 /// plugin_annex:某 agent 对某壳的**运行期附件**。运行期以字典全局变量 plugin_annex 注入执行环境。
+///
+/// ⚠️ **api_key 是"载入方"这个机器人自己的 club-apikey**(club 在建壳/引用时自动取该 agent 第一个 key)。
+///    引用别家插件时**不借被引方 owner 的 key** —— 取的是我(载入方)这个机器人的 key,以我的身份跑脚本。
 class PluginAnnex extends $pb.GeneratedMessage {
   factory PluginAnnex({
     $core.String? apiKey,
@@ -275,7 +278,10 @@ class PluginAnnex extends $pb.GeneratedMessage {
   $2.Struct ensureData() => $_ensure(1);
 }
 
-/// 某 agent 视角的一个插件:壳 + 该 agent 激活的版本 + 绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+/// 某 agent 视角的一个插件:壳(共享)+ **该 agent 自己的 annex**(每机器人各一份)+ 引用计数。
+/// **每个机器人各不相同的正是这几项 annex**:激活版本 / 是否启用 / api_key / 附加数据 ——
+/// 这就是壳+版本(共享本体)与 using(每机器人各一份)分开的意义。api_key 是该机器人**自己的** key,
+/// 非敏感借来物,随 View 一并回给持有者(持有者本就能在 apikey 管理页看到自己机器人的 key)。
 class PluginView extends $pb.GeneratedMessage {
   factory PluginView({
     PluginShell? shell,
@@ -283,6 +289,8 @@ class PluginView extends $pb.GeneratedMessage {
     $core.bool? enabled,
     PluginSource? source,
     $core.int? refCount,
+    $core.String? apiKey,
+    $2.Struct? data,
   }) {
     final result = create();
     if (shell != null) result.shell = shell;
@@ -290,6 +298,8 @@ class PluginView extends $pb.GeneratedMessage {
     if (enabled != null) result.enabled = enabled;
     if (source != null) result.source = source;
     if (refCount != null) result.refCount = refCount;
+    if (apiKey != null) result.apiKey = apiKey;
+    if (data != null) result.data = data;
     return result;
   }
 
@@ -314,6 +324,9 @@ class PluginView extends $pb.GeneratedMessage {
     ..aE<PluginSource>(4, _omitFieldNames ? '' : 'source',
         enumValues: PluginSource.values)
     ..aI(5, _omitFieldNames ? '' : 'refCount')
+    ..aOS(6, _omitFieldNames ? '' : 'apiKey')
+    ..aOM<$2.Struct>(7, _omitFieldNames ? '' : 'data',
+        subBuilder: $2.Struct.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -382,6 +395,26 @@ class PluginView extends $pb.GeneratedMessage {
   $core.bool hasRefCount() => $_has(4);
   @$pb.TagNumber(5)
   void clearRefCount() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get apiKey => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set apiKey($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasApiKey() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearApiKey() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $2.Struct get data => $_getN(6);
+  @$pb.TagNumber(7)
+  set data($2.Struct value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasData() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearData() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $2.Struct ensureData() => $_ensure(6);
 }
 
 /// 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。

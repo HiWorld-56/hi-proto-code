@@ -420,17 +420,23 @@ pub struct PluginVersion {
     pub description: ::prost::alloc::string::String,
 }
 /// plugin_annex:某 agent 对某壳的**运行期附件**。运行期以字典全局变量 plugin_annex 注入执行环境。
+///
+/// ⚠️ **api_key 是"载入方"这个机器人自己的 club-apikey**(club 在建壳/引用时自动取该 agent 第一个 key)。
+/// 引用别家插件时**不借被引方 owner 的 key** —— 取的是我(载入方)这个机器人的 key,以我的身份跑脚本。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PluginAnnex {
-    /// agent 的 club-apikey(club 上传时自动取第一个;鉴权范围 ≤ token)
+    /// **载入方 agent 自己的** club-apikey(club 自动填;引用不借被引方的)
     #[prost(string, tag = "1")]
     pub api_key: ::prost::alloc::string::String,
     /// 用户填的运行时扩展数据
     #[prost(message, optional, tag = "2")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 某 agent 视角的一个插件:壳 + 该 agent 激活的版本 + 绑定状态(List/Get 返回;api_key 敏感不随列表回)。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+/// 某 agent 视角的一个插件:壳(共享)+ **该 agent 自己的 annex**(每机器人各一份)+ 引用计数。
+/// **每个机器人各不相同的正是这几项 annex**:激活版本 / 是否启用 / api_key / 附加数据 ——
+/// 这就是壳+版本(共享本体)与 using(每机器人各一份)分开的意义。api_key 是该机器人**自己的** key,
+/// 非敏感借来物,随 View 一并回给持有者(持有者本就能在 apikey 管理页看到自己机器人的 key)。
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PluginView {
     #[prost(message, optional, tag = "1")]
     pub shell: ::core::option::Option<PluginShell>,
@@ -446,6 +452,12 @@ pub struct PluginView {
     /// 被多少机器人引用(实时 COUNT,**不落库**)
     #[prost(int32, tag = "5")]
     pub ref_count: i32,
+    /// 该 agent 载入此插件用的 club-apikey(该 agent 自己的)
+    #[prost(string, tag = "6")]
+    pub api_key: ::prost::alloc::string::String,
+    /// 该 agent 填的运行时扩展数据
+    #[prost(message, optional, tag = "7")]
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
 /// 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
 ///
@@ -611,7 +623,7 @@ pub struct GetPluginReq {
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetPluginResp {
     #[prost(message, optional, tag = "1")]
     pub view: ::core::option::Option<PluginView>,

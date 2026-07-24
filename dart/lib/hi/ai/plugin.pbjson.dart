@@ -119,6 +119,16 @@ const PluginView$json = {
       '10': 'source'
     },
     {'1': 'ref_count', '3': 5, '4': 1, '5': 5, '8': {}, '10': 'refCount'},
+    {'1': 'api_key', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'apiKey'},
+    {
+      '1': 'data',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '8': {},
+      '10': 'data'
+    },
   ],
   '7': {},
 };
@@ -129,7 +139,8 @@ final $typed_data.Uint8List pluginViewDescriptor = $convert.base64Decode(
     'NoZWxsEjIKBmFjdGl2ZRgCIAEoCzIULmhpLmFpLlBsdWdpblZlcnNpb25CBJC1GANSBmFjdGl2'
     'ZRIeCgdlbmFibGVkGAMgASgIQgSQtRgDUgdlbmFibGVkEjEKBnNvdXJjZRgEIAEoDjITLmhpLm'
     'FpLlBsdWdpblNvdXJjZUIEkLUYA1IGc291cmNlEiEKCXJlZl9jb3VudBgFIAEoBUIEkLUYA1II'
-    'cmVmQ291bnQ6BJi1GAM=');
+    'cmVmQ291bnQSHQoHYXBpX2tleRgGIAEoCUIEkLUYA1IGYXBpS2V5EjEKBGRhdGEYByABKAsyFy'
+    '5nb29nbGUucHJvdG9idWYuU3RydWN0QgSQtRgDUgRkYXRhOgSYtRgD');
 
 @$core.Deprecated('Use pluginLoadedDescriptor instead')
 const PluginLoaded$json = {
