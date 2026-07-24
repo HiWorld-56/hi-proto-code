@@ -387,189 +387,173 @@ pub mod chat_client {
         }
     }
 }
-/// PluginShell:插件的壳(身份)。uuid 后台分配,单一 id。
+/// a
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginShell {
-    /// 插件 id,后台分配(单一 id,不含子id)
+    /// 插件 id,后台分配(单一 id)
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
-    /// 脚本名(给人看)
+    /// 脚本名
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
 }
-/// PluginVersion:插件本体的一个版本(除名字外的内容)。按 (uuid,version) 冻结。
+/// b:按 (uuid,version) 冻结
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginVersion {
-    /// 所属壳 uuid
+    /// 所属壳
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
-    /// 三级版本号如 1.23.66,用户自填;前端按现有版本自动预填,后端校验
+    /// 版本号(前端按现有版本预填,后端校验须>现有最大)
     #[prost(string, tag = "2")]
     pub version: ::prost::alloc::string::String,
-    /// 图标 url
     #[prost(string, tag = "3")]
     pub logo: ::prost::alloc::string::String,
-    /// 详情资源 url:介绍页或美工图,用户自定
     #[prost(string, tag = "4")]
     pub summary: ::prost::alloc::string::String,
-    /// 主脚本包 zip url(内含 main.py + requirement.txt)
+    /// 脚本包 zip
     #[prost(string, tag = "5")]
     pub url: ::prost::alloc::string::String,
-    /// 完整 function-call spec(作用 + parameters schema)
+    /// function-call spec
     #[prost(string, tag = "6")]
     pub description: ::prost::alloc::string::String,
 }
-/// plugin_annex:某 agent 对某壳的**运行期附件**。运行期以字典全局变量 plugin_annex 注入执行环境。
-///
-/// ⚠️ **api_key 是"载入方"这个机器人自己的 club-apikey**(club 在建壳/引用时自动取该 agent 第一个 key)。
-/// 引用别家插件时**不借被引方 owner 的 key** —— 取的是我(载入方)这个机器人的 key,以我的身份跑脚本。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PluginAnnex {
-    /// **载入方 agent 自己的** club-apikey(club 自动填;引用不借被引方的)
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
-    /// 用户填的运行时扩展数据
-    #[prost(message, optional, tag = "2")]
-    pub data: ::core::option::Option<::pbjson_types::Struct>,
-}
-/// 某 agent 视角的一个插件:壳(共享)+ **该 agent 自己的 annex**(每机器人各一份)+ 引用计数。
-/// **每个机器人各不相同的正是这几项 annex**:激活版本 / 是否启用 / api_key / 附加数据 ——
-/// 这就是壳+版本(共享本体)与 using(每机器人各一份)分开的意义。api_key 是该机器人**自己的** key,
-/// 非敏感借来物,随 View 一并回给持有者(持有者本就能在 apikey 管理页看到自己机器人的 key)。
+/// 某 agent 视角的一个插件:壳 + 激活版本内容 + 壳级使用(enabled/source/data)+ 激活版本的版本级 data + 引用计数。
+/// **每机器人各不相同的 = c(enabled/source/data,含 api_key)+ d(激活版 + 版本级 data)**,这正是拆表的意义。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PluginView {
     #[prost(message, optional, tag = "1")]
     pub shell: ::core::option::Option<PluginShell>,
-    /// 该 agent 激活版本的内容(using.version 对应行);未激活为空
+    /// 激活版本内容(无激活为空)
     #[prost(message, optional, tag = "2")]
     pub active: ::core::option::Option<PluginVersion>,
-    /// 该 agent 是否启用此插件参与推理
+    /// c.enabled:插件是否开启
     #[prost(bool, tag = "3")]
     pub enabled: bool,
-    /// 来源:主人直接上传 or 经授权引用
+    /// c.source
     #[prost(enumeration = "PluginSource", tag = "4")]
     pub source: i32,
-    /// 被多少机器人引用(实时 COUNT,**不落库**)
+    /// 被多少机器人引用(实时 COUNT)
     #[prost(int32, tag = "5")]
     pub ref_count: i32,
-    /// 该 agent 载入此插件用的 club-apikey(该 agent 自己的)
-    #[prost(string, tag = "6")]
-    pub api_key: ::prost::alloc::string::String,
-    /// 该 agent 填的运行时扩展数据
+    /// c.data:插件级扩展数据(含 api_key)
+    #[prost(message, optional, tag = "6")]
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
+    /// 激活版本的 d.data:版本级扩展数据
     #[prost(message, optional, tag = "7")]
+    pub version_data: ::core::option::Option<::pbjson_types::Struct>,
+}
+/// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PluginVersionView {
+    #[prost(message, optional, tag = "1")]
+    pub version: ::core::option::Option<PluginVersion>,
+    #[prost(bool, tag = "2")]
+    pub active: bool,
+    /// d.data
+    #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
-///
-/// ⚠️ 别往通知里塞 PluginView(VIS_SELF,含脚本 url 这类私产);hi.club.Notice 是 VIS_PARTICIPANT。
+/// 插件加载完成通知(公开摘要,不带私产)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginLoaded {
-    /// 插件 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
-    /// 是否参与推理
     #[prost(bool, tag = "4")]
     pub enabled: bool,
 }
-/// 建壳:只建一个空壳(uuid + name),**还没有任何版本**,该 agent 的激活版本为空。
-/// uuid 由后台分配并返回,调用方不要传。同时给 owner 建一条 using(source=original)。
-/// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填(可空)。
+/// 建空壳:插 a{uuid,name} + owner 的 c{source=original, enabled}。uuid 后台分配返回;此时无版本、无激活。
+/// data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateShellReq {
-    /// 壳挂到哪个 agent(owner)
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// api_key 由 club 填、data 用户填
+    /// c.data(插件级)
     #[prost(message, optional, tag = "3")]
-    pub annex: ::core::option::Option<PluginAnnex>,
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateShellResp {
-    /// 后台分配的插件 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
 }
-/// 给已有壳加一个新版本。version 号由前端按版本列表自动计算/预填,后端做合法性校验:
-/// 必须**大于该壳现有最大版本**(三级数字按数值比较,不限前导零)。
-/// 若该 agent 当前激活版本为空(新壳首版),自动把这一版设为激活版。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+/// 给壳加版本:插 b。若该 agent 对此壳还没激活版(首版)→ 顺带插 d(active=true) 自动激活。
+/// data=该 agent 对这一版的版本级扩展数据(hiclub 放 club 数据)。
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateVersionReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// version.uuid = 壳 uuid;version.version + 本体内容由用户/前端提供
+    /// version.uuid=壳;version.version + 本体内容
     #[prost(message, optional, tag = "2")]
     pub version: ::core::option::Option<PluginVersion>,
+    /// d.data(版本级)
+    #[prost(message, optional, tag = "3")]
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 把一个**已有壳**绑定到某 agent(生成一条 using,source=reference)。插件市场"分享/授权"通过后由 club 调。
+/// 引用:把已有壳绑到某 agent。插 c{source=reference, data} + 选定激活版插 d{version, active=true, version_data}。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateUsingReq {
-    /// 目标 agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 要绑定的壳 uuid
+    /// 壳
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 激活哪个版本(该 agent 的 using.version)
+    /// 激活哪个版本
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
-    /// 该 agent 的 api_key(club 取)+ data
+    /// c.data(插件级,api_key)
     #[prost(message, optional, tag = "4")]
-    pub annex: ::core::option::Option<PluginAnnex>,
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
+    /// d.data(版本级)
+    #[prost(message, optional, tag = "5")]
+    pub version_data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 改使用记录。**壳/版本一个字段都不能改**(发布即冻结,要改就发新版本)。这里只动该 agent 的 annex。
+/// 改扩展数据:壳级(c.data)和/或某版本级(d.data)。**壳/版本本体冻结,不动。**
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditPluginReq {
-    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 插件 id(壳)
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 改该 agent 的 api_key/data
+    /// 传了才改 c.data(插件级)
     #[prost(message, optional, tag = "3")]
-    pub annex: ::core::option::Option<PluginAnnex>,
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
+    /// 配合 version_data 指定改哪个版本的 d.data
+    #[prost(string, optional, tag = "4")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 传了(且 version 非空)才改 d.data
+    #[prost(message, optional, tag = "5")]
+    pub version_data: ::core::option::Option<::pbjson_types::Struct>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetEnabledReq {
-    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 该 agent 是否参与推理
     #[prost(bool, tag = "3")]
     pub enabled: bool,
 }
-/// 选定该 agent 激活哪个版本(设 using.version)。同一壳每 agent 各选各的。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveReq {
-    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 要激活的版本号(须为该壳已存在的版本)
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
-/// 下载某版本的脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptReq {
-    /// agent did(校验持有关系)
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 哪个版本(url 在版本上)
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
@@ -577,7 +561,6 @@ pub struct DownloadScriptReq {
 pub struct DownloadScriptResp {
     #[prost(bytes = "vec", tag = "1")]
     pub content: ::prost::alloc::vec::Vec<u8>,
-    /// 建议的文件名
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
 }
@@ -588,13 +571,10 @@ pub struct ListPluginsReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
-/// 二级页:列某壳的所有版本。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListVersionsReq {
-    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
@@ -612,14 +592,12 @@ pub struct ListVersionsResp {
     #[prost(int32, tag = "1")]
     pub total: i32,
     #[prost(message, repeated, tag = "2")]
-    pub list: ::prost::alloc::vec::Vec<PluginVersion>,
+    pub list: ::prost::alloc::vec::Vec<PluginVersionView>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPluginReq {
-    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
 }
@@ -628,26 +606,21 @@ pub struct GetPluginResp {
     #[prost(message, optional, tag = "1")]
     pub view: ::core::option::Option<PluginView>,
 }
-/// 删单个版本(**连同脚本文件一并删**)。
-/// ⚠️ 允许**强删正被引用的版本** —— 引用方 using.version 指向随即失效;删前把 ref_count 摆给用户看。
+/// 删单个版本(b 该行 + 全部 agent 的 d 该版本行 + 脚本文件)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteVersionReq {
-    /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 要删的版本
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
-/// 删整个插件:壳 + 全部版本 + 全部 using 记录(连同所有脚本文件)。破坏半径远大于删单版本,独立成方法。
+/// 删整个插件(a + 全部 b + 全部 c + 全部 d + 脚本文件)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteShellReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
 }
@@ -656,23 +629,32 @@ pub struct DeletePluginByAgentsReq {
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// ── py-docker 执行契约 ──────────────────────────────────────────────────
-/// AiPlugin 是独立 py-docker 服务,专门安全执行 py 脚本。hiai 只作调用方,本 server 不在 hiai 实现。
+/// ── py-docker 执行契约(独立 py-docker 服务实现,hiai 只作调用方)──────────────
+/// 运行期 plugin_annex = c.data ∪ d.data(激活版),作字典全局变量 plugin_annex 注入。
+/// 这里保留 {api_key, data} 的注入形态不变(py-docker 契约),由 hiai 从 c.data 取 api_key、
+/// data = c.data ∪ d.data 合并;脚本照旧 plugin_annex\['api_key'\] / plugin_annex\[...\]。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PluginAnnex {
+    /// 运行期注入用:取自 c.data 的 api_key
+    #[prost(string, tag = "1")]
+    pub api_key: ::prost::alloc::string::String,
+    /// 运行期注入用:c.data ∪ d.data(激活版)
+    #[prost(message, optional, tag = "2")]
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReq {
-    /// 主脚本包 zip(= version.url)
+    /// = 激活版 b.url
     #[prost(string, tag = "1")]
     pub code_archive_url: ::prost::alloc::string::String,
-    /// 调用参数(作 argv)
     #[prost(string, tag = "2")]
     pub code_params: ::prost::alloc::string::String,
-    /// 插件壳 uuid
+    /// 壳 uuid
     #[prost(string, tag = "3")]
     pub uuid: ::prost::alloc::string::String,
-    /// 环境变量 key=value
     #[prost(string, repeated, tag = "4")]
     pub envs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// {api_key, data} → 以字典全局变量 plugin_annex 注入
+    /// → 字典全局变量 plugin_annex
     #[prost(message, optional, tag = "5")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
@@ -686,14 +668,11 @@ pub struct CleanupReq {
     #[prost(string, tag = "1")]
     pub code_archive_url: ::prost::alloc::string::String,
 }
-/// 插件在某机器人使用记录里的来源。
-///
-/// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判。
-/// ⚠️ **引用不是拷贝** —— 只是给另一个 agent 多一条 using 记录指向同一个壳,不新建壳/版本。
+/// 插件在某机器人使用记录里的来源(历史事实;引用不是拷贝,只多一行 c 指向同壳)。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum PluginSource {
-    /// 原始:主人给这个机器人上传的
+    /// 原始:主人上传的(每 uuid 唯一)
     Original = 0,
     /// 引用:经授权用别人的脚本;**不能下载源码**
     Reference = 1,
@@ -730,7 +709,6 @@ pub mod plugin_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
-    /// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
     #[derive(Debug, Clone)]
     pub struct PluginClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -811,7 +789,6 @@ pub mod plugin_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
         pub async fn create_shell(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateShellReq>,
@@ -1058,7 +1035,6 @@ pub mod ai_plugin_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// py-docker 脚本执行(由 py-docker 服务实现,hiai 只作调用方)。
     #[derive(Debug, Clone)]
     pub struct AiPluginClient<T> {
         inner: tonic::client::Grpc<T>,

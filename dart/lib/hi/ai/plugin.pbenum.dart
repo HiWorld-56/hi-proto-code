@@ -14,10 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-/// 插件在某机器人使用记录里的来源。
-///
-/// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判。
-/// ⚠️ **引用不是拷贝** —— 只是给另一个 agent 多一条 using 记录指向同一个壳,不新建壳/版本。
+/// 插件在某机器人使用记录里的来源(历史事实;引用不是拷贝,只多一行 c 指向同壳)。
 class PluginSource extends $pb.ProtobufEnum {
   static const PluginSource PLUGIN_SOURCE_ORIGINAL =
       PluginSource._(0, _omitEnumNames ? '' : 'PLUGIN_SOURCE_ORIGINAL');

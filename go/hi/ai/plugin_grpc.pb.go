@@ -39,9 +39,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
-// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 type PluginClient interface {
-	// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
 	CreateShell(ctx context.Context, in *CreateShellReq, opts ...grpc.CallOption) (*CreateShellResp, error)
 	CreateVersion(ctx context.Context, in *CreateVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateUsing(ctx context.Context, in *CreateUsingReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -189,9 +187,7 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts .
 // for forward compatibility.
 //
 // 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
-// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 type PluginServer interface {
-	// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
 	CreateShell(context.Context, *CreateShellReq) (*CreateShellResp, error)
 	CreateVersion(context.Context, *CreateVersionReq) (*emptypb.Empty, error)
 	CreateUsing(context.Context, *CreateUsingReq) (*emptypb.Empty, error)
@@ -553,8 +549,6 @@ const (
 // AiPluginClient is the client API for AiPlugin service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// py-docker 脚本执行(由 py-docker 服务实现,hiai 只作调用方)。
 type AiPluginClient interface {
 	Run(ctx context.Context, in *RunReq, opts ...grpc.CallOption) (*RunResp, error)
 	Cleanup(ctx context.Context, in *CleanupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -591,8 +585,6 @@ func (c *aiPluginClient) Cleanup(ctx context.Context, in *CleanupReq, opts ...gr
 // AiPluginServer is the server API for AiPlugin service.
 // All implementations should embed UnimplementedAiPluginServer
 // for forward compatibility.
-//
-// py-docker 脚本执行(由 py-docker 服务实现,hiai 只作调用方)。
 type AiPluginServer interface {
 	Run(context.Context, *RunReq) (*RunResp, error)
 	Cleanup(context.Context, *CleanupReq) (*emptypb.Empty, error)

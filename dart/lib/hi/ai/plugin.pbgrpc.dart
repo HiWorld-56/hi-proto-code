@@ -22,7 +22,6 @@ import 'plugin.pb.dart' as $0;
 export 'plugin.pb.dart';
 
 /// 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
-/// ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 @$pb.GrpcServiceName('hi.ai.Plugin')
 class PluginClient extends $grpc.Client {
   /// The hostname for this service.
@@ -35,7 +34,6 @@ class PluginClient extends $grpc.Client {
 
   PluginClient(super.channel, {super.options, super.interceptors});
 
-  /// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
   $grpc.ResponseFuture<$0.CreateShellResp> createShell(
     $0.CreateShellReq request, {
     $grpc.CallOptions? options,
@@ -366,7 +364,6 @@ abstract class PluginServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.SetEnabledReq request);
 }
 
-/// py-docker 脚本执行(由 py-docker 服务实现,hiai 只作调用方)。
 @$pb.GrpcServiceName('hi.ai.AiPlugin')
 class AiPluginClient extends $grpc.Client {
   /// The hostname for this service.
