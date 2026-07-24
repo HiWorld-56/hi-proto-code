@@ -35,6 +35,7 @@ const (
 	Plugin_DeleteByAgents_FullMethodName = "/hi.club.Plugin/DeleteByAgents"
 	Plugin_SetActive_FullMethodName      = "/hi.club.Plugin/SetActive"
 	Plugin_SetEnabled_FullMethodName     = "/hi.club.Plugin/SetEnabled"
+	Plugin_ReloadApiKey_FullMethodName   = "/hi.club.Plugin/ReloadApiKey"
 )
 
 // PluginClient is the client API for Plugin service.
@@ -67,6 +68,7 @@ type PluginClient interface {
 	DeleteByAgents(ctx context.Context, in *ai.DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActive(ctx context.Context, in *ai.SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ReloadApiKey(ctx context.Context, in *ReloadApiKeyReq, opts ...grpc.CallOption) (*ReloadApiKeyResp, error)
 }
 
 type pluginClient struct {
@@ -217,6 +219,16 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opt
 	return out, nil
 }
 
+func (c *pluginClient) ReloadApiKey(ctx context.Context, in *ReloadApiKeyReq, opts ...grpc.CallOption) (*ReloadApiKeyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReloadApiKeyResp)
+	err := c.cc.Invoke(ctx, Plugin_ReloadApiKey_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PluginServer is the server API for Plugin service.
 // All implementations should embed UnimplementedPluginServer
 // for forward compatibility.
@@ -247,6 +259,7 @@ type PluginServer interface {
 	DeleteByAgents(context.Context, *ai.DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActive(context.Context, *ai.SetActiveReq) (*emptypb.Empty, error)
 	SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error)
+	ReloadApiKey(context.Context, *ReloadApiKeyReq) (*ReloadApiKeyResp, error)
 }
 
 // UnimplementedPluginServer should be embedded to have
@@ -297,6 +310,9 @@ func (UnimplementedPluginServer) SetActive(context.Context, *ai.SetActiveReq) (*
 }
 func (UnimplementedPluginServer) SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
+}
+func (UnimplementedPluginServer) ReloadApiKey(context.Context, *ReloadApiKeyReq) (*ReloadApiKeyResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReloadApiKey not implemented")
 }
 func (UnimplementedPluginServer) testEmbeddedByValue() {}
 
@@ -570,6 +586,24 @@ func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_ReloadApiKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReloadApiKeyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).ReloadApiKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_ReloadApiKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).ReloadApiKey(ctx, req.(*ReloadApiKeyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Plugin_ServiceDesc is the grpc.ServiceDesc for Plugin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -632,6 +666,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetEnabled",
 			Handler:    _Plugin_SetEnabled_Handler,
+		},
+		{
+			MethodName: "ReloadApiKey",
+			Handler:    _Plugin_ReloadApiKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

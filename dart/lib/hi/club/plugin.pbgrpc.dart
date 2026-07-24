@@ -18,6 +18,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
 import '../ai/plugin.pb.dart' as $0;
+import 'plugin.pb.dart' as $2;
 
 export 'plugin.pb.dart';
 
@@ -142,6 +143,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$setEnabled, request, options: options);
   }
 
+  $grpc.ResponseFuture<$2.ReloadApiKeyResp> reloadApiKey(
+    $2.ReloadApiKeyReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$reloadApiKey, request, options: options);
+  }
+
   // method descriptors
 
   static final _$createShell =
@@ -207,6 +215,11 @@ class PluginClient extends $grpc.Client {
       '/hi.club.Plugin/SetEnabled',
       ($0.SetEnabledReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$reloadApiKey =
+      $grpc.ClientMethod<$2.ReloadApiKeyReq, $2.ReloadApiKeyResp>(
+          '/hi.club.Plugin/ReloadApiKey',
+          ($2.ReloadApiKeyReq value) => value.writeToBuffer(),
+          $2.ReloadApiKeyResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Plugin')
@@ -313,6 +326,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.SetEnabledReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.ReloadApiKeyReq, $2.ReloadApiKeyResp>(
+        'ReloadApiKey',
+        reloadApiKey_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.ReloadApiKeyReq.fromBuffer(value),
+        ($2.ReloadApiKeyResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateShellResp> createShell_Pre($grpc.ServiceCall $call,
@@ -426,4 +446,12 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setEnabled(
       $grpc.ServiceCall call, $0.SetEnabledReq request);
+
+  $async.Future<$2.ReloadApiKeyResp> reloadApiKey_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ReloadApiKeyReq> $request) async {
+    return reloadApiKey($call, await $request);
+  }
+
+  $async.Future<$2.ReloadApiKeyResp> reloadApiKey(
+      $grpc.ServiceCall call, $2.ReloadApiKeyReq request);
 }

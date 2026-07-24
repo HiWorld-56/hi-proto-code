@@ -2907,6 +2907,26 @@ pub mod push_manager_client {
         }
     }
 }
+/// ReloadApiKey —— club 专属(hi.ai 无 api_key 概念)。
+/// api_key 存在 c.data(该机器人自己的),用户可在别处删掉某个 apikey,导致插件里存的那个失效;
+/// 用户重建 apikey 后调此方法,后端**重新取**该机器人 apikey 列表的**第一个**覆盖写入 c.data 并发重载通知。
+/// 语义如"重新装弹":只从现有弹匣取,**不造子弹** —— 列表为空即报错,绝不偷偷创建 apikey。
+/// 前端**不允许手填 api_key**(防伪),一律由此/建插件时后端自动注入。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReloadApiKeyReq {
+    /// 机器人 did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 插件 uuid
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReloadApiKeyResp {
+    /// 重新写入的 api_key(便于前端就地刷新列表)
+    #[prost(string, tag = "1")]
+    pub api_key: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
 pub mod plugin_client {
     #![allow(
@@ -3298,6 +3318,30 @@ pub mod plugin_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "SetEnabled"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn reload_api_key(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReloadApiKeyReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ReloadApiKeyResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/ReloadApiKey",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "ReloadApiKey"));
             self.inner.unary(req, path, codec).await
         }
     }
