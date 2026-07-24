@@ -1735,7 +1735,9 @@ class DeleteVersionReq extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(3);
 }
 
-/// 删整个插件(a + 全部 b + 全部 c + 全部 d + 脚本文件)。
+/// 从某机器人移除插件。**按归属分别处理**:该 agent 是创建者(c.source=original)→ 删整个插件
+/// (a+全部b+全部c+全部d+脚本文件,全局);是引用方(reference)→ 只解绑本机器人(删本 agent 的 c/d,壳留给 owner)。
+/// 这样引用方删不掉别人的插件。
 class DeleteShellReq extends $pb.GeneratedMessage {
   factory DeleteShellReq({
     $core.String? agent,
@@ -1802,6 +1804,68 @@ class DeleteShellReq extends $pb.GeneratedMessage {
   void clearUuid() => $_clearField(2);
 }
 
+/// 批量:一次从某机器人移除多个插件,每个 uuid 语义同 DeleteShell(按归属删壳或解绑)。
+class DeleteShellsReq extends $pb.GeneratedMessage {
+  factory DeleteShellsReq({
+    $core.String? agent,
+    $core.Iterable<$core.String>? uuids,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuids != null) result.uuids.addAll(uuids);
+    return result;
+  }
+
+  DeleteShellsReq._();
+
+  factory DeleteShellsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteShellsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteShellsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..pPS(2, _omitFieldNames ? '' : 'uuids')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteShellsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteShellsReq copyWith(void Function(DeleteShellsReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteShellsReq))
+          as DeleteShellsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteShellsReq create() => DeleteShellsReq._();
+  @$core.override
+  DeleteShellsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteShellsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteShellsReq>(create);
+  static DeleteShellsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get uuids => $_getList(1);
+}
+
+/// **内部级联清理**:某些机器人被撤"插件权限"时,清掉它们名下全部插件绑定(club PermissionService.Revoke 调,非前端按钮)。
 class DeletePluginByAgentsReq extends $pb.GeneratedMessage {
   factory DeletePluginByAgentsReq({
     $core.Iterable<$core.String>? agents,

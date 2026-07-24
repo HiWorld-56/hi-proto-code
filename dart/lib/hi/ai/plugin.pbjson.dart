@@ -546,6 +546,20 @@ final $typed_data.Uint8List deleteShellReqDescriptor = $convert.base64Decode(
     'Cg5EZWxldGVTaGVsbFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudBIgCg'
     'R1dWlkGAIgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQ=');
 
+@$core.Deprecated('Use deleteShellsReqDescriptor instead')
+const DeleteShellsReq$json = {
+  '1': 'DeleteShellsReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuids', '3': 2, '4': 3, '5': 9, '10': 'uuids'},
+  ],
+};
+
+/// Descriptor for `DeleteShellsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteShellsReqDescriptor = $convert.base64Decode(
+    'Cg9EZWxldGVTaGVsbHNSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQSFA'
+    'oFdXVpZHMYAiADKAlSBXV1aWRz');
+
 @$core.Deprecated('Use deletePluginByAgentsReqDescriptor instead')
 const DeletePluginByAgentsReq$json = {
   '1': 'DeletePluginByAgentsReq',

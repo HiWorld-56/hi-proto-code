@@ -616,7 +616,9 @@ pub struct DeleteVersionReq {
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
-/// 删整个插件(a + 全部 b + 全部 c + 全部 d + 脚本文件)。
+/// 从某机器人移除插件。**按归属分别处理**:该 agent 是创建者(c.source=original)→ 删整个插件
+/// (a+全部b+全部c+全部d+脚本文件,全局);是引用方(reference)→ 只解绑本机器人(删本 agent 的 c/d,壳留给 owner)。
+/// 这样引用方删不掉别人的插件。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteShellReq {
     #[prost(string, tag = "1")]
@@ -624,6 +626,15 @@ pub struct DeleteShellReq {
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
 }
+/// 批量:一次从某机器人移除多个插件,每个 uuid 语义同 DeleteShell(按归属删壳或解绑)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteShellsReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(string, repeated, tag = "2")]
+    pub uuids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// **内部级联清理**:某些机器人被撤"插件权限"时,清掉它们名下全部插件绑定(club PermissionService.Revoke 调,非前端按钮)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginByAgentsReq {
     #[prost(string, repeated, tag = "1")]
@@ -963,6 +974,26 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/DeleteShell");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DeleteShell"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn delete_shells(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteShellsReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/DeleteShells",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DeleteShells"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete_by_agents(

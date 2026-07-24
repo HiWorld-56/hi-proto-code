@@ -3199,6 +3199,27 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.club.Plugin", "DeleteShell"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn delete_shells(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::DeleteShellsReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/DeleteShells",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "DeleteShells"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn delete_by_agents(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::DeletePluginByAgentsReq>,
