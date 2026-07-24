@@ -20,15 +20,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Plugin_Create_FullMethodName         = "/hi.ai.Plugin/Create"
+	Plugin_CreateShell_FullMethodName    = "/hi.ai.Plugin/CreateShell"
 	Plugin_CreateVersion_FullMethodName  = "/hi.ai.Plugin/CreateVersion"
-	Plugin_CreateAnnex_FullMethodName    = "/hi.ai.Plugin/CreateAnnex"
+	Plugin_CreateUsing_FullMethodName    = "/hi.ai.Plugin/CreateUsing"
 	Plugin_Edit_FullMethodName           = "/hi.ai.Plugin/Edit"
 	Plugin_Get_FullMethodName            = "/hi.ai.Plugin/Get"
 	Plugin_List_FullMethodName           = "/hi.ai.Plugin/List"
 	Plugin_ListVersions_FullMethodName   = "/hi.ai.Plugin/ListVersions"
 	Plugin_Delete_FullMethodName         = "/hi.ai.Plugin/Delete"
-	Plugin_DeleteAll_FullMethodName      = "/hi.ai.Plugin/DeleteAll"
+	Plugin_DeleteShell_FullMethodName    = "/hi.ai.Plugin/DeleteShell"
 	Plugin_DeleteByAgents_FullMethodName = "/hi.ai.Plugin/DeleteByAgents"
 	Plugin_SetActive_FullMethodName      = "/hi.ai.Plugin/SetActive"
 	Plugin_SetEnabled_FullMethodName     = "/hi.ai.Plugin/SetEnabled"
@@ -41,19 +41,16 @@ const (
 // 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
 // ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 type PluginClient interface {
-	// ── 脚本包存取(hiai bucket,**私有**)──────────────────────────────
-	// 脚本是 owner 私产、且是插件市场里的可交易资产,故 bucket 不开匿名读:
-	// 拿到 url 也直接下不了,必须经 Download 走服务端凭据。
-	// 上传与建插件解耦:先 UploadScript 拿 url,再把 url 放进 CreatePluginReq。
-	Create(ctx context.Context, in *CreatePluginReq, opts ...grpc.CallOption) (*CreatePluginResp, error)
-	CreateVersion(ctx context.Context, in *CreateVersionReq, opts ...grpc.CallOption) (*CreatePluginResp, error)
-	CreateAnnex(ctx context.Context, in *CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
+	CreateShell(ctx context.Context, in *CreateShellReq, opts ...grpc.CallOption) (*CreateShellResp, error)
+	CreateVersion(ctx context.Context, in *CreateVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CreateUsing(ctx context.Context, in *CreateUsingReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetPluginReq, opts ...grpc.CallOption) (*GetPluginResp, error)
 	List(ctx context.Context, in *ListPluginsReq, opts ...grpc.CallOption) (*ListPluginsResp, error)
-	ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListPluginsResp, error)
-	Delete(ctx context.Context, in *DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DeleteAll(ctx context.Context, in *DeleteAllPluginVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListVersionsResp, error)
+	Delete(ctx context.Context, in *DeleteVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteShell(ctx context.Context, in *DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActive(ctx context.Context, in *SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -67,19 +64,19 @@ func NewPluginClient(cc grpc.ClientConnInterface) PluginClient {
 	return &pluginClient{cc}
 }
 
-func (c *pluginClient) Create(ctx context.Context, in *CreatePluginReq, opts ...grpc.CallOption) (*CreatePluginResp, error) {
+func (c *pluginClient) CreateShell(ctx context.Context, in *CreateShellReq, opts ...grpc.CallOption) (*CreateShellResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreatePluginResp)
-	err := c.cc.Invoke(ctx, Plugin_Create_FullMethodName, in, out, cOpts...)
+	out := new(CreateShellResp)
+	err := c.cc.Invoke(ctx, Plugin_CreateShell_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pluginClient) CreateVersion(ctx context.Context, in *CreateVersionReq, opts ...grpc.CallOption) (*CreatePluginResp, error) {
+func (c *pluginClient) CreateVersion(ctx context.Context, in *CreateVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreatePluginResp)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Plugin_CreateVersion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -87,10 +84,10 @@ func (c *pluginClient) CreateVersion(ctx context.Context, in *CreateVersionReq, 
 	return out, nil
 }
 
-func (c *pluginClient) CreateAnnex(ctx context.Context, in *CreateAnnexReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) CreateUsing(ctx context.Context, in *CreateUsingReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_CreateAnnex_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Plugin_CreateUsing_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -127,9 +124,9 @@ func (c *pluginClient) List(ctx context.Context, in *ListPluginsReq, opts ...grp
 	return out, nil
 }
 
-func (c *pluginClient) ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListPluginsResp, error) {
+func (c *pluginClient) ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListVersionsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListPluginsResp)
+	out := new(ListVersionsResp)
 	err := c.cc.Invoke(ctx, Plugin_ListVersions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -137,7 +134,7 @@ func (c *pluginClient) ListVersions(ctx context.Context, in *ListVersionsReq, op
 	return out, nil
 }
 
-func (c *pluginClient) Delete(ctx context.Context, in *DeletePluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) Delete(ctx context.Context, in *DeleteVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Plugin_Delete_FullMethodName, in, out, cOpts...)
@@ -147,10 +144,10 @@ func (c *pluginClient) Delete(ctx context.Context, in *DeletePluginReq, opts ...
 	return out, nil
 }
 
-func (c *pluginClient) DeleteAll(ctx context.Context, in *DeleteAllPluginVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pluginClient) DeleteShell(ctx context.Context, in *DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_DeleteAll_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Plugin_DeleteShell_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -194,19 +191,16 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts .
 // 插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
 // ⚠️ 方法名别用 `Switch`(Dart 保留字,dart 生成器会语法错)。
 type PluginServer interface {
-	// ── 脚本包存取(hiai bucket,**私有**)──────────────────────────────
-	// 脚本是 owner 私产、且是插件市场里的可交易资产,故 bucket 不开匿名读:
-	// 拿到 url 也直接下不了,必须经 Download 走服务端凭据。
-	// 上传与建插件解耦:先 UploadScript 拿 url,再把 url 放进 CreatePluginReq。
-	Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error)
-	CreateVersion(context.Context, *CreateVersionReq) (*CreatePluginResp, error)
-	CreateAnnex(context.Context, *CreateAnnexReq) (*emptypb.Empty, error)
+	// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
+	CreateShell(context.Context, *CreateShellReq) (*CreateShellResp, error)
+	CreateVersion(context.Context, *CreateVersionReq) (*emptypb.Empty, error)
+	CreateUsing(context.Context, *CreateUsingReq) (*emptypb.Empty, error)
 	Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetPluginReq) (*GetPluginResp, error)
 	List(context.Context, *ListPluginsReq) (*ListPluginsResp, error)
-	ListVersions(context.Context, *ListVersionsReq) (*ListPluginsResp, error)
-	Delete(context.Context, *DeletePluginReq) (*emptypb.Empty, error)
-	DeleteAll(context.Context, *DeleteAllPluginVersionsReq) (*emptypb.Empty, error)
+	ListVersions(context.Context, *ListVersionsReq) (*ListVersionsResp, error)
+	Delete(context.Context, *DeleteVersionReq) (*emptypb.Empty, error)
+	DeleteShell(context.Context, *DeleteShellReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActive(context.Context, *SetActiveReq) (*emptypb.Empty, error)
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
@@ -219,14 +213,14 @@ type PluginServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPluginServer struct{}
 
-func (UnimplementedPluginServer) Create(context.Context, *CreatePluginReq) (*CreatePluginResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedPluginServer) CreateShell(context.Context, *CreateShellReq) (*CreateShellResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateShell not implemented")
 }
-func (UnimplementedPluginServer) CreateVersion(context.Context, *CreateVersionReq) (*CreatePluginResp, error) {
+func (UnimplementedPluginServer) CreateVersion(context.Context, *CreateVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateVersion not implemented")
 }
-func (UnimplementedPluginServer) CreateAnnex(context.Context, *CreateAnnexReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateAnnex not implemented")
+func (UnimplementedPluginServer) CreateUsing(context.Context, *CreateUsingReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateUsing not implemented")
 }
 func (UnimplementedPluginServer) Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -237,14 +231,14 @@ func (UnimplementedPluginServer) Get(context.Context, *GetPluginReq) (*GetPlugin
 func (UnimplementedPluginServer) List(context.Context, *ListPluginsReq) (*ListPluginsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedPluginServer) ListVersions(context.Context, *ListVersionsReq) (*ListPluginsResp, error) {
+func (UnimplementedPluginServer) ListVersions(context.Context, *ListVersionsReq) (*ListVersionsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListVersions not implemented")
 }
-func (UnimplementedPluginServer) Delete(context.Context, *DeletePluginReq) (*emptypb.Empty, error) {
+func (UnimplementedPluginServer) Delete(context.Context, *DeleteVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedPluginServer) DeleteAll(context.Context, *DeleteAllPluginVersionsReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteAll not implemented")
+func (UnimplementedPluginServer) DeleteShell(context.Context, *DeleteShellReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteShell not implemented")
 }
 func (UnimplementedPluginServer) DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteByAgents not implemented")
@@ -275,20 +269,20 @@ func RegisterPluginServer(s grpc.ServiceRegistrar, srv PluginServer) {
 	s.RegisterService(&Plugin_ServiceDesc, srv)
 }
 
-func _Plugin_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreatePluginReq)
+func _Plugin_CreateShell_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateShellReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).Create(ctx, in)
+		return srv.(PluginServer).CreateShell(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_Create_FullMethodName,
+		FullMethod: Plugin_CreateShell_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).Create(ctx, req.(*CreatePluginReq))
+		return srv.(PluginServer).CreateShell(ctx, req.(*CreateShellReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -311,20 +305,20 @@ func _Plugin_CreateVersion_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_CreateAnnex_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAnnexReq)
+func _Plugin_CreateUsing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUsingReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).CreateAnnex(ctx, in)
+		return srv.(PluginServer).CreateUsing(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_CreateAnnex_FullMethodName,
+		FullMethod: Plugin_CreateUsing_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).CreateAnnex(ctx, req.(*CreateAnnexReq))
+		return srv.(PluginServer).CreateUsing(ctx, req.(*CreateUsingReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -402,7 +396,7 @@ func _Plugin_ListVersions_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _Plugin_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeletePluginReq)
+	in := new(DeleteVersionReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -414,25 +408,25 @@ func _Plugin_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: Plugin_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).Delete(ctx, req.(*DeletePluginReq))
+		return srv.(PluginServer).Delete(ctx, req.(*DeleteVersionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_DeleteAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAllPluginVersionsReq)
+func _Plugin_DeleteShell_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteShellReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).DeleteAll(ctx, in)
+		return srv.(PluginServer).DeleteShell(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_DeleteAll_FullMethodName,
+		FullMethod: Plugin_DeleteShell_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).DeleteAll(ctx, req.(*DeleteAllPluginVersionsReq))
+		return srv.(PluginServer).DeleteShell(ctx, req.(*DeleteShellReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -499,16 +493,16 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PluginServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _Plugin_Create_Handler,
+			MethodName: "CreateShell",
+			Handler:    _Plugin_CreateShell_Handler,
 		},
 		{
 			MethodName: "CreateVersion",
 			Handler:    _Plugin_CreateVersion_Handler,
 		},
 		{
-			MethodName: "CreateAnnex",
-			Handler:    _Plugin_CreateAnnex_Handler,
+			MethodName: "CreateUsing",
+			Handler:    _Plugin_CreateUsing_Handler,
 		},
 		{
 			MethodName: "Edit",
@@ -531,8 +525,8 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_Delete_Handler,
 		},
 		{
-			MethodName: "DeleteAll",
-			Handler:    _Plugin_DeleteAll_Handler,
+			MethodName: "DeleteShell",
+			Handler:    _Plugin_DeleteShell_Handler,
 		},
 		{
 			MethodName: "DeleteByAgents",

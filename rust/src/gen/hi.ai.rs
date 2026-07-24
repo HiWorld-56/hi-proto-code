@@ -387,77 +387,72 @@ pub mod chat_client {
         }
     }
 }
-/// plugin_body:插件本体。
-///
-/// **uuid = \<主id>\_\<次id>,它就是"插件 id" —— 系统内一个 uuid 就是一个独立插件。**
-/// 同一个主id 下的多个 uuid = 同一脚本的多个版本;一级列表按主id 聚合,二级页列出各 uuid。
-/// ⚠️ **次id 与 version 无关**:次id 是后台生成的身份,version 是用户贴的标签。
-/// 正因如此,用户删掉某版本再用同一个版本号重建,拿到的是**新的 uuid**,
-/// 老的引用指向的仍是那个已删除的插件,不会被悄悄换掉内容。
-///
-/// ⚠️ **发布后整行冻结** —— name/logo/summary 也不例外。
-/// 定版的东西如果能改,版本就失去意义了;要改就发新版本。
+/// PluginShell:插件的壳(身份)。uuid 后台分配,单一 id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PluginBody {
-    /// 插件 id = \<主id>\_\<次id>,后台生成
+pub struct PluginShell {
+    /// 插件 id,后台分配(单一 id,不含子id)
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
     /// 脚本名(给人看)
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
+}
+/// PluginVersion:插件本体的一个版本(除名字外的内容)。按 (uuid,version) 冻结。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginVersion {
+    /// 所属壳 uuid
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 三级版本号如 1.23.66,用户自填;前端按现有版本自动预填,后端校验
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
     /// 图标 url
     #[prost(string, tag = "3")]
     pub logo: ::prost::alloc::string::String,
-    /// 详情资源 url:介绍页或一张美工图,由用户自定
+    /// 详情资源 url:介绍页或美工图,用户自定
     #[prost(string, tag = "4")]
     pub summary: ::prost::alloc::string::String,
-    /// 三级版本号如 1.23.66,用户自填;仅作标签,**不参与身份**
-    #[prost(string, tag = "5")]
-    pub version: ::prost::alloc::string::String,
     /// 主脚本包 zip url(内含 main.py + requirement.txt)
-    #[prost(string, tag = "6")]
+    #[prost(string, tag = "5")]
     pub url: ::prost::alloc::string::String,
     /// 完整 function-call spec(作用 + parameters schema)
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "6")]
     pub description: ::prost::alloc::string::String,
 }
-/// plugin_annex:某机器人对某 body 的附件。运行期以字典全局变量注入执行环境。
+/// plugin_annex:某 agent 对某壳的**运行期附件**。运行期以字典全局变量 plugin_annex 注入执行环境。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PluginAnnex {
-    /// agent 的 club-apikey(club 上传时自动取第一个)
+    /// agent 的 club-apikey(club 上传时自动取第一个;鉴权范围 ≤ token)
     #[prost(string, tag = "1")]
     pub api_key: ::prost::alloc::string::String,
     /// 用户填的运行时扩展数据
     #[prost(message, optional, tag = "2")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+/// 某 agent 视角的一个插件:壳 + 该 agent 激活的版本 + 绑定状态(List/Get 返回;api_key 敏感不随列表回)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginView {
     #[prost(message, optional, tag = "1")]
-    pub body: ::core::option::Option<PluginBody>,
-    /// 该 agent 激活的 uuid;body.uuid == active 即本行生效
-    #[prost(string, tag = "2")]
-    pub active: ::prost::alloc::string::String,
+    pub shell: ::core::option::Option<PluginShell>,
+    /// 该 agent 激活版本的内容(using.version 对应行);未激活为空
+    #[prost(message, optional, tag = "2")]
+    pub active: ::core::option::Option<PluginVersion>,
     /// 该 agent 是否启用此插件参与推理
     #[prost(bool, tag = "3")]
     pub enabled: bool,
     /// 来源:主人直接上传 or 经授权引用
     #[prost(enumeration = "PluginSource", tag = "4")]
     pub source: i32,
-    /// 被多少机器人引用(实时 COUNT,**不落库**,存了必漂)
+    /// 被多少机器人引用(实时 COUNT,**不落库**)
     #[prost(int32, tag = "5")]
     pub ref_count: i32,
 }
 /// 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
 ///
-/// ⚠️ 别再往通知里塞 PluginView:它是 VIS_SELF(body.url 是私有 bucket 的脚本包地址,
-/// 脚本是 owner 私产、且是可交易资产),而 hi.club.Notice 是 VIS_PARTICIPANT ——
-/// SELF 装进 PARTICIPANT 本该被可见性 lint 拦下,只因中间隔了个 google.protobuf.Any
-/// 才没拦住。**Any 是那套 lint 唯一的结构性缺口**,往里塞什么要自己把关。
+/// ⚠️ 别往通知里塞 PluginView(VIS_SELF,含脚本 url 这类私产);hi.club.Notice 是 VIS_PARTICIPANT。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginLoaded {
-    /// 插件 id(\<主id>\_\<次id>)
+    /// 插件 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
@@ -468,70 +463,60 @@ pub struct PluginLoaded {
     #[prost(bool, tag = "4")]
     pub enabled: bool,
 }
-/// 发布一个**全新脚本**(生成 主id+次id)+ 建该机器人的 annex(source=original)。
-///
-/// ⚠️ 与 CreateVersion(给已有脚本加新版本)**拆成两个方法**,不用"root 空/非空"分叉 ——
-/// 那是"创建一个新资源"与"往已有资源追加"两件事,连服务端的校验规则都不同
-/// (加版本要求版本号大于现有最大,建新脚本没有这条),必填字段也不同。
-///
-/// **uuid 已存在必拒**,发布即冻结。
-/// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
+/// 建壳:只建一个空壳(uuid + name),**还没有任何版本**,该 agent 的激活版本为空。
+/// uuid 由后台分配并返回,调用方不要传。同时给 owner 建一条 using(source=original)。
+/// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填(可空)。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreatePluginReq {
-    /// 装到哪个 agent
+pub struct CreateShellReq {
+    /// 壳挂到哪个 agent(owner)
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// uuid 由后台生成并回填,调用方不要传;其余字段由用户/前端提供
-    #[prost(message, optional, tag = "2")]
-    pub body: ::core::option::Option<PluginBody>,
-    /// api_key 由 club 自动填、data 用户填
-    #[prost(message, optional, tag = "3")]
-    pub annex: ::core::option::Option<PluginAnnex>,
-}
-/// 给**已有脚本**加一个新版本(只生成次id)。
-/// 版本号须**大于该 root 下现有最大**(三级数字按数值比较,不限前导零)。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateVersionReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    /// 主id:给哪个脚本加版本
     #[prost(string, tag = "2")]
-    pub root: ::prost::alloc::string::String,
+    pub name: ::prost::alloc::string::String,
+    /// api_key 由 club 填、data 用户填
     #[prost(message, optional, tag = "3")]
-    pub body: ::core::option::Option<PluginBody>,
-    #[prost(message, optional, tag = "4")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreatePluginResp {
-    /// 插件 id
+pub struct CreateShellResp {
+    /// 后台分配的插件 id
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
 }
-/// 把一个**已有 body** 绑定到某 agent(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
-/// owner 首次上传走 Create(自带 annex),本方法用于**同 body 多机器人引用**。
+/// 给已有壳加一个新版本。version 号由前端按版本列表自动计算/预填,后端做合法性校验:
+/// 必须**大于该壳现有最大版本**(三级数字按数值比较,不限前导零)。
+/// 若该 agent 当前激活版本为空(新壳首版),自动把这一版设为激活版。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateVersionReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// version.uuid = 壳 uuid;version.version + 本体内容由用户/前端提供
+    #[prost(message, optional, tag = "2")]
+    pub version: ::core::option::Option<PluginVersion>,
+}
+/// 把一个**已有壳**绑定到某 agent(生成一条 using,source=reference)。插件市场"分享/授权"通过后由 club 调。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateAnnexReq {
+pub struct CreateUsingReq {
     /// 目标 agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 要绑定的 body uuid
+    /// 要绑定的壳 uuid
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
-    /// 激活哪个版本(该 agent 的 active)
+    /// 激活哪个版本(该 agent 的 using.version)
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
     /// 该 agent 的 api_key(club 取)+ data
     #[prost(message, optional, tag = "4")]
     pub annex: ::core::option::Option<PluginAnnex>,
 }
-/// 改绑定关系。**body 一个字段都不能改** —— 发布即冻结,要改就发新版本。这里只动该 agent 的 annex。
+/// 改使用记录。**壳/版本一个字段都不能改**(发布即冻结,要改就发新版本)。这里只动该 agent 的 annex。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditPluginReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 插件 id
+    /// 插件 id(壳)
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
     /// 改该 agent 的 api_key/data
@@ -543,33 +528,38 @@ pub struct SetEnabledReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 脚本 id
+    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
     /// 该 agent 是否参与推理
     #[prost(bool, tag = "3")]
     pub enabled: bool,
 }
-/// 选定该 agent 激活哪个版本。uuid 本身即版本身份,不需要再传版本号。
-/// 同一主id 下只能激活一个;不同机器人可各自激活不同版本。
+/// 选定该 agent 激活哪个版本(设 using.version)。同一壳每 agent 各选各的。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 要激活的插件 id
+    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
+    /// 要激活的版本号(须为该壳已存在的版本)
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
 }
-/// 下载脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
+/// 下载某版本的脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptReq {
     /// agent did(校验持有关系)
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 插件 id
+    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
+    /// 哪个版本(url 在版本上)
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptResp {
@@ -586,14 +576,15 @@ pub struct ListPluginsReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 二级页:列某壳的所有版本。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListVersionsReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 主id:列该脚本的所有版本
+    /// 壳 id
     #[prost(string, tag = "2")]
-    pub root: ::prost::alloc::string::String,
+    pub uuid: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -604,12 +595,19 @@ pub struct ListPluginsResp {
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<PluginView>,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListVersionsResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub list: ::prost::alloc::vec::Vec<PluginVersion>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPluginReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 插件 id
+    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
 }
@@ -619,29 +617,27 @@ pub struct GetPluginResp {
     pub view: ::core::option::Option<PluginView>,
 }
 /// 删单个版本(**连同脚本文件一并删**)。
-///
-/// ⚠️ 与 DeleteAll(删整个脚本的所有版本)**拆成两个方法**,不用"uuid/root 二选一" ——
-/// 那两者破坏半径差一个数量级,却靠"哪个字段非空"分叉,且两个都传/都不传时行为未定义。
-///
-/// ⚠️ 允许**强删正被引用的插件** —— 引用方的 annex 不清理,指向随即失效;
-/// 调用时该 tool 返错给 LLM,但**不打断整体推理流程**。删前把 ref_count 摆给用户看。
+/// ⚠️ 允许**强删正被引用的版本** —— 引用方 using.version 指向随即失效;删前把 ref_count 摆给用户看。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeletePluginReq {
+pub struct DeleteVersionReq {
     /// agent did
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 插件 id(\<主id>\_\<次id>)
+    /// 壳 id
     #[prost(string, tag = "2")]
     pub uuid: ::prost::alloc::string::String,
+    /// 要删的版本
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
 }
-/// 删整个脚本的**全部版本**。破坏半径远大于 Delete,故独立成方法。
+/// 删整个插件:壳 + 全部版本 + 全部 using 记录(连同所有脚本文件)。破坏半径远大于删单版本,独立成方法。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeleteAllPluginVersionsReq {
+pub struct DeleteShellReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 主id
+    /// 壳 id
     #[prost(string, tag = "2")]
-    pub root: ::prost::alloc::string::String,
+    pub uuid: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeletePluginByAgentsReq {
@@ -652,13 +648,13 @@ pub struct DeletePluginByAgentsReq {
 /// AiPlugin 是独立 py-docker 服务,专门安全执行 py 脚本。hiai 只作调用方,本 server 不在 hiai 实现。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReq {
-    /// 主脚本包 zip(= body.url)
+    /// 主脚本包 zip(= version.url)
     #[prost(string, tag = "1")]
     pub code_archive_url: ::prost::alloc::string::String,
     /// 调用参数(作 argv)
     #[prost(string, tag = "2")]
     pub code_params: ::prost::alloc::string::String,
-    /// 插件真实 uuid
+    /// 插件壳 uuid
     #[prost(string, tag = "3")]
     pub uuid: ::prost::alloc::string::String,
     /// 环境变量 key=value
@@ -678,11 +674,10 @@ pub struct CleanupReq {
     #[prost(string, tag = "1")]
     pub code_archive_url: ::prost::alloc::string::String,
 }
-/// 插件在某机器人列表里的来源。
+/// 插件在某机器人使用记录里的来源。
 ///
-/// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判:
-/// 一个主人有三个机器人、同一脚本装三个上去,那样会把其中两个误判成引用。
-/// ⚠️ **引用不是拷贝** —— 只是把同一个 uuid 放进另一个机器人的列表,不新建 body。
+/// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判。
+/// ⚠️ **引用不是拷贝** —— 只是给另一个 agent 多一条 using 记录指向同一个壳,不新建壳/版本。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum PluginSource {
@@ -804,15 +799,12 @@ pub mod plugin_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// ── 脚本包存取(hiai bucket,**私有**)──────────────────────────────
-        /// 脚本是 owner 私产、且是插件市场里的可交易资产,故 bucket 不开匿名读:
-        /// 拿到 url 也直接下不了,必须经 Download 走服务端凭据。
-        /// 上传与建插件解耦:先 UploadScript 拿 url,再把 url 放进 CreatePluginReq。
-        pub async fn create(
+        /// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
+        pub async fn create_shell(
             &mut self,
-            request: impl tonic::IntoRequest<super::CreatePluginReq>,
+            request: impl tonic::IntoRequest<super::CreateShellReq>,
         ) -> std::result::Result<
-            tonic::Response<super::CreatePluginResp>,
+            tonic::Response<super::CreateShellResp>,
             tonic::Status,
         > {
             self.inner
@@ -824,18 +816,15 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/Create");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/CreateShell");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "Create"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "CreateShell"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn create_version(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateVersionReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreatePluginResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -853,9 +842,9 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.ai.Plugin", "CreateVersion"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn create_annex(
+        pub async fn create_using(
             &mut self,
-            request: impl tonic::IntoRequest<super::CreateAnnexReq>,
+            request: impl tonic::IntoRequest<super::CreateUsingReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -866,9 +855,9 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/CreateAnnex");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/CreateUsing");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "CreateAnnex"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "CreateUsing"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(
@@ -932,7 +921,7 @@ pub mod plugin_client {
             &mut self,
             request: impl tonic::IntoRequest<super::ListVersionsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListPluginsResp>,
+            tonic::Response<super::ListVersionsResp>,
             tonic::Status,
         > {
             self.inner
@@ -953,7 +942,7 @@ pub mod plugin_client {
         }
         pub async fn delete(
             &mut self,
-            request: impl tonic::IntoRequest<super::DeletePluginReq>,
+            request: impl tonic::IntoRequest<super::DeleteVersionReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -969,9 +958,9 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_all(
+        pub async fn delete_shell(
             &mut self,
-            request: impl tonic::IntoRequest<super::DeleteAllPluginVersionsReq>,
+            request: impl tonic::IntoRequest<super::DeleteShellReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -982,9 +971,9 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/DeleteAll");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/DeleteShell");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DeleteAll"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DeleteShell"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete_by_agents(

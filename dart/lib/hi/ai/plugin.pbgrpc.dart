@@ -35,29 +35,26 @@ class PluginClient extends $grpc.Client {
 
   PluginClient(super.channel, {super.options, super.interceptors});
 
-  /// ── 脚本包存取(hiai bucket,**私有**)──────────────────────────────
-  /// 脚本是 owner 私产、且是插件市场里的可交易资产,故 bucket 不开匿名读:
-  /// 拿到 url 也直接下不了,必须经 Download 走服务端凭据。
-  /// 上传与建插件解耦:先 UploadScript 拿 url,再把 url 放进 CreatePluginReq。
-  $grpc.ResponseFuture<$0.CreatePluginResp> create(
-    $0.CreatePluginReq request, {
+  /// ── 脚本包存取(hiai bucket,**私有**)。上传与建版本解耦:先 UploadScript 拿 url,再放进 CreateVersionReq。
+  $grpc.ResponseFuture<$0.CreateShellResp> createShell(
+    $0.CreateShellReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$create, request, options: options);
+    return $createUnaryCall(_$createShell, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.CreatePluginResp> createVersion(
+  $grpc.ResponseFuture<$1.Empty> createVersion(
     $0.CreateVersionReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$createVersion, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> createAnnex(
-    $0.CreateAnnexReq request, {
+  $grpc.ResponseFuture<$1.Empty> createUsing(
+    $0.CreateUsingReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$createAnnex, request, options: options);
+    return $createUnaryCall(_$createUsing, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> edit(
@@ -81,7 +78,7 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListPluginsResp> listVersions(
+  $grpc.ResponseFuture<$0.ListVersionsResp> listVersions(
     $0.ListVersionsReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -89,17 +86,17 @@ class PluginClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$1.Empty> delete(
-    $0.DeletePluginReq request, {
+    $0.DeleteVersionReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> deleteAll(
-    $0.DeleteAllPluginVersionsReq request, {
+  $grpc.ResponseFuture<$1.Empty> deleteShell(
+    $0.DeleteShellReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$deleteAll, request, options: options);
+    return $createUnaryCall(_$deleteShell, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> deleteByAgents(
@@ -125,19 +122,19 @@ class PluginClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$create =
-      $grpc.ClientMethod<$0.CreatePluginReq, $0.CreatePluginResp>(
-          '/hi.ai.Plugin/Create',
-          ($0.CreatePluginReq value) => value.writeToBuffer(),
-          $0.CreatePluginResp.fromBuffer);
+  static final _$createShell =
+      $grpc.ClientMethod<$0.CreateShellReq, $0.CreateShellResp>(
+          '/hi.ai.Plugin/CreateShell',
+          ($0.CreateShellReq value) => value.writeToBuffer(),
+          $0.CreateShellResp.fromBuffer);
   static final _$createVersion =
-      $grpc.ClientMethod<$0.CreateVersionReq, $0.CreatePluginResp>(
+      $grpc.ClientMethod<$0.CreateVersionReq, $1.Empty>(
           '/hi.ai.Plugin/CreateVersion',
           ($0.CreateVersionReq value) => value.writeToBuffer(),
-          $0.CreatePluginResp.fromBuffer);
-  static final _$createAnnex = $grpc.ClientMethod<$0.CreateAnnexReq, $1.Empty>(
-      '/hi.ai.Plugin/CreateAnnex',
-      ($0.CreateAnnexReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
+  static final _$createUsing = $grpc.ClientMethod<$0.CreateUsingReq, $1.Empty>(
+      '/hi.ai.Plugin/CreateUsing',
+      ($0.CreateUsingReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditPluginReq, $1.Empty>(
       '/hi.ai.Plugin/Edit',
@@ -153,19 +150,18 @@ class PluginClient extends $grpc.Client {
           ($0.ListPluginsReq value) => value.writeToBuffer(),
           $0.ListPluginsResp.fromBuffer);
   static final _$listVersions =
-      $grpc.ClientMethod<$0.ListVersionsReq, $0.ListPluginsResp>(
+      $grpc.ClientMethod<$0.ListVersionsReq, $0.ListVersionsResp>(
           '/hi.ai.Plugin/ListVersions',
           ($0.ListVersionsReq value) => value.writeToBuffer(),
-          $0.ListPluginsResp.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$0.DeletePluginReq, $1.Empty>(
+          $0.ListVersionsResp.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.DeleteVersionReq, $1.Empty>(
       '/hi.ai.Plugin/Delete',
-      ($0.DeletePluginReq value) => value.writeToBuffer(),
+      ($0.DeleteVersionReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
-  static final _$deleteAll =
-      $grpc.ClientMethod<$0.DeleteAllPluginVersionsReq, $1.Empty>(
-          '/hi.ai.Plugin/DeleteAll',
-          ($0.DeleteAllPluginVersionsReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
+  static final _$deleteShell = $grpc.ClientMethod<$0.DeleteShellReq, $1.Empty>(
+      '/hi.ai.Plugin/DeleteShell',
+      ($0.DeleteShellReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$deleteByAgents =
       $grpc.ClientMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
           '/hi.ai.Plugin/DeleteByAgents',
@@ -186,26 +182,26 @@ abstract class PluginServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.Plugin';
 
   PluginServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.CreatePluginReq, $0.CreatePluginResp>(
-        'Create',
-        create_Pre,
+    $addMethod($grpc.ServiceMethod<$0.CreateShellReq, $0.CreateShellResp>(
+        'CreateShell',
+        createShell_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.CreatePluginReq.fromBuffer(value),
-        ($0.CreatePluginResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateVersionReq, $0.CreatePluginResp>(
+        ($core.List<$core.int> value) => $0.CreateShellReq.fromBuffer(value),
+        ($0.CreateShellResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateVersionReq, $1.Empty>(
         'CreateVersion',
         createVersion_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.CreateVersionReq.fromBuffer(value),
-        ($0.CreatePluginResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateAnnexReq, $1.Empty>(
-        'CreateAnnex',
-        createAnnex_Pre,
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateUsingReq, $1.Empty>(
+        'CreateUsing',
+        createUsing_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.CreateAnnexReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.CreateUsingReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditPluginReq, $1.Empty>(
         'Edit',
@@ -228,27 +224,26 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ListPluginsReq.fromBuffer(value),
         ($0.ListPluginsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListVersionsReq, $0.ListPluginsResp>(
+    $addMethod($grpc.ServiceMethod<$0.ListVersionsReq, $0.ListVersionsResp>(
         'ListVersions',
         listVersions_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.ListVersionsReq.fromBuffer(value),
-        ($0.ListPluginsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeletePluginReq, $1.Empty>(
+        ($0.ListVersionsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteVersionReq, $1.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.DeletePluginReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.DeleteVersionReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteAllPluginVersionsReq, $1.Empty>(
-        'DeleteAll',
-        deleteAll_Pre,
+    $addMethod($grpc.ServiceMethod<$0.DeleteShellReq, $1.Empty>(
+        'DeleteShell',
+        deleteShell_Pre,
         false,
         false,
-        ($core.List<$core.int> value) =>
-            $0.DeleteAllPluginVersionsReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.DeleteShellReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
         'DeleteByAgents',
@@ -274,29 +269,29 @@ abstract class PluginServiceBase extends $grpc.Service {
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.CreatePluginResp> create_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreatePluginReq> $request) async {
-    return create($call, await $request);
+  $async.Future<$0.CreateShellResp> createShell_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateShellReq> $request) async {
+    return createShell($call, await $request);
   }
 
-  $async.Future<$0.CreatePluginResp> create(
-      $grpc.ServiceCall call, $0.CreatePluginReq request);
+  $async.Future<$0.CreateShellResp> createShell(
+      $grpc.ServiceCall call, $0.CreateShellReq request);
 
-  $async.Future<$0.CreatePluginResp> createVersion_Pre($grpc.ServiceCall $call,
+  $async.Future<$1.Empty> createVersion_Pre($grpc.ServiceCall $call,
       $async.Future<$0.CreateVersionReq> $request) async {
     return createVersion($call, await $request);
   }
 
-  $async.Future<$0.CreatePluginResp> createVersion(
+  $async.Future<$1.Empty> createVersion(
       $grpc.ServiceCall call, $0.CreateVersionReq request);
 
-  $async.Future<$1.Empty> createAnnex_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateAnnexReq> $request) async {
-    return createAnnex($call, await $request);
+  $async.Future<$1.Empty> createUsing_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateUsingReq> $request) async {
+    return createUsing($call, await $request);
   }
 
-  $async.Future<$1.Empty> createAnnex(
-      $grpc.ServiceCall call, $0.CreateAnnexReq request);
+  $async.Future<$1.Empty> createUsing(
+      $grpc.ServiceCall call, $0.CreateUsingReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditPluginReq> $request) async {
@@ -322,29 +317,29 @@ abstract class PluginServiceBase extends $grpc.Service {
   $async.Future<$0.ListPluginsResp> list(
       $grpc.ServiceCall call, $0.ListPluginsReq request);
 
-  $async.Future<$0.ListPluginsResp> listVersions_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.ListVersionsResp> listVersions_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListVersionsReq> $request) async {
     return listVersions($call, await $request);
   }
 
-  $async.Future<$0.ListPluginsResp> listVersions(
+  $async.Future<$0.ListVersionsResp> listVersions(
       $grpc.ServiceCall call, $0.ListVersionsReq request);
 
   $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeletePluginReq> $request) async {
+      $async.Future<$0.DeleteVersionReq> $request) async {
     return delete($call, await $request);
   }
 
   $async.Future<$1.Empty> delete(
-      $grpc.ServiceCall call, $0.DeletePluginReq request);
+      $grpc.ServiceCall call, $0.DeleteVersionReq request);
 
-  $async.Future<$1.Empty> deleteAll_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeleteAllPluginVersionsReq> $request) async {
-    return deleteAll($call, await $request);
+  $async.Future<$1.Empty> deleteShell_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeleteShellReq> $request) async {
+    return deleteShell($call, await $request);
   }
 
-  $async.Future<$1.Empty> deleteAll(
-      $grpc.ServiceCall call, $0.DeleteAllPluginVersionsReq request);
+  $async.Future<$1.Empty> deleteShell(
+      $grpc.ServiceCall call, $0.DeleteShellReq request);
 
   $async.Future<$1.Empty> deleteByAgents_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeletePluginByAgentsReq> $request) async {

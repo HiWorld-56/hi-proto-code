@@ -25,13 +25,10 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 插件在某机器人列表里的来源。
+// 插件在某机器人使用记录里的来源。
 //
-// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判:
-//
-//	一个主人有三个机器人、同一脚本装三个上去,那样会把其中两个误判成引用。
-//
-// ⚠️ **引用不是拷贝** —— 只是把同一个 uuid 放进另一个机器人的列表,不新建 body。
+// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判。
+// ⚠️ **引用不是拷贝** —— 只是给另一个 agent 多一条 using 记录指向同一个壳,不新建壳/版本。
 type PluginSource int32
 
 const (
@@ -78,45 +75,29 @@ func (PluginSource) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{0}
 }
 
-// plugin_body:插件本体。
-//
-// **uuid = <主id>_<次id>,它就是"插件 id" —— 系统内一个 uuid 就是一个独立插件。**
-// 同一个主id 下的多个 uuid = 同一脚本的多个版本;一级列表按主id 聚合,二级页列出各 uuid。
-// ⚠️ **次id 与 version 无关**:次id 是后台生成的身份,version 是用户贴的标签。
-//
-//	正因如此,用户删掉某版本再用同一个版本号重建,拿到的是**新的 uuid**,
-//	老的引用指向的仍是那个已删除的插件,不会被悄悄换掉内容。
-//
-// ⚠️ **发布后整行冻结** —— name/logo/summary 也不例外。
-//
-//	定版的东西如果能改,版本就失去意义了;要改就发新版本。
-type PluginBody struct {
+// PluginShell:插件的壳(身份)。uuid 后台分配,单一 id。
+type PluginShell struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`               // 插件 id = <主id>_<次id>,后台生成
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 脚本名(给人看)
-	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`               // 图标 url
-	Summary       string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`         // 详情资源 url:介绍页或一张美工图,由用户自定
-	Version       string                 `protobuf:"bytes,5,opt,name=version,proto3" json:"version,omitempty"`         // 三级版本号如 1.23.66,用户自填;仅作标签,**不参与身份**
-	Url           string                 `protobuf:"bytes,6,opt,name=url,proto3" json:"url,omitempty"`                 // 主脚本包 zip url(内含 main.py + requirement.txt)
-	Description   string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"` // 完整 function-call spec(作用 + parameters schema)
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // 插件 id,后台分配(单一 id,不含子id)
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"` // 脚本名(给人看)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PluginBody) Reset() {
-	*x = PluginBody{}
+func (x *PluginShell) Reset() {
+	*x = PluginShell{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PluginBody) String() string {
+func (x *PluginShell) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PluginBody) ProtoMessage() {}
+func (*PluginShell) ProtoMessage() {}
 
-func (x *PluginBody) ProtoReflect() protoreflect.Message {
+func (x *PluginShell) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -128,64 +109,114 @@ func (x *PluginBody) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PluginBody.ProtoReflect.Descriptor instead.
-func (*PluginBody) Descriptor() ([]byte, []int) {
+// Deprecated: Use PluginShell.ProtoReflect.Descriptor instead.
+func (*PluginShell) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PluginBody) GetUuid() string {
+func (x *PluginShell) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-func (x *PluginBody) GetName() string {
+func (x *PluginShell) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *PluginBody) GetLogo() string {
+// PluginVersion:插件本体的一个版本(除名字外的内容)。按 (uuid,version) 冻结。
+type PluginVersion struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`               // 所属壳 uuid
+	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`         // 三级版本号如 1.23.66,用户自填;前端按现有版本自动预填,后端校验
+	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`               // 图标 url
+	Summary       string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`         // 详情资源 url:介绍页或美工图,用户自定
+	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`                 // 主脚本包 zip url(内含 main.py + requirement.txt)
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 完整 function-call spec(作用 + parameters schema)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PluginVersion) Reset() {
+	*x = PluginVersion{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PluginVersion) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PluginVersion) ProtoMessage() {}
+
+func (x *PluginVersion) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[1]
 	if x != nil {
-		return x.Logo
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PluginVersion.ProtoReflect.Descriptor instead.
+func (*PluginVersion) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PluginVersion) GetUuid() string {
+	if x != nil {
+		return x.Uuid
 	}
 	return ""
 }
 
-func (x *PluginBody) GetSummary() string {
-	if x != nil {
-		return x.Summary
-	}
-	return ""
-}
-
-func (x *PluginBody) GetVersion() string {
+func (x *PluginVersion) GetVersion() string {
 	if x != nil {
 		return x.Version
 	}
 	return ""
 }
 
-func (x *PluginBody) GetUrl() string {
+func (x *PluginVersion) GetLogo() string {
+	if x != nil {
+		return x.Logo
+	}
+	return ""
+}
+
+func (x *PluginVersion) GetSummary() string {
+	if x != nil {
+		return x.Summary
+	}
+	return ""
+}
+
+func (x *PluginVersion) GetUrl() string {
 	if x != nil {
 		return x.Url
 	}
 	return ""
 }
 
-func (x *PluginBody) GetDescription() string {
+func (x *PluginVersion) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-// plugin_annex:某机器人对某 body 的附件。运行期以字典全局变量注入执行环境。
+// plugin_annex:某 agent 对某壳的**运行期附件**。运行期以字典全局变量 plugin_annex 注入执行环境。
 type PluginAnnex struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // agent 的 club-apikey(club 上传时自动取第一个)
+	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // agent 的 club-apikey(club 上传时自动取第一个;鉴权范围 ≤ token)
 	Data          *structpb.Struct       `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`                   // 用户填的运行时扩展数据
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -193,7 +224,7 @@ type PluginAnnex struct {
 
 func (x *PluginAnnex) Reset() {
 	*x = PluginAnnex{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[1]
+	mi := &file_hi_ai_plugin_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -205,7 +236,7 @@ func (x *PluginAnnex) String() string {
 func (*PluginAnnex) ProtoMessage() {}
 
 func (x *PluginAnnex) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[1]
+	mi := &file_hi_ai_plugin_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -218,7 +249,7 @@ func (x *PluginAnnex) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginAnnex.ProtoReflect.Descriptor instead.
 func (*PluginAnnex) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{1}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PluginAnnex) GetApiKey() string {
@@ -235,21 +266,21 @@ func (x *PluginAnnex) GetData() *structpb.Struct {
 	return nil
 }
 
-// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+// 某 agent 视角的一个插件:壳 + 该 agent 激活的版本 + 绑定状态(List/Get 返回;api_key 敏感不随列表回)。
 type PluginView struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Body          *PluginBody            `protobuf:"bytes,1,opt,name=body,proto3" json:"body,omitempty"`
-	Active        string                 `protobuf:"bytes,2,opt,name=active,proto3" json:"active,omitempty"`                          // 该 agent 激活的 uuid;body.uuid == active 即本行生效
+	Shell         *PluginShell           `protobuf:"bytes,1,opt,name=shell,proto3" json:"shell,omitempty"`
+	Active        *PluginVersion         `protobuf:"bytes,2,opt,name=active,proto3" json:"active,omitempty"`                          // 该 agent 激活版本的内容(using.version 对应行);未激活为空
 	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"`                       // 该 agent 是否启用此插件参与推理
 	Source        PluginSource           `protobuf:"varint,4,opt,name=source,proto3,enum=hi.ai.PluginSource" json:"source,omitempty"` // 来源:主人直接上传 or 经授权引用
-	RefCount      int32                  `protobuf:"varint,5,opt,name=ref_count,json=refCount,proto3" json:"ref_count,omitempty"`     // 被多少机器人引用(实时 COUNT,**不落库**,存了必漂)
+	RefCount      int32                  `protobuf:"varint,5,opt,name=ref_count,json=refCount,proto3" json:"ref_count,omitempty"`     // 被多少机器人引用(实时 COUNT,**不落库**)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PluginView) Reset() {
 	*x = PluginView{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[2]
+	mi := &file_hi_ai_plugin_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -261,7 +292,7 @@ func (x *PluginView) String() string {
 func (*PluginView) ProtoMessage() {}
 
 func (x *PluginView) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[2]
+	mi := &file_hi_ai_plugin_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -274,21 +305,21 @@ func (x *PluginView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginView.ProtoReflect.Descriptor instead.
 func (*PluginView) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{2}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *PluginView) GetBody() *PluginBody {
+func (x *PluginView) GetShell() *PluginShell {
 	if x != nil {
-		return x.Body
+		return x.Shell
 	}
 	return nil
 }
 
-func (x *PluginView) GetActive() string {
+func (x *PluginView) GetActive() *PluginVersion {
 	if x != nil {
 		return x.Active
 	}
-	return ""
+	return nil
 }
 
 func (x *PluginView) GetEnabled() bool {
@@ -314,14 +345,10 @@ func (x *PluginView) GetRefCount() int32 {
 
 // 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
 //
-// ⚠️ 别再往通知里塞 PluginView:它是 VIS_SELF(body.url 是私有 bucket 的脚本包地址,
-//
-//	脚本是 owner 私产、且是可交易资产),而 hi.club.Notice 是 VIS_PARTICIPANT ——
-//	SELF 装进 PARTICIPANT 本该被可见性 lint 拦下,只因中间隔了个 google.protobuf.Any
-//	才没拦住。**Any 是那套 lint 唯一的结构性缺口**,往里塞什么要自己把关。
+// ⚠️ 别往通知里塞 PluginView(VIS_SELF,含脚本 url 这类私产);hi.club.Notice 是 VIS_PARTICIPANT。
 type PluginLoaded struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // 插件 id(<主id>_<次id>)
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // 插件 id
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`
 	Enabled       bool                   `protobuf:"varint,4,opt,name=enabled,proto3" json:"enabled,omitempty"` // 是否参与推理
@@ -331,7 +358,7 @@ type PluginLoaded struct {
 
 func (x *PluginLoaded) Reset() {
 	*x = PluginLoaded{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[3]
+	mi := &file_hi_ai_plugin_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -343,7 +370,7 @@ func (x *PluginLoaded) String() string {
 func (*PluginLoaded) ProtoMessage() {}
 
 func (x *PluginLoaded) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[3]
+	mi := &file_hi_ai_plugin_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -356,7 +383,7 @@ func (x *PluginLoaded) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginLoaded.ProtoReflect.Descriptor instead.
 func (*PluginLoaded) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{3}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *PluginLoaded) GetUuid() string {
@@ -387,39 +414,33 @@ func (x *PluginLoaded) GetEnabled() bool {
 	return false
 }
 
-// 发布一个**全新脚本**(生成 主id+次id)+ 建该机器人的 annex(source=original)。
-//
-// ⚠️ 与 CreateVersion(给已有脚本加新版本)**拆成两个方法**,不用"root 空/非空"分叉 ——
-//
-//	那是"创建一个新资源"与"往已有资源追加"两件事,连服务端的校验规则都不同
-//	(加版本要求版本号大于现有最大,建新脚本没有这条),必填字段也不同。
-//
-// **uuid 已存在必拒**,发布即冻结。
-// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
-type CreatePluginReq struct {
+// 建壳:只建一个空壳(uuid + name),**还没有任何版本**,该 agent 的激活版本为空。
+// uuid 由后台分配并返回,调用方不要传。同时给 owner 建一条 using(source=original)。
+// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填(可空)。
+type CreateShellReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 装到哪个 agent
-	Body          *PluginBody            `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`   // uuid 由后台生成并回填,调用方不要传;其余字段由用户/前端提供
-	Annex         *PluginAnnex           `protobuf:"bytes,3,opt,name=annex,proto3" json:"annex,omitempty"` // api_key 由 club 自动填、data 用户填
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 壳挂到哪个 agent(owner)
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Annex         *PluginAnnex           `protobuf:"bytes,3,opt,name=annex,proto3" json:"annex,omitempty"` // api_key 由 club 填、data 用户填
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreatePluginReq) Reset() {
-	*x = CreatePluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[4]
+func (x *CreateShellReq) Reset() {
+	*x = CreateShellReq{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreatePluginReq) String() string {
+func (x *CreateShellReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreatePluginReq) ProtoMessage() {}
+func (*CreateShellReq) ProtoMessage() {}
 
-func (x *CreatePluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[4]
+func (x *CreateShellReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -430,47 +451,90 @@ func (x *CreatePluginReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreatePluginReq.ProtoReflect.Descriptor instead.
-func (*CreatePluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{4}
+// Deprecated: Use CreateShellReq.ProtoReflect.Descriptor instead.
+func (*CreateShellReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreatePluginReq) GetAgent() string {
+func (x *CreateShellReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
 	}
 	return ""
 }
 
-func (x *CreatePluginReq) GetBody() *PluginBody {
+func (x *CreateShellReq) GetName() string {
 	if x != nil {
-		return x.Body
+		return x.Name
 	}
-	return nil
+	return ""
 }
 
-func (x *CreatePluginReq) GetAnnex() *PluginAnnex {
+func (x *CreateShellReq) GetAnnex() *PluginAnnex {
 	if x != nil {
 		return x.Annex
 	}
 	return nil
 }
 
-// 给**已有脚本**加一个新版本(只生成次id)。
-// 版本号须**大于该 root 下现有最大**(三级数字按数值比较,不限前导零)。
+type CreateShellResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // 后台分配的插件 id
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateShellResp) Reset() {
+	*x = CreateShellResp{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateShellResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateShellResp) ProtoMessage() {}
+
+func (x *CreateShellResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateShellResp.ProtoReflect.Descriptor instead.
+func (*CreateShellResp) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CreateShellResp) GetUuid() string {
+	if x != nil {
+		return x.Uuid
+	}
+	return ""
+}
+
+// 给已有壳加一个新版本。version 号由前端按版本列表自动计算/预填,后端做合法性校验:
+// 必须**大于该壳现有最大版本**(三级数字按数值比较,不限前导零)。
+// 若该 agent 当前激活版本为空(新壳首版),自动把这一版设为激活版。
 type CreateVersionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Root          string                 `protobuf:"bytes,2,opt,name=root,proto3" json:"root,omitempty"` // 主id:给哪个脚本加版本
-	Body          *PluginBody            `protobuf:"bytes,3,opt,name=body,proto3" json:"body,omitempty"`
-	Annex         *PluginAnnex           `protobuf:"bytes,4,opt,name=annex,proto3" json:"annex,omitempty"`
+	Version       *PluginVersion         `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"` // version.uuid = 壳 uuid;version.version + 本体内容由用户/前端提供
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateVersionReq) Reset() {
 	*x = CreateVersionReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[5]
+	mi := &file_hi_ai_plugin_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -482,7 +546,7 @@ func (x *CreateVersionReq) String() string {
 func (*CreateVersionReq) ProtoMessage() {}
 
 func (x *CreateVersionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[5]
+	mi := &file_hi_ai_plugin_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -495,7 +559,7 @@ func (x *CreateVersionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateVersionReq.ProtoReflect.Descriptor instead.
 func (*CreateVersionReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{5}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CreateVersionReq) GetAgent() string {
@@ -505,98 +569,39 @@ func (x *CreateVersionReq) GetAgent() string {
 	return ""
 }
 
-func (x *CreateVersionReq) GetRoot() string {
+func (x *CreateVersionReq) GetVersion() *PluginVersion {
 	if x != nil {
-		return x.Root
-	}
-	return ""
-}
-
-func (x *CreateVersionReq) GetBody() *PluginBody {
-	if x != nil {
-		return x.Body
+		return x.Version
 	}
 	return nil
 }
 
-func (x *CreateVersionReq) GetAnnex() *PluginAnnex {
-	if x != nil {
-		return x.Annex
-	}
-	return nil
-}
-
-type CreatePluginResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // 插件 id
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreatePluginResp) Reset() {
-	*x = CreatePluginResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreatePluginResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreatePluginResp) ProtoMessage() {}
-
-func (x *CreatePluginResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreatePluginResp.ProtoReflect.Descriptor instead.
-func (*CreatePluginResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *CreatePluginResp) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
-// 把一个**已有 body** 绑定到某 agent(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
-// owner 首次上传走 Create(自带 annex),本方法用于**同 body 多机器人引用**。
-type CreateAnnexReq struct {
+// 把一个**已有壳**绑定到某 agent(生成一条 using,source=reference)。插件市场"分享/授权"通过后由 club 调。
+type CreateUsingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // 目标 agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 要绑定的 body uuid
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 激活哪个版本(该 agent 的 active)
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 要绑定的壳 uuid
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 激活哪个版本(该 agent 的 using.version)
 	Annex         *PluginAnnex           `protobuf:"bytes,4,opt,name=annex,proto3" json:"annex,omitempty"`     // 该 agent 的 api_key(club 取)+ data
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateAnnexReq) Reset() {
-	*x = CreateAnnexReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[7]
+func (x *CreateUsingReq) Reset() {
+	*x = CreateUsingReq{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateAnnexReq) String() string {
+func (x *CreateUsingReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateAnnexReq) ProtoMessage() {}
+func (*CreateUsingReq) ProtoMessage() {}
 
-func (x *CreateAnnexReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[7]
+func (x *CreateUsingReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -607,44 +612,44 @@ func (x *CreateAnnexReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateAnnexReq.ProtoReflect.Descriptor instead.
-func (*CreateAnnexReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{7}
+// Deprecated: Use CreateUsingReq.ProtoReflect.Descriptor instead.
+func (*CreateUsingReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *CreateAnnexReq) GetAgent() string {
+func (x *CreateUsingReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
 	}
 	return ""
 }
 
-func (x *CreateAnnexReq) GetUuid() string {
+func (x *CreateUsingReq) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-func (x *CreateAnnexReq) GetVersion() string {
+func (x *CreateUsingReq) GetVersion() string {
 	if x != nil {
 		return x.Version
 	}
 	return ""
 }
 
-func (x *CreateAnnexReq) GetAnnex() *PluginAnnex {
+func (x *CreateUsingReq) GetAnnex() *PluginAnnex {
 	if x != nil {
 		return x.Annex
 	}
 	return nil
 }
 
-// 改绑定关系。**body 一个字段都不能改** —— 发布即冻结,要改就发新版本。这里只动该 agent 的 annex。
+// 改使用记录。**壳/版本一个字段都不能改**(发布即冻结,要改就发新版本)。这里只动该 agent 的 annex。
 type EditPluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id(壳)
 	Annex         *PluginAnnex           `protobuf:"bytes,3,opt,name=annex,proto3" json:"annex,omitempty"` // 改该 agent 的 api_key/data
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -652,7 +657,7 @@ type EditPluginReq struct {
 
 func (x *EditPluginReq) Reset() {
 	*x = EditPluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[8]
+	mi := &file_hi_ai_plugin_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -664,7 +669,7 @@ func (x *EditPluginReq) String() string {
 func (*EditPluginReq) ProtoMessage() {}
 
 func (x *EditPluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[8]
+	mi := &file_hi_ai_plugin_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -677,7 +682,7 @@ func (x *EditPluginReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditPluginReq.ProtoReflect.Descriptor instead.
 func (*EditPluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{8}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *EditPluginReq) GetAgent() string {
@@ -704,7 +709,7 @@ func (x *EditPluginReq) GetAnnex() *PluginAnnex {
 type SetEnabledReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`      // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`        // 脚本 id
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`        // 壳 id
 	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"` // 该 agent 是否参与推理
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -712,7 +717,7 @@ type SetEnabledReq struct {
 
 func (x *SetEnabledReq) Reset() {
 	*x = SetEnabledReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[9]
+	mi := &file_hi_ai_plugin_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -724,7 +729,7 @@ func (x *SetEnabledReq) String() string {
 func (*SetEnabledReq) ProtoMessage() {}
 
 func (x *SetEnabledReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[9]
+	mi := &file_hi_ai_plugin_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -737,7 +742,7 @@ func (x *SetEnabledReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetEnabledReq.ProtoReflect.Descriptor instead.
 func (*SetEnabledReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{9}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *SetEnabledReq) GetAgent() string {
@@ -761,19 +766,19 @@ func (x *SetEnabledReq) GetEnabled() bool {
 	return false
 }
 
-// 选定该 agent 激活哪个版本。uuid 本身即版本身份,不需要再传版本号。
-// 同一主id 下只能激活一个;不同机器人可各自激活不同版本。
+// 选定该 agent 激活哪个版本(设 using.version)。同一壳每 agent 各选各的。
 type SetActiveReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 要激活的插件 id
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 壳 id
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 要激活的版本号(须为该壳已存在的版本)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SetActiveReq) Reset() {
 	*x = SetActiveReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[10]
+	mi := &file_hi_ai_plugin_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -785,7 +790,7 @@ func (x *SetActiveReq) String() string {
 func (*SetActiveReq) ProtoMessage() {}
 
 func (x *SetActiveReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[10]
+	mi := &file_hi_ai_plugin_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -798,7 +803,7 @@ func (x *SetActiveReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetActiveReq.ProtoReflect.Descriptor instead.
 func (*SetActiveReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{10}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *SetActiveReq) GetAgent() string {
@@ -815,18 +820,26 @@ func (x *SetActiveReq) GetUuid() string {
 	return ""
 }
 
-// 下载脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
+func (x *SetActiveReq) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+// 下载某版本的脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
 type DownloadScriptReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did(校验持有关系)
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did(校验持有关系)
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 壳 id
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 哪个版本(url 在版本上)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DownloadScriptReq) Reset() {
 	*x = DownloadScriptReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[11]
+	mi := &file_hi_ai_plugin_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -838,7 +851,7 @@ func (x *DownloadScriptReq) String() string {
 func (*DownloadScriptReq) ProtoMessage() {}
 
 func (x *DownloadScriptReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[11]
+	mi := &file_hi_ai_plugin_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -851,7 +864,7 @@ func (x *DownloadScriptReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadScriptReq.ProtoReflect.Descriptor instead.
 func (*DownloadScriptReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{11}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DownloadScriptReq) GetAgent() string {
@@ -868,6 +881,13 @@ func (x *DownloadScriptReq) GetUuid() string {
 	return ""
 }
 
+func (x *DownloadScriptReq) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
 type DownloadScriptResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
@@ -878,7 +898,7 @@ type DownloadScriptResp struct {
 
 func (x *DownloadScriptResp) Reset() {
 	*x = DownloadScriptResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[12]
+	mi := &file_hi_ai_plugin_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -890,7 +910,7 @@ func (x *DownloadScriptResp) String() string {
 func (*DownloadScriptResp) ProtoMessage() {}
 
 func (x *DownloadScriptResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[12]
+	mi := &file_hi_ai_plugin_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -903,7 +923,7 @@ func (x *DownloadScriptResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadScriptResp.ProtoReflect.Descriptor instead.
 func (*DownloadScriptResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{12}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DownloadScriptResp) GetContent() []byte {
@@ -930,7 +950,7 @@ type ListPluginsReq struct {
 
 func (x *ListPluginsReq) Reset() {
 	*x = ListPluginsReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[13]
+	mi := &file_hi_ai_plugin_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -942,7 +962,7 @@ func (x *ListPluginsReq) String() string {
 func (*ListPluginsReq) ProtoMessage() {}
 
 func (x *ListPluginsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[13]
+	mi := &file_hi_ai_plugin_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -955,7 +975,7 @@ func (x *ListPluginsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPluginsReq.ProtoReflect.Descriptor instead.
 func (*ListPluginsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{13}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ListPluginsReq) GetAgent() string {
@@ -972,10 +992,11 @@ func (x *ListPluginsReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
+// 二级页:列某壳的所有版本。
 type ListVersionsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
-	Root          string                 `protobuf:"bytes,2,opt,name=root,proto3" json:"root,omitempty"`   // 主id:列该脚本的所有版本
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 壳 id
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -983,7 +1004,7 @@ type ListVersionsReq struct {
 
 func (x *ListVersionsReq) Reset() {
 	*x = ListVersionsReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[14]
+	mi := &file_hi_ai_plugin_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -995,7 +1016,7 @@ func (x *ListVersionsReq) String() string {
 func (*ListVersionsReq) ProtoMessage() {}
 
 func (x *ListVersionsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[14]
+	mi := &file_hi_ai_plugin_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1008,7 +1029,7 @@ func (x *ListVersionsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListVersionsReq.ProtoReflect.Descriptor instead.
 func (*ListVersionsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{14}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ListVersionsReq) GetAgent() string {
@@ -1018,9 +1039,9 @@ func (x *ListVersionsReq) GetAgent() string {
 	return ""
 }
 
-func (x *ListVersionsReq) GetRoot() string {
+func (x *ListVersionsReq) GetUuid() string {
 	if x != nil {
-		return x.Root
+		return x.Uuid
 	}
 	return ""
 }
@@ -1042,7 +1063,7 @@ type ListPluginsResp struct {
 
 func (x *ListPluginsResp) Reset() {
 	*x = ListPluginsResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[15]
+	mi := &file_hi_ai_plugin_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1054,7 +1075,7 @@ func (x *ListPluginsResp) String() string {
 func (*ListPluginsResp) ProtoMessage() {}
 
 func (x *ListPluginsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[15]
+	mi := &file_hi_ai_plugin_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1067,7 +1088,7 @@ func (x *ListPluginsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPluginsResp.ProtoReflect.Descriptor instead.
 func (*ListPluginsResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{15}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ListPluginsResp) GetTotal() int32 {
@@ -1084,17 +1105,69 @@ func (x *ListPluginsResp) GetList() []*PluginView {
 	return nil
 }
 
+type ListVersionsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*PluginVersion       `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListVersionsResp) Reset() {
+	*x = ListVersionsResp{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListVersionsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListVersionsResp) ProtoMessage() {}
+
+func (x *ListVersionsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListVersionsResp.ProtoReflect.Descriptor instead.
+func (*ListVersionsResp) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ListVersionsResp) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListVersionsResp) GetList() []*PluginVersion {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
 type GetPluginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 壳 id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetPluginReq) Reset() {
 	*x = GetPluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[16]
+	mi := &file_hi_ai_plugin_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1106,7 +1179,7 @@ func (x *GetPluginReq) String() string {
 func (*GetPluginReq) ProtoMessage() {}
 
 func (x *GetPluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[16]
+	mi := &file_hi_ai_plugin_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1119,7 +1192,7 @@ func (x *GetPluginReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPluginReq.ProtoReflect.Descriptor instead.
 func (*GetPluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{16}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *GetPluginReq) GetAgent() string {
@@ -1145,7 +1218,7 @@ type GetPluginResp struct {
 
 func (x *GetPluginResp) Reset() {
 	*x = GetPluginResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[17]
+	mi := &file_hi_ai_plugin_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1157,7 +1230,7 @@ func (x *GetPluginResp) String() string {
 func (*GetPluginResp) ProtoMessage() {}
 
 func (x *GetPluginResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[17]
+	mi := &file_hi_ai_plugin_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1170,7 +1243,7 @@ func (x *GetPluginResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPluginResp.ProtoReflect.Descriptor instead.
 func (*GetPluginResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{17}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetPluginResp) GetView() *PluginView {
@@ -1181,37 +1254,31 @@ func (x *GetPluginResp) GetView() *PluginView {
 }
 
 // 删单个版本(**连同脚本文件一并删**)。
-//
-// ⚠️ 与 DeleteAll(删整个脚本的所有版本)**拆成两个方法**,不用"uuid/root 二选一" ——
-//
-//	那两者破坏半径差一个数量级,却靠"哪个字段非空"分叉,且两个都传/都不传时行为未定义。
-//
-// ⚠️ 允许**强删正被引用的插件** —— 引用方的 annex 不清理,指向随即失效;
-//
-//	调用时该 tool 返错给 LLM,但**不打断整体推理流程**。删前把 ref_count 摆给用户看。
-type DeletePluginReq struct {
+// ⚠️ 允许**强删正被引用的版本** —— 引用方 using.version 指向随即失效;删前把 ref_count 摆给用户看。
+type DeleteVersionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 id(<主id>_<次id>)
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`     // agent did
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 壳 id
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 要删的版本
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeletePluginReq) Reset() {
-	*x = DeletePluginReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[18]
+func (x *DeleteVersionReq) Reset() {
+	*x = DeleteVersionReq{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeletePluginReq) String() string {
+func (x *DeleteVersionReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeletePluginReq) ProtoMessage() {}
+func (*DeleteVersionReq) ProtoMessage() {}
 
-func (x *DeletePluginReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[18]
+func (x *DeleteVersionReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1222,49 +1289,56 @@ func (x *DeletePluginReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeletePluginReq.ProtoReflect.Descriptor instead.
-func (*DeletePluginReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{18}
+// Deprecated: Use DeleteVersionReq.ProtoReflect.Descriptor instead.
+func (*DeleteVersionReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *DeletePluginReq) GetAgent() string {
+func (x *DeleteVersionReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
 	}
 	return ""
 }
 
-func (x *DeletePluginReq) GetUuid() string {
+func (x *DeleteVersionReq) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-// 删整个脚本的**全部版本**。破坏半径远大于 Delete,故独立成方法。
-type DeleteAllPluginVersionsReq struct {
+func (x *DeleteVersionReq) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+// 删整个插件:壳 + 全部版本 + 全部 using 记录(连同所有脚本文件)。破坏半径远大于删单版本,独立成方法。
+type DeleteShellReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Root          string                 `protobuf:"bytes,2,opt,name=root,proto3" json:"root,omitempty"` // 主id
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"` // 壳 id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteAllPluginVersionsReq) Reset() {
-	*x = DeleteAllPluginVersionsReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[19]
+func (x *DeleteShellReq) Reset() {
+	*x = DeleteShellReq{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteAllPluginVersionsReq) String() string {
+func (x *DeleteShellReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteAllPluginVersionsReq) ProtoMessage() {}
+func (*DeleteShellReq) ProtoMessage() {}
 
-func (x *DeleteAllPluginVersionsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[19]
+func (x *DeleteShellReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1275,21 +1349,21 @@ func (x *DeleteAllPluginVersionsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteAllPluginVersionsReq.ProtoReflect.Descriptor instead.
-func (*DeleteAllPluginVersionsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{19}
+// Deprecated: Use DeleteShellReq.ProtoReflect.Descriptor instead.
+func (*DeleteShellReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *DeleteAllPluginVersionsReq) GetAgent() string {
+func (x *DeleteShellReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
 	}
 	return ""
 }
 
-func (x *DeleteAllPluginVersionsReq) GetRoot() string {
+func (x *DeleteShellReq) GetUuid() string {
 	if x != nil {
-		return x.Root
+		return x.Uuid
 	}
 	return ""
 }
@@ -1303,7 +1377,7 @@ type DeletePluginByAgentsReq struct {
 
 func (x *DeletePluginByAgentsReq) Reset() {
 	*x = DeletePluginByAgentsReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[20]
+	mi := &file_hi_ai_plugin_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1315,7 +1389,7 @@ func (x *DeletePluginByAgentsReq) String() string {
 func (*DeletePluginByAgentsReq) ProtoMessage() {}
 
 func (x *DeletePluginByAgentsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[20]
+	mi := &file_hi_ai_plugin_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1328,7 +1402,7 @@ func (x *DeletePluginByAgentsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePluginByAgentsReq.ProtoReflect.Descriptor instead.
 func (*DeletePluginByAgentsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{20}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *DeletePluginByAgentsReq) GetAgents() []string {
@@ -1342,9 +1416,9 @@ func (x *DeletePluginByAgentsReq) GetAgents() []string {
 // AiPlugin 是独立 py-docker 服务,专门安全执行 py 脚本。hiai 只作调用方,本 server 不在 hiai 实现。
 type RunReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"` // 主脚本包 zip(= body.url)
+	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"` // 主脚本包 zip(= version.url)
 	CodeParams     string                 `protobuf:"bytes,2,opt,name=code_params,json=codeParams,proto3" json:"code_params,omitempty"`               // 调用参数(作 argv)
-	Uuid           string                 `protobuf:"bytes,3,opt,name=uuid,proto3" json:"uuid,omitempty"`                                             // 插件真实 uuid
+	Uuid           string                 `protobuf:"bytes,3,opt,name=uuid,proto3" json:"uuid,omitempty"`                                             // 插件壳 uuid
 	Envs           []string               `protobuf:"bytes,4,rep,name=envs,proto3" json:"envs,omitempty"`                                             // 环境变量 key=value
 	Annex          *PluginAnnex           `protobuf:"bytes,5,opt,name=annex,proto3" json:"annex,omitempty"`                                           // {api_key, data} → 以字典全局变量 plugin_annex 注入
 	unknownFields  protoimpl.UnknownFields
@@ -1353,7 +1427,7 @@ type RunReq struct {
 
 func (x *RunReq) Reset() {
 	*x = RunReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[21]
+	mi := &file_hi_ai_plugin_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1365,7 +1439,7 @@ func (x *RunReq) String() string {
 func (*RunReq) ProtoMessage() {}
 
 func (x *RunReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[21]
+	mi := &file_hi_ai_plugin_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1378,7 +1452,7 @@ func (x *RunReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunReq.ProtoReflect.Descriptor instead.
 func (*RunReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{21}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *RunReq) GetCodeArchiveUrl() string {
@@ -1425,7 +1499,7 @@ type RunResp struct {
 
 func (x *RunResp) Reset() {
 	*x = RunResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[22]
+	mi := &file_hi_ai_plugin_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1437,7 +1511,7 @@ func (x *RunResp) String() string {
 func (*RunResp) ProtoMessage() {}
 
 func (x *RunResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[22]
+	mi := &file_hi_ai_plugin_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1450,7 +1524,7 @@ func (x *RunResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunResp.ProtoReflect.Descriptor instead.
 func (*RunResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{22}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *RunResp) GetConts() []*Content {
@@ -1469,7 +1543,7 @@ type CleanupReq struct {
 
 func (x *CleanupReq) Reset() {
 	*x = CleanupReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[23]
+	mi := &file_hi_ai_plugin_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1481,7 +1555,7 @@ func (x *CleanupReq) String() string {
 func (*CleanupReq) ProtoMessage() {}
 
 func (x *CleanupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[23]
+	mi := &file_hi_ai_plugin_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1494,7 +1568,7 @@ func (x *CleanupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CleanupReq.ProtoReflect.Descriptor instead.
 func (*CleanupReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{23}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *CleanupReq) GetCodeArchiveUrl() string {
@@ -1508,23 +1582,24 @@ var File_hi_ai_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xe0\x01\n" +
-	"\n" +
-	"PluginBody\x12\x18\n" +
+	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"G\n" +
+	"\vPluginShell\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x18\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name\x12\x18\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name:\x04\x98\xb5\x18\x03\"\xc9\x01\n" +
+	"\rPluginVersion\x12\x18\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x1e\n" +
+	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x12\x18\n" +
 	"\x04logo\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04logo\x12\x1e\n" +
-	"\asummary\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\asummary\x12\x1e\n" +
-	"\aversion\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x12\x16\n" +
-	"\x03url\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x03url\x12&\n" +
-	"\vdescription\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\vdescription:\x04\x98\xb5\x18\x03\"S\n" +
+	"\asummary\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\asummary\x12\x16\n" +
+	"\x03url\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\x03url\x12&\n" +
+	"\vdescription\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\vdescription:\x04\x98\xb5\x18\x03\"S\n" +
 	"\vPluginAnnex\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12+\n" +
-	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xd3\x01\n" +
+	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xec\x01\n" +
 	"\n" +
-	"PluginView\x12+\n" +
-	"\x04body\x18\x01 \x01(\v2\x11.hi.ai.PluginBodyB\x04\x90\xb5\x18\x03R\x04body\x12\x1c\n" +
-	"\x06active\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06active\x12\x1e\n" +
+	"PluginView\x12.\n" +
+	"\x05shell\x18\x01 \x01(\v2\x12.hi.ai.PluginShellB\x04\x90\xb5\x18\x03R\x05shell\x122\n" +
+	"\x06active\x18\x02 \x01(\v2\x14.hi.ai.PluginVersionB\x04\x90\xb5\x18\x03R\x06active\x12\x1e\n" +
 	"\aenabled\x18\x03 \x01(\bB\x04\x90\xb5\x18\x03R\aenabled\x121\n" +
 	"\x06source\x18\x04 \x01(\x0e2\x13.hi.ai.PluginSourceB\x04\x90\xb5\x18\x03R\x06source\x12!\n" +
 	"\tref_count\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03R\brefCount:\x04\x98\xb5\x18\x03\"\x88\x01\n" +
@@ -1532,19 +1607,17 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04uuid\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x04name\x12\x1e\n" +
 	"\aversion\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\aversion\x12\x1e\n" +
-	"\aenabled\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02R\aenabled:\x04\x98\xb5\x18\x02\"\x86\x01\n" +
-	"\x0fCreatePluginReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12%\n" +
-	"\x04body\x18\x02 \x01(\v2\x11.hi.ai.PluginBodyR\x04body\x12(\n" +
-	"\x05annex\x18\x03 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"\xa9\x01\n" +
+	"\aenabled\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02R\aenabled:\x04\x98\xb5\x18\x02\"{\n" +
+	"\x0eCreateShellReq\x12\"\n" +
+	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12\x1b\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12(\n" +
+	"\x05annex\x18\x03 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"1\n" +
+	"\x0fCreateShellResp\x12\x18\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"f\n" +
 	"\x10CreateVersionReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12 \n" +
-	"\x04root\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04root\x12%\n" +
-	"\x04body\x18\x03 \x01(\v2\x11.hi.ai.PluginBodyR\x04body\x12(\n" +
-	"\x05annex\x18\x04 \x01(\v2\x12.hi.ai.PluginAnnexR\x05annex\"2\n" +
-	"\x10CreatePluginResp\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"~\n" +
-	"\x0eCreateAnnexReq\x12\x14\n" +
+	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12.\n" +
+	"\aversion\x18\x02 \x01(\v2\x14.hi.ai.PluginVersionR\aversion\"~\n" +
+	"\x0eCreateUsingReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
 	"\aversion\x18\x03 \x01(\tR\aversion\x12(\n" +
@@ -1556,13 +1629,15 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\rSetEnabledReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aenabled\x18\x03 \x01(\bR\aenabled\"8\n" +
+	"\aenabled\x18\x03 \x01(\bR\aenabled\"R\n" +
 	"\fSetActiveReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"=\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\tR\aversion\"W\n" +
 	"\x11DownloadScriptReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"T\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\tR\aversion\"T\n" +
 	"\x12DownloadScriptResp\x12\x1e\n" +
 	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x03R\acontent\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name:\x04\x98\xb5\x18\x03\"V\n" +
@@ -1573,24 +1648,28 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"pagination\"k\n" +
 	"\x0fListVersionsReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04root\x18\x02 \x01(\tR\x04root\x12.\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"`\n" +
 	"\x0fListPluginsResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12+\n" +
-	"\x04list\x18\x02 \x03(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +
+	"\x04list\x18\x02 \x03(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"d\n" +
+	"\x10ListVersionsResp\x12\x1a\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.ai.PluginVersionB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +
 	"\fGetPluginReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"B\n" +
 	"\rGetPluginResp\x12+\n" +
-	"\x04view\x18\x01 \x01(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04view:\x04\x98\xb5\x18\x03\"W\n" +
-	"\x0fDeletePluginReq\x12\"\n" +
+	"\x04view\x18\x01 \x01(\v2\x11.hi.ai.PluginViewB\x04\x90\xb5\x18\x03R\x04view:\x04\x98\xb5\x18\x03\"\x80\x01\n" +
+	"\x10DeleteVersionReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12 \n" +
-	"\x04uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\"b\n" +
-	"\x1aDeleteAllPluginVersionsReq\x12\"\n" +
+	"\x04uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12&\n" +
+	"\aversion\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aversion\"V\n" +
+	"\x0eDeleteShellReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12 \n" +
-	"\x04root\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04root\"1\n" +
+	"\x04uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\"1\n" +
 	"\x17DeletePluginByAgentsReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\"\xa5\x01\n" +
 	"\x06RunReq\x12(\n" +
@@ -1607,17 +1686,17 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl*G\n" +
 	"\fPluginSource\x12\x1a\n" +
 	"\x16PLUGIN_SOURCE_ORIGINAL\x10\x00\x12\x1b\n" +
-	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\xb9\x06\n" +
-	"\x06Plugin\x12@\n" +
-	"\x06Create\x12\x16.hi.ai.CreatePluginReq\x1a\x17.hi.ai.CreatePluginResp\"\x05\x8a\xb5\x18\x01\x03\x12H\n" +
-	"\rCreateVersion\x12\x17.hi.ai.CreateVersionReq\x1a\x17.hi.ai.CreatePluginResp\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
-	"\vCreateAnnex\x12\x15.hi.ai.CreateAnnexReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
+	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\xb3\x06\n" +
+	"\x06Plugin\x12C\n" +
+	"\vCreateShell\x12\x15.hi.ai.CreateShellReq\x1a\x16.hi.ai.CreateShellResp\"\x05\x8a\xb5\x18\x01\x03\x12G\n" +
+	"\rCreateVersion\x12\x17.hi.ai.CreateVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
+	"\vCreateUsing\x12\x15.hi.ai.CreateUsingReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
 	"\x04Edit\x12\x14.hi.ai.EditPluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x127\n" +
 	"\x03Get\x12\x13.hi.ai.GetPluginReq\x1a\x14.hi.ai.GetPluginResp\"\x05\x8a\xb5\x18\x01\x03\x12<\n" +
-	"\x04List\x12\x15.hi.ai.ListPluginsReq\x1a\x16.hi.ai.ListPluginsResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
-	"\fListVersions\x12\x16.hi.ai.ListVersionsReq\x1a\x16.hi.ai.ListPluginsResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
-	"\x06Delete\x12\x16.hi.ai.DeletePluginReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12M\n" +
-	"\tDeleteAll\x12!.hi.ai.DeleteAllPluginVersionsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12O\n" +
+	"\x04List\x12\x15.hi.ai.ListPluginsReq\x1a\x16.hi.ai.ListPluginsResp\"\x05\x8a\xb5\x18\x01\x03\x12F\n" +
+	"\fListVersions\x12\x16.hi.ai.ListVersionsReq\x1a\x17.hi.ai.ListVersionsResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
+	"\x06Delete\x12\x17.hi.ai.DeleteVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12C\n" +
+	"\vDeleteShell\x12\x15.hi.ai.DeleteShellReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12O\n" +
 	"\x0eDeleteByAgents\x12\x1e.hi.ai.DeletePluginByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\tSetActive\x12\x13.hi.ai.SetActiveReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
 	"\n" +
@@ -1640,82 +1719,84 @@ func file_hi_ai_plugin_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_ai_plugin_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_ai_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_hi_ai_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_hi_ai_plugin_proto_goTypes = []any{
-	(PluginSource)(0),                  // 0: hi.ai.PluginSource
-	(*PluginBody)(nil),                 // 1: hi.ai.PluginBody
-	(*PluginAnnex)(nil),                // 2: hi.ai.PluginAnnex
-	(*PluginView)(nil),                 // 3: hi.ai.PluginView
-	(*PluginLoaded)(nil),               // 4: hi.ai.PluginLoaded
-	(*CreatePluginReq)(nil),            // 5: hi.ai.CreatePluginReq
-	(*CreateVersionReq)(nil),           // 6: hi.ai.CreateVersionReq
-	(*CreatePluginResp)(nil),           // 7: hi.ai.CreatePluginResp
-	(*CreateAnnexReq)(nil),             // 8: hi.ai.CreateAnnexReq
-	(*EditPluginReq)(nil),              // 9: hi.ai.EditPluginReq
-	(*SetEnabledReq)(nil),              // 10: hi.ai.SetEnabledReq
-	(*SetActiveReq)(nil),               // 11: hi.ai.SetActiveReq
-	(*DownloadScriptReq)(nil),          // 12: hi.ai.DownloadScriptReq
-	(*DownloadScriptResp)(nil),         // 13: hi.ai.DownloadScriptResp
-	(*ListPluginsReq)(nil),             // 14: hi.ai.ListPluginsReq
-	(*ListVersionsReq)(nil),            // 15: hi.ai.ListVersionsReq
-	(*ListPluginsResp)(nil),            // 16: hi.ai.ListPluginsResp
-	(*GetPluginReq)(nil),               // 17: hi.ai.GetPluginReq
-	(*GetPluginResp)(nil),              // 18: hi.ai.GetPluginResp
-	(*DeletePluginReq)(nil),            // 19: hi.ai.DeletePluginReq
-	(*DeleteAllPluginVersionsReq)(nil), // 20: hi.ai.DeleteAllPluginVersionsReq
-	(*DeletePluginByAgentsReq)(nil),    // 21: hi.ai.DeletePluginByAgentsReq
-	(*RunReq)(nil),                     // 22: hi.ai.RunReq
-	(*RunResp)(nil),                    // 23: hi.ai.RunResp
-	(*CleanupReq)(nil),                 // 24: hi.ai.CleanupReq
-	(*structpb.Struct)(nil),            // 25: google.protobuf.Struct
-	(*hi.Pagination)(nil),              // 26: hi.Pagination
-	(*Content)(nil),                    // 27: hi.ai.Content
-	(*emptypb.Empty)(nil),              // 28: google.protobuf.Empty
+	(PluginSource)(0),               // 0: hi.ai.PluginSource
+	(*PluginShell)(nil),             // 1: hi.ai.PluginShell
+	(*PluginVersion)(nil),           // 2: hi.ai.PluginVersion
+	(*PluginAnnex)(nil),             // 3: hi.ai.PluginAnnex
+	(*PluginView)(nil),              // 4: hi.ai.PluginView
+	(*PluginLoaded)(nil),            // 5: hi.ai.PluginLoaded
+	(*CreateShellReq)(nil),          // 6: hi.ai.CreateShellReq
+	(*CreateShellResp)(nil),         // 7: hi.ai.CreateShellResp
+	(*CreateVersionReq)(nil),        // 8: hi.ai.CreateVersionReq
+	(*CreateUsingReq)(nil),          // 9: hi.ai.CreateUsingReq
+	(*EditPluginReq)(nil),           // 10: hi.ai.EditPluginReq
+	(*SetEnabledReq)(nil),           // 11: hi.ai.SetEnabledReq
+	(*SetActiveReq)(nil),            // 12: hi.ai.SetActiveReq
+	(*DownloadScriptReq)(nil),       // 13: hi.ai.DownloadScriptReq
+	(*DownloadScriptResp)(nil),      // 14: hi.ai.DownloadScriptResp
+	(*ListPluginsReq)(nil),          // 15: hi.ai.ListPluginsReq
+	(*ListVersionsReq)(nil),         // 16: hi.ai.ListVersionsReq
+	(*ListPluginsResp)(nil),         // 17: hi.ai.ListPluginsResp
+	(*ListVersionsResp)(nil),        // 18: hi.ai.ListVersionsResp
+	(*GetPluginReq)(nil),            // 19: hi.ai.GetPluginReq
+	(*GetPluginResp)(nil),           // 20: hi.ai.GetPluginResp
+	(*DeleteVersionReq)(nil),        // 21: hi.ai.DeleteVersionReq
+	(*DeleteShellReq)(nil),          // 22: hi.ai.DeleteShellReq
+	(*DeletePluginByAgentsReq)(nil), // 23: hi.ai.DeletePluginByAgentsReq
+	(*RunReq)(nil),                  // 24: hi.ai.RunReq
+	(*RunResp)(nil),                 // 25: hi.ai.RunResp
+	(*CleanupReq)(nil),              // 26: hi.ai.CleanupReq
+	(*structpb.Struct)(nil),         // 27: google.protobuf.Struct
+	(*hi.Pagination)(nil),           // 28: hi.Pagination
+	(*Content)(nil),                 // 29: hi.ai.Content
+	(*emptypb.Empty)(nil),           // 30: google.protobuf.Empty
 }
 var file_hi_ai_plugin_proto_depIdxs = []int32{
-	25, // 0: hi.ai.PluginAnnex.data:type_name -> google.protobuf.Struct
-	1,  // 1: hi.ai.PluginView.body:type_name -> hi.ai.PluginBody
-	0,  // 2: hi.ai.PluginView.source:type_name -> hi.ai.PluginSource
-	1,  // 3: hi.ai.CreatePluginReq.body:type_name -> hi.ai.PluginBody
-	2,  // 4: hi.ai.CreatePluginReq.annex:type_name -> hi.ai.PluginAnnex
-	1,  // 5: hi.ai.CreateVersionReq.body:type_name -> hi.ai.PluginBody
-	2,  // 6: hi.ai.CreateVersionReq.annex:type_name -> hi.ai.PluginAnnex
-	2,  // 7: hi.ai.CreateAnnexReq.annex:type_name -> hi.ai.PluginAnnex
-	2,  // 8: hi.ai.EditPluginReq.annex:type_name -> hi.ai.PluginAnnex
-	26, // 9: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
-	26, // 10: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
-	3,  // 11: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
-	3,  // 12: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
-	2,  // 13: hi.ai.RunReq.annex:type_name -> hi.ai.PluginAnnex
-	27, // 14: hi.ai.RunResp.conts:type_name -> hi.ai.Content
-	5,  // 15: hi.ai.Plugin.Create:input_type -> hi.ai.CreatePluginReq
-	6,  // 16: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
-	8,  // 17: hi.ai.Plugin.CreateAnnex:input_type -> hi.ai.CreateAnnexReq
-	9,  // 18: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	17, // 19: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	14, // 20: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
-	15, // 21: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
-	19, // 22: hi.ai.Plugin.Delete:input_type -> hi.ai.DeletePluginReq
-	20, // 23: hi.ai.Plugin.DeleteAll:input_type -> hi.ai.DeleteAllPluginVersionsReq
-	21, // 24: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	11, // 25: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
-	10, // 26: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
-	22, // 27: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
-	24, // 28: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
-	7,  // 29: hi.ai.Plugin.Create:output_type -> hi.ai.CreatePluginResp
-	7,  // 30: hi.ai.Plugin.CreateVersion:output_type -> hi.ai.CreatePluginResp
-	28, // 31: hi.ai.Plugin.CreateAnnex:output_type -> google.protobuf.Empty
-	28, // 32: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	18, // 33: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	16, // 34: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
-	16, // 35: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListPluginsResp
-	28, // 36: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	28, // 37: hi.ai.Plugin.DeleteAll:output_type -> google.protobuf.Empty
-	28, // 38: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	28, // 39: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
-	28, // 40: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
-	23, // 41: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
-	28, // 42: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
+	27, // 0: hi.ai.PluginAnnex.data:type_name -> google.protobuf.Struct
+	1,  // 1: hi.ai.PluginView.shell:type_name -> hi.ai.PluginShell
+	2,  // 2: hi.ai.PluginView.active:type_name -> hi.ai.PluginVersion
+	0,  // 3: hi.ai.PluginView.source:type_name -> hi.ai.PluginSource
+	3,  // 4: hi.ai.CreateShellReq.annex:type_name -> hi.ai.PluginAnnex
+	2,  // 5: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
+	3,  // 6: hi.ai.CreateUsingReq.annex:type_name -> hi.ai.PluginAnnex
+	3,  // 7: hi.ai.EditPluginReq.annex:type_name -> hi.ai.PluginAnnex
+	28, // 8: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
+	28, // 9: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
+	4,  // 10: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
+	2,  // 11: hi.ai.ListVersionsResp.list:type_name -> hi.ai.PluginVersion
+	4,  // 12: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
+	3,  // 13: hi.ai.RunReq.annex:type_name -> hi.ai.PluginAnnex
+	29, // 14: hi.ai.RunResp.conts:type_name -> hi.ai.Content
+	6,  // 15: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
+	8,  // 16: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
+	9,  // 17: hi.ai.Plugin.CreateUsing:input_type -> hi.ai.CreateUsingReq
+	10, // 18: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	19, // 19: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
+	15, // 20: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
+	16, // 21: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
+	21, // 22: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
+	22, // 23: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
+	23, // 24: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
+	12, // 25: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
+	11, // 26: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	24, // 27: hi.ai.AiPlugin.Run:input_type -> hi.ai.RunReq
+	26, // 28: hi.ai.AiPlugin.Cleanup:input_type -> hi.ai.CleanupReq
+	7,  // 29: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
+	30, // 30: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
+	30, // 31: hi.ai.Plugin.CreateUsing:output_type -> google.protobuf.Empty
+	30, // 32: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	20, // 33: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	17, // 34: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
+	18, // 35: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
+	30, // 36: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	30, // 37: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
+	30, // 38: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
+	30, // 39: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
+	30, // 40: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	25, // 41: hi.ai.AiPlugin.Run:output_type -> hi.ai.RunResp
+	30, // 42: hi.ai.AiPlugin.Cleanup:output_type -> google.protobuf.Empty
 	29, // [29:43] is the sub-list for method output_type
 	15, // [15:29] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name
@@ -1735,7 +1816,7 @@ func file_hi_ai_plugin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_plugin_proto_rawDesc), len(file_hi_ai_plugin_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   24,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

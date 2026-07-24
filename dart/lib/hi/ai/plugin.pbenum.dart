@@ -14,11 +14,10 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-/// 插件在某机器人列表里的来源。
+/// 插件在某机器人使用记录里的来源。
 ///
-/// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判:
-///    一个主人有三个机器人、同一脚本装三个上去,那样会把其中两个误判成引用。
-/// ⚠️ **引用不是拷贝** —— 只是把同一个 uuid 放进另一个机器人的列表,不新建 body。
+/// ⚠️ 这是**历史事实,推导不出来** —— 不能用"agent 是不是创建者"去判。
+/// ⚠️ **引用不是拷贝** —— 只是给另一个 agent 多一条 using 记录指向同一个壳,不新建壳/版本。
 class PluginSource extends $pb.ProtobufEnum {
   static const PluginSource PLUGIN_SOURCE_ORIGINAL =
       PluginSource._(0, _omitEnumNames ? '' : 'PLUGIN_SOURCE_ORIGINAL');

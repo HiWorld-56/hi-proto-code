@@ -2920,16 +2920,16 @@ pub mod plugin_client {
     use tonic::codegen::http::Uri;
     /// 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
     ///
-    /// 插件只剩 **py 脚本一种** —— 网搜(search)/画图(draw)已随 ai 整体砍掉:
-    /// 那两类完全可以封装进 py 脚本里执行,且局限性太大(比如不好传入用户数据)。
-    /// 故 DrawConfig / SearchCreate / DrawCreate / GetDraw 一并删除。
+    /// 插件只剩 **py 脚本一种** —— 网搜/画图已随 ai 整体砍掉(可封装进 py 脚本)。
     ///
     /// ⚠️ club 侧的实际代码活(不只是改名):
     ///
-    /// 1. **上传脚本工程(Create)时,自动把该机器人的 ExAPIKey 塞进去** —— 这是根除
-    ///   "运行期回调三方要 apikey"那套机制的落地点(ai 的 UserCallback 已删)。
-    /// 1. apikey **挂机器人名下、不挂用户**,以便机器人换持有者后脚本照常跑。
-    /// 1. **删 apikey 前必须查是否被插件引用,被引用则拒删**(创建插件时已把它注入进去了)。
+    /// 1. **建壳/引用(CreateShell/CreateUsing)时,自动把该机器人的 club-apikey 塞进 annex** ——
+    ///   根除"运行期回调三方要 apikey"那套机制的落地点。
+    /// 1. apikey **挂机器人名下、不挂用户**,机器人换持有者后脚本照常跑。
+    /// 1. **删 apikey 前必须查是否被插件引用,被引用则拒删**。
+    ///
+    /// 三层模型见 hi/ai/plugin.proto:壳(uuid,name)/ 版本(uuid,version,本体)/ 使用(agent,uuid,激活版本)。
     #[derive(Debug, Clone)]
     pub struct PluginClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3010,12 +3010,11 @@ pub mod plugin_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 脚本包存取:纯透传 hi.ai.Plugin(club 侧只做用户鉴权 + CheckBotOwnership)。
-        pub async fn create(
+        pub async fn create_shell(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::CreatePluginReq>,
+            request: impl tonic::IntoRequest<super::super::ai::CreateShellReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::CreatePluginResp>,
+            tonic::Response<super::super::ai::CreateShellResp>,
             tonic::Status,
         > {
             self.inner
@@ -3027,18 +3026,18 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Plugin/Create");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/CreateShell",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "Create"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "CreateShell"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn create_version(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::CreateVersionReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::CreatePluginResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3056,9 +3055,9 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.club.Plugin", "CreateVersion"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn create_annex(
+        pub async fn create_using(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::CreateAnnexReq>,
+            request: impl tonic::IntoRequest<super::super::ai::CreateUsingReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -3070,11 +3069,11 @@ pub mod plugin_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/CreateAnnex",
+                "/hi.club.Plugin/CreateUsing",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "CreateAnnex"));
+                .insert(GrpcMethod::new("hi.club.Plugin", "CreateUsing"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(
@@ -3141,7 +3140,7 @@ pub mod plugin_client {
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::ListVersionsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListPluginsResp>,
+            tonic::Response<super::super::ai::ListVersionsResp>,
             tonic::Status,
         > {
             self.inner
@@ -3163,7 +3162,7 @@ pub mod plugin_client {
         }
         pub async fn delete(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::DeletePluginReq>,
+            request: impl tonic::IntoRequest<super::super::ai::DeleteVersionReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -3179,11 +3178,9 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_all(
+        pub async fn delete_shell(
             &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::ai::DeleteAllPluginVersionsReq,
-            >,
+            request: impl tonic::IntoRequest<super::super::ai::DeleteShellReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -3194,9 +3191,12 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Plugin/DeleteAll");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/DeleteShell",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "DeleteAll"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "DeleteShell"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete_by_agents(

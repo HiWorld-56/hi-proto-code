@@ -23,76 +23,53 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'plugin.pbenum.dart';
 
-/// plugin_body:插件本体。
-///
-/// **uuid = <主id>_<次id>,它就是"插件 id" —— 系统内一个 uuid 就是一个独立插件。**
-/// 同一个主id 下的多个 uuid = 同一脚本的多个版本;一级列表按主id 聚合,二级页列出各 uuid。
-/// ⚠️ **次id 与 version 无关**:次id 是后台生成的身份,version 是用户贴的标签。
-///    正因如此,用户删掉某版本再用同一个版本号重建,拿到的是**新的 uuid**,
-///    老的引用指向的仍是那个已删除的插件,不会被悄悄换掉内容。
-///
-/// ⚠️ **发布后整行冻结** —— name/logo/summary 也不例外。
-///    定版的东西如果能改,版本就失去意义了;要改就发新版本。
-class PluginBody extends $pb.GeneratedMessage {
-  factory PluginBody({
+/// PluginShell:插件的壳(身份)。uuid 后台分配,单一 id。
+class PluginShell extends $pb.GeneratedMessage {
+  factory PluginShell({
     $core.String? uuid,
     $core.String? name,
-    $core.String? logo,
-    $core.String? summary,
-    $core.String? version,
-    $core.String? url,
-    $core.String? description,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
     if (name != null) result.name = name;
-    if (logo != null) result.logo = logo;
-    if (summary != null) result.summary = summary;
-    if (version != null) result.version = version;
-    if (url != null) result.url = url;
-    if (description != null) result.description = description;
     return result;
   }
 
-  PluginBody._();
+  PluginShell._();
 
-  factory PluginBody.fromBuffer($core.List<$core.int> data,
+  factory PluginShell.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory PluginBody.fromJson($core.String json,
+  factory PluginShell.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PluginBody',
+      _omitMessageNames ? '' : 'PluginShell',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..aOS(3, _omitFieldNames ? '' : 'logo')
-    ..aOS(4, _omitFieldNames ? '' : 'summary')
-    ..aOS(5, _omitFieldNames ? '' : 'version')
-    ..aOS(6, _omitFieldNames ? '' : 'url')
-    ..aOS(7, _omitFieldNames ? '' : 'description')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginBody clone() => deepCopy();
+  PluginShell clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginBody copyWith(void Function(PluginBody) updates) =>
-      super.copyWith((message) => updates(message as PluginBody)) as PluginBody;
+  PluginShell copyWith(void Function(PluginShell) updates) =>
+      super.copyWith((message) => updates(message as PluginShell))
+          as PluginShell;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static PluginBody create() => PluginBody._();
+  static PluginShell create() => PluginShell._();
   @$core.override
-  PluginBody createEmptyInstance() => create();
+  PluginShell createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static PluginBody getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PluginBody>(create);
-  static PluginBody? _defaultInstance;
+  static PluginShell getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginShell>(create);
+  static PluginShell? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get uuid => $_getSZ(0);
@@ -111,6 +88,85 @@ class PluginBody extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
   void clearName() => $_clearField(2);
+}
+
+/// PluginVersion:插件本体的一个版本(除名字外的内容)。按 (uuid,version) 冻结。
+class PluginVersion extends $pb.GeneratedMessage {
+  factory PluginVersion({
+    $core.String? uuid,
+    $core.String? version,
+    $core.String? logo,
+    $core.String? summary,
+    $core.String? url,
+    $core.String? description,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    if (logo != null) result.logo = logo;
+    if (summary != null) result.summary = summary;
+    if (url != null) result.url = url;
+    if (description != null) result.description = description;
+    return result;
+  }
+
+  PluginVersion._();
+
+  factory PluginVersion.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PluginVersion.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PluginVersion',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..aOS(3, _omitFieldNames ? '' : 'logo')
+    ..aOS(4, _omitFieldNames ? '' : 'summary')
+    ..aOS(5, _omitFieldNames ? '' : 'url')
+    ..aOS(6, _omitFieldNames ? '' : 'description')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginVersion clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginVersion copyWith(void Function(PluginVersion) updates) =>
+      super.copyWith((message) => updates(message as PluginVersion))
+          as PluginVersion;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PluginVersion create() => PluginVersion._();
+  @$core.override
+  PluginVersion createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PluginVersion getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginVersion>(create);
+  static PluginVersion? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get logo => $_getSZ(2);
@@ -131,34 +187,25 @@ class PluginBody extends $pb.GeneratedMessage {
   void clearSummary() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get version => $_getSZ(4);
+  $core.String get url => $_getSZ(4);
   @$pb.TagNumber(5)
-  set version($core.String value) => $_setString(4, value);
+  set url($core.String value) => $_setString(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasVersion() => $_has(4);
+  $core.bool hasUrl() => $_has(4);
   @$pb.TagNumber(5)
-  void clearVersion() => $_clearField(5);
+  void clearUrl() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $core.String get url => $_getSZ(5);
+  $core.String get description => $_getSZ(5);
   @$pb.TagNumber(6)
-  set url($core.String value) => $_setString(5, value);
+  set description($core.String value) => $_setString(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasUrl() => $_has(5);
+  $core.bool hasDescription() => $_has(5);
   @$pb.TagNumber(6)
-  void clearUrl() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.String get description => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set description($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasDescription() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearDescription() => $_clearField(7);
+  void clearDescription() => $_clearField(6);
 }
 
-/// plugin_annex:某机器人对某 body 的附件。运行期以字典全局变量注入执行环境。
+/// plugin_annex:某 agent 对某壳的**运行期附件**。运行期以字典全局变量 plugin_annex 注入执行环境。
 class PluginAnnex extends $pb.GeneratedMessage {
   factory PluginAnnex({
     $core.String? apiKey,
@@ -228,17 +275,17 @@ class PluginAnnex extends $pb.GeneratedMessage {
   $2.Struct ensureData() => $_ensure(1);
 }
 
-/// 某 agent 视角的一个插件:body + 该 agent 的绑定状态(List/Get 返回;api_key 敏感不随列表回)。
+/// 某 agent 视角的一个插件:壳 + 该 agent 激活的版本 + 绑定状态(List/Get 返回;api_key 敏感不随列表回)。
 class PluginView extends $pb.GeneratedMessage {
   factory PluginView({
-    PluginBody? body,
-    $core.String? active,
+    PluginShell? shell,
+    PluginVersion? active,
     $core.bool? enabled,
     PluginSource? source,
     $core.int? refCount,
   }) {
     final result = create();
-    if (body != null) result.body = body;
+    if (shell != null) result.shell = shell;
     if (active != null) result.active = active;
     if (enabled != null) result.enabled = enabled;
     if (source != null) result.source = source;
@@ -259,9 +306,10 @@ class PluginView extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PluginView',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOM<PluginBody>(1, _omitFieldNames ? '' : 'body',
-        subBuilder: PluginBody.create)
-    ..aOS(2, _omitFieldNames ? '' : 'active')
+    ..aOM<PluginShell>(1, _omitFieldNames ? '' : 'shell',
+        subBuilder: PluginShell.create)
+    ..aOM<PluginVersion>(2, _omitFieldNames ? '' : 'active',
+        subBuilder: PluginVersion.create)
     ..aOB(3, _omitFieldNames ? '' : 'enabled')
     ..aE<PluginSource>(4, _omitFieldNames ? '' : 'source',
         enumValues: PluginSource.values)
@@ -287,24 +335,26 @@ class PluginView extends $pb.GeneratedMessage {
   static PluginView? _defaultInstance;
 
   @$pb.TagNumber(1)
-  PluginBody get body => $_getN(0);
+  PluginShell get shell => $_getN(0);
   @$pb.TagNumber(1)
-  set body(PluginBody value) => $_setField(1, value);
+  set shell(PluginShell value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasBody() => $_has(0);
+  $core.bool hasShell() => $_has(0);
   @$pb.TagNumber(1)
-  void clearBody() => $_clearField(1);
+  void clearShell() => $_clearField(1);
   @$pb.TagNumber(1)
-  PluginBody ensureBody() => $_ensure(0);
+  PluginShell ensureShell() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get active => $_getSZ(1);
+  PluginVersion get active => $_getN(1);
   @$pb.TagNumber(2)
-  set active($core.String value) => $_setString(1, value);
+  set active(PluginVersion value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasActive() => $_has(1);
   @$pb.TagNumber(2)
   void clearActive() => $_clearField(2);
+  @$pb.TagNumber(2)
+  PluginVersion ensureActive() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $core.bool get enabled => $_getBF(2);
@@ -336,10 +386,7 @@ class PluginView extends $pb.GeneratedMessage {
 
 /// 插件加载完成的**通知载荷**。只说"哪个插件好了",不带任何私产。
 ///
-/// ⚠️ 别再往通知里塞 PluginView:它是 VIS_SELF(body.url 是私有 bucket 的脚本包地址,
-///    脚本是 owner 私产、且是可交易资产),而 hi.club.Notice 是 VIS_PARTICIPANT ——
-///    SELF 装进 PARTICIPANT 本该被可见性 lint 拦下,只因中间隔了个 google.protobuf.Any
-///    才没拦住。**Any 是那套 lint 唯一的结构性缺口**,往里塞什么要自己把关。
+/// ⚠️ 别往通知里塞 PluginView(VIS_SELF,含脚本 url 这类私产);hi.club.Notice 是 VIS_PARTICIPANT。
 class PluginLoaded extends $pb.GeneratedMessage {
   factory PluginLoaded({
     $core.String? uuid,
@@ -430,65 +477,59 @@ class PluginLoaded extends $pb.GeneratedMessage {
   void clearEnabled() => $_clearField(4);
 }
 
-/// 发布一个**全新脚本**(生成 主id+次id)+ 建该机器人的 annex(source=original)。
-///
-/// ⚠️ 与 CreateVersion(给已有脚本加新版本)**拆成两个方法**,不用"root 空/非空"分叉 ——
-///    那是"创建一个新资源"与"往已有资源追加"两件事,连服务端的校验规则都不同
-///    (加版本要求版本号大于现有最大,建新脚本没有这条),必填字段也不同。
-///
-/// **uuid 已存在必拒**,发布即冻结。
-/// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填。
-class CreatePluginReq extends $pb.GeneratedMessage {
-  factory CreatePluginReq({
+/// 建壳:只建一个空壳(uuid + name),**还没有任何版本**,该 agent 的激活版本为空。
+/// uuid 由后台分配并返回,调用方不要传。同时给 owner 建一条 using(source=original)。
+/// annex.api_key 由 club 自动取该 agent 第一个 club-apikey 填入(ai 只存);data 用户填(可空)。
+class CreateShellReq extends $pb.GeneratedMessage {
+  factory CreateShellReq({
     $core.String? agent,
-    PluginBody? body,
+    $core.String? name,
     PluginAnnex? annex,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
-    if (body != null) result.body = body;
+    if (name != null) result.name = name;
     if (annex != null) result.annex = annex;
     return result;
   }
 
-  CreatePluginReq._();
+  CreateShellReq._();
 
-  factory CreatePluginReq.fromBuffer($core.List<$core.int> data,
+  factory CreateShellReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreatePluginReq.fromJson($core.String json,
+  factory CreateShellReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreatePluginReq',
+      _omitMessageNames ? '' : 'CreateShellReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOM<PluginBody>(2, _omitFieldNames ? '' : 'body',
-        subBuilder: PluginBody.create)
+    ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOM<PluginAnnex>(3, _omitFieldNames ? '' : 'annex',
         subBuilder: PluginAnnex.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreatePluginReq clone() => deepCopy();
+  CreateShellReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreatePluginReq copyWith(void Function(CreatePluginReq) updates) =>
-      super.copyWith((message) => updates(message as CreatePluginReq))
-          as CreatePluginReq;
+  CreateShellReq copyWith(void Function(CreateShellReq) updates) =>
+      super.copyWith((message) => updates(message as CreateShellReq))
+          as CreateShellReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreatePluginReq create() => CreatePluginReq._();
+  static CreateShellReq create() => CreateShellReq._();
   @$core.override
-  CreatePluginReq createEmptyInstance() => create();
+  CreateShellReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreatePluginReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreatePluginReq>(create);
-  static CreatePluginReq? _defaultInstance;
+  static CreateShellReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateShellReq>(create);
+  static CreateShellReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -500,15 +541,13 @@ class CreatePluginReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  PluginBody get body => $_getN(1);
+  $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set body(PluginBody value) => $_setField(2, value);
+  set name($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasBody() => $_has(1);
+  $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearBody() => $_clearField(2);
-  @$pb.TagNumber(2)
-  PluginBody ensureBody() => $_ensure(1);
+  void clearName() => $_clearField(2);
 
   @$pb.TagNumber(3)
   PluginAnnex get annex => $_getN(2);
@@ -522,20 +561,71 @@ class CreatePluginReq extends $pb.GeneratedMessage {
   PluginAnnex ensureAnnex() => $_ensure(2);
 }
 
-/// 给**已有脚本**加一个新版本(只生成次id)。
-/// 版本号须**大于该 root 下现有最大**(三级数字按数值比较,不限前导零)。
+class CreateShellResp extends $pb.GeneratedMessage {
+  factory CreateShellResp({
+    $core.String? uuid,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    return result;
+  }
+
+  CreateShellResp._();
+
+  factory CreateShellResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateShellResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateShellResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateShellResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateShellResp copyWith(void Function(CreateShellResp) updates) =>
+      super.copyWith((message) => updates(message as CreateShellResp))
+          as CreateShellResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateShellResp create() => CreateShellResp._();
+  @$core.override
+  CreateShellResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateShellResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateShellResp>(create);
+  static CreateShellResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+}
+
+/// 给已有壳加一个新版本。version 号由前端按版本列表自动计算/预填,后端做合法性校验:
+/// 必须**大于该壳现有最大版本**(三级数字按数值比较,不限前导零)。
+/// 若该 agent 当前激活版本为空(新壳首版),自动把这一版设为激活版。
 class CreateVersionReq extends $pb.GeneratedMessage {
   factory CreateVersionReq({
     $core.String? agent,
-    $core.String? root,
-    PluginBody? body,
-    PluginAnnex? annex,
+    PluginVersion? version,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
-    if (root != null) result.root = root;
-    if (body != null) result.body = body;
-    if (annex != null) result.annex = annex;
+    if (version != null) result.version = version;
     return result;
   }
 
@@ -553,11 +643,8 @@ class CreateVersionReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'root')
-    ..aOM<PluginBody>(3, _omitFieldNames ? '' : 'body',
-        subBuilder: PluginBody.create)
-    ..aOM<PluginAnnex>(4, _omitFieldNames ? '' : 'annex',
-        subBuilder: PluginAnnex.create)
+    ..aOM<PluginVersion>(2, _omitFieldNames ? '' : 'version',
+        subBuilder: PluginVersion.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -589,95 +676,20 @@ class CreateVersionReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get root => $_getSZ(1);
+  PluginVersion get version => $_getN(1);
   @$pb.TagNumber(2)
-  set root($core.String value) => $_setString(1, value);
+  set version(PluginVersion value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasRoot() => $_has(1);
+  $core.bool hasVersion() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRoot() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  PluginBody get body => $_getN(2);
-  @$pb.TagNumber(3)
-  set body(PluginBody value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasBody() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearBody() => $_clearField(3);
-  @$pb.TagNumber(3)
-  PluginBody ensureBody() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  PluginAnnex get annex => $_getN(3);
-  @$pb.TagNumber(4)
-  set annex(PluginAnnex value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasAnnex() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearAnnex() => $_clearField(4);
-  @$pb.TagNumber(4)
-  PluginAnnex ensureAnnex() => $_ensure(3);
+  void clearVersion() => $_clearField(2);
+  @$pb.TagNumber(2)
+  PluginVersion ensureVersion() => $_ensure(1);
 }
 
-class CreatePluginResp extends $pb.GeneratedMessage {
-  factory CreatePluginResp({
-    $core.String? uuid,
-  }) {
-    final result = create();
-    if (uuid != null) result.uuid = uuid;
-    return result;
-  }
-
-  CreatePluginResp._();
-
-  factory CreatePluginResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CreatePluginResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreatePluginResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'uuid')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreatePluginResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreatePluginResp copyWith(void Function(CreatePluginResp) updates) =>
-      super.copyWith((message) => updates(message as CreatePluginResp))
-          as CreatePluginResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static CreatePluginResp create() => CreatePluginResp._();
-  @$core.override
-  CreatePluginResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static CreatePluginResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreatePluginResp>(create);
-  static CreatePluginResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get uuid => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set uuid($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasUuid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUuid() => $_clearField(1);
-}
-
-/// 把一个**已有 body** 绑定到某 agent(生成一条 annex)。插件市场"分享/授权"通过后由 club 调;
-/// owner 首次上传走 Create(自带 annex),本方法用于**同 body 多机器人引用**。
-class CreateAnnexReq extends $pb.GeneratedMessage {
-  factory CreateAnnexReq({
+/// 把一个**已有壳**绑定到某 agent(生成一条 using,source=reference)。插件市场"分享/授权"通过后由 club 调。
+class CreateUsingReq extends $pb.GeneratedMessage {
+  factory CreateUsingReq({
     $core.String? agent,
     $core.String? uuid,
     $core.String? version,
@@ -691,17 +703,17 @@ class CreateAnnexReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  CreateAnnexReq._();
+  CreateUsingReq._();
 
-  factory CreateAnnexReq.fromBuffer($core.List<$core.int> data,
+  factory CreateUsingReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreateAnnexReq.fromJson($core.String json,
+  factory CreateUsingReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateAnnexReq',
+      _omitMessageNames ? '' : 'CreateUsingReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
@@ -712,23 +724,23 @@ class CreateAnnexReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateAnnexReq clone() => deepCopy();
+  CreateUsingReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateAnnexReq copyWith(void Function(CreateAnnexReq) updates) =>
-      super.copyWith((message) => updates(message as CreateAnnexReq))
-          as CreateAnnexReq;
+  CreateUsingReq copyWith(void Function(CreateUsingReq) updates) =>
+      super.copyWith((message) => updates(message as CreateUsingReq))
+          as CreateUsingReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreateAnnexReq create() => CreateAnnexReq._();
+  static CreateUsingReq create() => CreateUsingReq._();
   @$core.override
-  CreateAnnexReq createEmptyInstance() => create();
+  CreateUsingReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreateAnnexReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateAnnexReq>(create);
-  static CreateAnnexReq? _defaultInstance;
+  static CreateUsingReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateUsingReq>(create);
+  static CreateUsingReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -769,7 +781,7 @@ class CreateAnnexReq extends $pb.GeneratedMessage {
   PluginAnnex ensureAnnex() => $_ensure(3);
 }
 
-/// 改绑定关系。**body 一个字段都不能改** —— 发布即冻结,要改就发新版本。这里只动该 agent 的 annex。
+/// 改使用记录。**壳/版本一个字段都不能改**(发布即冻结,要改就发新版本)。这里只动该 agent 的 annex。
 class EditPluginReq extends $pb.GeneratedMessage {
   factory EditPluginReq({
     $core.String? agent,
@@ -929,16 +941,17 @@ class SetEnabledReq extends $pb.GeneratedMessage {
   void clearEnabled() => $_clearField(3);
 }
 
-/// 选定该 agent 激活哪个版本。uuid 本身即版本身份,不需要再传版本号。
-/// 同一主id 下只能激活一个;不同机器人可各自激活不同版本。
+/// 选定该 agent 激活哪个版本(设 using.version)。同一壳每 agent 各选各的。
 class SetActiveReq extends $pb.GeneratedMessage {
   factory SetActiveReq({
     $core.String? agent,
     $core.String? uuid,
+    $core.String? version,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
     return result;
   }
 
@@ -957,6 +970,7 @@ class SetActiveReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -995,17 +1009,28 @@ class SetActiveReq extends $pb.GeneratedMessage {
   $core.bool hasUuid() => $_has(1);
   @$pb.TagNumber(2)
   void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
 }
 
-/// 下载脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
+/// 下载某版本的脚本包。私有 bucket 匿名取不到,故由服务端带凭据取回字节。
 class DownloadScriptReq extends $pb.GeneratedMessage {
   factory DownloadScriptReq({
     $core.String? agent,
     $core.String? uuid,
+    $core.String? version,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
     return result;
   }
 
@@ -1024,6 +1049,7 @@ class DownloadScriptReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1062,6 +1088,15 @@ class DownloadScriptReq extends $pb.GeneratedMessage {
   $core.bool hasUuid() => $_has(1);
   @$pb.TagNumber(2)
   void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
 }
 
 class DownloadScriptResp extends $pb.GeneratedMessage {
@@ -1200,15 +1235,16 @@ class ListPluginsReq extends $pb.GeneratedMessage {
   $3.Pagination ensurePagination() => $_ensure(1);
 }
 
+/// 二级页:列某壳的所有版本。
 class ListVersionsReq extends $pb.GeneratedMessage {
   factory ListVersionsReq({
     $core.String? agent,
-    $core.String? root,
+    $core.String? uuid,
     $3.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
-    if (root != null) result.root = root;
+    if (uuid != null) result.uuid = uuid;
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -1227,7 +1263,7 @@ class ListVersionsReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'root')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
     ..aOM<$3.Pagination>(3, _omitFieldNames ? '' : 'pagination',
         subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
@@ -1261,13 +1297,13 @@ class ListVersionsReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get root => $_getSZ(1);
+  $core.String get uuid => $_getSZ(1);
   @$pb.TagNumber(2)
-  set root($core.String value) => $_setString(1, value);
+  set uuid($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasRoot() => $_has(1);
+  $core.bool hasUuid() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRoot() => $_clearField(2);
+  void clearUuid() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $3.Pagination get pagination => $_getN(2);
@@ -1340,6 +1376,67 @@ class ListPluginsResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<PluginView> get list => $_getList(1);
+}
+
+class ListVersionsResp extends $pb.GeneratedMessage {
+  factory ListVersionsResp({
+    $core.int? total,
+    $core.Iterable<PluginVersion>? list,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ListVersionsResp._();
+
+  factory ListVersionsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListVersionsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListVersionsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<PluginVersion>(2, _omitFieldNames ? '' : 'list',
+        subBuilder: PluginVersion.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListVersionsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListVersionsResp copyWith(void Function(ListVersionsResp) updates) =>
+      super.copyWith((message) => updates(message as ListVersionsResp))
+          as ListVersionsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListVersionsResp create() => ListVersionsResp._();
+  @$core.override
+  ListVersionsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListVersionsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListVersionsResp>(create);
+  static ListVersionsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<PluginVersion> get list => $_getList(1);
 }
 
 class GetPluginReq extends $pb.GeneratedMessage {
@@ -1466,58 +1563,56 @@ class GetPluginResp extends $pb.GeneratedMessage {
 }
 
 /// 删单个版本(**连同脚本文件一并删**)。
-///
-/// ⚠️ 与 DeleteAll(删整个脚本的所有版本)**拆成两个方法**,不用"uuid/root 二选一" ——
-///    那两者破坏半径差一个数量级,却靠"哪个字段非空"分叉,且两个都传/都不传时行为未定义。
-///
-/// ⚠️ 允许**强删正被引用的插件** —— 引用方的 annex 不清理,指向随即失效;
-///    调用时该 tool 返错给 LLM,但**不打断整体推理流程**。删前把 ref_count 摆给用户看。
-class DeletePluginReq extends $pb.GeneratedMessage {
-  factory DeletePluginReq({
+/// ⚠️ 允许**强删正被引用的版本** —— 引用方 using.version 指向随即失效;删前把 ref_count 摆给用户看。
+class DeleteVersionReq extends $pb.GeneratedMessage {
+  factory DeleteVersionReq({
     $core.String? agent,
     $core.String? uuid,
+    $core.String? version,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
     return result;
   }
 
-  DeletePluginReq._();
+  DeleteVersionReq._();
 
-  factory DeletePluginReq.fromBuffer($core.List<$core.int> data,
+  factory DeleteVersionReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeletePluginReq.fromJson($core.String json,
+  factory DeleteVersionReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeletePluginReq',
+      _omitMessageNames ? '' : 'DeleteVersionReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeletePluginReq clone() => deepCopy();
+  DeleteVersionReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeletePluginReq copyWith(void Function(DeletePluginReq) updates) =>
-      super.copyWith((message) => updates(message as DeletePluginReq))
-          as DeletePluginReq;
+  DeleteVersionReq copyWith(void Function(DeleteVersionReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteVersionReq))
+          as DeleteVersionReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeletePluginReq create() => DeletePluginReq._();
+  static DeleteVersionReq create() => DeleteVersionReq._();
   @$core.override
-  DeletePluginReq createEmptyInstance() => create();
+  DeleteVersionReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeletePluginReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeletePluginReq>(create);
-  static DeletePluginReq? _defaultInstance;
+  static DeleteVersionReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteVersionReq>(create);
+  static DeleteVersionReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -1536,57 +1631,64 @@ class DeletePluginReq extends $pb.GeneratedMessage {
   $core.bool hasUuid() => $_has(1);
   @$pb.TagNumber(2)
   void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
 }
 
-/// 删整个脚本的**全部版本**。破坏半径远大于 Delete,故独立成方法。
-class DeleteAllPluginVersionsReq extends $pb.GeneratedMessage {
-  factory DeleteAllPluginVersionsReq({
+/// 删整个插件:壳 + 全部版本 + 全部 using 记录(连同所有脚本文件)。破坏半径远大于删单版本,独立成方法。
+class DeleteShellReq extends $pb.GeneratedMessage {
+  factory DeleteShellReq({
     $core.String? agent,
-    $core.String? root,
+    $core.String? uuid,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
-    if (root != null) result.root = root;
+    if (uuid != null) result.uuid = uuid;
     return result;
   }
 
-  DeleteAllPluginVersionsReq._();
+  DeleteShellReq._();
 
-  factory DeleteAllPluginVersionsReq.fromBuffer($core.List<$core.int> data,
+  factory DeleteShellReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteAllPluginVersionsReq.fromJson($core.String json,
+  factory DeleteShellReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteAllPluginVersionsReq',
+      _omitMessageNames ? '' : 'DeleteShellReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'root')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAllPluginVersionsReq clone() => deepCopy();
+  DeleteShellReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteAllPluginVersionsReq copyWith(
-          void Function(DeleteAllPluginVersionsReq) updates) =>
-      super.copyWith(
-              (message) => updates(message as DeleteAllPluginVersionsReq))
-          as DeleteAllPluginVersionsReq;
+  DeleteShellReq copyWith(void Function(DeleteShellReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteShellReq))
+          as DeleteShellReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteAllPluginVersionsReq create() => DeleteAllPluginVersionsReq._();
+  static DeleteShellReq create() => DeleteShellReq._();
   @$core.override
-  DeleteAllPluginVersionsReq createEmptyInstance() => create();
+  DeleteShellReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteAllPluginVersionsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteAllPluginVersionsReq>(create);
-  static DeleteAllPluginVersionsReq? _defaultInstance;
+  static DeleteShellReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteShellReq>(create);
+  static DeleteShellReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -1598,13 +1700,13 @@ class DeleteAllPluginVersionsReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get root => $_getSZ(1);
+  $core.String get uuid => $_getSZ(1);
   @$pb.TagNumber(2)
-  set root($core.String value) => $_setString(1, value);
+  set uuid($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasRoot() => $_has(1);
+  $core.bool hasUuid() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRoot() => $_clearField(2);
+  void clearUuid() => $_clearField(2);
 }
 
 class DeletePluginByAgentsReq extends $pb.GeneratedMessage {
