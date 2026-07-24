@@ -27,12 +27,13 @@ export 'plugin.pb.dart';
 /// 插件只剩 **py 脚本一种** —— 网搜/画图已随 ai 整体砍掉(可封装进 py 脚本)。
 ///
 /// ⚠️ club 侧的实际代码活(不只是改名):
-///   1. **建壳/引用(CreateShell/CreateUsing)时,自动把该机器人的 club-apikey 塞进 annex** ——
-///      根除"运行期回调三方要 apikey"那套机制的落地点。
+///   1. **建壳(CreateShell)时,自动把该机器人的 club-apikey 塞进 c.data** ——
+///      根除"运行期回调三方要 apikey"那套机制的落地点;失效后经 ReloadApiKey 重取。
 ///   2. apikey **挂机器人名下、不挂用户**,机器人换持有者后脚本照常跑。
 ///   3. **删 apikey 前必须查是否被插件引用,被引用则拒删**。
 ///
-/// 三层模型见 hi/ai/plugin.proto:壳(uuid,name)/ 版本(uuid,version,本体)/ 使用(agent,uuid,激活版本)。
+/// 四表模型见 hi/ai/plugin.proto:a壳(uuid,name)/ b版本(uuid,version,本体)/ c壳级使用 / d版本级使用。
+/// 建壳=a+c 联表、建版本=b+d 联表;c/d 是机器人自定义使用态。市场引用(复用 a/b + 建自己 c/d)未开放。
 @$pb.GrpcServiceName('hi.club.Plugin')
 class PluginClient extends $grpc.Client {
   /// The hostname for this service.
@@ -57,13 +58,6 @@ class PluginClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$createVersion, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.Empty> createUsing(
-    $0.CreateUsingReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$createUsing, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> edit(
@@ -162,10 +156,6 @@ class PluginClient extends $grpc.Client {
           '/hi.club.Plugin/CreateVersion',
           ($0.CreateVersionReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$createUsing = $grpc.ClientMethod<$0.CreateUsingReq, $1.Empty>(
-      '/hi.club.Plugin/CreateUsing',
-      ($0.CreateUsingReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditPluginReq, $1.Empty>(
       '/hi.club.Plugin/Edit',
       ($0.EditPluginReq value) => value.writeToBuffer(),
@@ -240,13 +230,6 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.CreateVersionReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateUsingReq, $1.Empty>(
-        'CreateUsing',
-        createUsing_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.CreateUsingReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditPluginReq, $1.Empty>(
         'Edit',
@@ -350,14 +333,6 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> createVersion(
       $grpc.ServiceCall call, $0.CreateVersionReq request);
-
-  $async.Future<$1.Empty> createUsing_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateUsingReq> $request) async {
-    return createUsing($call, await $request);
-  }
-
-  $async.Future<$1.Empty> createUsing(
-      $grpc.ServiceCall call, $0.CreateUsingReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditPluginReq> $request) async {

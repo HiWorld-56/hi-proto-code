@@ -22,7 +22,6 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Plugin_CreateShell_FullMethodName    = "/hi.ai.Plugin/CreateShell"
 	Plugin_CreateVersion_FullMethodName  = "/hi.ai.Plugin/CreateVersion"
-	Plugin_CreateUsing_FullMethodName    = "/hi.ai.Plugin/CreateUsing"
 	Plugin_Edit_FullMethodName           = "/hi.ai.Plugin/Edit"
 	Plugin_Get_FullMethodName            = "/hi.ai.Plugin/Get"
 	Plugin_List_FullMethodName           = "/hi.ai.Plugin/List"
@@ -44,7 +43,6 @@ const (
 type PluginClient interface {
 	CreateShell(ctx context.Context, in *CreateShellReq, opts ...grpc.CallOption) (*CreateShellResp, error)
 	CreateVersion(ctx context.Context, in *CreateVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CreateUsing(ctx context.Context, in *CreateUsingReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetPluginReq, opts ...grpc.CallOption) (*GetPluginResp, error)
 	List(ctx context.Context, in *ListPluginsReq, opts ...grpc.CallOption) (*ListPluginsResp, error)
@@ -80,16 +78,6 @@ func (c *pluginClient) CreateVersion(ctx context.Context, in *CreateVersionReq, 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Plugin_CreateVersion_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *pluginClient) CreateUsing(ctx context.Context, in *CreateUsingReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_CreateUsing_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +202,6 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts .
 type PluginServer interface {
 	CreateShell(context.Context, *CreateShellReq) (*CreateShellResp, error)
 	CreateVersion(context.Context, *CreateVersionReq) (*emptypb.Empty, error)
-	CreateUsing(context.Context, *CreateUsingReq) (*emptypb.Empty, error)
 	Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetPluginReq) (*GetPluginResp, error)
 	List(context.Context, *ListPluginsReq) (*ListPluginsResp, error)
@@ -240,9 +227,6 @@ func (UnimplementedPluginServer) CreateShell(context.Context, *CreateShellReq) (
 }
 func (UnimplementedPluginServer) CreateVersion(context.Context, *CreateVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateVersion not implemented")
-}
-func (UnimplementedPluginServer) CreateUsing(context.Context, *CreateUsingReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateUsing not implemented")
 }
 func (UnimplementedPluginServer) Edit(context.Context, *EditPluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -329,24 +313,6 @@ func _Plugin_CreateVersion_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PluginServer).CreateVersion(ctx, req.(*CreateVersionReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Plugin_CreateUsing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUsingReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).CreateUsing(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_CreateUsing_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).CreateUsing(ctx, req.(*CreateUsingReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -563,10 +529,6 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateVersion",
 			Handler:    _Plugin_CreateVersion_Handler,
-		},
-		{
-			MethodName: "CreateUsing",
-			Handler:    _Plugin_CreateUsing_Handler,
 		},
 		{
 			MethodName: "Edit",

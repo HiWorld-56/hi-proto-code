@@ -2944,12 +2944,13 @@ pub mod plugin_client {
     ///
     /// ⚠️ club 侧的实际代码活(不只是改名):
     ///
-    /// 1. **建壳/引用(CreateShell/CreateUsing)时,自动把该机器人的 club-apikey 塞进 annex** ——
-    ///   根除"运行期回调三方要 apikey"那套机制的落地点。
+    /// 1. **建壳(CreateShell)时,自动把该机器人的 club-apikey 塞进 c.data** ——
+    ///   根除"运行期回调三方要 apikey"那套机制的落地点;失效后经 ReloadApiKey 重取。
     /// 1. apikey **挂机器人名下、不挂用户**,机器人换持有者后脚本照常跑。
     /// 1. **删 apikey 前必须查是否被插件引用,被引用则拒删**。
     ///
-    /// 三层模型见 hi/ai/plugin.proto:壳(uuid,name)/ 版本(uuid,version,本体)/ 使用(agent,uuid,激活版本)。
+    /// 四表模型见 hi/ai/plugin.proto:a壳(uuid,name)/ b版本(uuid,version,本体)/ c壳级使用 / d版本级使用。
+    /// 建壳=a+c 联表、建版本=b+d 联表;c/d 是机器人自定义使用态。市场引用(复用 a/b + 建自己 c/d)未开放。
     #[derive(Debug, Clone)]
     pub struct PluginClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3073,27 +3074,6 @@ pub mod plugin_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Plugin", "CreateVersion"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn create_using(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::CreateUsingReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/CreateUsing",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "CreateUsing"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(

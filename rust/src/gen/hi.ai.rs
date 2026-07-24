@@ -495,24 +495,6 @@ pub struct CreateVersionReq {
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// 引用:把已有壳绑到某 agent。插 c{source=reference, data} + 选定激活版插 d{version, active=true, version_data}。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateUsingReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    /// 壳
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 激活哪个版本
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
-    /// c.data(插件级,api_key)
-    #[prost(message, optional, tag = "4")]
-    pub data: ::core::option::Option<::pbjson_types::Struct>,
-    /// d.data(版本级)
-    #[prost(message, optional, tag = "5")]
-    pub version_data: ::core::option::Option<::pbjson_types::Struct>,
-}
 /// 改扩展数据:壳级(c.data)和/或某版本级(d.data)。**壳/版本本体冻结,不动。**
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditPluginReq {
@@ -855,24 +837,6 @@ pub mod plugin_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.Plugin", "CreateVersion"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn create_using(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateUsingReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/CreateUsing");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "CreateUsing"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(

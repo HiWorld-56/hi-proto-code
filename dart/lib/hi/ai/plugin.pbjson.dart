@@ -247,39 +247,6 @@ final $typed_data.Uint8List createVersionReqDescriptor = $convert.base64Decode(
     '4KB3ZlcnNpb24YAiABKAsyFC5oaS5haS5QbHVnaW5WZXJzaW9uUgd2ZXJzaW9uEisKBGRhdGEY'
     'AyABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0UgRkYXRh');
 
-@$core.Deprecated('Use createUsingReqDescriptor instead')
-const CreateUsingReq$json = {
-  '1': 'CreateUsingReq',
-  '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
-    {
-      '1': 'data',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Struct',
-      '10': 'data'
-    },
-    {
-      '1': 'version_data',
-      '3': 5,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Struct',
-      '10': 'versionData'
-    },
-  ],
-};
-
-/// Descriptor for `CreateUsingReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List createUsingReqDescriptor = $convert.base64Decode(
-    'Cg5DcmVhdGVVc2luZ1JlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEgoEdXVpZBgCIAEoCVIEdX'
-    'VpZBIYCgd2ZXJzaW9uGAMgASgJUgd2ZXJzaW9uEisKBGRhdGEYBCABKAsyFy5nb29nbGUucHJv'
-    'dG9idWYuU3RydWN0UgRkYXRhEjoKDHZlcnNpb25fZGF0YRgFIAEoCzIXLmdvb2dsZS5wcm90b2'
-    'J1Zi5TdHJ1Y3RSC3ZlcnNpb25EYXRh');
-
 @$core.Deprecated('Use editPluginReqDescriptor instead')
 const EditPluginReq$json = {
   '1': 'EditPluginReq',

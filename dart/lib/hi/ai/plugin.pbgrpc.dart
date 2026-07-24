@@ -48,13 +48,6 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$createVersion, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> createUsing(
-    $0.CreateUsingReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$createUsing, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> edit(
     $0.EditPluginReq request, {
     $grpc.CallOptions? options,
@@ -144,10 +137,6 @@ class PluginClient extends $grpc.Client {
           '/hi.ai.Plugin/CreateVersion',
           ($0.CreateVersionReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$createUsing = $grpc.ClientMethod<$0.CreateUsingReq, $1.Empty>(
-      '/hi.ai.Plugin/CreateUsing',
-      ($0.CreateUsingReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
   static final _$edit = $grpc.ClientMethod<$0.EditPluginReq, $1.Empty>(
       '/hi.ai.Plugin/Edit',
       ($0.EditPluginReq value) => value.writeToBuffer(),
@@ -217,13 +206,6 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.CreateVersionReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateUsingReq, $1.Empty>(
-        'CreateUsing',
-        createUsing_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.CreateUsingReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EditPluginReq, $1.Empty>(
         'Edit',
@@ -320,14 +302,6 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> createVersion(
       $grpc.ServiceCall call, $0.CreateVersionReq request);
-
-  $async.Future<$1.Empty> createUsing_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateUsingReq> $request) async {
-    return createUsing($call, await $request);
-  }
-
-  $async.Future<$1.Empty> createUsing(
-      $grpc.ServiceCall call, $0.CreateUsingReq request);
 
   $async.Future<$1.Empty> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditPluginReq> $request) async {

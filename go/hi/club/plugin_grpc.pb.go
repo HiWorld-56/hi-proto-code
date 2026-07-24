@@ -23,7 +23,6 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Plugin_CreateShell_FullMethodName    = "/hi.club.Plugin/CreateShell"
 	Plugin_CreateVersion_FullMethodName  = "/hi.club.Plugin/CreateVersion"
-	Plugin_CreateUsing_FullMethodName    = "/hi.club.Plugin/CreateUsing"
 	Plugin_Edit_FullMethodName           = "/hi.club.Plugin/Edit"
 	Plugin_Get_FullMethodName            = "/hi.club.Plugin/Get"
 	Plugin_List_FullMethodName           = "/hi.club.Plugin/List"
@@ -47,16 +46,16 @@ const (
 // 插件只剩 **py 脚本一种** —— 网搜/画图已随 ai 整体砍掉(可封装进 py 脚本)。
 //
 // ⚠️ club 侧的实际代码活(不只是改名):
-//  1. **建壳/引用(CreateShell/CreateUsing)时,自动把该机器人的 club-apikey 塞进 annex** ——
-//     根除"运行期回调三方要 apikey"那套机制的落地点。
+//  1. **建壳(CreateShell)时,自动把该机器人的 club-apikey 塞进 c.data** ——
+//     根除"运行期回调三方要 apikey"那套机制的落地点;失效后经 ReloadApiKey 重取。
 //  2. apikey **挂机器人名下、不挂用户**,机器人换持有者后脚本照常跑。
 //  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**。
 //
-// 三层模型见 hi/ai/plugin.proto:壳(uuid,name)/ 版本(uuid,version,本体)/ 使用(agent,uuid,激活版本)。
+// 四表模型见 hi/ai/plugin.proto:a壳(uuid,name)/ b版本(uuid,version,本体)/ c壳级使用 / d版本级使用。
+// 建壳=a+c 联表、建版本=b+d 联表;c/d 是机器人自定义使用态。市场引用(复用 a/b + 建自己 c/d)未开放。
 type PluginClient interface {
 	CreateShell(ctx context.Context, in *ai.CreateShellReq, opts ...grpc.CallOption) (*ai.CreateShellResp, error)
 	CreateVersion(ctx context.Context, in *ai.CreateVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CreateUsing(ctx context.Context, in *ai.CreateUsingReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *ai.EditPluginReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetPluginReq, opts ...grpc.CallOption) (*ai.GetPluginResp, error)
 	List(ctx context.Context, in *ai.ListPluginsReq, opts ...grpc.CallOption) (*ai.ListPluginsResp, error)
@@ -93,16 +92,6 @@ func (c *pluginClient) CreateVersion(ctx context.Context, in *ai.CreateVersionRe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Plugin_CreateVersion_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *pluginClient) CreateUsing(ctx context.Context, in *ai.CreateUsingReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Plugin_CreateUsing_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -238,16 +227,16 @@ func (c *pluginClient) ReloadApiKey(ctx context.Context, in *ReloadApiKeyReq, op
 // 插件只剩 **py 脚本一种** —— 网搜/画图已随 ai 整体砍掉(可封装进 py 脚本)。
 //
 // ⚠️ club 侧的实际代码活(不只是改名):
-//  1. **建壳/引用(CreateShell/CreateUsing)时,自动把该机器人的 club-apikey 塞进 annex** ——
-//     根除"运行期回调三方要 apikey"那套机制的落地点。
+//  1. **建壳(CreateShell)时,自动把该机器人的 club-apikey 塞进 c.data** ——
+//     根除"运行期回调三方要 apikey"那套机制的落地点;失效后经 ReloadApiKey 重取。
 //  2. apikey **挂机器人名下、不挂用户**,机器人换持有者后脚本照常跑。
 //  3. **删 apikey 前必须查是否被插件引用,被引用则拒删**。
 //
-// 三层模型见 hi/ai/plugin.proto:壳(uuid,name)/ 版本(uuid,version,本体)/ 使用(agent,uuid,激活版本)。
+// 四表模型见 hi/ai/plugin.proto:a壳(uuid,name)/ b版本(uuid,version,本体)/ c壳级使用 / d版本级使用。
+// 建壳=a+c 联表、建版本=b+d 联表;c/d 是机器人自定义使用态。市场引用(复用 a/b + 建自己 c/d)未开放。
 type PluginServer interface {
 	CreateShell(context.Context, *ai.CreateShellReq) (*ai.CreateShellResp, error)
 	CreateVersion(context.Context, *ai.CreateVersionReq) (*emptypb.Empty, error)
-	CreateUsing(context.Context, *ai.CreateUsingReq) (*emptypb.Empty, error)
 	Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetPluginReq) (*ai.GetPluginResp, error)
 	List(context.Context, *ai.ListPluginsReq) (*ai.ListPluginsResp, error)
@@ -274,9 +263,6 @@ func (UnimplementedPluginServer) CreateShell(context.Context, *ai.CreateShellReq
 }
 func (UnimplementedPluginServer) CreateVersion(context.Context, *ai.CreateVersionReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateVersion not implemented")
-}
-func (UnimplementedPluginServer) CreateUsing(context.Context, *ai.CreateUsingReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateUsing not implemented")
 }
 func (UnimplementedPluginServer) Edit(context.Context, *ai.EditPluginReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
@@ -366,24 +352,6 @@ func _Plugin_CreateVersion_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PluginServer).CreateVersion(ctx, req.(*ai.CreateVersionReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Plugin_CreateUsing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.CreateUsingReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PluginServer).CreateUsing(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Plugin_CreateUsing_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).CreateUsing(ctx, req.(*ai.CreateUsingReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -618,10 +586,6 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateVersion",
 			Handler:    _Plugin_CreateVersion_Handler,
-		},
-		{
-			MethodName: "CreateUsing",
-			Handler:    _Plugin_CreateUsing_Handler,
 		},
 		{
 			MethodName: "Edit",
