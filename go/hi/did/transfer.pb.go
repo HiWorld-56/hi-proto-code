@@ -490,6 +490,105 @@ func (x *VerifyTransactionResp) GetQueryCount() uint32 {
 	return 0
 }
 
+// 金额换算:人类可读 → 该币最小单位整数串。did 拥有各币精度,显式暴露给调用方,
+// 供其在调 VerifyTransaction 前把金额备成链上口径。**不把换算藏进 VerifyTransaction**——
+// 否则金额对不上时分不清是链上不符还是内部换算错,查都查不出。
+type AmountToRawReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`     // 币种(定位精度)
+	Amount        string                 `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "0.101"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AmountToRawReq) Reset() {
+	*x = AmountToRawReq{}
+	mi := &file_hi_did_transfer_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AmountToRawReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AmountToRawReq) ProtoMessage() {}
+
+func (x *AmountToRawReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_transfer_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AmountToRawReq.ProtoReflect.Descriptor instead.
+func (*AmountToRawReq) Descriptor() ([]byte, []int) {
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *AmountToRawReq) GetCoin() string {
+	if x != nil {
+		return x.Coin
+	}
+	return ""
+}
+
+func (x *AmountToRawReq) GetAmount() string {
+	if x != nil {
+		return x.Amount
+	}
+	return ""
+}
+
+type AmountToRawResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Raw           string                 `protobuf:"bytes,1,opt,name=raw,proto3" json:"raw,omitempty"` // 最小单位整数串,如 "10100000"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AmountToRawResp) Reset() {
+	*x = AmountToRawResp{}
+	mi := &file_hi_did_transfer_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AmountToRawResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AmountToRawResp) ProtoMessage() {}
+
+func (x *AmountToRawResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_transfer_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AmountToRawResp.ProtoReflect.Descriptor instead.
+func (*AmountToRawResp) Descriptor() ([]byte, []int) {
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *AmountToRawResp) GetRaw() string {
+	if x != nil {
+		return x.Raw
+	}
+	return ""
+}
+
 type HistoryResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Trans         *Transaction           `protobuf:"bytes,1,opt,name=trans,proto3" json:"trans,omitempty"`
@@ -502,7 +601,7 @@ type HistoryResp_Unit struct {
 
 func (x *HistoryResp_Unit) Reset() {
 	*x = HistoryResp_Unit{}
-	mi := &file_hi_did_transfer_proto_msgTypes[7]
+	mi := &file_hi_did_transfer_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -514,7 +613,7 @@ func (x *HistoryResp_Unit) String() string {
 func (*HistoryResp_Unit) ProtoMessage() {}
 
 func (x *HistoryResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_transfer_proto_msgTypes[7]
+	mi := &file_hi_did_transfer_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -606,11 +705,17 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x10confirmed_blocks\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\x0fconfirmedBlocks\x12\"\n" +
 	"\ttimestamp\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01R\ttimestamp\x12%\n" +
 	"\vquery_count\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01R\n" +
-	"queryCount:\x04\x98\xb5\x18\x012\x8f\x02\n" +
+	"queryCount:\x04\x98\xb5\x18\x01\"<\n" +
+	"\x0eAmountToRawReq\x12\x12\n" +
+	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\tR\x06amount\"/\n" +
+	"\x0fAmountToRawResp\x12\x16\n" +
+	"\x03raw\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03raw:\x04\x98\xb5\x18\x012\xd6\x02\n" +
 	"\bTransfer\x129\n" +
 	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\"\x05\x8a\xb5\x18\x01\x01\x12<\n" +
 	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12W\n" +
-	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x05\x8a\xb5\x18\x01\x01\x121\n" +
+	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
+	"\vAmountToRaw\x12\x16.hi.did.AmountToRawReq\x1a\x17.hi.did.AmountToRawResp\"\x05\x8a\xb5\x18\x01\x01\x121\n" +
 	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x05\x8a\xb5\x18\x01\x05B~\n" +
 	"\n" +
 	"com.hi.didB\rTransferProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -627,7 +732,7 @@ func file_hi_did_transfer_proto_rawDescGZIP() []byte {
 	return file_hi_did_transfer_proto_rawDescData
 }
 
-var file_hi_did_transfer_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_did_transfer_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_hi_did_transfer_proto_goTypes = []any{
 	(*Transaction)(nil),           // 0: hi.did.Transaction
 	(*HistoryReq)(nil),            // 1: hi.did.HistoryReq
@@ -636,28 +741,32 @@ var file_hi_did_transfer_proto_goTypes = []any{
 	(*TxStatusResp)(nil),          // 4: hi.did.TxStatusResp
 	(*VerifyTransactionReq)(nil),  // 5: hi.did.VerifyTransactionReq
 	(*VerifyTransactionResp)(nil), // 6: hi.did.VerifyTransactionResp
-	(*HistoryResp_Unit)(nil),      // 7: hi.did.HistoryResp.Unit
-	(*Coin)(nil),                  // 8: hi.did.Coin
-	(*hi.Entity)(nil),             // 9: hi.Entity
-	(*hi.SignedData)(nil),         // 10: hi.SignedData
-	(*hi.DID)(nil),                // 11: hi.DID
+	(*AmountToRawReq)(nil),        // 7: hi.did.AmountToRawReq
+	(*AmountToRawResp)(nil),       // 8: hi.did.AmountToRawResp
+	(*HistoryResp_Unit)(nil),      // 9: hi.did.HistoryResp.Unit
+	(*Coin)(nil),                  // 10: hi.did.Coin
+	(*hi.Entity)(nil),             // 11: hi.Entity
+	(*hi.SignedData)(nil),         // 12: hi.SignedData
+	(*hi.DID)(nil),                // 13: hi.DID
 }
 var file_hi_did_transfer_proto_depIdxs = []int32{
-	8,  // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
-	9,  // 1: hi.did.Transaction.from:type_name -> hi.Entity
-	9,  // 2: hi.did.Transaction.to:type_name -> hi.Entity
-	7,  // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
+	10, // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
+	11, // 1: hi.did.Transaction.from:type_name -> hi.Entity
+	11, // 2: hi.did.Transaction.to:type_name -> hi.Entity
+	9,  // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
 	0,  // 4: hi.did.HistoryResp.Unit.trans:type_name -> hi.did.Transaction
 	1,  // 5: hi.did.Transfer.History:input_type -> hi.did.HistoryReq
 	3,  // 6: hi.did.Transfer.TxStatus:input_type -> hi.did.TxStatusReq
 	5,  // 7: hi.did.Transfer.VerifyTransaction:input_type -> hi.did.VerifyTransactionReq
-	10, // 8: hi.did.Transfer.VerifySignature:input_type -> hi.SignedData
-	2,  // 9: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
-	4,  // 10: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
-	6,  // 11: hi.did.Transfer.VerifyTransaction:output_type -> hi.did.VerifyTransactionResp
-	11, // 12: hi.did.Transfer.VerifySignature:output_type -> hi.DID
-	9,  // [9:13] is the sub-list for method output_type
-	5,  // [5:9] is the sub-list for method input_type
+	7,  // 8: hi.did.Transfer.AmountToRaw:input_type -> hi.did.AmountToRawReq
+	12, // 9: hi.did.Transfer.VerifySignature:input_type -> hi.SignedData
+	2,  // 10: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
+	4,  // 11: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
+	6,  // 12: hi.did.Transfer.VerifyTransaction:output_type -> hi.did.VerifyTransactionResp
+	8,  // 13: hi.did.Transfer.AmountToRaw:output_type -> hi.did.AmountToRawResp
+	13, // 14: hi.did.Transfer.VerifySignature:output_type -> hi.DID
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -675,7 +784,7 @@ func file_hi_did_transfer_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_transfer_proto_rawDesc), len(file_hi_did_transfer_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

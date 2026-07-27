@@ -734,6 +734,129 @@ class VerifyTransactionResp extends $pb.GeneratedMessage {
   void clearQueryCount() => $_clearField(6);
 }
 
+/// 金额换算:人类可读 → 该币最小单位整数串。did 拥有各币精度,显式暴露给调用方,
+/// 供其在调 VerifyTransaction 前把金额备成链上口径。**不把换算藏进 VerifyTransaction**——
+/// 否则金额对不上时分不清是链上不符还是内部换算错,查都查不出。
+class AmountToRawReq extends $pb.GeneratedMessage {
+  factory AmountToRawReq({
+    $core.String? coin,
+    $core.String? amount,
+  }) {
+    final result = create();
+    if (coin != null) result.coin = coin;
+    if (amount != null) result.amount = amount;
+    return result;
+  }
+
+  AmountToRawReq._();
+
+  factory AmountToRawReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AmountToRawReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AmountToRawReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'coin')
+    ..aOS(2, _omitFieldNames ? '' : 'amount')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AmountToRawReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AmountToRawReq copyWith(void Function(AmountToRawReq) updates) =>
+      super.copyWith((message) => updates(message as AmountToRawReq))
+          as AmountToRawReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AmountToRawReq create() => AmountToRawReq._();
+  @$core.override
+  AmountToRawReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AmountToRawReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AmountToRawReq>(create);
+  static AmountToRawReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get coin => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set coin($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCoin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCoin() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get amount => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set amount($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAmount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAmount() => $_clearField(2);
+}
+
+class AmountToRawResp extends $pb.GeneratedMessage {
+  factory AmountToRawResp({
+    $core.String? raw,
+  }) {
+    final result = create();
+    if (raw != null) result.raw = raw;
+    return result;
+  }
+
+  AmountToRawResp._();
+
+  factory AmountToRawResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AmountToRawResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AmountToRawResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'raw')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AmountToRawResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AmountToRawResp copyWith(void Function(AmountToRawResp) updates) =>
+      super.copyWith((message) => updates(message as AmountToRawResp))
+          as AmountToRawResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AmountToRawResp create() => AmountToRawResp._();
+  @$core.override
+  AmountToRawResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AmountToRawResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AmountToRawResp>(create);
+  static AmountToRawResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get raw => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set raw($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRaw() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRaw() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

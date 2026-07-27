@@ -22,6 +22,7 @@ const Coin$json = {
     {'1': 'icon', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'icon'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
     {'1': 'category', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'category'},
+    {'1': 'type', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'type'},
   ],
   '7': {},
 };
@@ -29,7 +30,8 @@ const Coin$json = {
 /// Descriptor for `Coin`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List coinDescriptor = $convert.base64Decode(
     'CgRDb2luEhgKBGljb24YASABKAlCBJC1GAFSBGljb24SGAoEbmFtZRgCIAEoCUIEkLUYAVIEbm'
-    'FtZRIgCghjYXRlZ29yeRgDIAEoCUIEkLUYAVIIY2F0ZWdvcnk6BJi1GAE=');
+    'FtZRIgCghjYXRlZ29yeRgDIAEoCUIEkLUYAVIIY2F0ZWdvcnkSGAoEdHlwZRgEIAEoCUIEkLUY'
+    'AVIEdHlwZToEmLUYAQ==');
 
 @$core.Deprecated('Use listCoinsRespDescriptor instead')
 const ListCoinsResp$json = {
