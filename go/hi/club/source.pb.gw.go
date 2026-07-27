@@ -118,6 +118,29 @@ func local_request_Source_Download_0(ctx context.Context, marshaler runtime.Mars
 	return msg, metadata, err
 }
 
+func request_Source_DownloadStream_0(ctx context.Context, marshaler runtime.Marshaler, client SourceClient, req *http.Request, pathParams map[string]string) (Source_DownloadStreamClient, runtime.ServerMetadata, error) {
+	var (
+		protoReq DownloadResourceStreamReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	stream, err := client.DownloadStream(ctx, &protoReq)
+	if err != nil {
+		return nil, metadata, err
+	}
+	header, err := stream.Header()
+	if err != nil {
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, nil
+}
+
 func request_Source_UploadTemp_0(ctx context.Context, marshaler runtime.Marshaler, client SourceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq hi.UploadReq
@@ -428,6 +451,13 @@ func RegisterSourceHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		}
 		forward_Source_Download_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+
+	mux.Handle(http.MethodPost, pattern_Source_DownloadStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
+	})
 	mux.Handle(http.MethodPost, pattern_Source_UploadTemp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -653,6 +683,23 @@ func RegisterSourceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		}
 		forward_Source_Download_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_Source_DownloadStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/DownloadStream", runtime.WithHTTPPathPattern("/hi.club.Source/DownloadStream"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Source_DownloadStream_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Source_DownloadStream_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Source_UploadTemp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -796,6 +843,7 @@ var (
 	pattern_Source_UploadAvatar_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_avatar"}, ""))
 	pattern_Source_UploadBackground_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_background"}, ""))
 	pattern_Source_Download_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "Download"}, ""))
+	pattern_Source_DownloadStream_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "DownloadStream"}, ""))
 	pattern_Source_UploadTemp_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_temp"}, ""))
 	pattern_Source_UploadTempStream_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadTempStream"}, ""))
 	pattern_Source_UploadLog_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_log"}, ""))
@@ -810,6 +858,7 @@ var (
 	forward_Source_UploadAvatar_0         = runtime.ForwardResponseMessage
 	forward_Source_UploadBackground_0     = runtime.ForwardResponseMessage
 	forward_Source_Download_0             = runtime.ForwardResponseMessage
+	forward_Source_DownloadStream_0       = runtime.ForwardResponseStream
 	forward_Source_UploadTemp_0           = runtime.ForwardResponseMessage
 	forward_Source_UploadTempStream_0     = runtime.ForwardResponseMessage
 	forward_Source_UploadLog_0            = runtime.ForwardResponseMessage

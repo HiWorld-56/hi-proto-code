@@ -81,6 +81,19 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$download, request, options: options);
   }
 
+  /// DownloadStream 流式取**公开桶**媒体,带 offset/limit 支持 range/断点续传 ——
+  /// 语音、视频这类边下边播、可拖动的场景用它,别用 Download 把整包读进内存。
+  /// 桶边界与 Download 一致(只放 temp/hiclub/hidid 公开桶),私有资源仍走 DownloadScript / DownloadTrainingFile。
+  /// 透传 hi-source 的 File.DownloadStream。
+  $grpc.ResponseStream<$1.DownloadResourceStreamResp> downloadStream(
+    $1.DownloadResourceStreamReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(
+        _$downloadStream, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
   /// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
   $grpc.ResponseFuture<$0.UploadResp> uploadTemp(
     $0.UploadReq request, {
@@ -168,6 +181,11 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/Download',
           ($1.DownloadResourceReq value) => value.writeToBuffer(),
           $1.DownloadResourceResp.fromBuffer);
+  static final _$downloadStream = $grpc.ClientMethod<
+          $1.DownloadResourceStreamReq, $1.DownloadResourceStreamResp>(
+      '/hi.club.Source/DownloadStream',
+      ($1.DownloadResourceStreamReq value) => value.writeToBuffer(),
+      $1.DownloadResourceStreamResp.fromBuffer);
   static final _$uploadTemp = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
       '/hi.club.Source/UploadTemp',
       ($0.UploadReq value) => value.writeToBuffer(),
@@ -235,6 +253,15 @@ abstract class SourceServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $1.DownloadResourceReq.fromBuffer(value),
             ($1.DownloadResourceResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DownloadResourceStreamReq,
+            $1.DownloadResourceStreamResp>(
+        'DownloadStream',
+        downloadStream_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) =>
+            $1.DownloadResourceStreamReq.fromBuffer(value),
+        ($1.DownloadResourceStreamResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadTemp',
         uploadTemp_Pre,
@@ -316,6 +343,15 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Future<$1.DownloadResourceResp> download(
       $grpc.ServiceCall call, $1.DownloadResourceReq request);
+
+  $async.Stream<$1.DownloadResourceStreamResp> downloadStream_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.DownloadResourceStreamReq> $request) async* {
+    yield* downloadStream($call, await $request);
+  }
+
+  $async.Stream<$1.DownloadResourceStreamResp> downloadStream(
+      $grpc.ServiceCall call, $1.DownloadResourceStreamReq request);
 
   $async.Future<$0.UploadResp> uploadTemp_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {

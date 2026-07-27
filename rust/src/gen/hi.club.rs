@@ -1061,6 +1061,32 @@ pub struct DownloadResourceResp {
     #[prost(bytes = "vec", tag = "1")]
     pub content: ::prost::alloc::vec::Vec<u8>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadResourceStreamReq {
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+    /// 起始偏移(字节),0=从头;支持 range/断点续传
+    #[prost(int64, tag = "2")]
+    pub offset: i64,
+    /// 限制大小(字节),0=到文件尾
+    #[prost(int64, tag = "3")]
+    pub limit: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadResourceStreamResp {
+    /// 内容分片
+    #[prost(bytes = "vec", tag = "1")]
+    pub chunk: ::prost::alloc::vec::Vec<u8>,
+    /// 本次流累计已发送字节
+    #[prost(int64, tag = "2")]
+    pub sent: i64,
+    /// 文件总大小(字节)
+    #[prost(int64, tag = "3")]
+    pub total: i64,
+    /// 当前块在文件中的起始字节位置
+    #[prost(int64, tag = "4")]
+    pub offset: i64,
+}
 /// Generated client implementations.
 pub mod source_client {
     #![allow(
@@ -1244,6 +1270,34 @@ pub mod source_client {
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Source", "Download"));
             self.inner.unary(req, path, codec).await
+        }
+        /// DownloadStream 流式取**公开桶**媒体,带 offset/limit 支持 range/断点续传 ——
+        /// 语音、视频这类边下边播、可拖动的场景用它,别用 Download 把整包读进内存。
+        /// 桶边界与 Download 一致(只放 temp/hiclub/hidid 公开桶),私有资源仍走 DownloadScript / DownloadTrainingFile。
+        /// 透传 hi-source 的 File.DownloadStream。
+        pub async fn download_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DownloadResourceStreamReq>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::DownloadResourceStreamResp>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/DownloadStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "DownloadStream"));
+            self.inner.server_streaming(req, path, codec).await
         }
         /// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
         pub async fn upload_temp(
