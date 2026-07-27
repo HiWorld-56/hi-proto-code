@@ -3241,27 +3241,8 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.club.Plugin", "DeleteShells"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_by_agents(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::DeletePluginByAgentsReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Plugin/DeleteByAgents",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Plugin", "DeleteByAgents"));
-            self.inner.unary(req, path, codec).await
-        }
+        /// 注:按 agent 批量清插件是撤权级联的内部动作,club 侧不暴露给前端 ——
+        /// PermissionService 撤"插件权限"时直接调 hi.ai.Plugin.DeleteByAgents(grpc),不走 club 门面。
         pub async fn set_active(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::SetActiveReq>,

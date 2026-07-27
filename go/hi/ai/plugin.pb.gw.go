@@ -660,7 +660,7 @@ func RegisterPluginHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByAgents", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_by_agents"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByAgents", runtime.WithHTTPPathPattern("/hi.ai.Plugin/DeleteByAgents"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -978,7 +978,7 @@ func RegisterPluginHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByAgents", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_by_agents"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.ai.Plugin/DeleteByAgents", runtime.WithHTTPPathPattern("/hi.ai.Plugin/DeleteByAgents"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1039,7 +1039,7 @@ var (
 	pattern_Plugin_DeleteVersions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_versions"}, ""))
 	pattern_Plugin_DeleteShell_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_shell"}, ""))
 	pattern_Plugin_DeleteShells_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_shells"}, ""))
-	pattern_Plugin_DeleteByAgents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_by_agents"}, ""))
+	pattern_Plugin_DeleteByAgents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.ai.Plugin", "DeleteByAgents"}, ""))
 	pattern_Plugin_SetActive_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_active"}, ""))
 	pattern_Plugin_SetEnabled_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_enabled"}, ""))
 )

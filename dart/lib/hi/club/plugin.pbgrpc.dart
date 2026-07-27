@@ -116,13 +116,8 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$deleteShells, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> deleteByAgents(
-    $0.DeletePluginByAgentsReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$deleteByAgents, request, options: options);
-  }
-
+  /// 注:按 agent 批量清插件是撤权级联的内部动作,club 侧不暴露给前端 ——
+  ///     PermissionService 撤"插件权限"时直接调 hi.ai.Plugin.DeleteByAgents(grpc),不走 club 门面。
   $grpc.ResponseFuture<$1.Empty> setActive(
     $0.SetActiveReq request, {
     $grpc.CallOptions? options,
@@ -191,11 +186,6 @@ class PluginClient extends $grpc.Client {
       $grpc.ClientMethod<$0.DeleteShellsReq, $1.Empty>(
           '/hi.club.Plugin/DeleteShells',
           ($0.DeleteShellsReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
-  static final _$deleteByAgents =
-      $grpc.ClientMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
-          '/hi.club.Plugin/DeleteByAgents',
-          ($0.DeletePluginByAgentsReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
   static final _$setActive = $grpc.ClientMethod<$0.SetActiveReq, $1.Empty>(
       '/hi.club.Plugin/SetActive',
@@ -286,14 +276,6 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.DeleteShellsReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
-        'DeleteByAgents',
-        deleteByAgents_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.DeletePluginByAgentsReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetActiveReq, $1.Empty>(
         'SetActive',
@@ -397,14 +379,6 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> deleteShells(
       $grpc.ServiceCall call, $0.DeleteShellsReq request);
-
-  $async.Future<$1.Empty> deleteByAgents_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeletePluginByAgentsReq> $request) async {
-    return deleteByAgents($call, await $request);
-  }
-
-  $async.Future<$1.Empty> deleteByAgents(
-      $grpc.ServiceCall call, $0.DeletePluginByAgentsReq request);
 
   $async.Future<$1.Empty> setActive_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SetActiveReq> $request) async {
