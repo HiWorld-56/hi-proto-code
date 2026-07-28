@@ -22,13 +22,11 @@ class Coin extends $pb.GeneratedMessage {
     $core.String? icon,
     $core.String? name,
     $core.String? category,
-    $core.String? type,
   }) {
     final result = create();
     if (icon != null) result.icon = icon;
     if (name != null) result.name = name;
     if (category != null) result.category = category;
-    if (type != null) result.type = type;
     return result;
   }
 
@@ -48,7 +46,6 @@ class Coin extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'icon')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'category')
-    ..aOS(4, _omitFieldNames ? '' : 'type')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -95,15 +92,6 @@ class Coin extends $pb.GeneratedMessage {
   $core.bool hasCategory() => $_has(2);
   @$pb.TagNumber(3)
   void clearCategory() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get type => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set type($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasType() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearType() => $_clearField(4);
 }
 
 class ListCoinsResp extends $pb.GeneratedMessage {

@@ -28,7 +28,6 @@ type Coin struct {
 	Icon          string                 `protobuf:"bytes,1,opt,name=icon,proto3" json:"icon,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"` // public-公共币种, custom-自定义币种
-	Type          string                 `protobuf:"bytes,4,opt,name=type,proto3" json:"type,omitempty"`         // 所在链(btc/eth/trx/sol/aptos);随 coin 传递,调用方直接当 chain 用,免 coin→chain 映射
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -80,13 +79,6 @@ func (x *Coin) GetName() string {
 func (x *Coin) GetCategory() string {
 	if x != nil {
 		return x.Category
-	}
-	return ""
-}
-
-func (x *Coin) GetType() string {
-	if x != nil {
-		return x.Type
 	}
 	return ""
 }
@@ -349,12 +341,11 @@ var File_hi_did_base_proto protoreflect.FileDescriptor
 
 const file_hi_did_base_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"|\n" +
+	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"b\n" +
 	"\x04Coin\x12\x18\n" +
 	"\x04icon\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04icon\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12 \n" +
-	"\bcategory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\bcategory\x12\x18\n" +
-	"\x04type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x04type:\x04\x98\xb5\x18\x01\"=\n" +
+	"\bcategory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\bcategory:\x04\x98\xb5\x18\x01\"=\n" +
 	"\rListCoinsResp\x12&\n" +
 	"\x04list\x18\x01 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\".\n" +
 	"\x10LatestVersionReq\x12\x1a\n" +

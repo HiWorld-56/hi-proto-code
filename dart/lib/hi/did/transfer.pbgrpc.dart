@@ -21,7 +21,7 @@ import 'transfer.pb.dart' as $0;
 
 export 'transfer.pb.dart';
 
-/// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签 / 链上口径换算,给三方(尤其没能力自己做
+/// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
 /// 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
 @$pb.GrpcServiceName('hi.did.Transfer')
 class TransferClient extends $grpc.Client {
@@ -56,13 +56,6 @@ class TransferClient extends $grpc.Client {
     return $createUnaryCall(_$verifyTransaction, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.AmountToRawResp> amountToRaw(
-    $0.AmountToRawReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$amountToRaw, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.DID> verifySignature(
     $1.SignedData request, {
     $grpc.CallOptions? options,
@@ -85,11 +78,6 @@ class TransferClient extends $grpc.Client {
           '/hi.did.Transfer/VerifyTransaction',
           ($0.VerifyTransactionReq value) => value.writeToBuffer(),
           $0.VerifyTransactionResp.fromBuffer);
-  static final _$amountToRaw =
-      $grpc.ClientMethod<$0.AmountToRawReq, $0.AmountToRawResp>(
-          '/hi.did.Transfer/AmountToRaw',
-          ($0.AmountToRawReq value) => value.writeToBuffer(),
-          $0.AmountToRawResp.fromBuffer);
   static final _$verifySignature = $grpc.ClientMethod<$1.SignedData, $1.DID>(
       '/hi.did.Transfer/VerifySignature',
       ($1.SignedData value) => value.writeToBuffer(),
@@ -124,13 +112,6 @@ abstract class TransferServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.VerifyTransactionReq.fromBuffer(value),
             ($0.VerifyTransactionResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.AmountToRawReq, $0.AmountToRawResp>(
-        'AmountToRaw',
-        amountToRaw_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.AmountToRawReq.fromBuffer(value),
-        ($0.AmountToRawResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.SignedData, $1.DID>(
         'VerifySignature',
         verifySignature_Pre,
@@ -164,14 +145,6 @@ abstract class TransferServiceBase extends $grpc.Service {
 
   $async.Future<$0.VerifyTransactionResp> verifyTransaction(
       $grpc.ServiceCall call, $0.VerifyTransactionReq request);
-
-  $async.Future<$0.AmountToRawResp> amountToRaw_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.AmountToRawReq> $request) async {
-    return amountToRaw($call, await $request);
-  }
-
-  $async.Future<$0.AmountToRawResp> amountToRaw(
-      $grpc.ServiceCall call, $0.AmountToRawReq request);
 
   $async.Future<$1.DID> verifySignature_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {

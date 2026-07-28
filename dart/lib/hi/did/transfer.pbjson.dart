@@ -197,30 +197,3 @@ final $typed_data.Uint8List verifyTransactionRespDescriptor = $convert.base64Dec
     'Ei8KEGNvbmZpcm1lZF9ibG9ja3MYBCABKANCBJC1GAFSD2NvbmZpcm1lZEJsb2NrcxIiCgl0aW'
     '1lc3RhbXAYBSABKANCBJC1GAFSCXRpbWVzdGFtcBIlCgtxdWVyeV9jb3VudBgGIAEoDUIEkLUY'
     'AVIKcXVlcnlDb3VudDoEmLUYAQ==');
-
-@$core.Deprecated('Use amountToRawReqDescriptor instead')
-const AmountToRawReq$json = {
-  '1': 'AmountToRawReq',
-  '2': [
-    {'1': 'coin', '3': 1, '4': 1, '5': 9, '10': 'coin'},
-    {'1': 'amount', '3': 2, '4': 1, '5': 9, '10': 'amount'},
-  ],
-};
-
-/// Descriptor for `AmountToRawReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List amountToRawReqDescriptor = $convert.base64Decode(
-    'Cg5BbW91bnRUb1Jhd1JlcRISCgRjb2luGAEgASgJUgRjb2luEhYKBmFtb3VudBgCIAEoCVIGYW'
-    '1vdW50');
-
-@$core.Deprecated('Use amountToRawRespDescriptor instead')
-const AmountToRawResp$json = {
-  '1': 'AmountToRawResp',
-  '2': [
-    {'1': 'raw', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'raw'},
-  ],
-  '7': {},
-};
-
-/// Descriptor for `AmountToRawResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List amountToRawRespDescriptor = $convert.base64Decode(
-    'Cg9BbW91bnRUb1Jhd1Jlc3ASFgoDcmF3GAEgASgJQgSQtRgBUgNyYXc6BJi1GAE=');

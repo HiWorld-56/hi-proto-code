@@ -23,7 +23,6 @@ const (
 	Transfer_History_FullMethodName           = "/hi.did.Transfer/History"
 	Transfer_TxStatus_FullMethodName          = "/hi.did.Transfer/TxStatus"
 	Transfer_VerifyTransaction_FullMethodName = "/hi.did.Transfer/VerifyTransaction"
-	Transfer_AmountToRaw_FullMethodName       = "/hi.did.Transfer/AmountToRaw"
 	Transfer_VerifySignature_FullMethodName   = "/hi.did.Transfer/VerifySignature"
 )
 
@@ -31,13 +30,12 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签 / 链上口径换算,给三方(尤其没能力自己做
+// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
 // 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
 type TransferClient interface {
 	History(ctx context.Context, in *HistoryReq, opts ...grpc.CallOption) (*HistoryResp, error)
 	TxStatus(ctx context.Context, in *TxStatusReq, opts ...grpc.CallOption) (*TxStatusResp, error)
 	VerifyTransaction(ctx context.Context, in *VerifyTransactionReq, opts ...grpc.CallOption) (*VerifyTransactionResp, error)
-	AmountToRaw(ctx context.Context, in *AmountToRawReq, opts ...grpc.CallOption) (*AmountToRawResp, error)
 	VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error)
 }
 
@@ -79,16 +77,6 @@ func (c *transferClient) VerifyTransaction(ctx context.Context, in *VerifyTransa
 	return out, nil
 }
 
-func (c *transferClient) AmountToRaw(ctx context.Context, in *AmountToRawReq, opts ...grpc.CallOption) (*AmountToRawResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AmountToRawResp)
-	err := c.cc.Invoke(ctx, Transfer_AmountToRaw_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *transferClient) VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.DID)
@@ -103,13 +91,12 @@ func (c *transferClient) VerifySignature(ctx context.Context, in *hi.SignedData,
 // All implementations should embed UnimplementedTransferServer
 // for forward compatibility.
 //
-// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签 / 链上口径换算,给三方(尤其没能力自己做
+// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
 // 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
 type TransferServer interface {
 	History(context.Context, *HistoryReq) (*HistoryResp, error)
 	TxStatus(context.Context, *TxStatusReq) (*TxStatusResp, error)
 	VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error)
-	AmountToRaw(context.Context, *AmountToRawReq) (*AmountToRawResp, error)
 	VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error)
 }
 
@@ -128,9 +115,6 @@ func (UnimplementedTransferServer) TxStatus(context.Context, *TxStatusReq) (*TxS
 }
 func (UnimplementedTransferServer) VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyTransaction not implemented")
-}
-func (UnimplementedTransferServer) AmountToRaw(context.Context, *AmountToRawReq) (*AmountToRawResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AmountToRaw not implemented")
 }
 func (UnimplementedTransferServer) VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifySignature not implemented")
@@ -209,24 +193,6 @@ func _Transfer_VerifyTransaction_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Transfer_AmountToRaw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AmountToRawReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TransferServer).AmountToRaw(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Transfer_AmountToRaw_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransferServer).AmountToRaw(ctx, req.(*AmountToRawReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Transfer_VerifySignature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
@@ -263,10 +229,6 @@ var Transfer_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyTransaction",
 			Handler:    _Transfer_VerifyTransaction_Handler,
-		},
-		{
-			MethodName: "AmountToRaw",
-			Handler:    _Transfer_AmountToRaw_Handler,
 		},
 		{
 			MethodName: "VerifySignature",

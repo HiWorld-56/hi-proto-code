@@ -8,9 +8,6 @@ pub struct Coin {
     /// public-公共币种, custom-自定义币种
     #[prost(string, tag = "3")]
     pub category: ::prost::alloc::string::String,
-    /// 所在链(btc/eth/trx/sol/aptos);随 coin 传递,调用方直接当 chain 用,免 coin→chain 映射
-    #[prost(string, tag = "4")]
-    pub r#type: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCoinsResp {
@@ -419,19 +416,19 @@ pub struct TxStatusResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VerifyTransactionReq {
-    /// 预期币种（定位链/合约）
+    /// 预期币种（did 据此定位链/合约/精度）
     #[prost(string, tag = "1")]
     pub coin: ::prost::alloc::string::String,
     /// 链上交易 hash
     #[prost(string, tag = "2")]
     pub hash: ::prost::alloc::string::String,
-    /// 预期金额（最小单位整数串，与 tx_detail 口径一致）
+    /// 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
     #[prost(string, tag = "3")]
     pub amount: ::prost::alloc::string::String,
-    /// 预期付款方地址
+    /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）
     #[prost(string, tag = "4")]
     pub from: ::prost::alloc::string::String,
-    /// 预期收款方地址
+    /// 预期收款方 **DID**（同上）
     #[prost(string, tag = "5")]
     pub to: ::prost::alloc::string::String,
 }
@@ -456,24 +453,6 @@ pub struct VerifyTransactionResp {
     #[prost(uint32, tag = "6")]
     pub query_count: u32,
 }
-/// 金额换算:人类可读 → 该币最小单位整数串。did 拥有各币精度,显式暴露给调用方,
-/// 供其在调 VerifyTransaction 前把金额备成链上口径。**不把换算藏进 VerifyTransaction**——
-/// 否则金额对不上时分不清是链上不符还是内部换算错,查都查不出。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct AmountToRawReq {
-    /// 币种(定位精度)
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
-    /// 人类可读金额,如 "0.101"
-    #[prost(string, tag = "2")]
-    pub amount: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct AmountToRawResp {
-    /// 最小单位整数串,如 "10100000"
-    #[prost(string, tag = "1")]
-    pub raw: ::prost::alloc::string::String,
-}
 /// Generated client implementations.
 pub mod transfer_client {
     #![allow(
@@ -485,7 +464,7 @@ pub mod transfer_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签 / 链上口径换算,给三方(尤其没能力自己做
+    /// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
     /// 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
     #[derive(Debug, Clone)]
     pub struct TransferClient<T> {
@@ -625,30 +604,6 @@ pub mod transfer_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Transfer", "VerifyTransaction"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn amount_to_raw(
-            &mut self,
-            request: impl tonic::IntoRequest<super::AmountToRawReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::AmountToRawResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Transfer/AmountToRaw",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Transfer", "AmountToRaw"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn verify_signature(
