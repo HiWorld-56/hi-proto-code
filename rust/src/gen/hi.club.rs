@@ -1373,7 +1373,32 @@ pub mod source_client {
             self.inner.unary(req, path, codec).await
         }
         /// ── 永久私有:商户私产,不公开读,取用必须经 Download 带归属校验 ──
+        /// 插件脚本 zip。unary 供 web(浏览器发不了 grpc 流式);流式版 UploadScriptStream 给 app/大文件。
         pub async fn upload_script(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadScript",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadScript"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_script_stream(
             &mut self,
             request: impl tonic::IntoStreamingRequest<
                 Message = super::super::UploadStreamReq,
@@ -1392,11 +1417,11 @@ pub mod source_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Source/UploadScript",
+                "/hi.club.Source/UploadScriptStream",
             );
             let mut req = request.into_streaming_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Source", "UploadScript"));
+                .insert(GrpcMethod::new("hi.club.Source", "UploadScriptStream"));
             self.inner.client_streaming(req, path, codec).await
         }
         pub async fn download_script(

@@ -120,11 +120,19 @@ class SourceClient extends $grpc.Client {
   }
 
   /// ── 永久私有:商户私产,不公开读,取用必须经 Download 带归属校验 ──
+  /// 插件脚本 zip。unary 供 web(浏览器发不了 grpc 流式);流式版 UploadScriptStream 给 app/大文件。
   $grpc.ResponseFuture<$0.UploadResp> uploadScript(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadScript, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.UploadResp> uploadScriptStream(
     $async.Stream<$0.UploadStreamReq> request, {
     $grpc.CallOptions? options,
   }) {
-    return $createStreamingCall(_$uploadScript, request, options: options)
+    return $createStreamingCall(_$uploadScriptStream, request, options: options)
         .single;
   }
 
@@ -199,9 +207,13 @@ class SourceClient extends $grpc.Client {
       '/hi.club.Source/UploadLog',
       ($0.UploadReq value) => value.writeToBuffer(),
       $0.UploadResp.fromBuffer);
-  static final _$uploadScript =
+  static final _$uploadScript = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.club.Source/UploadScript',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
+  static final _$uploadScriptStream =
       $grpc.ClientMethod<$0.UploadStreamReq, $0.UploadResp>(
-          '/hi.club.Source/UploadScript',
+          '/hi.club.Source/UploadScriptStream',
           ($0.UploadStreamReq value) => value.writeToBuffer(),
           $0.UploadResp.fromBuffer);
   static final _$downloadScript =
@@ -283,9 +295,16 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
         ($0.UploadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UploadStreamReq, $0.UploadResp>(
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadScript',
-        uploadScript,
+        uploadScript_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadStreamReq, $0.UploadResp>(
+        'UploadScriptStream',
+        uploadScriptStream,
         true,
         false,
         ($core.List<$core.int> value) => $0.UploadStreamReq.fromBuffer(value),
@@ -372,7 +391,15 @@ abstract class SourceServiceBase extends $grpc.Service {
   $async.Future<$0.UploadResp> uploadLog(
       $grpc.ServiceCall call, $0.UploadReq request);
 
+  $async.Future<$0.UploadResp> uploadScript_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadScript($call, await $request);
+  }
+
   $async.Future<$0.UploadResp> uploadScript(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadScriptStream(
       $grpc.ServiceCall call, $async.Stream<$0.UploadStreamReq> request);
 
   $async.Future<$2.DownloadScriptResp> downloadScript_Pre(
