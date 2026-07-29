@@ -1448,6 +1448,53 @@ pub mod source_client {
                 .insert(GrpcMethod::new("hi.club.Source", "DownloadScript"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn upload_logo(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadLogo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Source", "UploadLogo"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_summary(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadSummary",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadSummary"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn upload_training_file(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::UploadFileReq>,

@@ -32,6 +32,8 @@ const (
 	Source_UploadScript_FullMethodName         = "/hi.club.Source/UploadScript"
 	Source_UploadScriptStream_FullMethodName   = "/hi.club.Source/UploadScriptStream"
 	Source_DownloadScript_FullMethodName       = "/hi.club.Source/DownloadScript"
+	Source_UploadLogo_FullMethodName           = "/hi.club.Source/UploadLogo"
+	Source_UploadSummary_FullMethodName        = "/hi.club.Source/UploadSummary"
 	Source_UploadTrainingFile_FullMethodName   = "/hi.club.Source/UploadTrainingFile"
 	Source_DownloadTrainingFile_FullMethodName = "/hi.club.Source/DownloadTrainingFile"
 	Source_Delete_FullMethodName               = "/hi.club.Source/Delete"
@@ -89,6 +91,8 @@ type SourceClient interface {
 	UploadScript(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadScriptStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
 	DownloadScript(ctx context.Context, in *ai.DownloadScriptReq, opts ...grpc.CallOption) (*ai.DownloadScriptResp, error)
+	UploadLogo(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	UploadSummary(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadTrainingFile(ctx context.Context, in *ai.UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DownloadTrainingFile(ctx context.Context, in *ai.DownloadFileReq, opts ...grpc.CallOption) (*ai.DownloadFileResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
@@ -227,6 +231,26 @@ func (c *sourceClient) DownloadScript(ctx context.Context, in *ai.DownloadScript
 	return out, nil
 }
 
+func (c *sourceClient) UploadLogo(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Source_UploadLogo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sourceClient) UploadSummary(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Source_UploadSummary_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sourceClient) UploadTrainingFile(ctx context.Context, in *ai.UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -309,6 +333,8 @@ type SourceServer interface {
 	UploadScript(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadScriptStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
 	DownloadScript(context.Context, *ai.DownloadScriptReq) (*ai.DownloadScriptResp, error)
+	UploadLogo(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	UploadSummary(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadTrainingFile(context.Context, *ai.UploadFileReq) (*emptypb.Empty, error)
 	DownloadTrainingFile(context.Context, *ai.DownloadFileReq) (*ai.DownloadFileResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
@@ -360,6 +386,12 @@ func (UnimplementedSourceServer) UploadScriptStream(grpc.ClientStreamingServer[h
 }
 func (UnimplementedSourceServer) DownloadScript(context.Context, *ai.DownloadScriptReq) (*ai.DownloadScriptResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DownloadScript not implemented")
+}
+func (UnimplementedSourceServer) UploadLogo(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadLogo not implemented")
+}
+func (UnimplementedSourceServer) UploadSummary(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadSummary not implemented")
 }
 func (UnimplementedSourceServer) UploadTrainingFile(context.Context, *ai.UploadFileReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadTrainingFile not implemented")
@@ -541,6 +573,42 @@ func _Source_DownloadScript_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Source_UploadLogo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadLogo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadLogo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadLogo(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Source_UploadSummary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadSummary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadSummary_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadSummary(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Source_UploadTrainingFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.UploadFileReq)
 	if err := dec(in); err != nil {
@@ -629,6 +697,14 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadScript",
 			Handler:    _Source_DownloadScript_Handler,
+		},
+		{
+			MethodName: "UploadLogo",
+			Handler:    _Source_UploadLogo_Handler,
+		},
+		{
+			MethodName: "UploadSummary",
+			Handler:    _Source_UploadSummary_Handler,
 		},
 		{
 			MethodName: "UploadTrainingFile",

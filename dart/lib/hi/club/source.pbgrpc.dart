@@ -143,6 +143,20 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$downloadScript, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.UploadResp> uploadLogo(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadLogo, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.UploadResp> uploadSummary(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadSummary, request, options: options);
+  }
+
   $grpc.ResponseFuture<$4.Empty> uploadTrainingFile(
     $3.UploadFileReq request, {
     $grpc.CallOptions? options,
@@ -221,6 +235,15 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/DownloadScript',
           ($2.DownloadScriptReq value) => value.writeToBuffer(),
           $2.DownloadScriptResp.fromBuffer);
+  static final _$uploadLogo = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.club.Source/UploadLogo',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
+  static final _$uploadSummary =
+      $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+          '/hi.club.Source/UploadSummary',
+          ($0.UploadReq value) => value.writeToBuffer(),
+          $0.UploadResp.fromBuffer);
   static final _$uploadTrainingFile =
       $grpc.ClientMethod<$3.UploadFileReq, $4.Empty>(
           '/hi.club.Source/UploadTrainingFile',
@@ -316,6 +339,20 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.DownloadScriptReq.fromBuffer(value),
         ($2.DownloadScriptResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadLogo',
+        uploadLogo_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadSummary',
+        uploadSummary_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$3.UploadFileReq, $4.Empty>(
         'UploadTrainingFile',
         uploadTrainingFile_Pre,
@@ -410,6 +447,22 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Future<$2.DownloadScriptResp> downloadScript(
       $grpc.ServiceCall call, $2.DownloadScriptReq request);
+
+  $async.Future<$0.UploadResp> uploadLogo_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadLogo($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadLogo(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadSummary_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadSummary($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadSummary(
+      $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$4.Empty> uploadTrainingFile_Pre(
       $grpc.ServiceCall $call, $async.Future<$3.UploadFileReq> $request) async {
