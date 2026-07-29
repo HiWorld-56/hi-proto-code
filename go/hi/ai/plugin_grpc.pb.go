@@ -20,19 +20,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Plugin_CreateShell_FullMethodName    = "/hi.ai.Plugin/CreateShell"
-	Plugin_CreateVersion_FullMethodName  = "/hi.ai.Plugin/CreateVersion"
-	Plugin_Edit_FullMethodName           = "/hi.ai.Plugin/Edit"
-	Plugin_Get_FullMethodName            = "/hi.ai.Plugin/Get"
-	Plugin_List_FullMethodName           = "/hi.ai.Plugin/List"
-	Plugin_ListVersions_FullMethodName   = "/hi.ai.Plugin/ListVersions"
-	Plugin_Delete_FullMethodName         = "/hi.ai.Plugin/Delete"
-	Plugin_DeleteVersions_FullMethodName = "/hi.ai.Plugin/DeleteVersions"
-	Plugin_DeleteShell_FullMethodName    = "/hi.ai.Plugin/DeleteShell"
-	Plugin_DeleteShells_FullMethodName   = "/hi.ai.Plugin/DeleteShells"
-	Plugin_DeleteByAgents_FullMethodName = "/hi.ai.Plugin/DeleteByAgents"
-	Plugin_SetActive_FullMethodName      = "/hi.ai.Plugin/SetActive"
-	Plugin_SetEnabled_FullMethodName     = "/hi.ai.Plugin/SetEnabled"
+	Plugin_CreateShell_FullMethodName       = "/hi.ai.Plugin/CreateShell"
+	Plugin_CreateVersion_FullMethodName     = "/hi.ai.Plugin/CreateVersion"
+	Plugin_Edit_FullMethodName              = "/hi.ai.Plugin/Edit"
+	Plugin_Get_FullMethodName               = "/hi.ai.Plugin/Get"
+	Plugin_List_FullMethodName              = "/hi.ai.Plugin/List"
+	Plugin_ListVersions_FullMethodName      = "/hi.ai.Plugin/ListVersions"
+	Plugin_Delete_FullMethodName            = "/hi.ai.Plugin/Delete"
+	Plugin_DeleteVersions_FullMethodName    = "/hi.ai.Plugin/DeleteVersions"
+	Plugin_DeleteVersionList_FullMethodName = "/hi.ai.Plugin/DeleteVersionList"
+	Plugin_DeleteShell_FullMethodName       = "/hi.ai.Plugin/DeleteShell"
+	Plugin_DeleteShells_FullMethodName      = "/hi.ai.Plugin/DeleteShells"
+	Plugin_DeleteByAgents_FullMethodName    = "/hi.ai.Plugin/DeleteByAgents"
+	Plugin_SetActive_FullMethodName         = "/hi.ai.Plugin/SetActive"
+	Plugin_SetEnabled_FullMethodName        = "/hi.ai.Plugin/SetEnabled"
 )
 
 // PluginClient is the client API for Plugin service.
@@ -49,6 +50,7 @@ type PluginClient interface {
 	ListVersions(ctx context.Context, in *ListVersionsReq, opts ...grpc.CallOption) (*ListVersionsResp, error)
 	Delete(ctx context.Context, in *DeleteVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteVersions(ctx context.Context, in *DeleteVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteVersionList(ctx context.Context, in *DeleteVersionListReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteShell(ctx context.Context, in *DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteShells(ctx context.Context, in *DeleteShellsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -144,6 +146,16 @@ func (c *pluginClient) DeleteVersions(ctx context.Context, in *DeleteVersionsReq
 	return out, nil
 }
 
+func (c *pluginClient) DeleteVersionList(ctx context.Context, in *DeleteVersionListReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_DeleteVersionList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) DeleteShell(ctx context.Context, in *DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -208,6 +220,7 @@ type PluginServer interface {
 	ListVersions(context.Context, *ListVersionsReq) (*ListVersionsResp, error)
 	Delete(context.Context, *DeleteVersionReq) (*emptypb.Empty, error)
 	DeleteVersions(context.Context, *DeleteVersionsReq) (*emptypb.Empty, error)
+	DeleteVersionList(context.Context, *DeleteVersionListReq) (*emptypb.Empty, error)
 	DeleteShell(context.Context, *DeleteShellReq) (*emptypb.Empty, error)
 	DeleteShells(context.Context, *DeleteShellsReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error)
@@ -245,6 +258,9 @@ func (UnimplementedPluginServer) Delete(context.Context, *DeleteVersionReq) (*em
 }
 func (UnimplementedPluginServer) DeleteVersions(context.Context, *DeleteVersionsReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteVersions not implemented")
+}
+func (UnimplementedPluginServer) DeleteVersionList(context.Context, *DeleteVersionListReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteVersionList not implemented")
 }
 func (UnimplementedPluginServer) DeleteShell(context.Context, *DeleteShellReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteShell not implemented")
@@ -425,6 +441,24 @@ func _Plugin_DeleteVersions_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_DeleteVersionList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVersionListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).DeleteVersionList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_DeleteVersionList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).DeleteVersionList(ctx, req.(*DeleteVersionListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_DeleteShell_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteShellReq)
 	if err := dec(in); err != nil {
@@ -553,6 +587,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteVersions",
 			Handler:    _Plugin_DeleteVersions_Handler,
+		},
+		{
+			MethodName: "DeleteVersionList",
+			Handler:    _Plugin_DeleteVersionList_Handler,
 		},
 		{
 			MethodName: "DeleteShell",

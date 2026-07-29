@@ -260,6 +260,33 @@ func local_request_Plugin_DeleteVersions_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
+func request_Plugin_DeleteVersionList_0(ctx context.Context, marshaler runtime.Marshaler, client PluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ai.DeleteVersionListReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.DeleteVersionList(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_Plugin_DeleteVersionList_0(ctx context.Context, marshaler runtime.Marshaler, server PluginServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ai.DeleteVersionListReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.DeleteVersionList(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_Plugin_DeleteShell_0(ctx context.Context, marshaler runtime.Marshaler, client PluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ai.DeleteShellReq
@@ -561,6 +588,26 @@ func RegisterPluginHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		}
 		forward_Plugin_DeleteVersions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_Plugin_DeleteVersionList_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Plugin/DeleteVersionList", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_version_list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Plugin_DeleteVersionList_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Plugin_DeleteVersionList_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Plugin_DeleteShell_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -837,6 +884,23 @@ func RegisterPluginHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		}
 		forward_Plugin_DeleteVersions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_Plugin_DeleteVersionList_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Plugin/DeleteVersionList", runtime.WithHTTPPathPattern("/api/v1/plugin/delete_version_list"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Plugin_DeleteVersionList_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Plugin_DeleteVersionList_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Plugin_DeleteShell_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -926,33 +990,35 @@ func RegisterPluginHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
-	pattern_Plugin_CreateShell_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create_shell"}, ""))
-	pattern_Plugin_CreateVersion_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create_version"}, ""))
-	pattern_Plugin_Edit_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "edit"}, ""))
-	pattern_Plugin_Get_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "get"}, ""))
-	pattern_Plugin_List_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list"}, ""))
-	pattern_Plugin_ListVersions_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list_versions"}, ""))
-	pattern_Plugin_Delete_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete"}, ""))
-	pattern_Plugin_DeleteVersions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_versions"}, ""))
-	pattern_Plugin_DeleteShell_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_shell"}, ""))
-	pattern_Plugin_DeleteShells_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_shells"}, ""))
-	pattern_Plugin_SetActive_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_active"}, ""))
-	pattern_Plugin_SetEnabled_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_enabled"}, ""))
-	pattern_Plugin_ReloadApiKey_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "reload_api_key"}, ""))
+	pattern_Plugin_CreateShell_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create_shell"}, ""))
+	pattern_Plugin_CreateVersion_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "create_version"}, ""))
+	pattern_Plugin_Edit_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "edit"}, ""))
+	pattern_Plugin_Get_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "get"}, ""))
+	pattern_Plugin_List_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list"}, ""))
+	pattern_Plugin_ListVersions_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "list_versions"}, ""))
+	pattern_Plugin_Delete_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete"}, ""))
+	pattern_Plugin_DeleteVersions_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_versions"}, ""))
+	pattern_Plugin_DeleteVersionList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_version_list"}, ""))
+	pattern_Plugin_DeleteShell_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_shell"}, ""))
+	pattern_Plugin_DeleteShells_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "delete_shells"}, ""))
+	pattern_Plugin_SetActive_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_active"}, ""))
+	pattern_Plugin_SetEnabled_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "set_enabled"}, ""))
+	pattern_Plugin_ReloadApiKey_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "plugin", "reload_api_key"}, ""))
 )
 
 var (
-	forward_Plugin_CreateShell_0    = runtime.ForwardResponseMessage
-	forward_Plugin_CreateVersion_0  = runtime.ForwardResponseMessage
-	forward_Plugin_Edit_0           = runtime.ForwardResponseMessage
-	forward_Plugin_Get_0            = runtime.ForwardResponseMessage
-	forward_Plugin_List_0           = runtime.ForwardResponseMessage
-	forward_Plugin_ListVersions_0   = runtime.ForwardResponseMessage
-	forward_Plugin_Delete_0         = runtime.ForwardResponseMessage
-	forward_Plugin_DeleteVersions_0 = runtime.ForwardResponseMessage
-	forward_Plugin_DeleteShell_0    = runtime.ForwardResponseMessage
-	forward_Plugin_DeleteShells_0   = runtime.ForwardResponseMessage
-	forward_Plugin_SetActive_0      = runtime.ForwardResponseMessage
-	forward_Plugin_SetEnabled_0     = runtime.ForwardResponseMessage
-	forward_Plugin_ReloadApiKey_0   = runtime.ForwardResponseMessage
+	forward_Plugin_CreateShell_0       = runtime.ForwardResponseMessage
+	forward_Plugin_CreateVersion_0     = runtime.ForwardResponseMessage
+	forward_Plugin_Edit_0              = runtime.ForwardResponseMessage
+	forward_Plugin_Get_0               = runtime.ForwardResponseMessage
+	forward_Plugin_List_0              = runtime.ForwardResponseMessage
+	forward_Plugin_ListVersions_0      = runtime.ForwardResponseMessage
+	forward_Plugin_Delete_0            = runtime.ForwardResponseMessage
+	forward_Plugin_DeleteVersions_0    = runtime.ForwardResponseMessage
+	forward_Plugin_DeleteVersionList_0 = runtime.ForwardResponseMessage
+	forward_Plugin_DeleteShell_0       = runtime.ForwardResponseMessage
+	forward_Plugin_DeleteShells_0      = runtime.ForwardResponseMessage
+	forward_Plugin_SetActive_0         = runtime.ForwardResponseMessage
+	forward_Plugin_SetEnabled_0        = runtime.ForwardResponseMessage
+	forward_Plugin_ReloadApiKey_0      = runtime.ForwardResponseMessage
 )

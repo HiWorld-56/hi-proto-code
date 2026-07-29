@@ -21,19 +21,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Plugin_CreateShell_FullMethodName    = "/hi.club.Plugin/CreateShell"
-	Plugin_CreateVersion_FullMethodName  = "/hi.club.Plugin/CreateVersion"
-	Plugin_Edit_FullMethodName           = "/hi.club.Plugin/Edit"
-	Plugin_Get_FullMethodName            = "/hi.club.Plugin/Get"
-	Plugin_List_FullMethodName           = "/hi.club.Plugin/List"
-	Plugin_ListVersions_FullMethodName   = "/hi.club.Plugin/ListVersions"
-	Plugin_Delete_FullMethodName         = "/hi.club.Plugin/Delete"
-	Plugin_DeleteVersions_FullMethodName = "/hi.club.Plugin/DeleteVersions"
-	Plugin_DeleteShell_FullMethodName    = "/hi.club.Plugin/DeleteShell"
-	Plugin_DeleteShells_FullMethodName   = "/hi.club.Plugin/DeleteShells"
-	Plugin_SetActive_FullMethodName      = "/hi.club.Plugin/SetActive"
-	Plugin_SetEnabled_FullMethodName     = "/hi.club.Plugin/SetEnabled"
-	Plugin_ReloadApiKey_FullMethodName   = "/hi.club.Plugin/ReloadApiKey"
+	Plugin_CreateShell_FullMethodName       = "/hi.club.Plugin/CreateShell"
+	Plugin_CreateVersion_FullMethodName     = "/hi.club.Plugin/CreateVersion"
+	Plugin_Edit_FullMethodName              = "/hi.club.Plugin/Edit"
+	Plugin_Get_FullMethodName               = "/hi.club.Plugin/Get"
+	Plugin_List_FullMethodName              = "/hi.club.Plugin/List"
+	Plugin_ListVersions_FullMethodName      = "/hi.club.Plugin/ListVersions"
+	Plugin_Delete_FullMethodName            = "/hi.club.Plugin/Delete"
+	Plugin_DeleteVersions_FullMethodName    = "/hi.club.Plugin/DeleteVersions"
+	Plugin_DeleteVersionList_FullMethodName = "/hi.club.Plugin/DeleteVersionList"
+	Plugin_DeleteShell_FullMethodName       = "/hi.club.Plugin/DeleteShell"
+	Plugin_DeleteShells_FullMethodName      = "/hi.club.Plugin/DeleteShells"
+	Plugin_SetActive_FullMethodName         = "/hi.club.Plugin/SetActive"
+	Plugin_SetEnabled_FullMethodName        = "/hi.club.Plugin/SetEnabled"
+	Plugin_ReloadApiKey_FullMethodName      = "/hi.club.Plugin/ReloadApiKey"
 )
 
 // PluginClient is the client API for Plugin service.
@@ -61,6 +62,7 @@ type PluginClient interface {
 	ListVersions(ctx context.Context, in *ai.ListVersionsReq, opts ...grpc.CallOption) (*ai.ListVersionsResp, error)
 	Delete(ctx context.Context, in *ai.DeleteVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteVersions(ctx context.Context, in *ai.DeleteVersionsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteVersionList(ctx context.Context, in *ai.DeleteVersionListReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteShell(ctx context.Context, in *ai.DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteShells(ctx context.Context, in *ai.DeleteShellsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 注:按 agent 批量清插件是撤权级联的内部动作,club 侧不暴露给前端 ——
@@ -159,6 +161,16 @@ func (c *pluginClient) DeleteVersions(ctx context.Context, in *ai.DeleteVersions
 	return out, nil
 }
 
+func (c *pluginClient) DeleteVersionList(ctx context.Context, in *ai.DeleteVersionListReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_DeleteVersionList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) DeleteShell(ctx context.Context, in *ai.DeleteShellReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -234,6 +246,7 @@ type PluginServer interface {
 	ListVersions(context.Context, *ai.ListVersionsReq) (*ai.ListVersionsResp, error)
 	Delete(context.Context, *ai.DeleteVersionReq) (*emptypb.Empty, error)
 	DeleteVersions(context.Context, *ai.DeleteVersionsReq) (*emptypb.Empty, error)
+	DeleteVersionList(context.Context, *ai.DeleteVersionListReq) (*emptypb.Empty, error)
 	DeleteShell(context.Context, *ai.DeleteShellReq) (*emptypb.Empty, error)
 	DeleteShells(context.Context, *ai.DeleteShellsReq) (*emptypb.Empty, error)
 	// 注:按 agent 批量清插件是撤权级联的内部动作,club 侧不暴露给前端 ——
@@ -274,6 +287,9 @@ func (UnimplementedPluginServer) Delete(context.Context, *ai.DeleteVersionReq) (
 }
 func (UnimplementedPluginServer) DeleteVersions(context.Context, *ai.DeleteVersionsReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteVersions not implemented")
+}
+func (UnimplementedPluginServer) DeleteVersionList(context.Context, *ai.DeleteVersionListReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteVersionList not implemented")
 }
 func (UnimplementedPluginServer) DeleteShell(context.Context, *ai.DeleteShellReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteShell not implemented")
@@ -454,6 +470,24 @@ func _Plugin_DeleteVersions_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_DeleteVersionList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.DeleteVersionListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).DeleteVersionList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_DeleteVersionList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).DeleteVersionList(ctx, req.(*ai.DeleteVersionListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_DeleteShell_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ai.DeleteShellReq)
 	if err := dec(in); err != nil {
@@ -582,6 +616,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteVersions",
 			Handler:    _Plugin_DeleteVersions_Handler,
+		},
+		{
+			MethodName: "DeleteVersionList",
+			Handler:    _Plugin_DeleteVersionList_Handler,
 		},
 		{
 			MethodName: "DeleteShell",

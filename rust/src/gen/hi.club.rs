@@ -3278,6 +3278,27 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.club.Plugin", "DeleteVersions"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn delete_version_list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::DeleteVersionListReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/DeleteVersionList",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "DeleteVersionList"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn delete_shell(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::DeleteShellReq>,
