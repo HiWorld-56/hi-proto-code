@@ -3139,7 +3139,31 @@ pub mod source_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// 插件脚本 zip → hiai/plugin/。unary 供 web(浏览器发不了 grpc 流式);流式 UploadScriptStream 给大文件/grpc。
         pub async fn upload_script(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Source/UploadScript",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Source", "UploadScript"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_script_stream(
             &mut self,
             request: impl tonic::IntoStreamingRequest<
                 Message = super::super::UploadStreamReq,
@@ -3158,10 +3182,11 @@ pub mod source_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Source/UploadScript",
+                "/hi.ai.Source/UploadScriptStream",
             );
             let mut req = request.into_streaming_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Source", "UploadScript"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Source", "UploadScriptStream"));
             self.inner.client_streaming(req, path, codec).await
         }
         pub async fn download_script(

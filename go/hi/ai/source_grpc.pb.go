@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Source_UploadScript_FullMethodName         = "/hi.ai.Source/UploadScript"
+	Source_UploadScriptStream_FullMethodName   = "/hi.ai.Source/UploadScriptStream"
 	Source_DownloadScript_FullMethodName       = "/hi.ai.Source/DownloadScript"
 	Source_UploadTrainingFile_FullMethodName   = "/hi.ai.Source/UploadTrainingFile"
 	Source_DownloadTrainingFile_FullMethodName = "/hi.ai.Source/DownloadTrainingFile"
@@ -42,7 +43,9 @@ const (
 //
 // 桶/目录/命名是 handler 内部封装,对 hi-source 只用其原子 Put(不外泄 hi-source 的接口)。
 type SourceClient interface {
-	UploadScript(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
+	// 插件脚本 zip → hiai/plugin/。unary 供 web(浏览器发不了 grpc 流式);流式 UploadScriptStream 给大文件/grpc。
+	UploadScript(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	UploadScriptStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
 	DownloadScript(ctx context.Context, in *DownloadScriptReq, opts ...grpc.CallOption) (*DownloadScriptResp, error)
 	UploadTrainingFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DownloadTrainingFile(ctx context.Context, in *DownloadFileReq, opts ...grpc.CallOption) (*DownloadFileResp, error)
@@ -68,9 +71,19 @@ func NewSourceClient(cc grpc.ClientConnInterface) SourceClient {
 	return &sourceClient{cc}
 }
 
-func (c *sourceClient) UploadScript(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error) {
+func (c *sourceClient) UploadScript(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Source_ServiceDesc.Streams[0], Source_UploadScript_FullMethodName, cOpts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Source_UploadScript_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sourceClient) UploadScriptStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Source_ServiceDesc.Streams[0], Source_UploadScriptStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +92,7 @@ func (c *sourceClient) UploadScript(ctx context.Context, opts ...grpc.CallOption
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Source_UploadScriptClient = grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp]
+type Source_UploadScriptStreamClient = grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp]
 
 func (c *sourceClient) DownloadScript(ctx context.Context, in *DownloadScriptReq, opts ...grpc.CallOption) (*DownloadScriptResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -144,7 +157,9 @@ func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opt
 //
 // 桶/目录/命名是 handler 内部封装,对 hi-source 只用其原子 Put(不外泄 hi-source 的接口)。
 type SourceServer interface {
-	UploadScript(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
+	// 插件脚本 zip → hiai/plugin/。unary 供 web(浏览器发不了 grpc 流式);流式 UploadScriptStream 给大文件/grpc。
+	UploadScript(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	UploadScriptStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
 	DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error)
 	UploadTrainingFile(context.Context, *UploadFileReq) (*emptypb.Empty, error)
 	DownloadTrainingFile(context.Context, *DownloadFileReq) (*DownloadFileResp, error)
@@ -169,8 +184,11 @@ type SourceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSourceServer struct{}
 
-func (UnimplementedSourceServer) UploadScript(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error {
-	return status.Error(codes.Unimplemented, "method UploadScript not implemented")
+func (UnimplementedSourceServer) UploadScript(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadScript not implemented")
+}
+func (UnimplementedSourceServer) UploadScriptStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error {
+	return status.Error(codes.Unimplemented, "method UploadScriptStream not implemented")
 }
 func (UnimplementedSourceServer) DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DownloadScript not implemented")
@@ -207,12 +225,30 @@ func RegisterSourceServer(s grpc.ServiceRegistrar, srv SourceServer) {
 	s.RegisterService(&Source_ServiceDesc, srv)
 }
 
-func _Source_UploadScript_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(SourceServer).UploadScript(&grpc.GenericServerStream[hi.UploadStreamReq, hi.UploadResp]{ServerStream: stream})
+func _Source_UploadScript_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadScript(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadScript_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadScript(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Source_UploadScriptStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SourceServer).UploadScriptStream(&grpc.GenericServerStream[hi.UploadStreamReq, hi.UploadResp]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Source_UploadScriptServer = grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]
+type Source_UploadScriptStreamServer = grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]
 
 func _Source_DownloadScript_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DownloadScriptReq)
@@ -312,6 +348,10 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*SourceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "UploadScript",
+			Handler:    _Source_UploadScript_Handler,
+		},
+		{
 			MethodName: "DownloadScript",
 			Handler:    _Source_DownloadScript_Handler,
 		},
@@ -334,8 +374,8 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "UploadScript",
-			Handler:       _Source_UploadScript_Handler,
+			StreamName:    "UploadScriptStream",
+			Handler:       _Source_UploadScriptStream_Handler,
 			ClientStreams: true,
 		},
 	},

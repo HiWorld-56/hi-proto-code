@@ -42,11 +42,19 @@ class SourceClient extends $grpc.Client {
 
   SourceClient(super.channel, {super.options, super.interceptors});
 
+  /// 插件脚本 zip → hiai/plugin/。unary 供 web(浏览器发不了 grpc 流式);流式 UploadScriptStream 给大文件/grpc。
   $grpc.ResponseFuture<$0.UploadResp> uploadScript(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadScript, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.UploadResp> uploadScriptStream(
     $async.Stream<$0.UploadStreamReq> request, {
     $grpc.CallOptions? options,
   }) {
-    return $createStreamingCall(_$uploadScript, request, options: options)
+    return $createStreamingCall(_$uploadScriptStream, request, options: options)
         .single;
   }
 
@@ -96,9 +104,13 @@ class SourceClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$uploadScript =
+  static final _$uploadScript = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.ai.Source/UploadScript',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
+  static final _$uploadScriptStream =
       $grpc.ClientMethod<$0.UploadStreamReq, $0.UploadResp>(
-          '/hi.ai.Source/UploadScript',
+          '/hi.ai.Source/UploadScriptStream',
           ($0.UploadStreamReq value) => value.writeToBuffer(),
           $0.UploadResp.fromBuffer);
   static final _$downloadScript =
@@ -131,9 +143,16 @@ abstract class SourceServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.Source';
 
   SourceServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.UploadStreamReq, $0.UploadResp>(
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadScript',
-        uploadScript,
+        uploadScript_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadStreamReq, $0.UploadResp>(
+        'UploadScriptStream',
+        uploadScriptStream,
         true,
         false,
         ($core.List<$core.int> value) => $0.UploadStreamReq.fromBuffer(value),
@@ -175,7 +194,15 @@ abstract class SourceServiceBase extends $grpc.Service {
         ($3.Empty value) => value.writeToBuffer()));
   }
 
+  $async.Future<$0.UploadResp> uploadScript_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadScript($call, await $request);
+  }
+
   $async.Future<$0.UploadResp> uploadScript(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadScriptStream(
       $grpc.ServiceCall call, $async.Stream<$0.UploadStreamReq> request);
 
   $async.Future<$1.DownloadScriptResp> downloadScript_Pre(
