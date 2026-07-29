@@ -565,7 +565,7 @@ func RegisterSourceHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/DownloadScript", runtime.WithHTTPPathPattern("/hi.club.Source/DownloadScript"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Source/DownloadScript", runtime.WithHTTPPathPattern("/api/v1/source/download_script"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -836,7 +836,7 @@ func RegisterSourceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/DownloadScript", runtime.WithHTTPPathPattern("/hi.club.Source/DownloadScript"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Source/DownloadScript", runtime.WithHTTPPathPattern("/api/v1/source/download_script"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -913,7 +913,7 @@ var (
 	pattern_Source_UploadLog_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_log"}, ""))
 	pattern_Source_UploadScript_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_script"}, ""))
 	pattern_Source_UploadScriptStream_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "UploadScriptStream"}, ""))
-	pattern_Source_DownloadScript_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Source", "DownloadScript"}, ""))
+	pattern_Source_DownloadScript_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "download_script"}, ""))
 	pattern_Source_UploadTrainingFile_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "upload_training_file"}, ""))
 	pattern_Source_DownloadTrainingFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "download_training_file"}, ""))
 	pattern_Source_Delete_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "source", "delete"}, ""))
