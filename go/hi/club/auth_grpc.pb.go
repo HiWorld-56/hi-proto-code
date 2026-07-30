@@ -13,6 +13,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Auth_RefreshToken_FullMethodName  = "/hi.club.Auth/RefreshToken"
+	Auth_Logout_FullMethodName        = "/hi.club.Auth/Logout"
 	Auth_GenerateReqId_FullMethodName = "/hi.club.Auth/GenerateReqId"
 	Auth_GetReqStatus_FullMethodName  = "/hi.club.Auth/GetReqStatus"
 	Auth_Verify_FullMethodName        = "/hi.club.Auth/Verify"
@@ -32,6 +34,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
 	RefreshToken(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
+	Logout(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*did.ReqStatusResp, error)
 	Verify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
@@ -49,6 +52,16 @@ func (c *authClient) RefreshToken(ctx context.Context, in *did.RefreshTokenReq, 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.AuthToken)
 	err := c.cc.Invoke(ctx, Auth_RefreshToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) Logout(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,6 +103,7 @@ func (c *authClient) Verify(ctx context.Context, in *hi.SignedData, opts ...grpc
 // for forward compatibility.
 type AuthServer interface {
 	RefreshToken(context.Context, *did.RefreshTokenReq) (*hi.AuthToken, error)
+	Logout(context.Context, *did.RefreshTokenReq) (*emptypb.Empty, error)
 	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error)
 	Verify(context.Context, *hi.SignedData) (*LoginResp, error)
@@ -104,6 +118,9 @@ type UnimplementedAuthServer struct{}
 
 func (UnimplementedAuthServer) RefreshToken(context.Context, *did.RefreshTokenReq) (*hi.AuthToken, error) {
 	return nil, status.Error(codes.Unimplemented, "method RefreshToken not implemented")
+}
+func (UnimplementedAuthServer) Logout(context.Context, *did.RefreshTokenReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error) {
 	return nil, status.Error(codes.Unimplemented, "method GenerateReqId not implemented")
@@ -148,6 +165,24 @@ func _Auth_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).RefreshToken(ctx, req.(*did.RefreshTokenReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(did.RefreshTokenReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).Logout(ctx, req.(*did.RefreshTokenReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -216,6 +251,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RefreshToken",
 			Handler:    _Auth_RefreshToken_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _Auth_Logout_Handler,
 		},
 		{
 			MethodName: "GenerateReqId",

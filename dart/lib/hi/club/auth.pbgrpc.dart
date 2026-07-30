@@ -15,10 +15,11 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
 import '../common.pb.dart' as $1;
 import '../did/auth.pb.dart' as $0;
-import 'auth.pb.dart' as $2;
+import 'auth.pb.dart' as $3;
 
 export 'auth.pb.dart';
 
@@ -41,6 +42,13 @@ class AuthClient extends $grpc.Client {
     return $createUnaryCall(_$refreshToken, request, options: options);
   }
 
+  $grpc.ResponseFuture<$2.Empty> logout(
+    $0.RefreshTokenReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$logout, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.RequestId> generateReqId(
     $0.GenerateReqIdReq request, {
     $grpc.CallOptions? options,
@@ -55,7 +63,7 @@ class AuthClient extends $grpc.Client {
     return $createUnaryCall(_$getReqStatus, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.LoginResp> verify(
+  $grpc.ResponseFuture<$3.LoginResp> verify(
     $1.SignedData request, {
     $grpc.CallOptions? options,
   }) {
@@ -69,6 +77,10 @@ class AuthClient extends $grpc.Client {
           '/hi.club.Auth/RefreshToken',
           ($0.RefreshTokenReq value) => value.writeToBuffer(),
           $1.AuthToken.fromBuffer);
+  static final _$logout = $grpc.ClientMethod<$0.RefreshTokenReq, $2.Empty>(
+      '/hi.club.Auth/Logout',
+      ($0.RefreshTokenReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
   static final _$generateReqId =
       $grpc.ClientMethod<$0.GenerateReqIdReq, $1.RequestId>(
           '/hi.club.Auth/GenerateReqId',
@@ -79,10 +91,10 @@ class AuthClient extends $grpc.Client {
           '/hi.club.Auth/GetReqStatus',
           ($1.RequestId value) => value.writeToBuffer(),
           $0.ReqStatusResp.fromBuffer);
-  static final _$verify = $grpc.ClientMethod<$1.SignedData, $2.LoginResp>(
+  static final _$verify = $grpc.ClientMethod<$1.SignedData, $3.LoginResp>(
       '/hi.club.Auth/Verify',
       ($1.SignedData value) => value.writeToBuffer(),
-      $2.LoginResp.fromBuffer);
+      $3.LoginResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Auth')
@@ -97,6 +109,13 @@ abstract class AuthServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RefreshTokenReq.fromBuffer(value),
         ($1.AuthToken value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RefreshTokenReq, $2.Empty>(
+        'Logout',
+        logout_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.RefreshTokenReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GenerateReqIdReq, $1.RequestId>(
         'GenerateReqId',
         generateReqId_Pre,
@@ -111,13 +130,13 @@ abstract class AuthServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.RequestId.fromBuffer(value),
         ($0.ReqStatusResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SignedData, $2.LoginResp>(
+    $addMethod($grpc.ServiceMethod<$1.SignedData, $3.LoginResp>(
         'Verify',
         verify_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.SignedData.fromBuffer(value),
-        ($2.LoginResp value) => value.writeToBuffer()));
+        ($3.LoginResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.AuthToken> refreshToken_Pre($grpc.ServiceCall $call,
@@ -126,6 +145,14 @@ abstract class AuthServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.AuthToken> refreshToken(
+      $grpc.ServiceCall call, $0.RefreshTokenReq request);
+
+  $async.Future<$2.Empty> logout_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RefreshTokenReq> $request) async {
+    return logout($call, await $request);
+  }
+
+  $async.Future<$2.Empty> logout(
       $grpc.ServiceCall call, $0.RefreshTokenReq request);
 
   $async.Future<$1.RequestId> generateReqId_Pre($grpc.ServiceCall $call,
@@ -144,11 +171,11 @@ abstract class AuthServiceBase extends $grpc.Service {
   $async.Future<$0.ReqStatusResp> getReqStatus(
       $grpc.ServiceCall call, $1.RequestId request);
 
-  $async.Future<$2.LoginResp> verify_Pre(
+  $async.Future<$3.LoginResp> verify_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {
     return verify($call, await $request);
   }
 
-  $async.Future<$2.LoginResp> verify(
+  $async.Future<$3.LoginResp> verify(
       $grpc.ServiceCall call, $1.SignedData request);
 }

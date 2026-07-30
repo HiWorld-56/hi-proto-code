@@ -11,6 +11,7 @@ import (
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -95,16 +96,17 @@ var File_hi_club_auth_proto protoreflect.FileDescriptor
 
 const file_hi_club_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/auth.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto\"\xbb\x01\n" +
+	"\x12hi/club/auth.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto\"\xbb\x01\n" +
 	"\tLoginResp\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12)\n" +
 	"\x05token\x18\x02 \x01(\v2\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n" +
 	"\x04mqtt\x18\x03 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt\x12(\n" +
 	"\x06master\x18\x04 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x032\xf8\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x032\xba\x02\n" +
 	"\x04Auth\x12=\n" +
-	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12?\n" +
+	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12@\n" +
+	"\x06Logout\x12\x17.hi.did.RefreshTokenReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x12?\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
 	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x123\n" +
 	"\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginResp\"\x05\x8a\xb5\x18\x01\x05B\x80\x01\n" +
@@ -132,7 +134,8 @@ var file_hi_club_auth_proto_goTypes = []any{
 	(*did.GenerateReqIdReq)(nil), // 5: hi.did.GenerateReqIdReq
 	(*hi.RequestId)(nil),         // 6: hi.RequestId
 	(*hi.SignedData)(nil),        // 7: hi.SignedData
-	(*did.ReqStatusResp)(nil),    // 8: hi.did.ReqStatusResp
+	(*emptypb.Empty)(nil),        // 8: google.protobuf.Empty
+	(*did.ReqStatusResp)(nil),    // 9: hi.did.ReqStatusResp
 }
 var file_hi_club_auth_proto_depIdxs = []int32{
 	1, // 0: hi.club.LoginResp.base:type_name -> hi.Entity
@@ -140,15 +143,17 @@ var file_hi_club_auth_proto_depIdxs = []int32{
 	3, // 2: hi.club.LoginResp.mqtt:type_name -> hi.MqttCredentials
 	1, // 3: hi.club.LoginResp.master:type_name -> hi.Entity
 	4, // 4: hi.club.Auth.RefreshToken:input_type -> hi.did.RefreshTokenReq
-	5, // 5: hi.club.Auth.GenerateReqId:input_type -> hi.did.GenerateReqIdReq
-	6, // 6: hi.club.Auth.GetReqStatus:input_type -> hi.RequestId
-	7, // 7: hi.club.Auth.Verify:input_type -> hi.SignedData
-	2, // 8: hi.club.Auth.RefreshToken:output_type -> hi.AuthToken
-	6, // 9: hi.club.Auth.GenerateReqId:output_type -> hi.RequestId
-	8, // 10: hi.club.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
-	0, // 11: hi.club.Auth.Verify:output_type -> hi.club.LoginResp
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
+	4, // 5: hi.club.Auth.Logout:input_type -> hi.did.RefreshTokenReq
+	5, // 6: hi.club.Auth.GenerateReqId:input_type -> hi.did.GenerateReqIdReq
+	6, // 7: hi.club.Auth.GetReqStatus:input_type -> hi.RequestId
+	7, // 8: hi.club.Auth.Verify:input_type -> hi.SignedData
+	2, // 9: hi.club.Auth.RefreshToken:output_type -> hi.AuthToken
+	8, // 10: hi.club.Auth.Logout:output_type -> google.protobuf.Empty
+	6, // 11: hi.club.Auth.GenerateReqId:output_type -> hi.RequestId
+	9, // 12: hi.club.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
+	0, // 13: hi.club.Auth.Verify:output_type -> hi.club.LoginResp
+	9, // [9:14] is the sub-list for method output_type
+	4, // [4:9] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name
