@@ -374,3 +374,15 @@ final $typed_data.Uint8List merchantSetPermissionReqDescriptor = $convert.base64
     'ChhNZXJjaGFudFNldFBlcm1pc3Npb25SZXESHgoDZGlkGAEgASgJQgy6SAlyBzIFXlxTKyRSA2'
     'RpZBIuCgRwZXJtGAIgASgOMhouaGkuZGlkLk1lcmNoYW50UGVybWlzc2lvblIEcGVybRIYCgdn'
     'cmFudGVkGAMgASgIUgdncmFudGVk');
+
+@$core.Deprecated('Use broadcastAppUpdateReqDescriptor instead')
+const BroadcastAppUpdateReq$json = {
+  '1': 'BroadcastAppUpdateReq',
+  '2': [
+    {'1': 'app', '3': 1, '4': 1, '5': 9, '10': 'app'},
+  ],
+};
+
+/// Descriptor for `BroadcastAppUpdateReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List broadcastAppUpdateReqDescriptor = $convert
+    .base64Decode('ChVCcm9hZGNhc3RBcHBVcGRhdGVSZXESEAoDYXBwGAEgASgJUgNhcHA=');

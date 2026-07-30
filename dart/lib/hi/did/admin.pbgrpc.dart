@@ -602,3 +602,55 @@ abstract class MerchantManageServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> setPermission(
       $grpc.ServiceCall call, $1.MerchantSetPermissionReq request);
 }
+
+@$pb.GrpcServiceName('hi.did.Broadcast')
+class BroadcastClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  BroadcastClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$0.Empty> appUpdate(
+    $1.BroadcastAppUpdateReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$appUpdate, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$appUpdate =
+      $grpc.ClientMethod<$1.BroadcastAppUpdateReq, $0.Empty>(
+          '/hi.did.Broadcast/AppUpdate',
+          ($1.BroadcastAppUpdateReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.Broadcast')
+abstract class BroadcastServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.Broadcast';
+
+  BroadcastServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.BroadcastAppUpdateReq, $0.Empty>(
+        'AppUpdate',
+        appUpdate_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.BroadcastAppUpdateReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.Empty> appUpdate_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.BroadcastAppUpdateReq> $request) async {
+    return appUpdate($call, await $request);
+  }
+
+  $async.Future<$0.Empty> appUpdate(
+      $grpc.ServiceCall call, $1.BroadcastAppUpdateReq request);
+}

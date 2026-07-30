@@ -1005,3 +1005,103 @@ var MerchantManage_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "hi/did/admin.proto",
 }
+
+const (
+	Broadcast_AppUpdate_FullMethodName = "/hi.did.Broadcast/AppUpdate"
+)
+
+// BroadcastClient is the client API for Broadcast service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type BroadcastClient interface {
+	AppUpdate(ctx context.Context, in *BroadcastAppUpdateReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type broadcastClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBroadcastClient(cc grpc.ClientConnInterface) BroadcastClient {
+	return &broadcastClient{cc}
+}
+
+func (c *broadcastClient) AppUpdate(ctx context.Context, in *BroadcastAppUpdateReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Broadcast_AppUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BroadcastServer is the server API for Broadcast service.
+// All implementations should embed UnimplementedBroadcastServer
+// for forward compatibility.
+type BroadcastServer interface {
+	AppUpdate(context.Context, *BroadcastAppUpdateReq) (*emptypb.Empty, error)
+}
+
+// UnimplementedBroadcastServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedBroadcastServer struct{}
+
+func (UnimplementedBroadcastServer) AppUpdate(context.Context, *BroadcastAppUpdateReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AppUpdate not implemented")
+}
+func (UnimplementedBroadcastServer) testEmbeddedByValue() {}
+
+// UnsafeBroadcastServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BroadcastServer will
+// result in compilation errors.
+type UnsafeBroadcastServer interface {
+	mustEmbedUnimplementedBroadcastServer()
+}
+
+func RegisterBroadcastServer(s grpc.ServiceRegistrar, srv BroadcastServer) {
+	// If the following call panics, it indicates UnimplementedBroadcastServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&Broadcast_ServiceDesc, srv)
+}
+
+func _Broadcast_AppUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BroadcastAppUpdateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BroadcastServer).AppUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Broadcast_AppUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BroadcastServer).AppUpdate(ctx, req.(*BroadcastAppUpdateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Broadcast_ServiceDesc is the grpc.ServiceDesc for Broadcast service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Broadcast_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.Broadcast",
+	HandlerType: (*BroadcastServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AppUpdate",
+			Handler:    _Broadcast_AppUpdate_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/admin.proto",
+}

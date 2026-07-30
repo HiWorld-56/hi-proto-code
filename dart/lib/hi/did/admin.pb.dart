@@ -1310,6 +1310,67 @@ class MerchantSetPermissionReq extends $pb.GeneratedMessage {
   void clearGranted() => $_clearField(3);
 }
 
+/// ═══════════════════════════════════════════════════════════════════════════
+/// 系统广播(超管面)—— 向固定主题 hi/v1/broadcast 发全体通知(所有 app/机器人订阅)。
+/// 系统用 root 账户代发 mqtt(仅 root 有该主题写权限)。目前承载 **app 新版本通知**:
+/// 载荷 = hi.did.Packet{Notice{type="app-update", ex_type=<app>}},**触发式** —— 客户端收到后
+/// 自查 hi.did.LatestVersion 取详情。不落消息记录。
+/// ═══════════════════════════════════════════════════════════════════════════
+class BroadcastAppUpdateReq extends $pb.GeneratedMessage {
+  factory BroadcastAppUpdateReq({
+    $core.String? app,
+  }) {
+    final result = create();
+    if (app != null) result.app = app;
+    return result;
+  }
+
+  BroadcastAppUpdateReq._();
+
+  factory BroadcastAppUpdateReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BroadcastAppUpdateReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BroadcastAppUpdateReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'app')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BroadcastAppUpdateReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BroadcastAppUpdateReq copyWith(
+          void Function(BroadcastAppUpdateReq) updates) =>
+      super.copyWith((message) => updates(message as BroadcastAppUpdateReq))
+          as BroadcastAppUpdateReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BroadcastAppUpdateReq create() => BroadcastAppUpdateReq._();
+  @$core.override
+  BroadcastAppUpdateReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BroadcastAppUpdateReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BroadcastAppUpdateReq>(create);
+  static BroadcastAppUpdateReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get app => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set app($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasApp() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearApp() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =
