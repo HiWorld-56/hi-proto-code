@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $3;
 
@@ -425,6 +426,7 @@ enum BrainToFace_Cmd {
   eventFriendAdd,
   membersInit,
   eventStatus,
+  eventUpdate,
   notSet
 }
 
@@ -449,6 +451,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     $0.Entity? eventFriendAdd,
     GroupInfoList? membersInit,
     StatusEvent? eventStatus,
+    UpdateInfo? eventUpdate,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -469,6 +472,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (eventFriendAdd != null) result.eventFriendAdd = eventFriendAdd;
     if (membersInit != null) result.membersInit = membersInit;
     if (eventStatus != null) result.eventStatus = eventStatus;
+    if (eventUpdate != null) result.eventUpdate = eventUpdate;
     return result;
   }
 
@@ -500,13 +504,14 @@ class BrainToFace extends $pb.GeneratedMessage {
     16: BrainToFace_Cmd.eventFriendAdd,
     17: BrainToFace_Cmd.membersInit,
     18: BrainToFace_Cmd.eventStatus,
+    19: BrainToFace_Cmd.eventUpdate,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'BrainToFace',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
     ..aE<StateToggle>(2, _omitFieldNames ? '' : 'showListen',
@@ -543,6 +548,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: GroupInfoList.create)
     ..aOM<StatusEvent>(18, _omitFieldNames ? '' : 'eventStatus',
         subBuilder: StatusEvent.create)
+    ..aOM<UpdateInfo>(19, _omitFieldNames ? '' : 'eventUpdate',
+        subBuilder: UpdateInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -582,6 +589,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   @$pb.TagNumber(17)
   @$pb.TagNumber(18)
+  @$pb.TagNumber(19)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -601,6 +609,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   @$pb.TagNumber(17)
   @$pb.TagNumber(18)
+  @$pb.TagNumber(19)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -804,6 +813,18 @@ class BrainToFace extends $pb.GeneratedMessage {
   void clearEventStatus() => $_clearField(18);
   @$pb.TagNumber(18)
   StatusEvent ensureEventStatus() => $_ensure(17);
+
+  /// 资源更新信息同步
+  @$pb.TagNumber(19)
+  UpdateInfo get eventUpdate => $_getN(18);
+  @$pb.TagNumber(19)
+  set eventUpdate(UpdateInfo value) => $_setField(19, value);
+  @$pb.TagNumber(19)
+  $core.bool hasEventUpdate() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearEventUpdate() => $_clearField(19);
+  @$pb.TagNumber(19)
+  UpdateInfo ensureEventUpdate() => $_ensure(18);
 }
 
 /// 系统状态快照
@@ -813,10 +834,12 @@ class StatusEvent extends $pb.GeneratedMessage {
   factory StatusEvent({
     $core.bool? ntp,
     $core.bool? wifi,
+    $core.bool? usb,
   }) {
     final result = create();
     if (ntp != null) result.ntp = ntp;
     if (wifi != null) result.wifi = wifi;
+    if (usb != null) result.usb = usb;
     return result;
   }
 
@@ -835,6 +858,7 @@ class StatusEvent extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'ntp')
     ..aOB(2, _omitFieldNames ? '' : 'wifi')
+    ..aOB(3, _omitFieldNames ? '' : 'usb')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -873,17 +897,213 @@ class StatusEvent extends $pb.GeneratedMessage {
   $core.bool hasWifi() => $_has(1);
   @$pb.TagNumber(2)
   void clearWifi() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get usb => $_getBF(2);
+  @$pb.TagNumber(3)
+  set usb($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasUsb() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearUsb() => $_clearField(3);
 }
 
-enum FaceToBrain_Cmd { voiceState, notSet }
+/// 资源更新进度信息
+///  `state`：当前更新状态，例如 `idle`、`checking`、`downloading`、`installing`、`success`、`failed` 等。
+///  `current_version`：当前已安装/正在运行的版本号。
+///  `target_version`：目标版本号，也就是准备更新到的版本。
+///  `progress`： 更新进度，通常是 `0-100` 的百分比。
+///  `message` ： 给用户或前端展示的状态说明，例如“正在下载更新包”。
+///  `error` ：错误信息。更新失败时记录失败原因；正常情况下通常为空。
+///  `changes` ：版本变更列表，通常是 changelog，例如修复了哪些问题、增加了哪些功能。
+///  `trigger`：更新触发来源，例如 `manual` 手动触发、`auto` 自动检查、`startup` 启动时触发等。
+///  `updated_at` ：状态最后更新时间，通常是 Unix 时间戳。具体是秒还是毫秒要看实现约定。
+///  `downloaded_bytes`：已下载的字节数。
+///  `total_bytes`：需要下载的总字节数。可用于计算下载百分比。
+class UpdateInfo extends $pb.GeneratedMessage {
+  factory UpdateInfo({
+    $core.String? state,
+    $core.String? currentVersion,
+    $core.String? targetVersion,
+    $core.int? progress,
+    $core.String? message,
+    $core.String? error,
+    $core.Iterable<$core.String>? changes,
+    $core.String? trigger,
+    $fixnum.Int64? updatedAt,
+    $fixnum.Int64? downloadedBytes,
+    $fixnum.Int64? totalBytes,
+  }) {
+    final result = create();
+    if (state != null) result.state = state;
+    if (currentVersion != null) result.currentVersion = currentVersion;
+    if (targetVersion != null) result.targetVersion = targetVersion;
+    if (progress != null) result.progress = progress;
+    if (message != null) result.message = message;
+    if (error != null) result.error = error;
+    if (changes != null) result.changes.addAll(changes);
+    if (trigger != null) result.trigger = trigger;
+    if (updatedAt != null) result.updatedAt = updatedAt;
+    if (downloadedBytes != null) result.downloadedBytes = downloadedBytes;
+    if (totalBytes != null) result.totalBytes = totalBytes;
+    return result;
+  }
+
+  UpdateInfo._();
+
+  factory UpdateInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'state')
+    ..aOS(2, _omitFieldNames ? '' : 'currentVersion')
+    ..aOS(3, _omitFieldNames ? '' : 'targetVersion')
+    ..aI(4, _omitFieldNames ? '' : 'progress', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(5, _omitFieldNames ? '' : 'message')
+    ..aOS(6, _omitFieldNames ? '' : 'error')
+    ..pPS(7, _omitFieldNames ? '' : 'changes')
+    ..aOS(8, _omitFieldNames ? '' : 'trigger')
+    ..a<$fixnum.Int64>(
+        9, _omitFieldNames ? '' : 'updatedAt', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        10, _omitFieldNames ? '' : 'downloadedBytes', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        11, _omitFieldNames ? '' : 'totalBytes', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateInfo copyWith(void Function(UpdateInfo) updates) =>
+      super.copyWith((message) => updates(message as UpdateInfo)) as UpdateInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateInfo create() => UpdateInfo._();
+  @$core.override
+  UpdateInfo createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateInfo>(create);
+  static UpdateInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get state => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set state($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasState() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearState() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get currentVersion => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set currentVersion($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCurrentVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCurrentVersion() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get targetVersion => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set targetVersion($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTargetVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTargetVersion() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get progress => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set progress($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasProgress() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearProgress() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get message => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set message($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasMessage() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMessage() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get error => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set error($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasError() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearError() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $pb.PbList<$core.String> get changes => $_getList(6);
+
+  @$pb.TagNumber(8)
+  $core.String get trigger => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set trigger($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasTrigger() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearTrigger() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get updatedAt => $_getI64(8);
+  @$pb.TagNumber(9)
+  set updatedAt($fixnum.Int64 value) => $_setInt64(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasUpdatedAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearUpdatedAt() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get downloadedBytes => $_getI64(9);
+  @$pb.TagNumber(10)
+  set downloadedBytes($fixnum.Int64 value) => $_setInt64(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasDownloadedBytes() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearDownloadedBytes() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $fixnum.Int64 get totalBytes => $_getI64(10);
+  @$pb.TagNumber(11)
+  set totalBytes($fixnum.Int64 value) => $_setInt64(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasTotalBytes() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearTotalBytes() => $_clearField(11);
+}
+
+enum FaceToBrain_Cmd { voiceState, updateAction, notSet }
 
 /// face -> brain
 class FaceToBrain extends $pb.GeneratedMessage {
   factory FaceToBrain({
     StateToggle? voiceState,
+    UpdateAction? updateAction,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
+    if (updateAction != null) result.updateAction = updateAction;
     return result;
   }
 
@@ -898,15 +1118,18 @@ class FaceToBrain extends $pb.GeneratedMessage {
 
   static const $core.Map<$core.int, FaceToBrain_Cmd> _FaceToBrain_CmdByTag = {
     1: FaceToBrain_Cmd.voiceState,
+    2: FaceToBrain_Cmd.updateAction,
     0: FaceToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1])
+    ..oo(0, [1, 2])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
+    ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
+        subBuilder: UpdateAction.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -929,8 +1152,10 @@ class FaceToBrain extends $pb.GeneratedMessage {
   static FaceToBrain? _defaultInstance;
 
   @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -941,6 +1166,73 @@ class FaceToBrain extends $pb.GeneratedMessage {
   $core.bool hasVoiceState() => $_has(0);
   @$pb.TagNumber(1)
   void clearVoiceState() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  UpdateAction get updateAction => $_getN(1);
+  @$pb.TagNumber(2)
+  set updateAction(UpdateAction value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUpdateAction() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUpdateAction() => $_clearField(2);
+  @$pb.TagNumber(2)
+  UpdateAction ensureUpdateAction() => $_ensure(1);
+}
+
+/// 更新动作
+class UpdateAction extends $pb.GeneratedMessage {
+  factory UpdateAction({
+    UpdateAction_Action? action,
+  }) {
+    final result = create();
+    if (action != null) result.action = action;
+    return result;
+  }
+
+  UpdateAction._();
+
+  factory UpdateAction.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateAction.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateAction',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aE<UpdateAction_Action>(1, _omitFieldNames ? '' : 'action',
+        enumValues: UpdateAction_Action.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAction clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAction copyWith(void Function(UpdateAction) updates) =>
+      super.copyWith((message) => updates(message as UpdateAction))
+          as UpdateAction;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateAction create() => UpdateAction._();
+  @$core.override
+  UpdateAction createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateAction getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateAction>(create);
+  static UpdateAction? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  UpdateAction_Action get action => $_getN(0);
+  @$pb.TagNumber(1)
+  set action(UpdateAction_Action value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAction() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAction() => $_clearField(1);
 }
 
 const $core.bool _omitFieldNames =

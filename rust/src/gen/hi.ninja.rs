@@ -54,7 +54,7 @@ pub struct AudioPlay {
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 16, 17, 18"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 16, 17, 18, 19"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -128,6 +128,9 @@ pub mod brain_to_face {
         /// 系统状态：NTP 时间同步 + 网络连通性（face 上线推送 + 状态变化时推送）
         #[prost(message, tag = "18")]
         EventStatus(super::StatusEvent),
+        /// 资源更新信息同步
+        #[prost(message, tag = "19")]
+        EventUpdate(super::UpdateInfo),
     }
 }
 /// 系统状态快照
@@ -139,11 +142,50 @@ pub struct StatusEvent {
     pub ntp: bool,
     #[prost(bool, tag = "2")]
     pub wifi: bool,
+    #[prost(bool, tag = "3")]
+    pub usb: bool,
+}
+/// 资源更新进度信息
+/// `state`：当前更新状态，例如 `idle`、`checking`、`downloading`、`installing`、`success`、`failed` 等。
+/// `current_version`：当前已安装/正在运行的版本号。
+/// `target_version`：目标版本号，也就是准备更新到的版本。
+/// `progress`： 更新进度，通常是 `0-100` 的百分比。
+/// `message` ： 给用户或前端展示的状态说明，例如“正在下载更新包”。
+/// `error` ：错误信息。更新失败时记录失败原因；正常情况下通常为空。
+/// `changes` ：版本变更列表，通常是 changelog，例如修复了哪些问题、增加了哪些功能。
+/// `trigger`：更新触发来源，例如 `manual` 手动触发、`auto` 自动检查、`startup` 启动时触发等。
+/// `updated_at` ：状态最后更新时间，通常是 Unix 时间戳。具体是秒还是毫秒要看实现约定。
+/// `downloaded_bytes`：已下载的字节数。
+/// `total_bytes`：需要下载的总字节数。可用于计算下载百分比。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateInfo {
+    #[prost(string, tag = "1")]
+    pub state: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub current_version: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub target_version: ::prost::alloc::string::String,
+    #[prost(uint32, tag = "4")]
+    pub progress: u32,
+    #[prost(string, tag = "5")]
+    pub message: ::prost::alloc::string::String,
+    #[prost(string, tag = "6")]
+    pub error: ::prost::alloc::string::String,
+    #[prost(string, repeated, tag = "7")]
+    pub changes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, tag = "8")]
+    pub trigger: ::prost::alloc::string::String,
+    #[prost(uint64, tag = "9")]
+    pub updated_at: u64,
+    #[prost(uint64, tag = "10")]
+    pub downloaded_bytes: u64,
+    #[prost(uint64, tag = "11")]
+    pub total_bytes: u64,
 }
 /// face -> brain
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
@@ -153,6 +195,60 @@ pub mod face_to_brain {
         /// 音频播放开始/结束，brain 据此控制麦克风静音
         #[prost(enumeration = "super::StateToggle", tag = "1")]
         VoiceState(i32),
+        /// 更新动作
+        #[prost(message, tag = "2")]
+        UpdateAction(super::UpdateAction),
+    }
+}
+/// 更新动作
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateAction {
+    #[prost(enumeration = "update_action::Action", tag = "1")]
+    pub action: i32,
+}
+/// Nested message and enum types in `UpdateAction`.
+pub mod update_action {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Action {
+        Unknown = 0,
+        Check = 1,
+        Apply = 2,
+        Dismiss = 3,
+    }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "ACTION_UNKNOWN",
+                Self::Check => "ACTION_CHECK",
+                Self::Apply => "ACTION_APPLY",
+                Self::Dismiss => "ACTION_DISMISS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACTION_UNKNOWN" => Some(Self::Unknown),
+                "ACTION_CHECK" => Some(Self::Check),
+                "ACTION_APPLY" => Some(Self::Apply),
+                "ACTION_DISMISS" => Some(Self::Dismiss),
+                _ => None,
+            }
+        }
     }
 }
 /// 二态开关：语音监听开始/结束、音频播放开始/结束等

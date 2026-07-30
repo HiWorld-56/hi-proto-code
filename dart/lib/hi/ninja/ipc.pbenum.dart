@@ -63,5 +63,30 @@ class Emotion extends $pb.ProtobufEnum {
   const Emotion._(super.value, super.name);
 }
 
+class UpdateAction_Action extends $pb.ProtobufEnum {
+  static const UpdateAction_Action ACTION_UNKNOWN =
+      UpdateAction_Action._(0, _omitEnumNames ? '' : 'ACTION_UNKNOWN');
+  static const UpdateAction_Action ACTION_CHECK =
+      UpdateAction_Action._(1, _omitEnumNames ? '' : 'ACTION_CHECK');
+  static const UpdateAction_Action ACTION_APPLY =
+      UpdateAction_Action._(2, _omitEnumNames ? '' : 'ACTION_APPLY');
+  static const UpdateAction_Action ACTION_DISMISS =
+      UpdateAction_Action._(3, _omitEnumNames ? '' : 'ACTION_DISMISS');
+
+  static const $core.List<UpdateAction_Action> values = <UpdateAction_Action>[
+    ACTION_UNKNOWN,
+    ACTION_CHECK,
+    ACTION_APPLY,
+    ACTION_DISMISS,
+  ];
+
+  static final $core.List<UpdateAction_Action?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static UpdateAction_Action? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const UpdateAction_Action._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

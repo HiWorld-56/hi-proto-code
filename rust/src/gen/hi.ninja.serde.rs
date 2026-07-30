@@ -182,6 +182,9 @@ impl serde::Serialize for BrainToFace {
                 brain_to_face::Cmd::EventStatus(v) => {
                     struct_ser.serialize_field("eventStatus", v)?;
                 }
+                brain_to_face::Cmd::EventUpdate(v) => {
+                    struct_ser.serialize_field("eventUpdate", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -230,6 +233,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             "membersInit",
             "event_status",
             "eventStatus",
+            "event_update",
+            "eventUpdate",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -252,6 +257,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             EventFriendAdd,
             MembersInit,
             EventStatus,
+            EventUpdate,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -291,6 +297,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             "eventFriendAdd" | "event_friend_add" => Ok(GeneratedField::EventFriendAdd),
                             "membersInit" | "members_init" => Ok(GeneratedField::MembersInit),
                             "eventStatus" | "event_status" => Ok(GeneratedField::EventStatus),
+                            "eventUpdate" | "event_update" => Ok(GeneratedField::EventUpdate),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -437,6 +444,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::EventStatus)
 ;
                         }
+                        GeneratedField::EventUpdate => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("eventUpdate"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::EventUpdate)
+;
+                        }
                     }
                 }
                 Ok(BrainToFace {
@@ -543,6 +557,9 @@ impl serde::Serialize for FaceToBrain {
                         .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
                     struct_ser.serialize_field("voiceState", &v)?;
                 }
+                face_to_brain::Cmd::UpdateAction(v) => {
+                    struct_ser.serialize_field("updateAction", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -557,11 +574,14 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
         const FIELDS: &[&str] = &[
             "voice_state",
             "voiceState",
+            "update_action",
+            "updateAction",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             VoiceState,
+            UpdateAction,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -584,6 +604,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                     {
                         match value {
                             "voiceState" | "voice_state" => Ok(GeneratedField::VoiceState),
+                            "updateAction" | "update_action" => Ok(GeneratedField::UpdateAction),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -611,6 +632,13 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("voiceState"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<StateToggle>>()?.map(|x| face_to_brain::Cmd::VoiceState(x as i32));
+                        }
+                        GeneratedField::UpdateAction => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateAction"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::UpdateAction)
+;
                         }
                     }
                 }
@@ -1108,12 +1136,18 @@ impl serde::Serialize for StatusEvent {
         if self.wifi {
             len += 1;
         }
+        if self.usb {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.StatusEvent", len)?;
         if self.ntp {
             struct_ser.serialize_field("ntp", &self.ntp)?;
         }
         if self.wifi {
             struct_ser.serialize_field("wifi", &self.wifi)?;
+        }
+        if self.usb {
+            struct_ser.serialize_field("usb", &self.usb)?;
         }
         struct_ser.end()
     }
@@ -1127,12 +1161,14 @@ impl<'de> serde::Deserialize<'de> for StatusEvent {
         const FIELDS: &[&str] = &[
             "ntp",
             "wifi",
+            "usb",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Ntp,
             Wifi,
+            Usb,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1156,6 +1192,7 @@ impl<'de> serde::Deserialize<'de> for StatusEvent {
                         match value {
                             "ntp" => Ok(GeneratedField::Ntp),
                             "wifi" => Ok(GeneratedField::Wifi),
+                            "usb" => Ok(GeneratedField::Usb),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1177,6 +1214,7 @@ impl<'de> serde::Deserialize<'de> for StatusEvent {
             {
                 let mut ntp__ = None;
                 let mut wifi__ = None;
+                let mut usb__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Ntp => {
@@ -1191,11 +1229,18 @@ impl<'de> serde::Deserialize<'de> for StatusEvent {
                             }
                             wifi__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Usb => {
+                            if usb__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usb"));
+                            }
+                            usb__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(StatusEvent {
                     ntp: ntp__.unwrap_or_default(),
                     wifi: wifi__.unwrap_or_default(),
+                    usb: usb__.unwrap_or_default(),
                 })
             }
         }
@@ -1308,5 +1353,455 @@ impl<'de> serde::Deserialize<'de> for TextReply {
             }
         }
         deserializer.deserialize_struct("hi.ninja.TextReply", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateAction {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.action != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateAction", len)?;
+        if self.action != 0 {
+            let v = update_action::Action::try_from(self.action)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.action)))?;
+            struct_ser.serialize_field("action", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateAction {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "action",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Action,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "action" => Ok(GeneratedField::Action),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateAction;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.UpdateAction")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateAction, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut action__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Action => {
+                            if action__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("action"));
+                            }
+                            action__ = Some(map_.next_value::<update_action::Action>()? as i32);
+                        }
+                    }
+                }
+                Ok(UpdateAction {
+                    action: action__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.UpdateAction", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for update_action::Action {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "ACTION_UNKNOWN",
+            Self::Check => "ACTION_CHECK",
+            Self::Apply => "ACTION_APPLY",
+            Self::Dismiss => "ACTION_DISMISS",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for update_action::Action {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "ACTION_UNKNOWN",
+            "ACTION_CHECK",
+            "ACTION_APPLY",
+            "ACTION_DISMISS",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = update_action::Action;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "ACTION_UNKNOWN" => Ok(update_action::Action::Unknown),
+                    "ACTION_CHECK" => Ok(update_action::Action::Check),
+                    "ACTION_APPLY" => Ok(update_action::Action::Apply),
+                    "ACTION_DISMISS" => Ok(update_action::Action::Dismiss),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateInfo {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.state.is_empty() {
+            len += 1;
+        }
+        if !self.current_version.is_empty() {
+            len += 1;
+        }
+        if !self.target_version.is_empty() {
+            len += 1;
+        }
+        if self.progress != 0 {
+            len += 1;
+        }
+        if !self.message.is_empty() {
+            len += 1;
+        }
+        if !self.error.is_empty() {
+            len += 1;
+        }
+        if !self.changes.is_empty() {
+            len += 1;
+        }
+        if !self.trigger.is_empty() {
+            len += 1;
+        }
+        if self.updated_at != 0 {
+            len += 1;
+        }
+        if self.downloaded_bytes != 0 {
+            len += 1;
+        }
+        if self.total_bytes != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateInfo", len)?;
+        if !self.state.is_empty() {
+            struct_ser.serialize_field("state", &self.state)?;
+        }
+        if !self.current_version.is_empty() {
+            struct_ser.serialize_field("currentVersion", &self.current_version)?;
+        }
+        if !self.target_version.is_empty() {
+            struct_ser.serialize_field("targetVersion", &self.target_version)?;
+        }
+        if self.progress != 0 {
+            struct_ser.serialize_field("progress", &self.progress)?;
+        }
+        if !self.message.is_empty() {
+            struct_ser.serialize_field("message", &self.message)?;
+        }
+        if !self.error.is_empty() {
+            struct_ser.serialize_field("error", &self.error)?;
+        }
+        if !self.changes.is_empty() {
+            struct_ser.serialize_field("changes", &self.changes)?;
+        }
+        if !self.trigger.is_empty() {
+            struct_ser.serialize_field("trigger", &self.trigger)?;
+        }
+        if self.updated_at != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("updatedAt", ToString::to_string(&self.updated_at).as_str())?;
+        }
+        if self.downloaded_bytes != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("downloadedBytes", ToString::to_string(&self.downloaded_bytes).as_str())?;
+        }
+        if self.total_bytes != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("totalBytes", ToString::to_string(&self.total_bytes).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateInfo {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "state",
+            "current_version",
+            "currentVersion",
+            "target_version",
+            "targetVersion",
+            "progress",
+            "message",
+            "error",
+            "changes",
+            "trigger",
+            "updated_at",
+            "updatedAt",
+            "downloaded_bytes",
+            "downloadedBytes",
+            "total_bytes",
+            "totalBytes",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            State,
+            CurrentVersion,
+            TargetVersion,
+            Progress,
+            Message,
+            Error,
+            Changes,
+            Trigger,
+            UpdatedAt,
+            DownloadedBytes,
+            TotalBytes,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "state" => Ok(GeneratedField::State),
+                            "currentVersion" | "current_version" => Ok(GeneratedField::CurrentVersion),
+                            "targetVersion" | "target_version" => Ok(GeneratedField::TargetVersion),
+                            "progress" => Ok(GeneratedField::Progress),
+                            "message" => Ok(GeneratedField::Message),
+                            "error" => Ok(GeneratedField::Error),
+                            "changes" => Ok(GeneratedField::Changes),
+                            "trigger" => Ok(GeneratedField::Trigger),
+                            "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
+                            "downloadedBytes" | "downloaded_bytes" => Ok(GeneratedField::DownloadedBytes),
+                            "totalBytes" | "total_bytes" => Ok(GeneratedField::TotalBytes),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateInfo;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.UpdateInfo")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateInfo, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut state__ = None;
+                let mut current_version__ = None;
+                let mut target_version__ = None;
+                let mut progress__ = None;
+                let mut message__ = None;
+                let mut error__ = None;
+                let mut changes__ = None;
+                let mut trigger__ = None;
+                let mut updated_at__ = None;
+                let mut downloaded_bytes__ = None;
+                let mut total_bytes__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::CurrentVersion => {
+                            if current_version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("currentVersion"));
+                            }
+                            current_version__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::TargetVersion => {
+                            if target_version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("targetVersion"));
+                            }
+                            target_version__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Progress => {
+                            if progress__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("progress"));
+                            }
+                            progress__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Message => {
+                            if message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("message"));
+                            }
+                            message__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Changes => {
+                            if changes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("changes"));
+                            }
+                            changes__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Trigger => {
+                            if trigger__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("trigger"));
+                            }
+                            trigger__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::UpdatedAt => {
+                            if updated_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updatedAt"));
+                            }
+                            updated_at__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::DownloadedBytes => {
+                            if downloaded_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("downloadedBytes"));
+                            }
+                            downloaded_bytes__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::TotalBytes => {
+                            if total_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("totalBytes"));
+                            }
+                            total_bytes__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(UpdateInfo {
+                    state: state__.unwrap_or_default(),
+                    current_version: current_version__.unwrap_or_default(),
+                    target_version: target_version__.unwrap_or_default(),
+                    progress: progress__.unwrap_or_default(),
+                    message: message__.unwrap_or_default(),
+                    error: error__.unwrap_or_default(),
+                    changes: changes__.unwrap_or_default(),
+                    trigger: trigger__.unwrap_or_default(),
+                    updated_at: updated_at__.unwrap_or_default(),
+                    downloaded_bytes: downloaded_bytes__.unwrap_or_default(),
+                    total_bytes: total_bytes__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.UpdateInfo", FIELDS, GeneratedVisitor)
     }
 }

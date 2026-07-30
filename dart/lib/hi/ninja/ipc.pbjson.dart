@@ -298,6 +298,15 @@ const BrainToFace$json = {
       '9': 0,
       '10': 'eventStatus'
     },
+    {
+      '1': 'event_update',
+      '3': 19,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.UpdateInfo',
+      '9': 0,
+      '10': 'eventUpdate'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -325,7 +334,8 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'bGV0ZRI2ChBldmVudF9mcmllbmRfYWRkGBAgASgLMgouaGkuRW50aXR5SABSDmV2ZW50RnJpZW'
     '5kQWRkEjwKDG1lbWJlcnNfaW5pdBgRIAEoCzIXLmhpLm5pbmphLkdyb3VwSW5mb0xpc3RIAFIL'
     'bWVtYmVyc0luaXQSOgoMZXZlbnRfc3RhdHVzGBIgASgLMhUuaGkubmluamEuU3RhdHVzRXZlbn'
-    'RIAFILZXZlbnRTdGF0dXNCBQoDY21k');
+    'RIAFILZXZlbnRTdGF0dXMSOQoMZXZlbnRfdXBkYXRlGBMgASgLMhQuaGkubmluamEuVXBkYXRl'
+    'SW5mb0gAUgtldmVudFVwZGF0ZUIFCgNjbWQ=');
 
 @$core.Deprecated('Use statusEventDescriptor instead')
 const StatusEvent$json = {
@@ -333,12 +343,42 @@ const StatusEvent$json = {
   '2': [
     {'1': 'ntp', '3': 1, '4': 1, '5': 8, '10': 'ntp'},
     {'1': 'wifi', '3': 2, '4': 1, '5': 8, '10': 'wifi'},
+    {'1': 'usb', '3': 3, '4': 1, '5': 8, '10': 'usb'},
   ],
 };
 
 /// Descriptor for `StatusEvent`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List statusEventDescriptor = $convert.base64Decode(
-    'CgtTdGF0dXNFdmVudBIQCgNudHAYASABKAhSA250cBISCgR3aWZpGAIgASgIUgR3aWZp');
+    'CgtTdGF0dXNFdmVudBIQCgNudHAYASABKAhSA250cBISCgR3aWZpGAIgASgIUgR3aWZpEhAKA3'
+    'VzYhgDIAEoCFIDdXNi');
+
+@$core.Deprecated('Use updateInfoDescriptor instead')
+const UpdateInfo$json = {
+  '1': 'UpdateInfo',
+  '2': [
+    {'1': 'state', '3': 1, '4': 1, '5': 9, '10': 'state'},
+    {'1': 'current_version', '3': 2, '4': 1, '5': 9, '10': 'currentVersion'},
+    {'1': 'target_version', '3': 3, '4': 1, '5': 9, '10': 'targetVersion'},
+    {'1': 'progress', '3': 4, '4': 1, '5': 13, '10': 'progress'},
+    {'1': 'message', '3': 5, '4': 1, '5': 9, '10': 'message'},
+    {'1': 'error', '3': 6, '4': 1, '5': 9, '10': 'error'},
+    {'1': 'changes', '3': 7, '4': 3, '5': 9, '10': 'changes'},
+    {'1': 'trigger', '3': 8, '4': 1, '5': 9, '10': 'trigger'},
+    {'1': 'updated_at', '3': 9, '4': 1, '5': 4, '10': 'updatedAt'},
+    {'1': 'downloaded_bytes', '3': 10, '4': 1, '5': 4, '10': 'downloadedBytes'},
+    {'1': 'total_bytes', '3': 11, '4': 1, '5': 4, '10': 'totalBytes'},
+  ],
+};
+
+/// Descriptor for `UpdateInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateInfoDescriptor = $convert.base64Decode(
+    'CgpVcGRhdGVJbmZvEhQKBXN0YXRlGAEgASgJUgVzdGF0ZRInCg9jdXJyZW50X3ZlcnNpb24YAi'
+    'ABKAlSDmN1cnJlbnRWZXJzaW9uEiUKDnRhcmdldF92ZXJzaW9uGAMgASgJUg10YXJnZXRWZXJz'
+    'aW9uEhoKCHByb2dyZXNzGAQgASgNUghwcm9ncmVzcxIYCgdtZXNzYWdlGAUgASgJUgdtZXNzYW'
+    'dlEhQKBWVycm9yGAYgASgJUgVlcnJvchIYCgdjaGFuZ2VzGAcgAygJUgdjaGFuZ2VzEhgKB3Ry'
+    'aWdnZXIYCCABKAlSB3RyaWdnZXISHQoKdXBkYXRlZF9hdBgJIAEoBFIJdXBkYXRlZEF0EikKEG'
+    'Rvd25sb2FkZWRfYnl0ZXMYCiABKARSD2Rvd25sb2FkZWRCeXRlcxIfCgt0b3RhbF9ieXRlcxgL'
+    'IAEoBFIKdG90YWxCeXRlcw==');
 
 @$core.Deprecated('Use faceToBrainDescriptor instead')
 const FaceToBrain$json = {
@@ -353,6 +393,15 @@ const FaceToBrain$json = {
       '9': 0,
       '10': 'voiceState'
     },
+    {
+      '1': 'update_action',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.UpdateAction',
+      '9': 0,
+      '10': 'updateAction'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -362,4 +411,38 @@ const FaceToBrain$json = {
 /// Descriptor for `FaceToBrain`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     'CgtGYWNlVG9CcmFpbhI4Cgt2b2ljZV9zdGF0ZRgBIAEoDjIVLmhpLm5pbmphLlN0YXRlVG9nZ2'
-    'xlSABSCnZvaWNlU3RhdGVCBQoDY21k');
+    'xlSABSCnZvaWNlU3RhdGUSPQoNdXBkYXRlX2FjdGlvbhgCIAEoCzIWLmhpLm5pbmphLlVwZGF0'
+    'ZUFjdGlvbkgAUgx1cGRhdGVBY3Rpb25CBQoDY21k');
+
+@$core.Deprecated('Use updateActionDescriptor instead')
+const UpdateAction$json = {
+  '1': 'UpdateAction',
+  '2': [
+    {
+      '1': 'action',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.ninja.UpdateAction.Action',
+      '10': 'action'
+    },
+  ],
+  '4': [UpdateAction_Action$json],
+};
+
+@$core.Deprecated('Use updateActionDescriptor instead')
+const UpdateAction_Action$json = {
+  '1': 'Action',
+  '2': [
+    {'1': 'ACTION_UNKNOWN', '2': 0},
+    {'1': 'ACTION_CHECK', '2': 1},
+    {'1': 'ACTION_APPLY', '2': 2},
+    {'1': 'ACTION_DISMISS', '2': 3},
+  ],
+};
+
+/// Descriptor for `UpdateAction`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateActionDescriptor = $convert.base64Decode(
+    'CgxVcGRhdGVBY3Rpb24SNQoGYWN0aW9uGAEgASgOMh0uaGkubmluamEuVXBkYXRlQWN0aW9uLk'
+    'FjdGlvblIGYWN0aW9uIlQKBkFjdGlvbhISCg5BQ1RJT05fVU5LTk9XThAAEhAKDEFDVElPTl9D'
+    'SEVDSxABEhAKDEFDVElPTl9BUFBMWRACEhIKDkFDVElPTl9ESVNNSVNTEAM=');
