@@ -11,6 +11,10 @@ pub mod hi {
     pub mod ai {
         include!("hi.ai.rs");
         include!("hi.ai.serde.rs");
+        pub mod plugin {
+            include!("hi.ai.plugin.rs");
+            include!("hi.ai.plugin.serde.rs");
+        }
     }
     pub mod club {
         include!("hi.club.rs");
