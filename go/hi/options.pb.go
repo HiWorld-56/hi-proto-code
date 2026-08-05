@@ -69,6 +69,22 @@ const (
 	// 与 AUTH_NONE 的区别:NONE 是真的谁都能调且无需证明身份;WEB3 是必须验签,
 	// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
 	Auth_AUTH_WEB3 Auth = 5
+	// ⚠️ AUTH_INTERNAL:**内部面** —— 只由父服务转发调用,主体由调用方以**显式字段**传入,
+	// 本服务不鉴权、也不该认识"用户"这个概念。
+	//
+	// 为什么要单独一档,而不是复用 AUTH_NONE:
+	//
+	//	NONE 的语义是"公开:真·免鉴权",看到它的人会认为可以直接对外暴露。内部面不是公开面,
+	//	它只是**把鉴权留在了父服务**。两者混用的直接后果就是 hi.club.Trade 那次事故:
+	//	club 与 club-trade 同时注册同一个 service,对外面故意不带 did(带就是越权)、
+	//	内部面又需要 did,于是只能拿 metadata 偷渡身份 —— 鉴权语义漏进了子服务,
+	//	而 metadata 是调用方随便填的,真按它鉴权反而开了个越权口子。
+	//
+	// 用法约束:
+	//  1. 子服务的方法一律标这一档,**主体走显式字段**(如 ListTradesReq.did),不走带外通道;
+	//  2. 父服务是唯一鉴权点,转发前完成鉴权与归属校验;
+	//  3. 内部面不配 http 路由(在 codegen/http_optout.txt 里以 `service:` 声明)。
+	Auth_AUTH_INTERNAL Auth = 6
 )
 
 // Enum value maps for Auth.
@@ -80,6 +96,7 @@ var (
 		3: "AUTH_MERCHANT",
 		4: "AUTH_SUPERADMIN",
 		5: "AUTH_WEB3",
+		6: "AUTH_INTERNAL",
 	}
 	Auth_value = map[string]int32{
 		"AUTH_UNSPECIFIED": 0,
@@ -88,6 +105,7 @@ var (
 		"AUTH_MERCHANT":    3,
 		"AUTH_SUPERADMIN":  4,
 		"AUTH_WEB3":        5,
+		"AUTH_INTERNAL":    6,
 	}
 )
 
@@ -259,14 +277,15 @@ var File_hi_options_proto protoreflect.FileDescriptor
 
 const file_hi_options_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*q\n" +
+	"\x10hi/options.proto\x12\x02hi\x1a google/protobuf/descriptor.proto*\x84\x01\n" +
 	"\x04Auth\x12\x14\n" +
 	"\x10AUTH_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tAUTH_NONE\x10\x01\x12\r\n" +
 	"\tAUTH_USER\x10\x02\x12\x11\n" +
 	"\rAUTH_MERCHANT\x10\x03\x12\x13\n" +
 	"\x0fAUTH_SUPERADMIN\x10\x04\x12\r\n" +
-	"\tAUTH_WEB3\x10\x05*T\n" +
+	"\tAUTH_WEB3\x10\x05\x12\x11\n" +
+	"\rAUTH_INTERNAL\x10\x06*T\n" +
 	"\n" +
 	"Visibility\x12\x13\n" +
 	"\x0fVIS_UNSPECIFIED\x10\x00\x12\x0e\n" +

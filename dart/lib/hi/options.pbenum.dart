@@ -63,6 +63,23 @@ class Auth extends $pb.ProtobufEnum {
   /// 只是验的地方在 handler 而非拦截器。分开标注是为了让"公开"与"验签"不被混为一谈。
   static const Auth AUTH_WEB3 = Auth._(5, _omitEnumNames ? '' : 'AUTH_WEB3');
 
+  /// ⚠️ AUTH_INTERNAL:**内部面** —— 只由父服务转发调用,主体由调用方以**显式字段**传入,
+  /// 本服务不鉴权、也不该认识"用户"这个概念。
+  ///
+  /// 为什么要单独一档,而不是复用 AUTH_NONE:
+  ///   NONE 的语义是"公开:真·免鉴权",看到它的人会认为可以直接对外暴露。内部面不是公开面,
+  ///   它只是**把鉴权留在了父服务**。两者混用的直接后果就是 hi.club.Trade 那次事故:
+  ///   club 与 club-trade 同时注册同一个 service,对外面故意不带 did(带就是越权)、
+  ///   内部面又需要 did,于是只能拿 metadata 偷渡身份 —— 鉴权语义漏进了子服务,
+  ///   而 metadata 是调用方随便填的,真按它鉴权反而开了个越权口子。
+  ///
+  /// 用法约束:
+  ///   1. 子服务的方法一律标这一档,**主体走显式字段**(如 ListTradesReq.did),不走带外通道;
+  ///   2. 父服务是唯一鉴权点,转发前完成鉴权与归属校验;
+  ///   3. 内部面不配 http 路由(在 codegen/http_optout.txt 里以 `service:` 声明)。
+  static const Auth AUTH_INTERNAL =
+      Auth._(6, _omitEnumNames ? '' : 'AUTH_INTERNAL');
+
   static const $core.List<Auth> values = <Auth>[
     AUTH_UNSPECIFIED,
     AUTH_NONE,
@@ -70,10 +87,11 @@ class Auth extends $pb.ProtobufEnum {
     AUTH_MERCHANT,
     AUTH_SUPERADMIN,
     AUTH_WEB3,
+    AUTH_INTERNAL,
   ];
 
   static final $core.List<Auth?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 5);
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
   static Auth? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

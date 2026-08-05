@@ -15,6 +15,10 @@ pub mod hi {
     pub mod club {
         include!("hi.club.rs");
         include!("hi.club.serde.rs");
+        pub mod trade {
+            include!("hi.club.trade.rs");
+            include!("hi.club.trade.serde.rs");
+        }
     }
     pub mod did {
         include!("hi.did.rs");

@@ -11,6 +11,7 @@ impl serde::Serialize for Auth {
             Self::Merchant => "AUTH_MERCHANT",
             Self::Superadmin => "AUTH_SUPERADMIN",
             Self::Web3 => "AUTH_WEB3",
+            Self::Internal => "AUTH_INTERNAL",
         };
         serializer.serialize_str(variant)
     }
@@ -28,6 +29,7 @@ impl<'de> serde::Deserialize<'de> for Auth {
             "AUTH_MERCHANT",
             "AUTH_SUPERADMIN",
             "AUTH_WEB3",
+            "AUTH_INTERNAL",
         ];
 
         struct GeneratedVisitor;
@@ -74,6 +76,7 @@ impl<'de> serde::Deserialize<'de> for Auth {
                     "AUTH_MERCHANT" => Ok(Auth::Merchant),
                     "AUTH_SUPERADMIN" => Ok(Auth::Superadmin),
                     "AUTH_WEB3" => Ok(Auth::Web3),
+                    "AUTH_INTERNAL" => Ok(Auth::Internal),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
