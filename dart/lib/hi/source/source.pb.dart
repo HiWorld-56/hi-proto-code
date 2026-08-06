@@ -1106,8 +1106,8 @@ class PutObjectReq extends $pb.GeneratedMessage {
   void clearContent() => $_clearField(3);
 }
 
-/// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
-/// "manifest 里写的 sha256 与真正传上去的包是否一致"。
+/// 按对象键流式下载。既有的 DownloadStream 按 **url** 取,而调用方手里是对象键 ——
+/// 让它自己拼 minio url 就得把 base 配一份过去,base 一改两边就散。
 class GetObjectStreamReq extends $pb.GeneratedMessage {
   factory GetObjectStreamReq({
     $core.String? bucket,
@@ -1265,6 +1265,8 @@ class GetObjectStreamResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(2);
 }
 
+/// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
+/// "manifest 里写的 sha256 与真正传上去的包是否一致"。
 class ObjectInfoReq extends $pb.GeneratedMessage {
   factory ObjectInfoReq({
     $core.String? bucket,

@@ -944,8 +944,8 @@ func (x *PutObjectReq) GetContent() []byte {
 	return nil
 }
 
-// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
-// "manifest 里写的 sha256 与真正传上去的包是否一致"。
+// 按对象键流式下载。既有的 DownloadStream 按 **url** 取,而调用方手里是对象键 ——
+// 让它自己拼 minio url 就得把 base 配一份过去,base 一改两边就散。
 type GetObjectStreamReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
@@ -1066,6 +1066,8 @@ func (x *GetObjectStreamResp) GetTotal() int64 {
 	return 0
 }
 
+// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
+// "manifest 里写的 sha256 与真正传上去的包是否一致"。
 type ObjectInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
