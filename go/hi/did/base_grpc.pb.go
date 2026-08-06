@@ -22,7 +22,6 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Base_ListCoins_FullMethodName     = "/hi.did.Base/ListCoins"
-	Base_LatestVersion_FullMethodName = "/hi.did.Base/LatestVersion"
 	Base_ServerVersion_FullMethodName = "/hi.did.Base/ServerVersion"
 	Base_UserTotal_FullMethodName     = "/hi.did.Base/UserTotal"
 )
@@ -31,11 +30,14 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本/用户总数),全部公开。
-// 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
+// Base —— 每个包统一的公共信息入口(币种/服务自身版本/用户总数),全部公开。
+// 生态约定:club/ai/media 也各有 Base.ServerVersion,保持一致。
+//
+// ⚠️ 原 `Base.LatestVersion` 已删:那是临时过渡品(数据在 hi_app_version 表、字段不足以描述
+//
+//	机器人的按需更新)。产品发布统一走 `hi.did.Release`,见 hi/did/release.proto。
 type BaseClient interface {
 	ListCoins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCoinsResp, error)
-	LatestVersion(ctx context.Context, in *LatestVersionReq, opts ...grpc.CallOption) (*LatestVersionResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 	UserTotal(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserTotalResp, error)
 }
@@ -52,16 +54,6 @@ func (c *baseClient) ListCoins(ctx context.Context, in *emptypb.Empty, opts ...g
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListCoinsResp)
 	err := c.cc.Invoke(ctx, Base_ListCoins_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *baseClient) LatestVersion(ctx context.Context, in *LatestVersionReq, opts ...grpc.CallOption) (*LatestVersionResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LatestVersionResp)
-	err := c.cc.Invoke(ctx, Base_LatestVersion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,11 +84,14 @@ func (c *baseClient) UserTotal(ctx context.Context, in *emptypb.Empty, opts ...g
 // All implementations should embed UnimplementedBaseServer
 // for forward compatibility.
 //
-// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本/用户总数),全部公开。
-// 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
+// Base —— 每个包统一的公共信息入口(币种/服务自身版本/用户总数),全部公开。
+// 生态约定:club/ai/media 也各有 Base.ServerVersion,保持一致。
+//
+// ⚠️ 原 `Base.LatestVersion` 已删:那是临时过渡品(数据在 hi_app_version 表、字段不足以描述
+//
+//	机器人的按需更新)。产品发布统一走 `hi.did.Release`,见 hi/did/release.proto。
 type BaseServer interface {
 	ListCoins(context.Context, *emptypb.Empty) (*ListCoinsResp, error)
-	LatestVersion(context.Context, *LatestVersionReq) (*LatestVersionResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 	UserTotal(context.Context, *emptypb.Empty) (*UserTotalResp, error)
 }
@@ -110,9 +105,6 @@ type UnimplementedBaseServer struct{}
 
 func (UnimplementedBaseServer) ListCoins(context.Context, *emptypb.Empty) (*ListCoinsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCoins not implemented")
-}
-func (UnimplementedBaseServer) LatestVersion(context.Context, *LatestVersionReq) (*LatestVersionResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method LatestVersion not implemented")
 }
 func (UnimplementedBaseServer) ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ServerVersion not implemented")
@@ -154,24 +146,6 @@ func _Base_ListCoins_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BaseServer).ListCoins(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Base_LatestVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LatestVersionReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).LatestVersion(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_LatestVersion_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).LatestVersion(ctx, req.(*LatestVersionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -222,10 +196,6 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCoins",
 			Handler:    _Base_ListCoins_Handler,
-		},
-		{
-			MethodName: "LatestVersion",
-			Handler:    _Base_LatestVersion_Handler,
 		},
 		{
 			MethodName: "ServerVersion",

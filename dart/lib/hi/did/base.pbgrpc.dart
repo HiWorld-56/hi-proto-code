@@ -22,8 +22,11 @@ import 'base.pb.dart' as $1;
 
 export 'base.pb.dart';
 
-/// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本/用户总数),全部公开。
-/// 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
+/// Base —— 每个包统一的公共信息入口(币种/服务自身版本/用户总数),全部公开。
+/// 生态约定:club/ai/media 也各有 Base.ServerVersion,保持一致。
+///
+/// ⚠️ 原 `Base.LatestVersion` 已删:那是临时过渡品(数据在 hi_app_version 表、字段不足以描述
+///    机器人的按需更新)。产品发布统一走 `hi.did.Release`,见 hi/did/release.proto。
 @$pb.GrpcServiceName('hi.did.Base')
 class BaseClient extends $grpc.Client {
   /// The hostname for this service.
@@ -41,13 +44,6 @@ class BaseClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listCoins, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.LatestVersionResp> latestVersion(
-    $1.LatestVersionReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$latestVersion, request, options: options);
   }
 
   $grpc.ResponseFuture<$2.ServerVersionResp> serverVersion(
@@ -70,11 +66,6 @@ class BaseClient extends $grpc.Client {
       '/hi.did.Base/ListCoins',
       ($0.Empty value) => value.writeToBuffer(),
       $1.ListCoinsResp.fromBuffer);
-  static final _$latestVersion =
-      $grpc.ClientMethod<$1.LatestVersionReq, $1.LatestVersionResp>(
-          '/hi.did.Base/LatestVersion',
-          ($1.LatestVersionReq value) => value.writeToBuffer(),
-          $1.LatestVersionResp.fromBuffer);
   static final _$serverVersion =
       $grpc.ClientMethod<$0.Empty, $2.ServerVersionResp>(
           '/hi.did.Base/ServerVersion',
@@ -98,13 +89,6 @@ abstract class BaseServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.ListCoinsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.LatestVersionReq, $1.LatestVersionResp>(
-        'LatestVersion',
-        latestVersion_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.LatestVersionReq.fromBuffer(value),
-        ($1.LatestVersionResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $2.ServerVersionResp>(
         'ServerVersion',
         serverVersion_Pre,
@@ -128,14 +112,6 @@ abstract class BaseServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListCoinsResp> listCoins(
       $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$1.LatestVersionResp> latestVersion_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.LatestVersionReq> $request) async {
-    return latestVersion($call, await $request);
-  }
-
-  $async.Future<$1.LatestVersionResp> latestVersion(
-      $grpc.ServiceCall call, $1.LatestVersionReq request);
 
   $async.Future<$2.ServerVersionResp> serverVersion_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {

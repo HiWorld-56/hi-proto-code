@@ -23,7 +23,6 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Base_ListCoins_FullMethodName     = "/hi.club.Base/ListCoins"
-	Base_LatestVersion_FullMethodName = "/hi.club.Base/LatestVersion"
 	Base_ServerVersion_FullMethodName = "/hi.club.Base/ServerVersion"
 )
 
@@ -37,7 +36,6 @@ const (
 // —— 注释与档位对不上,按 did 统一为公开。
 type BaseClient interface {
 	ListCoins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*did.ListCoinsResp, error)
-	LatestVersion(ctx context.Context, in *did.LatestVersionReq, opts ...grpc.CallOption) (*did.LatestVersionResp, error)
 	ServerVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.ServerVersionResp, error)
 }
 
@@ -53,16 +51,6 @@ func (c *baseClient) ListCoins(ctx context.Context, in *emptypb.Empty, opts ...g
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(did.ListCoinsResp)
 	err := c.cc.Invoke(ctx, Base_ListCoins_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *baseClient) LatestVersion(ctx context.Context, in *did.LatestVersionReq, opts ...grpc.CallOption) (*did.LatestVersionResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.LatestVersionResp)
-	err := c.cc.Invoke(ctx, Base_LatestVersion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +77,6 @@ func (c *baseClient) ServerVersion(ctx context.Context, in *emptypb.Empty, opts 
 // —— 注释与档位对不上,按 did 统一为公开。
 type BaseServer interface {
 	ListCoins(context.Context, *emptypb.Empty) (*did.ListCoinsResp, error)
-	LatestVersion(context.Context, *did.LatestVersionReq) (*did.LatestVersionResp, error)
 	ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error)
 }
 
@@ -102,9 +89,6 @@ type UnimplementedBaseServer struct{}
 
 func (UnimplementedBaseServer) ListCoins(context.Context, *emptypb.Empty) (*did.ListCoinsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCoins not implemented")
-}
-func (UnimplementedBaseServer) LatestVersion(context.Context, *did.LatestVersionReq) (*did.LatestVersionResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method LatestVersion not implemented")
 }
 func (UnimplementedBaseServer) ServerVersion(context.Context, *emptypb.Empty) (*hi.ServerVersionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ServerVersion not implemented")
@@ -147,24 +131,6 @@ func _Base_ListCoins_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_LatestVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(did.LatestVersionReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).LatestVersion(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_LatestVersion_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).LatestVersion(ctx, req.(*did.LatestVersionReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Base_ServerVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -193,10 +159,6 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCoins",
 			Handler:    _Base_ListCoins_Handler,
-		},
-		{
-			MethodName: "LatestVersion",
-			Handler:    _Base_LatestVersion_Handler,
 		},
 		{
 			MethodName: "ServerVersion",

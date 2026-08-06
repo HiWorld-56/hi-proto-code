@@ -14,25 +14,6 @@ pub struct ListCoinsResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Coin>,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LatestVersionReq {
-    /// android / ios / ...
-    #[prost(string, tag = "1")]
-    pub platform: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LatestVersionResp {
-    #[prost(string, tag = "1")]
-    pub min_supported_version: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub latest_version: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub download_url: ::prost::alloc::string::String,
-    #[prost(string, repeated, tag = "4")]
-    pub changes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(int64, tag = "5")]
-    pub release_time: i64,
-}
 /// ⚠️ 超管 did 名单不是"任何人可见":三个 SuperAdmin.List(did/club/ai)分别是
 /// USER+MERCHANT / USER / MERCHANT,没有一个是 AUTH_NONE,标 PUBLIC 与档位矛盾。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -56,8 +37,11 @@ pub mod base_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Base —— 每个包统一的公共信息入口(版本/币种/服务自身版本/用户总数),全部公开。
-    /// 生态约定:club/ai/media 也各有 Base.ServerVersion / Base.LatestVersion,保持一致。
+    /// Base —— 每个包统一的公共信息入口(币种/服务自身版本/用户总数),全部公开。
+    /// 生态约定:club/ai/media 也各有 Base.ServerVersion,保持一致。
+    ///
+    /// ⚠️ 原 `Base.LatestVersion` 已删:那是临时过渡品(数据在 hi_app_version 表、字段不足以描述
+    /// 机器人的按需更新)。产品发布统一走 `hi.did.Release`,见 hi/did/release.proto。
     #[derive(Debug, Clone)]
     pub struct BaseClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -154,29 +138,6 @@ pub mod base_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Base/ListCoins");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Base", "ListCoins"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn latest_version(
-            &mut self,
-            request: impl tonic::IntoRequest<super::LatestVersionReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::LatestVersionResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Base/LatestVersion",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Base", "LatestVersion"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn server_version(
@@ -3139,7 +3100,7 @@ pub struct MerchantSetPermissionReq {
 /// 系统广播(超管面)—— 向固定主题 hi/v1/broadcast 发全体通知(所有 app/机器人订阅)。
 /// 系统用 root 账户代发 mqtt(仅 root 有该主题写权限)。目前承载 **app 新版本通知**:
 /// 载荷 = hi.did.Packet{Notice{type="app-update", ex_type=<app>}},**触发式** —— 客户端收到后
-/// 自查 hi.did.LatestVersion 取详情。不落消息记录。
+/// 自查 hi.did.Release.Latest 取详情(原 Base.LatestVersion 已删,见 hi/did/release.proto)。不落消息记录。
 /// ═══════════════════════════════════════════════════════════════════════════
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BroadcastAppUpdateReq {
@@ -4606,6 +4567,410 @@ pub struct Notice {
     pub extra: ::core::option::Option<::pbjson_types::Any>,
     #[prost(string, tag = "5")]
     pub ex_type: ::prost::alloc::string::String,
+}
+/// 单个文件的更新指令。**版本长在文件上**,而不是塞一堆产品专属的顶层字段
+/// (原先想放 extra.brain_version,那样每加一个组件就要动 schema)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReleaseFile {
+    /// 相对安装根目录,如 bin/hinj_brain
+    #[prost(string, tag = "1")]
+    pub path: ::prost::alloc::string::String,
+    /// 该文件自身的版本,如 brain 的 0.6.0;没有就留空
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
+    /// 客户端据此判断"本地这份要不要换"
+    #[prost(string, tag = "3")]
+    pub sha256: ::prost::alloc::string::String,
+    #[prost(int64, tag = "4")]
+    pub size: i64,
+    /// 八进制权限,如 "0755";空=沿用默认
+    #[prost(string, tag = "5")]
+    pub mode: ::prost::alloc::string::String,
+    /// overwrite(默认) 覆盖 / keep 已存在就不动(用户配置,不可随机更改) /
+    /// delete 本版要删掉的旧文件(否则升级只增不减,废文件越堆越多)
+    #[prost(string, tag = "6")]
+    pub policy: ::prost::alloc::string::String,
+}
+/// 整包信息。存 **path 不存 url** —— url 里带 host,换机器/换环境就全废;
+/// 且下载 url 是 `Latest` 每次现算的预签名(有期限),不该固化进 manifest。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReleaseBundle {
+    /// minio 内的对象键
+    #[prost(string, tag = "1")]
+    pub path: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub sha256: ::prost::alloc::string::String,
+    #[prost(int64, tag = "3")]
+    pub size: i64,
+}
+/// 发布清单 = latest.json 的内容。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseManifest {
+    /// hidid / hiclub / hinj
+    #[prost(string, tag = "1")]
+    pub product: ::prost::alloc::string::String,
+    /// android / ios / linux-aarch64 …
+    #[prost(string, tag = "2")]
+    pub platform: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+    /// 低于它必须强制升级
+    #[prost(string, tag = "4")]
+    pub min_supported_version: ::prost::alloc::string::String,
+    #[prost(int64, tag = "5")]
+    pub release_time: i64,
+    #[prost(string, repeated, tag = "6")]
+    pub changes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "7")]
+    pub bundle: ::core::option::Option<ReleaseBundle>,
+    /// full  = 整包覆盖(安卓:下 apk 直接装);
+    /// files = 按 files 逐个比 sha256,只拉不同的(机器人:有些配置不能动)
+    #[prost(string, tag = "8")]
+    pub update_mode: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "9")]
+    pub files: ::prost::alloc::vec::Vec<ReleaseFile>,
+    /// **只在 Latest 的响应里现算**(预签名,有期限),不写进 latest.json。
+    #[prost(string, tag = "10")]
+    pub download_url: ::prost::alloc::string::String,
+    /// 该 url 的失效时刻(unix 秒)
+    #[prost(int64, tag = "11")]
+    pub download_url_expire: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UploadPackageResp {
+    /// 落好的对象键,填进 Publish 的 manifest.bundle.path
+    #[prost(string, tag = "1")]
+    pub path: ::prost::alloc::string::String,
+    /// 服务端边写边算,供发布方核对
+    #[prost(string, tag = "2")]
+    pub sha256: ::prost::alloc::string::String,
+    #[prost(int64, tag = "3")]
+    pub size: i64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PublishReq {
+    #[prost(message, optional, tag = "1")]
+    pub manifest: ::core::option::Option<ReleaseManifest>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LatestReq {
+    /// hidid / hiclub / hinj
+    #[prost(string, tag = "1")]
+    pub product: ::prost::alloc::string::String,
+    /// android / ios / linux-aarch64 …
+    #[prost(string, tag = "2")]
+    pub platform: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadReq {
+    #[prost(string, tag = "1")]
+    pub product: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub platform: ::prost::alloc::string::String,
+    /// 留空=最新版
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+    /// 断点续传:从第几字节开始。机器人网络不稳,这个有用
+    #[prost(int64, tag = "4")]
+    pub offset: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DownloadChunk {
+    #[prost(bytes = "vec", tag = "1")]
+    pub chunk: ::prost::alloc::vec::Vec<u8>,
+    /// 整包大小,首块带上,便于显示进度
+    #[prost(int64, tag = "2")]
+    pub total: i64,
+}
+/// Generated client implementations.
+pub mod release_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 发布管理(**超管面**)。与公开面 `Release` 拆开,不是为了迎合 lint ——
+    /// 同一个 service 里混档意味着主体归类错了(照 DApp/DAppAdmin、Trade/TradeManage 范式):
+    /// 上传/发布是"谁能发版"的问题,查询/下载是"谁能拿到"的问题,两者的主体本就不同。
+    ///
+    /// ⚠️ 上传与发布**分两步**是刻意的:一步做完的话,包传到一半失败就会留下
+    /// "latest.json 指向一个不完整的包"的半截状态。分开后:先传包(失败只多个垃圾对象),
+    /// 再 Publish —— 而 Publish 写 latest.json 是原子的(minio PutObject 要么成要么不成)。
+    #[derive(Debug, Clone)]
+    pub struct ReleaseManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ReleaseManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ReleaseManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ReleaseManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ReleaseManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 流式上传发布包(几十 MB,unary 扛不住)。首帧 meta 带文件名+大小,后续 chunk。
+        pub async fn upload_package(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::super::UploadStreamReq,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::UploadPackageResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.ReleaseManage/UploadPackage",
+            );
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.ReleaseManage", "UploadPackage"));
+            self.inner.client_streaming(req, path, codec).await
+        }
+        /// 提交发布:校验版本 semver 严格递增、bundle.sha256 与已上传包一致 → 覆盖 latest.json
+        /// → **自动触发 Broadcast.AppUpdate**(发布者不用再记得单独喊一嗓子,也就不会"发了包没通知")。
+        pub async fn publish(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PublishReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.ReleaseManage/Publish",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.ReleaseManage", "Publish"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod release_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 发布查询/下载(**公开面**)。客户端自查更新走这里,不需要任何凭证 ——
+    /// 发布信息与安装包本就是要给所有用户的。
+    #[derive(Debug, Clone)]
+    pub struct ReleaseClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ReleaseClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ReleaseClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ReleaseClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ReleaseClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 查最新版。返回 manifest + **现算的预签名 download_url**(桶是私有的,但这个 url 谁拿到都能下,到期即失效)。
+        pub async fn latest(
+            &mut self,
+            request: impl tonic::IntoRequest<super::LatestReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ReleaseManifest>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Release/Latest");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Release", "Latest"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 流式下载。给**机器人**用:它有 grpc 通道、要断点续传、不需要浏览器。
+        /// app 走 Latest 给的预签名 url,由浏览器/下载器直接拉,字节不经我们的服务。
+        pub async fn download(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DownloadReq>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::DownloadChunk>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Release/Download");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Release", "Download"));
+            self.inner.server_streaming(req, path, codec).await
+        }
+    }
 }
 /// ⚠️ 含 api_key(区块链节点凭证)—— 不是"任何人可见"的东西。
 /// Gateway.List 本就要 AUTH_USER/AUTH_MERCHANT 才能调,标 PUBLIC 与档位自相矛盾。

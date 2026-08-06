@@ -127,126 +127,6 @@ func (x *ListCoinsResp) GetList() []*Coin {
 	return nil
 }
 
-type LatestVersionReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Platform      string                 `protobuf:"bytes,1,opt,name=platform,proto3" json:"platform,omitempty"` // android / ios / ...
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LatestVersionReq) Reset() {
-	*x = LatestVersionReq{}
-	mi := &file_hi_did_base_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LatestVersionReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LatestVersionReq) ProtoMessage() {}
-
-func (x *LatestVersionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LatestVersionReq.ProtoReflect.Descriptor instead.
-func (*LatestVersionReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *LatestVersionReq) GetPlatform() string {
-	if x != nil {
-		return x.Platform
-	}
-	return ""
-}
-
-type LatestVersionResp struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	MinSupportedVersion string                 `protobuf:"bytes,1,opt,name=min_supported_version,json=minSupportedVersion,proto3" json:"min_supported_version,omitempty"`
-	LatestVersion       string                 `protobuf:"bytes,2,opt,name=latest_version,json=latestVersion,proto3" json:"latest_version,omitempty"`
-	DownloadUrl         string                 `protobuf:"bytes,3,opt,name=download_url,json=downloadUrl,proto3" json:"download_url,omitempty"`
-	Changes             []string               `protobuf:"bytes,4,rep,name=changes,proto3" json:"changes,omitempty"`
-	ReleaseTime         int64                  `protobuf:"varint,5,opt,name=release_time,json=releaseTime,proto3" json:"release_time,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *LatestVersionResp) Reset() {
-	*x = LatestVersionResp{}
-	mi := &file_hi_did_base_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LatestVersionResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LatestVersionResp) ProtoMessage() {}
-
-func (x *LatestVersionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LatestVersionResp.ProtoReflect.Descriptor instead.
-func (*LatestVersionResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *LatestVersionResp) GetMinSupportedVersion() string {
-	if x != nil {
-		return x.MinSupportedVersion
-	}
-	return ""
-}
-
-func (x *LatestVersionResp) GetLatestVersion() string {
-	if x != nil {
-		return x.LatestVersion
-	}
-	return ""
-}
-
-func (x *LatestVersionResp) GetDownloadUrl() string {
-	if x != nil {
-		return x.DownloadUrl
-	}
-	return ""
-}
-
-func (x *LatestVersionResp) GetChanges() []string {
-	if x != nil {
-		return x.Changes
-	}
-	return nil
-}
-
-func (x *LatestVersionResp) GetReleaseTime() int64 {
-	if x != nil {
-		return x.ReleaseTime
-	}
-	return 0
-}
-
 // ⚠️ 超管 did 名单不是"任何人可见":三个 SuperAdmin.List(did/club/ai)分别是
 // USER+MERCHANT / USER / MERCHANT,没有一个是 AUTH_NONE,标 PUBLIC 与档位矛盾。
 type ListSuperAdminUsersResp struct {
@@ -258,7 +138,7 @@ type ListSuperAdminUsersResp struct {
 
 func (x *ListSuperAdminUsersResp) Reset() {
 	*x = ListSuperAdminUsersResp{}
-	mi := &file_hi_did_base_proto_msgTypes[4]
+	mi := &file_hi_did_base_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -270,7 +150,7 @@ func (x *ListSuperAdminUsersResp) String() string {
 func (*ListSuperAdminUsersResp) ProtoMessage() {}
 
 func (x *ListSuperAdminUsersResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[4]
+	mi := &file_hi_did_base_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -283,7 +163,7 @@ func (x *ListSuperAdminUsersResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSuperAdminUsersResp.ProtoReflect.Descriptor instead.
 func (*ListSuperAdminUsersResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{4}
+	return file_hi_did_base_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListSuperAdminUsersResp) GetList() []string {
@@ -302,7 +182,7 @@ type UserTotalResp struct {
 
 func (x *UserTotalResp) Reset() {
 	*x = UserTotalResp{}
-	mi := &file_hi_did_base_proto_msgTypes[5]
+	mi := &file_hi_did_base_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -314,7 +194,7 @@ func (x *UserTotalResp) String() string {
 func (*UserTotalResp) ProtoMessage() {}
 
 func (x *UserTotalResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[5]
+	mi := &file_hi_did_base_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -327,7 +207,7 @@ func (x *UserTotalResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserTotalResp.ProtoReflect.Descriptor instead.
 func (*UserTotalResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{5}
+	return file_hi_did_base_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UserTotalResp) GetTotal() int32 {
@@ -347,22 +227,13 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12 \n" +
 	"\bcategory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\bcategory:\x04\x98\xb5\x18\x01\"=\n" +
 	"\rListCoinsResp\x12&\n" +
-	"\x04list\x18\x01 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\".\n" +
-	"\x10LatestVersionReq\x12\x1a\n" +
-	"\bplatform\x18\x01 \x01(\tR\bplatform\"\xf2\x01\n" +
-	"\x11LatestVersionResp\x128\n" +
-	"\x15min_supported_version\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x13minSupportedVersion\x12+\n" +
-	"\x0elatest_version\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\rlatestVersion\x12'\n" +
-	"\fdownload_url\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\vdownloadUrl\x12\x1e\n" +
-	"\achanges\x18\x04 \x03(\tB\x04\x90\xb5\x18\x01R\achanges\x12'\n" +
-	"\frelease_time\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01R\vreleaseTime:\x04\x98\xb5\x18\x01\"9\n" +
+	"\x04list\x18\x01 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"9\n" +
 	"\x17ListSuperAdminUsersResp\x12\x18\n" +
 	"\x04list\x18\x01 \x03(\tB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"1\n" +
 	"\rUserTotalResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total:\x04\x98\xb5\x18\x012\xa0\x02\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total:\x04\x98\xb5\x18\x012\xd3\x01\n" +
 	"\x04Base\x12A\n" +
-	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
-	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
+	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
 	"\tUserTotal\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.UserTotalResp\"\x05\x8a\xb5\x18\x01\x012U\n" +
 	"\n" +
@@ -383,31 +254,27 @@ func file_hi_did_base_proto_rawDescGZIP() []byte {
 	return file_hi_did_base_proto_rawDescData
 }
 
-var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_hi_did_base_proto_goTypes = []any{
 	(*Coin)(nil),                    // 0: hi.did.Coin
 	(*ListCoinsResp)(nil),           // 1: hi.did.ListCoinsResp
-	(*LatestVersionReq)(nil),        // 2: hi.did.LatestVersionReq
-	(*LatestVersionResp)(nil),       // 3: hi.did.LatestVersionResp
-	(*ListSuperAdminUsersResp)(nil), // 4: hi.did.ListSuperAdminUsersResp
-	(*UserTotalResp)(nil),           // 5: hi.did.UserTotalResp
-	(*emptypb.Empty)(nil),           // 6: google.protobuf.Empty
-	(*hi.ServerVersionResp)(nil),    // 7: hi.ServerVersionResp
+	(*ListSuperAdminUsersResp)(nil), // 2: hi.did.ListSuperAdminUsersResp
+	(*UserTotalResp)(nil),           // 3: hi.did.UserTotalResp
+	(*emptypb.Empty)(nil),           // 4: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil),    // 5: hi.ServerVersionResp
 }
 var file_hi_did_base_proto_depIdxs = []int32{
 	0, // 0: hi.did.ListCoinsResp.list:type_name -> hi.did.Coin
-	6, // 1: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
-	2, // 2: hi.did.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
-	6, // 3: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
-	6, // 4: hi.did.Base.UserTotal:input_type -> google.protobuf.Empty
-	6, // 5: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
-	1, // 6: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	3, // 7: hi.did.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	7, // 8: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	5, // 9: hi.did.Base.UserTotal:output_type -> hi.did.UserTotalResp
-	4, // 10: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
-	6, // [6:11] is the sub-list for method output_type
-	1, // [1:6] is the sub-list for method input_type
+	4, // 1: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
+	4, // 2: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
+	4, // 3: hi.did.Base.UserTotal:input_type -> google.protobuf.Empty
+	4, // 4: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
+	1, // 5: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	5, // 6: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	3, // 7: hi.did.Base.UserTotal:output_type -> hi.did.UserTotalResp
+	2, // 8: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -424,7 +291,7 @@ func file_hi_did_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_base_proto_rawDesc), len(file_hi_did_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

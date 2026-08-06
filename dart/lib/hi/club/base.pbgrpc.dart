@@ -45,13 +45,6 @@ class BaseClient extends $grpc.Client {
     return $createUnaryCall(_$listCoins, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.LatestVersionResp> latestVersion(
-    $1.LatestVersionReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$latestVersion, request, options: options);
-  }
-
   $grpc.ResponseFuture<$2.ServerVersionResp> serverVersion(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -65,11 +58,6 @@ class BaseClient extends $grpc.Client {
       '/hi.club.Base/ListCoins',
       ($0.Empty value) => value.writeToBuffer(),
       $1.ListCoinsResp.fromBuffer);
-  static final _$latestVersion =
-      $grpc.ClientMethod<$1.LatestVersionReq, $1.LatestVersionResp>(
-          '/hi.club.Base/LatestVersion',
-          ($1.LatestVersionReq value) => value.writeToBuffer(),
-          $1.LatestVersionResp.fromBuffer);
   static final _$serverVersion =
       $grpc.ClientMethod<$0.Empty, $2.ServerVersionResp>(
           '/hi.club.Base/ServerVersion',
@@ -89,13 +77,6 @@ abstract class BaseServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.ListCoinsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.LatestVersionReq, $1.LatestVersionResp>(
-        'LatestVersion',
-        latestVersion_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.LatestVersionReq.fromBuffer(value),
-        ($1.LatestVersionResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $2.ServerVersionResp>(
         'ServerVersion',
         serverVersion_Pre,
@@ -112,14 +93,6 @@ abstract class BaseServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListCoinsResp> listCoins(
       $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$1.LatestVersionResp> latestVersion_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.LatestVersionReq> $request) async {
-    return latestVersion($call, await $request);
-  }
-
-  $async.Future<$1.LatestVersionResp> latestVersion(
-      $grpc.ServiceCall call, $1.LatestVersionReq request);
 
   $async.Future<$2.ServerVersionResp> serverVersion_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {

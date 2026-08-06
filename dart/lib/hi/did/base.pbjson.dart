@@ -53,53 +53,6 @@ final $typed_data.Uint8List listCoinsRespDescriptor = $convert.base64Decode(
     'Cg1MaXN0Q29pbnNSZXNwEiYKBGxpc3QYASADKAsyDC5oaS5kaWQuQ29pbkIEkLUYAVIEbGlzdD'
     'oEmLUYAQ==');
 
-@$core.Deprecated('Use latestVersionReqDescriptor instead')
-const LatestVersionReq$json = {
-  '1': 'LatestVersionReq',
-  '2': [
-    {'1': 'platform', '3': 1, '4': 1, '5': 9, '10': 'platform'},
-  ],
-};
-
-/// Descriptor for `LatestVersionReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List latestVersionReqDescriptor = $convert.base64Decode(
-    'ChBMYXRlc3RWZXJzaW9uUmVxEhoKCHBsYXRmb3JtGAEgASgJUghwbGF0Zm9ybQ==');
-
-@$core.Deprecated('Use latestVersionRespDescriptor instead')
-const LatestVersionResp$json = {
-  '1': 'LatestVersionResp',
-  '2': [
-    {
-      '1': 'min_supported_version',
-      '3': 1,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '10': 'minSupportedVersion'
-    },
-    {
-      '1': 'latest_version',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '10': 'latestVersion'
-    },
-    {'1': 'download_url', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'downloadUrl'},
-    {'1': 'changes', '3': 4, '4': 3, '5': 9, '8': {}, '10': 'changes'},
-    {'1': 'release_time', '3': 5, '4': 1, '5': 3, '8': {}, '10': 'releaseTime'},
-  ],
-  '7': {},
-};
-
-/// Descriptor for `LatestVersionResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List latestVersionRespDescriptor = $convert.base64Decode(
-    'ChFMYXRlc3RWZXJzaW9uUmVzcBI4ChVtaW5fc3VwcG9ydGVkX3ZlcnNpb24YASABKAlCBJC1GA'
-    'FSE21pblN1cHBvcnRlZFZlcnNpb24SKwoObGF0ZXN0X3ZlcnNpb24YAiABKAlCBJC1GAFSDWxh'
-    'dGVzdFZlcnNpb24SJwoMZG93bmxvYWRfdXJsGAMgASgJQgSQtRgBUgtkb3dubG9hZFVybBIeCg'
-    'djaGFuZ2VzGAQgAygJQgSQtRgBUgdjaGFuZ2VzEicKDHJlbGVhc2VfdGltZRgFIAEoA0IEkLUY'
-    'AVILcmVsZWFzZVRpbWU6BJi1GAE=');
-
 @$core.Deprecated('Use listSuperAdminUsersRespDescriptor instead')
 const ListSuperAdminUsersResp$json = {
   '1': 'ListSuperAdminUsersResp',

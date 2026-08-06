@@ -27,10 +27,9 @@ var File_hi_club_base_proto protoreflect.FileDescriptor
 
 const file_hi_club_base_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2\xdd\x01\n" +
+	"\x12hi/club/base.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/base.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2\x90\x01\n" +
 	"\x04Base\x12A\n" +
-	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
-	"\rLatestVersion\x12\x18.hi.did.LatestVersionReq\x1a\x19.hi.did.LatestVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
+	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x012T\n" +
 	"\n" +
 	"SuperAdmin\x12F\n" +
@@ -39,23 +38,19 @@ const file_hi_club_base_proto_rawDesc = "" +
 
 var file_hi_club_base_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),               // 0: google.protobuf.Empty
-	(*did.LatestVersionReq)(nil),        // 1: hi.did.LatestVersionReq
-	(*did.ListCoinsResp)(nil),           // 2: hi.did.ListCoinsResp
-	(*did.LatestVersionResp)(nil),       // 3: hi.did.LatestVersionResp
-	(*hi.ServerVersionResp)(nil),        // 4: hi.ServerVersionResp
-	(*did.ListSuperAdminUsersResp)(nil), // 5: hi.did.ListSuperAdminUsersResp
+	(*did.ListCoinsResp)(nil),           // 1: hi.did.ListCoinsResp
+	(*hi.ServerVersionResp)(nil),        // 2: hi.ServerVersionResp
+	(*did.ListSuperAdminUsersResp)(nil), // 3: hi.did.ListSuperAdminUsersResp
 }
 var file_hi_club_base_proto_depIdxs = []int32{
 	0, // 0: hi.club.Base.ListCoins:input_type -> google.protobuf.Empty
-	1, // 1: hi.club.Base.LatestVersion:input_type -> hi.did.LatestVersionReq
-	0, // 2: hi.club.Base.ServerVersion:input_type -> google.protobuf.Empty
-	0, // 3: hi.club.SuperAdmin.List:input_type -> google.protobuf.Empty
-	2, // 4: hi.club.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	3, // 5: hi.club.Base.LatestVersion:output_type -> hi.did.LatestVersionResp
-	4, // 6: hi.club.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	5, // 7: hi.club.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	0, // 1: hi.club.Base.ServerVersion:input_type -> google.protobuf.Empty
+	0, // 2: hi.club.SuperAdmin.List:input_type -> google.protobuf.Empty
+	1, // 3: hi.club.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	2, // 4: hi.club.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	3, // 5: hi.club.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

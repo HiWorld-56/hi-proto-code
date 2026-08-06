@@ -1314,7 +1314,7 @@ class MerchantSetPermissionReq extends $pb.GeneratedMessage {
 /// 系统广播(超管面)—— 向固定主题 hi/v1/broadcast 发全体通知(所有 app/机器人订阅)。
 /// 系统用 root 账户代发 mqtt(仅 root 有该主题写权限)。目前承载 **app 新版本通知**:
 /// 载荷 = hi.did.Packet{Notice{type="app-update", ex_type=<app>}},**触发式** —— 客户端收到后
-/// 自查 hi.did.LatestVersion 取详情。不落消息记录。
+/// 自查 hi.did.Release.Latest 取详情(原 Base.LatestVersion 已删,见 hi/did/release.proto)。不落消息记录。
 /// ═══════════════════════════════════════════════════════════════════════════
 class BroadcastAppUpdateReq extends $pb.GeneratedMessage {
   factory BroadcastAppUpdateReq({
