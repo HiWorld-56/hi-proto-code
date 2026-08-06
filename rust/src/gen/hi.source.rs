@@ -180,6 +180,27 @@ pub struct PutObjectReq {
 /// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
 /// "manifest 里写的 sha256 与真正传上去的包是否一致"。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetObjectStreamReq {
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub object: ::prost::alloc::string::String,
+    /// 断点续传起点;0=从头
+    #[prost(int64, tag = "3")]
+    pub offset: i64,
+    /// 0=到结尾
+    #[prost(int64, tag = "4")]
+    pub limit: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetObjectStreamResp {
+    #[prost(bytes = "vec", tag = "1")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+    /// 整个对象的大小,首块带上,便于显示进度
+    #[prost(int64, tag = "2")]
+    pub total: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ObjectInfoReq {
     #[prost(string, tag = "1")]
     pub bucket: ::prost::alloc::string::String,
@@ -496,6 +517,30 @@ pub mod file_client {
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "ObjectInfo"));
             self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_object_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetObjectStreamReq>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::GetObjectStreamResp>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.source.File/GetObjectStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.source.File", "GetObjectStream"));
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }

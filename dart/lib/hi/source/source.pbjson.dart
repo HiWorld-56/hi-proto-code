@@ -273,6 +273,38 @@ final $typed_data.Uint8List putObjectReqDescriptor = $convert.base64Decode(
     'ZvYmplY3QYAiABKAlCDLpICXIHMgVeXFMrJFIGb2JqZWN0EhgKB2NvbnRlbnQYAyABKAxSB2Nv'
     'bnRlbnQ=');
 
+@$core.Deprecated('Use getObjectStreamReqDescriptor instead')
+const GetObjectStreamReq$json = {
+  '1': 'GetObjectStreamReq',
+  '2': [
+    {'1': 'bucket', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'bucket'},
+    {'1': 'object', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'object'},
+    {'1': 'offset', '3': 3, '4': 1, '5': 3, '8': {}, '10': 'offset'},
+    {'1': 'limit', '3': 4, '4': 1, '5': 3, '8': {}, '10': 'limit'},
+  ],
+};
+
+/// Descriptor for `GetObjectStreamReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getObjectStreamReqDescriptor = $convert.base64Decode(
+    'ChJHZXRPYmplY3RTdHJlYW1SZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2'
+    'tldBIkCgZvYmplY3QYAiABKAlCDLpICXIHMgVeXFMrJFIGb2JqZWN0Eh8KBm9mZnNldBgDIAEo'
+    'A0IHukgEIgIoAFIGb2Zmc2V0Eh0KBWxpbWl0GAQgASgDQge6SAQiAigAUgVsaW1pdA==');
+
+@$core.Deprecated('Use getObjectStreamRespDescriptor instead')
+const GetObjectStreamResp$json = {
+  '1': 'GetObjectStreamResp',
+  '2': [
+    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
+    {'1': 'total', '3': 2, '4': 1, '5': 3, '8': {}, '10': 'total'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `GetObjectStreamResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getObjectStreamRespDescriptor = $convert.base64Decode(
+    'ChNHZXRPYmplY3RTdHJlYW1SZXNwEh4KB2NvbnRlbnQYASABKAxCBJC1GAJSB2NvbnRlbnQSGg'
+    'oFdG90YWwYAiABKANCBJC1GAJSBXRvdGFsOgSYtRgC');
+
 @$core.Deprecated('Use objectInfoReqDescriptor instead')
 const ObjectInfoReq$json = {
   '1': 'ObjectInfoReq',

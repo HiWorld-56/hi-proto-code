@@ -289,6 +289,29 @@ func local_request_File_ObjectInfo_0(ctx context.Context, marshaler runtime.Mars
 	return msg, metadata, err
 }
 
+func request_File_GetObjectStream_0(ctx context.Context, marshaler runtime.Marshaler, client FileClient, req *http.Request, pathParams map[string]string) (File_GetObjectStreamClient, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetObjectStreamReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	stream, err := client.GetObjectStream(ctx, &protoReq)
+	if err != nil {
+		return nil, metadata, err
+	}
+	header, err := stream.Header()
+	if err != nil {
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, nil
+}
+
 func request_Base_ServerVersion_0(ctx context.Context, marshaler runtime.Marshaler, client BaseClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
@@ -475,6 +498,13 @@ func RegisterFileHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 			return
 		}
 		forward_File_ObjectInfo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle(http.MethodPost, pattern_File_GetObjectStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
 	})
 
 	return nil
@@ -699,31 +729,50 @@ func RegisterFileHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 		}
 		forward_File_ObjectInfo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_File_GetObjectStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.source.File/GetObjectStream", runtime.WithHTTPPathPattern("/hi.source.File/GetObjectStream"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_File_GetObjectStream_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_File_GetObjectStream_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
 var (
-	pattern_File_Put_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "Put"}, ""))
-	pattern_File_PutStream_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "PutStream"}, ""))
-	pattern_File_Download_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "Download"}, ""))
-	pattern_File_DownloadStream_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "DownloadStream"}, ""))
-	pattern_File_Delete_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "Delete"}, ""))
-	pattern_File_PresignedUrl_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "PresignedUrl"}, ""))
-	pattern_File_GetObject_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "GetObject"}, ""))
-	pattern_File_PutObject_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "PutObject"}, ""))
-	pattern_File_ObjectInfo_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "ObjectInfo"}, ""))
+	pattern_File_Put_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "Put"}, ""))
+	pattern_File_PutStream_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "PutStream"}, ""))
+	pattern_File_Download_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "Download"}, ""))
+	pattern_File_DownloadStream_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "DownloadStream"}, ""))
+	pattern_File_Delete_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "Delete"}, ""))
+	pattern_File_PresignedUrl_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "PresignedUrl"}, ""))
+	pattern_File_GetObject_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "GetObject"}, ""))
+	pattern_File_PutObject_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "PutObject"}, ""))
+	pattern_File_ObjectInfo_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "ObjectInfo"}, ""))
+	pattern_File_GetObjectStream_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.source.File", "GetObjectStream"}, ""))
 )
 
 var (
-	forward_File_Put_0            = runtime.ForwardResponseMessage
-	forward_File_PutStream_0      = runtime.ForwardResponseMessage
-	forward_File_Download_0       = runtime.ForwardResponseMessage
-	forward_File_DownloadStream_0 = runtime.ForwardResponseStream
-	forward_File_Delete_0         = runtime.ForwardResponseMessage
-	forward_File_PresignedUrl_0   = runtime.ForwardResponseMessage
-	forward_File_GetObject_0      = runtime.ForwardResponseMessage
-	forward_File_PutObject_0      = runtime.ForwardResponseMessage
-	forward_File_ObjectInfo_0     = runtime.ForwardResponseMessage
+	forward_File_Put_0             = runtime.ForwardResponseMessage
+	forward_File_PutStream_0       = runtime.ForwardResponseMessage
+	forward_File_Download_0        = runtime.ForwardResponseMessage
+	forward_File_DownloadStream_0  = runtime.ForwardResponseStream
+	forward_File_Delete_0          = runtime.ForwardResponseMessage
+	forward_File_PresignedUrl_0    = runtime.ForwardResponseMessage
+	forward_File_GetObject_0       = runtime.ForwardResponseMessage
+	forward_File_PutObject_0       = runtime.ForwardResponseMessage
+	forward_File_ObjectInfo_0      = runtime.ForwardResponseMessage
+	forward_File_GetObjectStream_0 = runtime.ForwardResponseStream
 )
 
 // RegisterBaseHandlerFromEndpoint is same as RegisterBaseHandler but

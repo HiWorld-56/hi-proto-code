@@ -99,6 +99,15 @@ class FileClient extends $grpc.Client {
     return $createUnaryCall(_$objectInfo, request, options: options);
   }
 
+  $grpc.ResponseStream<$0.GetObjectStreamResp> getObjectStream(
+    $0.GetObjectStreamReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(
+        _$getObjectStream, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
   // method descriptors
 
   static final _$put = $grpc.ClientMethod<$0.PutReq, $0.PutResp>(
@@ -141,6 +150,11 @@ class FileClient extends $grpc.Client {
           '/hi.source.File/ObjectInfo',
           ($0.ObjectInfoReq value) => value.writeToBuffer(),
           $0.ObjectInfoResp.fromBuffer);
+  static final _$getObjectStream =
+      $grpc.ClientMethod<$0.GetObjectStreamReq, $0.GetObjectStreamResp>(
+          '/hi.source.File/GetObjectStream',
+          ($0.GetObjectStreamReq value) => value.writeToBuffer(),
+          $0.GetObjectStreamResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.source.File')
@@ -211,6 +225,15 @@ abstract class FileServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ObjectInfoReq.fromBuffer(value),
         ($0.ObjectInfoResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.GetObjectStreamReq, $0.GetObjectStreamResp>(
+            'GetObjectStream',
+            getObjectStream_Pre,
+            false,
+            true,
+            ($core.List<$core.int> value) =>
+                $0.GetObjectStreamReq.fromBuffer(value),
+            ($0.GetObjectStreamResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.PutResp> put_Pre(
@@ -278,6 +301,15 @@ abstract class FileServiceBase extends $grpc.Service {
 
   $async.Future<$0.ObjectInfoResp> objectInfo(
       $grpc.ServiceCall call, $0.ObjectInfoReq request);
+
+  $async.Stream<$0.GetObjectStreamResp> getObjectStream_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.GetObjectStreamReq> $request) async* {
+    yield* getObjectStream($call, await $request);
+  }
+
+  $async.Stream<$0.GetObjectStreamResp> getObjectStream(
+      $grpc.ServiceCall call, $0.GetObjectStreamReq request);
 }
 
 @$pb.GrpcServiceName('hi.source.Base')

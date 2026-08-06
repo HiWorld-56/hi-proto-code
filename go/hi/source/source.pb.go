@@ -946,6 +946,126 @@ func (x *PutObjectReq) GetContent() []byte {
 
 // 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
 // "manifest 里写的 sha256 与真正传上去的包是否一致"。
+type GetObjectStreamReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`
+	Offset        int64                  `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"` // 断点续传起点;0=从头
+	Limit         int64                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`   // 0=到结尾
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetObjectStreamReq) Reset() {
+	*x = GetObjectStreamReq{}
+	mi := &file_hi_source_source_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetObjectStreamReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetObjectStreamReq) ProtoMessage() {}
+
+func (x *GetObjectStreamReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetObjectStreamReq.ProtoReflect.Descriptor instead.
+func (*GetObjectStreamReq) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetObjectStreamReq) GetBucket() string {
+	if x != nil {
+		return x.Bucket
+	}
+	return ""
+}
+
+func (x *GetObjectStreamReq) GetObject() string {
+	if x != nil {
+		return x.Object
+	}
+	return ""
+}
+
+func (x *GetObjectStreamReq) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *GetObjectStreamReq) GetLimit() int64 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type GetObjectStreamResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"` // 整个对象的大小,首块带上,便于显示进度
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetObjectStreamResp) Reset() {
+	*x = GetObjectStreamResp{}
+	mi := &file_hi_source_source_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetObjectStreamResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetObjectStreamResp) ProtoMessage() {}
+
+func (x *GetObjectStreamResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetObjectStreamResp.ProtoReflect.Descriptor instead.
+func (*GetObjectStreamResp) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetObjectStreamResp) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+func (x *GetObjectStreamResp) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 type ObjectInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
@@ -956,7 +1076,7 @@ type ObjectInfoReq struct {
 
 func (x *ObjectInfoReq) Reset() {
 	*x = ObjectInfoReq{}
-	mi := &file_hi_source_source_proto_msgTypes[14]
+	mi := &file_hi_source_source_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -968,7 +1088,7 @@ func (x *ObjectInfoReq) String() string {
 func (*ObjectInfoReq) ProtoMessage() {}
 
 func (x *ObjectInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[14]
+	mi := &file_hi_source_source_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -981,7 +1101,7 @@ func (x *ObjectInfoReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectInfoReq.ProtoReflect.Descriptor instead.
 func (*ObjectInfoReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{14}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ObjectInfoReq) GetBucket() string {
@@ -1008,7 +1128,7 @@ type ObjectInfoResp struct {
 
 func (x *ObjectInfoResp) Reset() {
 	*x = ObjectInfoResp{}
-	mi := &file_hi_source_source_proto_msgTypes[15]
+	mi := &file_hi_source_source_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1020,7 +1140,7 @@ func (x *ObjectInfoResp) String() string {
 func (*ObjectInfoResp) ProtoMessage() {}
 
 func (x *ObjectInfoResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[15]
+	mi := &file_hi_source_source_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1033,7 +1153,7 @@ func (x *ObjectInfoResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectInfoResp.ProtoReflect.Descriptor instead.
 func (*ObjectInfoResp) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{15}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ObjectInfoResp) GetSize() int64 {
@@ -1108,7 +1228,15 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\fPutObjectReq\x12$\n" +
 	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
 	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\fR\acontent\"[\n" +
+	"\acontent\x18\x03 \x01(\fR\acontent\"\xa0\x01\n" +
+	"\x12GetObjectStreamReq\x12$\n" +
+	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
+	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\x12\x1f\n" +
+	"\x06offset\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x06offset\x12\x1d\n" +
+	"\x05limit\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"W\n" +
+	"\x13GetObjectStreamResp\x12\x1e\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x02R\acontent\x12\x1a\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02R\x05total:\x04\x98\xb5\x18\x02\"[\n" +
 	"\rObjectInfoReq\x12$\n" +
 	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
 	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\"N\n" +
@@ -1118,7 +1246,7 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\bNameMode\x12\x0f\n" +
 	"\vNAME_RANDOM\x10\x00\x12\x12\n" +
 	"\x0eNAME_TIMESTAMP\x10\x01\x12\r\n" +
-	"\tNAME_KEEP\x10\x022\xff\x04\n" +
+	"\tNAME_KEEP\x10\x022\xda\x05\n" +
 	"\x04File\x123\n" +
 	"\x03Put\x12\x11.hi.source.PutReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
 	"\tPutStream\x12\x17.hi.source.PutStreamReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12B\n" +
@@ -1129,7 +1257,8 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\tGetObject\x12\x17.hi.source.GetObjectReq\x1a\x18.hi.source.GetObjectResp\"\x05\x8a\xb5\x18\x01\x01\x12C\n" +
 	"\tPutObject\x12\x17.hi.source.PutObjectReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x12H\n" +
 	"\n" +
-	"ObjectInfo\x12\x18.hi.source.ObjectInfoReq\x1a\x19.hi.source.ObjectInfoResp\"\x05\x8a\xb5\x18\x01\x012M\n" +
+	"ObjectInfo\x12\x18.hi.source.ObjectInfoReq\x1a\x19.hi.source.ObjectInfoResp\"\x05\x8a\xb5\x18\x01\x01\x12Y\n" +
+	"\x0fGetObjectStream\x12\x1d.hi.source.GetObjectStreamReq\x1a\x1e.hi.source.GetObjectStreamResp\"\x05\x8a\xb5\x18\x01\x010\x012M\n" +
 	"\x04Base\x12E\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01B\x8e\x01\n" +
 	"\rcom.hi.sourceB\vSourceProtoP\x01Z+github.com/HiWorld-56/hi-proto/go/hi/source\xa2\x02\x03HSX\xaa\x02\tHi.Source\xca\x02\tHi\\Source\xe2\x02\x15Hi\\Source\\GPBMetadata\xea\x02\n" +
@@ -1148,7 +1277,7 @@ func file_hi_source_source_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_source_source_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_source_source_proto_goTypes = []any{
 	(NameMode)(0),                // 0: hi.source.NameMode
 	(*DownloadReq)(nil),          // 1: hi.source.DownloadReq
@@ -1165,10 +1294,12 @@ var file_hi_source_source_proto_goTypes = []any{
 	(*GetObjectReq)(nil),         // 12: hi.source.GetObjectReq
 	(*GetObjectResp)(nil),        // 13: hi.source.GetObjectResp
 	(*PutObjectReq)(nil),         // 14: hi.source.PutObjectReq
-	(*ObjectInfoReq)(nil),        // 15: hi.source.ObjectInfoReq
-	(*ObjectInfoResp)(nil),       // 16: hi.source.ObjectInfoResp
-	(*emptypb.Empty)(nil),        // 17: google.protobuf.Empty
-	(*hi.ServerVersionResp)(nil), // 18: hi.ServerVersionResp
+	(*GetObjectStreamReq)(nil),   // 15: hi.source.GetObjectStreamReq
+	(*GetObjectStreamResp)(nil),  // 16: hi.source.GetObjectStreamResp
+	(*ObjectInfoReq)(nil),        // 17: hi.source.ObjectInfoReq
+	(*ObjectInfoResp)(nil),       // 18: hi.source.ObjectInfoResp
+	(*emptypb.Empty)(nil),        // 19: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil), // 20: hi.ServerVersionResp
 }
 var file_hi_source_source_proto_depIdxs = []int32{
 	0,  // 0: hi.source.PutReq.name_mode:type_name -> hi.source.NameMode
@@ -1181,20 +1312,22 @@ var file_hi_source_source_proto_depIdxs = []int32{
 	10, // 7: hi.source.File.PresignedUrl:input_type -> hi.source.PresignedUrlReq
 	12, // 8: hi.source.File.GetObject:input_type -> hi.source.GetObjectReq
 	14, // 9: hi.source.File.PutObject:input_type -> hi.source.PutObjectReq
-	15, // 10: hi.source.File.ObjectInfo:input_type -> hi.source.ObjectInfoReq
-	17, // 11: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
-	6,  // 12: hi.source.File.Put:output_type -> hi.source.PutResp
-	6,  // 13: hi.source.File.PutStream:output_type -> hi.source.PutResp
-	2,  // 14: hi.source.File.Download:output_type -> hi.source.DownloadResp
-	3,  // 15: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	17, // 16: hi.source.File.Delete:output_type -> google.protobuf.Empty
-	11, // 17: hi.source.File.PresignedUrl:output_type -> hi.source.PresignedUrlResp
-	13, // 18: hi.source.File.GetObject:output_type -> hi.source.GetObjectResp
-	17, // 19: hi.source.File.PutObject:output_type -> google.protobuf.Empty
-	16, // 20: hi.source.File.ObjectInfo:output_type -> hi.source.ObjectInfoResp
-	18, // 21: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	12, // [12:22] is the sub-list for method output_type
-	2,  // [2:12] is the sub-list for method input_type
+	17, // 10: hi.source.File.ObjectInfo:input_type -> hi.source.ObjectInfoReq
+	15, // 11: hi.source.File.GetObjectStream:input_type -> hi.source.GetObjectStreamReq
+	19, // 12: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
+	6,  // 13: hi.source.File.Put:output_type -> hi.source.PutResp
+	6,  // 14: hi.source.File.PutStream:output_type -> hi.source.PutResp
+	2,  // 15: hi.source.File.Download:output_type -> hi.source.DownloadResp
+	3,  // 16: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
+	19, // 17: hi.source.File.Delete:output_type -> google.protobuf.Empty
+	11, // 18: hi.source.File.PresignedUrl:output_type -> hi.source.PresignedUrlResp
+	13, // 19: hi.source.File.GetObject:output_type -> hi.source.GetObjectResp
+	19, // 20: hi.source.File.PutObject:output_type -> google.protobuf.Empty
+	18, // 21: hi.source.File.ObjectInfo:output_type -> hi.source.ObjectInfoResp
+	16, // 22: hi.source.File.GetObjectStream:output_type -> hi.source.GetObjectStreamResp
+	20, // 23: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	13, // [13:24] is the sub-list for method output_type
+	2,  // [2:13] is the sub-list for method input_type
 	2,  // [2:2] is the sub-list for extension type_name
 	2,  // [2:2] is the sub-list for extension extendee
 	0,  // [0:2] is the sub-list for field type_name
@@ -1216,7 +1349,7 @@ func file_hi_source_source_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_source_source_proto_rawDesc), len(file_hi_source_source_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

@@ -1108,6 +1108,163 @@ class PutObjectReq extends $pb.GeneratedMessage {
 
 /// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
 /// "manifest 里写的 sha256 与真正传上去的包是否一致"。
+class GetObjectStreamReq extends $pb.GeneratedMessage {
+  factory GetObjectStreamReq({
+    $core.String? bucket,
+    $core.String? object,
+    $fixnum.Int64? offset,
+    $fixnum.Int64? limit,
+  }) {
+    final result = create();
+    if (bucket != null) result.bucket = bucket;
+    if (object != null) result.object = object;
+    if (offset != null) result.offset = offset;
+    if (limit != null) result.limit = limit;
+    return result;
+  }
+
+  GetObjectStreamReq._();
+
+  factory GetObjectStreamReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetObjectStreamReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetObjectStreamReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'bucket')
+    ..aOS(2, _omitFieldNames ? '' : 'object')
+    ..aInt64(3, _omitFieldNames ? '' : 'offset')
+    ..aInt64(4, _omitFieldNames ? '' : 'limit')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectStreamReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectStreamReq copyWith(void Function(GetObjectStreamReq) updates) =>
+      super.copyWith((message) => updates(message as GetObjectStreamReq))
+          as GetObjectStreamReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetObjectStreamReq create() => GetObjectStreamReq._();
+  @$core.override
+  GetObjectStreamReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetObjectStreamReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetObjectStreamReq>(create);
+  static GetObjectStreamReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get bucket => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set bucket($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBucket() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBucket() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get object => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set object($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasObject() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearObject() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get offset => $_getI64(2);
+  @$pb.TagNumber(3)
+  set offset($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOffset() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOffset() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get limit => $_getI64(3);
+  @$pb.TagNumber(4)
+  set limit($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasLimit() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLimit() => $_clearField(4);
+}
+
+class GetObjectStreamResp extends $pb.GeneratedMessage {
+  factory GetObjectStreamResp({
+    $core.List<$core.int>? content,
+    $fixnum.Int64? total,
+  }) {
+    final result = create();
+    if (content != null) result.content = content;
+    if (total != null) result.total = total;
+    return result;
+  }
+
+  GetObjectStreamResp._();
+
+  factory GetObjectStreamResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetObjectStreamResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetObjectStreamResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..aInt64(2, _omitFieldNames ? '' : 'total')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectStreamResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectStreamResp copyWith(void Function(GetObjectStreamResp) updates) =>
+      super.copyWith((message) => updates(message as GetObjectStreamResp))
+          as GetObjectStreamResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetObjectStreamResp create() => GetObjectStreamResp._();
+  @$core.override
+  GetObjectStreamResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetObjectStreamResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetObjectStreamResp>(create);
+  static GetObjectStreamResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get content => $_getN(0);
+  @$pb.TagNumber(1)
+  set content($core.List<$core.int> value) => $_setBytes(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasContent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearContent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get total => $_getI64(1);
+  @$pb.TagNumber(2)
+  set total($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
+}
+
 class ObjectInfoReq extends $pb.GeneratedMessage {
   factory ObjectInfoReq({
     $core.String? bucket,

@@ -21,15 +21,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	File_Put_FullMethodName            = "/hi.source.File/Put"
-	File_PutStream_FullMethodName      = "/hi.source.File/PutStream"
-	File_Download_FullMethodName       = "/hi.source.File/Download"
-	File_DownloadStream_FullMethodName = "/hi.source.File/DownloadStream"
-	File_Delete_FullMethodName         = "/hi.source.File/Delete"
-	File_PresignedUrl_FullMethodName   = "/hi.source.File/PresignedUrl"
-	File_GetObject_FullMethodName      = "/hi.source.File/GetObject"
-	File_PutObject_FullMethodName      = "/hi.source.File/PutObject"
-	File_ObjectInfo_FullMethodName     = "/hi.source.File/ObjectInfo"
+	File_Put_FullMethodName             = "/hi.source.File/Put"
+	File_PutStream_FullMethodName       = "/hi.source.File/PutStream"
+	File_Download_FullMethodName        = "/hi.source.File/Download"
+	File_DownloadStream_FullMethodName  = "/hi.source.File/DownloadStream"
+	File_Delete_FullMethodName          = "/hi.source.File/Delete"
+	File_PresignedUrl_FullMethodName    = "/hi.source.File/PresignedUrl"
+	File_GetObject_FullMethodName       = "/hi.source.File/GetObject"
+	File_PutObject_FullMethodName       = "/hi.source.File/PutObject"
+	File_ObjectInfo_FullMethodName      = "/hi.source.File/ObjectInfo"
+	File_GetObjectStream_FullMethodName = "/hi.source.File/GetObjectStream"
 )
 
 // FileClient is the client API for File service.
@@ -45,6 +46,7 @@ type FileClient interface {
 	GetObject(ctx context.Context, in *GetObjectReq, opts ...grpc.CallOption) (*GetObjectResp, error)
 	PutObject(ctx context.Context, in *PutObjectReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ObjectInfo(ctx context.Context, in *ObjectInfoReq, opts ...grpc.CallOption) (*ObjectInfoResp, error)
+	GetObjectStream(ctx context.Context, in *GetObjectStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetObjectStreamResp], error)
 }
 
 type fileClient struct {
@@ -157,6 +159,25 @@ func (c *fileClient) ObjectInfo(ctx context.Context, in *ObjectInfoReq, opts ...
 	return out, nil
 }
 
+func (c *fileClient) GetObjectStream(ctx context.Context, in *GetObjectStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetObjectStreamResp], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &File_ServiceDesc.Streams[2], File_GetObjectStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GetObjectStreamReq, GetObjectStreamResp]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type File_GetObjectStreamClient = grpc.ServerStreamingClient[GetObjectStreamResp]
+
 // FileServer is the server API for File service.
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
@@ -170,6 +191,7 @@ type FileServer interface {
 	GetObject(context.Context, *GetObjectReq) (*GetObjectResp, error)
 	PutObject(context.Context, *PutObjectReq) (*emptypb.Empty, error)
 	ObjectInfo(context.Context, *ObjectInfoReq) (*ObjectInfoResp, error)
+	GetObjectStream(*GetObjectStreamReq, grpc.ServerStreamingServer[GetObjectStreamResp]) error
 }
 
 // UnimplementedFileServer should be embedded to have
@@ -205,6 +227,9 @@ func (UnimplementedFileServer) PutObject(context.Context, *PutObjectReq) (*empty
 }
 func (UnimplementedFileServer) ObjectInfo(context.Context, *ObjectInfoReq) (*ObjectInfoResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ObjectInfo not implemented")
+}
+func (UnimplementedFileServer) GetObjectStream(*GetObjectStreamReq, grpc.ServerStreamingServer[GetObjectStreamResp]) error {
+	return status.Error(codes.Unimplemented, "method GetObjectStream not implemented")
 }
 func (UnimplementedFileServer) testEmbeddedByValue() {}
 
@@ -370,6 +395,17 @@ func _File_ObjectInfo_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _File_GetObjectStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetObjectStreamReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(FileServer).GetObjectStream(m, &grpc.GenericServerStream[GetObjectStreamReq, GetObjectStreamResp]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type File_GetObjectStreamServer = grpc.ServerStreamingServer[GetObjectStreamResp]
+
 // File_ServiceDesc is the grpc.ServiceDesc for File service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -415,6 +451,11 @@ var File_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "DownloadStream",
 			Handler:       _File_DownloadStream_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetObjectStream",
+			Handler:       _File_GetObjectStream_Handler,
 			ServerStreams: true,
 		},
 	},
