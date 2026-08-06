@@ -41,7 +41,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GroupClient interface {
-	// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
+	// 群头像/群背景传 `Source.UploadGroupAvatar` / `UploadGroupBackground`(→ hiclub bucket)。
+	// 那两个只回 url;把 url 写进群信息仍走本 service 的 Update —— 权限校验在那一步。
 	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupMemberView, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
@@ -221,7 +222,8 @@ func (c *groupClient) MuteMembers(ctx context.Context, in *MuteMembersReq, opts 
 // All implementations should embed UnimplementedGroupServer
 // for forward compatibility.
 type GroupServer interface {
-	// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
+	// 群头像/群背景传 `Source.UploadGroupAvatar` / `UploadGroupBackground`(→ hiclub bucket)。
+	// 那两个只回 url;把 url 写进群信息仍走本 service 的 Update —— 权限校验在那一步。
 	Get(context.Context, *GetGroupReq) (*GroupMemberView, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)

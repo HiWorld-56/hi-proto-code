@@ -22,21 +22,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Source_UploadAvatar_FullMethodName         = "/hi.club.Source/UploadAvatar"
-	Source_UploadBackground_FullMethodName     = "/hi.club.Source/UploadBackground"
-	Source_Download_FullMethodName             = "/hi.club.Source/Download"
-	Source_DownloadStream_FullMethodName       = "/hi.club.Source/DownloadStream"
-	Source_UploadTemp_FullMethodName           = "/hi.club.Source/UploadTemp"
-	Source_UploadTempStream_FullMethodName     = "/hi.club.Source/UploadTempStream"
-	Source_UploadLog_FullMethodName            = "/hi.club.Source/UploadLog"
-	Source_UploadScript_FullMethodName         = "/hi.club.Source/UploadScript"
-	Source_UploadScriptStream_FullMethodName   = "/hi.club.Source/UploadScriptStream"
-	Source_DownloadScript_FullMethodName       = "/hi.club.Source/DownloadScript"
-	Source_UploadLogo_FullMethodName           = "/hi.club.Source/UploadLogo"
-	Source_UploadSummary_FullMethodName        = "/hi.club.Source/UploadSummary"
-	Source_UploadTrainingFile_FullMethodName   = "/hi.club.Source/UploadTrainingFile"
-	Source_DownloadTrainingFile_FullMethodName = "/hi.club.Source/DownloadTrainingFile"
-	Source_Delete_FullMethodName               = "/hi.club.Source/Delete"
+	Source_UploadAvatar_FullMethodName          = "/hi.club.Source/UploadAvatar"
+	Source_UploadGroupAvatar_FullMethodName     = "/hi.club.Source/UploadGroupAvatar"
+	Source_UploadGroupBackground_FullMethodName = "/hi.club.Source/UploadGroupBackground"
+	Source_Download_FullMethodName              = "/hi.club.Source/Download"
+	Source_DownloadStream_FullMethodName        = "/hi.club.Source/DownloadStream"
+	Source_UploadTemp_FullMethodName            = "/hi.club.Source/UploadTemp"
+	Source_UploadTempStream_FullMethodName      = "/hi.club.Source/UploadTempStream"
+	Source_UploadLog_FullMethodName             = "/hi.club.Source/UploadLog"
+	Source_UploadScript_FullMethodName          = "/hi.club.Source/UploadScript"
+	Source_UploadScriptStream_FullMethodName    = "/hi.club.Source/UploadScriptStream"
+	Source_DownloadScript_FullMethodName        = "/hi.club.Source/DownloadScript"
+	Source_UploadLogo_FullMethodName            = "/hi.club.Source/UploadLogo"
+	Source_UploadSummary_FullMethodName         = "/hi.club.Source/UploadSummary"
+	Source_UploadTrainingFile_FullMethodName    = "/hi.club.Source/UploadTrainingFile"
+	Source_DownloadTrainingFile_FullMethodName  = "/hi.club.Source/DownloadTrainingFile"
+	Source_Delete_FullMethodName                = "/hi.club.Source/Delete"
 )
 
 // SourceClient is the client API for Source service.
@@ -56,14 +57,24 @@ const (
 //	所以这里也**不校验 url 属于哪个桶**:调用方拿临时桶的 url 去设群头像,
 //	顶多是自己的图 14 天后失效,伤不到别人。
 //
-// ⚠️ **用户头像不在这里** —— 头像归 hidid 管,直接调 `hi.did.Source.UploadAvatar`。
+// ⚠️ **club 前端只调 club 的方法** —— 这是硬约束,不是偏好:app 侧的 core 只持有一条
 //
-//	club 原先的 `User.UploadAvatar` 只是一层转发,拆开后与群头像撞名,故删掉转发。
-//	本 service 的 `UploadAvatar` 指的是**群头像**(club 自己的实体只有群有头像)。
+//	hiclub 通道,`hi.did.*` 它够不着。所以凡是 club 前端要用的搬运口,这里都得有一个,
+//	哪怕实现只是转发。曾经把用户头像"指路"到 `hi.did.Source.UploadAvatar`,
+//	结果是前端根本调不动 —— 别再犯。
+//
+//	命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
+//	群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
 type SourceClient interface {
-	// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+	// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
+	//
+	// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
+	// 同一个用户从 hidid 端传、还是从 hiclub 端传,该落同一处 —— 否则一份头像两边各存一份,
+	// 而"权威在哪"这个问题会随入口漂移。加载端只认 url,存哪儿对它透明。
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
-	UploadBackground(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+	UploadGroupAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	UploadGroupBackground(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// Download 按 url 取**公开桶**媒体(聊天/AI 媒体)。给 brain 这类没有浏览器、
 	// 却持有 hiclub grpc 通道的设备端用 —— app/web 直接 http GET 公开 url,不走这里。
 	//
@@ -126,10 +137,20 @@ func (c *sourceClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts 
 	return out, nil
 }
 
-func (c *sourceClient) UploadBackground(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+func (c *sourceClient) UploadGroupAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.UploadResp)
-	err := c.cc.Invoke(ctx, Source_UploadBackground_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Source_UploadGroupAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sourceClient) UploadGroupBackground(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Source_UploadGroupBackground_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -298,14 +319,24 @@ func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opt
 //	所以这里也**不校验 url 属于哪个桶**:调用方拿临时桶的 url 去设群头像,
 //	顶多是自己的图 14 天后失效,伤不到别人。
 //
-// ⚠️ **用户头像不在这里** —— 头像归 hidid 管,直接调 `hi.did.Source.UploadAvatar`。
+// ⚠️ **club 前端只调 club 的方法** —— 这是硬约束,不是偏好:app 侧的 core 只持有一条
 //
-//	club 原先的 `User.UploadAvatar` 只是一层转发,拆开后与群头像撞名,故删掉转发。
-//	本 service 的 `UploadAvatar` 指的是**群头像**(club 自己的实体只有群有头像)。
+//	hiclub 通道,`hi.did.*` 它够不着。所以凡是 club 前端要用的搬运口,这里都得有一个,
+//	哪怕实现只是转发。曾经把用户头像"指路"到 `hi.did.Source.UploadAvatar`,
+//	结果是前端根本调不动 —— 别再犯。
+//
+//	命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
+//	群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
 type SourceServer interface {
-	// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+	// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
+	//
+	// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
+	// 同一个用户从 hidid 端传、还是从 hiclub 端传,该落同一处 —— 否则一份头像两边各存一份,
+	// 而"权威在哪"这个问题会随入口漂移。加载端只认 url,存哪儿对它透明。
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
-	UploadBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+	UploadGroupAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
+	UploadGroupBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	// Download 按 url 取**公开桶**媒体(聊天/AI 媒体)。给 brain 这类没有浏览器、
 	// 却持有 hiclub grpc 通道的设备端用 —— app/web 直接 http GET 公开 url,不走这里。
 	//
@@ -360,8 +391,11 @@ type UnimplementedSourceServer struct{}
 func (UnimplementedSourceServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
 }
-func (UnimplementedSourceServer) UploadBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UploadBackground not implemented")
+func (UnimplementedSourceServer) UploadGroupAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadGroupAvatar not implemented")
+}
+func (UnimplementedSourceServer) UploadGroupBackground(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadGroupBackground not implemented")
 }
 func (UnimplementedSourceServer) Download(context.Context, *DownloadResourceReq) (*DownloadResourceResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Download not implemented")
@@ -440,20 +474,38 @@ func _Source_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Source_UploadBackground_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Source_UploadGroupAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.UploadReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SourceServer).UploadBackground(ctx, in)
+		return srv.(SourceServer).UploadGroupAvatar(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Source_UploadBackground_FullMethodName,
+		FullMethod: Source_UploadGroupAvatar_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SourceServer).UploadBackground(ctx, req.(*hi.UploadReq))
+		return srv.(SourceServer).UploadGroupAvatar(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Source_UploadGroupBackground_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadGroupBackground(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadGroupBackground_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadGroupBackground(ctx, req.(*hi.UploadReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -675,8 +727,12 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Source_UploadAvatar_Handler,
 		},
 		{
-			MethodName: "UploadBackground",
-			Handler:    _Source_UploadBackground_Handler,
+			MethodName: "UploadGroupAvatar",
+			Handler:    _Source_UploadGroupAvatar_Handler,
+		},
+		{
+			MethodName: "UploadGroupBackground",
+			Handler:    _Source_UploadGroupBackground_Handler,
 		},
 		{
 			MethodName: "Download",

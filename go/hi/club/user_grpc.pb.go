@@ -40,11 +40,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
-	// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
-	//
-	// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
-	// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
-	// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
+	// 头像与日志的上传口都已搬到 `Source`(UploadAvatar / UploadLog),此处不再有。
 	GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
 	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListSystemMessages(ctx context.Context, in *ListSystemMessagesReq, opts ...grpc.CallOption) (*SystemMessages, error)
@@ -202,11 +198,7 @@ func (c *userClient) SetRemark(ctx context.Context, in *SetRemarkReq, opts ...gr
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
 type UserServer interface {
-	// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
-	//
-	// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
-	// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
-	// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
+	// 头像与日志的上传口都已搬到 `Source`(UploadAvatar / UploadLog),此处不再有。
 	GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error)
 	Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
 	ListSystemMessages(context.Context, *ListSystemMessagesReq) (*SystemMessages, error)

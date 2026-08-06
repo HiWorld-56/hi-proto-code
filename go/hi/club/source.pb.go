@@ -258,10 +258,11 @@ const file_hi_club_source_proto_rawDesc = "" +
 	"\x05chunk\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01R\x05chunk\x12\x18\n" +
 	"\x04sent\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\x04sent\x12\x1a\n" +
 	"\x05total\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01R\x05total\x12\x1c\n" +
-	"\x06offset\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\x06offset:\x04\x98\xb5\x18\x012\xe3\a\n" +
+	"\x06offset\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\x06offset:\x04\x98\xb5\x18\x012\xa3\b\n" +
 	"\x06Source\x124\n" +
-	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x128\n" +
-	"\x10UploadBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
+	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
+	"\x11UploadGroupAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
+	"\x15UploadGroupBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
 	"\bDownload\x12\x1c.hi.club.DownloadResourceReq\x1a\x1d.hi.club.DownloadResourceResp\"\x05\x8a\xb5\x18\x01\x02\x12b\n" +
 	"\x0eDownloadStream\x12\".hi.club.DownloadResourceStreamReq\x1a#.hi.club.DownloadResourceStreamResp\"\x05\x8a\xb5\x18\x01\x020\x01\x122\n" +
 	"\n" +
@@ -310,37 +311,39 @@ var file_hi_club_source_proto_goTypes = []any{
 }
 var file_hi_club_source_proto_depIdxs = []int32{
 	4,  // 0: hi.club.Source.UploadAvatar:input_type -> hi.UploadReq
-	4,  // 1: hi.club.Source.UploadBackground:input_type -> hi.UploadReq
-	0,  // 2: hi.club.Source.Download:input_type -> hi.club.DownloadResourceReq
-	2,  // 3: hi.club.Source.DownloadStream:input_type -> hi.club.DownloadResourceStreamReq
-	4,  // 4: hi.club.Source.UploadTemp:input_type -> hi.UploadReq
-	5,  // 5: hi.club.Source.UploadTempStream:input_type -> hi.UploadStreamReq
-	4,  // 6: hi.club.Source.UploadLog:input_type -> hi.UploadReq
-	4,  // 7: hi.club.Source.UploadScript:input_type -> hi.UploadReq
-	5,  // 8: hi.club.Source.UploadScriptStream:input_type -> hi.UploadStreamReq
-	6,  // 9: hi.club.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
-	4,  // 10: hi.club.Source.UploadLogo:input_type -> hi.UploadReq
-	4,  // 11: hi.club.Source.UploadSummary:input_type -> hi.UploadReq
-	7,  // 12: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
-	8,  // 13: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
-	9,  // 14: hi.club.Source.Delete:input_type -> hi.DeleteResourceReq
-	10, // 15: hi.club.Source.UploadAvatar:output_type -> hi.UploadResp
-	10, // 16: hi.club.Source.UploadBackground:output_type -> hi.UploadResp
-	1,  // 17: hi.club.Source.Download:output_type -> hi.club.DownloadResourceResp
-	3,  // 18: hi.club.Source.DownloadStream:output_type -> hi.club.DownloadResourceStreamResp
-	10, // 19: hi.club.Source.UploadTemp:output_type -> hi.UploadResp
-	10, // 20: hi.club.Source.UploadTempStream:output_type -> hi.UploadResp
-	10, // 21: hi.club.Source.UploadLog:output_type -> hi.UploadResp
-	10, // 22: hi.club.Source.UploadScript:output_type -> hi.UploadResp
-	10, // 23: hi.club.Source.UploadScriptStream:output_type -> hi.UploadResp
-	11, // 24: hi.club.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
-	10, // 25: hi.club.Source.UploadLogo:output_type -> hi.UploadResp
-	10, // 26: hi.club.Source.UploadSummary:output_type -> hi.UploadResp
-	12, // 27: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
-	13, // 28: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
-	12, // 29: hi.club.Source.Delete:output_type -> google.protobuf.Empty
-	15, // [15:30] is the sub-list for method output_type
-	0,  // [0:15] is the sub-list for method input_type
+	4,  // 1: hi.club.Source.UploadGroupAvatar:input_type -> hi.UploadReq
+	4,  // 2: hi.club.Source.UploadGroupBackground:input_type -> hi.UploadReq
+	0,  // 3: hi.club.Source.Download:input_type -> hi.club.DownloadResourceReq
+	2,  // 4: hi.club.Source.DownloadStream:input_type -> hi.club.DownloadResourceStreamReq
+	4,  // 5: hi.club.Source.UploadTemp:input_type -> hi.UploadReq
+	5,  // 6: hi.club.Source.UploadTempStream:input_type -> hi.UploadStreamReq
+	4,  // 7: hi.club.Source.UploadLog:input_type -> hi.UploadReq
+	4,  // 8: hi.club.Source.UploadScript:input_type -> hi.UploadReq
+	5,  // 9: hi.club.Source.UploadScriptStream:input_type -> hi.UploadStreamReq
+	6,  // 10: hi.club.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
+	4,  // 11: hi.club.Source.UploadLogo:input_type -> hi.UploadReq
+	4,  // 12: hi.club.Source.UploadSummary:input_type -> hi.UploadReq
+	7,  // 13: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
+	8,  // 14: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
+	9,  // 15: hi.club.Source.Delete:input_type -> hi.DeleteResourceReq
+	10, // 16: hi.club.Source.UploadAvatar:output_type -> hi.UploadResp
+	10, // 17: hi.club.Source.UploadGroupAvatar:output_type -> hi.UploadResp
+	10, // 18: hi.club.Source.UploadGroupBackground:output_type -> hi.UploadResp
+	1,  // 19: hi.club.Source.Download:output_type -> hi.club.DownloadResourceResp
+	3,  // 20: hi.club.Source.DownloadStream:output_type -> hi.club.DownloadResourceStreamResp
+	10, // 21: hi.club.Source.UploadTemp:output_type -> hi.UploadResp
+	10, // 22: hi.club.Source.UploadTempStream:output_type -> hi.UploadResp
+	10, // 23: hi.club.Source.UploadLog:output_type -> hi.UploadResp
+	10, // 24: hi.club.Source.UploadScript:output_type -> hi.UploadResp
+	10, // 25: hi.club.Source.UploadScriptStream:output_type -> hi.UploadResp
+	11, // 26: hi.club.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
+	10, // 27: hi.club.Source.UploadLogo:output_type -> hi.UploadResp
+	10, // 28: hi.club.Source.UploadSummary:output_type -> hi.UploadResp
+	12, // 29: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
+	13, // 30: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
+	12, // 31: hi.club.Source.Delete:output_type -> google.protobuf.Empty
+	16, // [16:32] is the sub-list for method output_type
+	0,  // [0:16] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

@@ -33,7 +33,8 @@ class GroupClient extends $grpc.Client {
 
   GroupClient(super.channel, {super.options, super.interceptors});
 
-  /// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
+  /// 群头像/群背景传 `Source.UploadGroupAvatar` / `UploadGroupBackground`(→ hiclub bucket)。
+  /// 那两个只回 url;把 url 写进群信息仍走本 service 的 Update —— 权限校验在那一步。
   $grpc.ResponseFuture<$0.GroupMemberView> get(
     $0.GetGroupReq request, {
     $grpc.CallOptions? options,

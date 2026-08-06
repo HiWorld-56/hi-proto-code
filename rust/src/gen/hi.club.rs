@@ -1128,9 +1128,15 @@ pub mod source_client {
     /// 所以这里也**不校验 url 属于哪个桶**:调用方拿临时桶的 url 去设群头像,
     /// 顶多是自己的图 14 天后失效,伤不到别人。
     ///
-    /// ⚠️ **用户头像不在这里** —— 头像归 hidid 管,直接调 `hi.did.Source.UploadAvatar`。
-    /// club 原先的 `User.UploadAvatar` 只是一层转发,拆开后与群头像撞名,故删掉转发。
-    /// 本 service 的 `UploadAvatar` 指的是**群头像**(club 自己的实体只有群有头像)。
+    /// ⚠️ **club 前端只调 club 的方法** —— 这是硬约束,不是偏好:app 侧的 core 只持有一条
+    /// hiclub 通道,`hi.did.*` 它够不着。所以凡是 club 前端要用的搬运口,这里都得有一个,
+    /// 哪怕实现只是转发。曾经把用户头像"指路"到 `hi.did.Source.UploadAvatar`,
+    /// 结果是前端根本调不动 —— 别再犯。
+    ///
+    /// ```text
+    /// 命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
+    /// 群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
+    /// ```
     #[derive(Debug, Clone)]
     pub struct SourceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1211,7 +1217,11 @@ pub mod source_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+        /// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
+        ///
+        /// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
+        /// 同一个用户从 hidid 端传、还是从 hiclub 端传,该落同一处 —— 否则一份头像两边各存一份,
+        /// 而"权威在哪"这个问题会随入口漂移。加载端只认 url,存哪儿对它透明。
         pub async fn upload_avatar(
             &mut self,
             request: impl tonic::IntoRequest<super::super::UploadReq>,
@@ -1236,7 +1246,8 @@ pub mod source_client {
                 .insert(GrpcMethod::new("hi.club.Source", "UploadAvatar"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn upload_background(
+        /// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+        pub async fn upload_group_avatar(
             &mut self,
             request: impl tonic::IntoRequest<super::super::UploadReq>,
         ) -> std::result::Result<
@@ -1253,11 +1264,35 @@ pub mod source_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Source/UploadBackground",
+                "/hi.club.Source/UploadGroupAvatar",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Source", "UploadBackground"));
+                .insert(GrpcMethod::new("hi.club.Source", "UploadGroupAvatar"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn upload_group_background(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadGroupBackground",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadGroupBackground"));
             self.inner.unary(req, path, codec).await
         }
         /// Download 按 url 取**公开桶**媒体(聊天/AI 媒体)。给 brain 这类没有浏览器、
@@ -4064,7 +4099,8 @@ pub mod group_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 群资源 → hiclub bucket(avatar/ 与 background/)。只回 url;写进群信息仍走 Update。
+        /// 群头像/群背景传 `Source.UploadGroupAvatar` / `UploadGroupBackground`(→ hiclub bucket)。
+        /// 那两个只回 url;把 url 写进群信息仍走本 service 的 Update —— 权限校验在那一步。
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGroupReq>,
@@ -4627,11 +4663,7 @@ pub mod user_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 传客户端日志 → log bucket 的 HiClub/,对象名固定为 <did>.log(**同一设备覆盖同一对象**)。
-        ///
-        /// 原先客户端是**直连 hi-source 的 File.Upload(type=log)**,免鉴权、在公网可达 ——
-        /// 现在收归模块转发,顺带给日志上传加上了鉴权(之前是裸奔的)。
-        /// did 取自 token,**不接受入参指定**:否则可以覆盖别人的日志。
+        /// 头像与日志的上传口都已搬到 `Source`(UploadAvatar / UploadLog),此处不再有。
         pub async fn get_current(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,

@@ -36,9 +36,13 @@ export 'source.pb.dart';
 ///    所以这里也**不校验 url 属于哪个桶**:调用方拿临时桶的 url 去设群头像,
 ///    顶多是自己的图 14 天后失效,伤不到别人。
 ///
-/// ⚠️ **用户头像不在这里** —— 头像归 hidid 管,直接调 `hi.did.Source.UploadAvatar`。
-///    club 原先的 `User.UploadAvatar` 只是一层转发,拆开后与群头像撞名,故删掉转发。
-///    本 service 的 `UploadAvatar` 指的是**群头像**(club 自己的实体只有群有头像)。
+/// ⚠️ **club 前端只调 club 的方法** —— 这是硬约束,不是偏好:app 侧的 core 只持有一条
+///    hiclub 通道,`hi.did.*` 它够不着。所以凡是 club 前端要用的搬运口,这里都得有一个,
+///    哪怕实现只是转发。曾经把用户头像"指路"到 `hi.did.Source.UploadAvatar`,
+///    结果是前端根本调不动 —— 别再犯。
+///
+///    命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
+///    群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
 @$pb.GrpcServiceName('hi.club.Source')
 class SourceClient extends $grpc.Client {
   /// The hostname for this service.
@@ -51,7 +55,11 @@ class SourceClient extends $grpc.Client {
 
   SourceClient(super.channel, {super.options, super.interceptors});
 
-  /// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+  /// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
+  ///
+  /// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
+  /// 同一个用户从 hidid 端传、还是从 hiclub 端传,该落同一处 —— 否则一份头像两边各存一份,
+  /// 而"权威在哪"这个问题会随入口漂移。加载端只认 url,存哪儿对它透明。
   $grpc.ResponseFuture<$0.UploadResp> uploadAvatar(
     $0.UploadReq request, {
     $grpc.CallOptions? options,
@@ -59,11 +67,19 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$uploadAvatar, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.UploadResp> uploadBackground(
+  /// ── 永久公开:club 自己的桶(hiclub)。只回 url,写进群信息仍走 Group.Update ──
+  $grpc.ResponseFuture<$0.UploadResp> uploadGroupAvatar(
     $0.UploadReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$uploadBackground, request, options: options);
+    return $createUnaryCall(_$uploadGroupAvatar, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.UploadResp> uploadGroupBackground(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadGroupBackground, request, options: options);
   }
 
   /// Download 按 url 取**公开桶**媒体(聊天/AI 媒体)。给 brain 这类没有浏览器、
@@ -193,9 +209,14 @@ class SourceClient extends $grpc.Client {
       '/hi.club.Source/UploadAvatar',
       ($0.UploadReq value) => value.writeToBuffer(),
       $0.UploadResp.fromBuffer);
-  static final _$uploadBackground =
+  static final _$uploadGroupAvatar =
       $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
-          '/hi.club.Source/UploadBackground',
+          '/hi.club.Source/UploadGroupAvatar',
+          ($0.UploadReq value) => value.writeToBuffer(),
+          $0.UploadResp.fromBuffer);
+  static final _$uploadGroupBackground =
+      $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+          '/hi.club.Source/UploadGroupBackground',
           ($0.UploadReq value) => value.writeToBuffer(),
           $0.UploadResp.fromBuffer);
   static final _$download =
@@ -273,8 +294,15 @@ abstract class SourceServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
         ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
-        'UploadBackground',
-        uploadBackground_Pre,
+        'UploadGroupAvatar',
+        uploadGroupAvatar_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadGroupBackground',
+        uploadGroupBackground_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
@@ -384,12 +412,20 @@ abstract class SourceServiceBase extends $grpc.Service {
   $async.Future<$0.UploadResp> uploadAvatar(
       $grpc.ServiceCall call, $0.UploadReq request);
 
-  $async.Future<$0.UploadResp> uploadBackground_Pre(
+  $async.Future<$0.UploadResp> uploadGroupAvatar_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
-    return uploadBackground($call, await $request);
+    return uploadGroupAvatar($call, await $request);
   }
 
-  $async.Future<$0.UploadResp> uploadBackground(
+  $async.Future<$0.UploadResp> uploadGroupAvatar(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadGroupBackground_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadGroupBackground($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadGroupBackground(
       $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$1.DownloadResourceResp> download_Pre($grpc.ServiceCall $call,
