@@ -4595,7 +4595,7 @@ pub struct ReleaseFile {
 /// 且下载 url 是 `Latest` 每次现算的预签名(有期限),不该固化进 manifest。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReleaseBundle {
-    /// minio 内的对象键
+    /// **product 桶内**的对象键(不含桶名),如 hinj/linux-aarch64/0.0.9/hinj_bundle_0.0.9.tar.gz
     #[prost(string, tag = "1")]
     pub path: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]

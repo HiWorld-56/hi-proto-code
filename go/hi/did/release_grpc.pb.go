@@ -14,8 +14,9 @@
 //
 // ## 存储布局(minio,**私有桶**)
 //
-//   product/<product>/<platform>/latest.json          ← 每个平台一份,发布时整体覆盖
-//   product/<product>/<platform>/<version>/<包文件>    ← 按版本留多份,不删
+//   桶固定为 `product`,下面的都是**桶内对象键**(不含桶名):
+//     <product>/<platform>/latest.json          ← 每个平台一份,发布时整体覆盖
+//     <product>/<platform>/<version>/<包文件>    ← 按版本留多份,不删
 //
 // 按 platform 分目录:安卓发了 iOS 还在审核,发布节奏本就不同步,
 // 塞一份 json 里迟早互相覆盖。

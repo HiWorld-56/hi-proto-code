@@ -71,6 +71,13 @@ class FileClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.PresignedUrlResp> presignedUrl(
+    $0.PresignedUrlReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$presignedUrl, request, options: options);
+  }
+
   // method descriptors
 
   static final _$put = $grpc.ClientMethod<$0.PutReq, $0.PutResp>(
@@ -94,6 +101,11 @@ class FileClient extends $grpc.Client {
       '/hi.source.File/Delete',
       ($0.DeleteReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$presignedUrl =
+      $grpc.ClientMethod<$0.PresignedUrlReq, $0.PresignedUrlResp>(
+          '/hi.source.File/PresignedUrl',
+          ($0.PresignedUrlReq value) => value.writeToBuffer(),
+          $0.PresignedUrlResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.source.File')
@@ -136,6 +148,13 @@ abstract class FileServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.DeleteReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PresignedUrlReq, $0.PresignedUrlResp>(
+        'PresignedUrl',
+        presignedUrl_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PresignedUrlReq.fromBuffer(value),
+        ($0.PresignedUrlResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.PutResp> put_Pre(
@@ -171,6 +190,14 @@ abstract class FileServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.Empty> delete($grpc.ServiceCall call, $0.DeleteReq request);
+
+  $async.Future<$0.PresignedUrlResp> presignedUrl_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PresignedUrlReq> $request) async {
+    return presignedUrl($call, await $request);
+  }
+
+  $async.Future<$0.PresignedUrlResp> presignedUrl(
+      $grpc.ServiceCall call, $0.PresignedUrlReq request);
 }
 
 @$pb.GrpcServiceName('hi.source.Base')

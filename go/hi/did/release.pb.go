@@ -14,8 +14,9 @@
 //
 // ## 存储布局(minio,**私有桶**)
 //
-//   product/<product>/<platform>/latest.json          ← 每个平台一份,发布时整体覆盖
-//   product/<product>/<platform>/<version>/<包文件>    ← 按版本留多份,不删
+//   桶固定为 `product`,下面的都是**桶内对象键**(不含桶名):
+//     <product>/<platform>/latest.json          ← 每个平台一份,发布时整体覆盖
+//     <product>/<platform>/<version>/<包文件>    ← 按版本留多份,不删
 //
 // 按 platform 分目录:安卓发了 iOS 还在审核,发布节奏本就不同步,
 // 塞一份 json 里迟早互相覆盖。
@@ -143,7 +144,7 @@ func (x *ReleaseFile) GetPolicy() string {
 // 且下载 url 是 `Latest` 每次现算的预签名(有期限),不该固化进 manifest。
 type ReleaseBundle struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Path          string                 `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"` // minio 内的对象键
+	Path          string                 `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"` // **product 桶内**的对象键(不含桶名),如 hinj/linux-aarch64/0.0.9/hinj_bundle_0.0.9.tar.gz
 	Sha256        string                 `protobuf:"bytes,2,opt,name=sha256,proto3" json:"sha256,omitempty"`
 	Size          int64                  `protobuf:"varint,3,opt,name=size,proto3" json:"size,omitempty"`
 	unknownFields protoimpl.UnknownFields

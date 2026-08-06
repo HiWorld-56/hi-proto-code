@@ -197,3 +197,35 @@ const DeleteReq$json = {
 /// Descriptor for `DeleteReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteReqDescriptor = $convert.base64Decode(
     'CglEZWxldGVSZXESHgoDdXJsGAEgASgJQgy6SAlyBzIFXlxTKyRSA3VybA==');
+
+@$core.Deprecated('Use presignedUrlReqDescriptor instead')
+const PresignedUrlReq$json = {
+  '1': 'PresignedUrlReq',
+  '2': [
+    {'1': 'bucket', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'bucket'},
+    {'1': 'object', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'object'},
+    {'1': 'expire_seconds', '3': 3, '4': 1, '5': 3, '10': 'expireSeconds'},
+    {'1': 'filename', '3': 4, '4': 1, '5': 9, '10': 'filename'},
+  ],
+};
+
+/// Descriptor for `PresignedUrlReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List presignedUrlReqDescriptor = $convert.base64Decode(
+    'Cg9QcmVzaWduZWRVcmxSZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2tldB'
+    'IkCgZvYmplY3QYAiABKAlCDLpICXIHMgVeXFMrJFIGb2JqZWN0EiUKDmV4cGlyZV9zZWNvbmRz'
+    'GAMgASgDUg1leHBpcmVTZWNvbmRzEhoKCGZpbGVuYW1lGAQgASgJUghmaWxlbmFtZQ==');
+
+@$core.Deprecated('Use presignedUrlRespDescriptor instead')
+const PresignedUrlResp$json = {
+  '1': 'PresignedUrlResp',
+  '2': [
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+    {'1': 'expire_at', '3': 2, '4': 1, '5': 3, '8': {}, '10': 'expireAt'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `PresignedUrlResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List presignedUrlRespDescriptor = $convert.base64Decode(
+    'ChBQcmVzaWduZWRVcmxSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiEKCWV4cGlyZV9hdB'
+    'gCIAEoA0IEkLUYAVIIZXhwaXJlQXQ6BJi1GAE=');

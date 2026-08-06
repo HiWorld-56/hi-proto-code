@@ -26,6 +26,7 @@ const (
 	File_Download_FullMethodName       = "/hi.source.File/Download"
 	File_DownloadStream_FullMethodName = "/hi.source.File/DownloadStream"
 	File_Delete_FullMethodName         = "/hi.source.File/Delete"
+	File_PresignedUrl_FullMethodName   = "/hi.source.File/PresignedUrl"
 )
 
 // FileClient is the client API for File service.
@@ -37,6 +38,7 @@ type FileClient interface {
 	Download(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownloadResp, error)
 	DownloadStream(ctx context.Context, in *DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadStreamResp], error)
 	Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PresignedUrl(ctx context.Context, in *PresignedUrlReq, opts ...grpc.CallOption) (*PresignedUrlResp, error)
 }
 
 type fileClient struct {
@@ -109,6 +111,16 @@ func (c *fileClient) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *fileClient) PresignedUrl(ctx context.Context, in *PresignedUrlReq, opts ...grpc.CallOption) (*PresignedUrlResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PresignedUrlResp)
+	err := c.cc.Invoke(ctx, File_PresignedUrl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileServer is the server API for File service.
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
@@ -118,6 +130,7 @@ type FileServer interface {
 	Download(context.Context, *DownloadReq) (*DownloadResp, error)
 	DownloadStream(*DownloadStreamReq, grpc.ServerStreamingServer[DownloadStreamResp]) error
 	Delete(context.Context, *DeleteReq) (*emptypb.Empty, error)
+	PresignedUrl(context.Context, *PresignedUrlReq) (*PresignedUrlResp, error)
 }
 
 // UnimplementedFileServer should be embedded to have
@@ -141,6 +154,9 @@ func (UnimplementedFileServer) DownloadStream(*DownloadStreamReq, grpc.ServerStr
 }
 func (UnimplementedFileServer) Delete(context.Context, *DeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedFileServer) PresignedUrl(context.Context, *PresignedUrlReq) (*PresignedUrlResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method PresignedUrl not implemented")
 }
 func (UnimplementedFileServer) testEmbeddedByValue() {}
 
@@ -234,6 +250,24 @@ func _File_Delete_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _File_PresignedUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PresignedUrlReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServer).PresignedUrl(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: File_PresignedUrl_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServer).PresignedUrl(ctx, req.(*PresignedUrlReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // File_ServiceDesc is the grpc.ServiceDesc for File service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -252,6 +286,10 @@ var File_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _File_Delete_Handler,
+		},
+		{
+			MethodName: "PresignedUrl",
+			Handler:    _File_PresignedUrl_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

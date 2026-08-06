@@ -738,6 +738,169 @@ class DeleteReq extends $pb.GeneratedMessage {
   void clearUrl() => $_clearField(1);
 }
 
+/// 预签名下载 url:给**私有桶**开一个限期、只针对单个对象的公开链接。
+///
+/// 用途:官网/浏览器/系统下载器要的是一个普通 http 链接,拿不了 grpc,也不该持有 minio 凭据。
+/// 桶保持私有(直连 403),签名参数写死了"哪个对象、什么方法、多久内有效",到期自动失效。
+/// **凭据只留在本服务**,调用方(主服务)只拿回一串 url。
+class PresignedUrlReq extends $pb.GeneratedMessage {
+  factory PresignedUrlReq({
+    $core.String? bucket,
+    $core.String? object,
+    $fixnum.Int64? expireSeconds,
+    $core.String? filename,
+  }) {
+    final result = create();
+    if (bucket != null) result.bucket = bucket;
+    if (object != null) result.object = object;
+    if (expireSeconds != null) result.expireSeconds = expireSeconds;
+    if (filename != null) result.filename = filename;
+    return result;
+  }
+
+  PresignedUrlReq._();
+
+  factory PresignedUrlReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PresignedUrlReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PresignedUrlReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'bucket')
+    ..aOS(2, _omitFieldNames ? '' : 'object')
+    ..aInt64(3, _omitFieldNames ? '' : 'expireSeconds')
+    ..aOS(4, _omitFieldNames ? '' : 'filename')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PresignedUrlReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PresignedUrlReq copyWith(void Function(PresignedUrlReq) updates) =>
+      super.copyWith((message) => updates(message as PresignedUrlReq))
+          as PresignedUrlReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PresignedUrlReq create() => PresignedUrlReq._();
+  @$core.override
+  PresignedUrlReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PresignedUrlReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PresignedUrlReq>(create);
+  static PresignedUrlReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get bucket => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set bucket($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBucket() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBucket() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get object => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set object($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasObject() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearObject() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get expireSeconds => $_getI64(2);
+  @$pb.TagNumber(3)
+  set expireSeconds($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasExpireSeconds() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearExpireSeconds() => $_clearField(3);
+
+  /// 可选:覆盖下载时的文件名(response-content-disposition)。
+  /// 发布包用得上 —— url 固定为 /dl/hidid.apk,却要让用户存下 hidid-0.0.9.apk。
+  @$pb.TagNumber(4)
+  $core.String get filename => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set filename($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFilename() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFilename() => $_clearField(4);
+}
+
+class PresignedUrlResp extends $pb.GeneratedMessage {
+  factory PresignedUrlResp({
+    $core.String? url,
+    $fixnum.Int64? expireAt,
+  }) {
+    final result = create();
+    if (url != null) result.url = url;
+    if (expireAt != null) result.expireAt = expireAt;
+    return result;
+  }
+
+  PresignedUrlResp._();
+
+  factory PresignedUrlResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PresignedUrlResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PresignedUrlResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..aInt64(2, _omitFieldNames ? '' : 'expireAt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PresignedUrlResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PresignedUrlResp copyWith(void Function(PresignedUrlResp) updates) =>
+      super.copyWith((message) => updates(message as PresignedUrlResp))
+          as PresignedUrlResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PresignedUrlResp create() => PresignedUrlResp._();
+  @$core.override
+  PresignedUrlResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PresignedUrlResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PresignedUrlResp>(create);
+  static PresignedUrlResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get url => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set url($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUrl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUrl() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get expireAt => $_getI64(1);
+  @$pb.TagNumber(2)
+  set expireAt($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasExpireAt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearExpireAt() => $_clearField(2);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

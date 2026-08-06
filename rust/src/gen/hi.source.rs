@@ -121,6 +121,35 @@ pub struct DeleteReq {
     #[prost(string, tag = "1")]
     pub url: ::prost::alloc::string::String,
 }
+/// 预签名下载 url:给**私有桶**开一个限期、只针对单个对象的公开链接。
+///
+/// 用途:官网/浏览器/系统下载器要的是一个普通 http 链接,拿不了 grpc,也不该持有 minio 凭据。
+/// 桶保持私有(直连 403),签名参数写死了"哪个对象、什么方法、多久内有效",到期自动失效。
+/// **凭据只留在本服务**,调用方(主服务)只拿回一串 url。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PresignedUrlReq {
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    /// 桶内对象键(不含桶名)
+    #[prost(string, tag = "2")]
+    pub object: ::prost::alloc::string::String,
+    /// 有效期;\<=0 用服务端默认
+    #[prost(int64, tag = "3")]
+    pub expire_seconds: i64,
+    /// 可选:覆盖下载时的文件名(response-content-disposition)。
+    /// 发布包用得上 —— url 固定为 /dl/hidid.apk,却要让用户存下 hidid-0.0.9.apk。
+    #[prost(string, tag = "4")]
+    pub filename: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PresignedUrlResp {
+    /// 带签名参数的完整 url,谁拿到都能下,到期即失效
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+    /// 失效时刻(unix 秒),调用方据此决定要不要重新要一个
+    #[prost(int64, tag = "2")]
+    pub expire_at: i64,
+}
 /// 对象命名方式。
 ///
 /// ⚠️ **红线**:公开 bucket 的用户内容一律用 NAME_RANDOM。那些 bucket 的安全性正是靠
@@ -343,6 +372,30 @@ pub mod file_client {
             let path = http::uri::PathAndQuery::from_static("/hi.source.File/Delete");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn presigned_url(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PresignedUrlReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::PresignedUrlResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.source.File/PresignedUrl",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.source.File", "PresignedUrl"));
             self.inner.unary(req, path, codec).await
         }
     }
