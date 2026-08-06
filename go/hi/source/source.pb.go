@@ -783,6 +783,273 @@ func (x *PresignedUrlResp) GetExpireAt() int64 {
 	return 0
 }
 
+// 按 **bucket+对象键** 直接取/查,不经 url。
+//
+// 既有的 Download/Delete 都从 url 反解 bucket+object —— 那是给"手里只有 url"的调用方用的。
+// 而发布模块手里本来就是对象键(latest.json、包路径),再去拼一个 url 让对方反解回来,
+// 等于让调用方复制一份 url 拼装规则,base 一改两边就散。
+type GetObjectReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetObjectReq) Reset() {
+	*x = GetObjectReq{}
+	mi := &file_hi_source_source_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetObjectReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetObjectReq) ProtoMessage() {}
+
+func (x *GetObjectReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetObjectReq.ProtoReflect.Descriptor instead.
+func (*GetObjectReq) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetObjectReq) GetBucket() string {
+	if x != nil {
+		return x.Bucket
+	}
+	return ""
+}
+
+func (x *GetObjectReq) GetObject() string {
+	if x != nil {
+		return x.Object
+	}
+	return ""
+}
+
+type GetObjectResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetObjectResp) Reset() {
+	*x = GetObjectResp{}
+	mi := &file_hi_source_source_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetObjectResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetObjectResp) ProtoMessage() {}
+
+func (x *GetObjectResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetObjectResp.ProtoReflect.Descriptor instead.
+func (*GetObjectResp) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetObjectResp) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+type PutObjectReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"` // **精确对象键**,不改名
+	Content       []byte                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutObjectReq) Reset() {
+	*x = PutObjectReq{}
+	mi := &file_hi_source_source_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutObjectReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutObjectReq) ProtoMessage() {}
+
+func (x *PutObjectReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutObjectReq.ProtoReflect.Descriptor instead.
+func (*PutObjectReq) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *PutObjectReq) GetBucket() string {
+	if x != nil {
+		return x.Bucket
+	}
+	return ""
+}
+
+func (x *PutObjectReq) GetObject() string {
+	if x != nil {
+		return x.Object
+	}
+	return ""
+}
+
+func (x *PutObjectReq) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
+// "manifest 里写的 sha256 与真正传上去的包是否一致"。
+type ObjectInfoReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ObjectInfoReq) Reset() {
+	*x = ObjectInfoReq{}
+	mi := &file_hi_source_source_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ObjectInfoReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ObjectInfoReq) ProtoMessage() {}
+
+func (x *ObjectInfoReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ObjectInfoReq.ProtoReflect.Descriptor instead.
+func (*ObjectInfoReq) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ObjectInfoReq) GetBucket() string {
+	if x != nil {
+		return x.Bucket
+	}
+	return ""
+}
+
+func (x *ObjectInfoReq) GetObject() string {
+	if x != nil {
+		return x.Object
+	}
+	return ""
+}
+
+type ObjectInfoResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Size          int64                  `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`
+	Sha256        string                 `protobuf:"bytes,2,opt,name=sha256,proto3" json:"sha256,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ObjectInfoResp) Reset() {
+	*x = ObjectInfoResp{}
+	mi := &file_hi_source_source_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ObjectInfoResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ObjectInfoResp) ProtoMessage() {}
+
+func (x *ObjectInfoResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_source_source_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ObjectInfoResp.ProtoReflect.Descriptor instead.
+func (*ObjectInfoResp) Descriptor() ([]byte, []int) {
+	return file_hi_source_source_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *ObjectInfoResp) GetSize() int64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *ObjectInfoResp) GetSha256() string {
+	if x != nil {
+		return x.Sha256
+	}
+	return ""
+}
+
 var File_hi_source_source_proto protoreflect.FileDescriptor
 
 const file_hi_source_source_proto_rawDesc = "" +
@@ -832,18 +1099,37 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\bfilename\x18\x04 \x01(\tR\bfilename\"S\n" +
 	"\x10PresignedUrlResp\x12\x16\n" +
 	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12!\n" +
-	"\texpire_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\bexpireAt:\x04\x98\xb5\x18\x01*>\n" +
+	"\texpire_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\bexpireAt:\x04\x98\xb5\x18\x01\"Z\n" +
+	"\fGetObjectReq\x12$\n" +
+	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
+	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\"5\n" +
+	"\rGetObjectResp\x12\x1e\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x02R\acontent:\x04\x98\xb5\x18\x02\"t\n" +
+	"\fPutObjectReq\x12$\n" +
+	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
+	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\fR\acontent\"[\n" +
+	"\rObjectInfoReq\x12$\n" +
+	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
+	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\"N\n" +
+	"\x0eObjectInfoResp\x12\x18\n" +
+	"\x04size\x18\x01 \x01(\x03B\x04\x90\xb5\x18\x02R\x04size\x12\x1c\n" +
+	"\x06sha256\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x06sha256:\x04\x98\xb5\x18\x02*>\n" +
 	"\bNameMode\x12\x0f\n" +
 	"\vNAME_RANDOM\x10\x00\x12\x12\n" +
 	"\x0eNAME_TIMESTAMP\x10\x01\x12\r\n" +
-	"\tNAME_KEEP\x10\x022\xa9\x03\n" +
+	"\tNAME_KEEP\x10\x022\xff\x04\n" +
 	"\x04File\x123\n" +
 	"\x03Put\x12\x11.hi.source.PutReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
 	"\tPutStream\x12\x17.hi.source.PutStreamReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12B\n" +
 	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
 	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x05\x8a\xb5\x18\x01\x010\x01\x12=\n" +
 	"\x06Delete\x12\x14.hi.source.DeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x12N\n" +
-	"\fPresignedUrl\x12\x1a.hi.source.PresignedUrlReq\x1a\x1b.hi.source.PresignedUrlResp\"\x05\x8a\xb5\x18\x01\x012M\n" +
+	"\fPresignedUrl\x12\x1a.hi.source.PresignedUrlReq\x1a\x1b.hi.source.PresignedUrlResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
+	"\tGetObject\x12\x17.hi.source.GetObjectReq\x1a\x18.hi.source.GetObjectResp\"\x05\x8a\xb5\x18\x01\x01\x12C\n" +
+	"\tPutObject\x12\x17.hi.source.PutObjectReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x12H\n" +
+	"\n" +
+	"ObjectInfo\x12\x18.hi.source.ObjectInfoReq\x1a\x19.hi.source.ObjectInfoResp\"\x05\x8a\xb5\x18\x01\x012M\n" +
 	"\x04Base\x12E\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01B\x8e\x01\n" +
 	"\rcom.hi.sourceB\vSourceProtoP\x01Z+github.com/HiWorld-56/hi-proto/go/hi/source\xa2\x02\x03HSX\xaa\x02\tHi.Source\xca\x02\tHi\\Source\xe2\x02\x15Hi\\Source\\GPBMetadata\xea\x02\n" +
@@ -862,7 +1148,7 @@ func file_hi_source_source_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_source_source_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_hi_source_source_proto_goTypes = []any{
 	(NameMode)(0),                // 0: hi.source.NameMode
 	(*DownloadReq)(nil),          // 1: hi.source.DownloadReq
@@ -876,8 +1162,13 @@ var file_hi_source_source_proto_goTypes = []any{
 	(*DeleteReq)(nil),            // 9: hi.source.DeleteReq
 	(*PresignedUrlReq)(nil),      // 10: hi.source.PresignedUrlReq
 	(*PresignedUrlResp)(nil),     // 11: hi.source.PresignedUrlResp
-	(*emptypb.Empty)(nil),        // 12: google.protobuf.Empty
-	(*hi.ServerVersionResp)(nil), // 13: hi.ServerVersionResp
+	(*GetObjectReq)(nil),         // 12: hi.source.GetObjectReq
+	(*GetObjectResp)(nil),        // 13: hi.source.GetObjectResp
+	(*PutObjectReq)(nil),         // 14: hi.source.PutObjectReq
+	(*ObjectInfoReq)(nil),        // 15: hi.source.ObjectInfoReq
+	(*ObjectInfoResp)(nil),       // 16: hi.source.ObjectInfoResp
+	(*emptypb.Empty)(nil),        // 17: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil), // 18: hi.ServerVersionResp
 }
 var file_hi_source_source_proto_depIdxs = []int32{
 	0,  // 0: hi.source.PutReq.name_mode:type_name -> hi.source.NameMode
@@ -888,16 +1179,22 @@ var file_hi_source_source_proto_depIdxs = []int32{
 	4,  // 5: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
 	9,  // 6: hi.source.File.Delete:input_type -> hi.source.DeleteReq
 	10, // 7: hi.source.File.PresignedUrl:input_type -> hi.source.PresignedUrlReq
-	12, // 8: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
-	6,  // 9: hi.source.File.Put:output_type -> hi.source.PutResp
-	6,  // 10: hi.source.File.PutStream:output_type -> hi.source.PutResp
-	2,  // 11: hi.source.File.Download:output_type -> hi.source.DownloadResp
-	3,  // 12: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	12, // 13: hi.source.File.Delete:output_type -> google.protobuf.Empty
-	11, // 14: hi.source.File.PresignedUrl:output_type -> hi.source.PresignedUrlResp
-	13, // 15: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	9,  // [9:16] is the sub-list for method output_type
-	2,  // [2:9] is the sub-list for method input_type
+	12, // 8: hi.source.File.GetObject:input_type -> hi.source.GetObjectReq
+	14, // 9: hi.source.File.PutObject:input_type -> hi.source.PutObjectReq
+	15, // 10: hi.source.File.ObjectInfo:input_type -> hi.source.ObjectInfoReq
+	17, // 11: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
+	6,  // 12: hi.source.File.Put:output_type -> hi.source.PutResp
+	6,  // 13: hi.source.File.PutStream:output_type -> hi.source.PutResp
+	2,  // 14: hi.source.File.Download:output_type -> hi.source.DownloadResp
+	3,  // 15: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
+	17, // 16: hi.source.File.Delete:output_type -> google.protobuf.Empty
+	11, // 17: hi.source.File.PresignedUrl:output_type -> hi.source.PresignedUrlResp
+	13, // 18: hi.source.File.GetObject:output_type -> hi.source.GetObjectResp
+	17, // 19: hi.source.File.PutObject:output_type -> google.protobuf.Empty
+	16, // 20: hi.source.File.ObjectInfo:output_type -> hi.source.ObjectInfoResp
+	18, // 21: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	12, // [12:22] is the sub-list for method output_type
+	2,  // [2:12] is the sub-list for method input_type
 	2,  // [2:2] is the sub-list for extension type_name
 	2,  // [2:2] is the sub-list for extension extendee
 	0,  // [0:2] is the sub-list for field type_name
@@ -919,7 +1216,7 @@ func file_hi_source_source_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_source_source_proto_rawDesc), len(file_hi_source_source_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   11,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

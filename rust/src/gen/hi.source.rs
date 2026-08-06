@@ -150,6 +150,49 @@ pub struct PresignedUrlResp {
     #[prost(int64, tag = "2")]
     pub expire_at: i64,
 }
+/// 按 **bucket+对象键** 直接取/查,不经 url。
+///
+/// 既有的 Download/Delete 都从 url 反解 bucket+object —— 那是给"手里只有 url"的调用方用的。
+/// 而发布模块手里本来就是对象键(latest.json、包路径),再去拼一个 url 让对方反解回来,
+/// 等于让调用方复制一份 url 拼装规则,base 一改两边就散。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetObjectReq {
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub object: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetObjectResp {
+    #[prost(bytes = "vec", tag = "1")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PutObjectReq {
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    /// **精确对象键**,不改名
+    #[prost(string, tag = "2")]
+    pub object: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", tag = "3")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
+}
+/// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
+/// "manifest 里写的 sha256 与真正传上去的包是否一致"。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectInfoReq {
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub object: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectInfoResp {
+    #[prost(int64, tag = "1")]
+    pub size: i64,
+    #[prost(string, tag = "2")]
+    pub sha256: ::prost::alloc::string::String,
+}
 /// 对象命名方式。
 ///
 /// ⚠️ **红线**:公开 bucket 的用户内容一律用 NAME_RANDOM。那些 bucket 的安全性正是靠
@@ -396,6 +439,62 @@ pub mod file_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.source.File", "PresignedUrl"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_object(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetObjectReq>,
+        ) -> std::result::Result<tonic::Response<super::GetObjectResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.source.File/GetObject");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "GetObject"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn put_object(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PutObjectReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.source.File/PutObject");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "PutObject"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn object_info(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ObjectInfoReq>,
+        ) -> std::result::Result<tonic::Response<super::ObjectInfoResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.source.File/ObjectInfo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.source.File", "ObjectInfo"));
             self.inner.unary(req, path, codec).await
         }
     }

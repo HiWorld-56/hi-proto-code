@@ -566,6 +566,209 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamResp {
         deserializer.deserialize_struct("hi.source.DownloadStreamResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for GetObjectReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.bucket.is_empty() {
+            len += 1;
+        }
+        if !self.object.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.GetObjectReq", len)?;
+        if !self.bucket.is_empty() {
+            struct_ser.serialize_field("bucket", &self.bucket)?;
+        }
+        if !self.object.is_empty() {
+            struct_ser.serialize_field("object", &self.object)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetObjectReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "bucket",
+            "object",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Bucket,
+            Object,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "bucket" => Ok(GeneratedField::Bucket),
+                            "object" => Ok(GeneratedField::Object),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetObjectReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.GetObjectReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetObjectReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut bucket__ = None;
+                let mut object__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Bucket => {
+                            if bucket__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bucket"));
+                            }
+                            bucket__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Object => {
+                            if object__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("object"));
+                            }
+                            object__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(GetObjectReq {
+                    bucket: bucket__.unwrap_or_default(),
+                    object: object__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.GetObjectReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetObjectResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.content.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.GetObjectResp", len)?;
+        if !self.content.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetObjectResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "content",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Content,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "content" => Ok(GeneratedField::Content),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetObjectResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.GetObjectResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetObjectResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut content__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Content => {
+                            if content__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("content"));
+                            }
+                            content__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(GetObjectResp {
+                    content: content__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.GetObjectResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for NameMode {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -638,6 +841,226 @@ impl<'de> serde::Deserialize<'de> for NameMode {
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ObjectInfoReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.bucket.is_empty() {
+            len += 1;
+        }
+        if !self.object.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.ObjectInfoReq", len)?;
+        if !self.bucket.is_empty() {
+            struct_ser.serialize_field("bucket", &self.bucket)?;
+        }
+        if !self.object.is_empty() {
+            struct_ser.serialize_field("object", &self.object)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ObjectInfoReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "bucket",
+            "object",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Bucket,
+            Object,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "bucket" => Ok(GeneratedField::Bucket),
+                            "object" => Ok(GeneratedField::Object),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ObjectInfoReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.ObjectInfoReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ObjectInfoReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut bucket__ = None;
+                let mut object__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Bucket => {
+                            if bucket__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bucket"));
+                            }
+                            bucket__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Object => {
+                            if object__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("object"));
+                            }
+                            object__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ObjectInfoReq {
+                    bucket: bucket__.unwrap_or_default(),
+                    object: object__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.ObjectInfoReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ObjectInfoResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.size != 0 {
+            len += 1;
+        }
+        if !self.sha256.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.ObjectInfoResp", len)?;
+        if self.size != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("size", ToString::to_string(&self.size).as_str())?;
+        }
+        if !self.sha256.is_empty() {
+            struct_ser.serialize_field("sha256", &self.sha256)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ObjectInfoResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "size",
+            "sha256",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Size,
+            Sha256,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "size" => Ok(GeneratedField::Size),
+                            "sha256" => Ok(GeneratedField::Sha256),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ObjectInfoResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.ObjectInfoResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ObjectInfoResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut size__ = None;
+                let mut sha256__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Size => {
+                            if size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("size"));
+                            }
+                            size__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Sha256 => {
+                            if sha256__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sha256"));
+                            }
+                            sha256__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ObjectInfoResp {
+                    size: size__.unwrap_or_default(),
+                    sha256: sha256__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.ObjectInfoResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for PresignedUrlReq {
@@ -1061,6 +1484,135 @@ impl<'de> serde::Deserialize<'de> for PutMeta {
             }
         }
         deserializer.deserialize_struct("hi.source.PutMeta", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PutObjectReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.bucket.is_empty() {
+            len += 1;
+        }
+        if !self.object.is_empty() {
+            len += 1;
+        }
+        if !self.content.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.source.PutObjectReq", len)?;
+        if !self.bucket.is_empty() {
+            struct_ser.serialize_field("bucket", &self.bucket)?;
+        }
+        if !self.object.is_empty() {
+            struct_ser.serialize_field("object", &self.object)?;
+        }
+        if !self.content.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PutObjectReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "bucket",
+            "object",
+            "content",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Bucket,
+            Object,
+            Content,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "bucket" => Ok(GeneratedField::Bucket),
+                            "object" => Ok(GeneratedField::Object),
+                            "content" => Ok(GeneratedField::Content),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PutObjectReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.source.PutObjectReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PutObjectReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut bucket__ = None;
+                let mut object__ = None;
+                let mut content__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Bucket => {
+                            if bucket__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bucket"));
+                            }
+                            bucket__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Object => {
+                            if object__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("object"));
+                            }
+                            object__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Content => {
+                            if content__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("content"));
+                            }
+                            content__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(PutObjectReq {
+                    bucket: bucket__.unwrap_or_default(),
+                    object: object__.unwrap_or_default(),
+                    content: content__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.source.PutObjectReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for PutReq {

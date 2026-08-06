@@ -27,6 +27,9 @@ const (
 	File_DownloadStream_FullMethodName = "/hi.source.File/DownloadStream"
 	File_Delete_FullMethodName         = "/hi.source.File/Delete"
 	File_PresignedUrl_FullMethodName   = "/hi.source.File/PresignedUrl"
+	File_GetObject_FullMethodName      = "/hi.source.File/GetObject"
+	File_PutObject_FullMethodName      = "/hi.source.File/PutObject"
+	File_ObjectInfo_FullMethodName     = "/hi.source.File/ObjectInfo"
 )
 
 // FileClient is the client API for File service.
@@ -39,6 +42,9 @@ type FileClient interface {
 	DownloadStream(ctx context.Context, in *DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadStreamResp], error)
 	Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PresignedUrl(ctx context.Context, in *PresignedUrlReq, opts ...grpc.CallOption) (*PresignedUrlResp, error)
+	GetObject(ctx context.Context, in *GetObjectReq, opts ...grpc.CallOption) (*GetObjectResp, error)
+	PutObject(ctx context.Context, in *PutObjectReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ObjectInfo(ctx context.Context, in *ObjectInfoReq, opts ...grpc.CallOption) (*ObjectInfoResp, error)
 }
 
 type fileClient struct {
@@ -121,6 +127,36 @@ func (c *fileClient) PresignedUrl(ctx context.Context, in *PresignedUrlReq, opts
 	return out, nil
 }
 
+func (c *fileClient) GetObject(ctx context.Context, in *GetObjectReq, opts ...grpc.CallOption) (*GetObjectResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetObjectResp)
+	err := c.cc.Invoke(ctx, File_GetObject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileClient) PutObject(ctx context.Context, in *PutObjectReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, File_PutObject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileClient) ObjectInfo(ctx context.Context, in *ObjectInfoReq, opts ...grpc.CallOption) (*ObjectInfoResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ObjectInfoResp)
+	err := c.cc.Invoke(ctx, File_ObjectInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileServer is the server API for File service.
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
@@ -131,6 +167,9 @@ type FileServer interface {
 	DownloadStream(*DownloadStreamReq, grpc.ServerStreamingServer[DownloadStreamResp]) error
 	Delete(context.Context, *DeleteReq) (*emptypb.Empty, error)
 	PresignedUrl(context.Context, *PresignedUrlReq) (*PresignedUrlResp, error)
+	GetObject(context.Context, *GetObjectReq) (*GetObjectResp, error)
+	PutObject(context.Context, *PutObjectReq) (*emptypb.Empty, error)
+	ObjectInfo(context.Context, *ObjectInfoReq) (*ObjectInfoResp, error)
 }
 
 // UnimplementedFileServer should be embedded to have
@@ -157,6 +196,15 @@ func (UnimplementedFileServer) Delete(context.Context, *DeleteReq) (*emptypb.Emp
 }
 func (UnimplementedFileServer) PresignedUrl(context.Context, *PresignedUrlReq) (*PresignedUrlResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method PresignedUrl not implemented")
+}
+func (UnimplementedFileServer) GetObject(context.Context, *GetObjectReq) (*GetObjectResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetObject not implemented")
+}
+func (UnimplementedFileServer) PutObject(context.Context, *PutObjectReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutObject not implemented")
+}
+func (UnimplementedFileServer) ObjectInfo(context.Context, *ObjectInfoReq) (*ObjectInfoResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ObjectInfo not implemented")
 }
 func (UnimplementedFileServer) testEmbeddedByValue() {}
 
@@ -268,6 +316,60 @@ func _File_PresignedUrl_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _File_GetObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetObjectReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServer).GetObject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: File_GetObject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServer).GetObject(ctx, req.(*GetObjectReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _File_PutObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutObjectReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServer).PutObject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: File_PutObject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServer).PutObject(ctx, req.(*PutObjectReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _File_ObjectInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ObjectInfoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServer).ObjectInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: File_ObjectInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServer).ObjectInfo(ctx, req.(*ObjectInfoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // File_ServiceDesc is the grpc.ServiceDesc for File service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -290,6 +392,18 @@ var File_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PresignedUrl",
 			Handler:    _File_PresignedUrl_Handler,
+		},
+		{
+			MethodName: "GetObject",
+			Handler:    _File_GetObject_Handler,
+		},
+		{
+			MethodName: "PutObject",
+			Handler:    _File_PutObject_Handler,
+		},
+		{
+			MethodName: "ObjectInfo",
+			Handler:    _File_ObjectInfo_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

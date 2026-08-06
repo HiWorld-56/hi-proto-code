@@ -229,3 +229,75 @@ const PresignedUrlResp$json = {
 final $typed_data.Uint8List presignedUrlRespDescriptor = $convert.base64Decode(
     'ChBQcmVzaWduZWRVcmxSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiEKCWV4cGlyZV9hdB'
     'gCIAEoA0IEkLUYAVIIZXhwaXJlQXQ6BJi1GAE=');
+
+@$core.Deprecated('Use getObjectReqDescriptor instead')
+const GetObjectReq$json = {
+  '1': 'GetObjectReq',
+  '2': [
+    {'1': 'bucket', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'bucket'},
+    {'1': 'object', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'object'},
+  ],
+};
+
+/// Descriptor for `GetObjectReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getObjectReqDescriptor = $convert.base64Decode(
+    'CgxHZXRPYmplY3RSZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2tldBIkCg'
+    'ZvYmplY3QYAiABKAlCDLpICXIHMgVeXFMrJFIGb2JqZWN0');
+
+@$core.Deprecated('Use getObjectRespDescriptor instead')
+const GetObjectResp$json = {
+  '1': 'GetObjectResp',
+  '2': [
+    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `GetObjectResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getObjectRespDescriptor = $convert.base64Decode(
+    'Cg1HZXRPYmplY3RSZXNwEh4KB2NvbnRlbnQYASABKAxCBJC1GAJSB2NvbnRlbnQ6BJi1GAI=');
+
+@$core.Deprecated('Use putObjectReqDescriptor instead')
+const PutObjectReq$json = {
+  '1': 'PutObjectReq',
+  '2': [
+    {'1': 'bucket', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'bucket'},
+    {'1': 'object', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'object'},
+    {'1': 'content', '3': 3, '4': 1, '5': 12, '10': 'content'},
+  ],
+};
+
+/// Descriptor for `PutObjectReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putObjectReqDescriptor = $convert.base64Decode(
+    'CgxQdXRPYmplY3RSZXESJAoGYnVja2V0GAEgASgJQgy6SAlyBzIFXlxTKyRSBmJ1Y2tldBIkCg'
+    'ZvYmplY3QYAiABKAlCDLpICXIHMgVeXFMrJFIGb2JqZWN0EhgKB2NvbnRlbnQYAyABKAxSB2Nv'
+    'bnRlbnQ=');
+
+@$core.Deprecated('Use objectInfoReqDescriptor instead')
+const ObjectInfoReq$json = {
+  '1': 'ObjectInfoReq',
+  '2': [
+    {'1': 'bucket', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'bucket'},
+    {'1': 'object', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'object'},
+  ],
+};
+
+/// Descriptor for `ObjectInfoReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List objectInfoReqDescriptor = $convert.base64Decode(
+    'Cg1PYmplY3RJbmZvUmVxEiQKBmJ1Y2tldBgBIAEoCUIMukgJcgcyBV5cUyskUgZidWNrZXQSJA'
+    'oGb2JqZWN0GAIgASgJQgy6SAlyBzIFXlxTKyRSBm9iamVjdA==');
+
+@$core.Deprecated('Use objectInfoRespDescriptor instead')
+const ObjectInfoResp$json = {
+  '1': 'ObjectInfoResp',
+  '2': [
+    {'1': 'size', '3': 1, '4': 1, '5': 3, '8': {}, '10': 'size'},
+    {'1': 'sha256', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'sha256'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ObjectInfoResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List objectInfoRespDescriptor = $convert.base64Decode(
+    'Cg5PYmplY3RJbmZvUmVzcBIYCgRzaXplGAEgASgDQgSQtRgCUgRzaXplEhwKBnNoYTI1NhgCIA'
+    'EoCUIEkLUYAlIGc2hhMjU2OgSYtRgC');

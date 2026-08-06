@@ -78,6 +78,27 @@ class FileClient extends $grpc.Client {
     return $createUnaryCall(_$presignedUrl, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.GetObjectResp> getObject(
+    $0.GetObjectReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getObject, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> putObject(
+    $0.PutObjectReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$putObject, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.ObjectInfoResp> objectInfo(
+    $0.ObjectInfoReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$objectInfo, request, options: options);
+  }
+
   // method descriptors
 
   static final _$put = $grpc.ClientMethod<$0.PutReq, $0.PutResp>(
@@ -106,6 +127,20 @@ class FileClient extends $grpc.Client {
           '/hi.source.File/PresignedUrl',
           ($0.PresignedUrlReq value) => value.writeToBuffer(),
           $0.PresignedUrlResp.fromBuffer);
+  static final _$getObject =
+      $grpc.ClientMethod<$0.GetObjectReq, $0.GetObjectResp>(
+          '/hi.source.File/GetObject',
+          ($0.GetObjectReq value) => value.writeToBuffer(),
+          $0.GetObjectResp.fromBuffer);
+  static final _$putObject = $grpc.ClientMethod<$0.PutObjectReq, $1.Empty>(
+      '/hi.source.File/PutObject',
+      ($0.PutObjectReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$objectInfo =
+      $grpc.ClientMethod<$0.ObjectInfoReq, $0.ObjectInfoResp>(
+          '/hi.source.File/ObjectInfo',
+          ($0.ObjectInfoReq value) => value.writeToBuffer(),
+          $0.ObjectInfoResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.source.File')
@@ -155,6 +190,27 @@ abstract class FileServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.PresignedUrlReq.fromBuffer(value),
         ($0.PresignedUrlResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetObjectReq, $0.GetObjectResp>(
+        'GetObject',
+        getObject_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetObjectReq.fromBuffer(value),
+        ($0.GetObjectResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PutObjectReq, $1.Empty>(
+        'PutObject',
+        putObject_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PutObjectReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ObjectInfoReq, $0.ObjectInfoResp>(
+        'ObjectInfo',
+        objectInfo_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ObjectInfoReq.fromBuffer(value),
+        ($0.ObjectInfoResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.PutResp> put_Pre(
@@ -198,6 +254,30 @@ abstract class FileServiceBase extends $grpc.Service {
 
   $async.Future<$0.PresignedUrlResp> presignedUrl(
       $grpc.ServiceCall call, $0.PresignedUrlReq request);
+
+  $async.Future<$0.GetObjectResp> getObject_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetObjectReq> $request) async {
+    return getObject($call, await $request);
+  }
+
+  $async.Future<$0.GetObjectResp> getObject(
+      $grpc.ServiceCall call, $0.GetObjectReq request);
+
+  $async.Future<$1.Empty> putObject_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.PutObjectReq> $request) async {
+    return putObject($call, await $request);
+  }
+
+  $async.Future<$1.Empty> putObject(
+      $grpc.ServiceCall call, $0.PutObjectReq request);
+
+  $async.Future<$0.ObjectInfoResp> objectInfo_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ObjectInfoReq> $request) async {
+    return objectInfo($call, await $request);
+  }
+
+  $async.Future<$0.ObjectInfoResp> objectInfo(
+      $grpc.ServiceCall call, $0.ObjectInfoReq request);
 }
 
 @$pb.GrpcServiceName('hi.source.Base')

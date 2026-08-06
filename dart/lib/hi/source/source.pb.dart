@@ -901,6 +901,345 @@ class PresignedUrlResp extends $pb.GeneratedMessage {
   void clearExpireAt() => $_clearField(2);
 }
 
+/// 按 **bucket+对象键** 直接取/查,不经 url。
+///
+/// 既有的 Download/Delete 都从 url 反解 bucket+object —— 那是给"手里只有 url"的调用方用的。
+/// 而发布模块手里本来就是对象键(latest.json、包路径),再去拼一个 url 让对方反解回来,
+/// 等于让调用方复制一份 url 拼装规则,base 一改两边就散。
+class GetObjectReq extends $pb.GeneratedMessage {
+  factory GetObjectReq({
+    $core.String? bucket,
+    $core.String? object,
+  }) {
+    final result = create();
+    if (bucket != null) result.bucket = bucket;
+    if (object != null) result.object = object;
+    return result;
+  }
+
+  GetObjectReq._();
+
+  factory GetObjectReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetObjectReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetObjectReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'bucket')
+    ..aOS(2, _omitFieldNames ? '' : 'object')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectReq copyWith(void Function(GetObjectReq) updates) =>
+      super.copyWith((message) => updates(message as GetObjectReq))
+          as GetObjectReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetObjectReq create() => GetObjectReq._();
+  @$core.override
+  GetObjectReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetObjectReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetObjectReq>(create);
+  static GetObjectReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get bucket => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set bucket($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBucket() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBucket() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get object => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set object($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasObject() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearObject() => $_clearField(2);
+}
+
+class GetObjectResp extends $pb.GeneratedMessage {
+  factory GetObjectResp({
+    $core.List<$core.int>? content,
+  }) {
+    final result = create();
+    if (content != null) result.content = content;
+    return result;
+  }
+
+  GetObjectResp._();
+
+  factory GetObjectResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetObjectResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetObjectResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetObjectResp copyWith(void Function(GetObjectResp) updates) =>
+      super.copyWith((message) => updates(message as GetObjectResp))
+          as GetObjectResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetObjectResp create() => GetObjectResp._();
+  @$core.override
+  GetObjectResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetObjectResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetObjectResp>(create);
+  static GetObjectResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get content => $_getN(0);
+  @$pb.TagNumber(1)
+  set content($core.List<$core.int> value) => $_setBytes(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasContent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearContent() => $_clearField(1);
+}
+
+class PutObjectReq extends $pb.GeneratedMessage {
+  factory PutObjectReq({
+    $core.String? bucket,
+    $core.String? object,
+    $core.List<$core.int>? content,
+  }) {
+    final result = create();
+    if (bucket != null) result.bucket = bucket;
+    if (object != null) result.object = object;
+    if (content != null) result.content = content;
+    return result;
+  }
+
+  PutObjectReq._();
+
+  factory PutObjectReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PutObjectReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PutObjectReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'bucket')
+    ..aOS(2, _omitFieldNames ? '' : 'object')
+    ..a<$core.List<$core.int>>(
+        3, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PutObjectReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PutObjectReq copyWith(void Function(PutObjectReq) updates) =>
+      super.copyWith((message) => updates(message as PutObjectReq))
+          as PutObjectReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PutObjectReq create() => PutObjectReq._();
+  @$core.override
+  PutObjectReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PutObjectReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PutObjectReq>(create);
+  static PutObjectReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get bucket => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set bucket($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBucket() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBucket() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get object => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set object($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasObject() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearObject() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.int> get content => $_getN(2);
+  @$pb.TagNumber(3)
+  set content($core.List<$core.int> value) => $_setBytes(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasContent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearContent() => $_clearField(3);
+}
+
+/// 对象元信息。`sha256` 由 hi-source **内部流式算**(字节不出本服务),供发布时核对
+/// "manifest 里写的 sha256 与真正传上去的包是否一致"。
+class ObjectInfoReq extends $pb.GeneratedMessage {
+  factory ObjectInfoReq({
+    $core.String? bucket,
+    $core.String? object,
+  }) {
+    final result = create();
+    if (bucket != null) result.bucket = bucket;
+    if (object != null) result.object = object;
+    return result;
+  }
+
+  ObjectInfoReq._();
+
+  factory ObjectInfoReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ObjectInfoReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ObjectInfoReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'bucket')
+    ..aOS(2, _omitFieldNames ? '' : 'object')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ObjectInfoReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ObjectInfoReq copyWith(void Function(ObjectInfoReq) updates) =>
+      super.copyWith((message) => updates(message as ObjectInfoReq))
+          as ObjectInfoReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ObjectInfoReq create() => ObjectInfoReq._();
+  @$core.override
+  ObjectInfoReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ObjectInfoReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ObjectInfoReq>(create);
+  static ObjectInfoReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get bucket => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set bucket($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBucket() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBucket() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get object => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set object($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasObject() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearObject() => $_clearField(2);
+}
+
+class ObjectInfoResp extends $pb.GeneratedMessage {
+  factory ObjectInfoResp({
+    $fixnum.Int64? size,
+    $core.String? sha256,
+  }) {
+    final result = create();
+    if (size != null) result.size = size;
+    if (sha256 != null) result.sha256 = sha256;
+    return result;
+  }
+
+  ObjectInfoResp._();
+
+  factory ObjectInfoResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ObjectInfoResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ObjectInfoResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.source'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'size')
+    ..aOS(2, _omitFieldNames ? '' : 'sha256')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ObjectInfoResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ObjectInfoResp copyWith(void Function(ObjectInfoResp) updates) =>
+      super.copyWith((message) => updates(message as ObjectInfoResp))
+          as ObjectInfoResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ObjectInfoResp create() => ObjectInfoResp._();
+  @$core.override
+  ObjectInfoResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ObjectInfoResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ObjectInfoResp>(create);
+  static ObjectInfoResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get size => $_getI64(0);
+  @$pb.TagNumber(1)
+  set size($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSize() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSize() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get sha256 => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set sha256($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSha256() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSha256() => $_clearField(2);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =
