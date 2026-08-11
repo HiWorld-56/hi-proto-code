@@ -1501,6 +1501,54 @@ pub mod source_client {
                 .insert(GrpcMethod::new("hi.club.Source", "DownloadScript"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn upload_training_file(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::UploadFileReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadTrainingFile",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadTrainingFile"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn download_training_file(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::DownloadFileReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::DownloadFileResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/DownloadTrainingFile",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "DownloadTrainingFile"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 插件的**展示资源** → hiai/pub/,**公开读**(透传 hi.ai.Source 的同名方法)──
+        /// 图标/简介图是网页 <img src> 直接加载的,不公开读就是 403;它们**不是商户私产**。
+        /// 曾与脚本 zip 混在 hiai/plugin/ 一个前缀,而那个桶不能整个开公开(开了白送源码),故单开 pub/。
         pub async fn upload_logo(
             &mut self,
             request: impl tonic::IntoRequest<super::super::UploadReq>,
@@ -1546,51 +1594,6 @@ pub mod source_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Source", "UploadSummary"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn upload_training_file(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::UploadFileReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Source/UploadTrainingFile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Source", "UploadTrainingFile"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn download_training_file(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::DownloadFileReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::DownloadFileResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Source/DownloadTrainingFile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Source", "DownloadTrainingFile"));
             self.inner.unary(req, path, codec).await
         }
         /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。

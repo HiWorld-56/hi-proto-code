@@ -65,6 +65,18 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$downloadScript, request, options: options);
   }
 
+  $grpc.ResponseFuture<$3.Empty> uploadTrainingFile(
+    $2.UploadFileReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadTrainingFile, request, options: options);
+  }
+
+  /// ── 插件的**展示资源** → hiai/pub/,**公开读** ────────────────────────────
+  /// 图标和简介图是网页上 <img src> 直接加载的,不公开读就是 403。它们**不是商户私产**,
+  /// 分类的依据是"给谁看",不是"都属于插件" —— 曾经和脚本 zip 混在同一个 hiai/plugin/ 前缀里,
+  /// 结果传上去就显示不了;而 hiai 桶又不能整个开公开(开了等于白送脚本源码)。
+  /// 于是单开 pub/ 前缀,minio 只对它放匿名 GetObject。**往这个前缀放东西前先问:任何人都能下载它吗?**
   $grpc.ResponseFuture<$0.UploadResp> uploadLogo(
     $0.UploadReq request, {
     $grpc.CallOptions? options,
@@ -77,13 +89,6 @@ class SourceClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$uploadSummary, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$3.Empty> uploadTrainingFile(
-    $2.UploadFileReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$uploadTrainingFile, request, options: options);
   }
 
   $grpc.ResponseFuture<$2.DownloadFileResp> downloadTrainingFile(
@@ -132,6 +137,11 @@ class SourceClient extends $grpc.Client {
           '/hi.ai.Source/DownloadScript',
           ($1.DownloadScriptReq value) => value.writeToBuffer(),
           $1.DownloadScriptResp.fromBuffer);
+  static final _$uploadTrainingFile =
+      $grpc.ClientMethod<$2.UploadFileReq, $3.Empty>(
+          '/hi.ai.Source/UploadTrainingFile',
+          ($2.UploadFileReq value) => value.writeToBuffer(),
+          $3.Empty.fromBuffer);
   static final _$uploadLogo = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
       '/hi.ai.Source/UploadLogo',
       ($0.UploadReq value) => value.writeToBuffer(),
@@ -141,11 +151,6 @@ class SourceClient extends $grpc.Client {
           '/hi.ai.Source/UploadSummary',
           ($0.UploadReq value) => value.writeToBuffer(),
           $0.UploadResp.fromBuffer);
-  static final _$uploadTrainingFile =
-      $grpc.ClientMethod<$2.UploadFileReq, $3.Empty>(
-          '/hi.ai.Source/UploadTrainingFile',
-          ($2.UploadFileReq value) => value.writeToBuffer(),
-          $3.Empty.fromBuffer);
   static final _$downloadTrainingFile =
       $grpc.ClientMethod<$2.DownloadFileReq, $2.DownloadFileResp>(
           '/hi.ai.Source/DownloadTrainingFile',
@@ -187,6 +192,13 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.DownloadScriptReq.fromBuffer(value),
         ($1.DownloadScriptResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.UploadFileReq, $3.Empty>(
+        'UploadTrainingFile',
+        uploadTrainingFile_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.UploadFileReq.fromBuffer(value),
+        ($3.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadLogo',
         uploadLogo_Pre,
@@ -201,13 +213,6 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
         ($0.UploadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.UploadFileReq, $3.Empty>(
-        'UploadTrainingFile',
-        uploadTrainingFile_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $2.UploadFileReq.fromBuffer(value),
-        ($3.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.DownloadFileReq, $2.DownloadFileResp>(
         'DownloadTrainingFile',
         downloadTrainingFile_Pre,
@@ -251,6 +256,14 @@ abstract class SourceServiceBase extends $grpc.Service {
   $async.Future<$1.DownloadScriptResp> downloadScript(
       $grpc.ServiceCall call, $1.DownloadScriptReq request);
 
+  $async.Future<$3.Empty> uploadTrainingFile_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.UploadFileReq> $request) async {
+    return uploadTrainingFile($call, await $request);
+  }
+
+  $async.Future<$3.Empty> uploadTrainingFile(
+      $grpc.ServiceCall call, $2.UploadFileReq request);
+
   $async.Future<$0.UploadResp> uploadLogo_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
     return uploadLogo($call, await $request);
@@ -266,14 +279,6 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Future<$0.UploadResp> uploadSummary(
       $grpc.ServiceCall call, $0.UploadReq request);
-
-  $async.Future<$3.Empty> uploadTrainingFile_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.UploadFileReq> $request) async {
-    return uploadTrainingFile($call, await $request);
-  }
-
-  $async.Future<$3.Empty> uploadTrainingFile(
-      $grpc.ServiceCall call, $2.UploadFileReq request);
 
   $async.Future<$2.DownloadFileResp> downloadTrainingFile_Pre(
       $grpc.ServiceCall $call,

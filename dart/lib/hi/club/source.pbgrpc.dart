@@ -159,20 +159,6 @@ class SourceClient extends $grpc.Client {
     return $createUnaryCall(_$downloadScript, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.UploadResp> uploadLogo(
-    $0.UploadReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$uploadLogo, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.UploadResp> uploadSummary(
-    $0.UploadReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$uploadSummary, request, options: options);
-  }
-
   $grpc.ResponseFuture<$4.Empty> uploadTrainingFile(
     $3.UploadFileReq request, {
     $grpc.CallOptions? options,
@@ -185,6 +171,23 @@ class SourceClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$downloadTrainingFile, request, options: options);
+  }
+
+  /// ── 插件的**展示资源** → hiai/pub/,**公开读**(透传 hi.ai.Source 的同名方法)──
+  /// 图标/简介图是网页 <img src> 直接加载的,不公开读就是 403;它们**不是商户私产**。
+  /// 曾与脚本 zip 混在 hiai/plugin/ 一个前缀,而那个桶不能整个开公开(开了白送源码),故单开 pub/。
+  $grpc.ResponseFuture<$0.UploadResp> uploadLogo(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadLogo, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.UploadResp> uploadSummary(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadSummary, request, options: options);
   }
 
   /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
@@ -256,15 +259,6 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/DownloadScript',
           ($2.DownloadScriptReq value) => value.writeToBuffer(),
           $2.DownloadScriptResp.fromBuffer);
-  static final _$uploadLogo = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
-      '/hi.club.Source/UploadLogo',
-      ($0.UploadReq value) => value.writeToBuffer(),
-      $0.UploadResp.fromBuffer);
-  static final _$uploadSummary =
-      $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
-          '/hi.club.Source/UploadSummary',
-          ($0.UploadReq value) => value.writeToBuffer(),
-          $0.UploadResp.fromBuffer);
   static final _$uploadTrainingFile =
       $grpc.ClientMethod<$3.UploadFileReq, $4.Empty>(
           '/hi.club.Source/UploadTrainingFile',
@@ -275,6 +269,15 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/DownloadTrainingFile',
           ($3.DownloadFileReq value) => value.writeToBuffer(),
           $3.DownloadFileResp.fromBuffer);
+  static final _$uploadLogo = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+      '/hi.club.Source/UploadLogo',
+      ($0.UploadReq value) => value.writeToBuffer(),
+      $0.UploadResp.fromBuffer);
+  static final _$uploadSummary =
+      $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+          '/hi.club.Source/UploadSummary',
+          ($0.UploadReq value) => value.writeToBuffer(),
+          $0.UploadResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$0.DeleteResourceReq, $4.Empty>(
       '/hi.club.Source/Delete',
       ($0.DeleteResourceReq value) => value.writeToBuffer(),
@@ -367,20 +370,6 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.DownloadScriptReq.fromBuffer(value),
         ($2.DownloadScriptResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
-        'UploadLogo',
-        uploadLogo_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
-        ($0.UploadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
-        'UploadSummary',
-        uploadSummary_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
-        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$3.UploadFileReq, $4.Empty>(
         'UploadTrainingFile',
         uploadTrainingFile_Pre,
@@ -395,6 +384,20 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $3.DownloadFileReq.fromBuffer(value),
         ($3.DownloadFileResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadLogo',
+        uploadLogo_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadSummary',
+        uploadSummary_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteResourceReq, $4.Empty>(
         'Delete',
         delete_Pre,
@@ -484,22 +487,6 @@ abstract class SourceServiceBase extends $grpc.Service {
   $async.Future<$2.DownloadScriptResp> downloadScript(
       $grpc.ServiceCall call, $2.DownloadScriptReq request);
 
-  $async.Future<$0.UploadResp> uploadLogo_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
-    return uploadLogo($call, await $request);
-  }
-
-  $async.Future<$0.UploadResp> uploadLogo(
-      $grpc.ServiceCall call, $0.UploadReq request);
-
-  $async.Future<$0.UploadResp> uploadSummary_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
-    return uploadSummary($call, await $request);
-  }
-
-  $async.Future<$0.UploadResp> uploadSummary(
-      $grpc.ServiceCall call, $0.UploadReq request);
-
   $async.Future<$4.Empty> uploadTrainingFile_Pre(
       $grpc.ServiceCall $call, $async.Future<$3.UploadFileReq> $request) async {
     return uploadTrainingFile($call, await $request);
@@ -516,6 +503,22 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Future<$3.DownloadFileResp> downloadTrainingFile(
       $grpc.ServiceCall call, $3.DownloadFileReq request);
+
+  $async.Future<$0.UploadResp> uploadLogo_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadLogo($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadLogo(
+      $grpc.ServiceCall call, $0.UploadReq request);
+
+  $async.Future<$0.UploadResp> uploadSummary_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadSummary($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadSummary(
+      $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$4.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteResourceReq> $request) async {

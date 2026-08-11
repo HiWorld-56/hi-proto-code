@@ -24,9 +24,9 @@ const (
 	Source_UploadScript_FullMethodName         = "/hi.ai.Source/UploadScript"
 	Source_UploadScriptStream_FullMethodName   = "/hi.ai.Source/UploadScriptStream"
 	Source_DownloadScript_FullMethodName       = "/hi.ai.Source/DownloadScript"
+	Source_UploadTrainingFile_FullMethodName   = "/hi.ai.Source/UploadTrainingFile"
 	Source_UploadLogo_FullMethodName           = "/hi.ai.Source/UploadLogo"
 	Source_UploadSummary_FullMethodName        = "/hi.ai.Source/UploadSummary"
-	Source_UploadTrainingFile_FullMethodName   = "/hi.ai.Source/UploadTrainingFile"
 	Source_DownloadTrainingFile_FullMethodName = "/hi.ai.Source/DownloadTrainingFile"
 	Source_UploadTemp_FullMethodName           = "/hi.ai.Source/UploadTemp"
 	Source_Delete_FullMethodName               = "/hi.ai.Source/Delete"
@@ -49,9 +49,14 @@ type SourceClient interface {
 	UploadScript(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadScriptStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
 	DownloadScript(ctx context.Context, in *DownloadScriptReq, opts ...grpc.CallOption) (*DownloadScriptResp, error)
+	UploadTrainingFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── 插件的**展示资源** → hiai/pub/,**公开读** ────────────────────────────
+	// 图标和简介图是网页上 <img src> 直接加载的,不公开读就是 403。它们**不是商户私产**,
+	// 分类的依据是"给谁看",不是"都属于插件" —— 曾经和脚本 zip 混在同一个 hiai/plugin/ 前缀里,
+	// 结果传上去就显示不了;而 hiai 桶又不能整个开公开(开了等于白送脚本源码)。
+	// 于是单开 pub/ 前缀,minio 只对它放匿名 GetObject。**往这个前缀放东西前先问:任何人都能下载它吗?**
 	UploadLogo(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadSummary(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
-	UploadTrainingFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DownloadTrainingFile(ctx context.Context, in *DownloadFileReq, opts ...grpc.CallOption) (*DownloadFileResp, error)
 	UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
@@ -108,6 +113,16 @@ func (c *sourceClient) DownloadScript(ctx context.Context, in *DownloadScriptReq
 	return out, nil
 }
 
+func (c *sourceClient) UploadTrainingFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Source_UploadTrainingFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sourceClient) UploadLogo(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.UploadResp)
@@ -122,16 +137,6 @@ func (c *sourceClient) UploadSummary(ctx context.Context, in *hi.UploadReq, opts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.UploadResp)
 	err := c.cc.Invoke(ctx, Source_UploadSummary_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *sourceClient) UploadTrainingFile(ctx context.Context, in *UploadFileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Source_UploadTrainingFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -185,9 +190,14 @@ type SourceServer interface {
 	UploadScript(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadScriptStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
 	DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error)
+	UploadTrainingFile(context.Context, *UploadFileReq) (*emptypb.Empty, error)
+	// ── 插件的**展示资源** → hiai/pub/,**公开读** ────────────────────────────
+	// 图标和简介图是网页上 <img src> 直接加载的,不公开读就是 403。它们**不是商户私产**,
+	// 分类的依据是"给谁看",不是"都属于插件" —— 曾经和脚本 zip 混在同一个 hiai/plugin/ 前缀里,
+	// 结果传上去就显示不了;而 hiai 桶又不能整个开公开(开了等于白送脚本源码)。
+	// 于是单开 pub/ 前缀,minio 只对它放匿名 GetObject。**往这个前缀放东西前先问:任何人都能下载它吗?**
 	UploadLogo(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadSummary(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
-	UploadTrainingFile(context.Context, *UploadFileReq) (*emptypb.Empty, error)
 	DownloadTrainingFile(context.Context, *DownloadFileReq) (*DownloadFileResp, error)
 	UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
@@ -219,14 +229,14 @@ func (UnimplementedSourceServer) UploadScriptStream(grpc.ClientStreamingServer[h
 func (UnimplementedSourceServer) DownloadScript(context.Context, *DownloadScriptReq) (*DownloadScriptResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DownloadScript not implemented")
 }
+func (UnimplementedSourceServer) UploadTrainingFile(context.Context, *UploadFileReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadTrainingFile not implemented")
+}
 func (UnimplementedSourceServer) UploadLogo(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadLogo not implemented")
 }
 func (UnimplementedSourceServer) UploadSummary(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadSummary not implemented")
-}
-func (UnimplementedSourceServer) UploadTrainingFile(context.Context, *UploadFileReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UploadTrainingFile not implemented")
 }
 func (UnimplementedSourceServer) DownloadTrainingFile(context.Context, *DownloadFileReq) (*DownloadFileResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DownloadTrainingFile not implemented")
@@ -300,6 +310,24 @@ func _Source_DownloadScript_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Source_UploadTrainingFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadFileReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadTrainingFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadTrainingFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadTrainingFile(ctx, req.(*UploadFileReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Source_UploadLogo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.UploadReq)
 	if err := dec(in); err != nil {
@@ -332,24 +360,6 @@ func _Source_UploadSummary_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SourceServer).UploadSummary(ctx, req.(*hi.UploadReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Source_UploadTrainingFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadFileReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SourceServer).UploadTrainingFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Source_UploadTrainingFile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SourceServer).UploadTrainingFile(ctx, req.(*UploadFileReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -424,16 +434,16 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Source_DownloadScript_Handler,
 		},
 		{
+			MethodName: "UploadTrainingFile",
+			Handler:    _Source_UploadTrainingFile_Handler,
+		},
+		{
 			MethodName: "UploadLogo",
 			Handler:    _Source_UploadLogo_Handler,
 		},
 		{
 			MethodName: "UploadSummary",
 			Handler:    _Source_UploadSummary_Handler,
-		},
-		{
-			MethodName: "UploadTrainingFile",
-			Handler:    _Source_UploadTrainingFile_Handler,
 		},
 		{
 			MethodName: "DownloadTrainingFile",

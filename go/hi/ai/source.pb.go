@@ -30,11 +30,11 @@ const file_hi_ai_source_proto_rawDesc = "" +
 	"\x06Source\x124\n" +
 	"\fUploadScript\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03\x12B\n" +
 	"\x12UploadScriptStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03(\x01\x12L\n" +
-	"\x0eDownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x03\x122\n" +
+	"\x0eDownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
+	"\x12UploadTrainingFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x122\n" +
 	"\n" +
 	"UploadLogo\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03\x125\n" +
-	"\rUploadSummary\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03\x12I\n" +
-	"\x12UploadTrainingFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12N\n" +
+	"\rUploadSummary\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03\x12N\n" +
 	"\x14DownloadTrainingFile\x12\x16.hi.ai.DownloadFileReq\x1a\x17.hi.ai.DownloadFileResp\"\x05\x8a\xb5\x18\x01\x03\x122\n" +
 	"\n" +
 	"UploadTemp\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
@@ -57,18 +57,18 @@ var file_hi_ai_source_proto_depIdxs = []int32{
 	0, // 0: hi.ai.Source.UploadScript:input_type -> hi.UploadReq
 	1, // 1: hi.ai.Source.UploadScriptStream:input_type -> hi.UploadStreamReq
 	2, // 2: hi.ai.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
-	0, // 3: hi.ai.Source.UploadLogo:input_type -> hi.UploadReq
-	0, // 4: hi.ai.Source.UploadSummary:input_type -> hi.UploadReq
-	3, // 5: hi.ai.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
+	3, // 3: hi.ai.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
+	0, // 4: hi.ai.Source.UploadLogo:input_type -> hi.UploadReq
+	0, // 5: hi.ai.Source.UploadSummary:input_type -> hi.UploadReq
 	4, // 6: hi.ai.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
 	0, // 7: hi.ai.Source.UploadTemp:input_type -> hi.UploadReq
 	5, // 8: hi.ai.Source.Delete:input_type -> hi.DeleteResourceReq
 	6, // 9: hi.ai.Source.UploadScript:output_type -> hi.UploadResp
 	6, // 10: hi.ai.Source.UploadScriptStream:output_type -> hi.UploadResp
 	7, // 11: hi.ai.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
-	6, // 12: hi.ai.Source.UploadLogo:output_type -> hi.UploadResp
-	6, // 13: hi.ai.Source.UploadSummary:output_type -> hi.UploadResp
-	8, // 14: hi.ai.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
+	8, // 12: hi.ai.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
+	6, // 13: hi.ai.Source.UploadLogo:output_type -> hi.UploadResp
+	6, // 14: hi.ai.Source.UploadSummary:output_type -> hi.UploadResp
 	9, // 15: hi.ai.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
 	6, // 16: hi.ai.Source.UploadTemp:output_type -> hi.UploadResp
 	8, // 17: hi.ai.Source.Delete:output_type -> google.protobuf.Empty

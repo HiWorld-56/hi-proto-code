@@ -3050,6 +3050,32 @@ pub mod source_client {
                 .insert(GrpcMethod::new("hi.ai.Source", "DownloadScript"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn upload_training_file(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UploadFileReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Source/UploadTrainingFile",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Source", "UploadTrainingFile"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 插件的**展示资源** → hiai/pub/,**公开读** ────────────────────────────
+        /// 图标和简介图是网页上 <img src> 直接加载的,不公开读就是 403。它们**不是商户私产**,
+        /// 分类的依据是"给谁看",不是"都属于插件" —— 曾经和脚本 zip 混在同一个 hiai/plugin/ 前缀里,
+        /// 结果传上去就显示不了;而 hiai 桶又不能整个开公开(开了等于白送脚本源码)。
+        /// 于是单开 pub/ 前缀,minio 只对它放匿名 GetObject。**往这个前缀放东西前先问:任何人都能下载它吗?**
         pub async fn upload_logo(
             &mut self,
             request: impl tonic::IntoRequest<super::super::UploadReq>,
@@ -3093,27 +3119,6 @@ pub mod source_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.Source", "UploadSummary"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn upload_training_file(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UploadFileReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Source/UploadTrainingFile",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Source", "UploadTrainingFile"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn download_training_file(

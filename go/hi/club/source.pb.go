@@ -271,12 +271,12 @@ const file_hi_club_source_proto_rawDesc = "" +
 	"\tUploadLog\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
 	"\fUploadScript\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\x12UploadScriptStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x12L\n" +
-	"\x0eDownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
+	"\x0eDownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
+	"\x12UploadTrainingFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
+	"\x14DownloadTrainingFile\x12\x16.hi.ai.DownloadFileReq\x1a\x17.hi.ai.DownloadFileResp\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
 	"\n" +
 	"UploadLogo\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x125\n" +
-	"\rUploadSummary\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
-	"\x12UploadTrainingFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
-	"\x14DownloadTrainingFile\x12\x16.hi.ai.DownloadFileReq\x1a\x17.hi.ai.DownloadFileResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\rUploadSummary\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x06Delete\x12\x15.hi.DeleteResourceReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x82\x01\n" +
 	"\vcom.hi.clubB\vSourceProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
@@ -321,10 +321,10 @@ var file_hi_club_source_proto_depIdxs = []int32{
 	4,  // 8: hi.club.Source.UploadScript:input_type -> hi.UploadReq
 	5,  // 9: hi.club.Source.UploadScriptStream:input_type -> hi.UploadStreamReq
 	6,  // 10: hi.club.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
-	4,  // 11: hi.club.Source.UploadLogo:input_type -> hi.UploadReq
-	4,  // 12: hi.club.Source.UploadSummary:input_type -> hi.UploadReq
-	7,  // 13: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
-	8,  // 14: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
+	7,  // 11: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
+	8,  // 12: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
+	4,  // 13: hi.club.Source.UploadLogo:input_type -> hi.UploadReq
+	4,  // 14: hi.club.Source.UploadSummary:input_type -> hi.UploadReq
 	9,  // 15: hi.club.Source.Delete:input_type -> hi.DeleteResourceReq
 	10, // 16: hi.club.Source.UploadAvatar:output_type -> hi.UploadResp
 	10, // 17: hi.club.Source.UploadGroupAvatar:output_type -> hi.UploadResp
@@ -337,10 +337,10 @@ var file_hi_club_source_proto_depIdxs = []int32{
 	10, // 24: hi.club.Source.UploadScript:output_type -> hi.UploadResp
 	10, // 25: hi.club.Source.UploadScriptStream:output_type -> hi.UploadResp
 	11, // 26: hi.club.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
-	10, // 27: hi.club.Source.UploadLogo:output_type -> hi.UploadResp
-	10, // 28: hi.club.Source.UploadSummary:output_type -> hi.UploadResp
-	12, // 29: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
-	13, // 30: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
+	12, // 27: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
+	13, // 28: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
+	10, // 29: hi.club.Source.UploadLogo:output_type -> hi.UploadResp
+	10, // 30: hi.club.Source.UploadSummary:output_type -> hi.UploadResp
 	12, // 31: hi.club.Source.Delete:output_type -> google.protobuf.Empty
 	16, // [16:32] is the sub-list for method output_type
 	0,  // [0:16] is the sub-list for method input_type
