@@ -125,13 +125,17 @@ func (x *PluginShell) GetName() string {
 }
 
 type PluginVersion struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 所属壳
-	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"` // 版本号(前端按现有版本预填,后端校验须>现有最大)
-	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`
-	Summary       string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`
-	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`                 // 脚本包 zip
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // function-call spec
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Uuid    string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`       // 所属壳
+	Version string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"` // 版本号(前端按现有版本预填,后端校验须>现有最大)
+	Logo    string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`
+	Summary string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`
+	Url     string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"` // 脚本包 zip:**至少含 main.py / requirements.txt / description.json**
+	// function-call spec({"description":...,"parameters":{schema}})。
+	// **创建时不用传** —— 后端在 CreateVersion 时从脚本包里的 description.json 读出来存库
+	// (运行期每次装配 function-call 都要它,存在包里就得每次下载解压,所以发版时预读一次)。
+	// 读接口(Get/List/ListVersions)会把内容回给你,web 拿它展示这个工具是干什么的。
+	Description   string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -541,10 +545,13 @@ func (x *CreateShellResp) GetUuid() string {
 // 给壳加版本:插 b。若该 agent 对此壳还没激活版(首版)→ 顺带插 d(active=true) 自动激活。
 // data=该 agent 对这一版的版本级扩展数据(hiclub 放 club 数据)。
 type CreateVersionReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Version       *PluginVersion         `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"` // version.uuid=壳;version.version + 本体内容
-	Data          *structpb.Struct       `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`       // d.data(版本级)
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Agent string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	// version.uuid=壳;version.version + 本体内容。
+	// **description 不用填**:后端从 version.url 那个包里的 description.json 预读入库;
+	// 包里没有它会直接报错(过渡期:字段里直接给合法 spec 内容仍收,但会告警)。
+	Version       *PluginVersion   `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
+	Data          *structpb.Struct `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"` // d.data(版本级)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

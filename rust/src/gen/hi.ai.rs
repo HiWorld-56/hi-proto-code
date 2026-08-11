@@ -410,10 +410,13 @@ pub struct PluginVersion {
     pub logo: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
     pub summary: ::prost::alloc::string::String,
-    /// 脚本包 zip
+    /// 脚本包 zip:**至少含 main.py / requirements.txt / description.json**
     #[prost(string, tag = "5")]
     pub url: ::prost::alloc::string::String,
-    /// function-call spec
+    /// function-call spec({"description":...,"parameters":{schema}})。
+    /// **创建时不用传** —— 后端在 CreateVersion 时从脚本包里的 description.json 读出来存库
+    /// (运行期每次装配 function-call 都要它,存在包里就得每次下载解压,所以发版时预读一次)。
+    /// 读接口(Get/List/ListVersions)会把内容回给你,web 拿它展示这个工具是干什么的。
     #[prost(string, tag = "6")]
     pub description: ::prost::alloc::string::String,
 }
@@ -488,7 +491,9 @@ pub struct CreateShellResp {
 pub struct CreateVersionReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// version.uuid=壳;version.version + 本体内容
+    /// version.uuid=壳;version.version + 本体内容。
+    /// **description 不用填**:后端从 version.url 那个包里的 description.json 预读入库;
+    /// 包里没有它会直接报错(过渡期:字段里直接给合法 spec 内容仍收,但会告警)。
     #[prost(message, optional, tag = "2")]
     pub version: ::core::option::Option<PluginVersion>,
     /// d.data(版本级)
