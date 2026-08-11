@@ -7,9 +7,11 @@
 package ai
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -75,6 +77,10 @@ func (x *MerchantListReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
+// 只由 AUTH_SUPERADMIN 的方法返回,而且带了**运营内部备注** → 整条 SELF
+// (与 `hi.did.InviteCodeListResp`、`hi.ai.SettingGetResp` 同档:超管后门数据一律最窄)。
+// 原先标 PARTICIPANT,是把它当"商户生态内的目录";加了 remark 之后这个定位就不成立了 ——
+// 私有字段不该靠"反正只有超管调"来兜,受众得写在结构上。
 type MerchantListResp struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
 	Total         int32                    `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
@@ -127,17 +133,71 @@ func (x *MerchantListResp) GetInfos() []*MerchantListResp_Unit {
 	return nil
 }
 
+// 改某商户的备注(超管)。整段覆盖,传空串即清空。
+type MerchantEditReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Remark        string                 `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"` // 列宽 255,超了当场拒,别到 DB 才截断
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MerchantEditReq) Reset() {
+	*x = MerchantEditReq{}
+	mi := &file_hi_ai_merchant_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MerchantEditReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MerchantEditReq) ProtoMessage() {}
+
+func (x *MerchantEditReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_merchant_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MerchantEditReq.ProtoReflect.Descriptor instead.
+func (*MerchantEditReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_merchant_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *MerchantEditReq) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
+}
+
+func (x *MerchantEditReq) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 type MerchantListResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`                             // hi.Entity 恒 PUBLIC
-	CreatedAt     int64                  `protobuf:"varint,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // 取本消息档
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"` // hi.Entity 恒 PUBLIC
+	CreatedAt     int64                  `protobuf:"varint,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Remark        string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"` // 超管写的内部备注,商户本人看不到也改不了
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MerchantListResp_Unit) Reset() {
 	*x = MerchantListResp_Unit{}
-	mi := &file_hi_ai_merchant_proto_msgTypes[2]
+	mi := &file_hi_ai_merchant_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -149,7 +209,7 @@ func (x *MerchantListResp_Unit) String() string {
 func (*MerchantListResp_Unit) ProtoMessage() {}
 
 func (x *MerchantListResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_merchant_proto_msgTypes[2]
+	mi := &file_hi_ai_merchant_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -179,26 +239,38 @@ func (x *MerchantListResp_Unit) GetCreatedAt() int64 {
 	return 0
 }
 
+func (x *MerchantListResp_Unit) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 var File_hi_ai_merchant_proto protoreflect.FileDescriptor
 
 const file_hi_ai_merchant_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/ai/merchant.proto\x12\x05hi.ai\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"S\n" +
+	"\x14hi/ai/merchant.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"S\n" +
 	"\x0fMerchantListReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\xc7\x01\n" +
+	"pagination\"\xe5\x01\n" +
 	"\x10MerchantListResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02R\x05total\x128\n" +
-	"\x05infos\x18\x02 \x03(\v2\x1c.hi.ai.MerchantListResp.UnitB\x04\x90\xb5\x18\x02R\x05infos\x1aW\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x128\n" +
+	"\x05infos\x18\x02 \x03(\v2\x1c.hi.ai.MerchantListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1au\n" +
 	"\x04Unit\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12#\n" +
 	"\n" +
-	"created_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02R\tcreatedAt:\x04\x98\xb5\x18\x02:\x04\x98\xb5\x18\x022J\n" +
+	"created_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12\x1c\n" +
+	"\x06remark\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06remark:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"S\n" +
+	"\x0fMerchantEditReq\x12\x1e\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12 \n" +
+	"\x06remark\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xff\x01R\x06remark2\x89\x01\n" +
 	"\bMerchant\x12>\n" +
-	"\x04List\x12\x16.hi.ai.MerchantListReq\x1a\x17.hi.ai.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04Bx\n" +
+	"\x04List\x12\x16.hi.ai.MerchantListReq\x1a\x17.hi.ai.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04\x12=\n" +
+	"\x04Edit\x12\x16.hi.ai.MerchantEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04Bx\n" +
 	"\tcom.hi.aiB\rMerchantProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
@@ -213,22 +285,26 @@ func file_hi_ai_merchant_proto_rawDescGZIP() []byte {
 	return file_hi_ai_merchant_proto_rawDescData
 }
 
-var file_hi_ai_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_hi_ai_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_hi_ai_merchant_proto_goTypes = []any{
 	(*MerchantListReq)(nil),       // 0: hi.ai.MerchantListReq
 	(*MerchantListResp)(nil),      // 1: hi.ai.MerchantListResp
-	(*MerchantListResp_Unit)(nil), // 2: hi.ai.MerchantListResp.Unit
-	(*hi.Pagination)(nil),         // 3: hi.Pagination
-	(*hi.Entity)(nil),             // 4: hi.Entity
+	(*MerchantEditReq)(nil),       // 2: hi.ai.MerchantEditReq
+	(*MerchantListResp_Unit)(nil), // 3: hi.ai.MerchantListResp.Unit
+	(*hi.Pagination)(nil),         // 4: hi.Pagination
+	(*hi.Entity)(nil),             // 5: hi.Entity
+	(*emptypb.Empty)(nil),         // 6: google.protobuf.Empty
 }
 var file_hi_ai_merchant_proto_depIdxs = []int32{
-	3, // 0: hi.ai.MerchantListReq.pagination:type_name -> hi.Pagination
-	2, // 1: hi.ai.MerchantListResp.infos:type_name -> hi.ai.MerchantListResp.Unit
-	4, // 2: hi.ai.MerchantListResp.Unit.base:type_name -> hi.Entity
+	4, // 0: hi.ai.MerchantListReq.pagination:type_name -> hi.Pagination
+	3, // 1: hi.ai.MerchantListResp.infos:type_name -> hi.ai.MerchantListResp.Unit
+	5, // 2: hi.ai.MerchantListResp.Unit.base:type_name -> hi.Entity
 	0, // 3: hi.ai.Merchant.List:input_type -> hi.ai.MerchantListReq
-	1, // 4: hi.ai.Merchant.List:output_type -> hi.ai.MerchantListResp
-	4, // [4:5] is the sub-list for method output_type
-	3, // [3:4] is the sub-list for method input_type
+	2, // 4: hi.ai.Merchant.Edit:input_type -> hi.ai.MerchantEditReq
+	1, // 5: hi.ai.Merchant.List:output_type -> hi.ai.MerchantListResp
+	6, // 6: hi.ai.Merchant.Edit:output_type -> google.protobuf.Empty
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -245,7 +321,7 @@ func file_hi_ai_merchant_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_merchant_proto_rawDesc), len(file_hi_ai_merchant_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

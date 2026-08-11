@@ -3201,6 +3201,10 @@ pub struct MerchantListReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 只由 AUTH_SUPERADMIN 的方法返回,而且带了**运营内部备注** → 整条 SELF
+/// (与 `hi.did.InviteCodeListResp`、`hi.ai.SettingGetResp` 同档:超管后门数据一律最窄)。
+/// 原先标 PARTICIPANT,是把它当"商户生态内的目录";加了 remark 之后这个定位就不成立了 ——
+/// 私有字段不该靠"反正只有超管调"来兜,受众得写在结构上。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantListResp {
     #[prost(int32, tag = "1")]
@@ -3215,10 +3219,21 @@ pub mod merchant_list_resp {
         /// hi.Entity 恒 PUBLIC
         #[prost(message, optional, tag = "1")]
         pub base: ::core::option::Option<super::super::Entity>,
-        /// 取本消息档
         #[prost(int64, tag = "2")]
         pub created_at: i64,
+        /// 超管写的内部备注,商户本人看不到也改不了
+        #[prost(string, tag = "3")]
+        pub remark: ::prost::alloc::string::String,
     }
+}
+/// 改某商户的备注(超管)。整段覆盖,传空串即清空。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantEditReq {
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    /// 列宽 255,超了当场拒,别到 DB 才截断
+    #[prost(string, tag = "2")]
+    pub remark: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
 pub mod merchant_client {
@@ -3333,6 +3348,24 @@ pub mod merchant_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Merchant/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Merchant", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MerchantEditReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Merchant/Edit");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Merchant", "Edit"));
             self.inner.unary(req, path, codec).await
         }
     }

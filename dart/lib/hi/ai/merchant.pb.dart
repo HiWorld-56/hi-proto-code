@@ -15,7 +15,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $1;
+import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -23,7 +23,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 class MerchantListReq extends $pb.GeneratedMessage {
   factory MerchantListReq({
     $core.String? did,
-    $1.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (did != null) result.did = did;
@@ -45,8 +45,8 @@ class MerchantListReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $1.Pagination.create)
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -78,25 +78,27 @@ class MerchantListReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $1.Pagination get pagination => $_getN(1);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($1.Pagination value) => $_setField(2, value);
+  set pagination($2.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $1.Pagination ensurePagination() => $_ensure(1);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class MerchantListResp_Unit extends $pb.GeneratedMessage {
   factory MerchantListResp_Unit({
-    $1.Entity? base,
+    $2.Entity? base,
     $fixnum.Int64? createdAt,
+    $core.String? remark,
   }) {
     final result = create();
     if (base != null) result.base = base;
     if (createdAt != null) result.createdAt = createdAt;
+    if (remark != null) result.remark = remark;
     return result;
   }
 
@@ -113,9 +115,10 @@ class MerchantListResp_Unit extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'MerchantListResp.Unit',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $1.Entity.create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: $2.Entity.create)
     ..aInt64(2, _omitFieldNames ? '' : 'createdAt')
+    ..aOS(3, _omitFieldNames ? '' : 'remark')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -139,15 +142,15 @@ class MerchantListResp_Unit extends $pb.GeneratedMessage {
   static MerchantListResp_Unit? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $1.Entity get base => $_getN(0);
+  $2.Entity get base => $_getN(0);
   @$pb.TagNumber(1)
-  set base($1.Entity value) => $_setField(1, value);
+  set base($2.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBase() => $_has(0);
   @$pb.TagNumber(1)
   void clearBase() => $_clearField(1);
   @$pb.TagNumber(1)
-  $1.Entity ensureBase() => $_ensure(0);
+  $2.Entity ensureBase() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get createdAt => $_getI64(1);
@@ -157,8 +160,21 @@ class MerchantListResp_Unit extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearCreatedAt() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get remark => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set remark($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRemark() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRemark() => $_clearField(3);
 }
 
+/// 只由 AUTH_SUPERADMIN 的方法返回,而且带了**运营内部备注** → 整条 SELF
+/// (与 `hi.did.InviteCodeListResp`、`hi.ai.SettingGetResp` 同档:超管后门数据一律最窄)。
+/// 原先标 PARTICIPANT,是把它当"商户生态内的目录";加了 remark 之后这个定位就不成立了 ——
+/// 私有字段不该靠"反正只有超管调"来兜,受众得写在结构上。
 class MerchantListResp extends $pb.GeneratedMessage {
   factory MerchantListResp({
     $core.int? total,
@@ -218,6 +234,73 @@ class MerchantListResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<MerchantListResp_Unit> get infos => $_getList(1);
+}
+
+/// 改某商户的备注(超管)。整段覆盖,传空串即清空。
+class MerchantEditReq extends $pb.GeneratedMessage {
+  factory MerchantEditReq({
+    $core.String? did,
+    $core.String? remark,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    if (remark != null) result.remark = remark;
+    return result;
+  }
+
+  MerchantEditReq._();
+
+  factory MerchantEditReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantEditReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantEditReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(2, _omitFieldNames ? '' : 'remark')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantEditReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantEditReq copyWith(void Function(MerchantEditReq) updates) =>
+      super.copyWith((message) => updates(message as MerchantEditReq))
+          as MerchantEditReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantEditReq create() => MerchantEditReq._();
+  @$core.override
+  MerchantEditReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantEditReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantEditReq>(create);
+  static MerchantEditReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get did => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set did($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get remark => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set remark($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRemark() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRemark() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

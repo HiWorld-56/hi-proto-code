@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Merchant_List_FullMethodName = "/hi.ai.Merchant/List"
+	Merchant_Edit_FullMethodName = "/hi.ai.Merchant/Edit"
 )
 
 // MerchantClient is the client API for Merchant service.
@@ -31,6 +33,7 @@ const (
 // 与 hi.did.MerchantManage.List 同形对齐(hiai 里没有普通用户,只有商户)。
 type MerchantClient interface {
 	List(ctx context.Context, in *MerchantListReq, opts ...grpc.CallOption) (*MerchantListResp, error)
+	Edit(ctx context.Context, in *MerchantEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type merchantClient struct {
@@ -51,6 +54,16 @@ func (c *merchantClient) List(ctx context.Context, in *MerchantListReq, opts ...
 	return out, nil
 }
 
+func (c *merchantClient) Edit(ctx context.Context, in *MerchantEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Merchant_Edit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MerchantServer is the server API for Merchant service.
 // All implementations should embed UnimplementedMerchantServer
 // for forward compatibility.
@@ -60,6 +73,7 @@ func (c *merchantClient) List(ctx context.Context, in *MerchantListReq, opts ...
 // 与 hi.did.MerchantManage.List 同形对齐(hiai 里没有普通用户,只有商户)。
 type MerchantServer interface {
 	List(context.Context, *MerchantListReq) (*MerchantListResp, error)
+	Edit(context.Context, *MerchantEditReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedMerchantServer should be embedded to have
@@ -71,6 +85,9 @@ type UnimplementedMerchantServer struct{}
 
 func (UnimplementedMerchantServer) List(context.Context, *MerchantListReq) (*MerchantListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedMerchantServer) Edit(context.Context, *MerchantEditReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedMerchantServer) testEmbeddedByValue() {}
 
@@ -110,6 +127,24 @@ func _Merchant_List_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MerchantEditReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).Edit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_Edit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).Edit(ctx, req.(*MerchantEditReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Merchant_ServiceDesc is the grpc.ServiceDesc for Merchant service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -120,6 +155,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _Merchant_List_Handler,
+		},
+		{
+			MethodName: "Edit",
+			Handler:    _Merchant_Edit_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

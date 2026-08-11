@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
 import 'merchant.pb.dart' as $0;
 
@@ -42,6 +43,13 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> edit(
+    $0.MerchantEditReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$edit, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list =
@@ -49,6 +57,10 @@ class MerchantClient extends $grpc.Client {
           '/hi.ai.Merchant/List',
           ($0.MerchantListReq value) => value.writeToBuffer(),
           $0.MerchantListResp.fromBuffer);
+  static final _$edit = $grpc.ClientMethod<$0.MerchantEditReq, $1.Empty>(
+      '/hi.ai.Merchant/Edit',
+      ($0.MerchantEditReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Merchant')
@@ -63,6 +75,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.MerchantListReq.fromBuffer(value),
         ($0.MerchantListResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.MerchantEditReq, $1.Empty>(
+        'Edit',
+        edit_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.MerchantEditReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.MerchantListResp> list_Pre($grpc.ServiceCall $call,
@@ -72,4 +91,12 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$0.MerchantListResp> list(
       $grpc.ServiceCall call, $0.MerchantListReq request);
+
+  $async.Future<$1.Empty> edit_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.MerchantEditReq> $request) async {
+    return edit($call, await $request);
+  }
+
+  $async.Future<$1.Empty> edit(
+      $grpc.ServiceCall call, $0.MerchantEditReq request);
 }
