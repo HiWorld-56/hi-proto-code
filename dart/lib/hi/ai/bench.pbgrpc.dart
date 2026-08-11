@@ -22,9 +22,15 @@ export 'bench.pb.dart';
 
 /// 智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
 ///
-/// 原 `Chat.ListAgentDelays` 与 `Chat.GetAgentDelay` **近乎重复**:都查 agent_sts_count、
-/// 同参(type/agent/分页)、返回同形 {total, []AgentDelayUnit} 明细行,唯一差别是前者多校验
-/// 一次 agent 存在。二者都不是"列 agent",故合并为一个 List。
+/// **两个方法,因为本来就是两种查询**:
+///   · List        —— 概览:每台机器人各一条(各自最新),铺"所有机器人当前延迟"那张表;
+///   · ListHistory —— 明细:某一台的历次测时记录,分页翻。
+///
+/// ⚠️ 曾经把 `Chat.ListAgentDelays` / `Chat.GetAgentDelay` 合成一个 List,理由写的是
+/// "近乎重复,唯一差别是前者多校验一次 agent 存在" —— **那句话是错的**。二者返回同形,
+/// 但查询完全不同(一个 GROUP BY agent 取各自最新,一个只取那台的最新一条)。合并后靠
+/// `agent` 空不空隐式分支,于是**没有任何传参拿得到"某台机器人的全部记录"**,分页也失效。
+/// **返回同形 ≠ 语义相同;要合并,先看 SQL,别看返回类型。**
 ///
 /// 商户档:hiai web 与商户后台服务都会调。
 @$pb.GrpcServiceName('hi.ai.AgentBench')
@@ -46,12 +52,24 @@ class AgentBenchClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListAgentDelaysResp> listHistory(
+    $0.ListAgentDelayHistoryReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listHistory, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list =
       $grpc.ClientMethod<$0.ListAgentDelaysReq, $0.ListAgentDelaysResp>(
           '/hi.ai.AgentBench/List',
           ($0.ListAgentDelaysReq value) => value.writeToBuffer(),
+          $0.ListAgentDelaysResp.fromBuffer);
+  static final _$listHistory =
+      $grpc.ClientMethod<$0.ListAgentDelayHistoryReq, $0.ListAgentDelaysResp>(
+          '/hi.ai.AgentBench/ListHistory',
+          ($0.ListAgentDelayHistoryReq value) => value.writeToBuffer(),
           $0.ListAgentDelaysResp.fromBuffer);
 }
 
@@ -69,6 +87,15 @@ abstract class AgentBenchServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.ListAgentDelaysReq.fromBuffer(value),
             ($0.ListAgentDelaysResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListAgentDelayHistoryReq,
+            $0.ListAgentDelaysResp>(
+        'ListHistory',
+        listHistory_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListAgentDelayHistoryReq.fromBuffer(value),
+        ($0.ListAgentDelaysResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.ListAgentDelaysResp> list_Pre($grpc.ServiceCall $call,
@@ -78,4 +105,12 @@ abstract class AgentBenchServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListAgentDelaysResp> list(
       $grpc.ServiceCall call, $0.ListAgentDelaysReq request);
+
+  $async.Future<$0.ListAgentDelaysResp> listHistory_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListAgentDelayHistoryReq> $request) async {
+    return listHistory($call, await $request);
+  }
+
+  $async.Future<$0.ListAgentDelaysResp> listHistory(
+      $grpc.ServiceCall call, $0.ListAgentDelayHistoryReq request);
 }

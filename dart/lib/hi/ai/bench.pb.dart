@@ -171,14 +171,13 @@ class AgentDelayUnit extends $pb.GeneratedMessage {
   void clearTestTime() => $_clearField(9);
 }
 
+/// 概览:**每台机器人各一条**(各自最新)。要看某一台的历次记录用 ListHistory。
 class ListAgentDelaysReq extends $pb.GeneratedMessage {
   factory ListAgentDelaysReq({
-    $core.String? agent,
     $core.String? type,
     $1.Pagination? pagination,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
     if (type != null) result.type = type;
     if (pagination != null) result.pagination = pagination;
     return result;
@@ -197,7 +196,6 @@ class ListAgentDelaysReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListAgentDelaysReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'type')
     ..aOM<$1.Pagination>(3, _omitFieldNames ? '' : 'pagination',
         subBuilder: $1.Pagination.create)
@@ -221,6 +219,81 @@ class ListAgentDelaysReq extends $pb.GeneratedMessage {
   static ListAgentDelaysReq getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ListAgentDelaysReq>(create);
   static ListAgentDelaysReq? _defaultInstance;
+
+  /// 靠参数空不空隐式分支,proto 上完全看不出来。已拆成 ListHistory。
+  @$pb.TagNumber(2)
+  $core.String get type => $_getSZ(0);
+  @$pb.TagNumber(2)
+  set type($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(2)
+  $core.bool hasType() => $_has(0);
+  @$pb.TagNumber(2)
+  void clearType() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $1.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(3)
+  set pagination($1.Pagination value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearPagination() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.Pagination ensurePagination() => $_ensure(1);
+}
+
+/// 明细:**某一台机器人的历次**测时记录,按时间倒序分页。
+class ListAgentDelayHistoryReq extends $pb.GeneratedMessage {
+  factory ListAgentDelayHistoryReq({
+    $core.String? agent,
+    $core.String? type,
+    $1.Pagination? pagination,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (type != null) result.type = type;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListAgentDelayHistoryReq._();
+
+  factory ListAgentDelayHistoryReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListAgentDelayHistoryReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListAgentDelayHistoryReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'type')
+    ..aOM<$1.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAgentDelayHistoryReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAgentDelayHistoryReq copyWith(
+          void Function(ListAgentDelayHistoryReq) updates) =>
+      super.copyWith((message) => updates(message as ListAgentDelayHistoryReq))
+          as ListAgentDelayHistoryReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListAgentDelayHistoryReq create() => ListAgentDelayHistoryReq._();
+  @$core.override
+  ListAgentDelayHistoryReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListAgentDelayHistoryReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAgentDelayHistoryReq>(create);
+  static ListAgentDelayHistoryReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);

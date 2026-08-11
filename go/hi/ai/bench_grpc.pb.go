@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AgentBench_List_FullMethodName = "/hi.ai.AgentBench/List"
+	AgentBench_List_FullMethodName        = "/hi.ai.AgentBench/List"
+	AgentBench_ListHistory_FullMethodName = "/hi.ai.AgentBench/ListHistory"
 )
 
 // AgentBenchClient is the client API for AgentBench service.
@@ -28,13 +29,21 @@ const (
 //
 // 智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
 //
-// 原 `Chat.ListAgentDelays` 与 `Chat.GetAgentDelay` **近乎重复**:都查 agent_sts_count、
-// 同参(type/agent/分页)、返回同形 {total, []AgentDelayUnit} 明细行,唯一差别是前者多校验
-// 一次 agent 存在。二者都不是"列 agent",故合并为一个 List。
+// **两个方法,因为本来就是两种查询**:
+//
+//	· List        —— 概览:每台机器人各一条(各自最新),铺"所有机器人当前延迟"那张表;
+//	· ListHistory —— 明细:某一台的历次测时记录,分页翻。
+//
+// ⚠️ 曾经把 `Chat.ListAgentDelays` / `Chat.GetAgentDelay` 合成一个 List,理由写的是
+// "近乎重复,唯一差别是前者多校验一次 agent 存在" —— **那句话是错的**。二者返回同形,
+// 但查询完全不同(一个 GROUP BY agent 取各自最新,一个只取那台的最新一条)。合并后靠
+// `agent` 空不空隐式分支,于是**没有任何传参拿得到"某台机器人的全部记录"**,分页也失效。
+// **返回同形 ≠ 语义相同;要合并,先看 SQL,别看返回类型。**
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type AgentBenchClient interface {
 	List(ctx context.Context, in *ListAgentDelaysReq, opts ...grpc.CallOption) (*ListAgentDelaysResp, error)
+	ListHistory(ctx context.Context, in *ListAgentDelayHistoryReq, opts ...grpc.CallOption) (*ListAgentDelaysResp, error)
 }
 
 type agentBenchClient struct {
@@ -55,19 +64,37 @@ func (c *agentBenchClient) List(ctx context.Context, in *ListAgentDelaysReq, opt
 	return out, nil
 }
 
+func (c *agentBenchClient) ListHistory(ctx context.Context, in *ListAgentDelayHistoryReq, opts ...grpc.CallOption) (*ListAgentDelaysResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentDelaysResp)
+	err := c.cc.Invoke(ctx, AgentBench_ListHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AgentBenchServer is the server API for AgentBench service.
 // All implementations should embed UnimplementedAgentBenchServer
 // for forward compatibility.
 //
 // 智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
 //
-// 原 `Chat.ListAgentDelays` 与 `Chat.GetAgentDelay` **近乎重复**:都查 agent_sts_count、
-// 同参(type/agent/分页)、返回同形 {total, []AgentDelayUnit} 明细行,唯一差别是前者多校验
-// 一次 agent 存在。二者都不是"列 agent",故合并为一个 List。
+// **两个方法,因为本来就是两种查询**:
+//
+//	· List        —— 概览:每台机器人各一条(各自最新),铺"所有机器人当前延迟"那张表;
+//	· ListHistory —— 明细:某一台的历次测时记录,分页翻。
+//
+// ⚠️ 曾经把 `Chat.ListAgentDelays` / `Chat.GetAgentDelay` 合成一个 List,理由写的是
+// "近乎重复,唯一差别是前者多校验一次 agent 存在" —— **那句话是错的**。二者返回同形,
+// 但查询完全不同(一个 GROUP BY agent 取各自最新,一个只取那台的最新一条)。合并后靠
+// `agent` 空不空隐式分支,于是**没有任何传参拿得到"某台机器人的全部记录"**,分页也失效。
+// **返回同形 ≠ 语义相同;要合并,先看 SQL,别看返回类型。**
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type AgentBenchServer interface {
 	List(context.Context, *ListAgentDelaysReq) (*ListAgentDelaysResp, error)
+	ListHistory(context.Context, *ListAgentDelayHistoryReq) (*ListAgentDelaysResp, error)
 }
 
 // UnimplementedAgentBenchServer should be embedded to have
@@ -79,6 +106,9 @@ type UnimplementedAgentBenchServer struct{}
 
 func (UnimplementedAgentBenchServer) List(context.Context, *ListAgentDelaysReq) (*ListAgentDelaysResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedAgentBenchServer) ListHistory(context.Context, *ListAgentDelayHistoryReq) (*ListAgentDelaysResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListHistory not implemented")
 }
 func (UnimplementedAgentBenchServer) testEmbeddedByValue() {}
 
@@ -118,6 +148,24 @@ func _AgentBench_List_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AgentBench_ListHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAgentDelayHistoryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentBenchServer).ListHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentBench_ListHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentBenchServer).ListHistory(ctx, req.(*ListAgentDelayHistoryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AgentBench_ServiceDesc is the grpc.ServiceDesc for AgentBench service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -128,6 +176,10 @@ var AgentBench_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _AgentBench_List_Handler,
+		},
+		{
+			MethodName: "ListHistory",
+			Handler:    _AgentBench_ListHistory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -4108,12 +4108,23 @@ pub struct AgentDelayUnit {
     #[prost(int64, tag = "9")]
     pub test_time: i64,
 }
+/// 概览:**每台机器人各一条**(各自最新)。要看某一台的历次记录用 ListHistory。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListAgentDelaysReq {
-    /// 可选:按 agent 过滤
+    /// 靠参数空不空隐式分支,proto 上完全看不出来。已拆成 ListHistory。
+    ///
+    /// 可选:按类型过滤(**空 = 全部类型**)
+    #[prost(string, tag = "2")]
+    pub r#type: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// 明细:**某一台机器人的历次**测时记录,按时间倒序分页。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListAgentDelayHistoryReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
-    /// 可选:按类型过滤
+    /// 可选:按类型过滤(**空 = 全部类型**)
     #[prost(string, tag = "2")]
     pub r#type: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
@@ -4139,9 +4150,15 @@ pub mod agent_bench_client {
     use tonic::codegen::http::Uri;
     /// 智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
     ///
-    /// 原 `Chat.ListAgentDelays` 与 `Chat.GetAgentDelay` **近乎重复**:都查 agent_sts_count、
-    /// 同参(type/agent/分页)、返回同形 {total, \[\]AgentDelayUnit} 明细行,唯一差别是前者多校验
-    /// 一次 agent 存在。二者都不是"列 agent",故合并为一个 List。
+    /// **两个方法,因为本来就是两种查询**:
+    /// · List        —— 概览:每台机器人各一条(各自最新),铺"所有机器人当前延迟"那张表;
+    /// · ListHistory —— 明细:某一台的历次测时记录,分页翻。
+    ///
+    /// ⚠️ 曾经把 `Chat.ListAgentDelays` / `Chat.GetAgentDelay` 合成一个 List,理由写的是
+    /// "近乎重复,唯一差别是前者多校验一次 agent 存在" —— **那句话是错的**。二者返回同形,
+    /// 但查询完全不同(一个 GROUP BY agent 取各自最新,一个只取那台的最新一条)。合并后靠
+    /// `agent` 空不空隐式分支,于是**没有任何传参拿得到"某台机器人的全部记录"**,分页也失效。
+    /// **返回同形 ≠ 语义相同;要合并,先看 SQL,别看返回类型。**
     ///
     /// 商户档:hiai web 与商户后台服务都会调。
     #[derive(Debug, Clone)]
@@ -4243,6 +4260,30 @@ pub mod agent_bench_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.AgentBench/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.AgentBench", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_history(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAgentDelayHistoryReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListAgentDelaysResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.AgentBench/ListHistory",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.AgentBench", "ListHistory"));
             self.inner.unary(req, path, codec).await
         }
     }

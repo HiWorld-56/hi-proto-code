@@ -52,7 +52,32 @@ final $typed_data.Uint8List agentDelayUnitDescriptor = $convert.base64Decode(
 const ListAgentDelaysReq$json = {
   '1': 'ListAgentDelaysReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
+    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
+    {
+      '1': 'pagination',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+  '9': [
+    {'1': 1, '2': 2},
+  ],
+  '10': ['agent'],
+};
+
+/// Descriptor for `ListAgentDelaysReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentDelaysReqDescriptor = $convert.base64Decode(
+    'ChJMaXN0QWdlbnREZWxheXNSZXESEgoEdHlwZRgCIAEoCVIEdHlwZRIuCgpwYWdpbmF0aW9uGA'
+    'MgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkoECAEQAlIFYWdlbnQ=');
+
+@$core.Deprecated('Use listAgentDelayHistoryReqDescriptor instead')
+const ListAgentDelayHistoryReq$json = {
+  '1': 'ListAgentDelayHistoryReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
     {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
     {
       '1': 'pagination',
@@ -65,10 +90,11 @@ const ListAgentDelaysReq$json = {
   ],
 };
 
-/// Descriptor for `ListAgentDelaysReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listAgentDelaysReqDescriptor = $convert.base64Decode(
-    'ChJMaXN0QWdlbnREZWxheXNSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHR5cGUYAiABKA'
-    'lSBHR5cGUSLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+/// Descriptor for `ListAgentDelayHistoryReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAgentDelayHistoryReqDescriptor = $convert.base64Decode(
+    'ChhMaXN0QWdlbnREZWxheUhpc3RvcnlSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJF'
+    'IFYWdlbnQSEgoEdHlwZRgCIAEoCVIEdHlwZRIuCgpwYWdpbmF0aW9uGAMgASgLMg4uaGkuUGFn'
+    'aW5hdGlvblIKcGFnaW5hdGlvbg==');
 
 @$core.Deprecated('Use listAgentDelaysRespDescriptor instead')
 const ListAgentDelaysResp$json = {

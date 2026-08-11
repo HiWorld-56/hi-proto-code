@@ -5986,7 +5986,7 @@ impl<'de> serde::Deserialize<'de> for GetPluginResp {
         deserializer.deserialize_struct("hi.ai.GetPluginResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListAgentDelaysReq {
+impl serde::Serialize for ListAgentDelayHistoryReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6003,7 +6003,7 @@ impl serde::Serialize for ListAgentDelaysReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentDelaysReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentDelayHistoryReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
@@ -6016,7 +6016,7 @@ impl serde::Serialize for ListAgentDelaysReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListAgentDelaysReq {
+impl<'de> serde::Deserialize<'de> for ListAgentDelayHistoryReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6066,13 +6066,13 @@ impl<'de> serde::Deserialize<'de> for ListAgentDelaysReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListAgentDelaysReq;
+            type Value = ListAgentDelayHistoryReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListAgentDelaysReq")
+                formatter.write_str("struct hi.ai.ListAgentDelayHistoryReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentDelaysReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentDelayHistoryReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6101,8 +6101,116 @@ impl<'de> serde::Deserialize<'de> for ListAgentDelaysReq {
                         }
                     }
                 }
-                Ok(ListAgentDelaysReq {
+                Ok(ListAgentDelayHistoryReq {
                     agent: agent__.unwrap_or_default(),
+                    r#type: r#type__.unwrap_or_default(),
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.ListAgentDelayHistoryReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListAgentDelaysReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.r#type.is_empty() {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListAgentDelaysReq", len)?;
+        if !self.r#type.is_empty() {
+            struct_ser.serialize_field("type", &self.r#type)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListAgentDelaysReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "type",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Type,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "type" => Ok(GeneratedField::Type),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListAgentDelaysReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.ListAgentDelaysReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListAgentDelaysReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut r#type__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Type => {
+                            if r#type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("type"));
+                            }
+                            r#type__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListAgentDelaysReq {
                     r#type: r#type__.unwrap_or_default(),
                     pagination: pagination__,
                 })
