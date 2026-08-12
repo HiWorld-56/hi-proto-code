@@ -260,6 +260,11 @@ class MasterEvent extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.Entity ensureMaster() => $_ensure(0);
 
+  /// 触发源:
+  ///   bind    绑定了主人(master = 新主人)
+  ///   unbind  解绑(master 为空)
+  ///   update  **主人还是那个人,但他改了资料**(master = 主人当前完整的 Entity)
+  /// ⚠️ update 这档别按 did 判重 —— did 没变正是它的常态,变的是 name/avatar。
   @$pb.TagNumber(2)
   $core.String get trigger => $_getSZ(1);
   @$pb.TagNumber(2)

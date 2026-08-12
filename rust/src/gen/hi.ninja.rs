@@ -26,6 +26,11 @@ pub struct GroupInfoList {
 pub struct MasterEvent {
     #[prost(message, optional, tag = "1")]
     pub master: ::core::option::Option<super::Entity>,
+    /// 触发源:
+    /// bind    绑定了主人(master = 新主人)
+    /// unbind  解绑(master 为空)
+    /// update  **主人还是那个人,但他改了资料**(master = 主人当前完整的 Entity)
+    /// ⚠️ update 这档别按 did 判重 —— did 没变正是它的常态,变的是 name/avatar。
     #[prost(string, tag = "2")]
     pub trigger: ::prost::alloc::string::String,
 }

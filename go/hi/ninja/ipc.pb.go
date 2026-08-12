@@ -328,9 +328,16 @@ func (x *GroupInfoList) GetList() []*club.GroupInfo {
 // 所有者变更事件
 // trigger: bind（新绑定）/ unbind（解绑，此时 master 缺省）/ update（资料更新，绑定关系不变）
 type MasterEvent struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`
-	Trigger       string                 `protobuf:"bytes,2,opt,name=trigger,proto3" json:"trigger,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Master *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`
+	// 触发源:
+	//
+	//	bind    绑定了主人(master = 新主人)
+	//	unbind  解绑(master 为空)
+	//	update  **主人还是那个人,但他改了资料**(master = 主人当前完整的 Entity)
+	//
+	// ⚠️ update 这档别按 did 判重 —— did 没变正是它的常态,变的是 name/avatar。
+	Trigger       string `protobuf:"bytes,2,opt,name=trigger,proto3" json:"trigger,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
