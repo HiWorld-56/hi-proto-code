@@ -20,16 +20,22 @@ import '../chat.pb.dart' as $3;
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// ── py-docker 执行契约(独立 py-docker 服务实现,hiai 只作调用方)──────────────
-/// 运行期 plugin_annex = c.data ∪ d.data(激活版),作字典全局变量 plugin_annex 注入。
-/// 这里保留 {api_key, data} 的注入形态不变(py-docker 契约),由 hiai 从 c.data 取 api_key、
-/// data = c.data ∪ d.data 合并;脚本照旧 plugin_annex['api_key'] / plugin_annex[...]。
+///
+/// 运行期 plugin_annex = c.data ∪ d.data(激活版),**原样**作字典全局变量注入脚本。
+///
+/// ⚠️ **这是一袋不透明的键值,谁都不该认识里面有什么。**
+/// api_key 只是其中一个普通键,由 **hiclub** 塞进 c.data(见它的 withApiKey ——
+/// 只有它知道哪台机器人对应哪个 apikey);hiai 与 py-docker 都只负责搬运。
+///
+/// 曾经这里单列过一个 `api_key` 字段,hiai 为此在 mergeRuntime 里把它从扩展数据中
+/// 挖出来(delete(m,"api_key"))。代价有二:hiclub 的约定泄进了 hiai(分层漏了);
+/// 脚本侧还得多穿一层 plugin_annex['data'][...]。现在扁平:脚本直接
+/// plugin_annex['api_key'] / plugin_annex['其它键']。
 class PluginAnnex extends $pb.GeneratedMessage {
   factory PluginAnnex({
-    $core.String? apiKey,
     $2.Struct? data,
   }) {
     final result = create();
-    if (apiKey != null) result.apiKey = apiKey;
     if (data != null) result.data = data;
     return result;
   }
@@ -47,7 +53,6 @@ class PluginAnnex extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PluginAnnex',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'apiKey')
     ..aOM<$2.Struct>(2, _omitFieldNames ? '' : 'data',
         subBuilder: $2.Struct.create)
     ..hasRequiredFields = false;
@@ -71,25 +76,16 @@ class PluginAnnex extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<PluginAnnex>(create);
   static PluginAnnex? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  $core.String get apiKey => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set apiKey($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasApiKey() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearApiKey() => $_clearField(1);
-
   @$pb.TagNumber(2)
-  $2.Struct get data => $_getN(1);
+  $2.Struct get data => $_getN(0);
   @$pb.TagNumber(2)
   set data($2.Struct value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasData() => $_has(1);
+  $core.bool hasData() => $_has(0);
   @$pb.TagNumber(2)
   void clearData() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Struct ensureData() => $_ensure(1);
+  $2.Struct ensureData() => $_ensure(0);
 }
 
 class RunReq extends $pb.GeneratedMessage {

@@ -19,7 +19,6 @@ import 'dart:typed_data' as $typed_data;
 const PluginAnnex$json = {
   '1': 'PluginAnnex',
   '2': [
-    {'1': 'api_key', '3': 1, '4': 1, '5': 9, '10': 'apiKey'},
     {
       '1': 'data',
       '3': 2,
@@ -29,12 +28,16 @@ const PluginAnnex$json = {
       '10': 'data'
     },
   ],
+  '9': [
+    {'1': 1, '2': 2},
+  ],
+  '10': ['api_key'],
 };
 
 /// Descriptor for `PluginAnnex`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginAnnexDescriptor = $convert.base64Decode(
-    'CgtQbHVnaW5Bbm5leBIXCgdhcGlfa2V5GAEgASgJUgZhcGlLZXkSKwoEZGF0YRgCIAEoCzIXLm'
-    'dvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RSBGRhdGE=');
+    'CgtQbHVnaW5Bbm5leBIrCgRkYXRhGAIgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFIEZG'
+    'F0YUoECAEQAlIHYXBpX2tleQ==');
 
 @$core.Deprecated('Use runReqDescriptor instead')
 const RunReq$json = {

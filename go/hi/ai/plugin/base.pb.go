@@ -52,13 +52,20 @@ const (
 )
 
 // ── py-docker 执行契约(独立 py-docker 服务实现,hiai 只作调用方)──────────────
-// 运行期 plugin_annex = c.data ∪ d.data(激活版),作字典全局变量 plugin_annex 注入。
-// 这里保留 {api_key, data} 的注入形态不变(py-docker 契约),由 hiai 从 c.data 取 api_key、
-// data = c.data ∪ d.data 合并;脚本照旧 plugin_annex['api_key'] / plugin_annex[...]。
+//
+// 运行期 plugin_annex = c.data ∪ d.data(激活版),**原样**作字典全局变量注入脚本。
+//
+// ⚠️ **这是一袋不透明的键值,谁都不该认识里面有什么。**
+// api_key 只是其中一个普通键,由 **hiclub** 塞进 c.data(见它的 withApiKey ——
+// 只有它知道哪台机器人对应哪个 apikey);hiai 与 py-docker 都只负责搬运。
+//
+// 曾经这里单列过一个 `api_key` 字段,hiai 为此在 mergeRuntime 里把它从扩展数据中
+// 挖出来(delete(m,"api_key"))。代价有二:hiclub 的约定泄进了 hiai(分层漏了);
+// 脚本侧还得多穿一层 plugin_annex['data'][...]。现在扁平:脚本直接
+// plugin_annex['api_key'] / plugin_annex['其它键']。
 type PluginAnnex struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // 运行期注入用:取自 c.data 的 api_key
-	Data          *structpb.Struct       `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`                   // 运行期注入用:c.data ∪ d.data(激活版)
+	Data          *structpb.Struct       `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"` // 扩展数据(c.data ∪ d.data,版本级覆盖插件级)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -91,13 +98,6 @@ func (x *PluginAnnex) ProtoReflect() protoreflect.Message {
 // Deprecated: Use PluginAnnex.ProtoReflect.Descriptor instead.
 func (*PluginAnnex) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *PluginAnnex) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
-	}
-	return ""
 }
 
 func (x *PluginAnnex) GetData() *structpb.Struct {
@@ -275,10 +275,9 @@ var File_hi_ai_plugin_base_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\"S\n" +
-	"\vPluginAnnex\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12+\n" +
-	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xac\x01\n" +
+	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\"I\n" +
+	"\vPluginAnnex\x12+\n" +
+	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04dataJ\x04\b\x01\x10\x02R\aapi_key\"\xac\x01\n" +
 	"\x06RunReq\x12(\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x1f\n" +
 	"\vcode_params\x18\x02 \x01(\tR\n" +

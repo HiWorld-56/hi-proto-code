@@ -98,16 +98,10 @@ impl serde::Serialize for PluginAnnex {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.api_key.is_empty() {
-            len += 1;
-        }
         if self.data.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.PluginAnnex", len)?;
-        if !self.api_key.is_empty() {
-            struct_ser.serialize_field("apiKey", &self.api_key)?;
-        }
         if let Some(v) = self.data.as_ref() {
             struct_ser.serialize_field("data", v)?;
         }
@@ -121,14 +115,11 @@ impl<'de> serde::Deserialize<'de> for PluginAnnex {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "api_key",
-            "apiKey",
             "data",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ApiKey,
             Data,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -151,7 +142,6 @@ impl<'de> serde::Deserialize<'de> for PluginAnnex {
                         E: serde::de::Error,
                     {
                         match value {
-                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
                             "data" => Ok(GeneratedField::Data),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -172,16 +162,9 @@ impl<'de> serde::Deserialize<'de> for PluginAnnex {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut api_key__ = None;
                 let mut data__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ApiKey => {
-                            if api_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("apiKey"));
-                            }
-                            api_key__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Data => {
                             if data__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("data"));
@@ -191,7 +174,6 @@ impl<'de> serde::Deserialize<'de> for PluginAnnex {
                     }
                 }
                 Ok(PluginAnnex {
-                    api_key: api_key__.unwrap_or_default(),
                     data: data__,
                 })
             }
