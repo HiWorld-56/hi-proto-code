@@ -42,7 +42,7 @@ type MerchantInfo struct {
 	CustomTokens  []*Coin                `protobuf:"bytes,6,rep,name=custom_tokens,json=customTokens,proto3" json:"custom_tokens,omitempty"` // 自定义币种
 	Endpoint      string                 `protobuf:"bytes,7,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
 	Scheme        string                 `protobuf:"bytes,8,opt,name=scheme,proto3" json:"scheme,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1662,8 +1662,7 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\bendpoint\x18\a \x01(\tB\x04\x90\xb5\x18\x02R\bendpoint\x12\x1c\n" +
 	"\x06scheme\x18\b \x01(\tB\x04\x90\xb5\x18\x02R\x06scheme\x12#\n" +
 	"\n" +
-	"created_at\x18\n" +
-	" \x01(\x03B\x04\x90\xb5\x18\x02R\tcreatedAt:\x04\x98\xb5\x18\x02\"G\n" +
+	"created_at\x18\t \x01(\x03B\x04\x90\xb5\x18\x02R\tcreatedAt:\x04\x98\xb5\x18\x02\"G\n" +
 	"\x0fMerchantGetResp\x12.\n" +
 	"\x04info\x18\x01 \x01(\v2\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04info:\x04\x98\xb5\x18\x02\"\x82\x01\n" +
 	"\x0eMerchantSetReq\x12\x12\n" +

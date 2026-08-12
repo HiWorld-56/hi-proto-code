@@ -135,13 +135,13 @@ func (x *AgentDelayUnit) GetTestTime() int64 {
 
 // 概览:**每台机器人各一条**(各自最新)。要看某一台的历次记录用 ListHistory。
 //
-// 注:字段号 1 空着 —— 原 `agent`,传了它这个方法就悄悄变成"只回那台的最新一条",
+// 原先第一个字段是 `agent`,传了它这个方法就悄悄变成"只回那台的最新一条",
 // 而且**连分页都忽略、total 恒为 1**:一个方法两种语义、靠参数空不空隐式分支,
 // proto 上完全看不出来。已拆成 ListHistory,**别再把 agent 加回这里**。
 type ListAgentDelaysReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // 可选:按类型过滤(**空 = 全部类型**)
-	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // 可选:按类型过滤(**空 = 全部类型**)
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -319,9 +319,9 @@ const file_hi_ai_bench_proto_rawDesc = "" +
 	"\rfunction_call\x18\b \x01(\x05B\x04\x90\xb5\x18\x03R\ffunctionCall\x12!\n" +
 	"\ttest_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03R\btestTime:\x04\x98\xb5\x18\x03\"X\n" +
 	"\x12ListAgentDelaysReq\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\x12.\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12.\n" +
 	"\n" +
-	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"\x82\x01\n" +
 	"\x18ListAgentDelayHistoryReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12\x12\n" +

@@ -527,7 +527,7 @@ class TradeDetail extends $pb.GeneratedMessage {
         valueCreator: TradeTrans.create,
         valueDefaultOrMaker: TradeTrans.getDefault,
         packageName: const $pb.PackageName('hi.club'))
-    ..aInt64(8, _omitFieldNames ? '' : 'timestamp')
+    ..aInt64(6, _omitFieldNames ? '' : 'timestamp')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -592,14 +592,14 @@ class TradeDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $pb.PbMap<$core.String, TradeTrans> get list => $_getMap(4);
 
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(6)
   $fixnum.Int64 get timestamp => $_getI64(5);
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(6)
   set timestamp($fixnum.Int64 value) => $_setInt64(5, value);
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(6)
   $core.bool hasTimestamp() => $_has(5);
-  @$pb.TagNumber(8)
-  void clearTimestamp() => $_clearField(8);
+  @$pb.TagNumber(6)
+  void clearTimestamp() => $_clearField(6);
 }
 
 /// 我的交易详情壳。

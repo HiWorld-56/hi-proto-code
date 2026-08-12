@@ -63,12 +63,10 @@ const (
 // 挖出来(delete(m,"api_key"))。代价有二:hiclub 的约定泄进了 hiai(分层漏了);
 // 脚本侧还得多穿一层 plugin_annex['data'][...]。现在扁平:脚本直接
 // plugin_annex['api_key'] / plugin_annex['其它键']。
-// 注:字段号 1 空着 —— 原 `api_key`,hiai 不该认识它,已并回 data 里的普通键。
-// **不要把 data 挪到 1 去补这个洞**:线上 hi-ai 与 py-docker 都按 2 在跑,
-// 改号会让扩展数据在版本错开的那一刻静默变空(不报错,只是脚本收到空字典)。
+// 原先还有个 `api_key` 字段(号 1),hiai 不该认识它,已并回 data 里的普通键。
 type PluginAnnex struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          *structpb.Struct       `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"` // 扩展数据(c.data ∪ d.data,版本级覆盖插件级)
+	Data          *structpb.Struct       `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"` // 扩展数据(c.data ∪ d.data,版本级覆盖插件级)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -280,7 +278,7 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\n" +
 	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\":\n" +
 	"\vPluginAnnex\x12+\n" +
-	"\x04data\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xac\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xac\x01\n" +
 	"\x06RunReq\x12(\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x1f\n" +
 	"\vcode_params\x18\x02 \x01(\tR\n" +

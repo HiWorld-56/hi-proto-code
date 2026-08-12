@@ -31,9 +31,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// 挖出来(delete(m,"api_key"))。代价有二:hiclub 的约定泄进了 hiai(分层漏了);
 /// 脚本侧还得多穿一层 plugin_annex['data'][...]。现在扁平:脚本直接
 /// plugin_annex['api_key'] / plugin_annex['其它键']。
-/// 注:字段号 1 空着 —— 原 `api_key`,hiai 不该认识它,已并回 data 里的普通键。
-/// **不要把 data 挪到 1 去补这个洞**:线上 hi-ai 与 py-docker 都按 2 在跑,
-/// 改号会让扩展数据在版本错开的那一刻静默变空(不报错,只是脚本收到空字典)。
+/// 原先还有个 `api_key` 字段(号 1),hiai 不该认识它,已并回 data 里的普通键。
 class PluginAnnex extends $pb.GeneratedMessage {
   factory PluginAnnex({
     $2.Struct? data,
@@ -56,7 +54,7 @@ class PluginAnnex extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PluginAnnex',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
       createEmptyInstance: create)
-    ..aOM<$2.Struct>(2, _omitFieldNames ? '' : 'data',
+    ..aOM<$2.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $2.Struct.create)
     ..hasRequiredFields = false;
 
@@ -79,15 +77,15 @@ class PluginAnnex extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<PluginAnnex>(create);
   static PluginAnnex? _defaultInstance;
 
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $2.Struct get data => $_getN(0);
-  @$pb.TagNumber(2)
-  set data($2.Struct value) => $_setField(2, value);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
+  set data($2.Struct value) => $_setField(1, value);
+  @$pb.TagNumber(1)
   $core.bool hasData() => $_has(0);
-  @$pb.TagNumber(2)
-  void clearData() => $_clearField(2);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
+  void clearData() => $_clearField(1);
+  @$pb.TagNumber(1)
   $2.Struct ensureData() => $_ensure(0);
 }
 

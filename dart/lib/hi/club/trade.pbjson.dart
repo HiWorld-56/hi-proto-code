@@ -181,7 +181,7 @@ const TradeDetail$json = {
       '8': {},
       '10': 'list'
     },
-    {'1': 'timestamp', '3': 8, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
+    {'1': 'timestamp', '3': 6, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
   ],
   '3': [TradeDetail_ListEntry$json],
   '7': {},
@@ -210,7 +210,7 @@ final $typed_data.Uint8List tradeDetailDescriptor = $convert.base64Decode(
     'gJQgSQtRgDUgZzdGF0dXMSLAoEZnJvbRgDIAEoCzISLmhpLmNsdWIuVHJhZGVVbml0QgSQtRgC'
     'UgRmcm9tEigKAnRvGAQgASgLMhIuaGkuY2x1Yi5UcmFkZVVuaXRCBJC1GAJSAnRvEjgKBGxpc3'
     'QYBSADKAsyHi5oaS5jbHViLlRyYWRlRGV0YWlsLkxpc3RFbnRyeUIEkLUYA1IEbGlzdBIiCgl0'
-    'aW1lc3RhbXAYCCABKANCBJC1GANSCXRpbWVzdGFtcBpMCglMaXN0RW50cnkSEAoDa2V5GAEgAS'
+    'aW1lc3RhbXAYBiABKANCBJC1GANSCXRpbWVzdGFtcBpMCglMaXN0RW50cnkSEAoDa2V5GAEgAS'
     'gJUgNrZXkSKQoFdmFsdWUYAiABKAsyEy5oaS5jbHViLlRyYWRlVHJhbnNSBXZhbHVlOgI4AToE'
     'mLUYAw==');
 

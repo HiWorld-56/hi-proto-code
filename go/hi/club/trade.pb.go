@@ -381,7 +381,7 @@ type TradeDetail struct {
 	From          *TradeUnit             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // TradeUnit=PARTICIPANT
 	To            *TradeUnit             `protobuf:"bytes,4,opt,name=to,proto3" json:"to,omitempty"`
 	List          map[string]*TradeTrans `protobuf:"bytes,5,rep,name=list,proto3" json:"list,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // TradeTrans=SELF
-	Timestamp     int64                  `protobuf:"varint,8,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -837,7 +837,7 @@ const file_hi_club_trade_proto_rawDesc = "" +
 	"\x04from\x18\x03 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x04from\x12(\n" +
 	"\x02to\x18\x04 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x02to\x128\n" +
 	"\x04list\x18\x05 \x03(\v2\x1e.hi.club.TradeDetail.ListEntryB\x04\x90\xb5\x18\x03R\x04list\x12\"\n" +
-	"\ttimestamp\x18\b \x01(\x03B\x04\x90\xb5\x18\x03R\ttimestamp\x1aL\n" +
+	"\ttimestamp\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\ttimestamp\x1aL\n" +
 	"\tListEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12)\n" +
 	"\x05value\x18\x02 \x01(\v2\x13.hi.club.TradeTransR\x05value:\x028\x01:\x04\x98\xb5\x18\x03\"H\n" +

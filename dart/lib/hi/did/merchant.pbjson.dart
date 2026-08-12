@@ -59,7 +59,7 @@ const MerchantInfo$json = {
     },
     {'1': 'endpoint', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'endpoint'},
     {'1': 'scheme', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'scheme'},
-    {'1': 'created_at', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+    {'1': 'created_at', '3': 9, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
   ],
   '7': {},
 };
@@ -72,7 +72,7 @@ final $typed_data.Uint8List merchantInfoDescriptor = $convert.base64Decode(
     'gFIAMoCzIMLmhpLmRpZC5Db2luQgSQtRgCUgtwdWJsaWNDb2lucxI3Cg1jdXN0b21fdG9rZW5z'
     'GAYgAygLMgwuaGkuZGlkLkNvaW5CBJC1GAJSDGN1c3RvbVRva2VucxIgCghlbmRwb2ludBgHIA'
     'EoCUIEkLUYAlIIZW5kcG9pbnQSHAoGc2NoZW1lGAggASgJQgSQtRgCUgZzY2hlbWUSIwoKY3Jl'
-    'YXRlZF9hdBgKIAEoA0IEkLUYAlIJY3JlYXRlZEF0OgSYtRgC');
+    'YXRlZF9hdBgJIAEoA0IEkLUYAlIJY3JlYXRlZEF0OgSYtRgC');
 
 @$core.Deprecated('Use merchantGetRespDescriptor instead')
 const MerchantGetResp$json = {

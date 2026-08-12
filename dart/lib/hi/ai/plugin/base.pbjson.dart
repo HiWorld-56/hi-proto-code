@@ -21,7 +21,7 @@ const PluginAnnex$json = {
   '2': [
     {
       '1': 'data',
-      '3': 2,
+      '3': 1,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Struct',
@@ -32,7 +32,7 @@ const PluginAnnex$json = {
 
 /// Descriptor for `PluginAnnex`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginAnnexDescriptor = $convert.base64Decode(
-    'CgtQbHVnaW5Bbm5leBIrCgRkYXRhGAIgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFIEZG'
+    'CgtQbHVnaW5Bbm5leBIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFIEZG'
     'F0YQ==');
 
 @$core.Deprecated('Use runReqDescriptor instead')

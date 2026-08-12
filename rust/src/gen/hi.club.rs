@@ -72,7 +72,7 @@ pub struct TradeDetail {
     /// TradeTrans=SELF
     #[prost(map = "string, message", tag = "5")]
     pub list: ::std::collections::HashMap<::prost::alloc::string::String, TradeTrans>,
-    #[prost(int64, tag = "8")]
+    #[prost(int64, tag = "6")]
     pub timestamp: i64,
 }
 /// 我的交易详情壳。
@@ -657,25 +657,25 @@ pub struct PcOrderData {
 }
 /// 我的订单(hidid-pc 为订单主体拉取)→ SELF。
 ///
-/// 注:字段号 1 空着 —— 原 `id` 填的是 hi_trade_sub_order 库的自增主键,违反
+/// 原先第一个字段是 `id`,填的是 hi_trade_sub_order 库的自增主键,违反
 /// "自增 id 禁止跨端流转"铁律,且下游回传只认 order_id(uuid),从无消费方,已删除。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PcOrder {
-    #[prost(string, tag = "2")]
+    #[prost(string, tag = "1")]
     pub order_id: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
+    #[prost(string, tag = "2")]
     pub to_did: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
+    #[prost(string, tag = "3")]
     pub amount: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
+    #[prost(string, tag = "4")]
     pub r#type: ::prost::alloc::string::String,
-    #[prost(int64, tag = "6")]
+    #[prost(int64, tag = "5")]
     pub created_at: i64,
-    #[prost(int64, tag = "7")]
+    #[prost(int64, tag = "6")]
     pub updated_at: i64,
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "7")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "8")]
     pub status: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]

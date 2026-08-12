@@ -77,7 +77,7 @@ class MerchantInfo extends $pb.GeneratedMessage {
         subBuilder: $3.Coin.create)
     ..aOS(7, _omitFieldNames ? '' : 'endpoint')
     ..aOS(8, _omitFieldNames ? '' : 'scheme')
-    ..aInt64(10, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(9, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -163,14 +163,14 @@ class MerchantInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearScheme() => $_clearField(8);
 
-  @$pb.TagNumber(10)
+  @$pb.TagNumber(9)
   $fixnum.Int64 get createdAt => $_getI64(8);
-  @$pb.TagNumber(10)
+  @$pb.TagNumber(9)
   set createdAt($fixnum.Int64 value) => $_setInt64(8, value);
-  @$pb.TagNumber(10)
+  @$pb.TagNumber(9)
   $core.bool hasCreatedAt() => $_has(8);
-  @$pb.TagNumber(10)
-  void clearCreatedAt() => $_clearField(10);
+  @$pb.TagNumber(9)
+  void clearCreatedAt() => $_clearField(9);
 }
 
 class MerchantGetResp extends $pb.GeneratedMessage {

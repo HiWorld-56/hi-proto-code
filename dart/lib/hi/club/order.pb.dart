@@ -88,7 +88,7 @@ class PcOrderData extends $pb.GeneratedMessage {
 
 /// 我的订单(hidid-pc 为订单主体拉取)→ SELF。
 ///
-/// 注:字段号 1 空着 —— 原 `id` 填的是 hi_trade_sub_order 库的自增主键,违反
+/// 原先第一个字段是 `id`,填的是 hi_trade_sub_order 库的自增主键,违反
 /// "自增 id 禁止跨端流转"铁律,且下游回传只认 order_id(uuid),从无消费方,已删除。
 class PcOrder extends $pb.GeneratedMessage {
   factory PcOrder({
@@ -126,14 +126,14 @@ class PcOrder extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PcOrder',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(2, _omitFieldNames ? '' : 'orderId')
-    ..aOS(3, _omitFieldNames ? '' : 'toDid')
-    ..aOS(4, _omitFieldNames ? '' : 'amount')
-    ..aOS(5, _omitFieldNames ? '' : 'type')
-    ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
-    ..aInt64(7, _omitFieldNames ? '' : 'updatedAt')
-    ..aOS(8, _omitFieldNames ? '' : 'did')
-    ..aOS(9, _omitFieldNames ? '' : 'status')
+    ..aOS(1, _omitFieldNames ? '' : 'orderId')
+    ..aOS(2, _omitFieldNames ? '' : 'toDid')
+    ..aOS(3, _omitFieldNames ? '' : 'amount')
+    ..aOS(4, _omitFieldNames ? '' : 'type')
+    ..aInt64(5, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(6, _omitFieldNames ? '' : 'updatedAt')
+    ..aOS(7, _omitFieldNames ? '' : 'did')
+    ..aOS(8, _omitFieldNames ? '' : 'status')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -154,77 +154,77 @@ class PcOrder extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PcOrder>(create);
   static PcOrder? _defaultInstance;
 
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.String get orderId => $_getSZ(0);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   set orderId($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.bool hasOrderId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderId() => $_clearField(1);
+
   @$pb.TagNumber(2)
-  void clearOrderId() => $_clearField(2);
-
-  @$pb.TagNumber(3)
   $core.String get toDid => $_getSZ(1);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
   set toDid($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
   $core.bool hasToDid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearToDid() => $_clearField(2);
+
   @$pb.TagNumber(3)
-  void clearToDid() => $_clearField(3);
-
-  @$pb.TagNumber(4)
   $core.String get amount => $_getSZ(2);
-  @$pb.TagNumber(4)
+  @$pb.TagNumber(3)
   set amount($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(4)
+  @$pb.TagNumber(3)
   $core.bool hasAmount() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAmount() => $_clearField(3);
+
   @$pb.TagNumber(4)
-  void clearAmount() => $_clearField(4);
-
-  @$pb.TagNumber(5)
   $core.String get type => $_getSZ(3);
-  @$pb.TagNumber(5)
+  @$pb.TagNumber(4)
   set type($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(5)
+  @$pb.TagNumber(4)
   $core.bool hasType() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearType() => $_clearField(4);
+
   @$pb.TagNumber(5)
-  void clearType() => $_clearField(5);
-
-  @$pb.TagNumber(6)
   $fixnum.Int64 get createdAt => $_getI64(4);
-  @$pb.TagNumber(6)
+  @$pb.TagNumber(5)
   set createdAt($fixnum.Int64 value) => $_setInt64(4, value);
-  @$pb.TagNumber(6)
+  @$pb.TagNumber(5)
   $core.bool hasCreatedAt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCreatedAt() => $_clearField(5);
+
   @$pb.TagNumber(6)
-  void clearCreatedAt() => $_clearField(6);
-
-  @$pb.TagNumber(7)
   $fixnum.Int64 get updatedAt => $_getI64(5);
-  @$pb.TagNumber(7)
+  @$pb.TagNumber(6)
   set updatedAt($fixnum.Int64 value) => $_setInt64(5, value);
-  @$pb.TagNumber(7)
+  @$pb.TagNumber(6)
   $core.bool hasUpdatedAt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearUpdatedAt() => $_clearField(6);
+
   @$pb.TagNumber(7)
-  void clearUpdatedAt() => $_clearField(7);
-
-  @$pb.TagNumber(8)
   $core.String get did => $_getSZ(6);
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(7)
   set did($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(7)
   $core.bool hasDid() => $_has(6);
-  @$pb.TagNumber(8)
-  void clearDid() => $_clearField(8);
+  @$pb.TagNumber(7)
+  void clearDid() => $_clearField(7);
 
-  @$pb.TagNumber(9)
+  @$pb.TagNumber(8)
   $core.String get status => $_getSZ(7);
-  @$pb.TagNumber(9)
+  @$pb.TagNumber(8)
   set status($core.String value) => $_setString(7, value);
-  @$pb.TagNumber(9)
+  @$pb.TagNumber(8)
   $core.bool hasStatus() => $_has(7);
-  @$pb.TagNumber(9)
-  void clearStatus() => $_clearField(9);
+  @$pb.TagNumber(8)
+  void clearStatus() => $_clearField(8);
 }
 
 class GetNotPulledPcOrdersResp extends $pb.GeneratedMessage {

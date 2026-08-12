@@ -1034,7 +1034,7 @@ pub struct MerchantInfo {
     pub endpoint: ::prost::alloc::string::String,
     #[prost(string, tag = "8")]
     pub scheme: ::prost::alloc::string::String,
-    #[prost(int64, tag = "10")]
+    #[prost(int64, tag = "9")]
     pub created_at: i64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]

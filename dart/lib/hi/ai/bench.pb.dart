@@ -173,7 +173,7 @@ class AgentDelayUnit extends $pb.GeneratedMessage {
 
 /// 概览:**每台机器人各一条**(各自最新)。要看某一台的历次记录用 ListHistory。
 ///
-/// 注:字段号 1 空着 —— 原 `agent`,传了它这个方法就悄悄变成"只回那台的最新一条",
+/// 原先第一个字段是 `agent`,传了它这个方法就悄悄变成"只回那台的最新一条",
 /// 而且**连分页都忽略、total 恒为 1**:一个方法两种语义、靠参数空不空隐式分支,
 /// proto 上完全看不出来。已拆成 ListHistory,**别再把 agent 加回这里**。
 class ListAgentDelaysReq extends $pb.GeneratedMessage {
@@ -200,8 +200,8 @@ class ListAgentDelaysReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListAgentDelaysReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOM<$1.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+    ..aOS(1, _omitFieldNames ? '' : 'type')
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $1.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -224,24 +224,24 @@ class ListAgentDelaysReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListAgentDelaysReq>(create);
   static ListAgentDelaysReq? _defaultInstance;
 
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.String get type => $_getSZ(0);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   set type($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.bool hasType() => $_has(0);
-  @$pb.TagNumber(2)
-  void clearType() => $_clearField(2);
+  @$pb.TagNumber(1)
+  void clearType() => $_clearField(1);
 
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
   $1.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(3)
-  set pagination($1.Pagination value) => $_setField(3, value);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  set pagination($1.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(3)
-  void clearPagination() => $_clearField(3);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
   $1.Pagination ensurePagination() => $_ensure(1);
 }
 
