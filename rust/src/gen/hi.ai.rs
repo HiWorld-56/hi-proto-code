@@ -28,6 +28,21 @@ pub struct CompleteReq {
     pub state: ::prost::alloc::string::String,
     #[prost(string, tag = "5")]
     pub custom: ::prost::alloc::string::String,
+    /// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
+    /// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
+    /// 模型看着 tools 自己决定 → 调 → 结果回喂 → 模型二次回复)。这两个开关只决定
+    /// 过程数据要不要一并流给调用方。
+    ///
+    /// 这两个字段在 dev45 那次迁移(Stream→CompleteStream)时**从请求里漏掉了**,
+    /// 而读它们的代码原样留着 → 恒 false → toolCalls 帧与训练数据从此再没发出去过,
+    /// 不报错、类型也对,只是值永远是零值。补回来。
+    ///
+    /// 发 type="toolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+    #[prost(bool, tag = "6")]
+    pub return_plugin_use: bool,
+    /// 回训练数据(命中的记忆片段)
+    #[prost(bool, tag = "7")]
+    pub return_training_data: bool,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CompleteResp {

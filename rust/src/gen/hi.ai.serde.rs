@@ -1623,6 +1623,12 @@ impl serde::Serialize for CompleteReq {
         if !self.custom.is_empty() {
             len += 1;
         }
+        if self.return_plugin_use {
+            len += 1;
+        }
+        if self.return_training_data {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CompleteReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -1639,6 +1645,12 @@ impl serde::Serialize for CompleteReq {
         if !self.custom.is_empty() {
             struct_ser.serialize_field("custom", &self.custom)?;
         }
+        if self.return_plugin_use {
+            struct_ser.serialize_field("returnPluginUse", &self.return_plugin_use)?;
+        }
+        if self.return_training_data {
+            struct_ser.serialize_field("returnTrainingData", &self.return_training_data)?;
+        }
         struct_ser.end()
     }
 }
@@ -1654,6 +1666,10 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
             "conts",
             "state",
             "custom",
+            "return_plugin_use",
+            "returnPluginUse",
+            "return_training_data",
+            "returnTrainingData",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1663,6 +1679,8 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
             Conts,
             State,
             Custom,
+            ReturnPluginUse,
+            ReturnTrainingData,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1689,6 +1707,8 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                             "conts" => Ok(GeneratedField::Conts),
                             "state" => Ok(GeneratedField::State),
                             "custom" => Ok(GeneratedField::Custom),
+                            "returnPluginUse" | "return_plugin_use" => Ok(GeneratedField::ReturnPluginUse),
+                            "returnTrainingData" | "return_training_data" => Ok(GeneratedField::ReturnTrainingData),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1713,6 +1733,8 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                 let mut conts__ = None;
                 let mut state__ = None;
                 let mut custom__ = None;
+                let mut return_plugin_use__ = None;
+                let mut return_training_data__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -1745,6 +1767,18 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                             }
                             custom__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::ReturnPluginUse => {
+                            if return_plugin_use__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("returnPluginUse"));
+                            }
+                            return_plugin_use__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ReturnTrainingData => {
+                            if return_training_data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("returnTrainingData"));
+                            }
+                            return_training_data__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(CompleteReq {
@@ -1753,6 +1787,8 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                     conts: conts__.unwrap_or_default(),
                     state: state__.unwrap_or_default(),
                     custom: custom__.unwrap_or_default(),
+                    return_plugin_use: return_plugin_use__.unwrap_or_default(),
+                    return_training_data: return_training_data__.unwrap_or_default(),
                 })
             }
         }

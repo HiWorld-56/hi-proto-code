@@ -59,6 +59,14 @@ const CompleteReq$json = {
     },
     {'1': 'state', '3': 4, '4': 1, '5': 9, '10': 'state'},
     {'1': 'custom', '3': 5, '4': 1, '5': 9, '10': 'custom'},
+    {'1': 'return_plugin_use', '3': 6, '4': 1, '5': 8, '10': 'returnPluginUse'},
+    {
+      '1': 'return_training_data',
+      '3': 7,
+      '4': 1,
+      '5': 8,
+      '10': 'returnTrainingData'
+    },
   ],
 };
 
@@ -66,7 +74,9 @@ const CompleteReq$json = {
 final $typed_data.Uint8List completeReqDescriptor = $convert.base64Decode(
     'CgtDb21wbGV0ZVJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEAoDY2lkGAIgASgJUgNjaWQSJA'
     'oFY29udHMYAyADKAsyDi5oaS5haS5Db250ZW50UgVjb250cxIUCgVzdGF0ZRgEIAEoCVIFc3Rh'
-    'dGUSFgoGY3VzdG9tGAUgASgJUgZjdXN0b20=');
+    'dGUSFgoGY3VzdG9tGAUgASgJUgZjdXN0b20SKgoRcmV0dXJuX3BsdWdpbl91c2UYBiABKAhSD3'
+    'JldHVyblBsdWdpblVzZRIwChRyZXR1cm5fdHJhaW5pbmdfZGF0YRgHIAEoCFIScmV0dXJuVHJh'
+    'aW5pbmdEYXRh');
 
 @$core.Deprecated('Use completeRespDescriptor instead')
 const CompleteResp$json = {

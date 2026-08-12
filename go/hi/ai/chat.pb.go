@@ -125,14 +125,25 @@ func (x *NewSessionResp) GetCid() string {
 // 服务端把一轮对话**整个跑完**(function call 也在服务端执行),客户端不参与工具调用,直接拿最终答复。
 // Complete = 一次性;CompleteStream = 流式。与下面 Converse/Resume(客户端 tool-callback 两阶段)是两条路。
 type CompleteReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
-	Custom        string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Agent  string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Cid    string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
+	Conts  []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
+	State  string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
+	Custom string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
+	// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
+	// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
+	//
+	//	模型看着 tools 自己决定 → 调 → 结果回喂 → 模型二次回复)。这两个开关只决定
+	//	过程数据要不要一并流给调用方。
+	//
+	// 这两个字段在 dev45 那次迁移(Stream→CompleteStream)时**从请求里漏掉了**,
+	// 而读它们的代码原样留着 → 恒 false → toolCalls 帧与训练数据从此再没发出去过,
+	// 不报错、类型也对,只是值永远是零值。补回来。
+	ReturnPluginUse    bool `protobuf:"varint,6,opt,name=return_plugin_use,json=returnPluginUse,proto3" json:"return_plugin_use,omitempty"`          // 发 type="toolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+	ReturnTrainingData bool `protobuf:"varint,7,opt,name=return_training_data,json=returnTrainingData,proto3" json:"return_training_data,omitempty"` // 回训练数据(命中的记忆片段)
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *CompleteReq) Reset() {
@@ -198,6 +209,20 @@ func (x *CompleteReq) GetCustom() string {
 		return x.Custom
 	}
 	return ""
+}
+
+func (x *CompleteReq) GetReturnPluginUse() bool {
+	if x != nil {
+		return x.ReturnPluginUse
+	}
+	return false
+}
+
+func (x *CompleteReq) GetReturnTrainingData() bool {
+	if x != nil {
+		return x.ReturnTrainingData
+	}
+	return false
 }
 
 type CompleteResp struct {
@@ -992,13 +1017,15 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1e\n" +
 	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\acontent:\x04\x98\xb5\x18\x03\".\n" +
 	"\x0eNewSessionResp\x12\x16\n" +
-	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03cid:\x04\x98\xb5\x18\x03\"\x89\x01\n" +
+	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03cid:\x04\x98\xb5\x18\x03\"\xe7\x01\n" +
 	"\vCompleteReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12$\n" +
 	"\x05conts\x18\x03 \x03(\v2\x0e.hi.ai.ContentR\x05conts\x12\x14\n" +
 	"\x05state\x18\x04 \x01(\tR\x05state\x12\x16\n" +
-	"\x06custom\x18\x05 \x01(\tR\x06custom\"0\n" +
+	"\x06custom\x18\x05 \x01(\tR\x06custom\x12*\n" +
+	"\x11return_plugin_use\x18\x06 \x01(\bR\x0freturnPluginUse\x120\n" +
+	"\x14return_training_data\x18\a \x01(\bR\x12returnTrainingData\"0\n" +
 	"\fCompleteResp\x12\x1a\n" +
 	"\x05reply\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05reply:\x04\x98\xb5\x18\x03\"n\n" +
 	"\x12CompleteStreamResp\x12\x18\n" +
