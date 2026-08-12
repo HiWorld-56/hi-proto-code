@@ -27,6 +27,8 @@ class CompleteReq extends $pb.GeneratedMessage {
     $core.Iterable<$3.Content>? conts,
     $core.String? state,
     $core.String? custom,
+    $core.bool? returnPluginUse,
+    $core.bool? returnTrainingData,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -34,6 +36,9 @@ class CompleteReq extends $pb.GeneratedMessage {
     if (conts != null) result.conts.addAll(conts);
     if (state != null) result.state = state;
     if (custom != null) result.custom = custom;
+    if (returnPluginUse != null) result.returnPluginUse = returnPluginUse;
+    if (returnTrainingData != null)
+      result.returnTrainingData = returnTrainingData;
     return result;
   }
 
@@ -56,6 +61,8 @@ class CompleteReq extends $pb.GeneratedMessage {
         subBuilder: $3.Content.create)
     ..aOS(4, _omitFieldNames ? '' : 'state')
     ..aOS(5, _omitFieldNames ? '' : 'custom')
+    ..aOB(6, _omitFieldNames ? '' : 'returnPluginUse')
+    ..aOB(7, _omitFieldNames ? '' : 'returnTrainingData')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -115,6 +122,32 @@ class CompleteReq extends $pb.GeneratedMessage {
   $core.bool hasCustom() => $_has(4);
   @$pb.TagNumber(5)
   void clearCustom() => $_clearField(5);
+
+  /// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
+  /// 与 hi.ai.CompleteReq 的同名字段一一对应,club 原样透传。
+  /// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这两个只决定
+  ///    过程数据要不要一并流给调用方。
+  ///
+  /// 与 ai 侧同因同源:dev45 迁移(Stream→CompleteStream)时从请求里漏掉了,
+  /// 而且 club 这层是**双层丢** —— 自己没有字段,转发给 ai 时自然也带不上,
+  /// 于是经 club 进来的调用方(app / hiclub web)即便 ai 修好了也永远拿不到 toolCalls。
+  @$pb.TagNumber(6)
+  $core.bool get returnPluginUse => $_getBF(5);
+  @$pb.TagNumber(6)
+  set returnPluginUse($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasReturnPluginUse() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearReturnPluginUse() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get returnTrainingData => $_getBF(6);
+  @$pb.TagNumber(7)
+  set returnTrainingData($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasReturnTrainingData() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearReturnTrainingData() => $_clearField(7);
 }
 
 class QA extends $pb.GeneratedMessage {

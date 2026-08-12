@@ -26,14 +26,25 @@ const (
 
 // 服务端整流程执行入参(工具在服务端跑)。
 type CompleteReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
-	Custom        string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Agent  string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Cid    string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
+	Conts  []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
+	State  string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
+	Custom string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
+	// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
+	// 与 hi.ai.CompleteReq 的同名字段一一对应,club 原样透传。
+	// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这两个只决定
+	//
+	//	过程数据要不要一并流给调用方。
+	//
+	// 与 ai 侧同因同源:dev45 迁移(Stream→CompleteStream)时从请求里漏掉了,
+	// 而且 club 这层是**双层丢** —— 自己没有字段,转发给 ai 时自然也带不上,
+	// 于是经 club 进来的调用方(app / hiclub web)即便 ai 修好了也永远拿不到 toolCalls。
+	ReturnPluginUse    bool `protobuf:"varint,6,opt,name=return_plugin_use,json=returnPluginUse,proto3" json:"return_plugin_use,omitempty"`          // 发 type="toolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+	ReturnTrainingData bool `protobuf:"varint,7,opt,name=return_training_data,json=returnTrainingData,proto3" json:"return_training_data,omitempty"` // 回训练数据(命中的记忆片段)
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *CompleteReq) Reset() {
@@ -99,6 +110,20 @@ func (x *CompleteReq) GetCustom() string {
 		return x.Custom
 	}
 	return ""
+}
+
+func (x *CompleteReq) GetReturnPluginUse() bool {
+	if x != nil {
+		return x.ReturnPluginUse
+	}
+	return false
+}
+
+func (x *CompleteReq) GetReturnTrainingData() bool {
+	if x != nil {
+		return x.ReturnTrainingData
+	}
+	return false
 }
 
 type QA struct {
@@ -407,13 +432,15 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"\x8b\x01\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"\xe9\x01\n" +
 	"\vCompleteReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
 	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12\x14\n" +
 	"\x05state\x18\x04 \x01(\tR\x05state\x12\x16\n" +
-	"\x06custom\x18\x05 \x01(\tR\x06custom\"D\n" +
+	"\x06custom\x18\x05 \x01(\tR\x06custom\x12*\n" +
+	"\x11return_plugin_use\x18\x06 \x01(\bR\x0freturnPluginUse\x120\n" +
+	"\x14return_training_data\x18\a \x01(\bR\x12returnTrainingData\"D\n" +
 	"\x02QA\x12$\n" +
 	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x12\n" +
 	"\x01a\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x01a:\x04\x98\xb5\x18\x03\"=\n" +

@@ -31,6 +31,14 @@ const CompleteReq$json = {
     },
     {'1': 'state', '3': 4, '4': 1, '5': 9, '10': 'state'},
     {'1': 'custom', '3': 5, '4': 1, '5': 9, '10': 'custom'},
+    {'1': 'return_plugin_use', '3': 6, '4': 1, '5': 8, '10': 'returnPluginUse'},
+    {
+      '1': 'return_training_data',
+      '3': 7,
+      '4': 1,
+      '5': 8,
+      '10': 'returnTrainingData'
+    },
   ],
 };
 
@@ -38,7 +46,9 @@ const CompleteReq$json = {
 final $typed_data.Uint8List completeReqDescriptor = $convert.base64Decode(
     'CgtDb21wbGV0ZVJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEAoDY2lkGAIgASgJUgNjaWQSJg'
     'oFY29udHMYAyADKAsyEC5oaS5jbHViLkNvbnRlbnRSBWNvbnRzEhQKBXN0YXRlGAQgASgJUgVz'
-    'dGF0ZRIWCgZjdXN0b20YBSABKAlSBmN1c3RvbQ==');
+    'dGF0ZRIWCgZjdXN0b20YBSABKAlSBmN1c3RvbRIqChFyZXR1cm5fcGx1Z2luX3VzZRgGIAEoCF'
+    'IPcmV0dXJuUGx1Z2luVXNlEjAKFHJldHVybl90cmFpbmluZ19kYXRhGAcgASgIUhJyZXR1cm5U'
+    'cmFpbmluZ0RhdGE=');
 
 @$core.Deprecated('Use qADescriptor instead')
 const QA$json = {
