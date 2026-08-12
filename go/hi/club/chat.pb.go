@@ -43,6 +43,7 @@ type CompleteReq struct {
 	// 于是经 club 进来的调用方(app / hiclub web)即便 ai 修好了也永远拿不到 toolCalls。
 	ReturnPluginUse    bool `protobuf:"varint,6,opt,name=return_plugin_use,json=returnPluginUse,proto3" json:"return_plugin_use,omitempty"`          // 发 type="toolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
 	ReturnTrainingData bool `protobuf:"varint,7,opt,name=return_training_data,json=returnTrainingData,proto3" json:"return_training_data,omitempty"` // 回训练数据(命中的记忆片段)
+	ReturnContext      bool `protobuf:"varint,8,opt,name=return_context,json=returnContext,proto3" json:"return_context,omitempty"`                  // 发 type="context" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -122,6 +123,13 @@ func (x *CompleteReq) GetReturnPluginUse() bool {
 func (x *CompleteReq) GetReturnTrainingData() bool {
 	if x != nil {
 		return x.ReturnTrainingData
+	}
+	return false
+}
+
+func (x *CompleteReq) GetReturnContext() bool {
+	if x != nil {
+		return x.ReturnContext
 	}
 	return false
 }
@@ -432,7 +440,7 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"\xe9\x01\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"\x90\x02\n" +
 	"\vCompleteReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
@@ -440,7 +448,8 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x05state\x18\x04 \x01(\tR\x05state\x12\x16\n" +
 	"\x06custom\x18\x05 \x01(\tR\x06custom\x12*\n" +
 	"\x11return_plugin_use\x18\x06 \x01(\bR\x0freturnPluginUse\x120\n" +
-	"\x14return_training_data\x18\a \x01(\bR\x12returnTrainingData\"D\n" +
+	"\x14return_training_data\x18\a \x01(\bR\x12returnTrainingData\x12%\n" +
+	"\x0ereturn_context\x18\b \x01(\bR\rreturnContext\"D\n" +
 	"\x02QA\x12$\n" +
 	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x12\n" +
 	"\x01a\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x01a:\x04\x98\xb5\x18\x03\"=\n" +

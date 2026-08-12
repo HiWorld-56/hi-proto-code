@@ -149,6 +149,7 @@ class CompleteReq extends $pb.GeneratedMessage {
     $core.String? custom,
     $core.bool? returnPluginUse,
     $core.bool? returnTrainingData,
+    $core.bool? returnContext,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -159,6 +160,7 @@ class CompleteReq extends $pb.GeneratedMessage {
     if (returnPluginUse != null) result.returnPluginUse = returnPluginUse;
     if (returnTrainingData != null)
       result.returnTrainingData = returnTrainingData;
+    if (returnContext != null) result.returnContext = returnContext;
     return result;
   }
 
@@ -183,6 +185,7 @@ class CompleteReq extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'custom')
     ..aOB(6, _omitFieldNames ? '' : 'returnPluginUse')
     ..aOB(7, _omitFieldNames ? '' : 'returnTrainingData')
+    ..aOB(8, _omitFieldNames ? '' : 'returnContext')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -268,6 +271,18 @@ class CompleteReq extends $pb.GeneratedMessage {
   $core.bool hasReturnTrainingData() => $_has(6);
   @$pb.TagNumber(7)
   void clearReturnTrainingData() => $_clearField(7);
+
+  /// 发 type="context" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
+  /// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
+  /// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
+  @$pb.TagNumber(8)
+  $core.bool get returnContext => $_getBF(7);
+  @$pb.TagNumber(8)
+  set returnContext($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasReturnContext() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearReturnContext() => $_clearField(8);
 }
 
 class CompleteResp extends $pb.GeneratedMessage {

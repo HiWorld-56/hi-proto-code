@@ -39,6 +39,7 @@ const CompleteReq$json = {
       '5': 8,
       '10': 'returnTrainingData'
     },
+    {'1': 'return_context', '3': 8, '4': 1, '5': 8, '10': 'returnContext'},
   ],
 };
 
@@ -48,7 +49,7 @@ final $typed_data.Uint8List completeReqDescriptor = $convert.base64Decode(
     'oFY29udHMYAyADKAsyEC5oaS5jbHViLkNvbnRlbnRSBWNvbnRzEhQKBXN0YXRlGAQgASgJUgVz'
     'dGF0ZRIWCgZjdXN0b20YBSABKAlSBmN1c3RvbRIqChFyZXR1cm5fcGx1Z2luX3VzZRgGIAEoCF'
     'IPcmV0dXJuUGx1Z2luVXNlEjAKFHJldHVybl90cmFpbmluZ19kYXRhGAcgASgIUhJyZXR1cm5U'
-    'cmFpbmluZ0RhdGE=');
+    'cmFpbmluZ0RhdGESJQoOcmV0dXJuX2NvbnRleHQYCCABKAhSDXJldHVybkNvbnRleHQ=');
 
 @$core.Deprecated('Use qADescriptor instead')
 const QA$json = {

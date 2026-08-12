@@ -5373,6 +5373,9 @@ pub struct CompleteReq {
     /// 回训练数据(命中的记忆片段)
     #[prost(bool, tag = "7")]
     pub return_training_data: bool,
+    /// 发 type="context" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
+    #[prost(bool, tag = "8")]
+    pub return_context: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Qa {

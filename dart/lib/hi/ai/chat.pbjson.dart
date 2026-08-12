@@ -67,6 +67,7 @@ const CompleteReq$json = {
       '5': 8,
       '10': 'returnTrainingData'
     },
+    {'1': 'return_context', '3': 8, '4': 1, '5': 8, '10': 'returnContext'},
   ],
 };
 
@@ -76,7 +77,7 @@ final $typed_data.Uint8List completeReqDescriptor = $convert.base64Decode(
     'oFY29udHMYAyADKAsyDi5oaS5haS5Db250ZW50UgVjb250cxIUCgVzdGF0ZRgEIAEoCVIFc3Rh'
     'dGUSFgoGY3VzdG9tGAUgASgJUgZjdXN0b20SKgoRcmV0dXJuX3BsdWdpbl91c2UYBiABKAhSD3'
     'JldHVyblBsdWdpblVzZRIwChRyZXR1cm5fdHJhaW5pbmdfZGF0YRgHIAEoCFIScmV0dXJuVHJh'
-    'aW5pbmdEYXRh');
+    'aW5pbmdEYXRhEiUKDnJldHVybl9jb250ZXh0GAggASgIUg1yZXR1cm5Db250ZXh0');
 
 @$core.Deprecated('Use completeRespDescriptor instead')
 const CompleteResp$json = {

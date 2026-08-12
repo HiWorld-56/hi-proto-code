@@ -950,6 +950,9 @@ impl serde::Serialize for CompleteReq {
         if self.return_training_data {
             len += 1;
         }
+        if self.return_context {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.CompleteReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -972,6 +975,9 @@ impl serde::Serialize for CompleteReq {
         if self.return_training_data {
             struct_ser.serialize_field("returnTrainingData", &self.return_training_data)?;
         }
+        if self.return_context {
+            struct_ser.serialize_field("returnContext", &self.return_context)?;
+        }
         struct_ser.end()
     }
 }
@@ -991,6 +997,8 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
             "returnPluginUse",
             "return_training_data",
             "returnTrainingData",
+            "return_context",
+            "returnContext",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1002,6 +1010,7 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
             Custom,
             ReturnPluginUse,
             ReturnTrainingData,
+            ReturnContext,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1030,6 +1039,7 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                             "custom" => Ok(GeneratedField::Custom),
                             "returnPluginUse" | "return_plugin_use" => Ok(GeneratedField::ReturnPluginUse),
                             "returnTrainingData" | "return_training_data" => Ok(GeneratedField::ReturnTrainingData),
+                            "returnContext" | "return_context" => Ok(GeneratedField::ReturnContext),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1056,6 +1066,7 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                 let mut custom__ = None;
                 let mut return_plugin_use__ = None;
                 let mut return_training_data__ = None;
+                let mut return_context__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -1100,6 +1111,12 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                             }
                             return_training_data__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::ReturnContext => {
+                            if return_context__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("returnContext"));
+                            }
+                            return_context__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(CompleteReq {
@@ -1110,6 +1127,7 @@ impl<'de> serde::Deserialize<'de> for CompleteReq {
                     custom: custom__.unwrap_or_default(),
                     return_plugin_use: return_plugin_use__.unwrap_or_default(),
                     return_training_data: return_training_data__.unwrap_or_default(),
+                    return_context: return_context__.unwrap_or_default(),
                 })
             }
         }
