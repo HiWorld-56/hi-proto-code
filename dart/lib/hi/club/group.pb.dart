@@ -1404,6 +1404,15 @@ class MuteMembersReq extends $pb.GeneratedMessage {
 ///   member(私密群): 全禁止(只能被邀请)
 /// 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
 /// 里面的 Entity 带 type/update 等服务端产物。入参只放:定位用的群号 + 真正可改的字段。
+/// **传了就是主动设置**:字段有值(optional 有 presence / name·avatar 非空)即视为"设成这个",
+/// 服务端**不拿新值跟旧值比**,照写、推进 update 时间戳、照发通知。
+///
+/// ⚠️ 别用值比对判断"改没改"。两个坑:
+///   1. **漏更新** —— 重新传同一张头像(比如换了图但 url 复用、或先改错再改回),
+///      值一样就不发通知,下游永远停在旧的那份。
+///   2. **拿旧的盖新的** —— 比值的前提是"我手里这份是最新的",而分布式下并不成立。
+/// 要不要更新是**下游按 update 时间戳**判断的(身份池 upsert、brain 的 is_outdated 都是),
+/// 上游只负责"我这次确实设置了"这个事实。
 class UpdateGroupReq extends $pb.GeneratedMessage {
   factory UpdateGroupReq({
     $core.String? group,

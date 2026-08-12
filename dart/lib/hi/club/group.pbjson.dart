@@ -398,13 +398,34 @@ const UpdateGroupReq$json = {
     {'1': 'group', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'group'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     {'1': 'avatar', '3': 3, '4': 1, '5': 9, '10': 'avatar'},
-    {'1': 'background', '3': 4, '4': 1, '5': 9, '10': 'background'},
-    {'1': 'private', '3': 5, '4': 1, '5': 8, '10': 'private'},
+    {
+      '1': 'background',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'background',
+      '17': true
+    },
+    {
+      '1': 'private',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '9': 1,
+      '10': 'private',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_background'},
+    {'1': '_private'},
   ],
 };
 
 /// Descriptor for `UpdateGroupReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateGroupReqDescriptor = $convert.base64Decode(
     'Cg5VcGRhdGVHcm91cFJlcRIiCgVncm91cBgBIAEoCUIMukgJcgcyBV5cUyskUgVncm91cBISCg'
-    'RuYW1lGAIgASgJUgRuYW1lEhYKBmF2YXRhchgDIAEoCVIGYXZhdGFyEh4KCmJhY2tncm91bmQY'
-    'BCABKAlSCmJhY2tncm91bmQSGAoHcHJpdmF0ZRgFIAEoCFIHcHJpdmF0ZQ==');
+    'RuYW1lGAIgASgJUgRuYW1lEhYKBmF2YXRhchgDIAEoCVIGYXZhdGFyEiMKCmJhY2tncm91bmQY'
+    'BCABKAlIAFIKYmFja2dyb3VuZIgBARIdCgdwcml2YXRlGAUgASgISAFSB3ByaXZhdGWIAQFCDQ'
+    'oLX2JhY2tncm91bmRCCgoIX3ByaXZhdGU=');

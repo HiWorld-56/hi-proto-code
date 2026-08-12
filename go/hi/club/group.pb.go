@@ -1144,13 +1144,23 @@ func (x *MuteMembersReq) GetMuted() bool {
 //
 // 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
 // 里面的 Entity 带 type/update 等服务端产物。入参只放:定位用的群号 + 真正可改的字段。
+// **传了就是主动设置**:字段有值(optional 有 presence / name·avatar 非空)即视为"设成这个",
+// 服务端**不拿新值跟旧值比**,照写、推进 update 时间戳、照发通知。
+//
+// ⚠️ 别用值比对判断"改没改"。两个坑:
+//  1. **漏更新** —— 重新传同一张头像(比如换了图但 url 复用、或先改错再改回),
+//     值一样就不发通知,下游永远停在旧的那份。
+//  2. **拿旧的盖新的** —— 比值的前提是"我手里这份是最新的",而分布式下并不成立。
+//
+// 要不要更新是**下游按 update 时间戳**判断的(身份池 upsert、brain 的 is_outdated 都是),
+// 上游只负责"我这次确实设置了"这个事实。
 type UpdateGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Group         string                 `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"`           // 群号(定位;权限由后端校验 owner/admin)
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`             // 群名
-	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`         // 群头像 url
-	Background    string                 `protobuf:"bytes,4,opt,name=background,proto3" json:"background,omitempty"` // 群背景 url
-	Private       bool                   `protobuf:"varint,5,opt,name=private,proto3" json:"private,omitempty"`      // true=私密群(只能被邀请);false=公开群
+	Group         string                 `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"`                 // 群号(定位;权限由后端校验 owner/admin)
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                   // 群名(非空=设置)
+	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`               // 群头像 url(非空=设置)
+	Background    *string                `protobuf:"bytes,4,opt,name=background,proto3,oneof" json:"background,omitempty"` // 群背景 url;**有 presence**:不传=不动,传空串=清空
+	Private       *bool                  `protobuf:"varint,5,opt,name=private,proto3,oneof" json:"private,omitempty"`      // true=私密群(只能被邀请);false=公开群。不传=不动
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1207,15 +1217,15 @@ func (x *UpdateGroupReq) GetAvatar() string {
 }
 
 func (x *UpdateGroupReq) GetBackground() string {
-	if x != nil {
-		return x.Background
+	if x != nil && x.Background != nil {
+		return *x.Background
 	}
 	return ""
 }
 
 func (x *UpdateGroupReq) GetPrivate() bool {
-	if x != nil {
-		return x.Private
+	if x != nil && x.Private != nil {
+		return *x.Private
 	}
 	return false
 }
@@ -1292,15 +1302,18 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x0eMuteMembersReq\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
 	"\amembers\x18\x02 \x03(\tR\amembers\x12\x14\n" +
-	"\x05muted\x18\x03 \x01(\bR\x05muted\"\x9a\x01\n" +
+	"\x05muted\x18\x03 \x01(\bR\x05muted\"\xbf\x01\n" +
 	"\x0eUpdateGroupReq\x12\"\n" +
 	"\x05group\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05group\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x03 \x01(\tR\x06avatar\x12\x1e\n" +
+	"\x06avatar\x18\x03 \x01(\tR\x06avatar\x12#\n" +
 	"\n" +
-	"background\x18\x04 \x01(\tR\n" +
-	"background\x12\x18\n" +
-	"\aprivate\x18\x05 \x01(\bR\aprivate2\x84\b\n" +
+	"background\x18\x04 \x01(\tH\x00R\n" +
+	"background\x88\x01\x01\x12\x1d\n" +
+	"\aprivate\x18\x05 \x01(\bH\x01R\aprivate\x88\x01\x01B\r\n" +
+	"\v_backgroundB\n" +
+	"\n" +
+	"\b_private2\x84\b\n" +
 	"\x05Group\x12<\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x18.hi.club.GroupMemberView\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
@@ -1415,6 +1428,7 @@ func file_hi_club_group_proto_init() {
 		return
 	}
 	file_hi_club_messaging_proto_init()
+	file_hi_club_group_proto_msgTypes[22].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

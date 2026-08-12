@@ -11908,10 +11908,10 @@ impl serde::Serialize for UpdateGroupReq {
         if !self.avatar.is_empty() {
             len += 1;
         }
-        if !self.background.is_empty() {
+        if self.background.is_some() {
             len += 1;
         }
-        if self.private {
+        if self.private.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.UpdateGroupReq", len)?;
@@ -11924,11 +11924,11 @@ impl serde::Serialize for UpdateGroupReq {
         if !self.avatar.is_empty() {
             struct_ser.serialize_field("avatar", &self.avatar)?;
         }
-        if !self.background.is_empty() {
-            struct_ser.serialize_field("background", &self.background)?;
+        if let Some(v) = self.background.as_ref() {
+            struct_ser.serialize_field("background", v)?;
         }
-        if self.private {
-            struct_ser.serialize_field("private", &self.private)?;
+        if let Some(v) = self.private.as_ref() {
+            struct_ser.serialize_field("private", v)?;
         }
         struct_ser.end()
     }
@@ -12028,13 +12028,13 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
                             if background__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("background"));
                             }
-                            background__ = Some(map_.next_value()?);
+                            background__ = map_.next_value()?;
                         }
                         GeneratedField::Private => {
                             if private__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("private"));
                             }
-                            private__ = Some(map_.next_value()?);
+                            private__ = map_.next_value()?;
                         }
                     }
                 }
@@ -12042,8 +12042,8 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
                     group: group__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
                     avatar: avatar__.unwrap_or_default(),
-                    background: background__.unwrap_or_default(),
-                    private: private__.unwrap_or_default(),
+                    background: background__,
+                    private: private__,
                 })
             }
         }
