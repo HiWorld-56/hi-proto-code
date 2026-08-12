@@ -4109,10 +4109,12 @@ pub struct AgentDelayUnit {
     pub test_time: i64,
 }
 /// 概览:**每台机器人各一条**(各自最新)。要看某一台的历次记录用 ListHistory。
+///
+/// 注:字段号 1 空着 —— 原 `agent`,传了它这个方法就悄悄变成"只回那台的最新一条",
+/// 而且**连分页都忽略、total 恒为 1**:一个方法两种语义、靠参数空不空隐式分支,
+/// proto 上完全看不出来。已拆成 ListHistory,**别再把 agent 加回这里**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListAgentDelaysReq {
-    /// 靠参数空不空隐式分支,proto 上完全看不出来。已拆成 ListHistory。
-    ///
     /// 可选:按类型过滤(**空 = 全部类型**)
     #[prost(string, tag = "2")]
     pub r#type: ::prost::alloc::string::String,

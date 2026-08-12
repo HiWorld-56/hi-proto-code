@@ -62,16 +62,12 @@ const ListAgentDelaysReq$json = {
       '10': 'pagination'
     },
   ],
-  '9': [
-    {'1': 1, '2': 2},
-  ],
-  '10': ['agent'],
 };
 
 /// Descriptor for `ListAgentDelaysReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listAgentDelaysReqDescriptor = $convert.base64Decode(
     'ChJMaXN0QWdlbnREZWxheXNSZXESEgoEdHlwZRgCIAEoCVIEdHlwZRIuCgpwYWdpbmF0aW9uGA'
-    'MgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkoECAEQAlIFYWdlbnQ=');
+    'MgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
 
 @$core.Deprecated('Use listAgentDelayHistoryReqDescriptor instead')
 const ListAgentDelayHistoryReq$json = {

@@ -79,6 +79,9 @@ func (x *PcOrderData) GetNonce() string {
 }
 
 // 我的订单(hidid-pc 为订单主体拉取)→ SELF。
+//
+// 注:字段号 1 空着 —— 原 `id` 填的是 hi_trade_sub_order 库的自增主键,违反
+// "自增 id 禁止跨端流转"铁律,且下游回传只认 order_id(uuid),从无消费方,已删除。
 type PcOrder struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrderId       string                 `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
@@ -351,7 +354,7 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"5\n" +
 	"\vPcOrderData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
-	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\x8f\x02\n" +
+	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\x85\x02\n" +
 	"\aPcOrder\x12\x1f\n" +
 	"\border_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12\x1b\n" +
 	"\x06to_did\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x05toDid\x12\x1c\n" +
@@ -362,7 +365,7 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03R\tupdatedAt\x12\x16\n" +
 	"\x03did\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12\x1c\n" +
-	"\x06status\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03J\x04\b\x01\x10\x02R\x02id\"P\n" +
+	"\x06status\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03\"P\n" +
 	"\x18GetNotPulledPcOrdersResp\x12.\n" +
 	"\x06orders\x18\x01 \x03(\v2\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"\x7f\n" +
 	"\x13UpdatePulledPcOrder\x12\x19\n" +

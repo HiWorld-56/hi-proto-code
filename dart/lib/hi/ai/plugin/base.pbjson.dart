@@ -28,16 +28,12 @@ const PluginAnnex$json = {
       '10': 'data'
     },
   ],
-  '9': [
-    {'1': 1, '2': 2},
-  ],
-  '10': ['api_key'],
 };
 
 /// Descriptor for `PluginAnnex`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginAnnexDescriptor = $convert.base64Decode(
     'CgtQbHVnaW5Bbm5leBIrCgRkYXRhGAIgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFIEZG'
-    'F0YUoECAEQAlIHYXBpX2tleQ==');
+    'F0YQ==');
 
 @$core.Deprecated('Use runReqDescriptor instead')
 const RunReq$json = {

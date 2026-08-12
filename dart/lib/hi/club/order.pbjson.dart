@@ -42,10 +42,6 @@ const PcOrder$json = {
     {'1': 'status', '3': 9, '4': 1, '5': 9, '8': {}, '10': 'status'},
   ],
   '7': {},
-  '9': [
-    {'1': 1, '2': 2},
-  ],
-  '10': ['id'],
 };
 
 /// Descriptor for `PcOrder`. Decode as a `google.protobuf.DescriptorProto`.
@@ -54,7 +50,7 @@ final $typed_data.Uint8List pcOrderDescriptor = $convert.base64Decode(
     'EoCUIEkLUYA1IFdG9EaWQSHAoGYW1vdW50GAQgASgJQgSQtRgDUgZhbW91bnQSGAoEdHlwZRgF'
     'IAEoCUIEkLUYA1IEdHlwZRIjCgpjcmVhdGVkX2F0GAYgASgDQgSQtRgDUgljcmVhdGVkQXQSIw'
     'oKdXBkYXRlZF9hdBgHIAEoA0IEkLUYA1IJdXBkYXRlZEF0EhYKA2RpZBgIIAEoCUIEkLUYA1ID'
-    'ZGlkEhwKBnN0YXR1cxgJIAEoCUIEkLUYA1IGc3RhdHVzOgSYtRgDSgQIARACUgJpZA==');
+    'ZGlkEhwKBnN0YXR1cxgJIAEoCUIEkLUYA1IGc3RhdHVzOgSYtRgD');
 
 @$core.Deprecated('Use getNotPulledPcOrdersRespDescriptor instead')
 const GetNotPulledPcOrdersResp$json = {

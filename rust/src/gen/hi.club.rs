@@ -656,6 +656,9 @@ pub struct PcOrderData {
     pub nonce: ::prost::alloc::string::String,
 }
 /// 我的订单(hidid-pc 为订单主体拉取)→ SELF。
+///
+/// 注:字段号 1 空着 —— 原 `id` 填的是 hi_trade_sub_order 库的自增主键,违反
+/// "自增 id 禁止跨端流转"铁律,且下游回传只认 order_id(uuid),从无消费方,已删除。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PcOrder {
     #[prost(string, tag = "2")]
