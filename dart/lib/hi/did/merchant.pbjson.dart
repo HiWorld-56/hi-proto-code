@@ -210,6 +210,20 @@ final $typed_data.Uint8List userExtensionInfoDescriptor = $convert.base64Decode(
     'UYAkgEUgRub3RliAEBOgSYtRgCQgcKBV9sb2dvQggKBl9sZXZlbEIHCgVfY2FyZEIJCgdfZXh0'
     'ZW5kQgcKBV9ub3Rl');
 
+@$core.Deprecated('Use setUserCardReqDescriptor instead')
+const SetUserCardReq$json = {
+  '1': 'SetUserCardReq',
+  '2': [
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'user'},
+    {'1': 'content', '3': 2, '4': 1, '5': 12, '8': {}, '10': 'content'},
+  ],
+};
+
+/// Descriptor for `SetUserCardReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setUserCardReqDescriptor = $convert.base64Decode(
+    'Cg5TZXRVc2VyQ2FyZFJlcRIgCgR1c2VyGAEgASgJQgy6SAlyBzIFXlxTKyRSBHVzZXISIQoHY2'
+    '9udGVudBgCIAEoDEIHukgEegIQAVIHY29udGVudA==');
+
 @$core.Deprecated('Use userExtensionUnitDescriptor instead')
 const UserExtensionUnit$json = {
   '1': 'UserExtensionUnit',

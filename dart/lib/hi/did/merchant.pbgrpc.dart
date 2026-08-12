@@ -108,6 +108,13 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$setUsers, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Empty> setUserCard(
+    $1.SetUserCardReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setUserCard, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.Empty> addUsers(
     $1.AddUsersReq request, {
     $grpc.CallOptions? options,
@@ -185,6 +192,10 @@ class MerchantClient extends $grpc.Client {
   static final _$setUsers = $grpc.ClientMethod<$1.SetUsersReq, $0.Empty>(
       '/hi.did.Merchant/SetUsers',
       ($1.SetUsersReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$setUserCard = $grpc.ClientMethod<$1.SetUserCardReq, $0.Empty>(
+      '/hi.did.Merchant/SetUserCard',
+      ($1.SetUserCardReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$addUsers = $grpc.ClientMethod<$1.AddUsersReq, $0.Empty>(
       '/hi.did.Merchant/AddUsers',
@@ -266,6 +277,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.SetUsersReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetUserCardReq, $0.Empty>(
+        'SetUserCard',
+        setUserCard_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.SetUserCardReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.AddUsersReq, $0.Empty>(
         'AddUsers',
@@ -366,6 +384,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> setUsers(
       $grpc.ServiceCall call, $1.SetUsersReq request);
+
+  $async.Future<$0.Empty> setUserCard_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SetUserCardReq> $request) async {
+    return setUserCard($call, await $request);
+  }
+
+  $async.Future<$0.Empty> setUserCard(
+      $grpc.ServiceCall call, $1.SetUserCardReq request);
 
   $async.Future<$0.Empty> addUsers_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.AddUsersReq> $request) async {

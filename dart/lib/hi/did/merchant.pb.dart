@@ -475,6 +475,10 @@ class UserExtensionInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearLevel() => $_clearField(2);
 
+  /// card 存的是**卡片 json 正文本身**,不是文件 url。
+  /// 卡片是结构化数据,不是媒体:读的人要的是里面的字段,存成文件就得多一跳 http 去取
+  /// (还得管桶的可见性、失效、跨环境地址),而落库之后 GetUser/ListUsers 顺手就带出来了。
+  /// 写入走 Merchant.SetUserCard(传 .json 文件,后端读正文入库,文件不留);清空走 SetUsers。
   @$pb.TagNumber(3)
   $core.String get card => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -501,6 +505,79 @@ class UserExtensionInfo extends $pb.GeneratedMessage {
   $core.bool hasNote() => $_has(4);
   @$pb.TagNumber(5)
   void clearNote() => $_clearField(5);
+}
+
+/// 商户给**自己名下**用户设置扩展卡片:前端传 .json 文件,后端读出正文直接落库,文件丢弃。
+///
+/// 为什么单开一个方法而不是让前端把 json 塞进 SetUsers.card:
+/// 卡片是**编辑好的文件**,前端的动作就是"选个文件传上去" —— 让它先把文件读成字符串再塞字段,
+/// 等于把"文件怎么读、编码怎么定、多大算大"这些事推给每个调用端各写一遍。
+/// (同样的理由见 hi-ai 的插件 description.json:也是后端读、前端只管传。)
+class SetUserCardReq extends $pb.GeneratedMessage {
+  factory SetUserCardReq({
+    $core.String? user,
+    $core.List<$core.int>? content,
+  }) {
+    final result = create();
+    if (user != null) result.user = user;
+    if (content != null) result.content = content;
+    return result;
+  }
+
+  SetUserCardReq._();
+
+  factory SetUserCardReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetUserCardReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetUserCardReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..a<$core.List<$core.int>>(
+        2, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetUserCardReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetUserCardReq copyWith(void Function(SetUserCardReq) updates) =>
+      super.copyWith((message) => updates(message as SetUserCardReq))
+          as SetUserCardReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetUserCardReq create() => SetUserCardReq._();
+  @$core.override
+  SetUserCardReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetUserCardReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetUserCardReq>(create);
+  static SetUserCardReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get user => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set user($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUser() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get content => $_getN(1);
+  @$pb.TagNumber(2)
+  set content($core.List<$core.int> value) => $_setBytes(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasContent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearContent() => $_clearField(2);
 }
 
 class UserExtensionUnit extends $pb.GeneratedMessage {

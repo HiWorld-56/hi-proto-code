@@ -28,6 +28,7 @@ const (
 	Merchant_ListGreeters_FullMethodName = "/hi.did.Merchant/ListGreeters"
 	Merchant_List_FullMethodName         = "/hi.did.Merchant/List"
 	Merchant_SetUsers_FullMethodName     = "/hi.did.Merchant/SetUsers"
+	Merchant_SetUserCard_FullMethodName  = "/hi.did.Merchant/SetUserCard"
 	Merchant_AddUsers_FullMethodName     = "/hi.did.Merchant/AddUsers"
 	Merchant_RemoveUsers_FullMethodName  = "/hi.did.Merchant/RemoveUsers"
 	Merchant_GetUserMqtt_FullMethodName  = "/hi.did.Merchant/GetUserMqtt"
@@ -77,6 +78,7 @@ type MerchantClient interface {
 	//	那个前提下这条守卫天然满足。
 	List(ctx context.Context, in *ListMerchantsReq, opts ...grpc.CallOption) (*MerchantListResp, error)
 	SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetUserCard(ctx context.Context, in *SetUserCardReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddUsers(ctx context.Context, in *AddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RemoveUsers(ctx context.Context, in *RemoveUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 用户 mqtt 凭证(基础信息,商户可见)──
@@ -159,6 +161,16 @@ func (c *merchantClient) SetUsers(ctx context.Context, in *SetUsersReq, opts ...
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Merchant_SetUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchantClient) SetUserCard(ctx context.Context, in *SetUserCardReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Merchant_SetUserCard_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -266,6 +278,7 @@ type MerchantServer interface {
 	//	那个前提下这条守卫天然满足。
 	List(context.Context, *ListMerchantsReq) (*MerchantListResp, error)
 	SetUsers(context.Context, *SetUsersReq) (*emptypb.Empty, error)
+	SetUserCard(context.Context, *SetUserCardReq) (*emptypb.Empty, error)
 	AddUsers(context.Context, *AddUsersReq) (*emptypb.Empty, error)
 	RemoveUsers(context.Context, *RemoveUsersReq) (*emptypb.Empty, error)
 	// ── 用户 mqtt 凭证(基础信息,商户可见)──
@@ -303,6 +316,9 @@ func (UnimplementedMerchantServer) List(context.Context, *ListMerchantsReq) (*Me
 }
 func (UnimplementedMerchantServer) SetUsers(context.Context, *SetUsersReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetUsers not implemented")
+}
+func (UnimplementedMerchantServer) SetUserCard(context.Context, *SetUserCardReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetUserCard not implemented")
 }
 func (UnimplementedMerchantServer) AddUsers(context.Context, *AddUsersReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddUsers not implemented")
@@ -468,6 +484,24 @@ func _Merchant_SetUsers_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_SetUserCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUserCardReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).SetUserCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_SetUserCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).SetUserCard(ctx, req.(*SetUserCardReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Merchant_AddUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddUsersReq)
 	if err := dec(in); err != nil {
@@ -610,6 +644,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetUsers",
 			Handler:    _Merchant_SetUsers_Handler,
+		},
+		{
+			MethodName: "SetUserCard",
+			Handler:    _Merchant_SetUserCard_Handler,
 		},
 		{
 			MethodName: "AddUsers",

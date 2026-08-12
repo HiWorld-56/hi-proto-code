@@ -1082,12 +1082,31 @@ pub struct UserExtensionInfo {
     pub logo: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int32, optional, tag = "2")]
     pub level: ::core::option::Option<i32>,
+    /// card 存的是**卡片 json 正文本身**,不是文件 url。
+    /// 卡片是结构化数据,不是媒体:读的人要的是里面的字段,存成文件就得多一跳 http 去取
+    /// (还得管桶的可见性、失效、跨环境地址),而落库之后 GetUser/ListUsers 顺手就带出来了。
+    /// 写入走 Merchant.SetUserCard(传 .json 文件,后端读正文入库,文件不留);清空走 SetUsers。
     #[prost(string, optional, tag = "3")]
     pub card: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "4")]
     pub extend: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "5")]
     pub note: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 商户给**自己名下**用户设置扩展卡片:前端传 .json 文件,后端读出正文直接落库,文件丢弃。
+///
+/// 为什么单开一个方法而不是让前端把 json 塞进 SetUsers.card:
+/// 卡片是**编辑好的文件**,前端的动作就是"选个文件传上去" —— 让它先把文件读成字符串再塞字段,
+/// 等于把"文件怎么读、编码怎么定、多大算大"这些事推给每个调用端各写一遍。
+/// (同样的理由见 hi-ai 的插件 description.json:也是后端读、前端只管传。)
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetUserCardReq {
+    /// 目标用户 did,**必须在调用者名下**
+    #[prost(string, tag = "1")]
+    pub user: ::prost::alloc::string::String,
+    /// .json 文件正文;服务端校验是合法 json 才入库
+    #[prost(bytes = "vec", tag = "2")]
+    pub content: ::prost::alloc::vec::Vec<u8>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UserExtensionUnit {
@@ -1564,6 +1583,27 @@ pub mod merchant_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Merchant/SetUsers");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "SetUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_user_card(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetUserCardReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Merchant/SetUserCard",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Merchant", "SetUserCard"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn add_users(
