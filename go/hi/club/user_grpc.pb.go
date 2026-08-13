@@ -27,6 +27,7 @@ const (
 	User_DeleteSystemMessage_FullMethodName    = "/hi.club.User/DeleteSystemMessage"
 	User_DeleteAllSystemMessage_FullMethodName = "/hi.club.User/DeleteAllSystemMessage"
 	User_HandleSystemMessage_FullMethodName    = "/hi.club.User/HandleSystemMessage"
+	User_MarkNoticeProcessed_FullMethodName    = "/hi.club.User/MarkNoticeProcessed"
 	User_ListRelations_FullMethodName          = "/hi.club.User/ListRelations"
 	User_AddFriend_FullMethodName              = "/hi.club.User/AddFriend"
 	User_DeleteFriend_FullMethodName           = "/hi.club.User/DeleteFriend"
@@ -54,6 +55,7 @@ type UserClient interface {
 	DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	HandleSystemMessage(ctx context.Context, in *HandleSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MarkNoticeProcessed(ctx context.Context, in *MarkNoticeProcessedReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListRelations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListRelationsResp, error)
 	AddFriend(ctx context.Context, in *AddFriendReq, opts ...grpc.CallOption) (*AddFriendResp, error)
 	DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -125,6 +127,16 @@ func (c *userClient) HandleSystemMessage(ctx context.Context, in *HandleSystemMe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, User_HandleSystemMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) MarkNoticeProcessed(ctx context.Context, in *MarkNoticeProcessedReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, User_MarkNoticeProcessed_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -219,6 +231,7 @@ type UserServer interface {
 	DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error)
+	MarkNoticeProcessed(context.Context, *MarkNoticeProcessedReq) (*emptypb.Empty, error)
 	ListRelations(context.Context, *emptypb.Empty) (*ListRelationsResp, error)
 	AddFriend(context.Context, *AddFriendReq) (*AddFriendResp, error)
 	DeleteFriend(context.Context, *DeleteFriendReq) (*emptypb.Empty, error)
@@ -252,6 +265,9 @@ func (UnimplementedUserServer) DeleteAllSystemMessage(context.Context, *emptypb.
 }
 func (UnimplementedUserServer) HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method HandleSystemMessage not implemented")
+}
+func (UnimplementedUserServer) MarkNoticeProcessed(context.Context, *MarkNoticeProcessedReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MarkNoticeProcessed not implemented")
 }
 func (UnimplementedUserServer) ListRelations(context.Context, *emptypb.Empty) (*ListRelationsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListRelations not implemented")
@@ -398,6 +414,24 @@ func _User_HandleSystemMessage_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).HandleSystemMessage(ctx, req.(*HandleSystemMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_MarkNoticeProcessed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkNoticeProcessedReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).MarkNoticeProcessed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_MarkNoticeProcessed_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).MarkNoticeProcessed(ctx, req.(*MarkNoticeProcessedReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -558,6 +592,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HandleSystemMessage",
 			Handler:    _User_HandleSystemMessage_Handler,
+		},
+		{
+			MethodName: "MarkNoticeProcessed",
+			Handler:    _User_MarkNoticeProcessed_Handler,
 		},
 		{
 			MethodName: "ListRelations",

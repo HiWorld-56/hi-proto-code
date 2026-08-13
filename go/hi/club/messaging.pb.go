@@ -107,74 +107,21 @@ func (*Packet_Notice) isPacket_Kind() {}
 
 func (*Packet_Message) isPacket_Kind() {}
 
-// type: 主类型
-// 群通知（topic: hiclub/v1/group/<群Id>）
-// group-dissolve      群已解散                               / hi.club.GroupBase
-// member-join         成员加入群（主动加入 / 接受邀请）          / hi.club.Member
-// member-exit         成员主动退群                            / hi.club.Member
-// member-update       成员资料更新（头像、名字等）               / hi.club.GroupMember
-// group-update        群基础信息更新（名称、头像等）             / hi.club.GroupBase
+// ## status:这条通知我处理过没有
 //
-// 单聊通知（topic: hiclub/v1/single/<用户Did>）
-// friend-invite         收到好友邀请（自动 accept）
-// friend-invite-accept  我发出的好友邀请已被对方接受，双方已成为好友
-// friend-invite-reject  我发出的好友邀请已被对方拒绝（无需响应）
-// friend-delete         我已被对方删除好友
-// group-invite          收到入群邀请（自动 accept）              / hi.club.Member
-// group-invite-reject   我邀请他人入群已被对方拒绝（无需响应）
-// group-kick            我已被踢出群聊                          / hi.club.MemberExit
-// robot-bind            robot(硬件机器人)绑定完成
-// robot-unbind          robot(硬件机器人)解绑完成
-// robot-update          robot(硬件机器人)资料更新              / hi.Entity
-// master-update         **主人**资料更新(发给仆从)              / hi.Entity(主人的 base)
-// plugin-load           插件/脚本加载完成                      / hi.ai.PluginLoaded
+// `not_processed` / `processed`(邀请类另有 `accept` / `reject`)。**发出时一律写 `not_processed`**,
+// 收方处理完调 `User.MarkNoticeProcessed`(按 uuid)置为 `processed`。
 //
-// ex_type: 附加类型
-// 扩充主类型，避免主类型产生过多分支。
-// 通知示例：
-// type: member-update + ex_type: role                   群成员角色更新
-// type: member-update + ex_type: base.name              群成员名字更新
-// type: member-update + ex_type: base.avatar            群成员头像更新
-// type: group-update  + ex_type: background             群背景更新
-// type: group-update  + ex_type: base.avatar            群头像更新
-// type: group-update  + ex_type: base.name;private      群名字与私有性更新
-// type: master-update + ex_type: base.name;base.avatar  主人资料更新(推给仆从)
-// ...
+// 为什么要落到通知上而不是让端上自己记:端**不在线时发生的事**,上线补拉 `ListSystemMessages`
+// 拿到的是同一条通知,状态跟着它走,端就知道这条到底处理过没有 —— 端上自己那份记录,
+// 换台设备、重装、清缓存就没了。
 //
-// ⚠️ **一次变更发一条通知,不按字段拆条**。载荷(extra)永远是**当前完整的实体**
-// (Entity / GroupBase),`ex_type` 只是附带说明"这次动了哪几项",多项用 `;` 拼接
-// (如 `base.name;private`)。收到的人拿整个实体按需更新即可 ——
-// 所以只有"主人变了"这种更新,没有"主人名字变了"那种更新。
-// 按字段拆成多条的坏处:同一次变更被拆成 N 条同内容的通知,收信方要么重复刷 N 次,
-// 要么按 update 时间戳把后面几条当旧的丢掉(它们时间戳一样),白发。
+// ⚠️ 补拉走的是**库里的 status**(`ListSystemMessage` 用 `sysMsg.Status` 覆盖 payload 里那份),
+// 实时那条则是发出时的快照(恒为 `not_processed`)。所以判据以补拉/回执为准。
 //
-// ## ex_type 是给谁看的
-//
-// · **机器人(hinj-brain)不看 ex_type** —— 收到就按 `update` 时间戳整体替换 Entity。
-// 它只关心"这份资料是不是比手里的新",不关心动的是哪个字段。
-// · **app 看 ex_type** —— 用来在群聊页把系统提示渲染准:是"XX 修改了群头像"
-// 还是"XX 修改了群名称"。**这是 ex_type 存在的唯一理由**。
-// 所以 ex_type 是**展示用的附注,不是分发依据**:别拿它做"要不要更新"的判断
-// (那是 update 时间戳的活),更别按它把一次变更拆成多条通知。
-//
-// ## 通知只推给**有限主体**,其余靠 update 时间戳惰性传播
-//
-// 主体改了基础信息(名字/头像),后端**不可能**给每个需要更新的地方主动发通知,
-// 只推有限的几类:
-// · 仆从机器人 —— master-update(长驻无头端,不会自己回前台刷,不推就一直是旧的)
-// · 群         —— group-update / member-update(群里人人要看到)
-//
-// 其余关系(典型:好友)**不推**。它们的更新时机是「我给他发消息的时候」:
-// `Message.from` 里带着我**当前**的 base,收信方拿 `from.update` 跟本地缓存的
-// `update` 一比,新的就覆盖 —— 这就是惰性传播,通知量与关系数解耦。
-//
-// ⚠️ 由此推出两条铁律:
-// 1. **主体主动设置就要推进 `Entity.update`**,哪怕值跟原来一样。
-// 时间戳不动,下游一律认为"没变"而丢弃(core 身份池 upsert、brain 的 is_outdated
-// 都是 `新.update > 旧.update` 才覆盖)。
-// 2. **判断要不要更新一律比 `update` 时间戳,不比字段值。** 比值有两个坑:
-// 重设同一个值被当成没改而漏发/漏更新;更糟的是拿手里那份旧的去盖新的
-// —— 比值的前提是"我这份是最新的",分布式下并不成立。
+// 典型:`friend-add` —— 我把 A 删了、A 又加回来、我又是"自动同意",
+// 那么这条通知就是我唯一能知道"好友回来了"的信号,处理完(清掉会话的 severed)回执一下,
+// 免得每次上线都重复处理。
 type Notice struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	Uuid       string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`

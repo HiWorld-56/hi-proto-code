@@ -140,6 +140,19 @@ final $typed_data.Uint8List handleSystemMessageReqDescriptor =
         'ChZIYW5kbGVTeXN0ZW1NZXNzYWdlUmVxEhIKBHV1aWQYASABKAlSBHV1aWQSFgoGc3RhdHVzGA'
         'IgASgJUgZzdGF0dXM=');
 
+@$core.Deprecated('Use markNoticeProcessedReqDescriptor instead')
+const MarkNoticeProcessedReq$json = {
+  '1': 'MarkNoticeProcessedReq',
+  '2': [
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+  ],
+};
+
+/// Descriptor for `MarkNoticeProcessedReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List markNoticeProcessedReqDescriptor =
+    $convert.base64Decode(
+        'ChZNYXJrTm90aWNlUHJvY2Vzc2VkUmVxEhIKBHV1aWQYASABKAlSBHV1aWQ=');
+
 @$core.Deprecated('Use relationInfoDescriptor instead')
 const RelationInfo$json = {
   '1': 'RelationInfo',

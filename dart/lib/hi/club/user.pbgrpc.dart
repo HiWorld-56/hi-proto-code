@@ -85,6 +85,13 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$handleSystemMessage, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Empty> markNoticeProcessed(
+    $1.MarkNoticeProcessedReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$markNoticeProcessed, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.ListRelationsResp> listRelations(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -164,6 +171,11 @@ class UserClient extends $grpc.Client {
       $grpc.ClientMethod<$1.HandleSystemMessageReq, $0.Empty>(
           '/hi.club.User/HandleSystemMessage',
           ($1.HandleSystemMessageReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
+  static final _$markNoticeProcessed =
+      $grpc.ClientMethod<$1.MarkNoticeProcessedReq, $0.Empty>(
+          '/hi.club.User/MarkNoticeProcessed',
+          ($1.MarkNoticeProcessedReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
   static final _$listRelations =
       $grpc.ClientMethod<$0.Empty, $1.ListRelationsResp>(
@@ -248,6 +260,14 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) =>
             $1.HandleSystemMessageReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.MarkNoticeProcessedReq, $0.Empty>(
+        'MarkNoticeProcessed',
+        markNoticeProcessed_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.MarkNoticeProcessedReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListRelationsResp>(
         'ListRelations',
@@ -348,6 +368,14 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> handleSystemMessage(
       $grpc.ServiceCall call, $1.HandleSystemMessageReq request);
+
+  $async.Future<$0.Empty> markNoticeProcessed_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.MarkNoticeProcessedReq> $request) async {
+    return markNoticeProcessed($call, await $request);
+  }
+
+  $async.Future<$0.Empty> markNoticeProcessed(
+      $grpc.ServiceCall call, $1.MarkNoticeProcessedReq request);
 
   $async.Future<$1.ListRelationsResp> listRelations_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {

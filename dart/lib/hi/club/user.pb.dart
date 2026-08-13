@@ -374,6 +374,65 @@ class HandleSystemMessageReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(2);
 }
 
+/// 通知回执:**我处理完这条通知了**。与 HandleSystemMessage 不是一回事 ——
+/// 后者是"我对邀请做决定"(accept/reject,带真加好友/真入群的副作用),
+/// 这里只是"这条我消费过了",没有任何业务副作用,对**任何**需要端上处理的通知都适用。
+/// 以通知 uuid 为唯一标识,所以不用按类型各写一个接口。
+class MarkNoticeProcessedReq extends $pb.GeneratedMessage {
+  factory MarkNoticeProcessedReq({
+    $core.String? uuid,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    return result;
+  }
+
+  MarkNoticeProcessedReq._();
+
+  factory MarkNoticeProcessedReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarkNoticeProcessedReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarkNoticeProcessedReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarkNoticeProcessedReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarkNoticeProcessedReq copyWith(
+          void Function(MarkNoticeProcessedReq) updates) =>
+      super.copyWith((message) => updates(message as MarkNoticeProcessedReq))
+          as MarkNoticeProcessedReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarkNoticeProcessedReq create() => MarkNoticeProcessedReq._();
+  @$core.override
+  MarkNoticeProcessedReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarkNoticeProcessedReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarkNoticeProcessedReq>(create);
+  static MarkNoticeProcessedReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+}
+
 class RelationInfo extends $pb.GeneratedMessage {
   factory RelationInfo({
     $2.Entity? base,
