@@ -114,8 +114,14 @@ abstract class PermissionServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.ListAgentPermissionsReq request);
 }
 
-/// 权限管理(超管)。**club 自有存储,不转发 hi.ai** —— 权限各自单独管理。
-/// club 侧还须执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
+/// 权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
+/// club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
+///
+/// ⚠️ 为什么不在 club 自己存:插件与记忆的**执行**在 ai,校验必须跟执行同一侧。
+///    曾经 club 存一份、ai 无权限层,结果撤了权限的机器人照样调插件用记忆 ——
+///    club 那几处检查全在"改配置"的路径上,拦得住改、拦不住用。
+///    两边各存一份也不行:同步必漂移,一漂移就是安全问题。
+/// club 侧仍执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
 @$pb.GrpcServiceName('hi.club.PermissionManage')
 class PermissionManageClient extends $grpc.Client {
   /// The hostname for this service.

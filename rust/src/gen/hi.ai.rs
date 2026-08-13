@@ -4110,6 +4110,287 @@ pub mod register_client {
         }
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PermissionInfo {
+    /// 机器人 did
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    /// 当前持有的档位
+    #[prost(enumeration = "PermissionType", repeated, packed = "false", tag = "2")]
+    pub permissions: ::prost::alloc::vec::Vec<i32>,
+    /// 备注(为什么被撤,给人看的)
+    #[prost(string, tag = "3")]
+    pub note: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListAgentPermissionsReq {
+    /// 机器人 did 列表;**只返回调用者名下的那些**,别人的直接略过
+    #[prost(string, repeated, tag = "1")]
+    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAgentPermissionsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PermissionAddReq {
+    /// 机器人 did
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(enumeration = "PermissionType", tag = "2")]
+    pub r#type: i32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PermissionDeleteReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(enumeration = "PermissionType", tag = "2")]
+    pub r#type: i32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PermissionEditReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 备注
+    #[prost(string, tag = "2")]
+    pub note: ::prost::alloc::string::String,
+}
+/// ── 机器人权限(hi.ai 是**唯一权威**)────────────────────────────────────────
+///
+/// 权限是**机器人自身的能力位**,授予的是机器人本身,不从 creator/master 继承 ——
+/// 机器人自己背授权,转手了也照常能用,符合去中心化机器人的初衷。
+/// 建号即授全部,用途是**出问题时撤掉**(把瞎搞的机器人限制住),不是逐步授予。
+///
+/// ## 为什么权威在 ai 而不在 club
+///
+/// 插件与记忆的**执行**在 ai:挂不挂 tools、要不要把记忆片段拼进上下文,都是 ai 推理时的事。
+/// 校验必须跟执行在同一侧 —— 否则就是"配置时拦得住、运行时拦不住":
+/// 曾经权限存 club、ai 无权限层,于是撤了插件/记忆权限的机器人照样调插件、照样用记忆
+/// (club 那三处检查全在改配置的路径上)。
+///
+/// club 侧的"机器人权限"页是**超管**功能,后端**穿透**到这里写(club 作为 ai 的商户调用),
+/// 不在 club 自己存一份 —— 同步两份必然漂移,而这类东西一漂移就是安全问题。
+///
+/// ## 档位:商户
+///
+/// 商户**只能配置自己创建/注册的机器人**(handler 一律 `creator = 调用者` 收束),
+/// 传别人的机器人 did 一律当"不存在"处理,不泄露"这个 did 存不存在"。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PermissionType {
+    /// ⚠️ 纯占位。proto3 要求首值为 0,故删不掉,但**不代表"全部"或"不过滤"** ——
+    /// 传它一律按无效参数拒绝。要列全部传 PERMISSION_NORMAL:所有机器人都持有
+    /// normal 位,按它筛天然等于不过滤。
+    PermissionUnspecified = 0,
+    /// 普通:自由度/系统提示词/用户提示词。**所有机器人默认持有**
+    PermissionNormal = 1,
+    /// 高级:上下文数/对话模型/嵌入模型/STT 模型
+    PermissionAdvanced = 2,
+    /// 记忆:上传资料/训练记忆;**撤掉后记忆不再进推理**
+    PermissionMem = 3,
+    /// 插件:启用插件;**撤掉后插件不再挂进 tools**
+    PermissionPlugin = 4,
+}
+impl PermissionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::PermissionUnspecified => "PERMISSION_UNSPECIFIED",
+            Self::PermissionNormal => "PERMISSION_NORMAL",
+            Self::PermissionAdvanced => "PERMISSION_ADVANCED",
+            Self::PermissionMem => "PERMISSION_MEM",
+            Self::PermissionPlugin => "PERMISSION_PLUGIN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PERMISSION_UNSPECIFIED" => Some(Self::PermissionUnspecified),
+            "PERMISSION_NORMAL" => Some(Self::PermissionNormal),
+            "PERMISSION_ADVANCED" => Some(Self::PermissionAdvanced),
+            "PERMISSION_MEM" => Some(Self::PermissionMem),
+            "PERMISSION_PLUGIN" => Some(Self::PermissionPlugin),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod permission_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 机器人权限(商户档)。**权威存储在 ai**,推理时由 ai 自己校验。
+    ///
+    /// ⚠️ 撤权**不删数据**:插件绑定、记忆文件都留着,只是不再参与推理;给回权限立刻恢复。
+    /// 曾经撤权顺手调 DeletePluginByAgents / DeleteAgentFilesByDid 真删,那是错的 ——
+    /// "限制一下瞎搞的机器人"不该等于"毁掉用户的数据"。
+    #[derive(Debug, Clone)]
+    pub struct PermissionClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl PermissionClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> PermissionClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PermissionClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            PermissionClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAgentPermissionsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListAgentPermissionsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Permission/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Permission", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn add(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PermissionAddReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Permission/Add");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Permission", "Add"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PermissionDeleteReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Permission/Delete");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Permission", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PermissionEditReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Permission/Edit");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Permission", "Edit"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// 一次测时明细(agent_sts_count 的一行):各段耗时。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentDelayUnit {
