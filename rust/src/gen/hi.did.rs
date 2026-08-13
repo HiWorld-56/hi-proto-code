@@ -4143,9 +4143,9 @@ pub mod source_client {
     /// ⚠️ **头像没有商户档的上传口**,也不需要:资源的消耗方不关心资源由谁上传。
     /// 商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
     /// `Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
-    /// 公共区(`hidid/pub/`)是唯一例外:商户后台确实要传附件/图并拿到直链,
-    /// 而 hidid 这边没有别的口子可借,所以另开了 `SourceMerchant`(见文件末尾)。
-    /// **不是把商户档并进 Source** —— 同一个 service 里混档位,说明主体归类错了。
+    /// 公共区(`hidid/pub/`)同理**只有用户档**:它是通用口子(哪儿要直链都能用),
+    /// 没必要为某个调用方的身份再开一档 —— 曾短暂拆出过 `SourceMerchant`,
+    /// 发现除了让同一件事有两个入口之外没带来任何东西,删了。
     #[derive(Debug, Clone)]
     pub struct SourceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -4279,6 +4279,9 @@ pub mod source_client {
         /// (私密的走各自的私有桶 + 鉴权下载口)。
         /// ⚠️ 只回 url,**不改任何资料** —— 与本文件其它上传口一致,落库各走各的设置方法;
         /// 设置失败记得调 Delete 收尸,否则就是无主文件(公开桶没有 lifecycle 兜底)。
+        ///
+        /// 本 service 里**只有它导出 http 路由**(网页要传);其余三个是端上的活,只走 grpc
+        /// (`Delete` 尤其不导出:它按 url 删对象、不做归属校验,挂到网关上风险不对等)。
         pub async fn upload_pub(
             &mut self,
             request: impl tonic::IntoRequest<super::super::UploadReq>,
@@ -4327,130 +4330,6 @@ pub mod source_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Source/Delete");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Source", "Delete"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod source_merchant_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// SourceMerchant —— **商户档**的二进制搬运。目前只有公共区上传一个方法。
-    ///
-    /// 与 `Source` 拆开而不是并进去:同一个 service 里两种档位,拦截器放行范围就得按方法看,
-    /// 归属校验也没法在 service 层一次说清 —— 仓里的范式是拆(见 DApp / DAppAdmin)。
-    ///
-    /// 落点与用户档那条**完全一样**(`hidid/pub/`,匿名可读):公共区就是公共区,
-    /// 不按上传者分目录 —— 分了也没人按这个维度取用。
-    #[derive(Debug, Clone)]
-    pub struct SourceMerchantClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl SourceMerchantClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> SourceMerchantClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SourceMerchantClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            SourceMerchantClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn upload_pub(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::UploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::UploadResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.SourceMerchant/UploadPub",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.SourceMerchant", "UploadPub"));
             self.inner.unary(req, path, codec).await
         }
     }

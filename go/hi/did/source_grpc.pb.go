@@ -46,9 +46,9 @@ const (
 //
 //	商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
 //	`Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
-//	公共区(`hidid/pub/`)是唯一例外:商户后台确实要传附件/图并拿到直链,
-//	而 hidid 这边没有别的口子可借,所以另开了 `SourceMerchant`(见文件末尾)。
-//	**不是把商户档并进 Source** —— 同一个 service 里混档位,说明主体归类错了。
+//	公共区(`hidid/pub/`)同理**只有用户档**:它是通用口子(哪儿要直链都能用),
+//	没必要为某个调用方的身份再开一档 —— 曾短暂拆出过 `SourceMerchant`,
+//	发现除了让同一件事有两个入口之外没带来任何东西,删了。
 type SourceClient interface {
 	UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadLog(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
@@ -63,6 +63,9 @@ type SourceClient interface {
 	// ⚠️ 只回 url,**不改任何资料** —— 与本文件其它上传口一致,落库各走各的设置方法;
 	//
 	//	设置失败记得调 Delete 收尸,否则就是无主文件(公开桶没有 lifecycle 兜底)。
+	//
+	// 本 service 里**只有它导出 http 路由**(网页要传);其余三个是端上的活,只走 grpc
+	// (`Delete` 尤其不导出:它按 url 删对象、不做归属校验,挂到网关上风险不对等)。
 	UploadPub(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
 	//
@@ -144,9 +147,9 @@ func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opt
 //
 //	商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
 //	`Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
-//	公共区(`hidid/pub/`)是唯一例外:商户后台确实要传附件/图并拿到直链,
-//	而 hidid 这边没有别的口子可借,所以另开了 `SourceMerchant`(见文件末尾)。
-//	**不是把商户档并进 Source** —— 同一个 service 里混档位,说明主体归类错了。
+//	公共区(`hidid/pub/`)同理**只有用户档**:它是通用口子(哪儿要直链都能用),
+//	没必要为某个调用方的身份再开一档 —— 曾短暂拆出过 `SourceMerchant`,
+//	发现除了让同一件事有两个入口之外没带来任何东西,删了。
 type SourceServer interface {
 	UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadLog(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
@@ -161,6 +164,9 @@ type SourceServer interface {
 	// ⚠️ 只回 url,**不改任何资料** —— 与本文件其它上传口一致,落库各走各的设置方法;
 	//
 	//	设置失败记得调 Delete 收尸,否则就是无主文件(公开桶没有 lifecycle 兜底)。
+	//
+	// 本 service 里**只有它导出 http 路由**(网页要传);其余三个是端上的活,只走 grpc
+	// (`Delete` 尤其不导出:它按 url 删对象、不做归属校验,挂到网关上风险不对等)。
 	UploadPub(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
 	//
@@ -308,122 +314,6 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _Source_Delete_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "hi/did/source.proto",
-}
-
-const (
-	SourceMerchant_UploadPub_FullMethodName = "/hi.did.SourceMerchant/UploadPub"
-)
-
-// SourceMerchantClient is the client API for SourceMerchant service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// SourceMerchant —— **商户档**的二进制搬运。目前只有公共区上传一个方法。
-//
-// 与 `Source` 拆开而不是并进去:同一个 service 里两种档位,拦截器放行范围就得按方法看,
-// 归属校验也没法在 service 层一次说清 —— 仓里的范式是拆(见 DApp / DAppAdmin)。
-//
-// 落点与用户档那条**完全一样**(`hidid/pub/`,匿名可读):公共区就是公共区,
-// 不按上传者分目录 —— 分了也没人按这个维度取用。
-type SourceMerchantClient interface {
-	UploadPub(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
-}
-
-type sourceMerchantClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewSourceMerchantClient(cc grpc.ClientConnInterface) SourceMerchantClient {
-	return &sourceMerchantClient{cc}
-}
-
-func (c *sourceMerchantClient) UploadPub(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.UploadResp)
-	err := c.cc.Invoke(ctx, SourceMerchant_UploadPub_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// SourceMerchantServer is the server API for SourceMerchant service.
-// All implementations should embed UnimplementedSourceMerchantServer
-// for forward compatibility.
-//
-// SourceMerchant —— **商户档**的二进制搬运。目前只有公共区上传一个方法。
-//
-// 与 `Source` 拆开而不是并进去:同一个 service 里两种档位,拦截器放行范围就得按方法看,
-// 归属校验也没法在 service 层一次说清 —— 仓里的范式是拆(见 DApp / DAppAdmin)。
-//
-// 落点与用户档那条**完全一样**(`hidid/pub/`,匿名可读):公共区就是公共区,
-// 不按上传者分目录 —— 分了也没人按这个维度取用。
-type SourceMerchantServer interface {
-	UploadPub(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
-}
-
-// UnimplementedSourceMerchantServer should be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedSourceMerchantServer struct{}
-
-func (UnimplementedSourceMerchantServer) UploadPub(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UploadPub not implemented")
-}
-func (UnimplementedSourceMerchantServer) testEmbeddedByValue() {}
-
-// UnsafeSourceMerchantServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to SourceMerchantServer will
-// result in compilation errors.
-type UnsafeSourceMerchantServer interface {
-	mustEmbedUnimplementedSourceMerchantServer()
-}
-
-func RegisterSourceMerchantServer(s grpc.ServiceRegistrar, srv SourceMerchantServer) {
-	// If the following call panics, it indicates UnimplementedSourceMerchantServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&SourceMerchant_ServiceDesc, srv)
-}
-
-func _SourceMerchant_UploadPub_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.UploadReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SourceMerchantServer).UploadPub(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: SourceMerchant_UploadPub_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SourceMerchantServer).UploadPub(ctx, req.(*hi.UploadReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// SourceMerchant_ServiceDesc is the grpc.ServiceDesc for SourceMerchant service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var SourceMerchant_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.did.SourceMerchant",
-	HandlerType: (*SourceMerchantServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "UploadPub",
-			Handler:    _SourceMerchant_UploadPub_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

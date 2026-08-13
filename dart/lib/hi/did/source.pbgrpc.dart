@@ -33,9 +33,9 @@ export 'source.pb.dart';
 /// ⚠️ **头像没有商户档的上传口**,也不需要:资源的消耗方不关心资源由谁上传。
 ///    商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
 ///    `Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
-///    公共区(`hidid/pub/`)是唯一例外:商户后台确实要传附件/图并拿到直链,
-///    而 hidid 这边没有别的口子可借,所以另开了 `SourceMerchant`(见文件末尾)。
-///    **不是把商户档并进 Source** —— 同一个 service 里混档位,说明主体归类错了。
+///    公共区(`hidid/pub/`)同理**只有用户档**:它是通用口子(哪儿要直链都能用),
+///    没必要为某个调用方的身份再开一档 —— 曾短暂拆出过 `SourceMerchant`,
+///    发现除了让同一件事有两个入口之外没带来任何东西,删了。
 @$pb.GrpcServiceName('hi.did.Source')
 class SourceClient extends $grpc.Client {
   /// The hostname for this service.
@@ -70,6 +70,9 @@ class SourceClient extends $grpc.Client {
   ///    (私密的走各自的私有桶 + 鉴权下载口)。
   /// ⚠️ 只回 url,**不改任何资料** —— 与本文件其它上传口一致,落库各走各的设置方法;
   ///    设置失败记得调 Delete 收尸,否则就是无主文件(公开桶没有 lifecycle 兜底)。
+  ///
+  /// 本 service 里**只有它导出 http 路由**(网页要传);其余三个是端上的活,只走 grpc
+  /// (`Delete` 尤其不导出:它按 url 删对象、不做归属校验,挂到网关上风险不对等)。
   $grpc.ResponseFuture<$0.UploadResp> uploadPub(
     $0.UploadReq request, {
     $grpc.CallOptions? options,
@@ -179,61 +182,4 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> delete(
       $grpc.ServiceCall call, $0.DeleteResourceReq request);
-}
-
-/// SourceMerchant —— **商户档**的二进制搬运。目前只有公共区上传一个方法。
-///
-/// 与 `Source` 拆开而不是并进去:同一个 service 里两种档位,拦截器放行范围就得按方法看,
-/// 归属校验也没法在 service 层一次说清 —— 仓里的范式是拆(见 DApp / DAppAdmin)。
-///
-/// 落点与用户档那条**完全一样**(`hidid/pub/`,匿名可读):公共区就是公共区,
-/// 不按上传者分目录 —— 分了也没人按这个维度取用。
-@$pb.GrpcServiceName('hi.did.SourceMerchant')
-class SourceMerchantClient extends $grpc.Client {
-  /// The hostname for this service.
-  static const $core.String defaultHost = '';
-
-  /// OAuth scopes needed for the client.
-  static const $core.List<$core.String> oauthScopes = [
-    '',
-  ];
-
-  SourceMerchantClient(super.channel, {super.options, super.interceptors});
-
-  $grpc.ResponseFuture<$0.UploadResp> uploadPub(
-    $0.UploadReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$uploadPub, request, options: options);
-  }
-
-  // method descriptors
-
-  static final _$uploadPub = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
-      '/hi.did.SourceMerchant/UploadPub',
-      ($0.UploadReq value) => value.writeToBuffer(),
-      $0.UploadResp.fromBuffer);
-}
-
-@$pb.GrpcServiceName('hi.did.SourceMerchant')
-abstract class SourceMerchantServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.did.SourceMerchant';
-
-  SourceMerchantServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
-        'UploadPub',
-        uploadPub_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
-        ($0.UploadResp value) => value.writeToBuffer()));
-  }
-
-  $async.Future<$0.UploadResp> uploadPub_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
-    return uploadPub($call, await $request);
-  }
-
-  $async.Future<$0.UploadResp> uploadPub(
-      $grpc.ServiceCall call, $0.UploadReq request);
 }
