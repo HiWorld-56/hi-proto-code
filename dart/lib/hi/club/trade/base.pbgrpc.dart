@@ -260,29 +260,28 @@ class OrderClient extends $grpc.Client {
 
   OrderClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$4.GetNotPulledPcOrdersResp> listNotPulled(
+  $grpc.ResponseFuture<$4.PullOrdersResp> pull(
     $3.SignedData request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listNotPulled, request, options: options);
+    return $createUnaryCall(_$pull, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> updatePulled(
+  $grpc.ResponseFuture<$1.Empty> report(
     $3.SignedData request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$updatePulled, request, options: options);
+    return $createUnaryCall(_$report, request, options: options);
   }
 
   // method descriptors
 
-  static final _$listNotPulled =
-      $grpc.ClientMethod<$3.SignedData, $4.GetNotPulledPcOrdersResp>(
-          '/hi.club.trade.Order/ListNotPulled',
-          ($3.SignedData value) => value.writeToBuffer(),
-          $4.GetNotPulledPcOrdersResp.fromBuffer);
-  static final _$updatePulled = $grpc.ClientMethod<$3.SignedData, $1.Empty>(
-      '/hi.club.trade.Order/UpdatePulled',
+  static final _$pull = $grpc.ClientMethod<$3.SignedData, $4.PullOrdersResp>(
+      '/hi.club.trade.Order/Pull',
+      ($3.SignedData value) => value.writeToBuffer(),
+      $4.PullOrdersResp.fromBuffer);
+  static final _$report = $grpc.ClientMethod<$3.SignedData, $1.Empty>(
+      '/hi.club.trade.Order/Report',
       ($3.SignedData value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
 }
@@ -292,35 +291,34 @@ abstract class OrderServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.trade.Order';
 
   OrderServiceBase() {
-    $addMethod($grpc.ServiceMethod<$3.SignedData, $4.GetNotPulledPcOrdersResp>(
-        'ListNotPulled',
-        listNotPulled_Pre,
+    $addMethod($grpc.ServiceMethod<$3.SignedData, $4.PullOrdersResp>(
+        'Pull',
+        pull_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $3.SignedData.fromBuffer(value),
-        ($4.GetNotPulledPcOrdersResp value) => value.writeToBuffer()));
+        ($4.PullOrdersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$3.SignedData, $1.Empty>(
-        'UpdatePulled',
-        updatePulled_Pre,
+        'Report',
+        report_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $3.SignedData.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$4.GetNotPulledPcOrdersResp> listNotPulled_Pre(
+  $async.Future<$4.PullOrdersResp> pull_Pre(
       $grpc.ServiceCall $call, $async.Future<$3.SignedData> $request) async {
-    return listNotPulled($call, await $request);
+    return pull($call, await $request);
   }
 
-  $async.Future<$4.GetNotPulledPcOrdersResp> listNotPulled(
+  $async.Future<$4.PullOrdersResp> pull(
       $grpc.ServiceCall call, $3.SignedData request);
 
-  $async.Future<$1.Empty> updatePulled_Pre(
+  $async.Future<$1.Empty> report_Pre(
       $grpc.ServiceCall $call, $async.Future<$3.SignedData> $request) async {
-    return updatePulled($call, await $request);
+    return report($call, await $request);
   }
 
-  $async.Future<$1.Empty> updatePulled(
-      $grpc.ServiceCall call, $3.SignedData request);
+  $async.Future<$1.Empty> report($grpc.ServiceCall call, $3.SignedData request);
 }

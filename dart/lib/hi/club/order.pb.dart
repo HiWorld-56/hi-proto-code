@@ -17,11 +17,11 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// Order.ListNotPulled 的**签名载荷 schema**(不是 rpc 参数):
+/// Order.Pull 的**签名载荷 schema**(不是 rpc 参数):
 /// rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它。
 /// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按"无引用"当死 message 删**。
-class PcOrderData extends $pb.GeneratedMessage {
-  factory PcOrderData({
+class PullOrdersData extends $pb.GeneratedMessage {
+  factory PullOrdersData({
     $core.String? did,
     $core.String? nonce,
   }) {
@@ -31,17 +31,17 @@ class PcOrderData extends $pb.GeneratedMessage {
     return result;
   }
 
-  PcOrderData._();
+  PullOrdersData._();
 
-  factory PcOrderData.fromBuffer($core.List<$core.int> data,
+  factory PullOrdersData.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory PcOrderData.fromJson($core.String json,
+  factory PullOrdersData.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PcOrderData',
+      _omitMessageNames ? '' : 'PullOrdersData',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
@@ -49,23 +49,23 @@ class PcOrderData extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PcOrderData clone() => deepCopy();
+  PullOrdersData clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PcOrderData copyWith(void Function(PcOrderData) updates) =>
-      super.copyWith((message) => updates(message as PcOrderData))
-          as PcOrderData;
+  PullOrdersData copyWith(void Function(PullOrdersData) updates) =>
+      super.copyWith((message) => updates(message as PullOrdersData))
+          as PullOrdersData;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static PcOrderData create() => PcOrderData._();
+  static PullOrdersData create() => PullOrdersData._();
   @$core.override
-  PcOrderData createEmptyInstance() => create();
+  PullOrdersData createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static PcOrderData getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PcOrderData>(create);
-  static PcOrderData? _defaultInstance;
+  static PullOrdersData getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PullOrdersData>(create);
+  static PullOrdersData? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
@@ -236,8 +236,8 @@ class PcOrder extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(8);
 }
 
-class GetNotPulledPcOrdersResp extends $pb.GeneratedMessage {
-  factory GetNotPulledPcOrdersResp({
+class PullOrdersResp extends $pb.GeneratedMessage {
+  factory PullOrdersResp({
     $core.Iterable<PcOrder>? orders,
   }) {
     final result = create();
@@ -245,17 +245,17 @@ class GetNotPulledPcOrdersResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetNotPulledPcOrdersResp._();
+  PullOrdersResp._();
 
-  factory GetNotPulledPcOrdersResp.fromBuffer($core.List<$core.int> data,
+  factory PullOrdersResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetNotPulledPcOrdersResp.fromJson($core.String json,
+  factory PullOrdersResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetNotPulledPcOrdersResp',
+      _omitMessageNames ? '' : 'PullOrdersResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPM<PcOrder>(1, _omitFieldNames ? '' : 'orders',
@@ -263,31 +263,30 @@ class GetNotPulledPcOrdersResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetNotPulledPcOrdersResp clone() => deepCopy();
+  PullOrdersResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetNotPulledPcOrdersResp copyWith(
-          void Function(GetNotPulledPcOrdersResp) updates) =>
-      super.copyWith((message) => updates(message as GetNotPulledPcOrdersResp))
-          as GetNotPulledPcOrdersResp;
+  PullOrdersResp copyWith(void Function(PullOrdersResp) updates) =>
+      super.copyWith((message) => updates(message as PullOrdersResp))
+          as PullOrdersResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetNotPulledPcOrdersResp create() => GetNotPulledPcOrdersResp._();
+  static PullOrdersResp create() => PullOrdersResp._();
   @$core.override
-  GetNotPulledPcOrdersResp createEmptyInstance() => create();
+  PullOrdersResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetNotPulledPcOrdersResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetNotPulledPcOrdersResp>(create);
-  static GetNotPulledPcOrdersResp? _defaultInstance;
+  static PullOrdersResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PullOrdersResp>(create);
+  static PullOrdersResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<PcOrder> get orders => $_getList(0);
 }
 
-class UpdatePulledPcOrder extends $pb.GeneratedMessage {
-  factory UpdatePulledPcOrder({
+class OrderResult extends $pb.GeneratedMessage {
+  factory OrderResult({
     $core.String? orderId,
     $core.String? status,
     $core.String? txHash,
@@ -301,17 +300,17 @@ class UpdatePulledPcOrder extends $pb.GeneratedMessage {
     return result;
   }
 
-  UpdatePulledPcOrder._();
+  OrderResult._();
 
-  factory UpdatePulledPcOrder.fromBuffer($core.List<$core.int> data,
+  factory OrderResult.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory UpdatePulledPcOrder.fromJson($core.String json,
+  factory OrderResult.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdatePulledPcOrder',
+      _omitMessageNames ? '' : 'OrderResult',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'orderId')
@@ -321,23 +320,23 @@ class UpdatePulledPcOrder extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdatePulledPcOrder clone() => deepCopy();
+  OrderResult clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdatePulledPcOrder copyWith(void Function(UpdatePulledPcOrder) updates) =>
-      super.copyWith((message) => updates(message as UpdatePulledPcOrder))
-          as UpdatePulledPcOrder;
+  OrderResult copyWith(void Function(OrderResult) updates) =>
+      super.copyWith((message) => updates(message as OrderResult))
+          as OrderResult;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static UpdatePulledPcOrder create() => UpdatePulledPcOrder._();
+  static OrderResult create() => OrderResult._();
   @$core.override
-  UpdatePulledPcOrder createEmptyInstance() => create();
+  OrderResult createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static UpdatePulledPcOrder getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdatePulledPcOrder>(create);
-  static UpdatePulledPcOrder? _defaultInstance;
+  static OrderResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OrderResult>(create);
+  static OrderResult? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get orderId => $_getSZ(0);
@@ -376,11 +375,11 @@ class UpdatePulledPcOrder extends $pb.GeneratedMessage {
   void clearTimestamp() => $_clearField(4);
 }
 
-/// Order.MarkPulled 的**签名载荷 schema**(同上,勿当死 message 删)。
-class UpdatePulledPcOrderData extends $pb.GeneratedMessage {
-  factory UpdatePulledPcOrderData({
+/// Order.Report 的**签名载荷 schema**(同上,勿当死 message 删)。
+class ReportResultsData extends $pb.GeneratedMessage {
+  factory ReportResultsData({
     $core.String? did,
-    $core.Iterable<UpdatePulledPcOrder>? orders,
+    $core.Iterable<OrderResult>? orders,
   }) {
     final result = create();
     if (did != null) result.did = did;
@@ -388,43 +387,42 @@ class UpdatePulledPcOrderData extends $pb.GeneratedMessage {
     return result;
   }
 
-  UpdatePulledPcOrderData._();
+  ReportResultsData._();
 
-  factory UpdatePulledPcOrderData.fromBuffer($core.List<$core.int> data,
+  factory ReportResultsData.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory UpdatePulledPcOrderData.fromJson($core.String json,
+  factory ReportResultsData.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdatePulledPcOrderData',
+      _omitMessageNames ? '' : 'ReportResultsData',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..pPM<UpdatePulledPcOrder>(2, _omitFieldNames ? '' : 'orders',
-        subBuilder: UpdatePulledPcOrder.create)
+    ..pPM<OrderResult>(2, _omitFieldNames ? '' : 'orders',
+        subBuilder: OrderResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdatePulledPcOrderData clone() => deepCopy();
+  ReportResultsData clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdatePulledPcOrderData copyWith(
-          void Function(UpdatePulledPcOrderData) updates) =>
-      super.copyWith((message) => updates(message as UpdatePulledPcOrderData))
-          as UpdatePulledPcOrderData;
+  ReportResultsData copyWith(void Function(ReportResultsData) updates) =>
+      super.copyWith((message) => updates(message as ReportResultsData))
+          as ReportResultsData;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static UpdatePulledPcOrderData create() => UpdatePulledPcOrderData._();
+  static ReportResultsData create() => ReportResultsData._();
   @$core.override
-  UpdatePulledPcOrderData createEmptyInstance() => create();
+  ReportResultsData createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static UpdatePulledPcOrderData getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdatePulledPcOrderData>(create);
-  static UpdatePulledPcOrderData? _defaultInstance;
+  static ReportResultsData getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReportResultsData>(create);
+  static ReportResultsData? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
@@ -436,7 +434,7 @@ class UpdatePulledPcOrderData extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<UpdatePulledPcOrder> get orders => $_getList(1);
+  $pb.PbList<OrderResult> get orders => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =

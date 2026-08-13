@@ -23,10 +23,10 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Order.ListNotPulled 的**签名载荷 schema**(不是 rpc 参数):
+// Order.Pull 的**签名载荷 schema**(不是 rpc 参数):
 // rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它。
 // ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按"无引用"当死 message 删**。
-type PcOrderData struct {
+type PullOrdersData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
 	Nonce         string                 `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
@@ -34,20 +34,20 @@ type PcOrderData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PcOrderData) Reset() {
-	*x = PcOrderData{}
+func (x *PullOrdersData) Reset() {
+	*x = PullOrdersData{}
 	mi := &file_hi_club_order_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PcOrderData) String() string {
+func (x *PullOrdersData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PcOrderData) ProtoMessage() {}
+func (*PullOrdersData) ProtoMessage() {}
 
-func (x *PcOrderData) ProtoReflect() protoreflect.Message {
+func (x *PullOrdersData) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_order_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -59,19 +59,19 @@ func (x *PcOrderData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PcOrderData.ProtoReflect.Descriptor instead.
-func (*PcOrderData) Descriptor() ([]byte, []int) {
+// Deprecated: Use PullOrdersData.ProtoReflect.Descriptor instead.
+func (*PullOrdersData) Descriptor() ([]byte, []int) {
 	return file_hi_club_order_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PcOrderData) GetDid() string {
+func (x *PullOrdersData) GetDid() string {
 	if x != nil {
 		return x.Did
 	}
 	return ""
 }
 
-func (x *PcOrderData) GetNonce() string {
+func (x *PullOrdersData) GetNonce() string {
 	if x != nil {
 		return x.Nonce
 	}
@@ -192,27 +192,27 @@ func (x *PcOrder) GetStatus() string {
 	return ""
 }
 
-type GetNotPulledPcOrdersResp struct {
+type PullOrdersResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Orders        []*PcOrder             `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetNotPulledPcOrdersResp) Reset() {
-	*x = GetNotPulledPcOrdersResp{}
+func (x *PullOrdersResp) Reset() {
+	*x = PullOrdersResp{}
 	mi := &file_hi_club_order_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetNotPulledPcOrdersResp) String() string {
+func (x *PullOrdersResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetNotPulledPcOrdersResp) ProtoMessage() {}
+func (*PullOrdersResp) ProtoMessage() {}
 
-func (x *GetNotPulledPcOrdersResp) ProtoReflect() protoreflect.Message {
+func (x *PullOrdersResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_order_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -224,19 +224,19 @@ func (x *GetNotPulledPcOrdersResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetNotPulledPcOrdersResp.ProtoReflect.Descriptor instead.
-func (*GetNotPulledPcOrdersResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use PullOrdersResp.ProtoReflect.Descriptor instead.
+func (*PullOrdersResp) Descriptor() ([]byte, []int) {
 	return file_hi_club_order_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetNotPulledPcOrdersResp) GetOrders() []*PcOrder {
+func (x *PullOrdersResp) GetOrders() []*PcOrder {
 	if x != nil {
 		return x.Orders
 	}
 	return nil
 }
 
-type UpdatePulledPcOrder struct {
+type OrderResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
 	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
@@ -246,20 +246,20 @@ type UpdatePulledPcOrder struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdatePulledPcOrder) Reset() {
-	*x = UpdatePulledPcOrder{}
+func (x *OrderResult) Reset() {
+	*x = OrderResult{}
 	mi := &file_hi_club_order_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdatePulledPcOrder) String() string {
+func (x *OrderResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdatePulledPcOrder) ProtoMessage() {}
+func (*OrderResult) ProtoMessage() {}
 
-func (x *UpdatePulledPcOrder) ProtoReflect() protoreflect.Message {
+func (x *OrderResult) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_order_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -271,62 +271,62 @@ func (x *UpdatePulledPcOrder) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdatePulledPcOrder.ProtoReflect.Descriptor instead.
-func (*UpdatePulledPcOrder) Descriptor() ([]byte, []int) {
+// Deprecated: Use OrderResult.ProtoReflect.Descriptor instead.
+func (*OrderResult) Descriptor() ([]byte, []int) {
 	return file_hi_club_order_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *UpdatePulledPcOrder) GetOrderId() string {
+func (x *OrderResult) GetOrderId() string {
 	if x != nil {
 		return x.OrderId
 	}
 	return ""
 }
 
-func (x *UpdatePulledPcOrder) GetStatus() string {
+func (x *OrderResult) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
 	return ""
 }
 
-func (x *UpdatePulledPcOrder) GetTxHash() string {
+func (x *OrderResult) GetTxHash() string {
 	if x != nil {
 		return x.TxHash
 	}
 	return ""
 }
 
-func (x *UpdatePulledPcOrder) GetTimestamp() int64 {
+func (x *OrderResult) GetTimestamp() int64 {
 	if x != nil {
 		return x.Timestamp
 	}
 	return 0
 }
 
-// Order.MarkPulled 的**签名载荷 schema**(同上,勿当死 message 删)。
-type UpdatePulledPcOrderData struct {
+// Order.Report 的**签名载荷 schema**(同上,勿当死 message 删)。
+type ReportResultsData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Orders        []*UpdatePulledPcOrder `protobuf:"bytes,2,rep,name=orders,proto3" json:"orders,omitempty"`
+	Orders        []*OrderResult         `protobuf:"bytes,2,rep,name=orders,proto3" json:"orders,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdatePulledPcOrderData) Reset() {
-	*x = UpdatePulledPcOrderData{}
+func (x *ReportResultsData) Reset() {
+	*x = ReportResultsData{}
 	mi := &file_hi_club_order_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdatePulledPcOrderData) String() string {
+func (x *ReportResultsData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdatePulledPcOrderData) ProtoMessage() {}
+func (*ReportResultsData) ProtoMessage() {}
 
-func (x *UpdatePulledPcOrderData) ProtoReflect() protoreflect.Message {
+func (x *ReportResultsData) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_order_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -338,19 +338,19 @@ func (x *UpdatePulledPcOrderData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdatePulledPcOrderData.ProtoReflect.Descriptor instead.
-func (*UpdatePulledPcOrderData) Descriptor() ([]byte, []int) {
+// Deprecated: Use ReportResultsData.ProtoReflect.Descriptor instead.
+func (*ReportResultsData) Descriptor() ([]byte, []int) {
 	return file_hi_club_order_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *UpdatePulledPcOrderData) GetDid() string {
+func (x *ReportResultsData) GetDid() string {
 	if x != nil {
 		return x.Did
 	}
 	return ""
 }
 
-func (x *UpdatePulledPcOrderData) GetOrders() []*UpdatePulledPcOrder {
+func (x *ReportResultsData) GetOrders() []*OrderResult {
 	if x != nil {
 		return x.Orders
 	}
@@ -361,8 +361,8 @@ var File_hi_club_order_proto protoreflect.FileDescriptor
 
 const file_hi_club_order_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"5\n" +
-	"\vPcOrderData\x12\x10\n" +
+	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"8\n" +
+	"\x0ePullOrdersData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\x85\x02\n" +
 	"\aPcOrder\x12\x1f\n" +
@@ -375,20 +375,20 @@ const file_hi_club_order_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tupdatedAt\x12\x16\n" +
 	"\x03did\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12\x1c\n" +
-	"\x06status\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03\"P\n" +
-	"\x18GetNotPulledPcOrdersResp\x12.\n" +
-	"\x06orders\x18\x01 \x03(\v2\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"\x7f\n" +
-	"\x13UpdatePulledPcOrder\x12\x19\n" +
+	"\x06status\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03\"F\n" +
+	"\x0ePullOrdersResp\x12.\n" +
+	"\x06orders\x18\x01 \x03(\v2\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"w\n" +
+	"\vOrderResult\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\tR\aorderId\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x17\n" +
 	"\atx_hash\x18\x03 \x01(\tR\x06txHash\x12\x1c\n" +
-	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"a\n" +
-	"\x17UpdatePulledPcOrderData\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x124\n" +
-	"\x06orders\x18\x02 \x03(\v2\x1c.hi.club.UpdatePulledPcOrderR\x06orders2\x91\x01\n" +
-	"\x05Order\x12I\n" +
-	"\rListNotPulled\x12\x0e.hi.SignedData\x1a!.hi.club.GetNotPulledPcOrdersResp\"\x05\x8a\xb5\x18\x01\x05\x12=\n" +
-	"\fUpdatePulled\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B\x81\x01\n" +
+	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"S\n" +
+	"\x11ReportResultsData\x12\x10\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12,\n" +
+	"\x06orders\x18\x02 \x03(\v2\x14.hi.club.OrderResultR\x06orders2x\n" +
+	"\x05Order\x126\n" +
+	"\x04Pull\x12\x0e.hi.SignedData\x1a\x17.hi.club.PullOrdersResp\"\x05\x8a\xb5\x18\x01\x05\x127\n" +
+	"\x06Report\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
 	"OrderProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
@@ -406,21 +406,21 @@ func file_hi_club_order_proto_rawDescGZIP() []byte {
 
 var file_hi_club_order_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_club_order_proto_goTypes = []any{
-	(*PcOrderData)(nil),              // 0: hi.club.PcOrderData
-	(*PcOrder)(nil),                  // 1: hi.club.PcOrder
-	(*GetNotPulledPcOrdersResp)(nil), // 2: hi.club.GetNotPulledPcOrdersResp
-	(*UpdatePulledPcOrder)(nil),      // 3: hi.club.UpdatePulledPcOrder
-	(*UpdatePulledPcOrderData)(nil),  // 4: hi.club.UpdatePulledPcOrderData
-	(*hi.SignedData)(nil),            // 5: hi.SignedData
-	(*emptypb.Empty)(nil),            // 6: google.protobuf.Empty
+	(*PullOrdersData)(nil),    // 0: hi.club.PullOrdersData
+	(*PcOrder)(nil),           // 1: hi.club.PcOrder
+	(*PullOrdersResp)(nil),    // 2: hi.club.PullOrdersResp
+	(*OrderResult)(nil),       // 3: hi.club.OrderResult
+	(*ReportResultsData)(nil), // 4: hi.club.ReportResultsData
+	(*hi.SignedData)(nil),     // 5: hi.SignedData
+	(*emptypb.Empty)(nil),     // 6: google.protobuf.Empty
 }
 var file_hi_club_order_proto_depIdxs = []int32{
-	1, // 0: hi.club.GetNotPulledPcOrdersResp.orders:type_name -> hi.club.PcOrder
-	3, // 1: hi.club.UpdatePulledPcOrderData.orders:type_name -> hi.club.UpdatePulledPcOrder
-	5, // 2: hi.club.Order.ListNotPulled:input_type -> hi.SignedData
-	5, // 3: hi.club.Order.UpdatePulled:input_type -> hi.SignedData
-	2, // 4: hi.club.Order.ListNotPulled:output_type -> hi.club.GetNotPulledPcOrdersResp
-	6, // 5: hi.club.Order.UpdatePulled:output_type -> google.protobuf.Empty
+	1, // 0: hi.club.PullOrdersResp.orders:type_name -> hi.club.PcOrder
+	3, // 1: hi.club.ReportResultsData.orders:type_name -> hi.club.OrderResult
+	5, // 2: hi.club.Order.Pull:input_type -> hi.SignedData
+	5, // 3: hi.club.Order.Report:input_type -> hi.SignedData
+	2, // 4: hi.club.Order.Pull:output_type -> hi.club.PullOrdersResp
+	6, // 5: hi.club.Order.Report:output_type -> google.protobuf.Empty
 	4, // [4:6] is the sub-list for method output_type
 	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

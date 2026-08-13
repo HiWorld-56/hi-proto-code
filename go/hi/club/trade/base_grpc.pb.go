@@ -419,8 +419,8 @@ var TradeManage_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Order_ListNotPulled_FullMethodName = "/hi.club.trade.Order/ListNotPulled"
-	Order_UpdatePulled_FullMethodName  = "/hi.club.trade.Order/UpdatePulled"
+	Order_Pull_FullMethodName   = "/hi.club.trade.Order/Pull"
+	Order_Report_FullMethodName = "/hi.club.trade.Order/Report"
 )
 
 // OrderClient is the client API for Order service.
@@ -438,8 +438,8 @@ const (
 // 所以 SignedData 一路透传到验签点是**设计如此**:AUTH_WEB3 的语义就是"传输层不鉴权、
 // handler 自验签",中间任何一跳都不该、也无法代劳(它们没有签名上下文)。
 type OrderClient interface {
-	ListNotPulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*club.GetNotPulledPcOrdersResp, error)
-	UpdatePulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Pull(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*club.PullOrdersResp, error)
+	Report(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type orderClient struct {
@@ -450,20 +450,20 @@ func NewOrderClient(cc grpc.ClientConnInterface) OrderClient {
 	return &orderClient{cc}
 }
 
-func (c *orderClient) ListNotPulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*club.GetNotPulledPcOrdersResp, error) {
+func (c *orderClient) Pull(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*club.PullOrdersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(club.GetNotPulledPcOrdersResp)
-	err := c.cc.Invoke(ctx, Order_ListNotPulled_FullMethodName, in, out, cOpts...)
+	out := new(club.PullOrdersResp)
+	err := c.cc.Invoke(ctx, Order_Pull_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *orderClient) UpdatePulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderClient) Report(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Order_UpdatePulled_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Order_Report_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -485,8 +485,8 @@ func (c *orderClient) UpdatePulled(ctx context.Context, in *hi.SignedData, opts 
 // 所以 SignedData 一路透传到验签点是**设计如此**:AUTH_WEB3 的语义就是"传输层不鉴权、
 // handler 自验签",中间任何一跳都不该、也无法代劳(它们没有签名上下文)。
 type OrderServer interface {
-	ListNotPulled(context.Context, *hi.SignedData) (*club.GetNotPulledPcOrdersResp, error)
-	UpdatePulled(context.Context, *hi.SignedData) (*emptypb.Empty, error)
+	Pull(context.Context, *hi.SignedData) (*club.PullOrdersResp, error)
+	Report(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }
 
 // UnimplementedOrderServer should be embedded to have
@@ -496,11 +496,11 @@ type OrderServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrderServer struct{}
 
-func (UnimplementedOrderServer) ListNotPulled(context.Context, *hi.SignedData) (*club.GetNotPulledPcOrdersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListNotPulled not implemented")
+func (UnimplementedOrderServer) Pull(context.Context, *hi.SignedData) (*club.PullOrdersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Pull not implemented")
 }
-func (UnimplementedOrderServer) UpdatePulled(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdatePulled not implemented")
+func (UnimplementedOrderServer) Report(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Report not implemented")
 }
 func (UnimplementedOrderServer) testEmbeddedByValue() {}
 
@@ -522,38 +522,38 @@ func RegisterOrderServer(s grpc.ServiceRegistrar, srv OrderServer) {
 	s.RegisterService(&Order_ServiceDesc, srv)
 }
 
-func _Order_ListNotPulled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Order_Pull_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServer).ListNotPulled(ctx, in)
+		return srv.(OrderServer).Pull(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Order_ListNotPulled_FullMethodName,
+		FullMethod: Order_Pull_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServer).ListNotPulled(ctx, req.(*hi.SignedData))
+		return srv.(OrderServer).Pull(ctx, req.(*hi.SignedData))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Order_UpdatePulled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Order_Report_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServer).UpdatePulled(ctx, in)
+		return srv.(OrderServer).Report(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Order_UpdatePulled_FullMethodName,
+		FullMethod: Order_Report_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServer).UpdatePulled(ctx, req.(*hi.SignedData))
+		return srv.(OrderServer).Report(ctx, req.(*hi.SignedData))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -566,12 +566,12 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OrderServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListNotPulled",
-			Handler:    _Order_ListNotPulled_Handler,
+			MethodName: "Pull",
+			Handler:    _Order_Pull_Handler,
 		},
 		{
-			MethodName: "UpdatePulled",
-			Handler:    _Order_UpdatePulled_Handler,
+			MethodName: "Report",
+			Handler:    _Order_Report_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

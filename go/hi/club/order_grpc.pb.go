@@ -21,18 +21,26 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Order_ListNotPulled_FullMethodName = "/hi.club.Order/ListNotPulled"
-	Order_UpdatePulled_FullMethodName  = "/hi.club.Order/UpdatePulled"
+	Order_Pull_FullMethodName   = "/hi.club.Order/Pull"
+	Order_Report_FullMethodName = "/hi.club.Order/Report"
 )
 
 // OrderClient is the client API for Order service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// hidid-pc 拉未处理订单 / 回传处理结果(web3 自证)。裁决#10 的 club 侧。
+// hidid-pc **拉单**并回传处理结果(web3 自证)。裁决#10 的 club 侧。
+//
+// 为什么叫 Pull:hidid 后端**只转发"有新单"的通知**,订单本身由 PC 端直接来业务后台拉、
+// 处理完再直接回传结果 —— 订单数据一旦经 hidid 中转,hidid 就有造假空间。
+// 所以除通知外,PC 端与业务后台是**直连**的,这两个 rpc 就是那条直连通道的两端。
+//
+// 旧名 `ListNotPulled` / `UpdatePulled` 是照着库里 `no_pull` 状态起的 —— 拿**存储的内部状态**
+// 当接口名,调用方根本不关心什么"没被拉过";而且 `List` 读着像只读,实际这一下有副作用
+// (状态推进 no_pull→created、消掉 nonce、重复拉还会换 uuid)。
 type OrderClient interface {
-	ListNotPulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GetNotPulledPcOrdersResp, error)
-	UpdatePulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Pull(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*PullOrdersResp, error)
+	Report(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type orderClient struct {
@@ -43,20 +51,20 @@ func NewOrderClient(cc grpc.ClientConnInterface) OrderClient {
 	return &orderClient{cc}
 }
 
-func (c *orderClient) ListNotPulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GetNotPulledPcOrdersResp, error) {
+func (c *orderClient) Pull(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*PullOrdersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetNotPulledPcOrdersResp)
-	err := c.cc.Invoke(ctx, Order_ListNotPulled_FullMethodName, in, out, cOpts...)
+	out := new(PullOrdersResp)
+	err := c.cc.Invoke(ctx, Order_Pull_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *orderClient) UpdatePulled(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderClient) Report(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Order_UpdatePulled_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Order_Report_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,10 +75,18 @@ func (c *orderClient) UpdatePulled(ctx context.Context, in *hi.SignedData, opts 
 // All implementations should embed UnimplementedOrderServer
 // for forward compatibility.
 //
-// hidid-pc 拉未处理订单 / 回传处理结果(web3 自证)。裁决#10 的 club 侧。
+// hidid-pc **拉单**并回传处理结果(web3 自证)。裁决#10 的 club 侧。
+//
+// 为什么叫 Pull:hidid 后端**只转发"有新单"的通知**,订单本身由 PC 端直接来业务后台拉、
+// 处理完再直接回传结果 —— 订单数据一旦经 hidid 中转,hidid 就有造假空间。
+// 所以除通知外,PC 端与业务后台是**直连**的,这两个 rpc 就是那条直连通道的两端。
+//
+// 旧名 `ListNotPulled` / `UpdatePulled` 是照着库里 `no_pull` 状态起的 —— 拿**存储的内部状态**
+// 当接口名,调用方根本不关心什么"没被拉过";而且 `List` 读着像只读,实际这一下有副作用
+// (状态推进 no_pull→created、消掉 nonce、重复拉还会换 uuid)。
 type OrderServer interface {
-	ListNotPulled(context.Context, *hi.SignedData) (*GetNotPulledPcOrdersResp, error)
-	UpdatePulled(context.Context, *hi.SignedData) (*emptypb.Empty, error)
+	Pull(context.Context, *hi.SignedData) (*PullOrdersResp, error)
+	Report(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }
 
 // UnimplementedOrderServer should be embedded to have
@@ -80,11 +96,11 @@ type OrderServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrderServer struct{}
 
-func (UnimplementedOrderServer) ListNotPulled(context.Context, *hi.SignedData) (*GetNotPulledPcOrdersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListNotPulled not implemented")
+func (UnimplementedOrderServer) Pull(context.Context, *hi.SignedData) (*PullOrdersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Pull not implemented")
 }
-func (UnimplementedOrderServer) UpdatePulled(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdatePulled not implemented")
+func (UnimplementedOrderServer) Report(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Report not implemented")
 }
 func (UnimplementedOrderServer) testEmbeddedByValue() {}
 
@@ -106,38 +122,38 @@ func RegisterOrderServer(s grpc.ServiceRegistrar, srv OrderServer) {
 	s.RegisterService(&Order_ServiceDesc, srv)
 }
 
-func _Order_ListNotPulled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Order_Pull_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServer).ListNotPulled(ctx, in)
+		return srv.(OrderServer).Pull(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Order_ListNotPulled_FullMethodName,
+		FullMethod: Order_Pull_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServer).ListNotPulled(ctx, req.(*hi.SignedData))
+		return srv.(OrderServer).Pull(ctx, req.(*hi.SignedData))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Order_UpdatePulled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Order_Report_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServer).UpdatePulled(ctx, in)
+		return srv.(OrderServer).Report(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Order_UpdatePulled_FullMethodName,
+		FullMethod: Order_Report_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServer).UpdatePulled(ctx, req.(*hi.SignedData))
+		return srv.(OrderServer).Report(ctx, req.(*hi.SignedData))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -150,12 +166,12 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OrderServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListNotPulled",
-			Handler:    _Order_ListNotPulled_Handler,
+			MethodName: "Pull",
+			Handler:    _Order_Pull_Handler,
 		},
 		{
-			MethodName: "UpdatePulled",
-			Handler:    _Order_UpdatePulled_Handler,
+			MethodName: "Report",
+			Handler:    _Order_Report_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

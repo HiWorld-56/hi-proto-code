@@ -133,10 +133,10 @@ const file_hi_club_trade_base_proto_rawDesc = "" +
 	"\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06\x12D\n" +
 	"\x04List\x12\x1c.hi.club.trade.ListTradesReq\x1a\x17.hi.club.ListTradesResp\"\x05\x8a\xb5\x18\x01\x062R\n" +
 	"\vTradeManage\x12C\n" +
-	"\x04List\x12\x1b.hi.club.TradeManageListReq\x1a\x17.hi.club.ListTradesResp\"\x05\x8a\xb5\x18\x01\x062\x91\x01\n" +
-	"\x05Order\x12I\n" +
-	"\rListNotPulled\x12\x0e.hi.SignedData\x1a!.hi.club.GetNotPulledPcOrdersResp\"\x05\x8a\xb5\x18\x01\x06\x12=\n" +
-	"\fUpdatePulled\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06B\xa5\x01\n" +
+	"\x04List\x12\x1b.hi.club.TradeManageListReq\x1a\x17.hi.club.ListTradesResp\"\x05\x8a\xb5\x18\x01\x062x\n" +
+	"\x05Order\x126\n" +
+	"\x04Pull\x12\x0e.hi.SignedData\x1a\x17.hi.club.PullOrdersResp\"\x05\x8a\xb5\x18\x01\x06\x127\n" +
+	"\x06Report\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06B\xa5\x01\n" +
 	"\x11com.hi.club.tradeB\tBaseProtoP\x01Z/github.com/HiWorld-56/hi-proto/go/hi/club/trade\xa2\x02\x03HCT\xaa\x02\rHi.Club.Trade\xca\x02\rHi\\Club\\Trade\xe2\x02\x19Hi\\Club\\Trade\\GPBMetadata\xea\x02\x0fHi::Club::Tradeb\x06proto3"
 
 var (
@@ -153,20 +153,20 @@ func file_hi_club_trade_base_proto_rawDescGZIP() []byte {
 
 var file_hi_club_trade_base_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_hi_club_trade_base_proto_goTypes = []any{
-	(*ListTradesReq)(nil),                 // 0: hi.club.trade.ListTradesReq
-	(*hi.Pagination)(nil),                 // 1: hi.Pagination
-	(*club.GetTradeFeeReq)(nil),           // 2: hi.club.GetTradeFeeReq
-	(*club.GetTradeReq)(nil),              // 3: hi.club.GetTradeReq
-	(*club.AddTradeReq)(nil),              // 4: hi.club.AddTradeReq
-	(*club.UpdateTransHashReq)(nil),       // 5: hi.club.UpdateTransHashReq
-	(*club.TradeManageListReq)(nil),       // 6: hi.club.TradeManageListReq
-	(*hi.SignedData)(nil),                 // 7: hi.SignedData
-	(*club.GetTradeFeeResp)(nil),          // 8: hi.club.GetTradeFeeResp
-	(*club.GetTradeResp)(nil),             // 9: hi.club.GetTradeResp
-	(*club.AddTradeResp)(nil),             // 10: hi.club.AddTradeResp
-	(*emptypb.Empty)(nil),                 // 11: google.protobuf.Empty
-	(*club.ListTradesResp)(nil),           // 12: hi.club.ListTradesResp
-	(*club.GetNotPulledPcOrdersResp)(nil), // 13: hi.club.GetNotPulledPcOrdersResp
+	(*ListTradesReq)(nil),           // 0: hi.club.trade.ListTradesReq
+	(*hi.Pagination)(nil),           // 1: hi.Pagination
+	(*club.GetTradeFeeReq)(nil),     // 2: hi.club.GetTradeFeeReq
+	(*club.GetTradeReq)(nil),        // 3: hi.club.GetTradeReq
+	(*club.AddTradeReq)(nil),        // 4: hi.club.AddTradeReq
+	(*club.UpdateTransHashReq)(nil), // 5: hi.club.UpdateTransHashReq
+	(*club.TradeManageListReq)(nil), // 6: hi.club.TradeManageListReq
+	(*hi.SignedData)(nil),           // 7: hi.SignedData
+	(*club.GetTradeFeeResp)(nil),    // 8: hi.club.GetTradeFeeResp
+	(*club.GetTradeResp)(nil),       // 9: hi.club.GetTradeResp
+	(*club.AddTradeResp)(nil),       // 10: hi.club.AddTradeResp
+	(*emptypb.Empty)(nil),           // 11: google.protobuf.Empty
+	(*club.ListTradesResp)(nil),     // 12: hi.club.ListTradesResp
+	(*club.PullOrdersResp)(nil),     // 13: hi.club.PullOrdersResp
 }
 var file_hi_club_trade_base_proto_depIdxs = []int32{
 	1,  // 0: hi.club.trade.ListTradesReq.pagination:type_name -> hi.Pagination
@@ -176,16 +176,16 @@ var file_hi_club_trade_base_proto_depIdxs = []int32{
 	5,  // 4: hi.club.trade.Trade.UpdateTransHash:input_type -> hi.club.UpdateTransHashReq
 	0,  // 5: hi.club.trade.Trade.List:input_type -> hi.club.trade.ListTradesReq
 	6,  // 6: hi.club.trade.TradeManage.List:input_type -> hi.club.TradeManageListReq
-	7,  // 7: hi.club.trade.Order.ListNotPulled:input_type -> hi.SignedData
-	7,  // 8: hi.club.trade.Order.UpdatePulled:input_type -> hi.SignedData
+	7,  // 7: hi.club.trade.Order.Pull:input_type -> hi.SignedData
+	7,  // 8: hi.club.trade.Order.Report:input_type -> hi.SignedData
 	8,  // 9: hi.club.trade.Trade.GetFee:output_type -> hi.club.GetTradeFeeResp
 	9,  // 10: hi.club.trade.Trade.Get:output_type -> hi.club.GetTradeResp
 	10, // 11: hi.club.trade.Trade.Add:output_type -> hi.club.AddTradeResp
 	11, // 12: hi.club.trade.Trade.UpdateTransHash:output_type -> google.protobuf.Empty
 	12, // 13: hi.club.trade.Trade.List:output_type -> hi.club.ListTradesResp
 	12, // 14: hi.club.trade.TradeManage.List:output_type -> hi.club.ListTradesResp
-	13, // 15: hi.club.trade.Order.ListNotPulled:output_type -> hi.club.GetNotPulledPcOrdersResp
-	11, // 16: hi.club.trade.Order.UpdatePulled:output_type -> google.protobuf.Empty
+	13, // 15: hi.club.trade.Order.Pull:output_type -> hi.club.PullOrdersResp
+	11, // 16: hi.club.trade.Order.Report:output_type -> google.protobuf.Empty
 	9,  // [9:17] is the sub-list for method output_type
 	1,  // [1:9] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name

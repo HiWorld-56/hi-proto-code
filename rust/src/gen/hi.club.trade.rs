@@ -437,11 +437,11 @@ pub mod order_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn list_not_pulled(
+        pub async fn pull(
             &mut self,
             request: impl tonic::IntoRequest<super::super::super::SignedData>,
         ) -> std::result::Result<
-            tonic::Response<super::super::GetNotPulledPcOrdersResp>,
+            tonic::Response<super::super::PullOrdersResp>,
             tonic::Status,
         > {
             self.inner
@@ -453,15 +453,12 @@ pub mod order_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.trade.Order/ListNotPulled",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.trade.Order/Pull");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.trade.Order", "ListNotPulled"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.trade.Order", "Pull"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn update_pulled(
+        pub async fn report(
             &mut self,
             request: impl tonic::IntoRequest<super::super::super::SignedData>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
@@ -475,11 +472,11 @@ pub mod order_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.trade.Order/UpdatePulled",
+                "/hi.club.trade.Order/Report",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.trade.Order", "UpdatePulled"));
+                .insert(GrpcMethod::new("hi.club.trade.Order", "Report"));
             self.inner.unary(req, path, codec).await
         }
     }

@@ -645,11 +645,11 @@ pub mod auth_client {
         }
     }
 }
-/// Order.ListNotPulled 的**签名载荷 schema**(不是 rpc 参数):
+/// Order.Pull 的**签名载荷 schema**(不是 rpc 参数):
 /// rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它。
 /// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按"无引用"当死 message 删**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PcOrderData {
+pub struct PullOrdersData {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
@@ -687,12 +687,12 @@ pub struct PcOrder {
     pub status: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetNotPulledPcOrdersResp {
+pub struct PullOrdersResp {
     #[prost(message, repeated, tag = "1")]
     pub orders: ::prost::alloc::vec::Vec<PcOrder>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UpdatePulledPcOrder {
+pub struct OrderResult {
     #[prost(string, tag = "1")]
     pub order_id: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
@@ -702,13 +702,13 @@ pub struct UpdatePulledPcOrder {
     #[prost(int64, tag = "4")]
     pub timestamp: i64,
 }
-/// Order.MarkPulled 的**签名载荷 schema**(同上,勿当死 message 删)。
+/// Order.Report 的**签名载荷 schema**(同上,勿当死 message 删)。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdatePulledPcOrderData {
+pub struct ReportResultsData {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "2")]
-    pub orders: ::prost::alloc::vec::Vec<UpdatePulledPcOrder>,
+    pub orders: ::prost::alloc::vec::Vec<OrderResult>,
 }
 /// Generated client implementations.
 pub mod order_client {
@@ -721,7 +721,15 @@ pub mod order_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// hidid-pc 拉未处理订单 / 回传处理结果(web3 自证)。裁决#10 的 club 侧。
+    /// hidid-pc **拉单**并回传处理结果(web3 自证)。裁决#10 的 club 侧。
+    ///
+    /// 为什么叫 Pull:hidid 后端**只转发"有新单"的通知**,订单本身由 PC 端直接来业务后台拉、
+    /// 处理完再直接回传结果 —— 订单数据一旦经 hidid 中转,hidid 就有造假空间。
+    /// 所以除通知外,PC 端与业务后台是**直连**的,这两个 rpc 就是那条直连通道的两端。
+    ///
+    /// 旧名 `ListNotPulled` / `UpdatePulled` 是照着库里 `no_pull` 状态起的 —— 拿**存储的内部状态**
+    /// 当接口名,调用方根本不关心什么"没被拉过";而且 `List` 读着像只读,实际这一下有副作用
+    /// (状态推进 no_pull→created、消掉 nonce、重复拉还会换 uuid)。
     #[derive(Debug, Clone)]
     pub struct OrderClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -802,13 +810,10 @@ pub mod order_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn list_not_pulled(
+        pub async fn pull(
             &mut self,
             request: impl tonic::IntoRequest<super::super::SignedData>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetNotPulledPcOrdersResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<super::PullOrdersResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -818,15 +823,12 @@ pub mod order_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Order/ListNotPulled",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Order/Pull");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Order", "ListNotPulled"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Order", "Pull"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn update_pulled(
+        pub async fn report(
             &mut self,
             request: impl tonic::IntoRequest<super::super::SignedData>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
@@ -839,12 +841,9 @@ pub mod order_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Order/UpdatePulled",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Order/Report");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Order", "UpdatePulled"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Order", "Report"));
             self.inner.unary(req, path, codec).await
         }
     }

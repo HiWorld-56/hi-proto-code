@@ -15,18 +15,19 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use pcOrderDataDescriptor instead')
-const PcOrderData$json = {
-  '1': 'PcOrderData',
+@$core.Deprecated('Use pullOrdersDataDescriptor instead')
+const PullOrdersData$json = {
+  '1': 'PullOrdersData',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
     {'1': 'nonce', '3': 2, '4': 1, '5': 9, '10': 'nonce'},
   ],
 };
 
-/// Descriptor for `PcOrderData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pcOrderDataDescriptor = $convert.base64Decode(
-    'CgtQY09yZGVyRGF0YRIQCgNkaWQYASABKAlSA2RpZBIUCgVub25jZRgCIAEoCVIFbm9uY2U=');
+/// Descriptor for `PullOrdersData`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pullOrdersDataDescriptor = $convert.base64Decode(
+    'Cg5QdWxsT3JkZXJzRGF0YRIQCgNkaWQYASABKAlSA2RpZBIUCgVub25jZRgCIAEoCVIFbm9uY2'
+    'U=');
 
 @$core.Deprecated('Use pcOrderDescriptor instead')
 const PcOrder$json = {
@@ -52,9 +53,9 @@ final $typed_data.Uint8List pcOrderDescriptor = $convert.base64Decode(
     'oKdXBkYXRlZF9hdBgGIAEoA0IEkLUYA1IJdXBkYXRlZEF0EhYKA2RpZBgHIAEoCUIEkLUYA1ID'
     'ZGlkEhwKBnN0YXR1cxgIIAEoCUIEkLUYA1IGc3RhdHVzOgSYtRgD');
 
-@$core.Deprecated('Use getNotPulledPcOrdersRespDescriptor instead')
-const GetNotPulledPcOrdersResp$json = {
-  '1': 'GetNotPulledPcOrdersResp',
+@$core.Deprecated('Use pullOrdersRespDescriptor instead')
+const PullOrdersResp$json = {
+  '1': 'PullOrdersResp',
   '2': [
     {
       '1': 'orders',
@@ -69,15 +70,14 @@ const GetNotPulledPcOrdersResp$json = {
   '7': {},
 };
 
-/// Descriptor for `GetNotPulledPcOrdersResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getNotPulledPcOrdersRespDescriptor =
-    $convert.base64Decode(
-        'ChhHZXROb3RQdWxsZWRQY09yZGVyc1Jlc3ASLgoGb3JkZXJzGAEgAygLMhAuaGkuY2x1Yi5QY0'
-        '9yZGVyQgSQtRgDUgZvcmRlcnM6BJi1GAM=');
+/// Descriptor for `PullOrdersResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pullOrdersRespDescriptor = $convert.base64Decode(
+    'Cg5QdWxsT3JkZXJzUmVzcBIuCgZvcmRlcnMYASADKAsyEC5oaS5jbHViLlBjT3JkZXJCBJC1GA'
+    'NSBm9yZGVyczoEmLUYAw==');
 
-@$core.Deprecated('Use updatePulledPcOrderDescriptor instead')
-const UpdatePulledPcOrder$json = {
-  '1': 'UpdatePulledPcOrder',
+@$core.Deprecated('Use orderResultDescriptor instead')
+const OrderResult$json = {
+  '1': 'OrderResult',
   '2': [
     {'1': 'order_id', '3': 1, '4': 1, '5': 9, '10': 'orderId'},
     {'1': 'status', '3': 2, '4': 1, '5': 9, '10': 'status'},
@@ -86,15 +86,15 @@ const UpdatePulledPcOrder$json = {
   ],
 };
 
-/// Descriptor for `UpdatePulledPcOrder`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updatePulledPcOrderDescriptor = $convert.base64Decode(
-    'ChNVcGRhdGVQdWxsZWRQY09yZGVyEhkKCG9yZGVyX2lkGAEgASgJUgdvcmRlcklkEhYKBnN0YX'
-    'R1cxgCIAEoCVIGc3RhdHVzEhcKB3R4X2hhc2gYAyABKAlSBnR4SGFzaBIcCgl0aW1lc3RhbXAY'
-    'BCABKANSCXRpbWVzdGFtcA==');
+/// Descriptor for `OrderResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List orderResultDescriptor = $convert.base64Decode(
+    'CgtPcmRlclJlc3VsdBIZCghvcmRlcl9pZBgBIAEoCVIHb3JkZXJJZBIWCgZzdGF0dXMYAiABKA'
+    'lSBnN0YXR1cxIXCgd0eF9oYXNoGAMgASgJUgZ0eEhhc2gSHAoJdGltZXN0YW1wGAQgASgDUgl0'
+    'aW1lc3RhbXA=');
 
-@$core.Deprecated('Use updatePulledPcOrderDataDescriptor instead')
-const UpdatePulledPcOrderData$json = {
-  '1': 'UpdatePulledPcOrderData',
+@$core.Deprecated('Use reportResultsDataDescriptor instead')
+const ReportResultsData$json = {
+  '1': 'ReportResultsData',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
     {
@@ -102,14 +102,13 @@ const UpdatePulledPcOrderData$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.club.UpdatePulledPcOrder',
+      '6': '.hi.club.OrderResult',
       '10': 'orders'
     },
   ],
 };
 
-/// Descriptor for `UpdatePulledPcOrderData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updatePulledPcOrderDataDescriptor =
-    $convert.base64Decode(
-        'ChdVcGRhdGVQdWxsZWRQY09yZGVyRGF0YRIQCgNkaWQYASABKAlSA2RpZBI0CgZvcmRlcnMYAi'
-        'ADKAsyHC5oaS5jbHViLlVwZGF0ZVB1bGxlZFBjT3JkZXJSBm9yZGVycw==');
+/// Descriptor for `ReportResultsData`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportResultsDataDescriptor = $convert.base64Decode(
+    'ChFSZXBvcnRSZXN1bHRzRGF0YRIQCgNkaWQYASABKAlSA2RpZBIsCgZvcmRlcnMYAiADKAsyFC'
+    '5oaS5jbHViLk9yZGVyUmVzdWx0UgZvcmRlcnM=');
