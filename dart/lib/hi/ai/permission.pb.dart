@@ -14,6 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common.pb.dart' as $2;
 import 'permission.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -327,6 +328,150 @@ class PermissionDeleteReq extends $pb.GeneratedMessage {
   $core.bool hasType() => $_has(1);
   @$pb.TagNumber(2)
   void clearType() => $_clearField(2);
+}
+
+/// 按档位分页列持有者(club 超管页穿透过来用)。**只出调用者名下的机器人**。
+class PermissionListReq extends $pb.GeneratedMessage {
+  factory PermissionListReq({
+    $core.String? did,
+    PermissionType? type,
+    $2.Pagination? pagination,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    if (type != null) result.type = type;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  PermissionListReq._();
+
+  factory PermissionListReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PermissionListReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PermissionListReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aE<PermissionType>(2, _omitFieldNames ? '' : 'type',
+        enumValues: PermissionType.values)
+    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PermissionListReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PermissionListReq copyWith(void Function(PermissionListReq) updates) =>
+      super.copyWith((message) => updates(message as PermissionListReq))
+          as PermissionListReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PermissionListReq create() => PermissionListReq._();
+  @$core.override
+  PermissionListReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PermissionListReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PermissionListReq>(create);
+  static PermissionListReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get did => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set did($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  PermissionType get type => $_getN(1);
+  @$pb.TagNumber(2)
+  set type(PermissionType value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasType() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearType() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $2.Pagination get pagination => $_getN(2);
+  @$pb.TagNumber(3)
+  set pagination($2.Pagination value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPagination() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPagination() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $2.Pagination ensurePagination() => $_ensure(2);
+}
+
+class PermissionListResp extends $pb.GeneratedMessage {
+  factory PermissionListResp({
+    $core.int? total,
+    $core.Iterable<PermissionInfo>? infos,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (infos != null) result.infos.addAll(infos);
+    return result;
+  }
+
+  PermissionListResp._();
+
+  factory PermissionListResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PermissionListResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PermissionListResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<PermissionInfo>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: PermissionInfo.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PermissionListResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PermissionListResp copyWith(void Function(PermissionListResp) updates) =>
+      super.copyWith((message) => updates(message as PermissionListResp))
+          as PermissionListResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PermissionListResp create() => PermissionListResp._();
+  @$core.override
+  PermissionListResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PermissionListResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PermissionListResp>(create);
+  static PermissionListResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<PermissionInfo> get infos => $_getList(1);
 }
 
 class PermissionEditReq extends $pb.GeneratedMessage {

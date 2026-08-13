@@ -66,6 +66,13 @@ class PermissionClient extends $grpc.Client {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.PermissionListResp> listByType(
+    $0.PermissionListReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listByType, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list = $grpc.ClientMethod<$0.ListAgentPermissionsReq,
@@ -85,6 +92,11 @@ class PermissionClient extends $grpc.Client {
       '/hi.ai.Permission/Edit',
       ($0.PermissionEditReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$listByType =
+      $grpc.ClientMethod<$0.PermissionListReq, $0.PermissionListResp>(
+          '/hi.ai.Permission/ListByType',
+          ($0.PermissionListReq value) => value.writeToBuffer(),
+          $0.PermissionListResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Permission')
@@ -123,6 +135,13 @@ abstract class PermissionServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.PermissionEditReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PermissionListReq, $0.PermissionListResp>(
+        'ListByType',
+        listByType_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PermissionListReq.fromBuffer(value),
+        ($0.PermissionListResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.ListAgentPermissionsResp> list_Pre($grpc.ServiceCall $call,
@@ -156,4 +175,12 @@ abstract class PermissionServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> edit(
       $grpc.ServiceCall call, $0.PermissionEditReq request);
+
+  $async.Future<$0.PermissionListResp> listByType_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PermissionListReq> $request) async {
+    return listByType($call, await $request);
+  }
+
+  $async.Future<$0.PermissionListResp> listByType(
+      $grpc.ServiceCall call, $0.PermissionListReq request);
 }

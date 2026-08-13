@@ -4148,6 +4148,25 @@ pub struct PermissionDeleteReq {
     #[prost(enumeration = "PermissionType", tag = "2")]
     pub r#type: i32,
 }
+/// 按档位分页列持有者(club 超管页穿透过来用)。**只出调用者名下的机器人**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PermissionListReq {
+    /// 可选:按 did 过滤
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    /// **必填**,须是四档之一;列全部传 NORMAL(所有机器人都持有它),不是 UNSPECIFIED
+    #[prost(enumeration = "PermissionType", tag = "2")]
+    pub r#type: i32,
+    #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PermissionListResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PermissionEditReq {
     #[prost(string, tag = "1")]
@@ -4387,6 +4406,30 @@ pub mod permission_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Permission/Edit");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Permission", "Edit"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_by_type(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PermissionListReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::PermissionListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Permission/ListByType",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Permission", "ListByType"));
             self.inner.unary(req, path, codec).await
         }
     }

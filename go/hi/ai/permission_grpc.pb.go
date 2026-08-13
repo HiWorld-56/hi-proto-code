@@ -20,10 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Permission_List_FullMethodName   = "/hi.ai.Permission/List"
-	Permission_Add_FullMethodName    = "/hi.ai.Permission/Add"
-	Permission_Delete_FullMethodName = "/hi.ai.Permission/Delete"
-	Permission_Edit_FullMethodName   = "/hi.ai.Permission/Edit"
+	Permission_List_FullMethodName       = "/hi.ai.Permission/List"
+	Permission_Add_FullMethodName        = "/hi.ai.Permission/Add"
+	Permission_Delete_FullMethodName     = "/hi.ai.Permission/Delete"
+	Permission_Edit_FullMethodName       = "/hi.ai.Permission/Edit"
+	Permission_ListByType_FullMethodName = "/hi.ai.Permission/ListByType"
 )
 
 // PermissionClient is the client API for Permission service.
@@ -41,6 +42,7 @@ type PermissionClient interface {
 	Add(ctx context.Context, in *PermissionAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *PermissionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Edit(ctx context.Context, in *PermissionEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListByType(ctx context.Context, in *PermissionListReq, opts ...grpc.CallOption) (*PermissionListResp, error)
 }
 
 type permissionClient struct {
@@ -91,6 +93,16 @@ func (c *permissionClient) Edit(ctx context.Context, in *PermissionEditReq, opts
 	return out, nil
 }
 
+func (c *permissionClient) ListByType(ctx context.Context, in *PermissionListReq, opts ...grpc.CallOption) (*PermissionListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PermissionListResp)
+	err := c.cc.Invoke(ctx, Permission_ListByType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PermissionServer is the server API for Permission service.
 // All implementations should embed UnimplementedPermissionServer
 // for forward compatibility.
@@ -106,6 +118,7 @@ type PermissionServer interface {
 	Add(context.Context, *PermissionAddReq) (*emptypb.Empty, error)
 	Delete(context.Context, *PermissionDeleteReq) (*emptypb.Empty, error)
 	Edit(context.Context, *PermissionEditReq) (*emptypb.Empty, error)
+	ListByType(context.Context, *PermissionListReq) (*PermissionListResp, error)
 }
 
 // UnimplementedPermissionServer should be embedded to have
@@ -126,6 +139,9 @@ func (UnimplementedPermissionServer) Delete(context.Context, *PermissionDeleteRe
 }
 func (UnimplementedPermissionServer) Edit(context.Context, *PermissionEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedPermissionServer) ListByType(context.Context, *PermissionListReq) (*PermissionListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListByType not implemented")
 }
 func (UnimplementedPermissionServer) testEmbeddedByValue() {}
 
@@ -219,6 +235,24 @@ func _Permission_Edit_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Permission_ListByType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PermissionListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServer).ListByType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Permission_ListByType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServer).ListByType(ctx, req.(*PermissionListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Permission_ServiceDesc is the grpc.ServiceDesc for Permission service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -241,6 +275,10 @@ var Permission_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Edit",
 			Handler:    _Permission_Edit_Handler,
+		},
+		{
+			MethodName: "ListByType",
+			Handler:    _Permission_ListByType_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
