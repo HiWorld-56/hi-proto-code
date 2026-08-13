@@ -15,7 +15,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../ai/agent.pb.dart' as $1;
-import '../common.pb.dart' as $3;
+import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -144,7 +144,7 @@ class BindStatusReq extends $pb.GeneratedMessage {
 
 class BindStatusResp extends $pb.GeneratedMessage {
   factory BindStatusResp({
-    $3.Entity? master,
+    $2.Entity? master,
   }) {
     final result = create();
     if (master != null) result.master = master;
@@ -164,8 +164,8 @@ class BindStatusResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BindStatusResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: $3.Entity.create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'master',
+        subBuilder: $2.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -188,15 +188,15 @@ class BindStatusResp extends $pb.GeneratedMessage {
   static BindStatusResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.Entity get master => $_getN(0);
+  $2.Entity get master => $_getN(0);
   @$pb.TagNumber(1)
-  set master($3.Entity value) => $_setField(1, value);
+  set master($2.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMaster() => $_has(0);
   @$pb.TagNumber(1)
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
-  $3.Entity ensureMaster() => $_ensure(0);
+  $2.Entity ensureMaster() => $_ensure(0);
 }
 
 /// 转让机器人 = **换 master**。club 侧不存在"机器人创建者"的概念。
@@ -274,7 +274,7 @@ class TransferReq extends $pb.GeneratedMessage {
 class ListOnlineReq extends $pb.GeneratedMessage {
   factory ListOnlineReq({
     $core.String? ownerDid,
-    $3.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (ownerDid != null) result.ownerDid = ownerDid;
@@ -296,8 +296,8 @@ class ListOnlineReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'ownerDid')
-    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -329,21 +329,21 @@ class ListOnlineReq extends $pb.GeneratedMessage {
   void clearOwnerDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $3.Pagination get pagination => $_getN(1);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($3.Pagination value) => $_setField(2, value);
+  set pagination($2.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Pagination ensurePagination() => $_ensure(1);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListOnlineResp extends $pb.GeneratedMessage {
   factory ListOnlineResp({
     $core.int? total,
-    $core.Iterable<$3.Entity>? infos,
+    $core.Iterable<$2.Entity>? infos,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -365,8 +365,8 @@ class ListOnlineResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$3.Entity>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: $3.Entity.create)
+    ..pPM<$2.Entity>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: $2.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -401,7 +401,7 @@ class ListOnlineResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$3.Entity> get infos => $_getList(1);
+  $pb.PbList<$2.Entity> get infos => $_getList(1);
 }
 
 /// 智能体(主体=智能体)。**用户 token 档**,全档一致。
@@ -412,7 +412,7 @@ class ListOnlineResp extends $pb.GeneratedMessage {
 class ListAgentsReq extends $pb.GeneratedMessage {
   factory ListAgentsReq({
     $core.Iterable<$core.String>? agents,
-    $3.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (agents != null) result.agents.addAll(agents);
@@ -434,8 +434,8 @@ class ListAgentsReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'agents')
-    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -461,15 +461,15 @@ class ListAgentsReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get agents => $_getList(0);
 
   @$pb.TagNumber(2)
-  $3.Pagination get pagination => $_getN(1);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($3.Pagination value) => $_setField(2, value);
+  set pagination($2.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Pagination ensurePagination() => $_ensure(1);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 /// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——
@@ -477,7 +477,7 @@ class ListAgentsReq extends $pb.GeneratedMessage {
 class ListAgentsByUsersReq extends $pb.GeneratedMessage {
   factory ListAgentsByUsersReq({
     $core.Iterable<$core.String>? users,
-    $3.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (users != null) result.users.addAll(users);
@@ -499,8 +499,8 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'users')
-    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $3.Pagination.create)
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -526,15 +526,15 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get users => $_getList(0);
 
   @$pb.TagNumber(2)
-  $3.Pagination get pagination => $_getN(1);
+  $2.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($3.Pagination value) => $_setField(2, value);
+  set pagination($2.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Pagination ensurePagination() => $_ensure(1);
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 /// 机器人列表。**列表项直接用 hi.ai.AgentInfo,不自定义** ——

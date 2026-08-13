@@ -1218,11 +1218,12 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\bcreators\x18\x01 \x03(\tR\bcreators\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination2\xe4\x04\n" +
+	"pagination2\xd8\x04\n" +
 	"\x05Agent\x12K\n" +
 	"\x0fCreateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12G\n" +
-	"\rRegisterRobot\x12\x17.hi.ai.RegisterRobotReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
-	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
+	"\rRegisterRobot\x12\x17.hi.ai.RegisterRobotReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12.\n" +
+	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\n" +
+	".hi.Entity\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
 	"\x06Delete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x125\n" +
 	"\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
 	"\x04List\x12\x14.hi.ai.ListAgentsReq\x1a\x15.hi.ai.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
@@ -1299,7 +1300,7 @@ var file_hi_ai_agent_proto_depIdxs = []int32{
 	18, // 24: hi.ai.AgentManage.List:input_type -> hi.ai.AgentManageListReq
 	8,  // 25: hi.ai.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
 	8,  // 26: hi.ai.Agent.RegisterRobot:output_type -> hi.ai.CreateAgentResp
-	8,  // 27: hi.ai.Agent.Edit:output_type -> hi.ai.CreateAgentResp
+	19, // 27: hi.ai.Agent.Edit:output_type -> hi.Entity
 	21, // 28: hi.ai.Agent.Delete:output_type -> google.protobuf.Empty
 	14, // 29: hi.ai.Agent.Get:output_type -> hi.ai.GetAgentResp
 	10, // 30: hi.ai.Agent.List:output_type -> hi.ai.ListAgentsResp

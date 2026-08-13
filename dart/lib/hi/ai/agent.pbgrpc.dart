@@ -15,8 +15,9 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
+import '../common.pb.dart' as $1;
 import 'agent.pb.dart' as $0;
 
 export 'agent.pb.dart';
@@ -61,14 +62,14 @@ class AgentClient extends $grpc.Client {
   /// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
   /// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
   /// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
-  $grpc.ResponseFuture<$0.CreateAgentResp> edit(
+  $grpc.ResponseFuture<$1.Entity> edit(
     $0.EditAgentReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> delete(
+  $grpc.ResponseFuture<$2.Empty> delete(
     $0.DeleteAgentReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -99,13 +100,13 @@ class AgentClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$0.DefaultConfigResp> getDefaultConfig(
-    $1.Empty request, {
+    $2.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getDefaultConfig, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> resetToDefault(
+  $grpc.ResponseFuture<$2.Empty> resetToDefault(
     $0.ResetToDefaultReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -124,14 +125,14 @@ class AgentClient extends $grpc.Client {
           '/hi.ai.Agent/RegisterRobot',
           ($0.RegisterRobotReq value) => value.writeToBuffer(),
           $0.CreateAgentResp.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$0.EditAgentReq, $0.CreateAgentResp>(
+  static final _$edit = $grpc.ClientMethod<$0.EditAgentReq, $1.Entity>(
       '/hi.ai.Agent/Edit',
       ($0.EditAgentReq value) => value.writeToBuffer(),
-      $0.CreateAgentResp.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$0.DeleteAgentReq, $1.Empty>(
+      $1.Entity.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.DeleteAgentReq, $2.Empty>(
       '/hi.ai.Agent/Delete',
       ($0.DeleteAgentReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      $2.Empty.fromBuffer);
   static final _$get = $grpc.ClientMethod<$0.GetAgentReq, $0.GetAgentResp>(
       '/hi.ai.Agent/Get',
       ($0.GetAgentReq value) => value.writeToBuffer(),
@@ -146,15 +147,15 @@ class AgentClient extends $grpc.Client {
           ($0.AgentUsageReq value) => value.writeToBuffer(),
           $0.AgentUsageResp.fromBuffer);
   static final _$getDefaultConfig =
-      $grpc.ClientMethod<$1.Empty, $0.DefaultConfigResp>(
+      $grpc.ClientMethod<$2.Empty, $0.DefaultConfigResp>(
           '/hi.ai.Agent/GetDefaultConfig',
-          ($1.Empty value) => value.writeToBuffer(),
+          ($2.Empty value) => value.writeToBuffer(),
           $0.DefaultConfigResp.fromBuffer);
   static final _$resetToDefault =
-      $grpc.ClientMethod<$0.ResetToDefaultReq, $1.Empty>(
+      $grpc.ClientMethod<$0.ResetToDefaultReq, $2.Empty>(
           '/hi.ai.Agent/ResetToDefault',
           ($0.ResetToDefaultReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
+          $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Agent')
@@ -177,20 +178,20 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RegisterRobotReq.fromBuffer(value),
         ($0.CreateAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.EditAgentReq, $0.CreateAgentResp>(
+    $addMethod($grpc.ServiceMethod<$0.EditAgentReq, $1.Entity>(
         'Edit',
         edit_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.EditAgentReq.fromBuffer(value),
-        ($0.CreateAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteAgentReq, $1.Empty>(
+        ($1.Entity value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteAgentReq, $2.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DeleteAgentReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetAgentReq, $0.GetAgentResp>(
         'Get',
         get_Pre,
@@ -212,20 +213,20 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.AgentUsageReq.fromBuffer(value),
         ($0.AgentUsageResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Empty, $0.DefaultConfigResp>(
+    $addMethod($grpc.ServiceMethod<$2.Empty, $0.DefaultConfigResp>(
         'GetDefaultConfig',
         getDefaultConfig_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
         ($0.DefaultConfigResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ResetToDefaultReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.ResetToDefaultReq, $2.Empty>(
         'ResetToDefault',
         resetToDefault_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.ResetToDefaultReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($2.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateAgentResp> createAssistant_Pre($grpc.ServiceCall $call,
@@ -244,20 +245,20 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$0.CreateAgentResp> registerRobot(
       $grpc.ServiceCall call, $0.RegisterRobotReq request);
 
-  $async.Future<$0.CreateAgentResp> edit_Pre(
+  $async.Future<$1.Entity> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditAgentReq> $request) async {
     return edit($call, await $request);
   }
 
-  $async.Future<$0.CreateAgentResp> edit(
+  $async.Future<$1.Entity> edit(
       $grpc.ServiceCall call, $0.EditAgentReq request);
 
-  $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteAgentReq> $request) async {
     return delete($call, await $request);
   }
 
-  $async.Future<$1.Empty> delete(
+  $async.Future<$2.Empty> delete(
       $grpc.ServiceCall call, $0.DeleteAgentReq request);
 
   $async.Future<$0.GetAgentResp> get_Pre(
@@ -285,19 +286,19 @@ abstract class AgentServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.AgentUsageReq request);
 
   $async.Future<$0.DefaultConfigResp> getDefaultConfig_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
     return getDefaultConfig($call, await $request);
   }
 
   $async.Future<$0.DefaultConfigResp> getDefaultConfig(
-      $grpc.ServiceCall call, $1.Empty request);
+      $grpc.ServiceCall call, $2.Empty request);
 
-  $async.Future<$1.Empty> resetToDefault_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> resetToDefault_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ResetToDefaultReq> $request) async {
     return resetToDefault($call, await $request);
   }
 
-  $async.Future<$1.Empty> resetToDefault(
+  $async.Future<$2.Empty> resetToDefault(
       $grpc.ServiceCall call, $0.ResetToDefaultReq request);
 }
 

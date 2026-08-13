@@ -15,9 +15,10 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $3;
 
 import '../ai/agent.pb.dart' as $1;
+import '../common.pb.dart' as $2;
 import 'agent.pb.dart' as $0;
 
 export 'agent.pb.dart';
@@ -57,14 +58,14 @@ class AgentClient extends $grpc.Client {
   /// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
   /// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
   /// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
-  $grpc.ResponseFuture<$1.CreateAgentResp> edit(
+  $grpc.ResponseFuture<$2.Entity> edit(
     $1.EditAgentReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> delete(
+  $grpc.ResponseFuture<$3.Empty> delete(
     $1.DeleteAgentReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -86,21 +87,21 @@ class AgentClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$1.DefaultConfigResp> getDefaultConfig(
-    $2.Empty request, {
+    $3.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getDefaultConfig, request, options: options);
   }
 
   /// ── club 自有:换绑主人 ──
-  $grpc.ResponseFuture<$2.Empty> bindMaster(
+  $grpc.ResponseFuture<$3.Empty> bindMaster(
     $0.MasterBindReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$bindMaster, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> unbindMaster(
+  $grpc.ResponseFuture<$3.Empty> unbindMaster(
     $0.MasterBindReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -114,7 +115,7 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$bindStatus, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> transfer(
+  $grpc.ResponseFuture<$3.Empty> transfer(
     $0.TransferReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -132,14 +133,14 @@ class AgentClient extends $grpc.Client {
           '/hi.club.Agent/CreateAssistant',
           ($1.CreateAssistantReq value) => value.writeToBuffer(),
           $1.CreateAgentResp.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$1.EditAgentReq, $1.CreateAgentResp>(
+  static final _$edit = $grpc.ClientMethod<$1.EditAgentReq, $2.Entity>(
       '/hi.club.Agent/Edit',
       ($1.EditAgentReq value) => value.writeToBuffer(),
-      $1.CreateAgentResp.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$1.DeleteAgentReq, $2.Empty>(
+      $2.Entity.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$1.DeleteAgentReq, $3.Empty>(
       '/hi.club.Agent/Delete',
       ($1.DeleteAgentReq value) => value.writeToBuffer(),
-      $2.Empty.fromBuffer);
+      $3.Empty.fromBuffer);
   static final _$get = $grpc.ClientMethod<$1.GetAgentReq, $1.GetAgentResp>(
       '/hi.club.Agent/Get',
       ($1.GetAgentReq value) => value.writeToBuffer(),
@@ -150,27 +151,27 @@ class AgentClient extends $grpc.Client {
           ($1.AgentUsageReq value) => value.writeToBuffer(),
           $1.AgentUsageResp.fromBuffer);
   static final _$getDefaultConfig =
-      $grpc.ClientMethod<$2.Empty, $1.DefaultConfigResp>(
+      $grpc.ClientMethod<$3.Empty, $1.DefaultConfigResp>(
           '/hi.club.Agent/GetDefaultConfig',
-          ($2.Empty value) => value.writeToBuffer(),
+          ($3.Empty value) => value.writeToBuffer(),
           $1.DefaultConfigResp.fromBuffer);
-  static final _$bindMaster = $grpc.ClientMethod<$0.MasterBindReq, $2.Empty>(
+  static final _$bindMaster = $grpc.ClientMethod<$0.MasterBindReq, $3.Empty>(
       '/hi.club.Agent/BindMaster',
       ($0.MasterBindReq value) => value.writeToBuffer(),
-      $2.Empty.fromBuffer);
-  static final _$unbindMaster = $grpc.ClientMethod<$0.MasterBindReq, $2.Empty>(
+      $3.Empty.fromBuffer);
+  static final _$unbindMaster = $grpc.ClientMethod<$0.MasterBindReq, $3.Empty>(
       '/hi.club.Agent/UnbindMaster',
       ($0.MasterBindReq value) => value.writeToBuffer(),
-      $2.Empty.fromBuffer);
+      $3.Empty.fromBuffer);
   static final _$bindStatus =
       $grpc.ClientMethod<$0.BindStatusReq, $0.BindStatusResp>(
           '/hi.club.Agent/BindStatus',
           ($0.BindStatusReq value) => value.writeToBuffer(),
           $0.BindStatusResp.fromBuffer);
-  static final _$transfer = $grpc.ClientMethod<$0.TransferReq, $2.Empty>(
+  static final _$transfer = $grpc.ClientMethod<$0.TransferReq, $3.Empty>(
       '/hi.club.Agent/Transfer',
       ($0.TransferReq value) => value.writeToBuffer(),
-      $2.Empty.fromBuffer);
+      $3.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Agent')
@@ -193,20 +194,20 @@ abstract class AgentServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.CreateAssistantReq.fromBuffer(value),
         ($1.CreateAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EditAgentReq, $1.CreateAgentResp>(
+    $addMethod($grpc.ServiceMethod<$1.EditAgentReq, $2.Entity>(
         'Edit',
         edit_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.EditAgentReq.fromBuffer(value),
-        ($1.CreateAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DeleteAgentReq, $2.Empty>(
+        ($2.Entity value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DeleteAgentReq, $3.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.DeleteAgentReq.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
+        ($3.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.GetAgentReq, $1.GetAgentResp>(
         'Get',
         get_Pre,
@@ -221,27 +222,27 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.AgentUsageReq.fromBuffer(value),
         ($1.AgentUsageResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Empty, $1.DefaultConfigResp>(
+    $addMethod($grpc.ServiceMethod<$3.Empty, $1.DefaultConfigResp>(
         'GetDefaultConfig',
         getDefaultConfig_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
+        ($core.List<$core.int> value) => $3.Empty.fromBuffer(value),
         ($1.DefaultConfigResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.MasterBindReq, $2.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.MasterBindReq, $3.Empty>(
         'BindMaster',
         bindMaster_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.MasterBindReq.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.MasterBindReq, $2.Empty>(
+        ($3.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.MasterBindReq, $3.Empty>(
         'UnbindMaster',
         unbindMaster_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.MasterBindReq.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
+        ($3.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.BindStatusReq, $0.BindStatusResp>(
         'BindStatus',
         bindStatus_Pre,
@@ -249,13 +250,13 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.BindStatusReq.fromBuffer(value),
         ($0.BindStatusResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.TransferReq, $2.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.TransferReq, $3.Empty>(
         'Transfer',
         transfer_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.TransferReq.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
+        ($3.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.ListAgentsResp> list_Pre(
@@ -274,20 +275,20 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$1.CreateAgentResp> createAssistant(
       $grpc.ServiceCall call, $1.CreateAssistantReq request);
 
-  $async.Future<$1.CreateAgentResp> edit_Pre(
+  $async.Future<$2.Entity> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.EditAgentReq> $request) async {
     return edit($call, await $request);
   }
 
-  $async.Future<$1.CreateAgentResp> edit(
+  $async.Future<$2.Entity> edit(
       $grpc.ServiceCall call, $1.EditAgentReq request);
 
-  $async.Future<$2.Empty> delete_Pre($grpc.ServiceCall $call,
+  $async.Future<$3.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$1.DeleteAgentReq> $request) async {
     return delete($call, await $request);
   }
 
-  $async.Future<$2.Empty> delete(
+  $async.Future<$3.Empty> delete(
       $grpc.ServiceCall call, $1.DeleteAgentReq request);
 
   $async.Future<$1.GetAgentResp> get_Pre(
@@ -307,27 +308,27 @@ abstract class AgentServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.AgentUsageReq request);
 
   $async.Future<$1.DefaultConfigResp> getDefaultConfig_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$3.Empty> $request) async {
     return getDefaultConfig($call, await $request);
   }
 
   $async.Future<$1.DefaultConfigResp> getDefaultConfig(
-      $grpc.ServiceCall call, $2.Empty request);
+      $grpc.ServiceCall call, $3.Empty request);
 
-  $async.Future<$2.Empty> bindMaster_Pre(
+  $async.Future<$3.Empty> bindMaster_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.MasterBindReq> $request) async {
     return bindMaster($call, await $request);
   }
 
-  $async.Future<$2.Empty> bindMaster(
+  $async.Future<$3.Empty> bindMaster(
       $grpc.ServiceCall call, $0.MasterBindReq request);
 
-  $async.Future<$2.Empty> unbindMaster_Pre(
+  $async.Future<$3.Empty> unbindMaster_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.MasterBindReq> $request) async {
     return unbindMaster($call, await $request);
   }
 
-  $async.Future<$2.Empty> unbindMaster(
+  $async.Future<$3.Empty> unbindMaster(
       $grpc.ServiceCall call, $0.MasterBindReq request);
 
   $async.Future<$0.BindStatusResp> bindStatus_Pre(
@@ -338,12 +339,12 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$0.BindStatusResp> bindStatus(
       $grpc.ServiceCall call, $0.BindStatusReq request);
 
-  $async.Future<$2.Empty> transfer_Pre(
+  $async.Future<$3.Empty> transfer_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.TransferReq> $request) async {
     return transfer($call, await $request);
   }
 
-  $async.Future<$2.Empty> transfer(
+  $async.Future<$3.Empty> transfer(
       $grpc.ServiceCall call, $0.TransferReq request);
 }
 

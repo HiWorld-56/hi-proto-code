@@ -2021,10 +2021,7 @@ pub mod agent_client {
         pub async fn edit(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::EditAgentReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::CreateAgentResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<super::super::Entity>, tonic::Status> {
             self.inner
                 .ready()
                 .await

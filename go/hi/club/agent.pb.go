@@ -549,11 +549,12 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"pagination\"b\n" +
 	"\x0eListAgentsResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
-	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x032\xe7\x05\n" +
+	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x032\xdb\x05\n" +
 	"\x05Agent\x12>\n" +
 	"\x04List\x12\x16.hi.club.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
-	"\x0fCreateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
-	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\x0fCreateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12.\n" +
+	"\x04Edit\x12\x13.hi.ai.EditAgentReq\x1a\n" +
+	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x06Delete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x125\n" +
 	"\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\bGetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
@@ -631,7 +632,7 @@ var file_hi_club_agent_proto_depIdxs = []int32{
 	7,  // 18: hi.club.AgentManage.List:input_type -> hi.club.ListAgentsByUsersReq
 	8,  // 19: hi.club.Agent.List:output_type -> hi.club.ListAgentsResp
 	18, // 20: hi.club.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
-	18, // 21: hi.club.Agent.Edit:output_type -> hi.ai.CreateAgentResp
+	9,  // 21: hi.club.Agent.Edit:output_type -> hi.Entity
 	17, // 22: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
 	19, // 23: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp
 	20, // 24: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
