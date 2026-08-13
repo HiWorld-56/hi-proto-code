@@ -15,7 +15,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -222,72 +222,6 @@ class CreateApiKeyResp extends $pb.GeneratedMessage {
   ApiKeyInfo ensureInfo() => $_ensure(0);
 }
 
-class EditApiKeyReq extends $pb.GeneratedMessage {
-  factory EditApiKeyReq({
-    $core.String? apiKey,
-    $core.String? note,
-  }) {
-    final result = create();
-    if (apiKey != null) result.apiKey = apiKey;
-    if (note != null) result.note = note;
-    return result;
-  }
-
-  EditApiKeyReq._();
-
-  factory EditApiKeyReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory EditApiKeyReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'EditApiKeyReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'apiKey')
-    ..aOS(2, _omitFieldNames ? '' : 'note')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  EditApiKeyReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  EditApiKeyReq copyWith(void Function(EditApiKeyReq) updates) =>
-      super.copyWith((message) => updates(message as EditApiKeyReq))
-          as EditApiKeyReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static EditApiKeyReq create() => EditApiKeyReq._();
-  @$core.override
-  EditApiKeyReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static EditApiKeyReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EditApiKeyReq>(create);
-  static EditApiKeyReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get apiKey => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set apiKey($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasApiKey() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearApiKey() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get note => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set note($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasNote() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearNote() => $_clearField(2);
-}
-
 class EditApiKeyResp extends $pb.GeneratedMessage {
   factory EditApiKeyResp({
     ApiKeyInfo? info,
@@ -348,7 +282,7 @@ class EditApiKeyResp extends $pb.GeneratedMessage {
 class ListApiKeysReq extends $pb.GeneratedMessage {
   factory ListApiKeysReq({
     $core.String? agent,
-    $2.Pagination? pagination,
+    $3.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -370,8 +304,8 @@ class ListApiKeysReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -403,15 +337,15 @@ class ListApiKeysReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $3.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($3.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListApiKeysResp extends $pb.GeneratedMessage {

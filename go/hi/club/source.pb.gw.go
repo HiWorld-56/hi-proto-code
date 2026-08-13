@@ -16,6 +16,7 @@ import (
 
 	"github.com/HiWorld-56/hi-proto/go/hi"
 	"github.com/HiWorld-56/hi-proto/go/hi/ai"
+	"github.com/HiWorld-56/hi-proto/go/hi/source"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -147,7 +148,7 @@ func local_request_Source_Download_0(ctx context.Context, marshaler runtime.Mars
 
 func request_Source_DownloadStream_0(ctx context.Context, marshaler runtime.Marshaler, client SourceClient, req *http.Request, pathParams map[string]string) (Source_DownloadStreamClient, runtime.ServerMetadata, error) {
 	var (
-		protoReq DownloadResourceStreamReq
+		protoReq source.DownloadStreamReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

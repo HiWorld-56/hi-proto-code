@@ -868,13 +868,6 @@ pub struct CreateApiKeyResp {
     pub info: ::core::option::Option<ApiKeyInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct EditApiKeyReq {
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct EditApiKeyResp {
     #[prost(message, optional, tag = "1")]
     pub info: ::core::option::Option<ApiKeyInfo>,
@@ -910,6 +903,9 @@ pub mod api_key_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// ⚠️ 入参 `EditApiKeyReq` **复用 hi.ai 的**(字段完全一致,club 只是门面)。
+    /// 但 `ApiKeyInfo` / `ListApiKeysResp` **不复用** —— club 那份有意收窄
+    /// (不吐 rate_limit / is_active),形状看着像、内容不是一回事。
     #[derive(Debug, Clone)]
     pub struct ApiKeyClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1015,7 +1011,7 @@ pub mod api_key_client {
         /// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
         pub async fn edit(
             &mut self,
-            request: impl tonic::IntoRequest<super::EditApiKeyReq>,
+            request: impl tonic::IntoRequest<super::super::ai::EditApiKeyReq>,
         ) -> std::result::Result<tonic::Response<super::EditApiKeyResp>, tonic::Status> {
             self.inner
                 .ready()
@@ -1081,32 +1077,6 @@ pub struct DownloadResourceReq {
 pub struct DownloadResourceResp {
     #[prost(bytes = "vec", tag = "1")]
     pub content: ::prost::alloc::vec::Vec<u8>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DownloadResourceStreamReq {
-    #[prost(string, tag = "1")]
-    pub url: ::prost::alloc::string::String,
-    /// 起始偏移(字节),0=从头;支持 range/断点续传
-    #[prost(int64, tag = "2")]
-    pub offset: i64,
-    /// 限制大小(字节),0=到文件尾
-    #[prost(int64, tag = "3")]
-    pub limit: i64,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DownloadResourceStreamResp {
-    /// 内容分片
-    #[prost(bytes = "vec", tag = "1")]
-    pub chunk: ::prost::alloc::vec::Vec<u8>,
-    /// 本次流累计已发送字节
-    #[prost(int64, tag = "2")]
-    pub sent: i64,
-    /// 文件总大小(字节)
-    #[prost(int64, tag = "3")]
-    pub total: i64,
-    /// 当前块在文件中的起始字节位置
-    #[prost(int64, tag = "4")]
-    pub offset: i64,
 }
 /// Generated client implementations.
 pub mod source_client {
@@ -1333,9 +1303,11 @@ pub mod source_client {
         /// 透传 hi-source 的 File.DownloadStream。
         pub async fn download_stream(
             &mut self,
-            request: impl tonic::IntoRequest<super::DownloadResourceStreamReq>,
+            request: impl tonic::IntoRequest<super::super::source::DownloadStreamReq>,
         ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::DownloadResourceStreamResp>>,
+            tonic::Response<
+                tonic::codec::Streaming<super::super::source::DownloadStreamResp>,
+            >,
             tonic::Status,
         > {
             self.inner
@@ -1839,19 +1811,6 @@ pub struct ListOnlineResp {
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<super::Entity>,
 }
-/// 智能体(主体=智能体)。**用户 token 档**,全档一致。
-/// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
-/// 列我的机器人。**没有"查谁"的参数** —— 主体永远是 token 里的人。
-/// 与 hi.ai.ListAgentsReq 结构对齐:agents 可选按 did 过滤(空=名下全部),
-/// 传别人的 did 得空(交集即归属守卫,不报错)。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListAgentsReq {
-    /// 可选:按机器人 did 筛;空=名下全部
-    #[prost(string, repeated, tag = "1")]
-    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
 /// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——
 /// 与"空=换一种语义"不同,这里两种情况是同一根轴上的"筛/不筛"。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1973,7 +1932,7 @@ pub mod agent_client {
         /// 将来若要开放"查别人的机器人列表",那是**另一个方法**,不是把这个的档位放开。
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListAgentsReq>,
+            request: impl tonic::IntoRequest<super::super::ai::ListAgentsReq>,
         ) -> std::result::Result<tonic::Response<super::ListAgentsResp>, tonic::Status> {
             self.inner
                 .ready()

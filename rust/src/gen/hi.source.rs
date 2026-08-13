@@ -71,14 +71,6 @@ pub struct PutReq {
     pub name_mode: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PutResp {
-    /// 完整可下载 url(私有 bucket 的 url 需经 Download 取)
-    #[prost(string, tag = "1")]
-    pub url: ::prost::alloc::string::String,
-    #[prost(string, optional, tag = "2")]
-    pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PutStreamReq {
     #[prost(oneof = "put_stream_req::Data", tags = "1, 2")]
     pub data: ::core::option::Option<put_stream_req::Data>,
@@ -347,7 +339,10 @@ pub mod file_client {
         pub async fn put(
             &mut self,
             request: impl tonic::IntoRequest<super::PutReq>,
-        ) -> std::result::Result<tonic::Response<super::PutResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -365,7 +360,10 @@ pub mod file_client {
         pub async fn put_stream(
             &mut self,
             request: impl tonic::IntoStreamingRequest<Message = super::PutStreamReq>,
-        ) -> std::result::Result<tonic::Response<super::PutResp>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await

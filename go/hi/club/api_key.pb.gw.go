@@ -14,6 +14,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/HiWorld-56/hi-proto/go/hi/ai"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -64,7 +65,7 @@ func local_request_ApiKey_Create_0(ctx context.Context, marshaler runtime.Marsha
 
 func request_ApiKey_Edit_0(ctx context.Context, marshaler runtime.Marshaler, client ApiKeyClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq EditApiKeyReq
+		protoReq ai.EditApiKeyReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -79,7 +80,7 @@ func request_ApiKey_Edit_0(ctx context.Context, marshaler runtime.Marshaler, cli
 
 func local_request_ApiKey_Edit_0(ctx context.Context, marshaler runtime.Marshaler, server ApiKeyServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq EditApiKeyReq
+		protoReq ai.EditApiKeyReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

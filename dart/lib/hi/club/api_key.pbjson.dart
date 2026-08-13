@@ -67,20 +67,6 @@ final $typed_data.Uint8List createApiKeyRespDescriptor = $convert.base64Decode(
     'ChBDcmVhdGVBcGlLZXlSZXNwEi0KBGluZm8YASABKAsyEy5oaS5jbHViLkFwaUtleUluZm9CBJ'
     'C1GANSBGluZm86BJi1GAM=');
 
-@$core.Deprecated('Use editApiKeyReqDescriptor instead')
-const EditApiKeyReq$json = {
-  '1': 'EditApiKeyReq',
-  '2': [
-    {'1': 'api_key', '3': 1, '4': 1, '5': 9, '10': 'apiKey'},
-    {'1': 'note', '3': 2, '4': 1, '5': 9, '10': 'note'},
-  ],
-};
-
-/// Descriptor for `EditApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List editApiKeyReqDescriptor = $convert.base64Decode(
-    'Cg1FZGl0QXBpS2V5UmVxEhcKB2FwaV9rZXkYASABKAlSBmFwaUtleRISCgRub3RlGAIgASgJUg'
-    'Rub3Rl');
-
 @$core.Deprecated('Use editApiKeyRespDescriptor instead')
 const EditApiKeyResp$json = {
   '1': 'EditApiKeyResp',

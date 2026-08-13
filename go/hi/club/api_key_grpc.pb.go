@@ -8,6 +8,7 @@ package club
 
 import (
 	context "context"
+	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -29,11 +30,16 @@ const (
 // ApiKeyClient is the client API for ApiKey service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ⚠️ 入参 `EditApiKeyReq` **复用 hi.ai 的**(字段完全一致,club 只是门面)。
+//
+//	但 `ApiKeyInfo` / `ListApiKeysResp` **不复用** —— club 那份有意收窄
+//	(不吐 rate_limit / is_active),形状看着像、内容不是一回事。
 type ApiKeyClient interface {
 	Create(ctx context.Context, in *CreateApiKeyReq, opts ...grpc.CallOption) (*CreateApiKeyResp, error)
 	// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
 	// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
-	Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
+	Edit(ctx context.Context, in *ai.EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
 	List(ctx context.Context, in *ListApiKeysReq, opts ...grpc.CallOption) (*ListApiKeysResp, error)
 	Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -56,7 +62,7 @@ func (c *apiKeyClient) Create(ctx context.Context, in *CreateApiKeyReq, opts ...
 	return out, nil
 }
 
-func (c *apiKeyClient) Edit(ctx context.Context, in *EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error) {
+func (c *apiKeyClient) Edit(ctx context.Context, in *ai.EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(EditApiKeyResp)
 	err := c.cc.Invoke(ctx, ApiKey_Edit_FullMethodName, in, out, cOpts...)
@@ -89,11 +95,16 @@ func (c *apiKeyClient) Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...
 // ApiKeyServer is the server API for ApiKey service.
 // All implementations should embed UnimplementedApiKeyServer
 // for forward compatibility.
+//
+// ⚠️ 入参 `EditApiKeyReq` **复用 hi.ai 的**(字段完全一致,club 只是门面)。
+//
+//	但 `ApiKeyInfo` / `ListApiKeysResp` **不复用** —— club 那份有意收窄
+//	(不吐 rate_limit / is_active),形状看着像、内容不是一回事。
 type ApiKeyServer interface {
 	Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error)
 	// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
 	// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
-	Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error)
+	Edit(context.Context, *ai.EditApiKeyReq) (*EditApiKeyResp, error)
 	List(context.Context, *ListApiKeysReq) (*ListApiKeysResp, error)
 	Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error)
 }
@@ -108,7 +119,7 @@ type UnimplementedApiKeyServer struct{}
 func (UnimplementedApiKeyServer) Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedApiKeyServer) Edit(context.Context, *EditApiKeyReq) (*EditApiKeyResp, error) {
+func (UnimplementedApiKeyServer) Edit(context.Context, *ai.EditApiKeyReq) (*EditApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedApiKeyServer) List(context.Context, *ListApiKeysReq) (*ListApiKeysResp, error) {
@@ -156,7 +167,7 @@ func _ApiKey_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 }
 
 func _ApiKey_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EditApiKeyReq)
+	in := new(ai.EditApiKeyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -168,7 +179,7 @@ func _ApiKey_Edit_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: ApiKey_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiKeyServer).Edit(ctx, req.(*EditApiKeyReq))
+		return srv.(ApiKeyServer).Edit(ctx, req.(*ai.EditApiKeyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

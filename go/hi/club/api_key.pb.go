@@ -8,6 +8,7 @@ package club
 
 import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
+	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -182,58 +183,6 @@ func (x *CreateApiKeyResp) GetInfo() *ApiKeyInfo {
 	return nil
 }
 
-type EditApiKeyReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
-	Note          string                 `protobuf:"bytes,2,opt,name=note,proto3" json:"note,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *EditApiKeyReq) Reset() {
-	*x = EditApiKeyReq{}
-	mi := &file_hi_club_api_key_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditApiKeyReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditApiKeyReq) ProtoMessage() {}
-
-func (x *EditApiKeyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_api_key_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use EditApiKeyReq.ProtoReflect.Descriptor instead.
-func (*EditApiKeyReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_api_key_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *EditApiKeyReq) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
-	}
-	return ""
-}
-
-func (x *EditApiKeyReq) GetNote() string {
-	if x != nil {
-		return x.Note
-	}
-	return ""
-}
-
 type EditApiKeyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Info          *ApiKeyInfo            `protobuf:"bytes,1,opt,name=info,proto3" json:"info,omitempty"`
@@ -243,7 +192,7 @@ type EditApiKeyResp struct {
 
 func (x *EditApiKeyResp) Reset() {
 	*x = EditApiKeyResp{}
-	mi := &file_hi_club_api_key_proto_msgTypes[4]
+	mi := &file_hi_club_api_key_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -255,7 +204,7 @@ func (x *EditApiKeyResp) String() string {
 func (*EditApiKeyResp) ProtoMessage() {}
 
 func (x *EditApiKeyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_api_key_proto_msgTypes[4]
+	mi := &file_hi_club_api_key_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -268,7 +217,7 @@ func (x *EditApiKeyResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditApiKeyResp.ProtoReflect.Descriptor instead.
 func (*EditApiKeyResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_api_key_proto_rawDescGZIP(), []int{4}
+	return file_hi_club_api_key_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *EditApiKeyResp) GetInfo() *ApiKeyInfo {
@@ -288,7 +237,7 @@ type ListApiKeysReq struct {
 
 func (x *ListApiKeysReq) Reset() {
 	*x = ListApiKeysReq{}
-	mi := &file_hi_club_api_key_proto_msgTypes[5]
+	mi := &file_hi_club_api_key_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -300,7 +249,7 @@ func (x *ListApiKeysReq) String() string {
 func (*ListApiKeysReq) ProtoMessage() {}
 
 func (x *ListApiKeysReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_api_key_proto_msgTypes[5]
+	mi := &file_hi_club_api_key_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -313,7 +262,7 @@ func (x *ListApiKeysReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListApiKeysReq.ProtoReflect.Descriptor instead.
 func (*ListApiKeysReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_api_key_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_api_key_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListApiKeysReq) GetAgent() string {
@@ -340,7 +289,7 @@ type ListApiKeysResp struct {
 
 func (x *ListApiKeysResp) Reset() {
 	*x = ListApiKeysResp{}
-	mi := &file_hi_club_api_key_proto_msgTypes[6]
+	mi := &file_hi_club_api_key_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -352,7 +301,7 @@ func (x *ListApiKeysResp) String() string {
 func (*ListApiKeysResp) ProtoMessage() {}
 
 func (x *ListApiKeysResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_api_key_proto_msgTypes[6]
+	mi := &file_hi_club_api_key_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -365,7 +314,7 @@ func (x *ListApiKeysResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListApiKeysResp.ProtoReflect.Descriptor instead.
 func (*ListApiKeysResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_api_key_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_api_key_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListApiKeysResp) GetTotal() int32 {
@@ -391,7 +340,7 @@ type DeleteApiKeyReq struct {
 
 func (x *DeleteApiKeyReq) Reset() {
 	*x = DeleteApiKeyReq{}
-	mi := &file_hi_club_api_key_proto_msgTypes[7]
+	mi := &file_hi_club_api_key_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +352,7 @@ func (x *DeleteApiKeyReq) String() string {
 func (*DeleteApiKeyReq) ProtoMessage() {}
 
 func (x *DeleteApiKeyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_api_key_proto_msgTypes[7]
+	mi := &file_hi_club_api_key_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +365,7 @@ func (x *DeleteApiKeyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteApiKeyReq.ProtoReflect.Descriptor instead.
 func (*DeleteApiKeyReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_api_key_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_api_key_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DeleteApiKeyReq) GetApiKey() string {
@@ -430,7 +379,7 @@ var File_hi_club_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_club_api_key_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x87\x01\n" +
+	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/ai/api_key.proto\x1a\x10hi/options.proto\"\x87\x01\n" +
 	"\n" +
 	"ApiKeyInfo\x12\x18\n" +
 	"\x04user\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04user\x12\x1a\n" +
@@ -441,10 +390,7 @@ const file_hi_club_api_key_proto_rawDesc = "" +
 	"\x0fCreateApiKeyReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\"G\n" +
 	"\x10CreateApiKeyResp\x12-\n" +
-	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"<\n" +
-	"\rEditApiKeyReq\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x12\n" +
-	"\x04note\x18\x02 \x01(\tR\x04note\"E\n" +
+	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"E\n" +
 	"\x0eEditApiKeyResp\x12-\n" +
 	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"V\n" +
 	"\x0eListApiKeysReq\x12\x14\n" +
@@ -456,10 +402,10 @@ const file_hi_club_api_key_proto_rawDesc = "" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12/\n" +
 	"\x05infos\x18\x02 \x03(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"*\n" +
 	"\x0fDeleteApiKeyReq\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\x93\x02\n" +
+	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\x91\x02\n" +
 	"\x06ApiKey\x12D\n" +
-	"\x06Create\x12\x18.hi.club.CreateApiKeyReq\x1a\x19.hi.club.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
-	"\x04Edit\x12\x16.hi.club.EditApiKeyReq\x1a\x17.hi.club.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
+	"\x06Create\x12\x18.hi.club.CreateApiKeyReq\x1a\x19.hi.club.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x17.hi.club.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x04List\x12\x17.hi.club.ListApiKeysReq\x1a\x18.hi.club.ListApiKeysResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
 	"\x06Delete\x12\x18.hi.club.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x82\x01\n" +
 	"\vcom.hi.clubB\vApiKeyProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
@@ -476,31 +422,31 @@ func file_hi_club_api_key_proto_rawDescGZIP() []byte {
 	return file_hi_club_api_key_proto_rawDescData
 }
 
-var file_hi_club_api_key_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_club_api_key_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_hi_club_api_key_proto_goTypes = []any{
 	(*ApiKeyInfo)(nil),       // 0: hi.club.ApiKeyInfo
 	(*CreateApiKeyReq)(nil),  // 1: hi.club.CreateApiKeyReq
 	(*CreateApiKeyResp)(nil), // 2: hi.club.CreateApiKeyResp
-	(*EditApiKeyReq)(nil),    // 3: hi.club.EditApiKeyReq
-	(*EditApiKeyResp)(nil),   // 4: hi.club.EditApiKeyResp
-	(*ListApiKeysReq)(nil),   // 5: hi.club.ListApiKeysReq
-	(*ListApiKeysResp)(nil),  // 6: hi.club.ListApiKeysResp
-	(*DeleteApiKeyReq)(nil),  // 7: hi.club.DeleteApiKeyReq
-	(*hi.Pagination)(nil),    // 8: hi.Pagination
+	(*EditApiKeyResp)(nil),   // 3: hi.club.EditApiKeyResp
+	(*ListApiKeysReq)(nil),   // 4: hi.club.ListApiKeysReq
+	(*ListApiKeysResp)(nil),  // 5: hi.club.ListApiKeysResp
+	(*DeleteApiKeyReq)(nil),  // 6: hi.club.DeleteApiKeyReq
+	(*hi.Pagination)(nil),    // 7: hi.Pagination
+	(*ai.EditApiKeyReq)(nil), // 8: hi.ai.EditApiKeyReq
 	(*emptypb.Empty)(nil),    // 9: google.protobuf.Empty
 }
 var file_hi_club_api_key_proto_depIdxs = []int32{
 	0, // 0: hi.club.CreateApiKeyResp.info:type_name -> hi.club.ApiKeyInfo
 	0, // 1: hi.club.EditApiKeyResp.info:type_name -> hi.club.ApiKeyInfo
-	8, // 2: hi.club.ListApiKeysReq.pagination:type_name -> hi.Pagination
+	7, // 2: hi.club.ListApiKeysReq.pagination:type_name -> hi.Pagination
 	0, // 3: hi.club.ListApiKeysResp.infos:type_name -> hi.club.ApiKeyInfo
 	1, // 4: hi.club.ApiKey.Create:input_type -> hi.club.CreateApiKeyReq
-	3, // 5: hi.club.ApiKey.Edit:input_type -> hi.club.EditApiKeyReq
-	5, // 6: hi.club.ApiKey.List:input_type -> hi.club.ListApiKeysReq
-	7, // 7: hi.club.ApiKey.Delete:input_type -> hi.club.DeleteApiKeyReq
+	8, // 5: hi.club.ApiKey.Edit:input_type -> hi.ai.EditApiKeyReq
+	4, // 6: hi.club.ApiKey.List:input_type -> hi.club.ListApiKeysReq
+	6, // 7: hi.club.ApiKey.Delete:input_type -> hi.club.DeleteApiKeyReq
 	2, // 8: hi.club.ApiKey.Create:output_type -> hi.club.CreateApiKeyResp
-	4, // 9: hi.club.ApiKey.Edit:output_type -> hi.club.EditApiKeyResp
-	6, // 10: hi.club.ApiKey.List:output_type -> hi.club.ListApiKeysResp
+	3, // 9: hi.club.ApiKey.Edit:output_type -> hi.club.EditApiKeyResp
+	5, // 10: hi.club.ApiKey.List:output_type -> hi.club.ListApiKeysResp
 	9, // 11: hi.club.ApiKey.Delete:output_type -> google.protobuf.Empty
 	8, // [8:12] is the sub-list for method output_type
 	4, // [4:8] is the sub-list for method input_type
@@ -520,7 +466,7 @@ func file_hi_club_api_key_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_api_key_proto_rawDesc), len(file_hi_club_api_key_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

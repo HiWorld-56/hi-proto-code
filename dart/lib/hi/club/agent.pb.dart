@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../ai/agent.pb.dart' as $1;
+import '../ai/agent.pb.dart' as $0;
 import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -404,74 +404,6 @@ class ListOnlineResp extends $pb.GeneratedMessage {
   $pb.PbList<$2.Entity> get infos => $_getList(1);
 }
 
-/// 智能体(主体=智能体)。**用户 token 档**,全档一致。
-/// 免鉴权的那几个(列表/在线/查主人)已拆去 AgentDirectory。
-/// 列我的机器人。**没有"查谁"的参数** —— 主体永远是 token 里的人。
-/// 与 hi.ai.ListAgentsReq 结构对齐:agents 可选按 did 过滤(空=名下全部),
-/// 传别人的 did 得空(交集即归属守卫,不报错)。
-class ListAgentsReq extends $pb.GeneratedMessage {
-  factory ListAgentsReq({
-    $core.Iterable<$core.String>? agents,
-    $2.Pagination? pagination,
-  }) {
-    final result = create();
-    if (agents != null) result.agents.addAll(agents);
-    if (pagination != null) result.pagination = pagination;
-    return result;
-  }
-
-  ListAgentsReq._();
-
-  factory ListAgentsReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ListAgentsReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListAgentsReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'agents')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentsReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListAgentsReq copyWith(void Function(ListAgentsReq) updates) =>
-      super.copyWith((message) => updates(message as ListAgentsReq))
-          as ListAgentsReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ListAgentsReq create() => ListAgentsReq._();
-  @$core.override
-  ListAgentsReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ListAgentsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListAgentsReq>(create);
-  static ListAgentsReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<$core.String> get agents => $_getList(0);
-
-  @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
-}
-
 /// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——
 /// 与"空=换一种语义"不同,这里两种情况是同一根轴上的"筛/不筛"。
 class ListAgentsByUsersReq extends $pb.GeneratedMessage {
@@ -548,7 +480,7 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
 class ListAgentsResp extends $pb.GeneratedMessage {
   factory ListAgentsResp({
     $core.int? total,
-    $core.Iterable<$1.AgentInfo>? agents,
+    $core.Iterable<$0.AgentInfo>? agents,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -570,8 +502,8 @@ class ListAgentsResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$1.AgentInfo>(2, _omitFieldNames ? '' : 'agents',
-        subBuilder: $1.AgentInfo.create)
+    ..pPM<$0.AgentInfo>(2, _omitFieldNames ? '' : 'agents',
+        subBuilder: $0.AgentInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -603,7 +535,7 @@ class ListAgentsResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$1.AgentInfo> get agents => $_getList(1);
+  $pb.PbList<$0.AgentInfo> get agents => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =

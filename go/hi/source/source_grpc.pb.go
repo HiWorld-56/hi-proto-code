@@ -37,8 +37,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileClient interface {
-	Put(ctx context.Context, in *PutReq, opts ...grpc.CallOption) (*PutResp, error)
-	PutStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[PutStreamReq, PutResp], error)
+	Put(ctx context.Context, in *PutReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
+	PutStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[PutStreamReq, hi.UploadResp], error)
 	Download(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownloadResp, error)
 	DownloadStream(ctx context.Context, in *DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadStreamResp], error)
 	Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -57,9 +57,9 @@ func NewFileClient(cc grpc.ClientConnInterface) FileClient {
 	return &fileClient{cc}
 }
 
-func (c *fileClient) Put(ctx context.Context, in *PutReq, opts ...grpc.CallOption) (*PutResp, error) {
+func (c *fileClient) Put(ctx context.Context, in *PutReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PutResp)
+	out := new(hi.UploadResp)
 	err := c.cc.Invoke(ctx, File_Put_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -67,18 +67,18 @@ func (c *fileClient) Put(ctx context.Context, in *PutReq, opts ...grpc.CallOptio
 	return out, nil
 }
 
-func (c *fileClient) PutStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[PutStreamReq, PutResp], error) {
+func (c *fileClient) PutStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[PutStreamReq, hi.UploadResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &File_ServiceDesc.Streams[0], File_PutStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[PutStreamReq, PutResp]{ClientStream: stream}
+	x := &grpc.GenericClientStream[PutStreamReq, hi.UploadResp]{ClientStream: stream}
 	return x, nil
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type File_PutStreamClient = grpc.ClientStreamingClient[PutStreamReq, PutResp]
+type File_PutStreamClient = grpc.ClientStreamingClient[PutStreamReq, hi.UploadResp]
 
 func (c *fileClient) Download(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownloadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -182,8 +182,8 @@ type File_GetObjectStreamClient = grpc.ServerStreamingClient[GetObjectStreamResp
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
 type FileServer interface {
-	Put(context.Context, *PutReq) (*PutResp, error)
-	PutStream(grpc.ClientStreamingServer[PutStreamReq, PutResp]) error
+	Put(context.Context, *PutReq) (*hi.UploadResp, error)
+	PutStream(grpc.ClientStreamingServer[PutStreamReq, hi.UploadResp]) error
 	Download(context.Context, *DownloadReq) (*DownloadResp, error)
 	DownloadStream(*DownloadStreamReq, grpc.ServerStreamingServer[DownloadStreamResp]) error
 	Delete(context.Context, *DeleteReq) (*emptypb.Empty, error)
@@ -201,10 +201,10 @@ type FileServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFileServer struct{}
 
-func (UnimplementedFileServer) Put(context.Context, *PutReq) (*PutResp, error) {
+func (UnimplementedFileServer) Put(context.Context, *PutReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Put not implemented")
 }
-func (UnimplementedFileServer) PutStream(grpc.ClientStreamingServer[PutStreamReq, PutResp]) error {
+func (UnimplementedFileServer) PutStream(grpc.ClientStreamingServer[PutStreamReq, hi.UploadResp]) error {
 	return status.Error(codes.Unimplemented, "method PutStream not implemented")
 }
 func (UnimplementedFileServer) Download(context.Context, *DownloadReq) (*DownloadResp, error) {
@@ -270,11 +270,11 @@ func _File_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{
 }
 
 func _File_PutStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(FileServer).PutStream(&grpc.GenericServerStream[PutStreamReq, PutResp]{ServerStream: stream})
+	return srv.(FileServer).PutStream(&grpc.GenericServerStream[PutStreamReq, hi.UploadResp]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type File_PutStreamServer = grpc.ClientStreamingServer[PutStreamReq, PutResp]
+type File_PutStreamServer = grpc.ClientStreamingServer[PutStreamReq, hi.UploadResp]
 
 func _File_Download_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DownloadReq)

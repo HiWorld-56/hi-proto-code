@@ -10,6 +10,7 @@ import (
 	context "context"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
+	source "github.com/HiWorld-56/hi-proto/go/hi/source"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -89,7 +90,7 @@ type SourceClient interface {
 	// 语音、视频这类边下边播、可拖动的场景用它,别用 Download 把整包读进内存。
 	// 桶边界与 Download 一致(只放 temp/hiclub/hidid 公开桶),私有资源仍走 DownloadScript / DownloadTrainingFile。
 	// 透传 hi-source 的 File.DownloadStream。
-	DownloadStream(ctx context.Context, in *DownloadResourceStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadResourceStreamResp], error)
+	DownloadStream(ctx context.Context, in *source.DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[source.DownloadStreamResp], error)
 	// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
 	UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadTempStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
@@ -170,13 +171,13 @@ func (c *sourceClient) Download(ctx context.Context, in *DownloadResourceReq, op
 	return out, nil
 }
 
-func (c *sourceClient) DownloadStream(ctx context.Context, in *DownloadResourceStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadResourceStreamResp], error) {
+func (c *sourceClient) DownloadStream(ctx context.Context, in *source.DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[source.DownloadStreamResp], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &Source_ServiceDesc.Streams[0], Source_DownloadStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[DownloadResourceStreamReq, DownloadResourceStreamResp]{ClientStream: stream}
+	x := &grpc.GenericClientStream[source.DownloadStreamReq, source.DownloadStreamResp]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -187,7 +188,7 @@ func (c *sourceClient) DownloadStream(ctx context.Context, in *DownloadResourceS
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Source_DownloadStreamClient = grpc.ServerStreamingClient[DownloadResourceStreamResp]
+type Source_DownloadStreamClient = grpc.ServerStreamingClient[source.DownloadStreamResp]
 
 func (c *sourceClient) UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -354,7 +355,7 @@ type SourceServer interface {
 	// 语音、视频这类边下边播、可拖动的场景用它,别用 Download 把整包读进内存。
 	// 桶边界与 Download 一致(只放 temp/hiclub/hidid 公开桶),私有资源仍走 DownloadScript / DownloadTrainingFile。
 	// 透传 hi-source 的 File.DownloadStream。
-	DownloadStream(*DownloadResourceStreamReq, grpc.ServerStreamingServer[DownloadResourceStreamResp]) error
+	DownloadStream(*source.DownloadStreamReq, grpc.ServerStreamingServer[source.DownloadStreamResp]) error
 	// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
 	UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadTempStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
@@ -406,7 +407,7 @@ func (UnimplementedSourceServer) UploadGroupBackground(context.Context, *hi.Uplo
 func (UnimplementedSourceServer) Download(context.Context, *DownloadResourceReq) (*DownloadResourceResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Download not implemented")
 }
-func (UnimplementedSourceServer) DownloadStream(*DownloadResourceStreamReq, grpc.ServerStreamingServer[DownloadResourceStreamResp]) error {
+func (UnimplementedSourceServer) DownloadStream(*source.DownloadStreamReq, grpc.ServerStreamingServer[source.DownloadStreamResp]) error {
 	return status.Error(codes.Unimplemented, "method DownloadStream not implemented")
 }
 func (UnimplementedSourceServer) UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
@@ -535,15 +536,15 @@ func _Source_Download_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _Source_DownloadStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(DownloadResourceStreamReq)
+	m := new(source.DownloadStreamReq)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(SourceServer).DownloadStream(m, &grpc.GenericServerStream[DownloadResourceStreamReq, DownloadResourceStreamResp]{ServerStream: stream})
+	return srv.(SourceServer).DownloadStream(m, &grpc.GenericServerStream[source.DownloadStreamReq, source.DownloadStreamResp]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Source_DownloadStreamServer = grpc.ServerStreamingServer[DownloadResourceStreamResp]
+type Source_DownloadStreamServer = grpc.ServerStreamingServer[source.DownloadStreamResp]
 
 func _Source_UploadTemp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.UploadReq)

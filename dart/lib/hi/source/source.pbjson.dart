@@ -116,33 +116,6 @@ final $typed_data.Uint8List putReqDescriptor = $convert.base64Decode(
     'B7pIBHoCEAFSB2NvbnRlbnQSHAoJdGh1bWJuYWlsGAUgASgIUgl0aHVtYm5haWwSMAoJbmFtZV'
     '9tb2RlGAYgASgOMhMuaGkuc291cmNlLk5hbWVNb2RlUghuYW1lTW9kZQ==');
 
-@$core.Deprecated('Use putRespDescriptor instead')
-const PutResp$json = {
-  '1': 'PutResp',
-  '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
-    {
-      '1': 'thumb_url',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 0,
-      '10': 'thumbUrl',
-      '17': true
-    },
-  ],
-  '7': {},
-  '8': [
-    {'1': '_thumb_url'},
-  ],
-};
-
-/// Descriptor for `PutResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List putRespDescriptor = $convert.base64Decode(
-    'CgdQdXRSZXNwEhYKA3VybBgBIAEoCUIEkLUYAVIDdXJsEiYKCXRodW1iX3VybBgCIAEoCUIEkL'
-    'UYAUgAUgh0aHVtYlVybIgBAToEmLUYAUIMCgpfdGh1bWJfdXJs');
-
 @$core.Deprecated('Use putStreamReqDescriptor instead')
 const PutStreamReq$json = {
   '1': 'PutStreamReq',

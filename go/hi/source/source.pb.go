@@ -395,58 +395,6 @@ func (x *PutReq) GetNameMode() NameMode {
 	return NameMode_NAME_RANDOM
 }
 
-type PutResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"` // 完整可下载 url(私有 bucket 的 url 需经 Download 取)
-	ThumbUrl      *string                `protobuf:"bytes,2,opt,name=thumb_url,json=thumbUrl,proto3,oneof" json:"thumb_url,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PutResp) Reset() {
-	*x = PutResp{}
-	mi := &file_hi_source_source_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PutResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PutResp) ProtoMessage() {}
-
-func (x *PutResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PutResp.ProtoReflect.Descriptor instead.
-func (*PutResp) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *PutResp) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
-func (x *PutResp) GetThumbUrl() string {
-	if x != nil && x.ThumbUrl != nil {
-		return *x.ThumbUrl
-	}
-	return ""
-}
-
 type PutStreamReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Data:
@@ -460,7 +408,7 @@ type PutStreamReq struct {
 
 func (x *PutStreamReq) Reset() {
 	*x = PutStreamReq{}
-	mi := &file_hi_source_source_proto_msgTypes[6]
+	mi := &file_hi_source_source_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -472,7 +420,7 @@ func (x *PutStreamReq) String() string {
 func (*PutStreamReq) ProtoMessage() {}
 
 func (x *PutStreamReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[6]
+	mi := &file_hi_source_source_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -485,7 +433,7 @@ func (x *PutStreamReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutStreamReq.ProtoReflect.Descriptor instead.
 func (*PutStreamReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{6}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *PutStreamReq) GetData() isPutStreamReq_Data {
@@ -542,7 +490,7 @@ type PutMeta struct {
 
 func (x *PutMeta) Reset() {
 	*x = PutMeta{}
-	mi := &file_hi_source_source_proto_msgTypes[7]
+	mi := &file_hi_source_source_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -554,7 +502,7 @@ func (x *PutMeta) String() string {
 func (*PutMeta) ProtoMessage() {}
 
 func (x *PutMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[7]
+	mi := &file_hi_source_source_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -567,7 +515,7 @@ func (x *PutMeta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutMeta.ProtoReflect.Descriptor instead.
 func (*PutMeta) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{7}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *PutMeta) GetBucket() string {
@@ -621,7 +569,7 @@ type DeleteReq struct {
 
 func (x *DeleteReq) Reset() {
 	*x = DeleteReq{}
-	mi := &file_hi_source_source_proto_msgTypes[8]
+	mi := &file_hi_source_source_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -633,7 +581,7 @@ func (x *DeleteReq) String() string {
 func (*DeleteReq) ProtoMessage() {}
 
 func (x *DeleteReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[8]
+	mi := &file_hi_source_source_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -646,7 +594,7 @@ func (x *DeleteReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteReq.ProtoReflect.Descriptor instead.
 func (*DeleteReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{8}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DeleteReq) GetUrl() string {
@@ -675,7 +623,7 @@ type PresignedUrlReq struct {
 
 func (x *PresignedUrlReq) Reset() {
 	*x = PresignedUrlReq{}
-	mi := &file_hi_source_source_proto_msgTypes[9]
+	mi := &file_hi_source_source_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -687,7 +635,7 @@ func (x *PresignedUrlReq) String() string {
 func (*PresignedUrlReq) ProtoMessage() {}
 
 func (x *PresignedUrlReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[9]
+	mi := &file_hi_source_source_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -700,7 +648,7 @@ func (x *PresignedUrlReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PresignedUrlReq.ProtoReflect.Descriptor instead.
 func (*PresignedUrlReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{9}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *PresignedUrlReq) GetBucket() string {
@@ -741,7 +689,7 @@ type PresignedUrlResp struct {
 
 func (x *PresignedUrlResp) Reset() {
 	*x = PresignedUrlResp{}
-	mi := &file_hi_source_source_proto_msgTypes[10]
+	mi := &file_hi_source_source_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -753,7 +701,7 @@ func (x *PresignedUrlResp) String() string {
 func (*PresignedUrlResp) ProtoMessage() {}
 
 func (x *PresignedUrlResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[10]
+	mi := &file_hi_source_source_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -766,7 +714,7 @@ func (x *PresignedUrlResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PresignedUrlResp.ProtoReflect.Descriptor instead.
 func (*PresignedUrlResp) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{10}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *PresignedUrlResp) GetUrl() string {
@@ -798,7 +746,7 @@ type GetObjectReq struct {
 
 func (x *GetObjectReq) Reset() {
 	*x = GetObjectReq{}
-	mi := &file_hi_source_source_proto_msgTypes[11]
+	mi := &file_hi_source_source_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -810,7 +758,7 @@ func (x *GetObjectReq) String() string {
 func (*GetObjectReq) ProtoMessage() {}
 
 func (x *GetObjectReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[11]
+	mi := &file_hi_source_source_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -823,7 +771,7 @@ func (x *GetObjectReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetObjectReq.ProtoReflect.Descriptor instead.
 func (*GetObjectReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{11}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetObjectReq) GetBucket() string {
@@ -849,7 +797,7 @@ type GetObjectResp struct {
 
 func (x *GetObjectResp) Reset() {
 	*x = GetObjectResp{}
-	mi := &file_hi_source_source_proto_msgTypes[12]
+	mi := &file_hi_source_source_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -861,7 +809,7 @@ func (x *GetObjectResp) String() string {
 func (*GetObjectResp) ProtoMessage() {}
 
 func (x *GetObjectResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[12]
+	mi := &file_hi_source_source_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -874,7 +822,7 @@ func (x *GetObjectResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetObjectResp.ProtoReflect.Descriptor instead.
 func (*GetObjectResp) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{12}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetObjectResp) GetContent() []byte {
@@ -895,7 +843,7 @@ type PutObjectReq struct {
 
 func (x *PutObjectReq) Reset() {
 	*x = PutObjectReq{}
-	mi := &file_hi_source_source_proto_msgTypes[13]
+	mi := &file_hi_source_source_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -907,7 +855,7 @@ func (x *PutObjectReq) String() string {
 func (*PutObjectReq) ProtoMessage() {}
 
 func (x *PutObjectReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[13]
+	mi := &file_hi_source_source_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -920,7 +868,7 @@ func (x *PutObjectReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutObjectReq.ProtoReflect.Descriptor instead.
 func (*PutObjectReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{13}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PutObjectReq) GetBucket() string {
@@ -958,7 +906,7 @@ type GetObjectStreamReq struct {
 
 func (x *GetObjectStreamReq) Reset() {
 	*x = GetObjectStreamReq{}
-	mi := &file_hi_source_source_proto_msgTypes[14]
+	mi := &file_hi_source_source_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -970,7 +918,7 @@ func (x *GetObjectStreamReq) String() string {
 func (*GetObjectStreamReq) ProtoMessage() {}
 
 func (x *GetObjectStreamReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[14]
+	mi := &file_hi_source_source_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -983,7 +931,7 @@ func (x *GetObjectStreamReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetObjectStreamReq.ProtoReflect.Descriptor instead.
 func (*GetObjectStreamReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{14}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetObjectStreamReq) GetBucket() string {
@@ -1024,7 +972,7 @@ type GetObjectStreamResp struct {
 
 func (x *GetObjectStreamResp) Reset() {
 	*x = GetObjectStreamResp{}
-	mi := &file_hi_source_source_proto_msgTypes[15]
+	mi := &file_hi_source_source_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1036,7 +984,7 @@ func (x *GetObjectStreamResp) String() string {
 func (*GetObjectStreamResp) ProtoMessage() {}
 
 func (x *GetObjectStreamResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[15]
+	mi := &file_hi_source_source_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1049,7 +997,7 @@ func (x *GetObjectStreamResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetObjectStreamResp.ProtoReflect.Descriptor instead.
 func (*GetObjectStreamResp) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{15}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetObjectStreamResp) GetContent() []byte {
@@ -1078,7 +1026,7 @@ type ObjectInfoReq struct {
 
 func (x *ObjectInfoReq) Reset() {
 	*x = ObjectInfoReq{}
-	mi := &file_hi_source_source_proto_msgTypes[16]
+	mi := &file_hi_source_source_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1090,7 +1038,7 @@ func (x *ObjectInfoReq) String() string {
 func (*ObjectInfoReq) ProtoMessage() {}
 
 func (x *ObjectInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[16]
+	mi := &file_hi_source_source_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1103,7 +1051,7 @@ func (x *ObjectInfoReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectInfoReq.ProtoReflect.Descriptor instead.
 func (*ObjectInfoReq) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{16}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ObjectInfoReq) GetBucket() string {
@@ -1130,7 +1078,7 @@ type ObjectInfoResp struct {
 
 func (x *ObjectInfoResp) Reset() {
 	*x = ObjectInfoResp{}
-	mi := &file_hi_source_source_proto_msgTypes[17]
+	mi := &file_hi_source_source_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1142,7 +1090,7 @@ func (x *ObjectInfoResp) String() string {
 func (*ObjectInfoResp) ProtoMessage() {}
 
 func (x *ObjectInfoResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_source_source_proto_msgTypes[17]
+	mi := &file_hi_source_source_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1155,7 +1103,7 @@ func (x *ObjectInfoResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectInfoResp.ProtoReflect.Descriptor instead.
 func (*ObjectInfoResp) Descriptor() ([]byte, []int) {
-	return file_hi_source_source_proto_rawDescGZIP(), []int{17}
+	return file_hi_source_source_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ObjectInfoResp) GetSize() int64 {
@@ -1196,12 +1144,7 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12!\n" +
 	"\acontent\x18\x04 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\x12\x1c\n" +
 	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\x120\n" +
-	"\tname_mode\x18\x06 \x01(\x0e2\x13.hi.source.NameModeR\bnameMode\"]\n" +
-	"\aPutResp\x12\x16\n" +
-	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12&\n" +
-	"\tthumb_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
-	"\n" +
-	"_thumb_url\"X\n" +
+	"\tname_mode\x18\x06 \x01(\x0e2\x13.hi.source.NameModeR\bnameMode\"X\n" +
 	"\fPutStreamReq\x12(\n" +
 	"\x04meta\x18\x01 \x01(\v2\x12.hi.source.PutMetaH\x00R\x04meta\x12\x16\n" +
 	"\x05chunk\x18\x02 \x01(\fH\x00R\x05chunkB\x06\n" +
@@ -1248,10 +1191,10 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\bNameMode\x12\x0f\n" +
 	"\vNAME_RANDOM\x10\x00\x12\x12\n" +
 	"\x0eNAME_TIMESTAMP\x10\x01\x12\r\n" +
-	"\tNAME_KEEP\x10\x022\xda\x05\n" +
-	"\x04File\x123\n" +
-	"\x03Put\x12\x11.hi.source.PutReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
-	"\tPutStream\x12\x17.hi.source.PutStreamReq\x1a\x12.hi.source.PutResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12B\n" +
+	"\tNAME_KEEP\x10\x022\xd2\x05\n" +
+	"\x04File\x12/\n" +
+	"\x03Put\x12\x11.hi.source.PutReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x01\x12=\n" +
+	"\tPutStream\x12\x17.hi.source.PutStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x01(\x01\x12B\n" +
 	"\bDownload\x12\x16.hi.source.DownloadReq\x1a\x17.hi.source.DownloadResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
 	"\x0eDownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x05\x8a\xb5\x18\x01\x010\x01\x12=\n" +
 	"\x06Delete\x12\x14.hi.source.DeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x12N\n" +
@@ -1279,7 +1222,7 @@ func file_hi_source_source_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_source_source_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_hi_source_source_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_hi_source_source_proto_goTypes = []any{
 	(NameMode)(0),                // 0: hi.source.NameMode
 	(*DownloadReq)(nil),          // 1: hi.source.DownloadReq
@@ -1287,46 +1230,46 @@ var file_hi_source_source_proto_goTypes = []any{
 	(*DownloadStreamResp)(nil),   // 3: hi.source.DownloadStreamResp
 	(*DownloadStreamReq)(nil),    // 4: hi.source.DownloadStreamReq
 	(*PutReq)(nil),               // 5: hi.source.PutReq
-	(*PutResp)(nil),              // 6: hi.source.PutResp
-	(*PutStreamReq)(nil),         // 7: hi.source.PutStreamReq
-	(*PutMeta)(nil),              // 8: hi.source.PutMeta
-	(*DeleteReq)(nil),            // 9: hi.source.DeleteReq
-	(*PresignedUrlReq)(nil),      // 10: hi.source.PresignedUrlReq
-	(*PresignedUrlResp)(nil),     // 11: hi.source.PresignedUrlResp
-	(*GetObjectReq)(nil),         // 12: hi.source.GetObjectReq
-	(*GetObjectResp)(nil),        // 13: hi.source.GetObjectResp
-	(*PutObjectReq)(nil),         // 14: hi.source.PutObjectReq
-	(*GetObjectStreamReq)(nil),   // 15: hi.source.GetObjectStreamReq
-	(*GetObjectStreamResp)(nil),  // 16: hi.source.GetObjectStreamResp
-	(*ObjectInfoReq)(nil),        // 17: hi.source.ObjectInfoReq
-	(*ObjectInfoResp)(nil),       // 18: hi.source.ObjectInfoResp
-	(*emptypb.Empty)(nil),        // 19: google.protobuf.Empty
+	(*PutStreamReq)(nil),         // 6: hi.source.PutStreamReq
+	(*PutMeta)(nil),              // 7: hi.source.PutMeta
+	(*DeleteReq)(nil),            // 8: hi.source.DeleteReq
+	(*PresignedUrlReq)(nil),      // 9: hi.source.PresignedUrlReq
+	(*PresignedUrlResp)(nil),     // 10: hi.source.PresignedUrlResp
+	(*GetObjectReq)(nil),         // 11: hi.source.GetObjectReq
+	(*GetObjectResp)(nil),        // 12: hi.source.GetObjectResp
+	(*PutObjectReq)(nil),         // 13: hi.source.PutObjectReq
+	(*GetObjectStreamReq)(nil),   // 14: hi.source.GetObjectStreamReq
+	(*GetObjectStreamResp)(nil),  // 15: hi.source.GetObjectStreamResp
+	(*ObjectInfoReq)(nil),        // 16: hi.source.ObjectInfoReq
+	(*ObjectInfoResp)(nil),       // 17: hi.source.ObjectInfoResp
+	(*emptypb.Empty)(nil),        // 18: google.protobuf.Empty
+	(*hi.UploadResp)(nil),        // 19: hi.UploadResp
 	(*hi.ServerVersionResp)(nil), // 20: hi.ServerVersionResp
 }
 var file_hi_source_source_proto_depIdxs = []int32{
 	0,  // 0: hi.source.PutReq.name_mode:type_name -> hi.source.NameMode
-	8,  // 1: hi.source.PutStreamReq.meta:type_name -> hi.source.PutMeta
+	7,  // 1: hi.source.PutStreamReq.meta:type_name -> hi.source.PutMeta
 	5,  // 2: hi.source.File.Put:input_type -> hi.source.PutReq
-	7,  // 3: hi.source.File.PutStream:input_type -> hi.source.PutStreamReq
+	6,  // 3: hi.source.File.PutStream:input_type -> hi.source.PutStreamReq
 	1,  // 4: hi.source.File.Download:input_type -> hi.source.DownloadReq
 	4,  // 5: hi.source.File.DownloadStream:input_type -> hi.source.DownloadStreamReq
-	9,  // 6: hi.source.File.Delete:input_type -> hi.source.DeleteReq
-	10, // 7: hi.source.File.PresignedUrl:input_type -> hi.source.PresignedUrlReq
-	12, // 8: hi.source.File.GetObject:input_type -> hi.source.GetObjectReq
-	14, // 9: hi.source.File.PutObject:input_type -> hi.source.PutObjectReq
-	17, // 10: hi.source.File.ObjectInfo:input_type -> hi.source.ObjectInfoReq
-	15, // 11: hi.source.File.GetObjectStream:input_type -> hi.source.GetObjectStreamReq
-	19, // 12: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
-	6,  // 13: hi.source.File.Put:output_type -> hi.source.PutResp
-	6,  // 14: hi.source.File.PutStream:output_type -> hi.source.PutResp
+	8,  // 6: hi.source.File.Delete:input_type -> hi.source.DeleteReq
+	9,  // 7: hi.source.File.PresignedUrl:input_type -> hi.source.PresignedUrlReq
+	11, // 8: hi.source.File.GetObject:input_type -> hi.source.GetObjectReq
+	13, // 9: hi.source.File.PutObject:input_type -> hi.source.PutObjectReq
+	16, // 10: hi.source.File.ObjectInfo:input_type -> hi.source.ObjectInfoReq
+	14, // 11: hi.source.File.GetObjectStream:input_type -> hi.source.GetObjectStreamReq
+	18, // 12: hi.source.Base.ServerVersion:input_type -> google.protobuf.Empty
+	19, // 13: hi.source.File.Put:output_type -> hi.UploadResp
+	19, // 14: hi.source.File.PutStream:output_type -> hi.UploadResp
 	2,  // 15: hi.source.File.Download:output_type -> hi.source.DownloadResp
 	3,  // 16: hi.source.File.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	19, // 17: hi.source.File.Delete:output_type -> google.protobuf.Empty
-	11, // 18: hi.source.File.PresignedUrl:output_type -> hi.source.PresignedUrlResp
-	13, // 19: hi.source.File.GetObject:output_type -> hi.source.GetObjectResp
-	19, // 20: hi.source.File.PutObject:output_type -> google.protobuf.Empty
-	18, // 21: hi.source.File.ObjectInfo:output_type -> hi.source.ObjectInfoResp
-	16, // 22: hi.source.File.GetObjectStream:output_type -> hi.source.GetObjectStreamResp
+	18, // 17: hi.source.File.Delete:output_type -> google.protobuf.Empty
+	10, // 18: hi.source.File.PresignedUrl:output_type -> hi.source.PresignedUrlResp
+	12, // 19: hi.source.File.GetObject:output_type -> hi.source.GetObjectResp
+	18, // 20: hi.source.File.PutObject:output_type -> google.protobuf.Empty
+	17, // 21: hi.source.File.ObjectInfo:output_type -> hi.source.ObjectInfoResp
+	15, // 22: hi.source.File.GetObjectStream:output_type -> hi.source.GetObjectStreamResp
 	20, // 23: hi.source.Base.ServerVersion:output_type -> hi.ServerVersionResp
 	13, // [13:24] is the sub-list for method output_type
 	2,  // [2:13] is the sub-list for method input_type
@@ -1340,8 +1283,7 @@ func file_hi_source_source_proto_init() {
 	if File_hi_source_source_proto != nil {
 		return
 	}
-	file_hi_source_source_proto_msgTypes[5].OneofWrappers = []any{}
-	file_hi_source_source_proto_msgTypes[6].OneofWrappers = []any{
+	file_hi_source_source_proto_msgTypes[5].OneofWrappers = []any{
 		(*PutStreamReq_Meta)(nil),
 		(*PutStreamReq_Chunk)(nil),
 	}
@@ -1351,7 +1293,7 @@ func file_hi_source_source_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_source_source_proto_rawDesc), len(file_hi_source_source_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   18,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

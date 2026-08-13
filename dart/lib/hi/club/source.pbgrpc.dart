@@ -15,11 +15,12 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $4;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $5;
 
-import '../ai/plugin.pb.dart' as $2;
-import '../ai/training.pb.dart' as $3;
+import '../ai/plugin.pb.dart' as $3;
+import '../ai/training.pb.dart' as $4;
 import '../common.pb.dart' as $0;
+import '../source/source.pb.dart' as $2;
 import 'source.pb.dart' as $1;
 
 export 'source.pb.dart';
@@ -101,8 +102,8 @@ class SourceClient extends $grpc.Client {
   /// 语音、视频这类边下边播、可拖动的场景用它,别用 Download 把整包读进内存。
   /// 桶边界与 Download 一致(只放 temp/hiclub/hidid 公开桶),私有资源仍走 DownloadScript / DownloadTrainingFile。
   /// 透传 hi-source 的 File.DownloadStream。
-  $grpc.ResponseStream<$1.DownloadResourceStreamResp> downloadStream(
-    $1.DownloadResourceStreamReq request, {
+  $grpc.ResponseStream<$2.DownloadStreamResp> downloadStream(
+    $2.DownloadStreamReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createStreamingCall(
@@ -152,22 +153,22 @@ class SourceClient extends $grpc.Client {
         .single;
   }
 
-  $grpc.ResponseFuture<$2.DownloadScriptResp> downloadScript(
-    $2.DownloadScriptReq request, {
+  $grpc.ResponseFuture<$3.DownloadScriptResp> downloadScript(
+    $3.DownloadScriptReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$downloadScript, request, options: options);
   }
 
-  $grpc.ResponseFuture<$4.Empty> uploadTrainingFile(
-    $3.UploadFileReq request, {
+  $grpc.ResponseFuture<$5.Empty> uploadTrainingFile(
+    $4.UploadFileReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$uploadTrainingFile, request, options: options);
   }
 
-  $grpc.ResponseFuture<$3.DownloadFileResp> downloadTrainingFile(
-    $3.DownloadFileReq request, {
+  $grpc.ResponseFuture<$4.DownloadFileResp> downloadTrainingFile(
+    $4.DownloadFileReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$downloadTrainingFile, request, options: options);
@@ -199,7 +200,7 @@ class SourceClient extends $grpc.Client {
   ///
   /// ⚠️ 不做归属校验,和上传对称 —— url 是 32 位随机名,知道 url 本身就是凭据。
   ///    这也意味着**它删得掉任何你知道 url 的对象**,别把 url 泄漏出去。
-  $grpc.ResponseFuture<$4.Empty> delete(
+  $grpc.ResponseFuture<$5.Empty> delete(
     $0.DeleteResourceReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -227,11 +228,11 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/Download',
           ($1.DownloadResourceReq value) => value.writeToBuffer(),
           $1.DownloadResourceResp.fromBuffer);
-  static final _$downloadStream = $grpc.ClientMethod<
-          $1.DownloadResourceStreamReq, $1.DownloadResourceStreamResp>(
-      '/hi.club.Source/DownloadStream',
-      ($1.DownloadResourceStreamReq value) => value.writeToBuffer(),
-      $1.DownloadResourceStreamResp.fromBuffer);
+  static final _$downloadStream =
+      $grpc.ClientMethod<$2.DownloadStreamReq, $2.DownloadStreamResp>(
+          '/hi.club.Source/DownloadStream',
+          ($2.DownloadStreamReq value) => value.writeToBuffer(),
+          $2.DownloadStreamResp.fromBuffer);
   static final _$uploadTemp = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
       '/hi.club.Source/UploadTemp',
       ($0.UploadReq value) => value.writeToBuffer(),
@@ -255,20 +256,20 @@ class SourceClient extends $grpc.Client {
           ($0.UploadStreamReq value) => value.writeToBuffer(),
           $0.UploadResp.fromBuffer);
   static final _$downloadScript =
-      $grpc.ClientMethod<$2.DownloadScriptReq, $2.DownloadScriptResp>(
+      $grpc.ClientMethod<$3.DownloadScriptReq, $3.DownloadScriptResp>(
           '/hi.club.Source/DownloadScript',
-          ($2.DownloadScriptReq value) => value.writeToBuffer(),
-          $2.DownloadScriptResp.fromBuffer);
+          ($3.DownloadScriptReq value) => value.writeToBuffer(),
+          $3.DownloadScriptResp.fromBuffer);
   static final _$uploadTrainingFile =
-      $grpc.ClientMethod<$3.UploadFileReq, $4.Empty>(
+      $grpc.ClientMethod<$4.UploadFileReq, $5.Empty>(
           '/hi.club.Source/UploadTrainingFile',
-          ($3.UploadFileReq value) => value.writeToBuffer(),
-          $4.Empty.fromBuffer);
+          ($4.UploadFileReq value) => value.writeToBuffer(),
+          $5.Empty.fromBuffer);
   static final _$downloadTrainingFile =
-      $grpc.ClientMethod<$3.DownloadFileReq, $3.DownloadFileResp>(
+      $grpc.ClientMethod<$4.DownloadFileReq, $4.DownloadFileResp>(
           '/hi.club.Source/DownloadTrainingFile',
-          ($3.DownloadFileReq value) => value.writeToBuffer(),
-          $3.DownloadFileResp.fromBuffer);
+          ($4.DownloadFileReq value) => value.writeToBuffer(),
+          $4.DownloadFileResp.fromBuffer);
   static final _$uploadLogo = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
       '/hi.club.Source/UploadLogo',
       ($0.UploadReq value) => value.writeToBuffer(),
@@ -278,10 +279,10 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/UploadSummary',
           ($0.UploadReq value) => value.writeToBuffer(),
           $0.UploadResp.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$0.DeleteResourceReq, $4.Empty>(
+  static final _$delete = $grpc.ClientMethod<$0.DeleteResourceReq, $5.Empty>(
       '/hi.club.Source/Delete',
       ($0.DeleteResourceReq value) => value.writeToBuffer(),
-      $4.Empty.fromBuffer);
+      $5.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Source')
@@ -319,15 +320,13 @@ abstract class SourceServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $1.DownloadResourceReq.fromBuffer(value),
             ($1.DownloadResourceResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DownloadResourceStreamReq,
-            $1.DownloadResourceStreamResp>(
+    $addMethod($grpc.ServiceMethod<$2.DownloadStreamReq, $2.DownloadStreamResp>(
         'DownloadStream',
         downloadStream_Pre,
         false,
         true,
-        ($core.List<$core.int> value) =>
-            $1.DownloadResourceStreamReq.fromBuffer(value),
-        ($1.DownloadResourceStreamResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $2.DownloadStreamReq.fromBuffer(value),
+        ($2.DownloadStreamResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadTemp',
         uploadTemp_Pre,
@@ -363,27 +362,27 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UploadStreamReq.fromBuffer(value),
         ($0.UploadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.DownloadScriptReq, $2.DownloadScriptResp>(
+    $addMethod($grpc.ServiceMethod<$3.DownloadScriptReq, $3.DownloadScriptResp>(
         'DownloadScript',
         downloadScript_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.DownloadScriptReq.fromBuffer(value),
-        ($2.DownloadScriptResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.UploadFileReq, $4.Empty>(
+        ($core.List<$core.int> value) => $3.DownloadScriptReq.fromBuffer(value),
+        ($3.DownloadScriptResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$4.UploadFileReq, $5.Empty>(
         'UploadTrainingFile',
         uploadTrainingFile_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.UploadFileReq.fromBuffer(value),
-        ($4.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.DownloadFileReq, $3.DownloadFileResp>(
+        ($core.List<$core.int> value) => $4.UploadFileReq.fromBuffer(value),
+        ($5.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$4.DownloadFileReq, $4.DownloadFileResp>(
         'DownloadTrainingFile',
         downloadTrainingFile_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.DownloadFileReq.fromBuffer(value),
-        ($3.DownloadFileResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $4.DownloadFileReq.fromBuffer(value),
+        ($4.DownloadFileResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadLogo',
         uploadLogo_Pre,
@@ -398,13 +397,13 @@ abstract class SourceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
         ($0.UploadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteResourceReq, $4.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.DeleteResourceReq, $5.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DeleteResourceReq.fromBuffer(value),
-        ($4.Empty value) => value.writeToBuffer()));
+        ($5.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.UploadResp> uploadAvatar_Pre(
@@ -439,14 +438,14 @@ abstract class SourceServiceBase extends $grpc.Service {
   $async.Future<$1.DownloadResourceResp> download(
       $grpc.ServiceCall call, $1.DownloadResourceReq request);
 
-  $async.Stream<$1.DownloadResourceStreamResp> downloadStream_Pre(
+  $async.Stream<$2.DownloadStreamResp> downloadStream_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$1.DownloadResourceStreamReq> $request) async* {
+      $async.Future<$2.DownloadStreamReq> $request) async* {
     yield* downloadStream($call, await $request);
   }
 
-  $async.Stream<$1.DownloadResourceStreamResp> downloadStream(
-      $grpc.ServiceCall call, $1.DownloadResourceStreamReq request);
+  $async.Stream<$2.DownloadStreamResp> downloadStream(
+      $grpc.ServiceCall call, $2.DownloadStreamReq request);
 
   $async.Future<$0.UploadResp> uploadTemp_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
@@ -478,31 +477,31 @@ abstract class SourceServiceBase extends $grpc.Service {
   $async.Future<$0.UploadResp> uploadScriptStream(
       $grpc.ServiceCall call, $async.Stream<$0.UploadStreamReq> request);
 
-  $async.Future<$2.DownloadScriptResp> downloadScript_Pre(
+  $async.Future<$3.DownloadScriptResp> downloadScript_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$2.DownloadScriptReq> $request) async {
+      $async.Future<$3.DownloadScriptReq> $request) async {
     return downloadScript($call, await $request);
   }
 
-  $async.Future<$2.DownloadScriptResp> downloadScript(
-      $grpc.ServiceCall call, $2.DownloadScriptReq request);
+  $async.Future<$3.DownloadScriptResp> downloadScript(
+      $grpc.ServiceCall call, $3.DownloadScriptReq request);
 
-  $async.Future<$4.Empty> uploadTrainingFile_Pre(
-      $grpc.ServiceCall $call, $async.Future<$3.UploadFileReq> $request) async {
+  $async.Future<$5.Empty> uploadTrainingFile_Pre(
+      $grpc.ServiceCall $call, $async.Future<$4.UploadFileReq> $request) async {
     return uploadTrainingFile($call, await $request);
   }
 
-  $async.Future<$4.Empty> uploadTrainingFile(
-      $grpc.ServiceCall call, $3.UploadFileReq request);
+  $async.Future<$5.Empty> uploadTrainingFile(
+      $grpc.ServiceCall call, $4.UploadFileReq request);
 
-  $async.Future<$3.DownloadFileResp> downloadTrainingFile_Pre(
+  $async.Future<$4.DownloadFileResp> downloadTrainingFile_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$3.DownloadFileReq> $request) async {
+      $async.Future<$4.DownloadFileReq> $request) async {
     return downloadTrainingFile($call, await $request);
   }
 
-  $async.Future<$3.DownloadFileResp> downloadTrainingFile(
-      $grpc.ServiceCall call, $3.DownloadFileReq request);
+  $async.Future<$4.DownloadFileResp> downloadTrainingFile(
+      $grpc.ServiceCall call, $4.DownloadFileReq request);
 
   $async.Future<$0.UploadResp> uploadLogo_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
@@ -520,11 +519,11 @@ abstract class SourceServiceBase extends $grpc.Service {
   $async.Future<$0.UploadResp> uploadSummary(
       $grpc.ServiceCall call, $0.UploadReq request);
 
-  $async.Future<$4.Empty> delete_Pre($grpc.ServiceCall $call,
+  $async.Future<$5.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteResourceReq> $request) async {
     return delete($call, await $request);
   }
 
-  $async.Future<$4.Empty> delete(
+  $async.Future<$5.Empty> delete(
       $grpc.ServiceCall call, $0.DeleteResourceReq request);
 }
