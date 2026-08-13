@@ -6304,125 +6304,6 @@ pub mod model_client {
         }
     }
 }
-/// 批量查机器人的权限。**调用者必须是这些机器人的 master**,否则报错
-/// (超管同样放行 —— 不管有没有 master 都能管,见 CheckAgentAccess)。
-///
-/// 与 Get() 的分工:
-/// Get()          机器人**查自己** —— 无参数,身份取自 token/apikey。
-/// 插件运行时拿的就是机器人自己的 apikey,走的正是这条。
-/// List(agents)   master 在 web 上**批量查自己名下机器人**的权限。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListAgentPermissionsReq {
-    /// 机器人 did 列表
-    #[prost(string, repeated, tag = "1")]
-    pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAgentPermissionsResp {
-    #[prost(message, repeated, tag = "1")]
-    pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionInfo {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(enumeration = "PermissionType", repeated, packed = "false", tag = "2")]
-    pub permissions: ::prost::alloc::vec::Vec<i32>,
-    #[prost(string, tag = "3")]
-    pub note: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionAddReq {
-    /// 机器人 did
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionDeleteReq {
-    /// 机器人 did
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionEditReq {
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PermissionListReq {
-    /// 可选:按 did 过滤
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
-    /// **必填**,须是四档之一;列全部传 NORMAL,不是 UNSPECIFIED
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
-    #[prost(message, optional, tag = "3")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PermissionListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
-}
-/// ── 权限模型(club 自有)────────────────────────────────────────────────
-/// **权限归 club 自己管**,类型定义也放在这里 —— 曾经复用 hi.ai 的,那是错的:
-/// 两边模型相同但各存各的表、各判各的,不跨服务查(见 hi.ai.Permission 的说明)。
-///
-/// 权限是 **bit 位**拼的,可组合。**授予的是实体本身(机器人),不从 master 继承** ——
-/// 机器人的能力写在它自己身上,没有 master 也能独立运作。
-/// 用途是**出问题时撤掉**(把瞎搞的机器人踢掉),不是逐步授予:建号即授全部。
-///
-/// ⚠️ **人用户没有权限配置,只有机器人才有。**
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum PermissionType {
-    /// ⚠️ 纯占位。proto3 要求首值为 0,故删不掉,但**不代表"全部"或"不过滤"** ——
-    /// 传它一律按无效参数拒绝。要列全部传 PERMISSION_NORMAL:所有机器人都持有
-    /// normal 位,按它筛天然等于不过滤,不需要另造一个"不过滤"的档。
-    PermissionUnspecified = 0,
-    /// 普通:自由度/系统提示词/用户提示词。**所有机器人默认持有**
-    PermissionNormal = 1,
-    /// 高级:上下文数/对话模型/嵌入模型/STT 模型
-    PermissionAdvanced = 2,
-    /// 记忆:上传资料/训练记忆
-    PermissionMem = 3,
-    /// 插件:启用插件
-    PermissionPlugin = 4,
-}
-impl PermissionType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::PermissionUnspecified => "PERMISSION_UNSPECIFIED",
-            Self::PermissionNormal => "PERMISSION_NORMAL",
-            Self::PermissionAdvanced => "PERMISSION_ADVANCED",
-            Self::PermissionMem => "PERMISSION_MEM",
-            Self::PermissionPlugin => "PERMISSION_PLUGIN",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "PERMISSION_UNSPECIFIED" => Some(Self::PermissionUnspecified),
-            "PERMISSION_NORMAL" => Some(Self::PermissionNormal),
-            "PERMISSION_ADVANCED" => Some(Self::PermissionAdvanced),
-            "PERMISSION_MEM" => Some(Self::PermissionMem),
-            "PERMISSION_PLUGIN" => Some(Self::PermissionPlugin),
-            _ => None,
-        }
-    }
-}
 /// Generated client implementations.
 pub mod permission_client {
     #![allow(
@@ -6531,7 +6412,10 @@ pub mod permission_client {
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::PermissionInfo>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::PermissionInfo>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6548,9 +6432,9 @@ pub mod permission_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListAgentPermissionsReq>,
+            request: impl tonic::IntoRequest<super::super::ai::ListAgentPermissionsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListAgentPermissionsResp>,
+            tonic::Response<super::super::ai::ListAgentPermissionsResp>,
             tonic::Status,
         > {
             self.inner
@@ -6670,7 +6554,7 @@ pub mod permission_manage_client {
         }
         pub async fn add(
             &mut self,
-            request: impl tonic::IntoRequest<super::PermissionAddReq>,
+            request: impl tonic::IntoRequest<super::super::ai::PermissionAddReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -6691,7 +6575,7 @@ pub mod permission_manage_client {
         }
         pub async fn delete(
             &mut self,
-            request: impl tonic::IntoRequest<super::PermissionDeleteReq>,
+            request: impl tonic::IntoRequest<super::super::ai::PermissionDeleteReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -6712,7 +6596,7 @@ pub mod permission_manage_client {
         }
         pub async fn edit(
             &mut self,
-            request: impl tonic::IntoRequest<super::PermissionEditReq>,
+            request: impl tonic::IntoRequest<super::super::ai::PermissionEditReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -6733,9 +6617,9 @@ pub mod permission_manage_client {
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::PermissionListReq>,
+            request: impl tonic::IntoRequest<super::super::ai::PermissionListReq>,
         ) -> std::result::Result<
-            tonic::Response<super::PermissionListResp>,
+            tonic::Response<super::super::ai::PermissionListResp>,
             tonic::Status,
         > {
             self.inner

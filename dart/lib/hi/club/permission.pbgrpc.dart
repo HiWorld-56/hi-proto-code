@@ -17,7 +17,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
-import 'permission.pb.dart' as $1;
+import '../ai/permission.pb.dart' as $1;
 
 export 'permission.pb.dart';
 

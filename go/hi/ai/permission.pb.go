@@ -253,7 +253,7 @@ func (x *ListAgentPermissionsResp) GetInfos() []*PermissionInfo {
 
 type PermissionAddReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 机器人 did
 	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -289,9 +289,9 @@ func (*PermissionAddReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_permission_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *PermissionAddReq) GetAgent() string {
+func (x *PermissionAddReq) GetDid() string {
 	if x != nil {
-		return x.Agent
+		return x.Did
 	}
 	return ""
 }
@@ -305,7 +305,7 @@ func (x *PermissionAddReq) GetType() PermissionType {
 
 type PermissionDeleteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
 	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -341,9 +341,9 @@ func (*PermissionDeleteReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_permission_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *PermissionDeleteReq) GetAgent() string {
+func (x *PermissionDeleteReq) GetDid() string {
 	if x != nil {
-		return x.Agent
+		return x.Did
 	}
 	return ""
 }
@@ -470,7 +470,7 @@ func (x *PermissionListResp) GetInfos() []*PermissionInfo {
 
 type PermissionEditReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
 	Note          string                 `protobuf:"bytes,2,opt,name=note,proto3" json:"note,omitempty"` // 备注
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -506,9 +506,9 @@ func (*PermissionEditReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_permission_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *PermissionEditReq) GetAgent() string {
+func (x *PermissionEditReq) GetDid() string {
 	if x != nil {
-		return x.Agent
+		return x.Did
 	}
 	return ""
 }
@@ -532,12 +532,12 @@ const file_hi_ai_permission_proto_rawDesc = "" +
 	"\x17ListAgentPermissionsReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\"S\n" +
 	"\x18ListAgentPermissionsResp\x121\n" +
-	"\x05infos\x18\x01 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"a\n" +
-	"\x10PermissionAddReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12)\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"d\n" +
-	"\x13PermissionDeleteReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12)\n" +
+	"\x05infos\x18\x01 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"]\n" +
+	"\x10PermissionAddReq\x12\x1e\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12)\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"`\n" +
+	"\x13PermissionDeleteReq\x12\x1e\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12)\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"\x80\x01\n" +
 	"\x11PermissionListReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12)\n" +
@@ -547,9 +547,9 @@ const file_hi_ai_permission_proto_rawDesc = "" +
 	"pagination\"i\n" +
 	"\x12PermissionListResp\x12\x1a\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x121\n" +
-	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"K\n" +
-	"\x11PermissionEditReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12\x12\n" +
+	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"G\n" +
+	"\x11PermissionEditReq\x12\x1e\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12\x12\n" +
 	"\x04note\x18\x02 \x01(\tR\x04note*\x87\x01\n" +
 	"\x0ePermissionType\x12\x1a\n" +
 	"\x16PERMISSION_UNSPECIFIED\x10\x00\x12\x15\n" +

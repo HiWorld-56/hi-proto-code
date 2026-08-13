@@ -198,11 +198,11 @@ class ListAgentPermissionsResp extends $pb.GeneratedMessage {
 
 class PermissionAddReq extends $pb.GeneratedMessage {
   factory PermissionAddReq({
-    $core.String? agent,
+    $core.String? did,
     PermissionType? type,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
+    if (did != null) result.did = did;
     if (type != null) result.type = type;
     return result;
   }
@@ -220,7 +220,7 @@ class PermissionAddReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PermissionAddReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(1, _omitFieldNames ? '' : 'did')
     ..aE<PermissionType>(2, _omitFieldNames ? '' : 'type',
         enumValues: PermissionType.values)
     ..hasRequiredFields = false;
@@ -245,13 +245,13 @@ class PermissionAddReq extends $pb.GeneratedMessage {
   static PermissionAddReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $core.String get did => $_getSZ(0);
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
+  set did($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
+  $core.bool hasDid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
   PermissionType get type => $_getN(1);
@@ -265,11 +265,11 @@ class PermissionAddReq extends $pb.GeneratedMessage {
 
 class PermissionDeleteReq extends $pb.GeneratedMessage {
   factory PermissionDeleteReq({
-    $core.String? agent,
+    $core.String? did,
     PermissionType? type,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
+    if (did != null) result.did = did;
     if (type != null) result.type = type;
     return result;
   }
@@ -287,7 +287,7 @@ class PermissionDeleteReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PermissionDeleteReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(1, _omitFieldNames ? '' : 'did')
     ..aE<PermissionType>(2, _omitFieldNames ? '' : 'type',
         enumValues: PermissionType.values)
     ..hasRequiredFields = false;
@@ -312,13 +312,13 @@ class PermissionDeleteReq extends $pb.GeneratedMessage {
   static PermissionDeleteReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $core.String get did => $_getSZ(0);
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
+  set did($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
+  $core.bool hasDid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
   PermissionType get type => $_getN(1);
@@ -476,11 +476,11 @@ class PermissionListResp extends $pb.GeneratedMessage {
 
 class PermissionEditReq extends $pb.GeneratedMessage {
   factory PermissionEditReq({
-    $core.String? agent,
+    $core.String? did,
     $core.String? note,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
+    if (did != null) result.did = did;
     if (note != null) result.note = note;
     return result;
   }
@@ -498,7 +498,7 @@ class PermissionEditReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'PermissionEditReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(1, _omitFieldNames ? '' : 'did')
     ..aOS(2, _omitFieldNames ? '' : 'note')
     ..hasRequiredFields = false;
 
@@ -522,13 +522,13 @@ class PermissionEditReq extends $pb.GeneratedMessage {
   static PermissionEditReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $core.String get did => $_getSZ(0);
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
+  set did($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
+  $core.bool hasDid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get note => $_getSZ(1);

@@ -98,7 +98,7 @@ final $typed_data.Uint8List listAgentPermissionsRespDescriptor =
 const PermissionAddReq$json = {
   '1': 'PermissionAddReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
     {
       '1': 'type',
       '3': 2,
@@ -112,14 +112,14 @@ const PermissionAddReq$json = {
 
 /// Descriptor for `PermissionAddReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionAddReqDescriptor = $convert.base64Decode(
-    'ChBQZXJtaXNzaW9uQWRkUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50Ei'
-    'kKBHR5cGUYAiABKA4yFS5oaS5haS5QZXJtaXNzaW9uVHlwZVIEdHlwZQ==');
+    'ChBQZXJtaXNzaW9uQWRkUmVxEh4KA2RpZBgBIAEoCUIMukgJcgcyBV5cUyskUgNkaWQSKQoEdH'
+    'lwZRgCIAEoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlUgR0eXBl');
 
 @$core.Deprecated('Use permissionDeleteReqDescriptor instead')
 const PermissionDeleteReq$json = {
   '1': 'PermissionDeleteReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
     {
       '1': 'type',
       '3': 2,
@@ -133,8 +133,8 @@ const PermissionDeleteReq$json = {
 
 /// Descriptor for `PermissionDeleteReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionDeleteReqDescriptor = $convert.base64Decode(
-    'ChNQZXJtaXNzaW9uRGVsZXRlUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW'
-    '50EikKBHR5cGUYAiABKA4yFS5oaS5haS5QZXJtaXNzaW9uVHlwZVIEdHlwZQ==');
+    'ChNQZXJtaXNzaW9uRGVsZXRlUmVxEh4KA2RpZBgBIAEoCUIMukgJcgcyBV5cUyskUgNkaWQSKQ'
+    'oEdHlwZRgCIAEoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlUgR0eXBl');
 
 @$core.Deprecated('Use permissionListReqDescriptor instead')
 const PermissionListReq$json = {
@@ -193,12 +193,12 @@ final $typed_data.Uint8List permissionListRespDescriptor = $convert.base64Decode
 const PermissionEditReq$json = {
   '1': 'PermissionEditReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
     {'1': 'note', '3': 2, '4': 1, '5': 9, '10': 'note'},
   ],
 };
 
 /// Descriptor for `PermissionEditReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionEditReqDescriptor = $convert.base64Decode(
-    'ChFQZXJtaXNzaW9uRWRpdFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudB'
-    'ISCgRub3RlGAIgASgJUgRub3Rl');
+    'ChFQZXJtaXNzaW9uRWRpdFJlcRIeCgNkaWQYASABKAlCDLpICXIHMgVeXFMrJFIDZGlkEhIKBG'
+    '5vdGUYAiABKAlSBG5vdGU=');

@@ -8495,15 +8495,15 @@ impl serde::Serialize for PermissionAddReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if !self.did.is_empty() {
             len += 1;
         }
         if self.r#type != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PermissionAddReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
         }
         if self.r#type != 0 {
             let v = PermissionType::try_from(self.r#type)
@@ -8520,13 +8520,13 @@ impl<'de> serde::Deserialize<'de> for PermissionAddReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "agent",
+            "did",
             "type",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Agent,
+            Did,
             Type,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -8549,7 +8549,7 @@ impl<'de> serde::Deserialize<'de> for PermissionAddReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "agent" => Ok(GeneratedField::Agent),
+                            "did" => Ok(GeneratedField::Did),
                             "type" => Ok(GeneratedField::Type),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -8570,15 +8570,15 @@ impl<'de> serde::Deserialize<'de> for PermissionAddReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut agent__ = None;
+                let mut did__ = None;
                 let mut r#type__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            did__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Type => {
                             if r#type__.is_some() {
@@ -8589,7 +8589,7 @@ impl<'de> serde::Deserialize<'de> for PermissionAddReq {
                     }
                 }
                 Ok(PermissionAddReq {
-                    agent: agent__.unwrap_or_default(),
+                    did: did__.unwrap_or_default(),
                     r#type: r#type__.unwrap_or_default(),
                 })
             }
@@ -8605,15 +8605,15 @@ impl serde::Serialize for PermissionDeleteReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if !self.did.is_empty() {
             len += 1;
         }
         if self.r#type != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PermissionDeleteReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
         }
         if self.r#type != 0 {
             let v = PermissionType::try_from(self.r#type)
@@ -8630,13 +8630,13 @@ impl<'de> serde::Deserialize<'de> for PermissionDeleteReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "agent",
+            "did",
             "type",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Agent,
+            Did,
             Type,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -8659,7 +8659,7 @@ impl<'de> serde::Deserialize<'de> for PermissionDeleteReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "agent" => Ok(GeneratedField::Agent),
+                            "did" => Ok(GeneratedField::Did),
                             "type" => Ok(GeneratedField::Type),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -8680,15 +8680,15 @@ impl<'de> serde::Deserialize<'de> for PermissionDeleteReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut agent__ = None;
+                let mut did__ = None;
                 let mut r#type__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            did__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Type => {
                             if r#type__.is_some() {
@@ -8699,7 +8699,7 @@ impl<'de> serde::Deserialize<'de> for PermissionDeleteReq {
                     }
                 }
                 Ok(PermissionDeleteReq {
-                    agent: agent__.unwrap_or_default(),
+                    did: did__.unwrap_or_default(),
                     r#type: r#type__.unwrap_or_default(),
                 })
             }
@@ -8715,15 +8715,15 @@ impl serde::Serialize for PermissionEditReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if !self.did.is_empty() {
             len += 1;
         }
         if !self.note.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PermissionEditReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
         }
         if !self.note.is_empty() {
             struct_ser.serialize_field("note", &self.note)?;
@@ -8738,13 +8738,13 @@ impl<'de> serde::Deserialize<'de> for PermissionEditReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "agent",
+            "did",
             "note",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Agent,
+            Did,
             Note,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -8767,7 +8767,7 @@ impl<'de> serde::Deserialize<'de> for PermissionEditReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "agent" => Ok(GeneratedField::Agent),
+                            "did" => Ok(GeneratedField::Did),
                             "note" => Ok(GeneratedField::Note),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -8788,15 +8788,15 @@ impl<'de> serde::Deserialize<'de> for PermissionEditReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut agent__ = None;
+                let mut did__ = None;
                 let mut note__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            did__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Note => {
                             if note__.is_some() {
@@ -8807,7 +8807,7 @@ impl<'de> serde::Deserialize<'de> for PermissionEditReq {
                     }
                 }
                 Ok(PermissionEditReq {
-                    agent: agent__.unwrap_or_default(),
+                    did: did__.unwrap_or_default(),
                     note: note__.unwrap_or_default(),
                 })
             }
