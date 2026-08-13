@@ -275,6 +275,7 @@ var Trade_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	TradeManage_List_FullMethodName = "/hi.club.TradeManage/List"
+	TradeManage_Get_FullMethodName  = "/hi.club.TradeManage/Get"
 )
 
 // TradeManageClient is the client API for TradeManage service.
@@ -290,6 +291,15 @@ const (
 //	**把 filter 值变成越权入口**。拆成两个 service 后,这个坑物理上不存在了。
 type TradeManageClient interface {
 	List(ctx context.Context, in *TradeManageListReq, opts ...grpc.CallOption) (*ListTradesResp, error)
+	// 超管:看任意一笔的详情。
+	//
+	// 为什么不复用 `Trade.Get`:那条是**用户面**的,带归属校验(只有付款/收款方本人能看,
+	// 别人一律 NotFound —— 否则拿到 order id 就能读别人的交易)。超管页列的是全站交易,
+	// 详情却打在用户面那条上,于是"列表有、点开空",只有自己参与的那两笔打得开。
+	//
+	// 校验跟着**调用主体**走,而档位是按方法挂的 —— 所以是再开一条超管档的口,
+	// 不是给用户面那条开后门(那等于把 filter/身份判断混进同一个方法,老坑了)。
+	Get(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error)
 }
 
 type tradeManageClient struct {
@@ -310,6 +320,16 @@ func (c *tradeManageClient) List(ctx context.Context, in *TradeManageListReq, op
 	return out, nil
 }
 
+func (c *tradeManageClient) Get(ctx context.Context, in *GetTradeReq, opts ...grpc.CallOption) (*GetTradeResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTradeResp)
+	err := c.cc.Invoke(ctx, TradeManage_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TradeManageServer is the server API for TradeManage service.
 // All implementations should embed UnimplementedTradeManageServer
 // for forward compatibility.
@@ -323,6 +343,15 @@ func (c *tradeManageClient) List(ctx context.Context, in *TradeManageListReq, op
 //	**把 filter 值变成越权入口**。拆成两个 service 后,这个坑物理上不存在了。
 type TradeManageServer interface {
 	List(context.Context, *TradeManageListReq) (*ListTradesResp, error)
+	// 超管:看任意一笔的详情。
+	//
+	// 为什么不复用 `Trade.Get`:那条是**用户面**的,带归属校验(只有付款/收款方本人能看,
+	// 别人一律 NotFound —— 否则拿到 order id 就能读别人的交易)。超管页列的是全站交易,
+	// 详情却打在用户面那条上,于是"列表有、点开空",只有自己参与的那两笔打得开。
+	//
+	// 校验跟着**调用主体**走,而档位是按方法挂的 —— 所以是再开一条超管档的口,
+	// 不是给用户面那条开后门(那等于把 filter/身份判断混进同一个方法,老坑了)。
+	Get(context.Context, *GetTradeReq) (*GetTradeResp, error)
 }
 
 // UnimplementedTradeManageServer should be embedded to have
@@ -334,6 +363,9 @@ type UnimplementedTradeManageServer struct{}
 
 func (UnimplementedTradeManageServer) List(context.Context, *TradeManageListReq) (*ListTradesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedTradeManageServer) Get(context.Context, *GetTradeReq) (*GetTradeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedTradeManageServer) testEmbeddedByValue() {}
 
@@ -373,6 +405,24 @@ func _TradeManage_List_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TradeManage_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTradeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TradeManageServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TradeManage_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TradeManageServer).Get(ctx, req.(*GetTradeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TradeManage_ServiceDesc is the grpc.ServiceDesc for TradeManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -383,6 +433,10 @@ var TradeManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _TradeManage_List_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _TradeManage_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

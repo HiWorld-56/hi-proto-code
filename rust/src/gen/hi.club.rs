@@ -429,6 +429,32 @@ pub mod trade_manage_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.TradeManage", "List"));
             self.inner.unary(req, path, codec).await
         }
+        /// 超管:看任意一笔的详情。
+        ///
+        /// 为什么不复用 `Trade.Get`:那条是**用户面**的,带归属校验(只有付款/收款方本人能看,
+        /// 别人一律 NotFound —— 否则拿到 order id 就能读别人的交易)。超管页列的是全站交易,
+        /// 详情却打在用户面那条上,于是"列表有、点开空",只有自己参与的那两笔打得开。
+        ///
+        /// 校验跟着**调用主体**走,而档位是按方法挂的 —— 所以是再开一条超管档的口,
+        /// 不是给用户面那条开后门(那等于把 filter/身份判断混进同一个方法,老坑了)。
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTradeReq>,
+        ) -> std::result::Result<tonic::Response<super::GetTradeResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.TradeManage/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.TradeManage", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
