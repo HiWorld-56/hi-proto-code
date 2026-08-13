@@ -57,7 +57,11 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$registerRobot, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> edit(
+  /// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+  /// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+  /// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+  /// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+  $grpc.ResponseFuture<$0.CreateAgentResp> edit(
     $0.EditAgentReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -120,10 +124,10 @@ class AgentClient extends $grpc.Client {
           '/hi.ai.Agent/RegisterRobot',
           ($0.RegisterRobotReq value) => value.writeToBuffer(),
           $0.CreateAgentResp.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$0.EditAgentReq, $1.Empty>(
+  static final _$edit = $grpc.ClientMethod<$0.EditAgentReq, $0.CreateAgentResp>(
       '/hi.ai.Agent/Edit',
       ($0.EditAgentReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      $0.CreateAgentResp.fromBuffer);
   static final _$delete = $grpc.ClientMethod<$0.DeleteAgentReq, $1.Empty>(
       '/hi.ai.Agent/Delete',
       ($0.DeleteAgentReq value) => value.writeToBuffer(),
@@ -173,13 +177,13 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RegisterRobotReq.fromBuffer(value),
         ($0.CreateAgentResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.EditAgentReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.EditAgentReq, $0.CreateAgentResp>(
         'Edit',
         edit_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.EditAgentReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($0.CreateAgentResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteAgentReq, $1.Empty>(
         'Delete',
         delete_Pre,
@@ -240,12 +244,13 @@ abstract class AgentServiceBase extends $grpc.Service {
   $async.Future<$0.CreateAgentResp> registerRobot(
       $grpc.ServiceCall call, $0.RegisterRobotReq request);
 
-  $async.Future<$1.Empty> edit_Pre(
+  $async.Future<$0.CreateAgentResp> edit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.EditAgentReq> $request) async {
     return edit($call, await $request);
   }
 
-  $async.Future<$1.Empty> edit($grpc.ServiceCall call, $0.EditAgentReq request);
+  $async.Future<$0.CreateAgentResp> edit(
+      $grpc.ServiceCall call, $0.EditAgentReq request);
 
   $async.Future<$1.Empty> delete_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteAgentReq> $request) async {

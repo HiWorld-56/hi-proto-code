@@ -32,7 +32,11 @@ type UserClient interface {
 	// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
 	// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
 	// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
-	Edit(ctx context.Context, in *EditProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Edit(ctx context.Context, in *EditProfileReq, opts ...grpc.CallOption) (*hi.Entity, error)
 	Query(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.Entity, error)
 }
 
@@ -44,9 +48,9 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 	return &userClient{cc}
 }
 
-func (c *userClient) Edit(ctx context.Context, in *EditProfileReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userClient) Edit(ctx context.Context, in *EditProfileReq, opts ...grpc.CallOption) (*hi.Entity, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(hi.Entity)
 	err := c.cc.Invoke(ctx, User_Edit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -71,7 +75,11 @@ type UserServer interface {
 	// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
 	// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
 	// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
-	Edit(context.Context, *EditProfileReq) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Edit(context.Context, *EditProfileReq) (*hi.Entity, error)
 	Query(context.Context, *emptypb.Empty) (*hi.Entity, error)
 }
 
@@ -82,7 +90,7 @@ type UserServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServer struct{}
 
-func (UnimplementedUserServer) Edit(context.Context, *EditProfileReq) (*emptypb.Empty, error) {
+func (UnimplementedUserServer) Edit(context.Context, *EditProfileReq) (*hi.Entity, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedUserServer) Query(context.Context, *emptypb.Empty) (*hi.Entity, error) {

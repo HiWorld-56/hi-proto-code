@@ -1313,12 +1313,12 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\aprivate\x18\x05 \x01(\bH\x01R\aprivate\x88\x01\x01B\r\n" +
 	"\v_backgroundB\n" +
 	"\n" +
-	"\b_private2\x84\b\n" +
+	"\b_private2\x80\b\n" +
 	"\x05Group\x12<\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x18.hi.club.GroupMemberView\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
-	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
-	"\x06Update\x12\x17.hi.club.UpdateGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
+	"\fCreateSingle\x12\x18.hi.club.CreateSingleReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x06Update\x12\x17.hi.club.UpdateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
 	"\vListMembers\x12\x1c.hi.club.ListGroupMembersReq\x1a\x12.hi.club.GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
 	"\x0eGetMemberTotal\x12\x1f.hi.club.GetGroupMemberTotalReq\x1a .hi.club.GetGroupMemberTotalResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x06Invite\x12\x17.hi.club.InviteGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
@@ -1403,7 +1403,7 @@ var file_hi_club_group_proto_depIdxs = []int32{
 	4,  // 24: hi.club.Group.Get:output_type -> hi.club.GroupMemberView
 	0,  // 25: hi.club.Group.Create:output_type -> hi.club.GroupBase
 	0,  // 26: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
-	26, // 27: hi.club.Group.Update:output_type -> google.protobuf.Empty
+	0,  // 27: hi.club.Group.Update:output_type -> hi.club.GroupBase
 	3,  // 28: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
 	12, // 29: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
 	26, // 30: hi.club.Group.Invite:output_type -> google.protobuf.Empty

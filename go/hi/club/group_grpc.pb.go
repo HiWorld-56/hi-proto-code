@@ -46,7 +46,11 @@ type GroupClient interface {
 	Get(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*GroupMemberView, error)
 	Create(ctx context.Context, in *CreateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	CreateSingle(ctx context.Context, in *CreateSingleReq, opts ...grpc.CallOption) (*GroupBase, error)
-	Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*GroupBase, error)
 	ListMembers(ctx context.Context, in *ListGroupMembersReq, opts ...grpc.CallOption) (*GroupInfo, error)
 	GetMemberTotal(ctx context.Context, in *GetGroupMemberTotalReq, opts ...grpc.CallOption) (*GetGroupMemberTotalResp, error)
 	Invite(ctx context.Context, in *InviteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -98,9 +102,9 @@ func (c *groupClient) CreateSingle(ctx context.Context, in *CreateSingleReq, opt
 	return out, nil
 }
 
-func (c *groupClient) Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *groupClient) Update(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*GroupBase, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(GroupBase)
 	err := c.cc.Invoke(ctx, Group_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -227,7 +231,11 @@ type GroupServer interface {
 	Get(context.Context, *GetGroupReq) (*GroupMemberView, error)
 	Create(context.Context, *CreateGroupReq) (*GroupBase, error)
 	CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error)
-	Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Update(context.Context, *UpdateGroupReq) (*GroupBase, error)
 	ListMembers(context.Context, *ListGroupMembersReq) (*GroupInfo, error)
 	GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error)
 	Invite(context.Context, *InviteGroupReq) (*emptypb.Empty, error)
@@ -257,7 +265,7 @@ func (UnimplementedGroupServer) Create(context.Context, *CreateGroupReq) (*Group
 func (UnimplementedGroupServer) CreateSingle(context.Context, *CreateSingleReq) (*GroupBase, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateSingle not implemented")
 }
-func (UnimplementedGroupServer) Update(context.Context, *UpdateGroupReq) (*emptypb.Empty, error) {
+func (UnimplementedGroupServer) Update(context.Context, *UpdateGroupReq) (*GroupBase, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedGroupServer) ListMembers(context.Context, *ListGroupMembersReq) (*GroupInfo, error) {

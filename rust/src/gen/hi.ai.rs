@@ -2076,10 +2076,17 @@ pub mod agent_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Agent", "RegisterRobot"));
             self.inner.unary(req, path, codec).await
         }
+        /// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+        /// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+        /// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+        /// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
         pub async fn edit(
             &mut self,
             request: impl tonic::IntoRequest<super::EditAgentReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CreateAgentResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await

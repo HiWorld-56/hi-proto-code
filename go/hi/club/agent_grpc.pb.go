@@ -45,7 +45,11 @@ type AgentClient interface {
 	List(ctx context.Context, in *ListAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(ctx context.Context, in *ai.CreateAssistantReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
-	Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error)
 	Delete(ctx context.Context, in *ai.DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *ai.GetAgentReq, opts ...grpc.CallOption) (*ai.GetAgentResp, error)
 	GetUsage(ctx context.Context, in *ai.AgentUsageReq, opts ...grpc.CallOption) (*ai.AgentUsageResp, error)
@@ -85,9 +89,9 @@ func (c *agentClient) CreateAssistant(ctx context.Context, in *ai.CreateAssistan
 	return out, nil
 }
 
-func (c *agentClient) Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *agentClient) Edit(ctx context.Context, in *ai.EditAgentReq, opts ...grpc.CallOption) (*ai.CreateAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(ai.CreateAgentResp)
 	err := c.cc.Invoke(ctx, Agent_Edit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -186,7 +190,11 @@ type AgentServer interface {
 	List(context.Context, *ListAgentsReq) (*ListAgentsResp, error)
 	// ── hi.ai 门面(跟 ai 定稿改名)──
 	CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error)
-	Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Edit(context.Context, *ai.EditAgentReq) (*ai.CreateAgentResp, error)
 	Delete(context.Context, *ai.DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *ai.GetAgentReq) (*ai.GetAgentResp, error)
 	GetUsage(context.Context, *ai.AgentUsageReq) (*ai.AgentUsageResp, error)
@@ -211,7 +219,7 @@ func (UnimplementedAgentServer) List(context.Context, *ListAgentsReq) (*ListAgen
 func (UnimplementedAgentServer) CreateAssistant(context.Context, *ai.CreateAssistantReq) (*ai.CreateAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateAssistant not implemented")
 }
-func (UnimplementedAgentServer) Edit(context.Context, *ai.EditAgentReq) (*emptypb.Empty, error) {
+func (UnimplementedAgentServer) Edit(context.Context, *ai.EditAgentReq) (*ai.CreateAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedAgentServer) Delete(context.Context, *ai.DeleteAgentReq) (*emptypb.Empty, error) {

@@ -1243,6 +1243,14 @@ pub struct SetUsersReq {
     #[prost(message, repeated, tag = "1")]
     pub units: ::prost::alloc::vec::Vec<SetUserUnit>,
 }
+/// SetUsers 的返回:每个被改用户改完之后的**权威 Entity**。
+/// Entity.update 是资料惰性传播的唯一依据(见 hi/club/messaging.proto),
+/// 时间戳的权威在服务端 —— 回给调用方,它才能把自己的缓存对齐,不必再逐个 GetUser。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SetUsersResp {
+    #[prost(message, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<super::Entity>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AddUsersReq {
     /// 用户 did:加到自己名下
@@ -1567,10 +1575,13 @@ pub mod merchant_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Merchant", "List"));
             self.inner.unary(req, path, codec).await
         }
+        /// 回**每个被改用户的权威 Entity**(原先返 Empty):这个接口会穿透写全局 user 表的
+        /// name/avatar,而 `Entity.update` 是资料惰性传播的唯一依据 —— 调用方(club)拿到权威
+        /// 时间戳才能把自己的缓存对齐,不必再逐个 GetUser。只改 Info 不改 Entity 的那些 unit 也照回。
         pub async fn set_users(
             &mut self,
             request: impl tonic::IntoRequest<super::SetUsersReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::SetUsersResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4398,10 +4409,14 @@ pub mod user_client {
         /// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
         /// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
         /// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
+        /// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+        /// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+        /// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+        /// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
         pub async fn edit(
             &mut self,
             request: impl tonic::IntoRequest<super::EditProfileReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::super::Entity>, tonic::Status> {
             self.inner
                 .ready()
                 .await

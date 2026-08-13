@@ -50,7 +50,11 @@ type AgentClient interface {
 	//	拆开后各自的 type 由服务端固定,调用方无从传错。
 	CreateAssistant(ctx context.Context, in *CreateAssistantReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
 	RegisterRobot(ctx context.Context, in *RegisterRobotReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
-	Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
 	Delete(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Get(ctx context.Context, in *GetAgentReq, opts ...grpc.CallOption) (*GetAgentResp, error)
 	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentsReq 的说明)。
@@ -89,9 +93,9 @@ func (c *agentClient) RegisterRobot(ctx context.Context, in *RegisterRobotReq, o
 	return out, nil
 }
 
-func (c *agentClient) Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *agentClient) Edit(ctx context.Context, in *EditAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(CreateAgentResp)
 	err := c.cc.Invoke(ctx, Agent_Edit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -178,7 +182,11 @@ type AgentServer interface {
 	//	拆开后各自的 type 由服务端固定,调用方无从传错。
 	CreateAssistant(context.Context, *CreateAssistantReq) (*CreateAgentResp, error)
 	RegisterRobot(context.Context, *RegisterRobotReq) (*CreateAgentResp, error)
-	Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error)
+	// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+	// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+	// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+	Edit(context.Context, *EditAgentReq) (*CreateAgentResp, error)
 	Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error)
 	Get(context.Context, *GetAgentReq) (*GetAgentResp, error)
 	// 列**自己名下**的机器人;agents 非空则在名下再按 did 筛(见 ListAgentsReq 的说明)。
@@ -202,7 +210,7 @@ func (UnimplementedAgentServer) CreateAssistant(context.Context, *CreateAssistan
 func (UnimplementedAgentServer) RegisterRobot(context.Context, *RegisterRobotReq) (*CreateAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RegisterRobot not implemented")
 }
-func (UnimplementedAgentServer) Edit(context.Context, *EditAgentReq) (*emptypb.Empty, error) {
+func (UnimplementedAgentServer) Edit(context.Context, *EditAgentReq) (*CreateAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedAgentServer) Delete(context.Context, *DeleteAgentReq) (*emptypb.Empty, error) {

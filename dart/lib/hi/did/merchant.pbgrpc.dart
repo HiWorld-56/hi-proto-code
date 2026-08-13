@@ -101,7 +101,10 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> setUsers(
+  /// 回**每个被改用户的权威 Entity**(原先返 Empty):这个接口会穿透写全局 user 表的
+  /// name/avatar,而 `Entity.update` 是资料惰性传播的唯一依据 —— 调用方(club)拿到权威
+  /// 时间戳才能把自己的缓存对齐,不必再逐个 GetUser。只改 Info 不改 Entity 的那些 unit 也照回。
+  $grpc.ResponseFuture<$1.SetUsersResp> setUsers(
     $1.SetUsersReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -189,10 +192,10 @@ class MerchantClient extends $grpc.Client {
           '/hi.did.Merchant/List',
           ($1.ListMerchantsReq value) => value.writeToBuffer(),
           $1.MerchantListResp.fromBuffer);
-  static final _$setUsers = $grpc.ClientMethod<$1.SetUsersReq, $0.Empty>(
+  static final _$setUsers = $grpc.ClientMethod<$1.SetUsersReq, $1.SetUsersResp>(
       '/hi.did.Merchant/SetUsers',
       ($1.SetUsersReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
+      $1.SetUsersResp.fromBuffer);
   static final _$setUserCard = $grpc.ClientMethod<$1.SetUserCardReq, $0.Empty>(
       '/hi.did.Merchant/SetUserCard',
       ($1.SetUserCardReq value) => value.writeToBuffer(),
@@ -271,13 +274,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.ListMerchantsReq.fromBuffer(value),
         ($1.MerchantListResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SetUsersReq, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$1.SetUsersReq, $1.SetUsersResp>(
         'SetUsers',
         setUsers_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.SetUsersReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
+        ($1.SetUsersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.SetUserCardReq, $0.Empty>(
         'SetUserCard',
         setUserCard_Pre,
@@ -377,12 +380,12 @@ abstract class MerchantServiceBase extends $grpc.Service {
   $async.Future<$1.MerchantListResp> list(
       $grpc.ServiceCall call, $1.ListMerchantsReq request);
 
-  $async.Future<$0.Empty> setUsers_Pre(
+  $async.Future<$1.SetUsersResp> setUsers_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.SetUsersReq> $request) async {
     return setUsers($call, await $request);
   }
 
-  $async.Future<$0.Empty> setUsers(
+  $async.Future<$1.SetUsersResp> setUsers(
       $grpc.ServiceCall call, $1.SetUsersReq request);
 
   $async.Future<$0.Empty> setUserCard_Pre($grpc.ServiceCall $call,

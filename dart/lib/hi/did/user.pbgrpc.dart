@@ -15,9 +15,9 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $1;
 import 'user.pb.dart' as $0;
 
 export 'user.pb.dart';
@@ -37,15 +37,19 @@ class UserClient extends $grpc.Client {
   /// 传用户头像 → hidid bucket 的 avatar/。**头像归 hidid 管**,club/ai 要传头像都内部转到这里,
   /// 免得同一份资源散落在各家 bucket(以前不分家,出过批量误删头像的事故)。
   /// 只回 url,不改资料 —— 改资料仍走 Edit,上传与落库解耦。
-  $grpc.ResponseFuture<$1.Empty> edit(
+  /// **改完回权威资料**(原先返 Empty)。`base.update` 是资料传播的唯一依据:
+  /// 发消息时 message.from / 群通知的 extra 都带着它,收信方按它比时间戳决定要不要刷缓存
+  /// (惰性传播,见 hi/club/messaging.proto)。时间戳的权威在服务端,客户端自己造一个就是
+  /// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
+  $grpc.ResponseFuture<$1.Entity> edit(
     $0.EditProfileReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Entity> query(
-    $1.Empty request, {
+  $grpc.ResponseFuture<$1.Entity> query(
+    $2.Empty request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$query, request, options: options);
@@ -53,14 +57,14 @@ class UserClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$edit = $grpc.ClientMethod<$0.EditProfileReq, $1.Empty>(
+  static final _$edit = $grpc.ClientMethod<$0.EditProfileReq, $1.Entity>(
       '/hi.did.User/Edit',
       ($0.EditProfileReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$query = $grpc.ClientMethod<$1.Empty, $2.Entity>(
+      $1.Entity.fromBuffer);
+  static final _$query = $grpc.ClientMethod<$2.Empty, $1.Entity>(
       '/hi.did.User/Query',
-      ($1.Empty value) => value.writeToBuffer(),
-      $2.Entity.fromBuffer);
+      ($2.Empty value) => value.writeToBuffer(),
+      $1.Entity.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.User')
@@ -68,34 +72,34 @@ abstract class UserServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.User';
 
   UserServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.EditProfileReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.EditProfileReq, $1.Entity>(
         'Edit',
         edit_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.EditProfileReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Empty, $2.Entity>(
+        ($1.Entity value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.Empty, $1.Entity>(
         'Query',
         query_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
-        ($2.Entity value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
+        ($1.Entity value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.Empty> edit_Pre($grpc.ServiceCall $call,
+  $async.Future<$1.Entity> edit_Pre($grpc.ServiceCall $call,
       $async.Future<$0.EditProfileReq> $request) async {
     return edit($call, await $request);
   }
 
-  $async.Future<$1.Empty> edit(
+  $async.Future<$1.Entity> edit(
       $grpc.ServiceCall call, $0.EditProfileReq request);
 
-  $async.Future<$2.Entity> query_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+  $async.Future<$1.Entity> query_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
     return query($call, await $request);
   }
 
-  $async.Future<$2.Entity> query($grpc.ServiceCall call, $1.Empty request);
+  $async.Future<$1.Entity> query($grpc.ServiceCall call, $2.Empty request);
 }

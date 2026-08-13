@@ -1472,6 +1472,58 @@ class SetUsersReq extends $pb.GeneratedMessage {
   $pb.PbList<SetUserUnit> get units => $_getList(0);
 }
 
+/// SetUsers 的返回:每个被改用户改完之后的**权威 Entity**。
+/// Entity.update 是资料惰性传播的唯一依据(见 hi/club/messaging.proto),
+/// 时间戳的权威在服务端 —— 回给调用方,它才能把自己的缓存对齐,不必再逐个 GetUser。
+class SetUsersResp extends $pb.GeneratedMessage {
+  factory SetUsersResp({
+    $core.Iterable<$2.Entity>? users,
+  }) {
+    final result = create();
+    if (users != null) result.users.addAll(users);
+    return result;
+  }
+
+  SetUsersResp._();
+
+  factory SetUsersResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetUsersResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetUsersResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..pPM<$2.Entity>(1, _omitFieldNames ? '' : 'users',
+        subBuilder: $2.Entity.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetUsersResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetUsersResp copyWith(void Function(SetUsersResp) updates) =>
+      super.copyWith((message) => updates(message as SetUsersResp))
+          as SetUsersResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetUsersResp create() => SetUsersResp._();
+  @$core.override
+  SetUsersResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetUsersResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetUsersResp>(create);
+  static SetUsersResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$2.Entity> get users => $_getList(0);
+}
+
 class AddUsersReq extends $pb.GeneratedMessage {
   factory AddUsersReq({
     $core.Iterable<$core.String>? users,

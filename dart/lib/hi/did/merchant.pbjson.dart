@@ -496,6 +496,28 @@ final $typed_data.Uint8List setUsersReqDescriptor = $convert.base64Decode(
     'CgtTZXRVc2Vyc1JlcRIpCgV1bml0cxgBIAMoCzITLmhpLmRpZC5TZXRVc2VyVW5pdFIFdW5pdH'
     'M=');
 
+@$core.Deprecated('Use setUsersRespDescriptor instead')
+const SetUsersResp$json = {
+  '1': 'SetUsersResp',
+  '2': [
+    {
+      '1': 'users',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'users'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `SetUsersResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setUsersRespDescriptor = $convert.base64Decode(
+    'CgxTZXRVc2Vyc1Jlc3ASJgoFdXNlcnMYASADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBXVzZXJzOg'
+    'SYtRgC');
+
 @$core.Deprecated('Use addUsersReqDescriptor instead')
 const AddUsersReq$json = {
   '1': 'AddUsersReq',

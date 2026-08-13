@@ -77,7 +77,10 @@ type MerchantClient interface {
 	//	真实用法是 club 替自己的用户查(用户登录 club,club 列出他的全部商户归属),
 	//	那个前提下这条守卫天然满足。
 	List(ctx context.Context, in *ListMerchantsReq, opts ...grpc.CallOption) (*MerchantListResp, error)
-	SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 回**每个被改用户的权威 Entity**(原先返 Empty):这个接口会穿透写全局 user 表的
+	// name/avatar,而 `Entity.update` 是资料惰性传播的唯一依据 —— 调用方(club)拿到权威
+	// 时间戳才能把自己的缓存对齐,不必再逐个 GetUser。只改 Info 不改 Entity 的那些 unit 也照回。
+	SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*SetUsersResp, error)
 	SetUserCard(ctx context.Context, in *SetUserCardReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddUsers(ctx context.Context, in *AddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RemoveUsers(ctx context.Context, in *RemoveUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -157,9 +160,9 @@ func (c *merchantClient) List(ctx context.Context, in *ListMerchantsReq, opts ..
 	return out, nil
 }
 
-func (c *merchantClient) SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *merchantClient) SetUsers(ctx context.Context, in *SetUsersReq, opts ...grpc.CallOption) (*SetUsersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(SetUsersResp)
 	err := c.cc.Invoke(ctx, Merchant_SetUsers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -277,7 +280,10 @@ type MerchantServer interface {
 	//	真实用法是 club 替自己的用户查(用户登录 club,club 列出他的全部商户归属),
 	//	那个前提下这条守卫天然满足。
 	List(context.Context, *ListMerchantsReq) (*MerchantListResp, error)
-	SetUsers(context.Context, *SetUsersReq) (*emptypb.Empty, error)
+	// 回**每个被改用户的权威 Entity**(原先返 Empty):这个接口会穿透写全局 user 表的
+	// name/avatar,而 `Entity.update` 是资料惰性传播的唯一依据 —— 调用方(club)拿到权威
+	// 时间戳才能把自己的缓存对齐,不必再逐个 GetUser。只改 Info 不改 Entity 的那些 unit 也照回。
+	SetUsers(context.Context, *SetUsersReq) (*SetUsersResp, error)
 	SetUserCard(context.Context, *SetUserCardReq) (*emptypb.Empty, error)
 	AddUsers(context.Context, *AddUsersReq) (*emptypb.Empty, error)
 	RemoveUsers(context.Context, *RemoveUsersReq) (*emptypb.Empty, error)
@@ -314,7 +320,7 @@ func (UnimplementedMerchantServer) ListGreeters(context.Context, *ListGreetersRe
 func (UnimplementedMerchantServer) List(context.Context, *ListMerchantsReq) (*MerchantListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedMerchantServer) SetUsers(context.Context, *SetUsersReq) (*emptypb.Empty, error) {
+func (UnimplementedMerchantServer) SetUsers(context.Context, *SetUsersReq) (*SetUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetUsers not implemented")
 }
 func (UnimplementedMerchantServer) SetUserCard(context.Context, *SetUserCardReq) (*emptypb.Empty, error) {
