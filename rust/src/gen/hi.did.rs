@@ -4140,9 +4140,12 @@ pub mod source_client {
     ///
     /// ⚠️ 只回 url,**不改资料** —— 落库分别走 `User.Edit` / `Merchant.Update` /
     /// `Merchant.SetUsers`,上传与落库解耦(这个约定原先就是这样,只是方法搬了家)。
-    /// ⚠️ **没有商户档的上传口**,也不需要:资源的消耗方不关心资源由谁上传。
+    /// ⚠️ **头像没有商户档的上传口**,也不需要:资源的消耗方不关心资源由谁上传。
     /// 商户要给名下用户设头像,拿任意一个自己有权调的上传口换到 url,再走
     /// `Merchant.SetUsers` 即可 —— 设置那步才是有主体校验的地方。
+    /// 公共区(`hidid/pub/`)是唯一例外:商户后台确实要传附件/图并拿到直链,
+    /// 而 hidid 这边没有别的口子可借,所以另开了 `SourceMerchant`(见文件末尾)。
+    /// **不是把商户档并进 Source** —— 同一个 service 里混档位,说明主体归类错了。
     #[derive(Debug, Clone)]
     pub struct SourceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -4268,6 +4271,35 @@ pub mod source_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Source", "UploadLog"));
             self.inner.unary(req, path, codec).await
         }
+        /// 公共区上传 → `hidid/pub/`,**拿到 url 直接 http get 就能下**(桶是永固公开读,
+        /// 与 hiclub/pub、hiai/pub 同一口径)。给"前端要个能直链的地址"这类需求用:
+        /// 商户后台传个附件/图、端上传个要分享出去的文件,拿回 url 就完事,不用再走鉴权下载口。
+        ///
+        /// ⚠️ **公开即公开**:url 是 32 位随机名,知道 url 就能拿到内容,别往这儿放私密文件
+        /// (私密的走各自的私有桶 + 鉴权下载口)。
+        /// ⚠️ 只回 url,**不改任何资料** —— 与本文件其它上传口一致,落库各走各的设置方法;
+        /// 设置失败记得调 Delete 收尸,否则就是无主文件(公开桶没有 lifecycle 兜底)。
+        pub async fn upload_pub(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Source/UploadPub");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Source", "UploadPub"));
+            self.inner.unary(req, path, codec).await
+        }
         /// Delete 删掉刚传上去、但**没被任何地方引用**的对象。
         ///
         /// 上传与落库解耦之后必然产生这个缺口:上传成功 → 调设置方法 → 设置失败,
@@ -4295,6 +4327,130 @@ pub mod source_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Source/Delete");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Source", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod source_merchant_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// SourceMerchant —— **商户档**的二进制搬运。目前只有公共区上传一个方法。
+    ///
+    /// 与 `Source` 拆开而不是并进去:同一个 service 里两种档位,拦截器放行范围就得按方法看,
+    /// 归属校验也没法在 service 层一次说清 —— 仓里的范式是拆(见 DApp / DAppAdmin)。
+    ///
+    /// 落点与用户档那条**完全一样**(`hidid/pub/`,匿名可读):公共区就是公共区,
+    /// 不按上传者分目录 —— 分了也没人按这个维度取用。
+    #[derive(Debug, Clone)]
+    pub struct SourceMerchantClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SourceMerchantClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SourceMerchantClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SourceMerchantClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SourceMerchantClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn upload_pub(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.SourceMerchant/UploadPub",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.SourceMerchant", "UploadPub"));
             self.inner.unary(req, path, codec).await
         }
     }
