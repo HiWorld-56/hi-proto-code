@@ -42,7 +42,14 @@ const (
 type UserClient interface {
 	// 头像与日志的上传口都已搬到 `Source`(UploadAvatar / UploadLog),此处不再有。
 	GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserInfo, error)
-	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 更新用户信息。**返回更新后的完整资料**(原先返 Empty)。
+	//
+	// 为什么要回:`base.update` 是资料传播的唯一依据 —— 我发消息时 message.from 带着它,
+	// 收信方按它比时间戳决定要不要刷本地缓存(惰性传播,见 hi/club/messaging.proto)。
+	// 这个时间戳的权威在服务端;客户端自己造一个,与服务端那份就是两个时钟,会**倒退**
+	// (实测差 0.6s:客户端微秒 vs 服务端整秒)。写完顺手回权威值,调用方不必再多一次
+	// GetCurrent,也避免中间被自己的另一个端插一手、拿回不一致的资料。
+	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UserInfo, error)
 	ListSystemMessages(ctx context.Context, in *ListSystemMessagesReq, opts ...grpc.CallOption) (*SystemMessages, error)
 	DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -74,9 +81,9 @@ func (c *userClient) GetCurrent(ctx context.Context, in *emptypb.Empty, opts ...
 	return out, nil
 }
 
-func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(UserInfo)
 	err := c.cc.Invoke(ctx, User_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -200,7 +207,14 @@ func (c *userClient) SetRemark(ctx context.Context, in *SetRemarkReq, opts ...gr
 type UserServer interface {
 	// 头像与日志的上传口都已搬到 `Source`(UploadAvatar / UploadLog),此处不再有。
 	GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error)
-	Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error)
+	// 更新用户信息。**返回更新后的完整资料**(原先返 Empty)。
+	//
+	// 为什么要回:`base.update` 是资料传播的唯一依据 —— 我发消息时 message.from 带着它,
+	// 收信方按它比时间戳决定要不要刷本地缓存(惰性传播,见 hi/club/messaging.proto)。
+	// 这个时间戳的权威在服务端;客户端自己造一个,与服务端那份就是两个时钟,会**倒退**
+	// (实测差 0.6s:客户端微秒 vs 服务端整秒)。写完顺手回权威值,调用方不必再多一次
+	// GetCurrent,也避免中间被自己的另一个端插一手、拿回不一致的资料。
+	Update(context.Context, *UpdateUserReq) (*UserInfo, error)
 	ListSystemMessages(context.Context, *ListSystemMessagesReq) (*SystemMessages, error)
 	DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error)
 	DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
@@ -224,7 +238,7 @@ type UnimplementedUserServer struct{}
 func (UnimplementedUserServer) GetCurrent(context.Context, *emptypb.Empty) (*UserInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCurrent not implemented")
 }
-func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*emptypb.Empty, error) {
+func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*UserInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedUserServer) ListSystemMessages(context.Context, *ListSystemMessagesReq) (*SystemMessages, error) {

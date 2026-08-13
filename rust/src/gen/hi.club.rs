@@ -4736,10 +4736,17 @@ pub mod user_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "GetCurrent"));
             self.inner.unary(req, path, codec).await
         }
+        /// 更新用户信息。**返回更新后的完整资料**(原先返 Empty)。
+        ///
+        /// 为什么要回:`base.update` 是资料传播的唯一依据 —— 我发消息时 message.from 带着它,
+        /// 收信方按它比时间戳决定要不要刷本地缓存(惰性传播,见 hi/club/messaging.proto)。
+        /// 这个时间戳的权威在服务端;客户端自己造一个,与服务端那份就是两个时钟,会**倒退**
+        /// (实测差 0.6s:客户端微秒 vs 服务端整秒)。写完顺手回权威值,调用方不必再多一次
+        /// GetCurrent,也避免中间被自己的另一个端插一手、拿回不一致的资料。
         pub async fn update(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateUserReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::UserInfo>, tonic::Status> {
             self.inner
                 .ready()
                 .await

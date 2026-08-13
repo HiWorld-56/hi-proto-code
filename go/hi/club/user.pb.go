@@ -1014,11 +1014,11 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"!FRIEND_REQUEST_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eFRIEND_REQUEST_STATUS_REJECTED\x10\x01\x12\x1e\n" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
-	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xcf\a\n" +
+	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xca\a\n" +
 	"\x04User\x12>\n" +
 	"\n" +
-	"GetCurrent\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
-	"\x06Update\x12\x16.hi.club.UpdateUserReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
+	"GetCurrent\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
+	"\x06Update\x12\x16.hi.club.UpdateUserReq\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
 	"\x12ListSystemMessages\x12\x1e.hi.club.ListSystemMessagesReq\x1a\x17.hi.club.SystemMessages\"\x05\x8a\xb5\x18\x01\x02\x12U\n" +
 	"\x13DeleteSystemMessage\x12\x1f.hi.club.DeleteSystemMessageReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
 	"\x16DeleteAllSystemMessage\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12U\n" +
@@ -1101,7 +1101,7 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	15, // 21: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
 	16, // 22: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUsersReq
 	1,  // 23: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
-	22, // 24: hi.club.User.Update:output_type -> google.protobuf.Empty
+	1,  // 24: hi.club.User.Update:output_type -> hi.club.UserInfo
 	3,  // 25: hi.club.User.ListSystemMessages:output_type -> hi.club.SystemMessages
 	22, // 26: hi.club.User.DeleteSystemMessage:output_type -> google.protobuf.Empty
 	22, // 27: hi.club.User.DeleteAllSystemMessage:output_type -> google.protobuf.Empty

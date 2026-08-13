@@ -42,7 +42,14 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$getCurrent, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> update(
+  /// 更新用户信息。**返回更新后的完整资料**(原先返 Empty)。
+  ///
+  /// 为什么要回:`base.update` 是资料传播的唯一依据 —— 我发消息时 message.from 带着它,
+  /// 收信方按它比时间戳决定要不要刷本地缓存(惰性传播,见 hi/club/messaging.proto)。
+  /// 这个时间戳的权威在服务端;客户端自己造一个,与服务端那份就是两个时钟,会**倒退**
+  /// (实测差 0.6s:客户端微秒 vs 服务端整秒)。写完顺手回权威值,调用方不必再多一次
+  /// GetCurrent,也避免中间被自己的另一个端插一手、拿回不一致的资料。
+  $grpc.ResponseFuture<$1.UserInfo> update(
     $1.UpdateUserReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -134,10 +141,10 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/GetCurrent',
       ($0.Empty value) => value.writeToBuffer(),
       $1.UserInfo.fromBuffer);
-  static final _$update = $grpc.ClientMethod<$1.UpdateUserReq, $0.Empty>(
+  static final _$update = $grpc.ClientMethod<$1.UpdateUserReq, $1.UserInfo>(
       '/hi.club.User/Update',
       ($1.UpdateUserReq value) => value.writeToBuffer(),
-      $0.Empty.fromBuffer);
+      $1.UserInfo.fromBuffer);
   static final _$listSystemMessages =
       $grpc.ClientMethod<$1.ListSystemMessagesReq, $1.SystemMessages>(
           '/hi.club.User/ListSystemMessages',
@@ -204,13 +211,13 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.UserInfo value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.UpdateUserReq, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$1.UpdateUserReq, $1.UserInfo>(
         'Update',
         update_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $1.UpdateUserReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
+        ($1.UserInfo value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListSystemMessagesReq, $1.SystemMessages>(
         'ListSystemMessages',
         listSystemMessages_Pre,
@@ -301,12 +308,12 @@ abstract class UserServiceBase extends $grpc.Service {
   $async.Future<$1.UserInfo> getCurrent(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$0.Empty> update_Pre(
+  $async.Future<$1.UserInfo> update_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.UpdateUserReq> $request) async {
     return update($call, await $request);
   }
 
-  $async.Future<$0.Empty> update(
+  $async.Future<$1.UserInfo> update(
       $grpc.ServiceCall call, $1.UpdateUserReq request);
 
   $async.Future<$1.SystemMessages> listSystemMessages_Pre(
