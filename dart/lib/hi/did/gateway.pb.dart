@@ -68,6 +68,12 @@ class GatewayConfigUnit extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<GatewayConfigUnit>(create);
   static GatewayConfigUnit? _defaultInstance;
 
+  /// 节点配置名(库 hi_gateway_config.name 实际就这几个):
+  ///   aptos / bitcoin / ethereum / solana / tatum / tron-grpc / tron-http
+  ///
+  /// ⚠️ **这不是链标识**,别跟 `chain` 字段那套(btc/eth/trx/sol/aptos,见 wallet.proto)混。
+  /// 它是"配哪个节点/服务商"的名字 —— 所以才会有 tatum(数据 API)、
+  /// 以及 tron 拆成 grpc/http 两条。两套词汇长得像、含义不同,混用会静默查空。
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)

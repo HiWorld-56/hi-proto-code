@@ -26,10 +26,17 @@ const (
 // ⚠️ 含 api_key(区块链节点凭证)—— 不是"任何人可见"的东西。
 // Gateway.List 本就要 AUTH_USER/AUTH_MERCHANT 才能调,标 PUBLIC 与档位自相矛盾。
 type GatewayConfigUnit struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` //aptos/bitcoin/ethereum/solana/tatum/tron-grpc/tron-http
-	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	ApiKey        string                 `protobuf:"bytes,3,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 节点配置名(库 hi_gateway_config.name 实际就这几个):
+	//
+	//	aptos / bitcoin / ethereum / solana / tatum / tron-grpc / tron-http
+	//
+	// ⚠️ **这不是链标识**,别跟 `chain` 字段那套(btc/eth/trx/sol/aptos,见 wallet.proto)混。
+	// 它是"配哪个节点/服务商"的名字 —— 所以才会有 tatum(数据 API)、
+	// 以及 tron 拆成 grpc/http 两条。两套词汇长得像、含义不同,混用会静默查空。
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Url           string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	ApiKey        string `protobuf:"bytes,3,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
