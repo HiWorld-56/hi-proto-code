@@ -963,6 +963,38 @@ pub struct DeletePluginByAgentsReq {
     #[prost(string, repeated, tag = "1")]
     pub agents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// CreateReference **按授权建引用** —— 插件市场的落地点。
+///
+/// 语义 = 插 c(source=REFERENCE) + d(active=true),**一个字都不碰 a/b**
+/// (壳与版本是共享本体,引用方无权改)。这正是 PluginSource 里那条
+/// 「引用:经授权用别人的脚本;**不能下载源码**」终于被用上的地方。
+///
+/// 与 CreateShell 的区别:CreateShell 是建**新**壳(a+c),这里是给**已有**壳加一个使用者。
+///
+/// 幂等:该 agent 已有该 uuid 的 c 行 → 直接返回成功(重试安全)。拒绝:壳不存在。
+///
+/// ⚠️ **data 必须是受让方机器人自己的扩展数据** —— 尤其 api_key。
+/// club 侧复用建壳时那套「取该机器人第一个有效 apikey 塞进 c.data」的逻辑,主体换成受让方。
+/// **绝不能把出让方的 c.data 拷过来** —— 那等于把出让方的凭据连同脚本一起交出去了。
+/// c/d 本来就是「每机器人各不相同的使用态」,这正是当初拆表的意义。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateReferenceReq {
+    /// 受让方机器人
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 壳 uuid(别人的)
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 空 = 取出让方当前激活版
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+    /// c.data(club 注入受让方自己的 api_key)
+    #[prost(message, optional, tag = "4")]
+    pub data: ::core::option::Option<::pbjson_types::Struct>,
+    /// d.data
+    #[prost(message, optional, tag = "5")]
+    pub version_data: ::core::option::Option<::pbjson_types::Struct>,
+}
 /// 插件在某机器人使用记录里的来源(历史事实;引用不是拷贝,只多一行 c 指向同壳)。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1302,6 +1334,27 @@ pub mod plugin_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "DeleteShells"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn create_reference(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateReferenceReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/CreateReference",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Plugin", "CreateReference"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete_by_agents(

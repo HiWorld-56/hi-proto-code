@@ -111,6 +111,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$deleteShells, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> createReference(
+    $0.CreateReferenceReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createReference, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> deleteByAgents(
     $0.DeletePluginByAgentsReq request, {
     $grpc.CallOptions? options,
@@ -184,6 +191,11 @@ class PluginClient extends $grpc.Client {
       $grpc.ClientMethod<$0.DeleteShellsReq, $1.Empty>(
           '/hi.ai.Plugin/DeleteShells',
           ($0.DeleteShellsReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
+  static final _$createReference =
+      $grpc.ClientMethod<$0.CreateReferenceReq, $1.Empty>(
+          '/hi.ai.Plugin/CreateReference',
+          ($0.CreateReferenceReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
   static final _$deleteByAgents =
       $grpc.ClientMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
@@ -282,6 +294,14 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.DeleteShellsReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateReferenceReq, $1.Empty>(
+        'CreateReference',
+        createReference_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.CreateReferenceReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeletePluginByAgentsReq, $1.Empty>(
         'DeleteByAgents',
@@ -394,6 +414,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> deleteShells(
       $grpc.ServiceCall call, $0.DeleteShellsReq request);
+
+  $async.Future<$1.Empty> createReference_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateReferenceReq> $request) async {
+    return createReference($call, await $request);
+  }
+
+  $async.Future<$1.Empty> createReference(
+      $grpc.ServiceCall call, $0.CreateReferenceReq request);
 
   $async.Future<$1.Empty> deleteByAgents_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeletePluginByAgentsReq> $request) async {

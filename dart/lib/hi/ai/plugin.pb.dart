@@ -1992,6 +1992,128 @@ class DeletePluginByAgentsReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get agents => $_getList(0);
 }
 
+/// CreateReference **按授权建引用** —— 插件市场的落地点。
+///
+/// 语义 = 插 c(source=REFERENCE) + d(active=true),**一个字都不碰 a/b**
+/// (壳与版本是共享本体,引用方无权改)。这正是 PluginSource 里那条
+/// 「引用:经授权用别人的脚本;**不能下载源码**」终于被用上的地方。
+///
+/// 与 CreateShell 的区别:CreateShell 是建**新**壳(a+c),这里是给**已有**壳加一个使用者。
+///
+/// 幂等:该 agent 已有该 uuid 的 c 行 → 直接返回成功(重试安全)。拒绝:壳不存在。
+///
+/// ⚠️ **data 必须是受让方机器人自己的扩展数据** —— 尤其 api_key。
+///    club 侧复用建壳时那套「取该机器人第一个有效 apikey 塞进 c.data」的逻辑,主体换成受让方。
+///    **绝不能把出让方的 c.data 拷过来** —— 那等于把出让方的凭据连同脚本一起交出去了。
+///    c/d 本来就是「每机器人各不相同的使用态」,这正是当初拆表的意义。
+class CreateReferenceReq extends $pb.GeneratedMessage {
+  factory CreateReferenceReq({
+    $core.String? agent,
+    $core.String? uuid,
+    $core.String? version,
+    $2.Struct? data,
+    $2.Struct? versionData,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    if (data != null) result.data = data;
+    if (versionData != null) result.versionData = versionData;
+    return result;
+  }
+
+  CreateReferenceReq._();
+
+  factory CreateReferenceReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateReferenceReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateReferenceReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..aOM<$2.Struct>(4, _omitFieldNames ? '' : 'data',
+        subBuilder: $2.Struct.create)
+    ..aOM<$2.Struct>(5, _omitFieldNames ? '' : 'versionData',
+        subBuilder: $2.Struct.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateReferenceReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateReferenceReq copyWith(void Function(CreateReferenceReq) updates) =>
+      super.copyWith((message) => updates(message as CreateReferenceReq))
+          as CreateReferenceReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateReferenceReq create() => CreateReferenceReq._();
+  @$core.override
+  CreateReferenceReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateReferenceReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateReferenceReq>(create);
+  static CreateReferenceReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $2.Struct get data => $_getN(3);
+  @$pb.TagNumber(4)
+  set data($2.Struct value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasData() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearData() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $2.Struct ensureData() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $2.Struct get versionData => $_getN(4);
+  @$pb.TagNumber(5)
+  set versionData($2.Struct value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasVersionData() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearVersionData() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $2.Struct ensureVersionData() => $_ensure(4);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

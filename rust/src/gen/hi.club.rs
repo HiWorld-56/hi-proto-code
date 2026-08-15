@@ -5707,6 +5707,1310 @@ pub mod chat_client {
         }
     }
 }
+/// MarketListingBrief 挂牌摘要(搜索结果一行)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketListingBrief {
+    /// 挂牌 id
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 出让方机器人(只到 Entity,**不吐它的 master**)
+    #[prost(message, optional, tag = "2")]
+    pub agent: ::core::option::Option<super::Entity>,
+    #[prost(string, tag = "3")]
+    pub title: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub summary: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub logo: ::prost::alloc::string::String,
+    #[prost(string, repeated, tag = "6")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(enumeration = "SettleMode", tag = "7")]
+    pub settle_mode: i32,
+    /// 十进制字符串,免浮点误差
+    #[prost(string, tag = "8")]
+    pub price: ::prost::alloc::string::String,
+    #[prost(string, tag = "9")]
+    pub coin: ::prost::alloc::string::String,
+    /// 商品规格:买一次能用多久(秒);0 = 永久
+    #[prost(int64, tag = "10")]
+    pub duration: i64,
+    /// 装机数
+    #[prost(int32, tag = "11")]
+    pub install_count: i32,
+}
+/// MarketListingDetail 挂牌详情。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketListingDetail {
+    #[prost(message, optional, tag = "1")]
+    pub brief: ::core::option::Option<MarketListingBrief>,
+    /// 这个包提供哪些方法。直接取自 hi.ai 那份 tools 数组(已是最终形态、name 带壳前缀),
+    /// 买家装之前就知道会得到什么能力。
+    #[prost(string, tag = "2")]
+    pub capabilities: ::prost::alloc::string::String,
+    /// 出让方是否允许引用方跟随最新版。引用方自己再选(见 ApplyReq.follow_latest)。
+    #[prost(bool, tag = "3")]
+    pub allow_follow_latest: bool,
+    /// 可选版本列表(引用方装好后可在其中切换)。
+    #[prost(string, repeated, tag = "4")]
+    pub versions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。
+///
+/// ⚠️ `Notice.extra` 是 `google.protobuf.Any`,而 Any 是可见性 lint **唯一的结构性缺口**:
+/// 装进去的真实类型 lint 看不见。所以往里塞的类型必须自己是 VIS_PARTICIPANT 或更宽。
+/// 踩过:plugin-load 曾塞 `hi.ai.PluginView`(SELF,body.url 是私有 bucket 的脚本地址)。
+/// **别把 grant 详情塞进来。**
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketGrantBrief {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 挂牌标题
+    #[prost(string, tag = "2")]
+    pub title: ::prost::alloc::string::String,
+    /// 出让方机器人
+    #[prost(message, optional, tag = "3")]
+    pub from_agent: ::core::option::Option<super::Entity>,
+    /// 受让方机器人
+    #[prost(message, optional, tag = "4")]
+    pub to_agent: ::core::option::Option<super::Entity>,
+    /// 申请人
+    #[prost(message, optional, tag = "5")]
+    pub applicant: ::core::option::Option<super::Entity>,
+    #[prost(enumeration = "SettleMode", tag = "6")]
+    pub settle_mode: i32,
+    #[prost(string, tag = "7")]
+    pub price: ::prost::alloc::string::String,
+    #[prost(string, tag = "8")]
+    pub coin: ::prost::alloc::string::String,
+}
+/// MarketGrantView 我的授权 / 我收到的申请(SELF)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketGrantView {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub listing_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub title: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "4")]
+    pub from_agent: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "5")]
+    pub to_agent: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "6")]
+    pub applicant: ::core::option::Option<super::Entity>,
+    #[prost(enumeration = "GrantStatus", tag = "7")]
+    pub status: i32,
+    #[prost(enumeration = "SettleMode", tag = "8")]
+    pub settle_mode: i32,
+    #[prost(string, tag = "9")]
+    pub price: ::prost::alloc::string::String,
+    #[prost(string, tag = "10")]
+    pub coin: ::prost::alloc::string::String,
+    #[prost(bool, tag = "11")]
+    pub follow_latest: bool,
+    /// 当前引用的版本
+    #[prost(string, tag = "12")]
+    pub version: ::prost::alloc::string::String,
+    /// installed_at + duration;0 = 永久
+    #[prost(int64, tag = "13")]
+    pub expire_at: i64,
+    /// 外部流程给的"去付款/去填资料"地址(可空)
+    #[prost(string, tag = "14")]
+    pub action_url: ::prost::alloc::string::String,
+    /// 拒绝/撤销原因
+    #[prost(string, tag = "15")]
+    pub reason: ::prost::alloc::string::String,
+    #[prost(int64, tag = "16")]
+    pub created_at: i64,
+    #[prost(int64, tag = "17")]
+    pub decided_at: i64,
+    #[prost(int64, tag = "18")]
+    pub installed_at: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SearchListingsReq {
+    /// 空 = 不过滤
+    #[prost(string, tag = "1")]
+    pub keyword: ::prost::alloc::string::String,
+    #[prost(string, repeated, tag = "2")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListAgentListingsReq {
+    /// 逛这台机器人的"店"
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetListingReq {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchListingsResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub list: ::prost::alloc::vec::Vec<MarketListingBrief>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetListingResp {
+    #[prost(message, optional, tag = "1")]
+    pub detail: ::core::option::Option<MarketListingDetail>,
+}
+/// CreateListingReq 挂牌。
+///
+/// ⚠️ **只有原始持有者能挂牌**:ai 侧 `c.source` 必须是 ORIGINAL。引用来的不能转挂,
+/// 否则授权链失控(B 从 A 拿的转手挂给 C,A 撤 B 的权时 C 怎么办)。后端穿透 ai 查 c.source。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateListingReq {
+    /// 出让方机器人(须是调用者名下)
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub plugin_uuid: ::prost::alloc::string::String,
+    /// **建后不可改**
+    #[prost(enumeration = "SettleMode", tag = "3")]
+    pub settle_mode: i32,
+    #[prost(string, tag = "4")]
+    pub price: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub coin: ::prost::alloc::string::String,
+    /// 秒;0 = 永久
+    #[prost(int64, tag = "6")]
+    pub duration: i64,
+    #[prost(string, tag = "7")]
+    pub title: ::prost::alloc::string::String,
+    #[prost(string, tag = "8")]
+    pub summary: ::prost::alloc::string::String,
+    #[prost(string, tag = "9")]
+    pub logo: ::prost::alloc::string::String,
+    #[prost(string, repeated, tag = "10")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(bool, tag = "11")]
+    pub allow_follow_latest: bool,
+}
+/// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
+///
+/// ⚠️ 「不可改」要真做到:下架**不删** listing 行(唯一索引 (agent, plugin_uuid) 天然保证
+/// 重新挂牌复用同一行),该字段在首次 LISTED 之后禁止 UPDATE。否则"下架再上架"就绕过去了。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EditListingReq {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "4")]
+    pub duration: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "5")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "7")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "8")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "9")]
+    pub allow_follow_latest: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetListingStatusReq {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(enumeration = "ListingStatus", tag = "2")]
+    pub status: i32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListMyListingsReq {
+    /// 可选:只看这台机器人的
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMyListingsResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    /// Detail=PUBLIC,放进 SELF 壳合法
+    #[prost(message, repeated, tag = "2")]
+    pub list: ::prost::alloc::vec::Vec<MarketListingDetail>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateListingResp {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+}
+/// ApplyReq 申请把某个挂牌的插件装到自己的机器人上。
+///
+/// ⚠️ **没有申请人字段** —— 主体恒从凭证取。
+/// 照 `MasterBindReq` 删掉 `master` 那次的教训:字段存在就得写校验,写了就显得有防护,
+/// 而真正的防护点其实全在别处;删掉字段后"替别人申请"在类型上就说不出来。
+///
+/// ⚠️ **主体是 `to_agent`(机器人),不是用户** —— 这是为「机器人自主搜插件并申请」留的口子,
+/// 也是**唯一现在不做就补不回来**的一条。将来机器人自己调时,档位从 AUTH_USER 扩成
+/// AUTH_USER + AUTH_MERCHANT(apikey 主体)即可,**接口形状一个字不用改**。
+/// 反过来现在写成 user-only 的形状,将来就是破坏性改动。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ApplyReq {
+    #[prost(string, tag = "1")]
+    pub listing_uuid: ::prost::alloc::string::String,
+    /// 装到哪台机器人上
+    #[prost(string, tag = "2")]
+    pub to_agent: ::prost::alloc::string::String,
+    /// 是否自动跟随出让方的新版本。**默认 false**(见下)
+    #[prost(bool, tag = "3")]
+    pub follow_latest: bool,
+    /// 外部流程要的额外参数,原样转给商户后台
+    #[prost(message, optional, tag = "4")]
+    pub params: ::core::option::Option<::pbjson_types::Struct>,
+}
+/// ApplyResp
+///
+/// status=PENDING 且 action_url 非空 → 前端把用户带去那个地址(付款/填资料)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ApplyResp {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(enumeration = "GrantStatus", tag = "2")]
+    pub status: i32,
+    #[prost(string, tag = "3")]
+    pub action_url: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DecideGrantReq {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 拒绝/撤销原因,给人看的
+    #[prost(string, tag = "2")]
+    pub reason: ::prost::alloc::string::String,
+}
+/// ConfirmPaymentReq `SETTLE_MODE_AGENT`(硬件机器人自己收款)用:
+/// 用户付完款把 tx_hash 交上来,club 调 `hi.did.Transfer.VerifyTransaction` 核验。
+///
+/// 那个接口是 AUTH_NONE、收 DID + 人类可读金额、did 内部解析地址与精度后比对 ——
+/// 所以**收款验证不需要商户体系,也不需要机器人在线**,club 自己就能验。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ConfirmPaymentReq {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub tx_hash: ::prost::alloc::string::String,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListGrantsReq {
+    /// 可选:按状态筛
+    #[prost(enumeration = "GrantStatus", tag = "1")]
+    pub status: i32,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGrantsResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub list: ::prost::alloc::vec::Vec<MarketGrantView>,
+}
+/// SetGrantVersionReq 引用方切换用哪个版本。
+///
+/// 语义与 `hi.club.Plugin.SetActive` 一致 —— 若该 agent 对 (uuid, version) 还没有 d 行,
+/// 就**以当前激活版的 d.data 为模板建一行**再置 active。
+/// c 是壳级的、每 (agent,uuid) 只有一行、跨版本不变,**不需要复制**,要复制的只有 d.data。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetGrantVersionReq {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketManageListListingsReq {
+    /// 可选:按机器人筛
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    /// 可选:按状态筛
+    #[prost(enumeration = "ListingStatus", tag = "2")]
+    pub status: i32,
+    #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketManageListGrantsReq {
+    #[prost(string, tag = "1")]
+    pub listing_uuid: ::prost::alloc::string::String,
+    #[prost(enumeration = "GrantStatus", tag = "2")]
+    pub status: i32,
+    #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ForceDelistReq {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub reason: ::prost::alloc::string::String,
+}
+/// Notify 的**签名载荷 schema**(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**
+/// (同 `PullOrdersData` / `ReportResultsData` 的先例)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MarketNotifyData {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 商户侧单号
+    #[prost(string, tag = "2")]
+    pub outer_id: ::prost::alloc::string::String,
+    /// approved / rejected
+    #[prost(string, tag = "3")]
+    pub result: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub reason: ::prost::alloc::string::String,
+    /// 可选:商户回填实际生效条款(实付金额 / 有效期)
+    #[prost(message, optional, tag = "5")]
+    pub terms_override: ::core::option::Option<::pbjson_types::Struct>,
+    #[prost(string, tag = "6")]
+    pub nonce: ::prost::alloc::string::String,
+    #[prost(int64, tag = "7")]
+    pub timestamp: i64,
+}
+/// SettleMode 结算方式。**挂牌后不可改** —— 改价可以,改"钱怎么走"不行。
+///
+/// club 不实现任何一种业务,它只跑状态机:FREE/APPROVAL 自己闭合;
+/// MERCHANT/AGENT/EXTERNAL 共用同一条回调路径(见 hi/club/callback.proto),
+/// club 完全不关心对方是在收钱还是在审资质。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SettleMode {
+    Unspecified = 0,
+    /// 免费:申请即成立
+    Free = 1,
+    /// 人工审批,不收钱 —— 出让方 master 点头即成立
+    Approval = 2,
+    /// 走 master 的商户(hidid 结算系统)。要求 master 已注册商户
+    Merchant = 3,
+    /// 机器人自己收款。**仅硬件机器人(Entity.type == robot)** —— 软件机器人没有私钥
+    Agent = 4,
+    /// 三方自定义流程
+    External = 5,
+}
+impl SettleMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "SETTLE_MODE_UNSPECIFIED",
+            Self::Free => "SETTLE_MODE_FREE",
+            Self::Approval => "SETTLE_MODE_APPROVAL",
+            Self::Merchant => "SETTLE_MODE_MERCHANT",
+            Self::Agent => "SETTLE_MODE_AGENT",
+            Self::External => "SETTLE_MODE_EXTERNAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SETTLE_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+            "SETTLE_MODE_FREE" => Some(Self::Free),
+            "SETTLE_MODE_APPROVAL" => Some(Self::Approval),
+            "SETTLE_MODE_MERCHANT" => Some(Self::Merchant),
+            "SETTLE_MODE_AGENT" => Some(Self::Agent),
+            "SETTLE_MODE_EXTERNAL" => Some(Self::External),
+            _ => None,
+        }
+    }
+}
+/// ListingStatus 挂牌状态。
+///
+/// ⚠️ **下架 ≠ 撤销已成立的授权** —— 下架只是不再接新申请,已授权的照跑。
+/// 否则「隐藏一下」会误伤一片付费用户。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ListingStatus {
+    Unspecified = 0,
+    /// 草稿:还没挂出去
+    Draft = 1,
+    /// 挂牌中:可搜到、可申请
+    Listed = 2,
+    /// 隐藏:搜不到,但直链可见(出让方自己收着)
+    Hidden = 3,
+    /// 已下架:不再接新申请
+    Delisted = 4,
+}
+impl ListingStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "LISTING_STATUS_UNSPECIFIED",
+            Self::Draft => "LISTING_STATUS_DRAFT",
+            Self::Listed => "LISTING_STATUS_LISTED",
+            Self::Hidden => "LISTING_STATUS_HIDDEN",
+            Self::Delisted => "LISTING_STATUS_DELISTED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "LISTING_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "LISTING_STATUS_DRAFT" => Some(Self::Draft),
+            "LISTING_STATUS_LISTED" => Some(Self::Listed),
+            "LISTING_STATUS_HIDDEN" => Some(Self::Hidden),
+            "LISTING_STATUS_DELISTED" => Some(Self::Delisted),
+            _ => None,
+        }
+    }
+}
+/// GrantStatus 授权状态机。
+///
+/// ⚠️ **`APPROVED` 与 `INSTALLED` 必须分开。** 前者是"授权成立"(club 的事实),
+/// 后者是"ai 侧 c/d 行建好了"(执行侧的事实)。中间会失败:ai 不通、受让方机器人被撤了
+/// PERMISSION_PLUGIN、uuid 已存在……合并成一个状态就无从重试,而且状态在撒谎
+/// (说装好了其实没装)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum GrantStatus {
+    Unspecified = 0,
+    /// 申请中(等审批 / 等外部流程回调)
+    Pending = 1,
+    /// 授权成立,但还没装上
+    Approved = 2,
+    /// 已装载(ai 侧 c/d 行就绪)
+    Installed = 3,
+    Rejected = 4,
+    /// 被出让方撤回
+    Revoked = 5,
+    /// 到期
+    Expired = 6,
+}
+impl GrantStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "GRANT_STATUS_UNSPECIFIED",
+            Self::Pending => "GRANT_STATUS_PENDING",
+            Self::Approved => "GRANT_STATUS_APPROVED",
+            Self::Installed => "GRANT_STATUS_INSTALLED",
+            Self::Rejected => "GRANT_STATUS_REJECTED",
+            Self::Revoked => "GRANT_STATUS_REVOKED",
+            Self::Expired => "GRANT_STATUS_EXPIRED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "GRANT_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "GRANT_STATUS_PENDING" => Some(Self::Pending),
+            "GRANT_STATUS_APPROVED" => Some(Self::Approved),
+            "GRANT_STATUS_INSTALLED" => Some(Self::Installed),
+            "GRANT_STATUS_REJECTED" => Some(Self::Rejected),
+            "GRANT_STATUS_REVOKED" => Some(Self::Revoked),
+            "GRANT_STATUS_EXPIRED" => Some(Self::Expired),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod market_directory_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 市场公开目录(免鉴权):逛市场不需要登录。
+    ///
+    /// ⚠️ **公开面不吐 master did。** `AgentDirectory.GetAgentMaster` 当初就是因为
+    /// 「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
+    #[derive(Debug, Clone)]
+    pub struct MarketDirectoryClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MarketDirectoryClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MarketDirectoryClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MarketDirectoryClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MarketDirectoryClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn search_listings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchListingsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SearchListingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketDirectory/SearchListings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketDirectory", "SearchListings"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_agent_listings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAgentListingsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SearchListingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketDirectory/ListAgentListings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketDirectory", "ListAgentListings"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_listing(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetListingReq>,
+        ) -> std::result::Result<tonic::Response<super::GetListingResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketDirectory/GetListing",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketDirectory", "GetListing"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod market_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 市场用户面:挂牌方与购买方都在这。
+    #[derive(Debug, Clone)]
+    pub struct MarketClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MarketClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MarketClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MarketClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MarketClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// ── 挂牌方 ──
+        pub async fn create_listing(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateListingReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateListingResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/CreateListing",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "CreateListing"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn edit_listing(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EditListingReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/EditListing",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "EditListing"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_listing_status(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetListingStatusReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/SetListingStatus",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "SetListingStatus"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_my_listings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListMyListingsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListMyListingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ListMyListings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ListMyListings"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_received_requests(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListGrantsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListGrantsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ListReceivedRequests",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ListReceivedRequests"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn approve(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DecideGrantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Market/Approve");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Market", "Approve"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn reject(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DecideGrantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Market/Reject");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Market", "Reject"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn revoke(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DecideGrantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Market/Revoke");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Market", "Revoke"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 购买方 ──
+        pub async fn apply(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ApplyReq>,
+        ) -> std::result::Result<tonic::Response<super::ApplyResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Market/Apply");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Market", "Apply"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn confirm_payment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ConfirmPaymentReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ConfirmPayment",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ConfirmPayment"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_my_grants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListGrantsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListGrantsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ListMyGrants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ListMyGrants"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_grant_version(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetGrantVersionReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/SetGrantVersion",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "SetGrantVersion"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod market_callback_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 市场回调(商户后台 → club)。传输层不鉴权,**鉴权在载荷里**:
+    /// 收 hi.SignedData,handler 用 `grant.from_master` 的 did 公钥验签 —— 不是"谁签的都收"。
+    ///
+    /// 幂等键 `(grant_uuid, outer_id)`,重复回调直接返 OK。移动支付必踩,不留到线上再补。
+    /// 状态机只接受合法迁移:只有 PENDING 能被回调推进;APPROVED 后重复回调 = 幂等 OK;
+    /// REVOKED/EXPIRED 后来的回调 = 记 flow、不改 grant。
+    #[derive(Debug, Clone)]
+    pub struct MarketCallbackClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MarketCallbackClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MarketCallbackClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MarketCallbackClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MarketCallbackClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn notify(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketCallback/Notify",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketCallback", "Notify"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod market_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
+    #[derive(Debug, Clone)]
+    pub struct MarketManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MarketManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MarketManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MarketManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MarketManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list_listings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MarketManageListListingsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SearchListingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketManage/ListListings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketManage", "ListListings"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_grants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MarketManageListGrantsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListGrantsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketManage/ListGrants",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketManage", "ListGrants"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn force_delist(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ForceDelistReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketManage/ForceDelist",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketManage", "ForceDelist"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// Generated client implementations.
 pub mod base_client {
     #![allow(
@@ -6605,6 +7909,226 @@ pub mod permission_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.PermissionManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Begin 的**签名载荷 schema**(rpc 收的是 hi.SignedData,由实现方反序列化进它)。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MarketBeginData {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub listing_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub plugin_uuid: ::prost::alloc::string::String,
+    /// 受让方机器人 did
+    #[prost(string, tag = "4")]
+    pub to_agent: ::prost::alloc::string::String,
+    /// **购买者 did** ← 商户据此调 hi.did.Merchant.AddUsers 纳入私域
+    #[prost(string, tag = "5")]
+    pub to_master: ::prost::alloc::string::String,
+    /// 成立时的 settle_mode + price + coin + duration 快照
+    #[prost(message, optional, tag = "6")]
+    pub terms: ::core::option::Option<::pbjson_types::Struct>,
+    /// 申请方填的额外参数,原样转来
+    #[prost(message, optional, tag = "7")]
+    pub params: ::core::option::Option<::pbjson_types::Struct>,
+    #[prost(string, tag = "8")]
+    pub nonce: ::prost::alloc::string::String,
+    #[prost(int64, tag = "9")]
+    pub timestamp: i64,
+}
+/// Cancel 的签名载荷 schema(同上,勿当死 message 删)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketCancelData {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 商户侧单号,由 Begin 返回、club 存下
+    #[prost(string, tag = "2")]
+    pub outer_id: ::prost::alloc::string::String,
+    /// revoked / expired / ...
+    #[prost(string, tag = "3")]
+    pub reason: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub nonce: ::prost::alloc::string::String,
+    #[prost(int64, tag = "5")]
+    pub timestamp: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BeginResp {
+    /// 商户侧单号 —— 与 grant_uuid 一起构成回调幂等键
+    #[prost(string, tag = "1")]
+    pub outer_id: ::prost::alloc::string::String,
+    /// 让用户去付款 / 填资料的地址(可空)
+    #[prost(string, tag = "2")]
+    pub action_url: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod market_provider_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// ── 插件市场的认证流程契约:**club 只定义,由挂牌方的后台实现** ──────────────────
+    ///
+    /// 照 `hi/did/callback.proto` 的范式:did 定义 `LoginCallback` / `PayCallback`,
+    /// 由三方业务(club 等)实现并注册到自己的服务里,**did 侧没有 handler 是正常的**。
+    /// 这里同理 —— club 侧不实现这两个方法,它们是被商户实现的;club 是**调用方**。
+    ///
+    /// ## 为什么用 gRPC 而不是 webhook
+    ///
+    /// 数据结构在 hi-proto 一次定义、两边共用生成码,字段改了编译期就知道;
+    /// 不用另写一份 webhook 文档,也不会出现「文档写了实现没跟」的漂移。
+    /// 代价是接入方得能起 gRPC 服务 —— 而典型场景里接入方本来就是**注册商户**
+    /// (`MerchantInfo.endpoint` 就是它的后台地址),这个门槛本来就得跨。
+    ///
+    /// ## 为什么鉴权是 AUTH_WEB3
+    ///
+    /// club 手里没有商户的 token,传输层无从鉴权;但载荷是 web3 签名的,伪造不了。
+    /// 典型链路:
+    ///
+    /// ```text
+    /// 注册 hisrv 商户 A → 注册 hiclub 账号 → 创建机器人 B → 插件全挂 B 上
+    ///  → 用户为其机器人购买 → 商户 A 调 hi.did.Merchant.AddUsers(购买者 did) 纳入私域
+    ///  → 结算走 hidid(收款方 = MerchantPubServerResp.server,默认 = master)
+    /// ```
+    ///
+    /// 接入方本来就是注册商户、天然持 did 私钥,`AUTH_WEB3` 直接成立,与 hidid 的回调同一套验签。
+    /// **不需要第二套 HMAC 密钥体系。**
+    ///
+    /// ⚠️ 「把购买者纳入私域」这一步**由商户 A 自己做,不是 club 代做** ——
+    /// `Merchant.AddUsers` 的主体由 ExtendToken 解出「加到自己名下」,
+    /// club 手里只有 club 自己的商户凭证,代调只会把人加到 club 名下、够不着商户 A。
+    /// club 的职责到「把 `to_master` 放进 MarketBeginData 告诉商户 A」为止。这个边界别越。
+    #[derive(Debug, Clone)]
+    pub struct MarketProviderClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MarketProviderClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MarketProviderClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MarketProviderClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MarketProviderClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Begin club 受理申请 → 通知商户后台开始业务流程(收款 / 审核)。
+        pub async fn begin(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
+        ) -> std::result::Result<tonic::Response<super::BeginResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketProvider/Begin",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketProvider", "Begin"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// Cancel 授权被撤销 / 到期 → 通知商户后台(退款、清私域等由商户自理)。
+        pub async fn cancel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketProvider/Cancel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketProvider", "Cancel"));
             self.inner.unary(req, path, codec).await
         }
     }

@@ -572,3 +572,36 @@ const DeletePluginByAgentsReq$json = {
 final $typed_data.Uint8List deletePluginByAgentsReqDescriptor =
     $convert.base64Decode(
         'ChdEZWxldGVQbHVnaW5CeUFnZW50c1JlcRIWCgZhZ2VudHMYASADKAlSBmFnZW50cw==');
+
+@$core.Deprecated('Use createReferenceReqDescriptor instead')
+const CreateReferenceReq$json = {
+  '1': 'CreateReferenceReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+    {
+      '1': 'data',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '10': 'data'
+    },
+    {
+      '1': 'version_data',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '10': 'versionData'
+    },
+  ],
+};
+
+/// Descriptor for `CreateReferenceReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createReferenceReqDescriptor = $convert.base64Decode(
+    'ChJDcmVhdGVSZWZlcmVuY2VSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbn'
+    'QSIAoEdXVpZBgCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3Zl'
+    'cnNpb24SKwoEZGF0YRgEIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RSBGRhdGESOgoMdm'
+    'Vyc2lvbl9kYXRhGAUgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFILdmVyc2lvbkRhdGE=');
