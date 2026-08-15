@@ -1045,6 +1045,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     $core.String? logo,
     $core.Iterable<$core.String>? tags,
     $core.bool? allowFollowLatest,
+    $core.String? actionUrl,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1058,6 +1059,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     if (logo != null) result.logo = logo;
     if (tags != null) result.tags.addAll(tags);
     if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
+    if (actionUrl != null) result.actionUrl = actionUrl;
     return result;
   }
 
@@ -1086,6 +1088,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     ..aOS(9, _omitFieldNames ? '' : 'logo')
     ..pPS(10, _omitFieldNames ? '' : 'tags')
     ..aOB(11, _omitFieldNames ? '' : 'allowFollowLatest')
+    ..aOS(12, _omitFieldNames ? '' : 'actionUrl')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1199,6 +1202,19 @@ class CreateListingReq extends $pb.GeneratedMessage {
   $core.bool hasAllowFollowLatest() => $_has(10);
   @$pb.TagNumber(11)
   void clearAllowFollowLatest() => $_clearField(11);
+
+  /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
+  ///
+  /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
+  /// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
+  @$pb.TagNumber(12)
+  $core.String get actionUrl => $_getSZ(11);
+  @$pb.TagNumber(12)
+  set actionUrl($core.String value) => $_setString(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasActionUrl() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearActionUrl() => $_clearField(12);
 }
 
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
@@ -1216,6 +1232,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     $core.String? logo,
     $core.Iterable<$core.String>? tags,
     $core.bool? allowFollowLatest,
+    $core.String? actionUrl,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -1227,6 +1244,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     if (logo != null) result.logo = logo;
     if (tags != null) result.tags.addAll(tags);
     if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
+    if (actionUrl != null) result.actionUrl = actionUrl;
     return result;
   }
 
@@ -1252,6 +1270,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     ..aOS(7, _omitFieldNames ? '' : 'logo')
     ..pPS(8, _omitFieldNames ? '' : 'tags')
     ..aOB(9, _omitFieldNames ? '' : 'allowFollowLatest')
+    ..aOS(10, _omitFieldNames ? '' : 'actionUrl')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1347,6 +1366,15 @@ class EditListingReq extends $pb.GeneratedMessage {
   $core.bool hasAllowFollowLatest() => $_has(8);
   @$pb.TagNumber(9)
   void clearAllowFollowLatest() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.String get actionUrl => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set actionUrl($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasActionUrl() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearActionUrl() => $_clearField(10);
 }
 
 class SetListingStatusReq extends $pb.GeneratedMessage {
@@ -2356,7 +2384,323 @@ class ForceDelistReq extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(2);
 }
 
-/// Notify 的**签名载荷 schema**(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
+/// Pull 的**签名载荷 schema**(rpc 收 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**。
+///
+/// 没有 merchant 字段:**主体恒取自签名**,传进来的一律不认 ——
+/// 收了这个字段就得写"它必须等于签名者"的校验,而那是同义反复;
+/// 字段不存在,"替别人拉单"在类型上就说不出来(同 MasterBindReq 删 master 那次)。
+class MarketPullData extends $pb.GeneratedMessage {
+  factory MarketPullData({
+    $core.String? nonce,
+    $fixnum.Int64? timestamp,
+  }) {
+    final result = create();
+    if (nonce != null) result.nonce = nonce;
+    if (timestamp != null) result.timestamp = timestamp;
+    return result;
+  }
+
+  MarketPullData._();
+
+  factory MarketPullData.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketPullData.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketPullData',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'nonce')
+    ..aInt64(2, _omitFieldNames ? '' : 'timestamp')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPullData clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPullData copyWith(void Function(MarketPullData) updates) =>
+      super.copyWith((message) => updates(message as MarketPullData))
+          as MarketPullData;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketPullData create() => MarketPullData._();
+  @$core.override
+  MarketPullData createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketPullData getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketPullData>(create);
+  static MarketPullData? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get nonce => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set nonce($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasNonce() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearNonce() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get timestamp => $_getI64(1);
+  @$pb.TagNumber(2)
+  set timestamp($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTimestamp() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTimestamp() => $_clearField(2);
+}
+
+/// 一条待处理的申请。**这是商户能拿到的全部** —— 不吐买方机器人的私有配置,
+/// 只给它做业务决策(收款 / 审资质 / 纳私域)真正需要的那些。
+class MarketPendingGrant extends $pb.GeneratedMessage {
+  factory MarketPendingGrant({
+    $core.String? grantUuid,
+    $core.String? listingUuid,
+    $core.String? pluginUuid,
+    $core.String? title,
+    $core.String? toAgent,
+    $core.String? toMaster,
+    SettleMode? settleMode,
+    $core.String? price,
+    $core.String? coin,
+    $fixnum.Int64? duration,
+    $3.Struct? params,
+    $fixnum.Int64? createdAt,
+  }) {
+    final result = create();
+    if (grantUuid != null) result.grantUuid = grantUuid;
+    if (listingUuid != null) result.listingUuid = listingUuid;
+    if (pluginUuid != null) result.pluginUuid = pluginUuid;
+    if (title != null) result.title = title;
+    if (toAgent != null) result.toAgent = toAgent;
+    if (toMaster != null) result.toMaster = toMaster;
+    if (settleMode != null) result.settleMode = settleMode;
+    if (price != null) result.price = price;
+    if (coin != null) result.coin = coin;
+    if (duration != null) result.duration = duration;
+    if (params != null) result.params = params;
+    if (createdAt != null) result.createdAt = createdAt;
+    return result;
+  }
+
+  MarketPendingGrant._();
+
+  factory MarketPendingGrant.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketPendingGrant.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketPendingGrant',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'grantUuid')
+    ..aOS(2, _omitFieldNames ? '' : 'listingUuid')
+    ..aOS(3, _omitFieldNames ? '' : 'pluginUuid')
+    ..aOS(4, _omitFieldNames ? '' : 'title')
+    ..aOS(5, _omitFieldNames ? '' : 'toAgent')
+    ..aOS(6, _omitFieldNames ? '' : 'toMaster')
+    ..aE<SettleMode>(7, _omitFieldNames ? '' : 'settleMode',
+        enumValues: SettleMode.values)
+    ..aOS(8, _omitFieldNames ? '' : 'price')
+    ..aOS(9, _omitFieldNames ? '' : 'coin')
+    ..aInt64(10, _omitFieldNames ? '' : 'duration')
+    ..aOM<$3.Struct>(11, _omitFieldNames ? '' : 'params',
+        subBuilder: $3.Struct.create)
+    ..aInt64(12, _omitFieldNames ? '' : 'createdAt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPendingGrant clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPendingGrant copyWith(void Function(MarketPendingGrant) updates) =>
+      super.copyWith((message) => updates(message as MarketPendingGrant))
+          as MarketPendingGrant;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketPendingGrant create() => MarketPendingGrant._();
+  @$core.override
+  MarketPendingGrant createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketPendingGrant getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketPendingGrant>(create);
+  static MarketPendingGrant? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get grantUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set grantUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get listingUuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set listingUuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasListingUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearListingUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get pluginUuid => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set pluginUuid($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPluginUuid() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPluginUuid() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get title => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set title($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTitle() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTitle() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get toAgent => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set toAgent($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasToAgent() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearToAgent() => $_clearField(5);
+
+  /// 购买者 did ← 商户据此调 hi.did.Merchant.AddUsers 把他纳入自己的私域。
+  /// ⚠️ 那一步**由商户自己做,不是 club 代做**:AddUsers 的主体由 ExtendToken 解出
+  ///    "加到自己名下",club 手里只有 club 自己的商户凭证,代调只会加到 club 名下。
+  @$pb.TagNumber(6)
+  $core.String get toMaster => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set toMaster($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasToMaster() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearToMaster() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  SettleMode get settleMode => $_getN(6);
+  @$pb.TagNumber(7)
+  set settleMode(SettleMode value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSettleMode() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSettleMode() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get price => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set price($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasPrice() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearPrice() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.String get coin => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set coin($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasCoin() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearCoin() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get duration => $_getI64(9);
+  @$pb.TagNumber(10)
+  set duration($fixnum.Int64 value) => $_setInt64(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasDuration() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearDuration() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $3.Struct get params => $_getN(10);
+  @$pb.TagNumber(11)
+  set params($3.Struct value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasParams() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearParams() => $_clearField(11);
+  @$pb.TagNumber(11)
+  $3.Struct ensureParams() => $_ensure(10);
+
+  @$pb.TagNumber(12)
+  $fixnum.Int64 get createdAt => $_getI64(11);
+  @$pb.TagNumber(12)
+  set createdAt($fixnum.Int64 value) => $_setInt64(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasCreatedAt() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearCreatedAt() => $_clearField(12);
+}
+
+class MarketPullResp extends $pb.GeneratedMessage {
+  factory MarketPullResp({
+    $core.Iterable<MarketPendingGrant>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  MarketPullResp._();
+
+  factory MarketPullResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketPullResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketPullResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<MarketPendingGrant>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: MarketPendingGrant.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPullResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPullResp copyWith(void Function(MarketPullResp) updates) =>
+      super.copyWith((message) => updates(message as MarketPullResp))
+          as MarketPullResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketPullResp create() => MarketPullResp._();
+  @$core.override
+  MarketPullResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketPullResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketPullResp>(create);
+  static MarketPullResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<MarketPendingGrant> get list => $_getList(0);
+}
+
+/// Notify 的**签名载荷 schema**(商户处理完把结果交回来)(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
 /// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**
 ///    (同 `PullOrdersData` / `ReportResultsData` 的先例)。
 class MarketNotifyData extends $pb.GeneratedMessage {

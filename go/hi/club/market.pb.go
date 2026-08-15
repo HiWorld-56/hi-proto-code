@@ -972,8 +972,13 @@ type CreateListingReq struct {
 	Logo              string                 `protobuf:"bytes,9,opt,name=logo,proto3" json:"logo,omitempty"`
 	Tags              []string               `protobuf:"bytes,10,rep,name=tags,proto3" json:"tags,omitempty"`
 	AllowFollowLatest bool                   `protobuf:"varint,11,opt,name=allow_follow_latest,json=allowFollowLatest,proto3" json:"allow_follow_latest,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
+	//
+	// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
+	// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
+	ActionUrl     string `protobuf:"bytes,12,opt,name=action_url,json=actionUrl,proto3" json:"action_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateListingReq) Reset() {
@@ -1083,6 +1088,13 @@ func (x *CreateListingReq) GetAllowFollowLatest() bool {
 	return false
 }
 
+func (x *CreateListingReq) GetActionUrl() string {
+	if x != nil {
+		return x.ActionUrl
+	}
+	return ""
+}
+
 // EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
 //
 // ⚠️ 「不可改」要真做到:下架**不删** listing 行(唯一索引 (agent, plugin_uuid) 天然保证
@@ -1099,6 +1111,7 @@ type EditListingReq struct {
 	Logo              *string                `protobuf:"bytes,7,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
 	Tags              []string               `protobuf:"bytes,8,rep,name=tags,proto3" json:"tags,omitempty"`
 	AllowFollowLatest *bool                  `protobuf:"varint,9,opt,name=allow_follow_latest,json=allowFollowLatest,proto3,oneof" json:"allow_follow_latest,omitempty"`
+	ActionUrl         *string                `protobuf:"bytes,10,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1194,6 +1207,13 @@ func (x *EditListingReq) GetAllowFollowLatest() bool {
 		return *x.AllowFollowLatest
 	}
 	return false
+}
+
+func (x *EditListingReq) GetActionUrl() string {
+	if x != nil && x.ActionUrl != nil {
+		return *x.ActionUrl
+	}
+	return ""
 }
 
 type SetListingStatusReq struct {
@@ -1981,7 +2001,247 @@ func (x *ForceDelistReq) GetReason() string {
 	return ""
 }
 
-// Notify 的**签名载荷 schema**(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
+// Pull 的**签名载荷 schema**(rpc 收 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
+// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**。
+//
+// 没有 merchant 字段:**主体恒取自签名**,传进来的一律不认 ——
+// 收了这个字段就得写"它必须等于签名者"的校验,而那是同义反复;
+// 字段不存在,"替别人拉单"在类型上就说不出来(同 MasterBindReq 删 master 那次)。
+type MarketPullData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Nonce         string                 `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarketPullData) Reset() {
+	*x = MarketPullData{}
+	mi := &file_hi_club_market_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarketPullData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketPullData) ProtoMessage() {}
+
+func (x *MarketPullData) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketPullData.ProtoReflect.Descriptor instead.
+func (*MarketPullData) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *MarketPullData) GetNonce() string {
+	if x != nil {
+		return x.Nonce
+	}
+	return ""
+}
+
+func (x *MarketPullData) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+// 一条待处理的申请。**这是商户能拿到的全部** —— 不吐买方机器人的私有配置,
+// 只给它做业务决策(收款 / 审资质 / 纳私域)真正需要的那些。
+type MarketPendingGrant struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	GrantUuid   string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
+	ListingUuid string                 `protobuf:"bytes,2,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"`
+	PluginUuid  string                 `protobuf:"bytes,3,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"`
+	Title       string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
+	ToAgent     string                 `protobuf:"bytes,5,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"` // 受让方机器人 did
+	// 购买者 did ← 商户据此调 hi.did.Merchant.AddUsers 把他纳入自己的私域。
+	// ⚠️ 那一步**由商户自己做,不是 club 代做**:AddUsers 的主体由 ExtendToken 解出
+	//
+	//	"加到自己名下",club 手里只有 club 自己的商户凭证,代调只会加到 club 名下。
+	ToMaster      string           `protobuf:"bytes,6,opt,name=to_master,json=toMaster,proto3" json:"to_master,omitempty"`
+	SettleMode    SettleMode       `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
+	Price         string           `protobuf:"bytes,8,opt,name=price,proto3" json:"price,omitempty"`
+	Coin          string           `protobuf:"bytes,9,opt,name=coin,proto3" json:"coin,omitempty"`
+	Duration      int64            `protobuf:"varint,10,opt,name=duration,proto3" json:"duration,omitempty"`
+	Params        *structpb.Struct `protobuf:"bytes,11,opt,name=params,proto3" json:"params,omitempty"` // 申请方填的额外参数
+	CreatedAt     int64            `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarketPendingGrant) Reset() {
+	*x = MarketPendingGrant{}
+	mi := &file_hi_club_market_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarketPendingGrant) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketPendingGrant) ProtoMessage() {}
+
+func (x *MarketPendingGrant) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketPendingGrant.ProtoReflect.Descriptor instead.
+func (*MarketPendingGrant) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *MarketPendingGrant) GetGrantUuid() string {
+	if x != nil {
+		return x.GrantUuid
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetListingUuid() string {
+	if x != nil {
+		return x.ListingUuid
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetPluginUuid() string {
+	if x != nil {
+		return x.PluginUuid
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetToAgent() string {
+	if x != nil {
+		return x.ToAgent
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetToMaster() string {
+	if x != nil {
+		return x.ToMaster
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetSettleMode() SettleMode {
+	if x != nil {
+		return x.SettleMode
+	}
+	return SettleMode_SETTLE_MODE_UNSPECIFIED
+}
+
+func (x *MarketPendingGrant) GetPrice() string {
+	if x != nil {
+		return x.Price
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetCoin() string {
+	if x != nil {
+		return x.Coin
+	}
+	return ""
+}
+
+func (x *MarketPendingGrant) GetDuration() int64 {
+	if x != nil {
+		return x.Duration
+	}
+	return 0
+}
+
+func (x *MarketPendingGrant) GetParams() *structpb.Struct {
+	if x != nil {
+		return x.Params
+	}
+	return nil
+}
+
+func (x *MarketPendingGrant) GetCreatedAt() int64 {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return 0
+}
+
+type MarketPullResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*MarketPendingGrant  `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarketPullResp) Reset() {
+	*x = MarketPullResp{}
+	mi := &file_hi_club_market_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarketPullResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketPullResp) ProtoMessage() {}
+
+func (x *MarketPullResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketPullResp.ProtoReflect.Descriptor instead.
+func (*MarketPullResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *MarketPullResp) GetList() []*MarketPendingGrant {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+// Notify 的**签名载荷 schema**(商户处理完把结果交回来)(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
 // ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**
 //
 //	(同 `PullOrdersData` / `ReportResultsData` 的先例)。
@@ -2000,7 +2260,7 @@ type MarketNotifyData struct {
 
 func (x *MarketNotifyData) Reset() {
 	*x = MarketNotifyData{}
-	mi := &file_hi_club_market_proto_msgTypes[25]
+	mi := &file_hi_club_market_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2012,7 +2272,7 @@ func (x *MarketNotifyData) String() string {
 func (*MarketNotifyData) ProtoMessage() {}
 
 func (x *MarketNotifyData) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[25]
+	mi := &file_hi_club_market_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2025,7 +2285,7 @@ func (x *MarketNotifyData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketNotifyData.ProtoReflect.Descriptor instead.
 func (*MarketNotifyData) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{25}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *MarketNotifyData) GetGrantUuid() string {
@@ -2162,7 +2422,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x125\n" +
 	"\x04list\x18\x02 \x03(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"R\n" +
 	"\x0eGetListingResp\x12:\n" +
-	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\xf2\x02\n" +
+	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\x91\x03\n" +
 	"\x10CreateListingReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12-\n" +
 	"\vplugin_uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\n" +
@@ -2177,7 +2437,9 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x04logo\x18\t \x01(\tR\x04logo\x12\x12\n" +
 	"\x04tags\x18\n" +
 	" \x03(\tR\x04tags\x12.\n" +
-	"\x13allow_follow_latest\x18\v \x01(\bR\x11allowFollowLatest\"\xfa\x02\n" +
+	"\x13allow_follow_latest\x18\v \x01(\bR\x11allowFollowLatest\x12\x1d\n" +
+	"\n" +
+	"action_url\x18\f \x01(\tR\tactionUrl\"\xad\x03\n" +
 	"\x0eEditListingReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12\x19\n" +
 	"\x05price\x18\x02 \x01(\tH\x00R\x05price\x88\x01\x01\x12\x17\n" +
@@ -2187,7 +2449,10 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\asummary\x18\x06 \x01(\tH\x04R\asummary\x88\x01\x01\x12\x17\n" +
 	"\x04logo\x18\a \x01(\tH\x05R\x04logo\x88\x01\x01\x12\x12\n" +
 	"\x04tags\x18\b \x03(\tR\x04tags\x123\n" +
-	"\x13allow_follow_latest\x18\t \x01(\bH\x06R\x11allowFollowLatest\x88\x01\x01B\b\n" +
+	"\x13allow_follow_latest\x18\t \x01(\bH\x06R\x11allowFollowLatest\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"action_url\x18\n" +
+	" \x01(\tH\aR\tactionUrl\x88\x01\x01B\b\n" +
 	"\x06_priceB\a\n" +
 	"\x05_coinB\v\n" +
 	"\t_durationB\b\n" +
@@ -2195,7 +2460,8 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\n" +
 	"\b_summaryB\a\n" +
 	"\x05_logoB\x16\n" +
-	"\x14_allow_follow_latest\"g\n" +
+	"\x14_allow_follow_latestB\r\n" +
+	"\v_action_url\"g\n" +
 	"\x13SetListingStatusReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12.\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x16.hi.club.ListingStatusR\x06status\"Y\n" +
@@ -2254,7 +2520,30 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"pagination\"J\n" +
 	"\x0eForceDelistReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12\x16\n" +
-	"\x06reason\x18\x02 \x01(\tR\x06reason\"\xf0\x01\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\"D\n" +
+	"\x0eMarketPullData\x12\x14\n" +
+	"\x05nonce\x18\x01 \x01(\tR\x05nonce\x12\x1c\n" +
+	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\"\xdf\x03\n" +
+	"\x12MarketPendingGrant\x12#\n" +
+	"\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\tgrantUuid\x12'\n" +
+	"\flisting_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vlistingUuid\x12%\n" +
+	"\vplugin_uuid\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
+	"pluginUuid\x12\x1a\n" +
+	"\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x05title\x12\x1f\n" +
+	"\bto_agent\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\atoAgent\x12!\n" +
+	"\tto_master\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\btoMaster\x12:\n" +
+	"\vsettle_mode\x18\a \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x03R\n" +
+	"settleMode\x12\x1a\n" +
+	"\x05price\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x05price\x12\x18\n" +
+	"\x04coin\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12 \n" +
+	"\bduration\x18\n" +
+	" \x01(\x03B\x04\x90\xb5\x18\x03R\bduration\x125\n" +
+	"\x06params\x18\v \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x06params\x12#\n" +
+	"\n" +
+	"created_at\x18\f \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"M\n" +
+	"\x0eMarketPullResp\x125\n" +
+	"\x04list\x18\x01 \x03(\v2\x1b.hi.club.MarketPendingGrantB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xf0\x01\n" +
 	"\x10MarketNotifyData\x12\x1d\n" +
 	"\n" +
 	"grant_uuid\x18\x01 \x01(\tR\tgrantUuid\x12\x19\n" +
@@ -2303,8 +2592,9 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05Apply\x12\x11.hi.club.ApplyReq\x1a\x12.hi.club.ApplyResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
 	"\x0eConfirmPayment\x12\x1a.hi.club.ConfirmPaymentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
 	"\fListMyGrants\x12\x16.hi.club.ListGrantsReq\x1a\x17.hi.club.ListGrantsResp\"\x05\x8a\xb5\x18\x01\x02\x12M\n" +
-	"\x0fSetGrantVersion\x12\x1b.hi.club.SetGrantVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022I\n" +
-	"\x0eMarketCallback\x127\n" +
+	"\x0fSetGrantVersion\x12\x1b.hi.club.SetGrantVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022\x81\x01\n" +
+	"\x0eMarketCallback\x126\n" +
+	"\x04Pull\x12\x0e.hi.SignedData\x1a\x17.hi.club.MarketPullResp\"\x05\x8a\xb5\x18\x01\x05\x127\n" +
 	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x052\x81\x02\n" +
 	"\fMarketManage\x12X\n" +
 	"\fListListings\x12$.hi.club.MarketManageListListingsReq\x1a\x1b.hi.club.SearchListingsResp\"\x05\x8a\xb5\x18\x01\x04\x12P\n" +
@@ -2326,7 +2616,7 @@ func file_hi_club_market_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_market_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_hi_club_market_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_hi_club_market_proto_msgTypes = make([]protoimpl.MessageInfo, 29)
 var file_hi_club_market_proto_goTypes = []any{
 	(SettleMode)(0),                     // 0: hi.club.SettleMode
 	(ListingStatus)(0),                  // 1: hi.club.ListingStatus
@@ -2356,87 +2646,95 @@ var file_hi_club_market_proto_goTypes = []any{
 	(*MarketManageListListingsReq)(nil), // 25: hi.club.MarketManageListListingsReq
 	(*MarketManageListGrantsReq)(nil),   // 26: hi.club.MarketManageListGrantsReq
 	(*ForceDelistReq)(nil),              // 27: hi.club.ForceDelistReq
-	(*MarketNotifyData)(nil),            // 28: hi.club.MarketNotifyData
-	(*hi.Entity)(nil),                   // 29: hi.Entity
-	(*hi.Pagination)(nil),               // 30: hi.Pagination
-	(*structpb.Struct)(nil),             // 31: google.protobuf.Struct
-	(*hi.SignedData)(nil),               // 32: hi.SignedData
-	(*emptypb.Empty)(nil),               // 33: google.protobuf.Empty
+	(*MarketPullData)(nil),              // 28: hi.club.MarketPullData
+	(*MarketPendingGrant)(nil),          // 29: hi.club.MarketPendingGrant
+	(*MarketPullResp)(nil),              // 30: hi.club.MarketPullResp
+	(*MarketNotifyData)(nil),            // 31: hi.club.MarketNotifyData
+	(*hi.Entity)(nil),                   // 32: hi.Entity
+	(*hi.Pagination)(nil),               // 33: hi.Pagination
+	(*structpb.Struct)(nil),             // 34: google.protobuf.Struct
+	(*hi.SignedData)(nil),               // 35: hi.SignedData
+	(*emptypb.Empty)(nil),               // 36: google.protobuf.Empty
 }
 var file_hi_club_market_proto_depIdxs = []int32{
-	29, // 0: hi.club.MarketListingBrief.agent:type_name -> hi.Entity
+	32, // 0: hi.club.MarketListingBrief.agent:type_name -> hi.Entity
 	0,  // 1: hi.club.MarketListingBrief.settle_mode:type_name -> hi.club.SettleMode
 	3,  // 2: hi.club.MarketListingDetail.brief:type_name -> hi.club.MarketListingBrief
-	29, // 3: hi.club.MarketGrantBrief.from_agent:type_name -> hi.Entity
-	29, // 4: hi.club.MarketGrantBrief.to_agent:type_name -> hi.Entity
-	29, // 5: hi.club.MarketGrantBrief.applicant:type_name -> hi.Entity
+	32, // 3: hi.club.MarketGrantBrief.from_agent:type_name -> hi.Entity
+	32, // 4: hi.club.MarketGrantBrief.to_agent:type_name -> hi.Entity
+	32, // 5: hi.club.MarketGrantBrief.applicant:type_name -> hi.Entity
 	0,  // 6: hi.club.MarketGrantBrief.settle_mode:type_name -> hi.club.SettleMode
-	29, // 7: hi.club.MarketGrantView.from_agent:type_name -> hi.Entity
-	29, // 8: hi.club.MarketGrantView.to_agent:type_name -> hi.Entity
-	29, // 9: hi.club.MarketGrantView.applicant:type_name -> hi.Entity
+	32, // 7: hi.club.MarketGrantView.from_agent:type_name -> hi.Entity
+	32, // 8: hi.club.MarketGrantView.to_agent:type_name -> hi.Entity
+	32, // 9: hi.club.MarketGrantView.applicant:type_name -> hi.Entity
 	2,  // 10: hi.club.MarketGrantView.status:type_name -> hi.club.GrantStatus
 	0,  // 11: hi.club.MarketGrantView.settle_mode:type_name -> hi.club.SettleMode
-	30, // 12: hi.club.SearchListingsReq.pagination:type_name -> hi.Pagination
-	30, // 13: hi.club.ListAgentListingsReq.pagination:type_name -> hi.Pagination
+	33, // 12: hi.club.SearchListingsReq.pagination:type_name -> hi.Pagination
+	33, // 13: hi.club.ListAgentListingsReq.pagination:type_name -> hi.Pagination
 	3,  // 14: hi.club.SearchListingsResp.list:type_name -> hi.club.MarketListingBrief
 	4,  // 15: hi.club.GetListingResp.detail:type_name -> hi.club.MarketListingDetail
 	0,  // 16: hi.club.CreateListingReq.settle_mode:type_name -> hi.club.SettleMode
 	1,  // 17: hi.club.SetListingStatusReq.status:type_name -> hi.club.ListingStatus
-	30, // 18: hi.club.ListMyListingsReq.pagination:type_name -> hi.Pagination
+	33, // 18: hi.club.ListMyListingsReq.pagination:type_name -> hi.Pagination
 	4,  // 19: hi.club.ListMyListingsResp.list:type_name -> hi.club.MarketListingDetail
-	31, // 20: hi.club.ApplyReq.params:type_name -> google.protobuf.Struct
+	34, // 20: hi.club.ApplyReq.params:type_name -> google.protobuf.Struct
 	2,  // 21: hi.club.ApplyResp.status:type_name -> hi.club.GrantStatus
 	2,  // 22: hi.club.ListGrantsReq.status:type_name -> hi.club.GrantStatus
-	30, // 23: hi.club.ListGrantsReq.pagination:type_name -> hi.Pagination
+	33, // 23: hi.club.ListGrantsReq.pagination:type_name -> hi.Pagination
 	6,  // 24: hi.club.ListGrantsResp.list:type_name -> hi.club.MarketGrantView
 	1,  // 25: hi.club.MarketManageListListingsReq.status:type_name -> hi.club.ListingStatus
-	30, // 26: hi.club.MarketManageListListingsReq.pagination:type_name -> hi.Pagination
+	33, // 26: hi.club.MarketManageListListingsReq.pagination:type_name -> hi.Pagination
 	2,  // 27: hi.club.MarketManageListGrantsReq.status:type_name -> hi.club.GrantStatus
-	30, // 28: hi.club.MarketManageListGrantsReq.pagination:type_name -> hi.Pagination
-	31, // 29: hi.club.MarketNotifyData.terms_override:type_name -> google.protobuf.Struct
-	7,  // 30: hi.club.MarketDirectory.SearchListings:input_type -> hi.club.SearchListingsReq
-	8,  // 31: hi.club.MarketDirectory.ListAgentListings:input_type -> hi.club.ListAgentListingsReq
-	9,  // 32: hi.club.MarketDirectory.GetListing:input_type -> hi.club.GetListingReq
-	12, // 33: hi.club.Market.CreateListing:input_type -> hi.club.CreateListingReq
-	13, // 34: hi.club.Market.EditListing:input_type -> hi.club.EditListingReq
-	14, // 35: hi.club.Market.SetListingStatus:input_type -> hi.club.SetListingStatusReq
-	15, // 36: hi.club.Market.ListMyListings:input_type -> hi.club.ListMyListingsReq
-	22, // 37: hi.club.Market.ListReceivedRequests:input_type -> hi.club.ListGrantsReq
-	20, // 38: hi.club.Market.Approve:input_type -> hi.club.DecideGrantReq
-	20, // 39: hi.club.Market.Reject:input_type -> hi.club.DecideGrantReq
-	20, // 40: hi.club.Market.Revoke:input_type -> hi.club.DecideGrantReq
-	18, // 41: hi.club.Market.Apply:input_type -> hi.club.ApplyReq
-	21, // 42: hi.club.Market.ConfirmPayment:input_type -> hi.club.ConfirmPaymentReq
-	22, // 43: hi.club.Market.ListMyGrants:input_type -> hi.club.ListGrantsReq
-	24, // 44: hi.club.Market.SetGrantVersion:input_type -> hi.club.SetGrantVersionReq
-	32, // 45: hi.club.MarketCallback.Notify:input_type -> hi.SignedData
-	25, // 46: hi.club.MarketManage.ListListings:input_type -> hi.club.MarketManageListListingsReq
-	26, // 47: hi.club.MarketManage.ListGrants:input_type -> hi.club.MarketManageListGrantsReq
-	27, // 48: hi.club.MarketManage.ForceDelist:input_type -> hi.club.ForceDelistReq
-	10, // 49: hi.club.MarketDirectory.SearchListings:output_type -> hi.club.SearchListingsResp
-	10, // 50: hi.club.MarketDirectory.ListAgentListings:output_type -> hi.club.SearchListingsResp
-	11, // 51: hi.club.MarketDirectory.GetListing:output_type -> hi.club.GetListingResp
-	17, // 52: hi.club.Market.CreateListing:output_type -> hi.club.CreateListingResp
-	33, // 53: hi.club.Market.EditListing:output_type -> google.protobuf.Empty
-	33, // 54: hi.club.Market.SetListingStatus:output_type -> google.protobuf.Empty
-	16, // 55: hi.club.Market.ListMyListings:output_type -> hi.club.ListMyListingsResp
-	23, // 56: hi.club.Market.ListReceivedRequests:output_type -> hi.club.ListGrantsResp
-	33, // 57: hi.club.Market.Approve:output_type -> google.protobuf.Empty
-	33, // 58: hi.club.Market.Reject:output_type -> google.protobuf.Empty
-	33, // 59: hi.club.Market.Revoke:output_type -> google.protobuf.Empty
-	19, // 60: hi.club.Market.Apply:output_type -> hi.club.ApplyResp
-	33, // 61: hi.club.Market.ConfirmPayment:output_type -> google.protobuf.Empty
-	23, // 62: hi.club.Market.ListMyGrants:output_type -> hi.club.ListGrantsResp
-	33, // 63: hi.club.Market.SetGrantVersion:output_type -> google.protobuf.Empty
-	33, // 64: hi.club.MarketCallback.Notify:output_type -> google.protobuf.Empty
-	10, // 65: hi.club.MarketManage.ListListings:output_type -> hi.club.SearchListingsResp
-	23, // 66: hi.club.MarketManage.ListGrants:output_type -> hi.club.ListGrantsResp
-	33, // 67: hi.club.MarketManage.ForceDelist:output_type -> google.protobuf.Empty
-	49, // [49:68] is the sub-list for method output_type
-	30, // [30:49] is the sub-list for method input_type
-	30, // [30:30] is the sub-list for extension type_name
-	30, // [30:30] is the sub-list for extension extendee
-	0,  // [0:30] is the sub-list for field type_name
+	33, // 28: hi.club.MarketManageListGrantsReq.pagination:type_name -> hi.Pagination
+	0,  // 29: hi.club.MarketPendingGrant.settle_mode:type_name -> hi.club.SettleMode
+	34, // 30: hi.club.MarketPendingGrant.params:type_name -> google.protobuf.Struct
+	29, // 31: hi.club.MarketPullResp.list:type_name -> hi.club.MarketPendingGrant
+	34, // 32: hi.club.MarketNotifyData.terms_override:type_name -> google.protobuf.Struct
+	7,  // 33: hi.club.MarketDirectory.SearchListings:input_type -> hi.club.SearchListingsReq
+	8,  // 34: hi.club.MarketDirectory.ListAgentListings:input_type -> hi.club.ListAgentListingsReq
+	9,  // 35: hi.club.MarketDirectory.GetListing:input_type -> hi.club.GetListingReq
+	12, // 36: hi.club.Market.CreateListing:input_type -> hi.club.CreateListingReq
+	13, // 37: hi.club.Market.EditListing:input_type -> hi.club.EditListingReq
+	14, // 38: hi.club.Market.SetListingStatus:input_type -> hi.club.SetListingStatusReq
+	15, // 39: hi.club.Market.ListMyListings:input_type -> hi.club.ListMyListingsReq
+	22, // 40: hi.club.Market.ListReceivedRequests:input_type -> hi.club.ListGrantsReq
+	20, // 41: hi.club.Market.Approve:input_type -> hi.club.DecideGrantReq
+	20, // 42: hi.club.Market.Reject:input_type -> hi.club.DecideGrantReq
+	20, // 43: hi.club.Market.Revoke:input_type -> hi.club.DecideGrantReq
+	18, // 44: hi.club.Market.Apply:input_type -> hi.club.ApplyReq
+	21, // 45: hi.club.Market.ConfirmPayment:input_type -> hi.club.ConfirmPaymentReq
+	22, // 46: hi.club.Market.ListMyGrants:input_type -> hi.club.ListGrantsReq
+	24, // 47: hi.club.Market.SetGrantVersion:input_type -> hi.club.SetGrantVersionReq
+	35, // 48: hi.club.MarketCallback.Pull:input_type -> hi.SignedData
+	35, // 49: hi.club.MarketCallback.Notify:input_type -> hi.SignedData
+	25, // 50: hi.club.MarketManage.ListListings:input_type -> hi.club.MarketManageListListingsReq
+	26, // 51: hi.club.MarketManage.ListGrants:input_type -> hi.club.MarketManageListGrantsReq
+	27, // 52: hi.club.MarketManage.ForceDelist:input_type -> hi.club.ForceDelistReq
+	10, // 53: hi.club.MarketDirectory.SearchListings:output_type -> hi.club.SearchListingsResp
+	10, // 54: hi.club.MarketDirectory.ListAgentListings:output_type -> hi.club.SearchListingsResp
+	11, // 55: hi.club.MarketDirectory.GetListing:output_type -> hi.club.GetListingResp
+	17, // 56: hi.club.Market.CreateListing:output_type -> hi.club.CreateListingResp
+	36, // 57: hi.club.Market.EditListing:output_type -> google.protobuf.Empty
+	36, // 58: hi.club.Market.SetListingStatus:output_type -> google.protobuf.Empty
+	16, // 59: hi.club.Market.ListMyListings:output_type -> hi.club.ListMyListingsResp
+	23, // 60: hi.club.Market.ListReceivedRequests:output_type -> hi.club.ListGrantsResp
+	36, // 61: hi.club.Market.Approve:output_type -> google.protobuf.Empty
+	36, // 62: hi.club.Market.Reject:output_type -> google.protobuf.Empty
+	36, // 63: hi.club.Market.Revoke:output_type -> google.protobuf.Empty
+	19, // 64: hi.club.Market.Apply:output_type -> hi.club.ApplyResp
+	36, // 65: hi.club.Market.ConfirmPayment:output_type -> google.protobuf.Empty
+	23, // 66: hi.club.Market.ListMyGrants:output_type -> hi.club.ListGrantsResp
+	36, // 67: hi.club.Market.SetGrantVersion:output_type -> google.protobuf.Empty
+	30, // 68: hi.club.MarketCallback.Pull:output_type -> hi.club.MarketPullResp
+	36, // 69: hi.club.MarketCallback.Notify:output_type -> google.protobuf.Empty
+	10, // 70: hi.club.MarketManage.ListListings:output_type -> hi.club.SearchListingsResp
+	23, // 71: hi.club.MarketManage.ListGrants:output_type -> hi.club.ListGrantsResp
+	36, // 72: hi.club.MarketManage.ForceDelist:output_type -> google.protobuf.Empty
+	53, // [53:73] is the sub-list for method output_type
+	33, // [33:53] is the sub-list for method input_type
+	33, // [33:33] is the sub-list for extension type_name
+	33, // [33:33] is the sub-list for extension extendee
+	0,  // [0:33] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_market_proto_init() }
@@ -2451,7 +2749,7 @@ func file_hi_club_market_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_market_proto_rawDesc), len(file_hi_club_market_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   26,
+			NumMessages:   29,
 			NumExtensions: 0,
 			NumServices:   4,
 		},

@@ -484,12 +484,30 @@ abstract class MarketServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.SetGrantVersionReq request);
 }
 
-/// 市场回调(商户后台 → club)。传输层不鉴权,**鉴权在载荷里**:
-/// 收 hi.SignedData,handler 用 `grant.from_master` 的 did 公钥验签 —— 不是"谁签的都收"。
+/// ── 外部结算:**商户来拉 + 回传**,club 不主动调商户 ──────────────────────────
 ///
-/// 幂等键 `(grant_uuid, outer_id)`,重复回调直接返 OK。移动支付必踩,不留到线上再补。
-/// 状态机只接受合法迁移:只有 PENDING 能被回调推进;APPROVED 后重复回调 = 幂等 OK;
-/// REVOKED/EXPIRED 后来的回调 = 记 flow、不改 grant。
+/// 两个方法都是**商户后台调 club**,主体由载荷里的 web3 签名证明。
+///
+/// ## 为什么是"来拉"而不是"club 推"
+///
+/// ① **club 没有私钥,签不了名。** 它只有验签能力(didapi.VerifySignature)与
+///    hidid/ai 的商户凭证 —— 对第三方商户拿不出可验证的身份。
+///    要让 club 主动调,就得给它配一套密钥并自己管理,多一块攻击面。
+///
+/// ② 更重要的是:**中间人不参与业务交互,就没有造假空间。**
+///    这与 hidid PC 端那套是同一个设计:hidid 只通知 PC "有新单",
+///    订单本身由 PC 端直接去业务后台拉、处理完直接回传 ——
+///    数据一旦经中间方中转,中间方就有造假空间。私钥在谁手里,谁就是签名方;
+///    签名方向与"谁持有密钥"天然对齐,不需要额外的信任假设。
+///    同一范式在本仓已有先例:`hi.club.Order` 的 Pull / Report。
+///
+/// ③ 顺带简化:不需要发现商户的 endpoint、不需要出方向的重试与超时、
+///    不需要商户额外起一个 gRPC 服务端。
+///
+/// ## 通知
+///
+/// club 可以给商户发一个**不带数据**的"有新申请"提醒(纯触发,伪造了最多让它白拉一次),
+/// 商户也可以自己轮询 Pull。**数据只走 Pull 这一条路。**
 @$pb.GrpcServiceName('hi.club.MarketCallback')
 class MarketCallbackClient extends $grpc.Client {
   /// The hostname for this service.
@@ -502,6 +520,13 @@ class MarketCallbackClient extends $grpc.Client {
 
   MarketCallbackClient(super.channel, {super.options, super.interceptors});
 
+  $grpc.ResponseFuture<$0.MarketPullResp> pull(
+    $2.SignedData request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$pull, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> notify(
     $2.SignedData request, {
     $grpc.CallOptions? options,
@@ -511,6 +536,10 @@ class MarketCallbackClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$pull = $grpc.ClientMethod<$2.SignedData, $0.MarketPullResp>(
+      '/hi.club.MarketCallback/Pull',
+      ($2.SignedData value) => value.writeToBuffer(),
+      $0.MarketPullResp.fromBuffer);
   static final _$notify = $grpc.ClientMethod<$2.SignedData, $1.Empty>(
       '/hi.club.MarketCallback/Notify',
       ($2.SignedData value) => value.writeToBuffer(),
@@ -522,6 +551,13 @@ abstract class MarketCallbackServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.MarketCallback';
 
   MarketCallbackServiceBase() {
+    $addMethod($grpc.ServiceMethod<$2.SignedData, $0.MarketPullResp>(
+        'Pull',
+        pull_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.SignedData.fromBuffer(value),
+        ($0.MarketPullResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.SignedData, $1.Empty>(
         'Notify',
         notify_Pre,
@@ -530,6 +566,14 @@ abstract class MarketCallbackServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $2.SignedData.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
   }
+
+  $async.Future<$0.MarketPullResp> pull_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.SignedData> $request) async {
+    return pull($call, await $request);
+  }
+
+  $async.Future<$0.MarketPullResp> pull(
+      $grpc.ServiceCall call, $2.SignedData request);
 
   $async.Future<$1.Empty> notify_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.SignedData> $request) async {

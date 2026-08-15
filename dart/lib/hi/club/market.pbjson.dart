@@ -450,6 +450,7 @@ const CreateListingReq$json = {
       '5': 8,
       '10': 'allowFollowLatest'
     },
+    {'1': 'action_url', '3': 12, '4': 1, '5': 9, '10': 'actionUrl'},
   ],
 };
 
@@ -461,7 +462,8 @@ final $typed_data.Uint8List createListingReqDescriptor = $convert.base64Decode(
     'ABKAlSBXByaWNlEhIKBGNvaW4YBSABKAlSBGNvaW4SGgoIZHVyYXRpb24YBiABKANSCGR1cmF0'
     'aW9uEh0KBXRpdGxlGAcgASgJQge6SARyAhABUgV0aXRsZRIYCgdzdW1tYXJ5GAggASgJUgdzdW'
     '1tYXJ5EhIKBGxvZ28YCSABKAlSBGxvZ28SEgoEdGFncxgKIAMoCVIEdGFncxIuChNhbGxvd19m'
-    'b2xsb3dfbGF0ZXN0GAsgASgIUhFhbGxvd0ZvbGxvd0xhdGVzdA==');
+    'b2xsb3dfbGF0ZXN0GAsgASgIUhFhbGxvd0ZvbGxvd0xhdGVzdBIdCgphY3Rpb25fdXJsGAwgAS'
+    'gJUglhY3Rpb25Vcmw=');
 
 @$core.Deprecated('Use editListingReqDescriptor instead')
 const EditListingReq$json = {
@@ -500,6 +502,15 @@ const EditListingReq$json = {
       '10': 'allowFollowLatest',
       '17': true
     },
+    {
+      '1': 'action_url',
+      '3': 10,
+      '4': 1,
+      '5': 9,
+      '9': 7,
+      '10': 'actionUrl',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_price'},
@@ -509,6 +520,7 @@ const EditListingReq$json = {
     {'1': '_summary'},
     {'1': '_logo'},
     {'1': '_allow_follow_latest'},
+    {'1': '_action_url'},
   ],
 };
 
@@ -519,8 +531,9 @@ final $typed_data.Uint8List editListingReqDescriptor = $convert.base64Decode(
     'aW9uGAQgASgDSAJSCGR1cmF0aW9uiAEBEhkKBXRpdGxlGAUgASgJSANSBXRpdGxliAEBEh0KB3'
     'N1bW1hcnkYBiABKAlIBFIHc3VtbWFyeYgBARIXCgRsb2dvGAcgASgJSAVSBGxvZ2+IAQESEgoE'
     'dGFncxgIIAMoCVIEdGFncxIzChNhbGxvd19mb2xsb3dfbGF0ZXN0GAkgASgISAZSEWFsbG93Rm'
-    '9sbG93TGF0ZXN0iAEBQggKBl9wcmljZUIHCgVfY29pbkILCglfZHVyYXRpb25CCAoGX3RpdGxl'
-    'QgoKCF9zdW1tYXJ5QgcKBV9sb2dvQhYKFF9hbGxvd19mb2xsb3dfbGF0ZXN0');
+    '9sbG93TGF0ZXN0iAEBEiIKCmFjdGlvbl91cmwYCiABKAlIB1IJYWN0aW9uVXJsiAEBQggKBl9w'
+    'cmljZUIHCgVfY29pbkILCglfZHVyYXRpb25CCAoGX3RpdGxlQgoKCF9zdW1tYXJ5QgcKBV9sb2'
+    'dvQhYKFF9hbGxvd19mb2xsb3dfbGF0ZXN0Qg0KC19hY3Rpb25fdXJs');
 
 @$core.Deprecated('Use setListingStatusReqDescriptor instead')
 const SetListingStatusReq$json = {
@@ -817,6 +830,90 @@ const ForceDelistReq$json = {
 final $typed_data.Uint8List forceDelistReqDescriptor = $convert.base64Decode(
     'Cg5Gb3JjZURlbGlzdFJlcRIgCgR1dWlkGAEgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQSFgoGcm'
     'Vhc29uGAIgASgJUgZyZWFzb24=');
+
+@$core.Deprecated('Use marketPullDataDescriptor instead')
+const MarketPullData$json = {
+  '1': 'MarketPullData',
+  '2': [
+    {'1': 'nonce', '3': 1, '4': 1, '5': 9, '10': 'nonce'},
+    {'1': 'timestamp', '3': 2, '4': 1, '5': 3, '10': 'timestamp'},
+  ],
+};
+
+/// Descriptor for `MarketPullData`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketPullDataDescriptor = $convert.base64Decode(
+    'Cg5NYXJrZXRQdWxsRGF0YRIUCgVub25jZRgBIAEoCVIFbm9uY2USHAoJdGltZXN0YW1wGAIgAS'
+    'gDUgl0aW1lc3RhbXA=');
+
+@$core.Deprecated('Use marketPendingGrantDescriptor instead')
+const MarketPendingGrant$json = {
+  '1': 'MarketPendingGrant',
+  '2': [
+    {'1': 'grant_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
+    {'1': 'listing_uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'listingUuid'},
+    {'1': 'plugin_uuid', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'pluginUuid'},
+    {'1': 'title', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'title'},
+    {'1': 'to_agent', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'toAgent'},
+    {'1': 'to_master', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'toMaster'},
+    {
+      '1': 'settle_mode',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.SettleMode',
+      '8': {},
+      '10': 'settleMode'
+    },
+    {'1': 'price', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'price'},
+    {'1': 'coin', '3': 9, '4': 1, '5': 9, '8': {}, '10': 'coin'},
+    {'1': 'duration', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'duration'},
+    {
+      '1': 'params',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '8': {},
+      '10': 'params'
+    },
+    {'1': 'created_at', '3': 12, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `MarketPendingGrant`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketPendingGrantDescriptor = $convert.base64Decode(
+    'ChJNYXJrZXRQZW5kaW5nR3JhbnQSIwoKZ3JhbnRfdXVpZBgBIAEoCUIEkLUYA1IJZ3JhbnRVdW'
+    'lkEicKDGxpc3RpbmdfdXVpZBgCIAEoCUIEkLUYA1ILbGlzdGluZ1V1aWQSJQoLcGx1Z2luX3V1'
+    'aWQYAyABKAlCBJC1GANSCnBsdWdpblV1aWQSGgoFdGl0bGUYBCABKAlCBJC1GANSBXRpdGxlEh'
+    '8KCHRvX2FnZW50GAUgASgJQgSQtRgDUgd0b0FnZW50EiEKCXRvX21hc3RlchgGIAEoCUIEkLUY'
+    'A1IIdG9NYXN0ZXISOgoLc2V0dGxlX21vZGUYByABKA4yEy5oaS5jbHViLlNldHRsZU1vZGVCBJ'
+    'C1GANSCnNldHRsZU1vZGUSGgoFcHJpY2UYCCABKAlCBJC1GANSBXByaWNlEhgKBGNvaW4YCSAB'
+    'KAlCBJC1GANSBGNvaW4SIAoIZHVyYXRpb24YCiABKANCBJC1GANSCGR1cmF0aW9uEjUKBnBhcm'
+    'FtcxgLIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RCBJC1GANSBnBhcmFtcxIjCgpjcmVh'
+    'dGVkX2F0GAwgASgDQgSQtRgDUgljcmVhdGVkQXQ6BJi1GAM=');
+
+@$core.Deprecated('Use marketPullRespDescriptor instead')
+const MarketPullResp$json = {
+  '1': 'MarketPullResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.MarketPendingGrant',
+      '8': {},
+      '10': 'list'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `MarketPullResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketPullRespDescriptor = $convert.base64Decode(
+    'Cg5NYXJrZXRQdWxsUmVzcBI1CgRsaXN0GAEgAygLMhsuaGkuY2x1Yi5NYXJrZXRQZW5kaW5nR3'
+    'JhbnRCBJC1GANSBGxpc3Q6BJi1GAM=');
 
 @$core.Deprecated('Use marketNotifyDataDescriptor instead')
 const MarketNotifyData$json = {

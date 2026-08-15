@@ -5893,6 +5893,12 @@ pub struct CreateListingReq {
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(bool, tag = "11")]
     pub allow_follow_latest: bool,
+    /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
+    ///
+    /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
+    /// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
+    #[prost(string, tag = "12")]
+    pub action_url: ::prost::alloc::string::String,
 }
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
 ///
@@ -5918,6 +5924,8 @@ pub struct EditListingReq {
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(bool, optional, tag = "9")]
     pub allow_follow_latest: ::core::option::Option<bool>,
+    #[prost(string, optional, tag = "10")]
+    pub action_url: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetListingStatusReq {
@@ -6057,7 +6065,59 @@ pub struct ForceDelistReq {
     #[prost(string, tag = "2")]
     pub reason: ::prost::alloc::string::String,
 }
-/// Notify 的**签名载荷 schema**(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
+/// Pull 的**签名载荷 schema**(rpc 收 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**。
+///
+/// 没有 merchant 字段:**主体恒取自签名**,传进来的一律不认 ——
+/// 收了这个字段就得写"它必须等于签名者"的校验,而那是同义反复;
+/// 字段不存在,"替别人拉单"在类型上就说不出来(同 MasterBindReq 删 master 那次)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketPullData {
+    #[prost(string, tag = "1")]
+    pub nonce: ::prost::alloc::string::String,
+    #[prost(int64, tag = "2")]
+    pub timestamp: i64,
+}
+/// 一条待处理的申请。**这是商户能拿到的全部** —— 不吐买方机器人的私有配置,
+/// 只给它做业务决策(收款 / 审资质 / 纳私域)真正需要的那些。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MarketPendingGrant {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub listing_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub plugin_uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub title: ::prost::alloc::string::String,
+    /// 受让方机器人 did
+    #[prost(string, tag = "5")]
+    pub to_agent: ::prost::alloc::string::String,
+    /// 购买者 did ← 商户据此调 hi.did.Merchant.AddUsers 把他纳入自己的私域。
+    /// ⚠️ 那一步**由商户自己做,不是 club 代做**:AddUsers 的主体由 ExtendToken 解出
+    /// "加到自己名下",club 手里只有 club 自己的商户凭证,代调只会加到 club 名下。
+    #[prost(string, tag = "6")]
+    pub to_master: ::prost::alloc::string::String,
+    #[prost(enumeration = "SettleMode", tag = "7")]
+    pub settle_mode: i32,
+    #[prost(string, tag = "8")]
+    pub price: ::prost::alloc::string::String,
+    #[prost(string, tag = "9")]
+    pub coin: ::prost::alloc::string::String,
+    #[prost(int64, tag = "10")]
+    pub duration: i64,
+    /// 申请方填的额外参数
+    #[prost(message, optional, tag = "11")]
+    pub params: ::core::option::Option<::pbjson_types::Struct>,
+    #[prost(int64, tag = "12")]
+    pub created_at: i64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MarketPullResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<MarketPendingGrant>,
+}
+/// Notify 的**签名载荷 schema**(商户处理完把结果交回来)(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
 /// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**
 /// (同 `PullOrdersData` / `ReportResultsData` 的先例)。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -6742,12 +6802,30 @@ pub mod market_callback_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 市场回调(商户后台 → club)。传输层不鉴权,**鉴权在载荷里**:
-    /// 收 hi.SignedData,handler 用 `grant.from_master` 的 did 公钥验签 —— 不是"谁签的都收"。
+    /// ── 外部结算:**商户来拉 + 回传**,club 不主动调商户 ──────────────────────────
     ///
-    /// 幂等键 `(grant_uuid, outer_id)`,重复回调直接返 OK。移动支付必踩,不留到线上再补。
-    /// 状态机只接受合法迁移:只有 PENDING 能被回调推进;APPROVED 后重复回调 = 幂等 OK;
-    /// REVOKED/EXPIRED 后来的回调 = 记 flow、不改 grant。
+    /// 两个方法都是**商户后台调 club**,主体由载荷里的 web3 签名证明。
+    ///
+    /// ## 为什么是"来拉"而不是"club 推"
+    ///
+    /// ① **club 没有私钥,签不了名。** 它只有验签能力(didapi.VerifySignature)与
+    /// hidid/ai 的商户凭证 —— 对第三方商户拿不出可验证的身份。
+    /// 要让 club 主动调,就得给它配一套密钥并自己管理,多一块攻击面。
+    ///
+    /// ② 更重要的是:**中间人不参与业务交互,就没有造假空间。**
+    /// 这与 hidid PC 端那套是同一个设计:hidid 只通知 PC "有新单",
+    /// 订单本身由 PC 端直接去业务后台拉、处理完直接回传 ——
+    /// 数据一旦经中间方中转,中间方就有造假空间。私钥在谁手里,谁就是签名方;
+    /// 签名方向与"谁持有密钥"天然对齐,不需要额外的信任假设。
+    /// 同一范式在本仓已有先例:`hi.club.Order` 的 Pull / Report。
+    ///
+    /// ③ 顺带简化:不需要发现商户的 endpoint、不需要出方向的重试与超时、
+    /// 不需要商户额外起一个 gRPC 服务端。
+    ///
+    /// ## 通知
+    ///
+    /// club 可以给商户发一个**不带数据**的"有新申请"提醒(纯触发,伪造了最多让它白拉一次),
+    /// 商户也可以自己轮询 Pull。**数据只走 Pull 这一条路。**
     #[derive(Debug, Clone)]
     pub struct MarketCallbackClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -6827,6 +6905,27 @@ pub mod market_callback_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        pub async fn pull(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
+        ) -> std::result::Result<tonic::Response<super::MarketPullResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketCallback/Pull",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketCallback", "Pull"));
+            self.inner.unary(req, path, codec).await
         }
         pub async fn notify(
             &mut self,
@@ -7909,226 +8008,6 @@ pub mod permission_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.PermissionManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Begin 的**签名载荷 schema**(rpc 收的是 hi.SignedData,由实现方反序列化进它)。
-/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MarketBeginData {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub listing_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub plugin_uuid: ::prost::alloc::string::String,
-    /// 受让方机器人 did
-    #[prost(string, tag = "4")]
-    pub to_agent: ::prost::alloc::string::String,
-    /// **购买者 did** ← 商户据此调 hi.did.Merchant.AddUsers 纳入私域
-    #[prost(string, tag = "5")]
-    pub to_master: ::prost::alloc::string::String,
-    /// 成立时的 settle_mode + price + coin + duration 快照
-    #[prost(message, optional, tag = "6")]
-    pub terms: ::core::option::Option<::pbjson_types::Struct>,
-    /// 申请方填的额外参数,原样转来
-    #[prost(message, optional, tag = "7")]
-    pub params: ::core::option::Option<::pbjson_types::Struct>,
-    #[prost(string, tag = "8")]
-    pub nonce: ::prost::alloc::string::String,
-    #[prost(int64, tag = "9")]
-    pub timestamp: i64,
-}
-/// Cancel 的签名载荷 schema(同上,勿当死 message 删)。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MarketCancelData {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    /// 商户侧单号,由 Begin 返回、club 存下
-    #[prost(string, tag = "2")]
-    pub outer_id: ::prost::alloc::string::String,
-    /// revoked / expired / ...
-    #[prost(string, tag = "3")]
-    pub reason: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub nonce: ::prost::alloc::string::String,
-    #[prost(int64, tag = "5")]
-    pub timestamp: i64,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BeginResp {
-    /// 商户侧单号 —— 与 grant_uuid 一起构成回调幂等键
-    #[prost(string, tag = "1")]
-    pub outer_id: ::prost::alloc::string::String,
-    /// 让用户去付款 / 填资料的地址(可空)
-    #[prost(string, tag = "2")]
-    pub action_url: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod market_provider_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// ── 插件市场的认证流程契约:**club 只定义,由挂牌方的后台实现** ──────────────────
-    ///
-    /// 照 `hi/did/callback.proto` 的范式:did 定义 `LoginCallback` / `PayCallback`,
-    /// 由三方业务(club 等)实现并注册到自己的服务里,**did 侧没有 handler 是正常的**。
-    /// 这里同理 —— club 侧不实现这两个方法,它们是被商户实现的;club 是**调用方**。
-    ///
-    /// ## 为什么用 gRPC 而不是 webhook
-    ///
-    /// 数据结构在 hi-proto 一次定义、两边共用生成码,字段改了编译期就知道;
-    /// 不用另写一份 webhook 文档,也不会出现「文档写了实现没跟」的漂移。
-    /// 代价是接入方得能起 gRPC 服务 —— 而典型场景里接入方本来就是**注册商户**
-    /// (`MerchantInfo.endpoint` 就是它的后台地址),这个门槛本来就得跨。
-    ///
-    /// ## 为什么鉴权是 AUTH_WEB3
-    ///
-    /// club 手里没有商户的 token,传输层无从鉴权;但载荷是 web3 签名的,伪造不了。
-    /// 典型链路:
-    ///
-    /// ```text
-    /// 注册 hisrv 商户 A → 注册 hiclub 账号 → 创建机器人 B → 插件全挂 B 上
-    ///  → 用户为其机器人购买 → 商户 A 调 hi.did.Merchant.AddUsers(购买者 did) 纳入私域
-    ///  → 结算走 hidid(收款方 = MerchantPubServerResp.server,默认 = master)
-    /// ```
-    ///
-    /// 接入方本来就是注册商户、天然持 did 私钥,`AUTH_WEB3` 直接成立,与 hidid 的回调同一套验签。
-    /// **不需要第二套 HMAC 密钥体系。**
-    ///
-    /// ⚠️ 「把购买者纳入私域」这一步**由商户 A 自己做,不是 club 代做** ——
-    /// `Merchant.AddUsers` 的主体由 ExtendToken 解出「加到自己名下」,
-    /// club 手里只有 club 自己的商户凭证,代调只会把人加到 club 名下、够不着商户 A。
-    /// club 的职责到「把 `to_master` 放进 MarketBeginData 告诉商户 A」为止。这个边界别越。
-    #[derive(Debug, Clone)]
-    pub struct MarketProviderClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MarketProviderClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MarketProviderClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MarketProviderClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MarketProviderClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        /// Begin club 受理申请 → 通知商户后台开始业务流程(收款 / 审核)。
-        pub async fn begin(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::SignedData>,
-        ) -> std::result::Result<tonic::Response<super::BeginResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MarketProvider/Begin",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.MarketProvider", "Begin"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// Cancel 授权被撤销 / 到期 → 通知商户后台(退款、清私域等由商户自理)。
-        pub async fn cancel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::SignedData>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MarketProvider/Cancel",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.MarketProvider", "Cancel"));
             self.inner.unary(req, path, codec).await
         }
     }
