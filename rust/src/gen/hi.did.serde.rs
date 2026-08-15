@@ -289,6 +289,15 @@ impl serde::Serialize for Coin {
         if !self.category.is_empty() {
             len += 1;
         }
+        if !self.chain.is_empty() {
+            len += 1;
+        }
+        if !self.contract.is_empty() {
+            len += 1;
+        }
+        if self.decimals != 0 {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.did.Coin", len)?;
         if !self.icon.is_empty() {
             struct_ser.serialize_field("icon", &self.icon)?;
@@ -298,6 +307,15 @@ impl serde::Serialize for Coin {
         }
         if !self.category.is_empty() {
             struct_ser.serialize_field("category", &self.category)?;
+        }
+        if !self.chain.is_empty() {
+            struct_ser.serialize_field("chain", &self.chain)?;
+        }
+        if !self.contract.is_empty() {
+            struct_ser.serialize_field("contract", &self.contract)?;
+        }
+        if self.decimals != 0 {
+            struct_ser.serialize_field("decimals", &self.decimals)?;
         }
         struct_ser.end()
     }
@@ -312,6 +330,9 @@ impl<'de> serde::Deserialize<'de> for Coin {
             "icon",
             "name",
             "category",
+            "chain",
+            "contract",
+            "decimals",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -319,6 +340,9 @@ impl<'de> serde::Deserialize<'de> for Coin {
             Icon,
             Name,
             Category,
+            Chain,
+            Contract,
+            Decimals,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -343,6 +367,9 @@ impl<'de> serde::Deserialize<'de> for Coin {
                             "icon" => Ok(GeneratedField::Icon),
                             "name" => Ok(GeneratedField::Name),
                             "category" => Ok(GeneratedField::Category),
+                            "chain" => Ok(GeneratedField::Chain),
+                            "contract" => Ok(GeneratedField::Contract),
+                            "decimals" => Ok(GeneratedField::Decimals),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -365,6 +392,9 @@ impl<'de> serde::Deserialize<'de> for Coin {
                 let mut icon__ = None;
                 let mut name__ = None;
                 let mut category__ = None;
+                let mut chain__ = None;
+                let mut contract__ = None;
+                let mut decimals__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Icon => {
@@ -385,12 +415,35 @@ impl<'de> serde::Deserialize<'de> for Coin {
                             }
                             category__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Chain => {
+                            if chain__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("chain"));
+                            }
+                            chain__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Contract => {
+                            if contract__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("contract"));
+                            }
+                            contract__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Decimals => {
+                            if decimals__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("decimals"));
+                            }
+                            decimals__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
                     }
                 }
                 Ok(Coin {
                     icon: icon__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
                     category: category__.unwrap_or_default(),
+                    chain: chain__.unwrap_or_default(),
+                    contract: contract__.unwrap_or_default(),
+                    decimals: decimals__.unwrap_or_default(),
                 })
             }
         }

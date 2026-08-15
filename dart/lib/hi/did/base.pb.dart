@@ -16,16 +16,25 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// 一个币种。**`name` 就是它的标识**(全生态用它指代币种:挂牌定价、付款、余额查询),
+/// 所以带链后缀 —— `USDT-TRC20` / `USDT-ERC20` / `WHDS-APTOS` 是三个不同的币,
+/// 光写 `USDT` 说不清往哪条链上转。
 class Coin extends $pb.GeneratedMessage {
   factory Coin({
     $core.String? icon,
     $core.String? name,
     $core.String? category,
+    $core.String? chain,
+    $core.String? contract,
+    $core.int? decimals,
   }) {
     final result = create();
     if (icon != null) result.icon = icon;
     if (name != null) result.name = name;
     if (category != null) result.category = category;
+    if (chain != null) result.chain = chain;
+    if (contract != null) result.contract = contract;
+    if (decimals != null) result.decimals = decimals;
     return result;
   }
 
@@ -45,6 +54,9 @@ class Coin extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'icon')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'category')
+    ..aOS(4, _omitFieldNames ? '' : 'chain')
+    ..aOS(5, _omitFieldNames ? '' : 'contract')
+    ..aI(6, _omitFieldNames ? '' : 'decimals', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -91,6 +103,43 @@ class Coin extends $pb.GeneratedMessage {
   $core.bool hasCategory() => $_has(2);
   @$pb.TagNumber(3)
   void clearCategory() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get chain => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set chain($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasChain() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearChain() => $_clearField(4);
+
+  /// 合约(FA / token)地址。**空 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
+  @$pb.TagNumber(5)
+  $core.String get contract => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set contract($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasContract() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearContract() => $_clearField(5);
+
+  /// 最小单位的小数位。金额换算全程走整数,**不碰 f64** —— 钱经不起浮点误差。
+  ///
+  /// ⚠️ **必须与链上一致,配错就是金额差几个数量级**,而且不会报错:
+  ///    多一位就是少付十倍,少一位就是多付十倍,链上不可撤销。
+  ///    **不要照抄同名币种的经验值**(同一个符号在不同链上小数位可以不同)。
+  ///    配之前去链上问一次,例如 Aptos:
+  ///      POST <fullnode>/v1/view
+  ///      {"function":"0x1::fungible_asset::decimals",
+  ///       "type_arguments":["0x1::fungible_asset::Metadata"],"arguments":["<合约地址>"]}
+  @$pb.TagNumber(6)
+  $core.int get decimals => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set decimals($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasDecimals() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearDecimals() => $_clearField(6);
 }
 
 class ListCoinsResp extends $pb.GeneratedMessage {

@@ -23,11 +23,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 一个币种。**`name` 就是它的标识**(全生态用它指代币种:挂牌定价、付款、余额查询),
+// 所以带链后缀 —— `USDT-TRC20` / `USDT-ERC20` / `WHDS-APTOS` 是三个不同的币,
+// 光写 `USDT` 说不清往哪条链上转。
 type Coin struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Icon          string                 `protobuf:"bytes,1,opt,name=icon,proto3" json:"icon,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"` // public-公共币种, custom-自定义币种
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Icon     string                 `protobuf:"bytes,1,opt,name=icon,proto3" json:"icon,omitempty"`
+	Name     string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`         // 标识 + 显示名,如 USDT-TRC20 / WHDS-APTOS
+	Category string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"` // public-公共币种, custom-自定义币种
+	Chain    string                 `protobuf:"bytes,4,opt,name=chain,proto3" json:"chain,omitempty"`       // btc/eth/trx/sol/aptos,对齐 hidid-core 的 Chain::id()
+	// 合约(FA / token)地址。**空 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
+	Contract string `protobuf:"bytes,5,opt,name=contract,proto3" json:"contract,omitempty"`
+	// 最小单位的小数位。金额换算全程走整数,**不碰 f64** —— 钱经不起浮点误差。
+	//
+	// ⚠️ **必须与链上一致,配错就是金额差几个数量级**,而且不会报错:
+	//
+	//	多一位就是少付十倍,少一位就是多付十倍,链上不可撤销。
+	//	**不要照抄同名币种的经验值**(同一个符号在不同链上小数位可以不同)。
+	//	配之前去链上问一次,例如 Aptos:
+	//	  POST <fullnode>/v1/view
+	//	  {"function":"0x1::fungible_asset::decimals",
+	//	   "type_arguments":["0x1::fungible_asset::Metadata"],"arguments":["<合约地址>"]}
+	Decimals      uint32 `protobuf:"varint,6,opt,name=decimals,proto3" json:"decimals,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -81,6 +98,27 @@ func (x *Coin) GetCategory() string {
 		return x.Category
 	}
 	return ""
+}
+
+func (x *Coin) GetChain() string {
+	if x != nil {
+		return x.Chain
+	}
+	return ""
+}
+
+func (x *Coin) GetContract() string {
+	if x != nil {
+		return x.Contract
+	}
+	return ""
+}
+
+func (x *Coin) GetDecimals() uint32 {
+	if x != nil {
+		return x.Decimals
+	}
+	return 0
 }
 
 type ListCoinsResp struct {
@@ -221,11 +259,14 @@ var File_hi_did_base_proto protoreflect.FileDescriptor
 
 const file_hi_did_base_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"b\n" +
+	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xc2\x01\n" +
 	"\x04Coin\x12\x18\n" +
 	"\x04icon\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04icon\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12 \n" +
-	"\bcategory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\bcategory:\x04\x98\xb5\x18\x01\"=\n" +
+	"\bcategory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\bcategory\x12\x1a\n" +
+	"\x05chain\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x05chain\x12 \n" +
+	"\bcontract\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\bcontract\x12 \n" +
+	"\bdecimals\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01R\bdecimals:\x04\x98\xb5\x18\x01\"=\n" +
 	"\rListCoinsResp\x12&\n" +
 	"\x04list\x18\x01 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"9\n" +
 	"\x17ListSuperAdminUsersResp\x12\x18\n" +
