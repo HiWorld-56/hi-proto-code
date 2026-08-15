@@ -111,12 +111,22 @@ func (x *PluginAnnex) GetData() *structpb.Struct {
 type RunReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"` // = 激活版 b.url
-	CodeParams     string                 `protobuf:"bytes,2,opt,name=code_params,json=codeParams,proto3" json:"code_params,omitempty"`
-	Uuid           string                 `protobuf:"bytes,3,opt,name=uuid,proto3" json:"uuid,omitempty"` // 壳 uuid
+	CodeParams     string                 `protobuf:"bytes,2,opt,name=code_params,json=codeParams,proto3" json:"code_params,omitempty"`               // function-call 的 arguments(JSON 对象),按 ** 展开成关键字实参
+	Uuid           string                 `protobuf:"bytes,3,opt,name=uuid,proto3" json:"uuid,omitempty"`                                             // 壳 uuid
 	Envs           []string               `protobuf:"bytes,4,rep,name=envs,proto3" json:"envs,omitempty"`
 	Annex          *PluginAnnex           `protobuf:"bytes,5,opt,name=annex,proto3" json:"annex,omitempty"` // → 字典全局变量 plugin_annex
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 要调包里的哪个方法。**必传**,且是 main.py 里的**原始函数名**(不带壳前缀)。
+	//
+	// 一个包提供 N 个方法:main.py 是 facade,方法就是它顶层暴露的函数,
+	// runner 以非 `__main__` 的名字装载它(所以 `if __name__ == "__main__"` 块不触发),
+	// 再 `getattr(main, function)(**code_params)`。
+	//
+	// ⚠️ **不要把带前缀的名字传进来。** 喂给模型的工具名是 `<壳前缀>_<原名>`
+	// (前缀保证不同插件包的同名方法不撞,见 hi/ai/plugin.proto 的 PluginVersion.description),
+	// 但那是 hiai↔模型之间的事 —— 前缀在 hiai 侧切掉,包里和这里只认原始名。
+	Function      string `protobuf:"bytes,6,opt,name=function,proto3" json:"function,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RunReq) Reset() {
@@ -182,6 +192,13 @@ func (x *RunReq) GetAnnex() *PluginAnnex {
 		return x.Annex
 	}
 	return nil
+}
+
+func (x *RunReq) GetFunction() string {
+	if x != nil {
+		return x.Function
+	}
+	return ""
 }
 
 type RunResp struct {
@@ -278,14 +295,15 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\n" +
 	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\":\n" +
 	"\vPluginAnnex\x12+\n" +
-	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xac\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xc8\x01\n" +
 	"\x06RunReq\x12(\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x1f\n" +
 	"\vcode_params\x18\x02 \x01(\tR\n" +
 	"codeParams\x12\x12\n" +
 	"\x04uuid\x18\x03 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04envs\x18\x04 \x03(\tR\x04envs\x12/\n" +
-	"\x05annex\x18\x05 \x01(\v2\x19.hi.ai.plugin.PluginAnnexR\x05annex\";\n" +
+	"\x05annex\x18\x05 \x01(\v2\x19.hi.ai.plugin.PluginAnnexR\x05annex\x12\x1a\n" +
+	"\bfunction\x18\x06 \x01(\tR\bfunction\";\n" +
 	"\aRunResp\x12*\n" +
 	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
 	"\n" +

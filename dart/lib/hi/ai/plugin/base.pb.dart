@@ -96,6 +96,7 @@ class RunReq extends $pb.GeneratedMessage {
     $core.String? uuid,
     $core.Iterable<$core.String>? envs,
     PluginAnnex? annex,
+    $core.String? function,
   }) {
     final result = create();
     if (codeArchiveUrl != null) result.codeArchiveUrl = codeArchiveUrl;
@@ -103,6 +104,7 @@ class RunReq extends $pb.GeneratedMessage {
     if (uuid != null) result.uuid = uuid;
     if (envs != null) result.envs.addAll(envs);
     if (annex != null) result.annex = annex;
+    if (function != null) result.function = function;
     return result;
   }
 
@@ -125,6 +127,7 @@ class RunReq extends $pb.GeneratedMessage {
     ..pPS(4, _omitFieldNames ? '' : 'envs')
     ..aOM<PluginAnnex>(5, _omitFieldNames ? '' : 'annex',
         subBuilder: PluginAnnex.create)
+    ..aOS(6, _omitFieldNames ? '' : 'function')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -185,6 +188,24 @@ class RunReq extends $pb.GeneratedMessage {
   void clearAnnex() => $_clearField(5);
   @$pb.TagNumber(5)
   PluginAnnex ensureAnnex() => $_ensure(4);
+
+  /// 要调包里的哪个方法。**必传**,且是 main.py 里的**原始函数名**(不带壳前缀)。
+  ///
+  /// 一个包提供 N 个方法:main.py 是 facade,方法就是它顶层暴露的函数,
+  /// runner 以非 `__main__` 的名字装载它(所以 `if __name__ == "__main__"` 块不触发),
+  /// 再 `getattr(main, function)(**code_params)`。
+  ///
+  /// ⚠️ **不要把带前缀的名字传进来。** 喂给模型的工具名是 `<壳前缀>_<原名>`
+  /// (前缀保证不同插件包的同名方法不撞,见 hi/ai/plugin.proto 的 PluginVersion.description),
+  /// 但那是 hiai↔模型之间的事 —— 前缀在 hiai 侧切掉,包里和这里只认原始名。
+  @$pb.TagNumber(6)
+  $core.String get function => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set function($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasFunction() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearFunction() => $_clearField(6);
 }
 
 class RunResp extends $pb.GeneratedMessage {

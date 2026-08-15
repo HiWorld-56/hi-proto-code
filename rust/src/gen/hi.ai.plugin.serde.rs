@@ -204,6 +204,9 @@ impl serde::Serialize for RunReq {
         if self.annex.is_some() {
             len += 1;
         }
+        if !self.function.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.RunReq", len)?;
         if !self.code_archive_url.is_empty() {
             struct_ser.serialize_field("codeArchiveUrl", &self.code_archive_url)?;
@@ -219,6 +222,9 @@ impl serde::Serialize for RunReq {
         }
         if let Some(v) = self.annex.as_ref() {
             struct_ser.serialize_field("annex", v)?;
+        }
+        if !self.function.is_empty() {
+            struct_ser.serialize_field("function", &self.function)?;
         }
         struct_ser.end()
     }
@@ -237,6 +243,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
             "uuid",
             "envs",
             "annex",
+            "function",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -246,6 +253,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
             Uuid,
             Envs,
             Annex,
+            Function,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -272,6 +280,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "envs" => Ok(GeneratedField::Envs),
                             "annex" => Ok(GeneratedField::Annex),
+                            "function" => Ok(GeneratedField::Function),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -296,6 +305,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                 let mut uuid__ = None;
                 let mut envs__ = None;
                 let mut annex__ = None;
+                let mut function__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::CodeArchiveUrl => {
@@ -328,6 +338,12 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             }
                             annex__ = map_.next_value()?;
                         }
+                        GeneratedField::Function => {
+                            if function__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("function"));
+                            }
+                            function__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(RunReq {
@@ -336,6 +352,7 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                     uuid: uuid__.unwrap_or_default(),
                     envs: envs__.unwrap_or_default(),
                     annex: annex__,
+                    function: function__.unwrap_or_default(),
                 })
             }
         }

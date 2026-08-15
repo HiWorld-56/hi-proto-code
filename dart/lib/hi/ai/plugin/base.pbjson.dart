@@ -51,6 +51,7 @@ const RunReq$json = {
       '6': '.hi.ai.plugin.PluginAnnex',
       '10': 'annex'
     },
+    {'1': 'function', '3': 6, '4': 1, '5': 9, '10': 'function'},
   ],
 };
 
@@ -59,7 +60,7 @@ final $typed_data.Uint8List runReqDescriptor = $convert.base64Decode(
     'CgZSdW5SZXESKAoQY29kZV9hcmNoaXZlX3VybBgBIAEoCVIOY29kZUFyY2hpdmVVcmwSHwoLY2'
     '9kZV9wYXJhbXMYAiABKAlSCmNvZGVQYXJhbXMSEgoEdXVpZBgDIAEoCVIEdXVpZBISCgRlbnZz'
     'GAQgAygJUgRlbnZzEi8KBWFubmV4GAUgASgLMhkuaGkuYWkucGx1Z2luLlBsdWdpbkFubmV4Ug'
-    'Vhbm5leA==');
+    'Vhbm5leBIaCghmdW5jdGlvbhgGIAEoCVIIZnVuY3Rpb24=');
 
 @$core.Deprecated('Use runRespDescriptor instead')
 const RunResp$json = {
