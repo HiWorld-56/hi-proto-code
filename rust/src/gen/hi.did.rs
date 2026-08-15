@@ -407,9 +407,20 @@ pub struct VerifyTransactionReq {
     /// 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
     #[prost(string, tag = "3")]
     pub amount: ::prost::alloc::string::String,
-    /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）
-    #[prost(string, tag = "4")]
-    pub from: ::prost::alloc::string::String,
+    /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
+    ///
+    /// ⚠️ **optional 是有意的:不传 = 不限定付款方**(跳过这一项比对),传了就必须对上。
+    /// 用 optional 而不是"空串即跳过",是为了让"没传"和"传了个空值"可区分 ——
+    /// 后者会让某个调用方哪天忘了填 from 时,**检查无声地消失**,而这是笔钱的事。
+    ///
+    /// ```text
+    /// 什么时候该不传:业务上按**订单**认款(订单号定履约内容),此时"谁掏的钱"不进判据 ——
+    /// 插件市场就是这样:订单写明给 A 续期,那么谁付的都给 A 续。
+    /// 这种场景下改用**交易时间 ≥ 订单创建时间**防伪(见 resp.timestamp),
+    /// 它同样不关心付款方。
+    /// ```
+    #[prost(string, optional, tag = "4")]
+    pub from: ::core::option::Option<::prost::alloc::string::String>,
     /// 预期收款方 **DID**（同上）
     #[prost(string, tag = "5")]
     pub to: ::prost::alloc::string::String,

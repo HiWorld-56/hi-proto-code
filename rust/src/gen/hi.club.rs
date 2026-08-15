@@ -6165,14 +6165,76 @@ pub struct ApplyReq {
     #[prost(message, optional, tag = "4")]
     pub params: ::core::option::Option<::pbjson_types::Struct>,
 }
-/// MarketPayInfo 这一笔要付多少、付给谁 —— **前端拿它直接唤起 hidid app**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketOrder {
+    /// 付款回报时的唯一凭据
+    #[prost(string, tag = "1")]
+    pub order_id: ::prost::alloc::string::String,
+    /// 履行到哪笔授权上
+    #[prost(string, tag = "2")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 给**哪台机器人**
+    #[prost(string, tag = "3")]
+    pub target_agent: ::prost::alloc::string::String,
+    #[prost(enumeration = "MarketOrderKind", tag = "4")]
+    pub kind: i32,
+    #[prost(enumeration = "MarketOrderStatus", tag = "5")]
+    pub status: i32,
+    /// 收款方 DID。**后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
+    #[prost(string, tag = "6")]
+    pub payee: ::prost::alloc::string::String,
+    /// 人类可读金额,如 "9.9"
+    #[prost(string, tag = "7")]
+    pub amount: ::prost::alloc::string::String,
+    #[prost(string, tag = "8")]
+    pub coin: ::prost::alloc::string::String,
+    /// 订单自己的有效期(秒)。过了就作废重开 —— 价格会变,不能让一张老账单永远能付。
+    #[prost(int64, tag = "9")]
+    pub expire_at: i64,
+    #[prost(int64, tag = "10")]
+    pub created_at: i64,
+}
+/// 开一张续期账单。购买的账单由 Apply 顺带开出来,这条是**单独续期**用的。
 ///
-/// 用户体验就是:点购买 → 弹出金额和币种 → 确认 → 跳 hidid 付款 → 回来即可用。
-/// 付完把 tx_hash 交回 `Market.ConfirmPayment`,club 调 `hi.did.Transfer.VerifyTransaction`
-/// 核验(那是个 AUTH_NONE 的公开接口,收 DID + 人类可读金额,内部解析地址与精度后比对)。
+/// 谁能开:该授权的 master,或**这台机器人自己**(自动续费就是它开给自己的)。
+/// grant 决定了 target_agent —— 不接受入参指定,否则就成了"替别人的机器人开单"。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateRenewOrderReq {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+}
+/// 付款回报:告诉市场"这张单我付了,钱在这笔转账里"。
 ///
-/// ⚠️ **club 全程只需要验签/验交易的能力,不需要签名。** 这条链路上持私钥的是用户的
-/// hidid app —— 与登录、授权登录用的是同一套现成流程。
+/// ## **不看付款方是谁** —— 这是有意的
+///
+/// 卖家关心的是"这张单要的钱到账了没有",不是"谁掏的"。订单上写明给 A 续期,
+/// 那么谁付的款都一样给 A 续 —— master 付、机器人自己付、将来某台机器人替别的机器人付,
+/// 全是同一条路,不需要为每种情况放宽一次判据。
+/// (原来那版把"付款方必须是谁"当判据,机器人替自己付款时就对不上,只能一路打补丁。)
+///
+/// ## 判据(全部与付款方无关)
+///
+/// ① 订单 OPEN 且未过期        ② 这笔 tx 没被别的单用过(全局唯一)
+/// ③ 链上 success              ④ 收款方/金额/币种与订单一致
+/// ⑤ **链上时间不早于订单创建时间**
+///
+/// ⑤ 挡的是"拿一笔早就存在、恰好金额相符的旧转账来认领新订单" ——
+/// 它只看时间,不看付款方,所以不违背上面那条原则。
+///
+/// ⚠️ 已知且**接受**的残留风险:订单号写不进链上转账(Aptos 的
+/// primary_fungible_store::transfer 没有 memo 字段),所以同一挂牌、同价、
+/// 同收款地址的两张单,链上那两笔钱长得一模一样 —— 理论上谁先报谁认走。
+/// 这是"不看付款方"的必然代价,已知情采纳。真要堵,得让每张单的金额带一点随机尾数
+/// 使其链上唯一,代价是金额变得不好看。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketPayReport {
+    /// 认哪张单
+    #[prost(string, tag = "1")]
+    pub order_id: ::prost::alloc::string::String,
+    /// 链上那笔转账
+    #[prost(string, tag = "2")]
+    pub tx_hash: ::prost::alloc::string::String,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketPayInfo {
     /// 收款方 DID。**由后端按机器人类型自动定,不接受前端指定**:
@@ -6202,6 +6264,11 @@ pub struct ApplyResp {
     pub action_url: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "4")]
     pub pay: ::core::option::Option<MarketPayInfo>,
+    /// 付费购买时顺带开出的账单。付款方拿它去付,再用 Market.ReportPayment 认领。
+    /// **pay 是它的摘要**(收款方/金额/币种),留着是因为前端唤起 hidid app 只要这三样;
+    /// 认领必须用 order_id。
+    #[prost(message, optional, tag = "5")]
+    pub order: ::core::option::Option<MarketOrder>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DecideGrantReq {
@@ -6210,26 +6277,6 @@ pub struct DecideGrantReq {
     /// 拒绝/撤销原因,给人看的
     #[prost(string, tag = "2")]
     pub reason: ::prost::alloc::string::String,
-}
-/// ConfirmPaymentReq 付完款把 tx_hash 交回来,club 核验后放行插件。
-///
-/// club 调 `hi.did.Transfer.VerifyTransaction`(AUTH_NONE 公开接口,收 DID + 人类可读金额,
-/// 内部解析地址与精度后比对)。所以**收款验证不需要商户体系,也不需要卖方在线**。
-///
-/// ⚠️ **同一个 tx_hash 只能兑换一次** —— 后端按 hash 全局去重,
-/// 不然一笔转账可以拿去把所有挂牌都买一遍。
-///
-/// **首购与续费共用这一个接口**:
-/// · grant 处于 PENDING → 首购,核验通过后装载;
-/// · grant 处于 INSTALLED → 续费,核验通过后 `expire_at += duration`。
-/// 续费**延长同一个 grant,不新建** —— 新建要先撤旧的,而撤销会删掉 ai 侧的 c/d 行,
-/// 用户在这个插件上攒的使用态配置(d.data)就没了。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ConfirmPaymentReq {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub tx_hash: ::prost::alloc::string::String,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGrantsReq {
@@ -6516,6 +6563,96 @@ impl GrantStatus {
             "GRANT_STATUS_REJECTED" => Some(Self::Rejected),
             "GRANT_STATUS_REVOKED" => Some(Self::Revoked),
             "GRANT_STATUS_EXPIRED" => Some(Self::Expired),
+            _ => None,
+        }
+    }
+}
+/// MarketPayInfo 这一笔要付多少、付给谁 —— **前端拿它直接唤起 hidid app**。
+///
+/// 用户体验就是:点购买 → 弹出金额和币种 → 确认 → 跳 hidid 付款 → 回来即可用。
+/// 付完把 tx_hash 交回 `Market.ConfirmPayment`,club 调 `hi.did.Transfer.VerifyTransaction`
+/// 核验(那是个 AUTH_NONE 的公开接口,收 DID + 人类可读金额,内部解析地址与精度后比对)。
+///
+/// ⚠️ **club 全程只需要验签/验交易的能力,不需要签名。** 这条链路上持私钥的是用户的
+/// hidid app —— 与登录、授权登录用的是同一套现成流程。
+/// ── 订单 ────────────────────────────────────────────────────────────────────
+///
+/// **购买与续期共用同一个东西。** 两者的业务流程本来就是一样的:
+/// 市场开一张账单 → 有人把钱付到账单指定的地址 → 市场核验 → 履行。
+/// 差别只在"履行"那一步(装载 vs 延期),不该是两条链路。
+///
+/// ## 为什么必须有订单号,而不是拿 (付款方,收款方,金额,币种) 去认款
+///
+/// 原来没有订单实体:`ConfirmPayment(grant_uuid, tx_hash)` 直接拿这四元组去链上比对,
+/// 于是"这笔钱是谁付的"变成了判据 —— 一旦机器人替自己付款(自动续费),
+/// 判据就对不上了,只能去放宽"付款方必须是谁",越改越歪。
+///
+/// 有了订单号,判据回到本来该有的样子:**订单要的钱到账了就履行,付款方是谁不重要**。
+/// 于是 master 付、机器人自己付、将来某台机器人替别的机器人付,都是同一条路。
+///
+/// ## target_agent 是给扩展性留的
+///
+/// 购买时它是受让方;续期时它是"被续的那台机器人"。今天发起方总是 master 或机器人自己,
+/// 但**订单里写清楚了给谁**,所以"机器人给别的机器人续期"将来只是换个值,不动结构。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum MarketOrderKind {
+    /// 购买:履行=装载
+    Purchase = 0,
+    /// 续期:履行=延长到期时刻
+    Renew = 1,
+}
+impl MarketOrderKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Purchase => "MARKET_ORDER_KIND_PURCHASE",
+            Self::Renew => "MARKET_ORDER_KIND_RENEW",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MARKET_ORDER_KIND_PURCHASE" => Some(Self::Purchase),
+            "MARKET_ORDER_KIND_RENEW" => Some(Self::Renew),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum MarketOrderStatus {
+    /// 待付款
+    Open = 0,
+    /// 已付款并履行完毕
+    Paid = 1,
+    /// 订单过期作废(**不是授权到期**)
+    Expired = 2,
+    Canceled = 3,
+}
+impl MarketOrderStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Open => "MARKET_ORDER_STATUS_OPEN",
+            Self::Paid => "MARKET_ORDER_STATUS_PAID",
+            Self::Expired => "MARKET_ORDER_STATUS_EXPIRED",
+            Self::Canceled => "MARKET_ORDER_STATUS_CANCELED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MARKET_ORDER_STATUS_OPEN" => Some(Self::Open),
+            "MARKET_ORDER_STATUS_PAID" => Some(Self::Paid),
+            "MARKET_ORDER_STATUS_EXPIRED" => Some(Self::Expired),
+            "MARKET_ORDER_STATUS_CANCELED" => Some(Self::Canceled),
             _ => None,
         }
     }
@@ -6963,9 +7100,32 @@ pub mod market_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Market", "Apply"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn confirm_payment(
+        /// 开一张续期账单(购买的账单由 Apply 顺带开出)。
+        pub async fn create_renew_order(
             &mut self,
-            request: impl tonic::IntoRequest<super::ConfirmPaymentReq>,
+            request: impl tonic::IntoRequest<super::CreateRenewOrderReq>,
+        ) -> std::result::Result<tonic::Response<super::MarketOrder>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/CreateRenewOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "CreateRenewOrder"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 认领一笔付款并履约。**不看付款方是谁**,见 MarketPayReport。
+        pub async fn report_payment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MarketPayReport>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -6977,11 +7137,11 @@ pub mod market_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Market/ConfirmPayment",
+                "/hi.club.Market/ReportPayment",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Market", "ConfirmPayment"));
+                .insert(GrpcMethod::new("hi.club.Market", "ReportPayment"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_my_grants(

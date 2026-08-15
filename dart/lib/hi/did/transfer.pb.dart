@@ -600,6 +600,16 @@ class VerifyTransactionReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearAmount() => $_clearField(3);
 
+  /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
+  ///
+  /// ⚠️ **optional 是有意的:不传 = 不限定付款方**(跳过这一项比对),传了就必须对上。
+  ///    用 optional 而不是"空串即跳过",是为了让"没传"和"传了个空值"可区分 ——
+  ///    后者会让某个调用方哪天忘了填 from 时,**检查无声地消失**,而这是笔钱的事。
+  ///
+  ///    什么时候该不传:业务上按**订单**认款(订单号定履约内容),此时"谁掏的钱"不进判据 ——
+  ///    插件市场就是这样:订单写明给 A 续期,那么谁付的都给 A 续。
+  ///    这种场景下改用**交易时间 ≥ 订单创建时间**防伪(见 resp.timestamp),
+  ///    它同样不关心付款方。
   @$pb.TagNumber(4)
   $core.String get from => $_getSZ(3);
   @$pb.TagNumber(4)

@@ -72,6 +72,37 @@ final $typed_data.Uint8List grantStatusDescriptor = $convert.base64Decode(
     'U19JTlNUQUxMRUQQAxIZChVHUkFOVF9TVEFUVVNfUkVKRUNURUQQBBIYChRHUkFOVF9TVEFUVV'
     'NfUkVWT0tFRBAFEhgKFEdSQU5UX1NUQVRVU19FWFBJUkVEEAY=');
 
+@$core.Deprecated('Use marketOrderKindDescriptor instead')
+const MarketOrderKind$json = {
+  '1': 'MarketOrderKind',
+  '2': [
+    {'1': 'MARKET_ORDER_KIND_PURCHASE', '2': 0},
+    {'1': 'MARKET_ORDER_KIND_RENEW', '2': 1},
+  ],
+};
+
+/// Descriptor for `MarketOrderKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List marketOrderKindDescriptor = $convert.base64Decode(
+    'Cg9NYXJrZXRPcmRlcktpbmQSHgoaTUFSS0VUX09SREVSX0tJTkRfUFVSQ0hBU0UQABIbChdNQV'
+    'JLRVRfT1JERVJfS0lORF9SRU5FVxAB');
+
+@$core.Deprecated('Use marketOrderStatusDescriptor instead')
+const MarketOrderStatus$json = {
+  '1': 'MarketOrderStatus',
+  '2': [
+    {'1': 'MARKET_ORDER_STATUS_OPEN', '2': 0},
+    {'1': 'MARKET_ORDER_STATUS_PAID', '2': 1},
+    {'1': 'MARKET_ORDER_STATUS_EXPIRED', '2': 2},
+    {'1': 'MARKET_ORDER_STATUS_CANCELED', '2': 3},
+  ],
+};
+
+/// Descriptor for `MarketOrderStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List marketOrderStatusDescriptor = $convert.base64Decode(
+    'ChFNYXJrZXRPcmRlclN0YXR1cxIcChhNQVJLRVRfT1JERVJfU1RBVFVTX09QRU4QABIcChhNQV'
+    'JLRVRfT1JERVJfU1RBVFVTX1BBSUQQARIfChtNQVJLRVRfT1JERVJfU1RBVFVTX0VYUElSRUQQ'
+    'AhIgChxNQVJLRVRfT1JERVJfU1RBVFVTX0NBTkNFTEVEEAM=');
+
 @$core.Deprecated('Use marketListingBriefDescriptor instead')
 const MarketListingBrief$json = {
   '1': 'MarketListingBrief',
@@ -662,6 +693,78 @@ final $typed_data.Uint8List applyReqDescriptor = $convert.base64Decode(
     'bGF0ZXN0GAMgASgIUgxmb2xsb3dMYXRlc3QSLwoGcGFyYW1zGAQgASgLMhcuZ29vZ2xlLnByb3'
     'RvYnVmLlN0cnVjdFIGcGFyYW1z');
 
+@$core.Deprecated('Use marketOrderDescriptor instead')
+const MarketOrder$json = {
+  '1': 'MarketOrder',
+  '2': [
+    {'1': 'order_id', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'orderId'},
+    {'1': 'grant_uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
+    {'1': 'target_agent', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'targetAgent'},
+    {
+      '1': 'kind',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.MarketOrderKind',
+      '8': {},
+      '10': 'kind'
+    },
+    {
+      '1': 'status',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.MarketOrderStatus',
+      '8': {},
+      '10': 'status'
+    },
+    {'1': 'payee', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'payee'},
+    {'1': 'amount', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'coin', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'coin'},
+    {'1': 'expire_at', '3': 9, '4': 1, '5': 3, '8': {}, '10': 'expireAt'},
+    {'1': 'created_at', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `MarketOrder`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketOrderDescriptor = $convert.base64Decode(
+    'CgtNYXJrZXRPcmRlchIfCghvcmRlcl9pZBgBIAEoCUIEkLUYA1IHb3JkZXJJZBIjCgpncmFudF'
+    '91dWlkGAIgASgJQgSQtRgDUglncmFudFV1aWQSJwoMdGFyZ2V0X2FnZW50GAMgASgJQgSQtRgD'
+    'Ugt0YXJnZXRBZ2VudBIyCgRraW5kGAQgASgOMhguaGkuY2x1Yi5NYXJrZXRPcmRlcktpbmRCBJ'
+    'C1GANSBGtpbmQSOAoGc3RhdHVzGAUgASgOMhouaGkuY2x1Yi5NYXJrZXRPcmRlclN0YXR1c0IE'
+    'kLUYA1IGc3RhdHVzEhoKBXBheWVlGAYgASgJQgSQtRgDUgVwYXllZRIcCgZhbW91bnQYByABKA'
+    'lCBJC1GANSBmFtb3VudBIYCgRjb2luGAggASgJQgSQtRgDUgRjb2luEiEKCWV4cGlyZV9hdBgJ'
+    'IAEoA0IEkLUYA1IIZXhwaXJlQXQSIwoKY3JlYXRlZF9hdBgKIAEoA0IEkLUYA1IJY3JlYXRlZE'
+    'F0OgSYtRgD');
+
+@$core.Deprecated('Use createRenewOrderReqDescriptor instead')
+const CreateRenewOrderReq$json = {
+  '1': 'CreateRenewOrderReq',
+  '2': [
+    {'1': 'grant_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
+  ],
+};
+
+/// Descriptor for `CreateRenewOrderReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createRenewOrderReqDescriptor = $convert.base64Decode(
+    'ChNDcmVhdGVSZW5ld09yZGVyUmVxEisKCmdyYW50X3V1aWQYASABKAlCDLpICXIHMgVeXFMrJF'
+    'IJZ3JhbnRVdWlk');
+
+@$core.Deprecated('Use marketPayReportDescriptor instead')
+const MarketPayReport$json = {
+  '1': 'MarketPayReport',
+  '2': [
+    {'1': 'order_id', '3': 1, '4': 1, '5': 9, '10': 'orderId'},
+    {'1': 'tx_hash', '3': 2, '4': 1, '5': 9, '10': 'txHash'},
+  ],
+};
+
+/// Descriptor for `MarketPayReport`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketPayReportDescriptor = $convert.base64Decode(
+    'Cg9NYXJrZXRQYXlSZXBvcnQSGQoIb3JkZXJfaWQYASABKAlSB29yZGVySWQSFwoHdHhfaGFzaB'
+    'gCIAEoCVIGdHhIYXNo');
+
 @$core.Deprecated('Use marketPayInfoDescriptor instead')
 const MarketPayInfo$json = {
   '1': 'MarketPayInfo',
@@ -702,6 +805,15 @@ const ApplyResp$json = {
       '8': {},
       '10': 'pay'
     },
+    {
+      '1': 'order',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.MarketOrder',
+      '8': {},
+      '10': 'order'
+    },
   ],
   '7': {},
 };
@@ -711,7 +823,8 @@ final $typed_data.Uint8List applyRespDescriptor = $convert.base64Decode(
     'CglBcHBseVJlc3ASIwoKZ3JhbnRfdXVpZBgBIAEoCUIEkLUYA1IJZ3JhbnRVdWlkEjIKBnN0YX'
     'R1cxgCIAEoDjIULmhpLmNsdWIuR3JhbnRTdGF0dXNCBJC1GANSBnN0YXR1cxIjCgphY3Rpb25f'
     'dXJsGAMgASgJQgSQtRgDUglhY3Rpb25VcmwSLgoDcGF5GAQgASgLMhYuaGkuY2x1Yi5NYXJrZX'
-    'RQYXlJbmZvQgSQtRgDUgNwYXk6BJi1GAM=');
+    'RQYXlJbmZvQgSQtRgDUgNwYXkSMAoFb3JkZXIYBSABKAsyFC5oaS5jbHViLk1hcmtldE9yZGVy'
+    'QgSQtRgDUgVvcmRlcjoEmLUYAw==');
 
 @$core.Deprecated('Use decideGrantReqDescriptor instead')
 const DecideGrantReq$json = {
@@ -726,20 +839,6 @@ const DecideGrantReq$json = {
 final $typed_data.Uint8List decideGrantReqDescriptor = $convert.base64Decode(
     'Cg5EZWNpZGVHcmFudFJlcRIrCgpncmFudF91dWlkGAEgASgJQgy6SAlyBzIFXlxTKyRSCWdyYW'
     '50VXVpZBIWCgZyZWFzb24YAiABKAlSBnJlYXNvbg==');
-
-@$core.Deprecated('Use confirmPaymentReqDescriptor instead')
-const ConfirmPaymentReq$json = {
-  '1': 'ConfirmPaymentReq',
-  '2': [
-    {'1': 'grant_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
-    {'1': 'tx_hash', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'txHash'},
-  ],
-};
-
-/// Descriptor for `ConfirmPaymentReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List confirmPaymentReqDescriptor = $convert.base64Decode(
-    'ChFDb25maXJtUGF5bWVudFJlcRIrCgpncmFudF91dWlkGAEgASgJQgy6SAlyBzIFXlxTKyRSCW'
-    'dyYW50VXVpZBIgCgd0eF9oYXNoGAIgASgJQge6SARyAhABUgZ0eEhhc2g=');
 
 @$core.Deprecated('Use listGrantsReqDescriptor instead')
 const ListGrantsReq$json = {

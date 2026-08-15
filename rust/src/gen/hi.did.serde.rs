@@ -12045,7 +12045,7 @@ impl serde::Serialize for VerifyTransactionReq {
         if !self.amount.is_empty() {
             len += 1;
         }
-        if !self.from.is_empty() {
+        if self.from.is_some() {
             len += 1;
         }
         if !self.to.is_empty() {
@@ -12061,8 +12061,8 @@ impl serde::Serialize for VerifyTransactionReq {
         if !self.amount.is_empty() {
             struct_ser.serialize_field("amount", &self.amount)?;
         }
-        if !self.from.is_empty() {
-            struct_ser.serialize_field("from", &self.from)?;
+        if let Some(v) = self.from.as_ref() {
+            struct_ser.serialize_field("from", v)?;
         }
         if !self.to.is_empty() {
             struct_ser.serialize_field("to", &self.to)?;
@@ -12165,7 +12165,7 @@ impl<'de> serde::Deserialize<'de> for VerifyTransactionReq {
                             if from__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("from"));
                             }
-                            from__ = Some(map_.next_value()?);
+                            from__ = map_.next_value()?;
                         }
                         GeneratedField::To => {
                             if to__.is_some() {
@@ -12179,7 +12179,7 @@ impl<'de> serde::Deserialize<'de> for VerifyTransactionReq {
                     coin: coin__.unwrap_or_default(),
                     hash: hash__.unwrap_or_default(),
                     amount: amount__.unwrap_or_default(),
-                    from: from__.unwrap_or_default(),
+                    from: from__,
                     to: to__.unwrap_or_default(),
                 })
             }

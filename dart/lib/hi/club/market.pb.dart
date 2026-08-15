@@ -1879,14 +1879,319 @@ class ApplyReq extends $pb.GeneratedMessage {
   $3.Struct ensureParams() => $_ensure(3);
 }
 
-/// MarketPayInfo 这一笔要付多少、付给谁 —— **前端拿它直接唤起 hidid app**。
+class MarketOrder extends $pb.GeneratedMessage {
+  factory MarketOrder({
+    $core.String? orderId,
+    $core.String? grantUuid,
+    $core.String? targetAgent,
+    MarketOrderKind? kind,
+    MarketOrderStatus? status,
+    $core.String? payee,
+    $core.String? amount,
+    $core.String? coin,
+    $fixnum.Int64? expireAt,
+    $fixnum.Int64? createdAt,
+  }) {
+    final result = create();
+    if (orderId != null) result.orderId = orderId;
+    if (grantUuid != null) result.grantUuid = grantUuid;
+    if (targetAgent != null) result.targetAgent = targetAgent;
+    if (kind != null) result.kind = kind;
+    if (status != null) result.status = status;
+    if (payee != null) result.payee = payee;
+    if (amount != null) result.amount = amount;
+    if (coin != null) result.coin = coin;
+    if (expireAt != null) result.expireAt = expireAt;
+    if (createdAt != null) result.createdAt = createdAt;
+    return result;
+  }
+
+  MarketOrder._();
+
+  factory MarketOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'orderId')
+    ..aOS(2, _omitFieldNames ? '' : 'grantUuid')
+    ..aOS(3, _omitFieldNames ? '' : 'targetAgent')
+    ..aE<MarketOrderKind>(4, _omitFieldNames ? '' : 'kind',
+        enumValues: MarketOrderKind.values)
+    ..aE<MarketOrderStatus>(5, _omitFieldNames ? '' : 'status',
+        enumValues: MarketOrderStatus.values)
+    ..aOS(6, _omitFieldNames ? '' : 'payee')
+    ..aOS(7, _omitFieldNames ? '' : 'amount')
+    ..aOS(8, _omitFieldNames ? '' : 'coin')
+    ..aInt64(9, _omitFieldNames ? '' : 'expireAt')
+    ..aInt64(10, _omitFieldNames ? '' : 'createdAt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketOrder copyWith(void Function(MarketOrder) updates) =>
+      super.copyWith((message) => updates(message as MarketOrder))
+          as MarketOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketOrder create() => MarketOrder._();
+  @$core.override
+  MarketOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketOrder>(create);
+  static MarketOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get orderId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set orderId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOrderId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get grantUuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set grantUuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasGrantUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearGrantUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get targetAgent => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set targetAgent($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTargetAgent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTargetAgent() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  MarketOrderKind get kind => $_getN(3);
+  @$pb.TagNumber(4)
+  set kind(MarketOrderKind value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasKind() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearKind() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  MarketOrderStatus get status => $_getN(4);
+  @$pb.TagNumber(5)
+  set status(MarketOrderStatus value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasStatus() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearStatus() => $_clearField(5);
+
+  /// 收款方 DID。**后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
+  @$pb.TagNumber(6)
+  $core.String get payee => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set payee($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasPayee() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearPayee() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get amount => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set amount($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasAmount() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearAmount() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get coin => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set coin($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCoin() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCoin() => $_clearField(8);
+
+  /// 订单自己的有效期(秒)。过了就作废重开 —— 价格会变,不能让一张老账单永远能付。
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get expireAt => $_getI64(8);
+  @$pb.TagNumber(9)
+  set expireAt($fixnum.Int64 value) => $_setInt64(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasExpireAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearExpireAt() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get createdAt => $_getI64(9);
+  @$pb.TagNumber(10)
+  set createdAt($fixnum.Int64 value) => $_setInt64(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasCreatedAt() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearCreatedAt() => $_clearField(10);
+}
+
+/// 开一张续期账单。购买的账单由 Apply 顺带开出来,这条是**单独续期**用的。
 ///
-/// 用户体验就是:点购买 → 弹出金额和币种 → 确认 → 跳 hidid 付款 → 回来即可用。
-/// 付完把 tx_hash 交回 `Market.ConfirmPayment`,club 调 `hi.did.Transfer.VerifyTransaction`
-/// 核验(那是个 AUTH_NONE 的公开接口,收 DID + 人类可读金额,内部解析地址与精度后比对)。
+/// 谁能开:该授权的 master,或**这台机器人自己**(自动续费就是它开给自己的)。
+/// grant 决定了 target_agent —— 不接受入参指定,否则就成了"替别人的机器人开单"。
+class CreateRenewOrderReq extends $pb.GeneratedMessage {
+  factory CreateRenewOrderReq({
+    $core.String? grantUuid,
+  }) {
+    final result = create();
+    if (grantUuid != null) result.grantUuid = grantUuid;
+    return result;
+  }
+
+  CreateRenewOrderReq._();
+
+  factory CreateRenewOrderReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateRenewOrderReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateRenewOrderReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'grantUuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateRenewOrderReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateRenewOrderReq copyWith(void Function(CreateRenewOrderReq) updates) =>
+      super.copyWith((message) => updates(message as CreateRenewOrderReq))
+          as CreateRenewOrderReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateRenewOrderReq create() => CreateRenewOrderReq._();
+  @$core.override
+  CreateRenewOrderReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateRenewOrderReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateRenewOrderReq>(create);
+  static CreateRenewOrderReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get grantUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set grantUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantUuid() => $_clearField(1);
+}
+
+/// 付款回报:告诉市场"这张单我付了,钱在这笔转账里"。
 ///
-/// ⚠️ **club 全程只需要验签/验交易的能力,不需要签名。** 这条链路上持私钥的是用户的
-///    hidid app —— 与登录、授权登录用的是同一套现成流程。
+/// ## **不看付款方是谁** —— 这是有意的
+///
+/// 卖家关心的是"这张单要的钱到账了没有",不是"谁掏的"。订单上写明给 A 续期,
+/// 那么谁付的款都一样给 A 续 —— master 付、机器人自己付、将来某台机器人替别的机器人付,
+/// 全是同一条路,不需要为每种情况放宽一次判据。
+/// (原来那版把"付款方必须是谁"当判据,机器人替自己付款时就对不上,只能一路打补丁。)
+///
+/// ## 判据(全部与付款方无关)
+///
+///   ① 订单 OPEN 且未过期        ② 这笔 tx 没被别的单用过(全局唯一)
+///   ③ 链上 success              ④ 收款方/金额/币种与订单一致
+///   ⑤ **链上时间不早于订单创建时间**
+///
+/// ⑤ 挡的是"拿一笔早就存在、恰好金额相符的旧转账来认领新订单" ——
+/// 它只看时间,不看付款方,所以不违背上面那条原则。
+///
+/// ⚠️ 已知且**接受**的残留风险:订单号写不进链上转账(Aptos 的
+///    primary_fungible_store::transfer 没有 memo 字段),所以同一挂牌、同价、
+///    同收款地址的两张单,链上那两笔钱长得一模一样 —— 理论上谁先报谁认走。
+///    这是"不看付款方"的必然代价,已知情采纳。真要堵,得让每张单的金额带一点随机尾数
+///    使其链上唯一,代价是金额变得不好看。
+class MarketPayReport extends $pb.GeneratedMessage {
+  factory MarketPayReport({
+    $core.String? orderId,
+    $core.String? txHash,
+  }) {
+    final result = create();
+    if (orderId != null) result.orderId = orderId;
+    if (txHash != null) result.txHash = txHash;
+    return result;
+  }
+
+  MarketPayReport._();
+
+  factory MarketPayReport.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketPayReport.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketPayReport',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'orderId')
+    ..aOS(2, _omitFieldNames ? '' : 'txHash')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPayReport clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPayReport copyWith(void Function(MarketPayReport) updates) =>
+      super.copyWith((message) => updates(message as MarketPayReport))
+          as MarketPayReport;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketPayReport create() => MarketPayReport._();
+  @$core.override
+  MarketPayReport createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketPayReport getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketPayReport>(create);
+  static MarketPayReport? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get orderId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set orderId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOrderId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get txHash => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set txHash($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTxHash() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTxHash() => $_clearField(2);
+}
+
 class MarketPayInfo extends $pb.GeneratedMessage {
   factory MarketPayInfo({
     $core.String? payee,
@@ -1980,12 +2285,14 @@ class ApplyResp extends $pb.GeneratedMessage {
     GrantStatus? status,
     $core.String? actionUrl,
     MarketPayInfo? pay,
+    MarketOrder? order,
   }) {
     final result = create();
     if (grantUuid != null) result.grantUuid = grantUuid;
     if (status != null) result.status = status;
     if (actionUrl != null) result.actionUrl = actionUrl;
     if (pay != null) result.pay = pay;
+    if (order != null) result.order = order;
     return result;
   }
 
@@ -2008,6 +2315,8 @@ class ApplyResp extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'actionUrl')
     ..aOM<MarketPayInfo>(4, _omitFieldNames ? '' : 'pay',
         subBuilder: MarketPayInfo.create)
+    ..aOM<MarketOrder>(5, _omitFieldNames ? '' : 'order',
+        subBuilder: MarketOrder.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2065,6 +2374,20 @@ class ApplyResp extends $pb.GeneratedMessage {
   void clearPay() => $_clearField(4);
   @$pb.TagNumber(4)
   MarketPayInfo ensurePay() => $_ensure(3);
+
+  /// 付费购买时顺带开出的账单。付款方拿它去付,再用 Market.ReportPayment 认领。
+  /// **pay 是它的摘要**(收款方/金额/币种),留着是因为前端唤起 hidid app 只要这三样;
+  /// 认领必须用 order_id。
+  @$pb.TagNumber(5)
+  MarketOrder get order => $_getN(4);
+  @$pb.TagNumber(5)
+  set order(MarketOrder value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasOrder() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearOrder() => $_clearField(5);
+  @$pb.TagNumber(5)
+  MarketOrder ensureOrder() => $_ensure(4);
 }
 
 class DecideGrantReq extends $pb.GeneratedMessage {
@@ -2131,85 +2454,6 @@ class DecideGrantReq extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(1);
   @$pb.TagNumber(2)
   void clearReason() => $_clearField(2);
-}
-
-/// ConfirmPaymentReq 付完款把 tx_hash 交回来,club 核验后放行插件。
-///
-/// club 调 `hi.did.Transfer.VerifyTransaction`(AUTH_NONE 公开接口,收 DID + 人类可读金额,
-/// 内部解析地址与精度后比对)。所以**收款验证不需要商户体系,也不需要卖方在线**。
-///
-/// ⚠️ **同一个 tx_hash 只能兑换一次** —— 后端按 hash 全局去重,
-///    不然一笔转账可以拿去把所有挂牌都买一遍。
-///
-/// **首购与续费共用这一个接口**:
-///   · grant 处于 PENDING → 首购,核验通过后装载;
-///   · grant 处于 INSTALLED → 续费,核验通过后 `expire_at += duration`。
-/// 续费**延长同一个 grant,不新建** —— 新建要先撤旧的,而撤销会删掉 ai 侧的 c/d 行,
-/// 用户在这个插件上攒的使用态配置(d.data)就没了。
-class ConfirmPaymentReq extends $pb.GeneratedMessage {
-  factory ConfirmPaymentReq({
-    $core.String? grantUuid,
-    $core.String? txHash,
-  }) {
-    final result = create();
-    if (grantUuid != null) result.grantUuid = grantUuid;
-    if (txHash != null) result.txHash = txHash;
-    return result;
-  }
-
-  ConfirmPaymentReq._();
-
-  factory ConfirmPaymentReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ConfirmPaymentReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ConfirmPaymentReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'grantUuid')
-    ..aOS(2, _omitFieldNames ? '' : 'txHash')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConfirmPaymentReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConfirmPaymentReq copyWith(void Function(ConfirmPaymentReq) updates) =>
-      super.copyWith((message) => updates(message as ConfirmPaymentReq))
-          as ConfirmPaymentReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ConfirmPaymentReq create() => ConfirmPaymentReq._();
-  @$core.override
-  ConfirmPaymentReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ConfirmPaymentReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ConfirmPaymentReq>(create);
-  static ConfirmPaymentReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get grantUuid => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set grantUuid($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasGrantUuid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearGrantUuid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get txHash => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set txHash($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasTxHash() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearTxHash() => $_clearField(2);
 }
 
 class ListGrantsReq extends $pb.GeneratedMessage {

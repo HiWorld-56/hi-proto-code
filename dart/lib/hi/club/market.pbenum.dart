@@ -129,5 +129,78 @@ class GrantStatus extends $pb.ProtobufEnum {
   const GrantStatus._(super.value, super.name);
 }
 
+/// MarketPayInfo 这一笔要付多少、付给谁 —— **前端拿它直接唤起 hidid app**。
+///
+/// 用户体验就是:点购买 → 弹出金额和币种 → 确认 → 跳 hidid 付款 → 回来即可用。
+/// 付完把 tx_hash 交回 `Market.ConfirmPayment`,club 调 `hi.did.Transfer.VerifyTransaction`
+/// 核验(那是个 AUTH_NONE 的公开接口,收 DID + 人类可读金额,内部解析地址与精度后比对)。
+///
+/// ⚠️ **club 全程只需要验签/验交易的能力,不需要签名。** 这条链路上持私钥的是用户的
+///    hidid app —— 与登录、授权登录用的是同一套现成流程。
+/// ── 订单 ────────────────────────────────────────────────────────────────────
+///
+/// **购买与续期共用同一个东西。** 两者的业务流程本来就是一样的:
+/// 市场开一张账单 → 有人把钱付到账单指定的地址 → 市场核验 → 履行。
+/// 差别只在"履行"那一步(装载 vs 延期),不该是两条链路。
+///
+/// ## 为什么必须有订单号,而不是拿 (付款方,收款方,金额,币种) 去认款
+///
+/// 原来没有订单实体:`ConfirmPayment(grant_uuid, tx_hash)` 直接拿这四元组去链上比对,
+/// 于是"这笔钱是谁付的"变成了判据 —— 一旦机器人替自己付款(自动续费),
+/// 判据就对不上了,只能去放宽"付款方必须是谁",越改越歪。
+///
+/// 有了订单号,判据回到本来该有的样子:**订单要的钱到账了就履行,付款方是谁不重要**。
+/// 于是 master 付、机器人自己付、将来某台机器人替别的机器人付,都是同一条路。
+///
+/// ## target_agent 是给扩展性留的
+///
+/// 购买时它是受让方;续期时它是"被续的那台机器人"。今天发起方总是 master 或机器人自己,
+/// 但**订单里写清楚了给谁**,所以"机器人给别的机器人续期"将来只是换个值,不动结构。
+class MarketOrderKind extends $pb.ProtobufEnum {
+  static const MarketOrderKind MARKET_ORDER_KIND_PURCHASE =
+      MarketOrderKind._(0, _omitEnumNames ? '' : 'MARKET_ORDER_KIND_PURCHASE');
+  static const MarketOrderKind MARKET_ORDER_KIND_RENEW =
+      MarketOrderKind._(1, _omitEnumNames ? '' : 'MARKET_ORDER_KIND_RENEW');
+
+  static const $core.List<MarketOrderKind> values = <MarketOrderKind>[
+    MARKET_ORDER_KIND_PURCHASE,
+    MARKET_ORDER_KIND_RENEW,
+  ];
+
+  static final $core.List<MarketOrderKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
+  static MarketOrderKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MarketOrderKind._(super.value, super.name);
+}
+
+class MarketOrderStatus extends $pb.ProtobufEnum {
+  static const MarketOrderStatus MARKET_ORDER_STATUS_OPEN =
+      MarketOrderStatus._(0, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_OPEN');
+  static const MarketOrderStatus MARKET_ORDER_STATUS_PAID =
+      MarketOrderStatus._(1, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_PAID');
+  static const MarketOrderStatus MARKET_ORDER_STATUS_EXPIRED =
+      MarketOrderStatus._(
+          2, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_EXPIRED');
+  static const MarketOrderStatus MARKET_ORDER_STATUS_CANCELED =
+      MarketOrderStatus._(
+          3, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_CANCELED');
+
+  static const $core.List<MarketOrderStatus> values = <MarketOrderStatus>[
+    MARKET_ORDER_STATUS_OPEN,
+    MARKET_ORDER_STATUS_PAID,
+    MARKET_ORDER_STATUS_EXPIRED,
+    MARKET_ORDER_STATUS_CANCELED,
+  ];
+
+  static final $core.List<MarketOrderStatus?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static MarketOrderStatus? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MarketOrderStatus._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

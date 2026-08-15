@@ -331,12 +331,23 @@ func (x *TxStatusResp) GetProgress() uint32 {
 }
 
 type VerifyTransactionReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`     // 预期币种（did 据此定位链/合约/精度）
-	Hash          string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`     // 链上交易 hash
-	Amount        string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"` // 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
-	From          string                 `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`     // 预期付款方 **DID**（did 内部按币种链解析成地址比对）
-	To            string                 `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"`         // 预期收款方 **DID**（同上）
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Coin   string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`     // 预期币种（did 据此定位链/合约/精度）
+	Hash   string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`     // 链上交易 hash
+	Amount string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"` // 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
+	// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
+	//
+	// ⚠️ **optional 是有意的:不传 = 不限定付款方**(跳过这一项比对),传了就必须对上。
+	//
+	//	用 optional 而不是"空串即跳过",是为了让"没传"和"传了个空值"可区分 ——
+	//	后者会让某个调用方哪天忘了填 from 时,**检查无声地消失**,而这是笔钱的事。
+	//
+	//	什么时候该不传:业务上按**订单**认款(订单号定履约内容),此时"谁掏的钱"不进判据 ——
+	//	插件市场就是这样:订单写明给 A 续期,那么谁付的都给 A 续。
+	//	这种场景下改用**交易时间 ≥ 订单创建时间**防伪(见 resp.timestamp),
+	//	它同样不关心付款方。
+	From          *string `protobuf:"bytes,4,opt,name=from,proto3,oneof" json:"from,omitempty"`
+	To            string  `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"` // 预期收款方 **DID**（同上）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -393,8 +404,8 @@ func (x *VerifyTransactionReq) GetAmount() string {
 }
 
 func (x *VerifyTransactionReq) GetFrom() string {
-	if x != nil {
-		return x.From
+	if x != nil && x.From != nil {
+		return *x.From
 	}
 	return ""
 }
@@ -592,13 +603,14 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x04hash\x18\x02 \x01(\tR\x04hash\"R\n" +
 	"\fTxStatusResp\x12\x1a\n" +
 	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12 \n" +
-	"\bprogress\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01R\bprogress:\x04\x98\xb5\x18\x01\"z\n" +
+	"\bprogress\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01R\bprogress:\x04\x98\xb5\x18\x01\"\x88\x01\n" +
 	"\x14VerifyTransactionReq\x12\x12\n" +
 	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x12\n" +
 	"\x04hash\x18\x02 \x01(\tR\x04hash\x12\x16\n" +
-	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x12\n" +
-	"\x04from\x18\x04 \x01(\tR\x04from\x12\x0e\n" +
-	"\x02to\x18\x05 \x01(\tR\x02to\"\xf1\x01\n" +
+	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x17\n" +
+	"\x04from\x18\x04 \x01(\tH\x00R\x04from\x88\x01\x01\x12\x0e\n" +
+	"\x02to\x18\x05 \x01(\tR\x02toB\a\n" +
+	"\x05_from\"\xf1\x01\n" +
 	"\x15VerifyTransactionResp\x12\x1a\n" +
 	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12\x1c\n" +
 	"\x06passed\x18\x02 \x01(\bB\x04\x90\xb5\x18\x01R\x06passed\x12\x1c\n" +
@@ -669,6 +681,7 @@ func file_hi_did_transfer_proto_init() {
 		return
 	}
 	file_hi_did_base_proto_init()
+	file_hi_did_transfer_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
