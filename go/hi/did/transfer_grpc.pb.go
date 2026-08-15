@@ -23,6 +23,7 @@ const (
 	Transfer_History_FullMethodName           = "/hi.did.Transfer/History"
 	Transfer_TxStatus_FullMethodName          = "/hi.did.Transfer/TxStatus"
 	Transfer_VerifyTransaction_FullMethodName = "/hi.did.Transfer/VerifyTransaction"
+	Transfer_TxDetail_FullMethodName          = "/hi.did.Transfer/TxDetail"
 	Transfer_VerifySignature_FullMethodName   = "/hi.did.Transfer/VerifySignature"
 )
 
@@ -36,6 +37,7 @@ type TransferClient interface {
 	History(ctx context.Context, in *HistoryReq, opts ...grpc.CallOption) (*HistoryResp, error)
 	TxStatus(ctx context.Context, in *TxStatusReq, opts ...grpc.CallOption) (*TxStatusResp, error)
 	VerifyTransaction(ctx context.Context, in *VerifyTransactionReq, opts ...grpc.CallOption) (*VerifyTransactionResp, error)
+	TxDetail(ctx context.Context, in *TxDetailReq, opts ...grpc.CallOption) (*TxDetailResp, error)
 	VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error)
 }
 
@@ -77,6 +79,16 @@ func (c *transferClient) VerifyTransaction(ctx context.Context, in *VerifyTransa
 	return out, nil
 }
 
+func (c *transferClient) TxDetail(ctx context.Context, in *TxDetailReq, opts ...grpc.CallOption) (*TxDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TxDetailResp)
+	err := c.cc.Invoke(ctx, Transfer_TxDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *transferClient) VerifySignature(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*hi.DID, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.DID)
@@ -97,6 +109,7 @@ type TransferServer interface {
 	History(context.Context, *HistoryReq) (*HistoryResp, error)
 	TxStatus(context.Context, *TxStatusReq) (*TxStatusResp, error)
 	VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error)
+	TxDetail(context.Context, *TxDetailReq) (*TxDetailResp, error)
 	VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error)
 }
 
@@ -115,6 +128,9 @@ func (UnimplementedTransferServer) TxStatus(context.Context, *TxStatusReq) (*TxS
 }
 func (UnimplementedTransferServer) VerifyTransaction(context.Context, *VerifyTransactionReq) (*VerifyTransactionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyTransaction not implemented")
+}
+func (UnimplementedTransferServer) TxDetail(context.Context, *TxDetailReq) (*TxDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method TxDetail not implemented")
 }
 func (UnimplementedTransferServer) VerifySignature(context.Context, *hi.SignedData) (*hi.DID, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifySignature not implemented")
@@ -193,6 +209,24 @@ func _Transfer_VerifyTransaction_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transfer_TxDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxDetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransferServer).TxDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transfer_TxDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransferServer).TxDetail(ctx, req.(*TxDetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Transfer_VerifySignature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
@@ -229,6 +263,10 @@ var Transfer_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyTransaction",
 			Handler:    _Transfer_VerifyTransaction_Handler,
+		},
+		{
+			MethodName: "TxDetail",
+			Handler:    _Transfer_TxDetail_Handler,
 		},
 		{
 			MethodName: "VerifySignature",

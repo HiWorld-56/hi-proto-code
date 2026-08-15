@@ -151,6 +151,51 @@ final $typed_data.Uint8List txStatusRespDescriptor = $convert.base64Decode(
     'CgxUeFN0YXR1c1Jlc3ASGgoFc3RhdGUYASABKAlCBJC1GAFSBXN0YXRlEiAKCHByb2dyZXNzGA'
     'IgASgNQgSQtRgBUghwcm9ncmVzczoEmLUYAQ==');
 
+@$core.Deprecated('Use txDetailReqDescriptor instead')
+const TxDetailReq$json = {
+  '1': 'TxDetailReq',
+  '2': [
+    {'1': 'coin', '3': 1, '4': 1, '5': 9, '10': 'coin'},
+    {'1': 'hash', '3': 2, '4': 1, '5': 9, '10': 'hash'},
+  ],
+};
+
+/// Descriptor for `TxDetailReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List txDetailReqDescriptor = $convert.base64Decode(
+    'CgtUeERldGFpbFJlcRISCgRjb2luGAEgASgJUgRjb2luEhIKBGhhc2gYAiABKAlSBGhhc2g=');
+
+@$core.Deprecated('Use txDetailRespDescriptor instead')
+const TxDetailResp$json = {
+  '1': 'TxDetailResp',
+  '2': [
+    {'1': 'state', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'state'},
+    {
+      '1': 'confirmed_blocks',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '10': 'confirmedBlocks'
+    },
+    {'1': 'timestamp', '3': 3, '4': 1, '5': 3, '8': {}, '10': 'timestamp'},
+    {'1': 'from', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'from'},
+    {'1': 'to', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'to'},
+    {'1': 'amount', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'contract', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'contract'},
+    {'1': 'query_count', '3': 8, '4': 1, '5': 13, '8': {}, '10': 'queryCount'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `TxDetailResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List txDetailRespDescriptor = $convert.base64Decode(
+    'CgxUeERldGFpbFJlc3ASGgoFc3RhdGUYASABKAlCBJC1GAFSBXN0YXRlEi8KEGNvbmZpcm1lZF'
+    '9ibG9ja3MYAiABKANCBJC1GAFSD2NvbmZpcm1lZEJsb2NrcxIiCgl0aW1lc3RhbXAYAyABKANC'
+    'BJC1GAFSCXRpbWVzdGFtcBIYCgRmcm9tGAQgASgJQgSQtRgBUgRmcm9tEhQKAnRvGAUgASgJQg'
+    'SQtRgBUgJ0bxIcCgZhbW91bnQYBiABKAlCBJC1GAFSBmFtb3VudBIgCghjb250cmFjdBgHIAEo'
+    'CUIEkLUYAVIIY29udHJhY3QSJQoLcXVlcnlfY291bnQYCCABKA1CBJC1GAFSCnF1ZXJ5Q291bn'
+    'Q6BJi1GAE=');
+
 @$core.Deprecated('Use verifyTransactionReqDescriptor instead')
 const VerifyTransactionReq$json = {
   '1': 'VerifyTransactionReq',
@@ -158,19 +203,16 @@ const VerifyTransactionReq$json = {
     {'1': 'coin', '3': 1, '4': 1, '5': 9, '10': 'coin'},
     {'1': 'hash', '3': 2, '4': 1, '5': 9, '10': 'hash'},
     {'1': 'amount', '3': 3, '4': 1, '5': 9, '10': 'amount'},
-    {'1': 'from', '3': 4, '4': 1, '5': 9, '9': 0, '10': 'from', '17': true},
+    {'1': 'from', '3': 4, '4': 1, '5': 9, '10': 'from'},
     {'1': 'to', '3': 5, '4': 1, '5': 9, '10': 'to'},
-  ],
-  '8': [
-    {'1': '_from'},
   ],
 };
 
 /// Descriptor for `VerifyTransactionReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List verifyTransactionReqDescriptor = $convert.base64Decode(
     'ChRWZXJpZnlUcmFuc2FjdGlvblJlcRISCgRjb2luGAEgASgJUgRjb2luEhIKBGhhc2gYAiABKA'
-    'lSBGhhc2gSFgoGYW1vdW50GAMgASgJUgZhbW91bnQSFwoEZnJvbRgEIAEoCUgAUgRmcm9tiAEB'
-    'Eg4KAnRvGAUgASgJUgJ0b0IHCgVfZnJvbQ==');
+    'lSBGhhc2gSFgoGYW1vdW50GAMgASgJUgZhbW91bnQSEgoEZnJvbRgEIAEoCVIEZnJvbRIOCgJ0'
+    'bxgFIAEoCVICdG8=');
 
 @$core.Deprecated('Use verifyTransactionRespDescriptor instead')
 const VerifyTransactionResp$json = {

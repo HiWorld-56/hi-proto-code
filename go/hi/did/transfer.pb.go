@@ -330,6 +330,177 @@ func (x *TxStatusResp) GetProgress() uint32 {
 	return 0
 }
 
+// 取一笔链上交易的明细。**只报事实,不做判断。**
+//
+// 与 VerifyTransaction 的分工:
+//
+//	· VerifyTransaction —— 你把**完整的**预期(币种/金额/付款方/收款方)交给它,它替你比对。
+//	  信息必须完整,它不替调用方做假设。
+//	· TxDetail          —— 你只说"哪条链的哪笔交易",它把链上事实原样给你,
+//	  **比对规则由你自己定**。
+//
+// 为什么需要后者:有的业务判据里**没有付款方**这一项。插件市场就是这样 ——
+// 它按**订单**认款(订单号定履约内容),谁掏的钱不进判据。这种业务不该逼着
+// 通用验证器变松(那会让对付款方敏感的业务在漏传字段时无声失去检查),
+// 而应该拿到事实自己比。
+//
+// 返回的都是链上公开数据,故与同 service 的其它方法同档(AUTH_NONE)。
+type TxDetailReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"` // 用来定位链/合约/精度
+	Hash          string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TxDetailReq) Reset() {
+	*x = TxDetailReq{}
+	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TxDetailReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TxDetailReq) ProtoMessage() {}
+
+func (x *TxDetailReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TxDetailReq.ProtoReflect.Descriptor instead.
+func (*TxDetailReq) Descriptor() ([]byte, []int) {
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *TxDetailReq) GetCoin() string {
+	if x != nil {
+		return x.Coin
+	}
+	return ""
+}
+
+func (x *TxDetailReq) GetHash() string {
+	if x != nil {
+		return x.Hash
+	}
+	return ""
+}
+
+type TxDetailResp struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	State           string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"` // pending / confirming / success / failed / notfound
+	ConfirmedBlocks int64                  `protobuf:"varint,2,opt,name=confirmed_blocks,json=confirmedBlocks,proto3" json:"confirmed_blocks,omitempty"`
+	Timestamp       int64                  `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"` // 交易时间(ms)。业务侧据此做时限校验
+	From            string                 `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`            // 链上地址(不是 DID)
+	To              string                 `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"`                // 链上地址(不是 DID)
+	Amount          string                 `protobuf:"bytes,6,opt,name=amount,proto3" json:"amount,omitempty"`        // **人类可读**,已按币种精度换算
+	Contract        string                 `protobuf:"bytes,7,opt,name=contract,proto3" json:"contract,omitempty"`    // 合约地址;空=原生币
+	// 该 hash 在缓存窗口内被**成功且合法地核验**过几次。业务侧据此防伪。
+	// ⚠️ 别拿它当硬闸:响应丢了导致的重试、崩在中途导致的重试,都会让它变大 ——
+	//
+	//	早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
+	QueryCount    uint32 `protobuf:"varint,8,opt,name=query_count,json=queryCount,proto3" json:"query_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TxDetailResp) Reset() {
+	*x = TxDetailResp{}
+	mi := &file_hi_did_transfer_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TxDetailResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TxDetailResp) ProtoMessage() {}
+
+func (x *TxDetailResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_transfer_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TxDetailResp.ProtoReflect.Descriptor instead.
+func (*TxDetailResp) Descriptor() ([]byte, []int) {
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *TxDetailResp) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *TxDetailResp) GetConfirmedBlocks() int64 {
+	if x != nil {
+		return x.ConfirmedBlocks
+	}
+	return 0
+}
+
+func (x *TxDetailResp) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *TxDetailResp) GetFrom() string {
+	if x != nil {
+		return x.From
+	}
+	return ""
+}
+
+func (x *TxDetailResp) GetTo() string {
+	if x != nil {
+		return x.To
+	}
+	return ""
+}
+
+func (x *TxDetailResp) GetAmount() string {
+	if x != nil {
+		return x.Amount
+	}
+	return ""
+}
+
+func (x *TxDetailResp) GetContract() string {
+	if x != nil {
+		return x.Contract
+	}
+	return ""
+}
+
+func (x *TxDetailResp) GetQueryCount() uint32 {
+	if x != nil {
+		return x.QueryCount
+	}
+	return 0
+}
+
 type VerifyTransactionReq struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
 	Coin   string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`     // 预期币种（did 据此定位链/合约/精度）
@@ -337,24 +508,24 @@ type VerifyTransactionReq struct {
 	Amount string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"` // 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
 	// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
 	//
-	// ⚠️ **optional 是有意的:不传 = 不限定付款方**(跳过这一项比对),传了就必须对上。
+	// ⚠️ **必填,不要改成 optional。** 曾经为了插件市场("按订单认款,不关心谁付的")
 	//
-	//	用 optional 而不是"空串即跳过",是为了让"没传"和"传了个空值"可区分 ——
-	//	后者会让某个调用方哪天忘了填 from 时,**检查无声地消失**,而这是笔钱的事。
+	//	想把它改成"不传即跳过" —— 那是**把业务层的判断塞进通用帮助方法**。
+	//	VerifyTransaction 是给三方用的独立工具,它不该替调用方做假设:
+	//	**既然要验,信息就必须完整**。开了这个口子,对 from 敏感的业务哪天漏传一个字段,
+	//	检查就无声消失了,而这是笔钱的事。
 	//
-	//	什么时候该不传:业务上按**订单**认款(订单号定履约内容),此时"谁掏的钱"不进判据 ——
-	//	插件市场就是这样:订单写明给 A 续期,那么谁付的都给 A 续。
-	//	这种场景下改用**交易时间 ≥ 订单创建时间**防伪(见 resp.timestamp),
-	//	它同样不关心付款方。
-	From          *string `protobuf:"bytes,4,opt,name=from,proto3,oneof" json:"from,omitempty"`
-	To            string  `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"` // 预期收款方 **DID**（同上）
+	//	不关心付款方的业务应当去查**交易明细**,自己按业务规则比对,
+	//	而不是让公用的验证器变松。
+	From          string `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`
+	To            string `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"` // 预期收款方 **DID**（同上）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *VerifyTransactionReq) Reset() {
 	*x = VerifyTransactionReq{}
-	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	mi := &file_hi_did_transfer_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -366,7 +537,7 @@ func (x *VerifyTransactionReq) String() string {
 func (*VerifyTransactionReq) ProtoMessage() {}
 
 func (x *VerifyTransactionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_transfer_proto_msgTypes[5]
+	mi := &file_hi_did_transfer_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -379,7 +550,7 @@ func (x *VerifyTransactionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerifyTransactionReq.ProtoReflect.Descriptor instead.
 func (*VerifyTransactionReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_transfer_proto_rawDescGZIP(), []int{5}
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *VerifyTransactionReq) GetCoin() string {
@@ -404,8 +575,8 @@ func (x *VerifyTransactionReq) GetAmount() string {
 }
 
 func (x *VerifyTransactionReq) GetFrom() string {
-	if x != nil && x.From != nil {
-		return *x.From
+	if x != nil {
+		return x.From
 	}
 	return ""
 }
@@ -431,7 +602,7 @@ type VerifyTransactionResp struct {
 
 func (x *VerifyTransactionResp) Reset() {
 	*x = VerifyTransactionResp{}
-	mi := &file_hi_did_transfer_proto_msgTypes[6]
+	mi := &file_hi_did_transfer_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -443,7 +614,7 @@ func (x *VerifyTransactionResp) String() string {
 func (*VerifyTransactionResp) ProtoMessage() {}
 
 func (x *VerifyTransactionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_transfer_proto_msgTypes[6]
+	mi := &file_hi_did_transfer_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -456,7 +627,7 @@ func (x *VerifyTransactionResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerifyTransactionResp.ProtoReflect.Descriptor instead.
 func (*VerifyTransactionResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_transfer_proto_rawDescGZIP(), []int{6}
+	return file_hi_did_transfer_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *VerifyTransactionResp) GetState() string {
@@ -513,7 +684,7 @@ type HistoryResp_Unit struct {
 
 func (x *HistoryResp_Unit) Reset() {
 	*x = HistoryResp_Unit{}
-	mi := &file_hi_did_transfer_proto_msgTypes[7]
+	mi := &file_hi_did_transfer_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -525,7 +696,7 @@ func (x *HistoryResp_Unit) String() string {
 func (*HistoryResp_Unit) ProtoMessage() {}
 
 func (x *HistoryResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_transfer_proto_msgTypes[7]
+	mi := &file_hi_did_transfer_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -603,14 +774,26 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x04hash\x18\x02 \x01(\tR\x04hash\"R\n" +
 	"\fTxStatusResp\x12\x1a\n" +
 	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12 \n" +
-	"\bprogress\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01R\bprogress:\x04\x98\xb5\x18\x01\"\x88\x01\n" +
+	"\bprogress\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01R\bprogress:\x04\x98\xb5\x18\x01\"5\n" +
+	"\vTxDetailReq\x12\x12\n" +
+	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x12\n" +
+	"\x04hash\x18\x02 \x01(\tR\x04hash\"\x9c\x02\n" +
+	"\fTxDetailResp\x12\x1a\n" +
+	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12/\n" +
+	"\x10confirmed_blocks\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\x0fconfirmedBlocks\x12\"\n" +
+	"\ttimestamp\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01R\ttimestamp\x12\x18\n" +
+	"\x04from\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x04from\x12\x14\n" +
+	"\x02to\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\x02to\x12\x1c\n" +
+	"\x06amount\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\x06amount\x12 \n" +
+	"\bcontract\x18\a \x01(\tB\x04\x90\xb5\x18\x01R\bcontract\x12%\n" +
+	"\vquery_count\x18\b \x01(\rB\x04\x90\xb5\x18\x01R\n" +
+	"queryCount:\x04\x98\xb5\x18\x01\"z\n" +
 	"\x14VerifyTransactionReq\x12\x12\n" +
 	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x12\n" +
 	"\x04hash\x18\x02 \x01(\tR\x04hash\x12\x16\n" +
-	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x17\n" +
-	"\x04from\x18\x04 \x01(\tH\x00R\x04from\x88\x01\x01\x12\x0e\n" +
-	"\x02to\x18\x05 \x01(\tR\x02toB\a\n" +
-	"\x05_from\"\xf1\x01\n" +
+	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x12\n" +
+	"\x04from\x18\x04 \x01(\tR\x04from\x12\x0e\n" +
+	"\x02to\x18\x05 \x01(\tR\x02to\"\xf1\x01\n" +
 	"\x15VerifyTransactionResp\x12\x1a\n" +
 	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12\x1c\n" +
 	"\x06passed\x18\x02 \x01(\bB\x04\x90\xb5\x18\x01R\x06passed\x12\x1c\n" +
@@ -618,11 +801,12 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x10confirmed_blocks\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\x0fconfirmedBlocks\x12\"\n" +
 	"\ttimestamp\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01R\ttimestamp\x12%\n" +
 	"\vquery_count\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01R\n" +
-	"queryCount:\x04\x98\xb5\x18\x012\x8f\x02\n" +
+	"queryCount:\x04\x98\xb5\x18\x012\xcd\x02\n" +
 	"\bTransfer\x129\n" +
 	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\"\x05\x8a\xb5\x18\x01\x01\x12<\n" +
 	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12W\n" +
-	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x05\x8a\xb5\x18\x01\x01\x121\n" +
+	"\x11VerifyTransaction\x12\x1c.hi.did.VerifyTransactionReq\x1a\x1d.hi.did.VerifyTransactionResp\"\x05\x8a\xb5\x18\x01\x01\x12<\n" +
+	"\bTxDetail\x12\x13.hi.did.TxDetailReq\x1a\x14.hi.did.TxDetailResp\"\x05\x8a\xb5\x18\x01\x01\x121\n" +
 	"\x0fVerifySignature\x12\x0e.hi.SignedData\x1a\a.hi.DID\"\x05\x8a\xb5\x18\x01\x05B~\n" +
 	"\n" +
 	"com.hi.didB\rTransferProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
@@ -639,37 +823,41 @@ func file_hi_did_transfer_proto_rawDescGZIP() []byte {
 	return file_hi_did_transfer_proto_rawDescData
 }
 
-var file_hi_did_transfer_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_did_transfer_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_hi_did_transfer_proto_goTypes = []any{
 	(*Transaction)(nil),           // 0: hi.did.Transaction
 	(*HistoryReq)(nil),            // 1: hi.did.HistoryReq
 	(*HistoryResp)(nil),           // 2: hi.did.HistoryResp
 	(*TxStatusReq)(nil),           // 3: hi.did.TxStatusReq
 	(*TxStatusResp)(nil),          // 4: hi.did.TxStatusResp
-	(*VerifyTransactionReq)(nil),  // 5: hi.did.VerifyTransactionReq
-	(*VerifyTransactionResp)(nil), // 6: hi.did.VerifyTransactionResp
-	(*HistoryResp_Unit)(nil),      // 7: hi.did.HistoryResp.Unit
-	(*Coin)(nil),                  // 8: hi.did.Coin
-	(*hi.Entity)(nil),             // 9: hi.Entity
-	(*hi.SignedData)(nil),         // 10: hi.SignedData
-	(*hi.DID)(nil),                // 11: hi.DID
+	(*TxDetailReq)(nil),           // 5: hi.did.TxDetailReq
+	(*TxDetailResp)(nil),          // 6: hi.did.TxDetailResp
+	(*VerifyTransactionReq)(nil),  // 7: hi.did.VerifyTransactionReq
+	(*VerifyTransactionResp)(nil), // 8: hi.did.VerifyTransactionResp
+	(*HistoryResp_Unit)(nil),      // 9: hi.did.HistoryResp.Unit
+	(*Coin)(nil),                  // 10: hi.did.Coin
+	(*hi.Entity)(nil),             // 11: hi.Entity
+	(*hi.SignedData)(nil),         // 12: hi.SignedData
+	(*hi.DID)(nil),                // 13: hi.DID
 }
 var file_hi_did_transfer_proto_depIdxs = []int32{
-	8,  // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
-	9,  // 1: hi.did.Transaction.from:type_name -> hi.Entity
-	9,  // 2: hi.did.Transaction.to:type_name -> hi.Entity
-	7,  // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
+	10, // 0: hi.did.Transaction.coin:type_name -> hi.did.Coin
+	11, // 1: hi.did.Transaction.from:type_name -> hi.Entity
+	11, // 2: hi.did.Transaction.to:type_name -> hi.Entity
+	9,  // 3: hi.did.HistoryResp.list:type_name -> hi.did.HistoryResp.Unit
 	0,  // 4: hi.did.HistoryResp.Unit.trans:type_name -> hi.did.Transaction
 	1,  // 5: hi.did.Transfer.History:input_type -> hi.did.HistoryReq
 	3,  // 6: hi.did.Transfer.TxStatus:input_type -> hi.did.TxStatusReq
-	5,  // 7: hi.did.Transfer.VerifyTransaction:input_type -> hi.did.VerifyTransactionReq
-	10, // 8: hi.did.Transfer.VerifySignature:input_type -> hi.SignedData
-	2,  // 9: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
-	4,  // 10: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
-	6,  // 11: hi.did.Transfer.VerifyTransaction:output_type -> hi.did.VerifyTransactionResp
-	11, // 12: hi.did.Transfer.VerifySignature:output_type -> hi.DID
-	9,  // [9:13] is the sub-list for method output_type
-	5,  // [5:9] is the sub-list for method input_type
+	7,  // 7: hi.did.Transfer.VerifyTransaction:input_type -> hi.did.VerifyTransactionReq
+	5,  // 8: hi.did.Transfer.TxDetail:input_type -> hi.did.TxDetailReq
+	12, // 9: hi.did.Transfer.VerifySignature:input_type -> hi.SignedData
+	2,  // 10: hi.did.Transfer.History:output_type -> hi.did.HistoryResp
+	4,  // 11: hi.did.Transfer.TxStatus:output_type -> hi.did.TxStatusResp
+	8,  // 12: hi.did.Transfer.VerifyTransaction:output_type -> hi.did.VerifyTransactionResp
+	6,  // 13: hi.did.Transfer.TxDetail:output_type -> hi.did.TxDetailResp
+	13, // 14: hi.did.Transfer.VerifySignature:output_type -> hi.DID
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -681,14 +869,13 @@ func file_hi_did_transfer_proto_init() {
 		return
 	}
 	file_hi_did_base_proto_init()
-	file_hi_did_transfer_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_transfer_proto_rawDesc), len(file_hi_did_transfer_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

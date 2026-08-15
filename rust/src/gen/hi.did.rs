@@ -396,6 +396,56 @@ pub struct TxStatusResp {
     #[prost(uint32, tag = "2")]
     pub progress: u32,
 }
+/// 取一笔链上交易的明细。**只报事实,不做判断。**
+///
+/// 与 VerifyTransaction 的分工:
+/// · VerifyTransaction —— 你把**完整的**预期(币种/金额/付款方/收款方)交给它,它替你比对。
+/// 信息必须完整,它不替调用方做假设。
+/// · TxDetail          —— 你只说"哪条链的哪笔交易",它把链上事实原样给你,
+/// **比对规则由你自己定**。
+///
+/// 为什么需要后者:有的业务判据里**没有付款方**这一项。插件市场就是这样 ——
+/// 它按**订单**认款(订单号定履约内容),谁掏的钱不进判据。这种业务不该逼着
+/// 通用验证器变松(那会让对付款方敏感的业务在漏传字段时无声失去检查),
+/// 而应该拿到事实自己比。
+///
+/// 返回的都是链上公开数据,故与同 service 的其它方法同档(AUTH_NONE)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TxDetailReq {
+    /// 用来定位链/合约/精度
+    #[prost(string, tag = "1")]
+    pub coin: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub hash: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TxDetailResp {
+    /// pending / confirming / success / failed / notfound
+    #[prost(string, tag = "1")]
+    pub state: ::prost::alloc::string::String,
+    #[prost(int64, tag = "2")]
+    pub confirmed_blocks: i64,
+    /// 交易时间(ms)。业务侧据此做时限校验
+    #[prost(int64, tag = "3")]
+    pub timestamp: i64,
+    /// 链上地址(不是 DID)
+    #[prost(string, tag = "4")]
+    pub from: ::prost::alloc::string::String,
+    /// 链上地址(不是 DID)
+    #[prost(string, tag = "5")]
+    pub to: ::prost::alloc::string::String,
+    /// **人类可读**,已按币种精度换算
+    #[prost(string, tag = "6")]
+    pub amount: ::prost::alloc::string::String,
+    /// 合约地址;空=原生币
+    #[prost(string, tag = "7")]
+    pub contract: ::prost::alloc::string::String,
+    /// 该 hash 在缓存窗口内被**成功且合法地核验**过几次。业务侧据此防伪。
+    /// ⚠️ 别拿它当硬闸:响应丢了导致的重试、崩在中途导致的重试,都会让它变大 ——
+    /// 早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
+    #[prost(uint32, tag = "8")]
+    pub query_count: u32,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VerifyTransactionReq {
     /// 预期币种（did 据此定位链/合约/精度）
@@ -409,18 +459,18 @@ pub struct VerifyTransactionReq {
     pub amount: ::prost::alloc::string::String,
     /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
     ///
-    /// ⚠️ **optional 是有意的:不传 = 不限定付款方**(跳过这一项比对),传了就必须对上。
-    /// 用 optional 而不是"空串即跳过",是为了让"没传"和"传了个空值"可区分 ——
-    /// 后者会让某个调用方哪天忘了填 from 时,**检查无声地消失**,而这是笔钱的事。
+    /// ⚠️ **必填,不要改成 optional。** 曾经为了插件市场("按订单认款,不关心谁付的")
+    /// 想把它改成"不传即跳过" —— 那是**把业务层的判断塞进通用帮助方法**。
+    /// VerifyTransaction 是给三方用的独立工具,它不该替调用方做假设:
+    /// **既然要验,信息就必须完整**。开了这个口子,对 from 敏感的业务哪天漏传一个字段,
+    /// 检查就无声消失了,而这是笔钱的事。
     ///
     /// ```text
-    /// 什么时候该不传:业务上按**订单**认款(订单号定履约内容),此时"谁掏的钱"不进判据 ——
-    /// 插件市场就是这样:订单写明给 A 续期,那么谁付的都给 A 续。
-    /// 这种场景下改用**交易时间 ≥ 订单创建时间**防伪(见 resp.timestamp),
-    /// 它同样不关心付款方。
+    /// 不关心付款方的业务应当去查**交易明细**,自己按业务规则比对,
+    /// 而不是让公用的验证器变松。
     /// ```
-    #[prost(string, optional, tag = "4")]
-    pub from: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, tag = "4")]
+    pub from: ::prost::alloc::string::String,
     /// 预期收款方 **DID**（同上）
     #[prost(string, tag = "5")]
     pub to: ::prost::alloc::string::String,
@@ -597,6 +647,24 @@ pub mod transfer_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.Transfer", "VerifyTransaction"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn tx_detail(
+            &mut self,
+            request: impl tonic::IntoRequest<super::TxDetailReq>,
+        ) -> std::result::Result<tonic::Response<super::TxDetailResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/TxDetail");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "TxDetail"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn verify_signature(

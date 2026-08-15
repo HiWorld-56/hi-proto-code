@@ -10944,6 +10944,336 @@ impl<'de> serde::Deserialize<'de> for Transaction {
         deserializer.deserialize_struct("hi.did.Transaction", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for TxDetailReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.coin.is_empty() {
+            len += 1;
+        }
+        if !self.hash.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.TxDetailReq", len)?;
+        if !self.coin.is_empty() {
+            struct_ser.serialize_field("coin", &self.coin)?;
+        }
+        if !self.hash.is_empty() {
+            struct_ser.serialize_field("hash", &self.hash)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TxDetailReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "coin",
+            "hash",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Coin,
+            Hash,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "coin" => Ok(GeneratedField::Coin),
+                            "hash" => Ok(GeneratedField::Hash),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TxDetailReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.TxDetailReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TxDetailReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut coin__ = None;
+                let mut hash__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Coin => {
+                            if coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("coin"));
+                            }
+                            coin__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Hash => {
+                            if hash__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hash"));
+                            }
+                            hash__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(TxDetailReq {
+                    coin: coin__.unwrap_or_default(),
+                    hash: hash__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.TxDetailReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TxDetailResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.state.is_empty() {
+            len += 1;
+        }
+        if self.confirmed_blocks != 0 {
+            len += 1;
+        }
+        if self.timestamp != 0 {
+            len += 1;
+        }
+        if !self.from.is_empty() {
+            len += 1;
+        }
+        if !self.to.is_empty() {
+            len += 1;
+        }
+        if !self.amount.is_empty() {
+            len += 1;
+        }
+        if !self.contract.is_empty() {
+            len += 1;
+        }
+        if self.query_count != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.TxDetailResp", len)?;
+        if !self.state.is_empty() {
+            struct_ser.serialize_field("state", &self.state)?;
+        }
+        if self.confirmed_blocks != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("confirmedBlocks", ToString::to_string(&self.confirmed_blocks).as_str())?;
+        }
+        if self.timestamp != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("timestamp", ToString::to_string(&self.timestamp).as_str())?;
+        }
+        if !self.from.is_empty() {
+            struct_ser.serialize_field("from", &self.from)?;
+        }
+        if !self.to.is_empty() {
+            struct_ser.serialize_field("to", &self.to)?;
+        }
+        if !self.amount.is_empty() {
+            struct_ser.serialize_field("amount", &self.amount)?;
+        }
+        if !self.contract.is_empty() {
+            struct_ser.serialize_field("contract", &self.contract)?;
+        }
+        if self.query_count != 0 {
+            struct_ser.serialize_field("queryCount", &self.query_count)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TxDetailResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "state",
+            "confirmed_blocks",
+            "confirmedBlocks",
+            "timestamp",
+            "from",
+            "to",
+            "amount",
+            "contract",
+            "query_count",
+            "queryCount",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            State,
+            ConfirmedBlocks,
+            Timestamp,
+            From,
+            To,
+            Amount,
+            Contract,
+            QueryCount,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "state" => Ok(GeneratedField::State),
+                            "confirmedBlocks" | "confirmed_blocks" => Ok(GeneratedField::ConfirmedBlocks),
+                            "timestamp" => Ok(GeneratedField::Timestamp),
+                            "from" => Ok(GeneratedField::From),
+                            "to" => Ok(GeneratedField::To),
+                            "amount" => Ok(GeneratedField::Amount),
+                            "contract" => Ok(GeneratedField::Contract),
+                            "queryCount" | "query_count" => Ok(GeneratedField::QueryCount),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TxDetailResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.TxDetailResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TxDetailResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut state__ = None;
+                let mut confirmed_blocks__ = None;
+                let mut timestamp__ = None;
+                let mut from__ = None;
+                let mut to__ = None;
+                let mut amount__ = None;
+                let mut contract__ = None;
+                let mut query_count__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ConfirmedBlocks => {
+                            if confirmed_blocks__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("confirmedBlocks"));
+                            }
+                            confirmed_blocks__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Timestamp => {
+                            if timestamp__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("timestamp"));
+                            }
+                            timestamp__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::From => {
+                            if from__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("from"));
+                            }
+                            from__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::To => {
+                            if to__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("to"));
+                            }
+                            to__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Amount => {
+                            if amount__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("amount"));
+                            }
+                            amount__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Contract => {
+                            if contract__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("contract"));
+                            }
+                            contract__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::QueryCount => {
+                            if query_count__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("queryCount"));
+                            }
+                            query_count__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(TxDetailResp {
+                    state: state__.unwrap_or_default(),
+                    confirmed_blocks: confirmed_blocks__.unwrap_or_default(),
+                    timestamp: timestamp__.unwrap_or_default(),
+                    from: from__.unwrap_or_default(),
+                    to: to__.unwrap_or_default(),
+                    amount: amount__.unwrap_or_default(),
+                    contract: contract__.unwrap_or_default(),
+                    query_count: query_count__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.TxDetailResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for TxStatusReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -12045,7 +12375,7 @@ impl serde::Serialize for VerifyTransactionReq {
         if !self.amount.is_empty() {
             len += 1;
         }
-        if self.from.is_some() {
+        if !self.from.is_empty() {
             len += 1;
         }
         if !self.to.is_empty() {
@@ -12061,8 +12391,8 @@ impl serde::Serialize for VerifyTransactionReq {
         if !self.amount.is_empty() {
             struct_ser.serialize_field("amount", &self.amount)?;
         }
-        if let Some(v) = self.from.as_ref() {
-            struct_ser.serialize_field("from", v)?;
+        if !self.from.is_empty() {
+            struct_ser.serialize_field("from", &self.from)?;
         }
         if !self.to.is_empty() {
             struct_ser.serialize_field("to", &self.to)?;
@@ -12165,7 +12495,7 @@ impl<'de> serde::Deserialize<'de> for VerifyTransactionReq {
                             if from__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("from"));
                             }
-                            from__ = map_.next_value()?;
+                            from__ = Some(map_.next_value()?);
                         }
                         GeneratedField::To => {
                             if to__.is_some() {
@@ -12179,7 +12509,7 @@ impl<'de> serde::Deserialize<'de> for VerifyTransactionReq {
                     coin: coin__.unwrap_or_default(),
                     hash: hash__.unwrap_or_default(),
                     amount: amount__.unwrap_or_default(),
-                    from: from__,
+                    from: from__.unwrap_or_default(),
                     to: to__.unwrap_or_default(),
                 })
             }

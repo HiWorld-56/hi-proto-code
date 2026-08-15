@@ -56,6 +56,13 @@ class TransferClient extends $grpc.Client {
     return $createUnaryCall(_$verifyTransaction, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.TxDetailResp> txDetail(
+    $0.TxDetailReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$txDetail, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.DID> verifySignature(
     $1.SignedData request, {
     $grpc.CallOptions? options,
@@ -78,6 +85,10 @@ class TransferClient extends $grpc.Client {
           '/hi.did.Transfer/VerifyTransaction',
           ($0.VerifyTransactionReq value) => value.writeToBuffer(),
           $0.VerifyTransactionResp.fromBuffer);
+  static final _$txDetail = $grpc.ClientMethod<$0.TxDetailReq, $0.TxDetailResp>(
+      '/hi.did.Transfer/TxDetail',
+      ($0.TxDetailReq value) => value.writeToBuffer(),
+      $0.TxDetailResp.fromBuffer);
   static final _$verifySignature = $grpc.ClientMethod<$1.SignedData, $1.DID>(
       '/hi.did.Transfer/VerifySignature',
       ($1.SignedData value) => value.writeToBuffer(),
@@ -112,6 +123,13 @@ abstract class TransferServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.VerifyTransactionReq.fromBuffer(value),
             ($0.VerifyTransactionResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.TxDetailReq, $0.TxDetailResp>(
+        'TxDetail',
+        txDetail_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.TxDetailReq.fromBuffer(value),
+        ($0.TxDetailResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.SignedData, $1.DID>(
         'VerifySignature',
         verifySignature_Pre,
@@ -145,6 +163,14 @@ abstract class TransferServiceBase extends $grpc.Service {
 
   $async.Future<$0.VerifyTransactionResp> verifyTransaction(
       $grpc.ServiceCall call, $0.VerifyTransactionReq request);
+
+  $async.Future<$0.TxDetailResp> txDetail_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.TxDetailReq> $request) async {
+    return txDetail($call, await $request);
+  }
+
+  $async.Future<$0.TxDetailResp> txDetail(
+      $grpc.ServiceCall call, $0.TxDetailReq request);
 
   $async.Future<$1.DID> verifySignature_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {
