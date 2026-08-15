@@ -5377,38 +5377,6 @@ pub mod training_client {
         }
     }
 }
-/// 服务端整流程执行入参(工具在服务端跑)。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub cid: ::prost::alloc::string::String,
-    #[prost(message, repeated, tag = "3")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
-    #[prost(string, tag = "4")]
-    pub state: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    pub custom: ::prost::alloc::string::String,
-    /// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
-    /// 与 hi.ai.CompleteReq 的同名字段一一对应,club 原样透传。
-    /// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这两个只决定
-    /// 过程数据要不要一并流给调用方。
-    ///
-    /// 与 ai 侧同因同源:dev45 迁移(Stream→CompleteStream)时从请求里漏掉了,
-    /// 而且 club 这层是**双层丢** —— 自己没有字段,转发给 ai 时自然也带不上,
-    /// 于是经 club 进来的调用方(app / hiclub web)即便 ai 修好了也永远拿不到 toolCalls。
-    ///
-    /// 发 type="toolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-    #[prost(bool, tag = "6")]
-    pub return_plugin_use: bool,
-    /// 回训练数据(命中的记忆片段)
-    #[prost(bool, tag = "7")]
-    pub return_training_data: bool,
-    /// 发 type="context" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
-    #[prost(bool, tag = "8")]
-    pub return_context: bool,
-}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Qa {
     /// User(club Content=PARTICIPANT)
@@ -5424,7 +5392,11 @@ pub struct GetHistoryResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Qa>,
 }
-/// 客户端 tool-callback 两阶段对话入参(合并原 TextToText/SpeechToText/SpeechToSpeech;模态由 conts+style 决定)。
+/// 对话入参(模态由 conts+style 决定;合原 TextToText/SpeechToText/SpeechToSpeech 与原 CompleteReq)。
+///
+/// ⚠️ **`tools` 是「我这边能执行哪些工具」,不是「这轮可用的全部工具」** ——
+/// ai 会把该 agent 的插件工具追加在它后面一起喂模型,返回后按名字分流。
+/// 不上报(app / hiclub web)= 全部由服务端跑完 = 一次调用拿到最终答复。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatReq {
     #[prost(string, tag = "1")]
@@ -5433,6 +5405,7 @@ pub struct ChatReq {
     pub cid: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "3")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
+    /// **客户端自己能执行的工具**;空 = 全交服务端跑完
     #[prost(message, repeated, tag = "4")]
     pub tools: ::prost::alloc::vec::Vec<super::ai::ToolSupply>,
     #[prost(string, optional, tag = "5")]
@@ -5444,6 +5417,29 @@ pub struct ChatReq {
     /// 语音出音色等;纯文本留空
     #[prost(string, optional, tag = "8")]
     pub style: ::core::option::Option<::prost::alloc::string::String>,
+    /// ── 过程回显开关(**只管输出,不管行为**)──────────────────────────────────────
+    /// 与 hi.ai.ChatReq 的同名字段一一对应,club 原样透传。**仅流式有意义。**
+    /// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这几个只决定
+    /// 过程数据要不要一并流出去。
+    ///
+    /// ⚠️ 旧名 `return_plugin_use` / `return_training_data` / `return_context` 已随 ai 一并改名
+    /// (`return_` 像"要不要返回结果",而回的是**过程**;`plugin_use` 回的是 function call,
+    /// 不是"插件用量")。
+    ///
+    /// ⚠️ 这几个字段原属已删除的 `CompleteReq`。与 ai 侧同因同源:dev45 迁移
+    /// (Stream→CompleteStream)时从请求里漏掉过,而且 club 这层是**双层丢** ——
+    /// 自己没有字段,转发给 ai 时自然也带不上,于是经 club 进来的调用方(app / hiclub web)
+    /// 即便 ai 修好了也永远拿不到回显帧。搬家时别再漏第二次。
+    ///
+    /// 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+    #[prost(bool, tag = "9")]
+    pub echo_tool_calls: bool,
+    /// 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
+    #[prost(bool, tag = "10")]
+    pub echo_memory: bool,
+    /// 发 type="echoContext" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
+    #[prost(bool, tag = "11")]
+    pub echo_context: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResult {
@@ -5615,55 +5611,7 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "ClearHistory"));
             self.inner.unary(req, path, codec).await
         }
-        /// ── 服务端整流程执行(工具在服务端跑)──
-        pub async fn complete(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CompleteReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::ai::CompleteResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/Complete");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Complete"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn complete_stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CompleteReq>,
-        ) -> std::result::Result<
-            tonic::Response<
-                tonic::codec::Streaming<super::super::ai::CompleteStreamResp>,
-            >,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/CompleteStream",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Chat", "CompleteStream"));
-            self.inner.server_streaming(req, path, codec).await
-        }
-        /// ── 客户端 tool-callback 两阶段 ──
+        /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
         pub async fn converse(
             &mut self,
             request: impl tonic::IntoRequest<super::ChatReq>,
@@ -5685,6 +5633,32 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Converse"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn converse_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ChatReq>,
+        ) -> std::result::Result<
+            tonic::Response<
+                tonic::codec::Streaming<super::super::ai::ConverseStreamResp>,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Chat/ConverseStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Chat", "ConverseStream"));
+            self.inner.server_streaming(req, path, codec).await
+        }
         pub async fn resume(
             &mut self,
             request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
@@ -5705,6 +5679,31 @@ pub mod chat_client {
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "Resume"));
             self.inner.unary(req, path, codec).await
+        }
+        pub async fn resume_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
+        ) -> std::result::Result<
+            tonic::Response<
+                tonic::codec::Streaming<super::super::ai::ConverseStreamResp>,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Chat/ResumeStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "ResumeStream"));
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }

@@ -24,116 +24,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 服务端整流程执行入参(工具在服务端跑)。
-type CompleteReq struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Agent  string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid    string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts  []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	State  string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
-	Custom string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
-	// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
-	// 与 hi.ai.CompleteReq 的同名字段一一对应,club 原样透传。
-	// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这两个只决定
-	//
-	//	过程数据要不要一并流给调用方。
-	//
-	// 与 ai 侧同因同源:dev45 迁移(Stream→CompleteStream)时从请求里漏掉了,
-	// 而且 club 这层是**双层丢** —— 自己没有字段,转发给 ai 时自然也带不上,
-	// 于是经 club 进来的调用方(app / hiclub web)即便 ai 修好了也永远拿不到 toolCalls。
-	ReturnPluginUse    bool `protobuf:"varint,6,opt,name=return_plugin_use,json=returnPluginUse,proto3" json:"return_plugin_use,omitempty"`          // 发 type="toolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-	ReturnTrainingData bool `protobuf:"varint,7,opt,name=return_training_data,json=returnTrainingData,proto3" json:"return_training_data,omitempty"` // 回训练数据(命中的记忆片段)
-	ReturnContext      bool `protobuf:"varint,8,opt,name=return_context,json=returnContext,proto3" json:"return_context,omitempty"`                  // 发 type="context" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *CompleteReq) Reset() {
-	*x = CompleteReq{}
-	mi := &file_hi_club_chat_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CompleteReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CompleteReq) ProtoMessage() {}
-
-func (x *CompleteReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CompleteReq.ProtoReflect.Descriptor instead.
-func (*CompleteReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *CompleteReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetCid() string {
-	if x != nil {
-		return x.Cid
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetConts() []*Content {
-	if x != nil {
-		return x.Conts
-	}
-	return nil
-}
-
-func (x *CompleteReq) GetState() string {
-	if x != nil {
-		return x.State
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetCustom() string {
-	if x != nil {
-		return x.Custom
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetReturnPluginUse() bool {
-	if x != nil {
-		return x.ReturnPluginUse
-	}
-	return false
-}
-
-func (x *CompleteReq) GetReturnTrainingData() bool {
-	if x != nil {
-		return x.ReturnTrainingData
-	}
-	return false
-}
-
-func (x *CompleteReq) GetReturnContext() bool {
-	if x != nil {
-		return x.ReturnContext
-	}
-	return false
-}
-
 type QA struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Q             []*Content             `protobuf:"bytes,1,rep,name=q,proto3" json:"q,omitempty"` // User(club Content=PARTICIPANT)
@@ -144,7 +34,7 @@ type QA struct {
 
 func (x *QA) Reset() {
 	*x = QA{}
-	mi := &file_hi_club_chat_proto_msgTypes[1]
+	mi := &file_hi_club_chat_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -156,7 +46,7 @@ func (x *QA) String() string {
 func (*QA) ProtoMessage() {}
 
 func (x *QA) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[1]
+	mi := &file_hi_club_chat_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -169,7 +59,7 @@ func (x *QA) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QA.ProtoReflect.Descriptor instead.
 func (*QA) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{1}
+	return file_hi_club_chat_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *QA) GetQ() []*Content {
@@ -195,7 +85,7 @@ type GetHistoryResp struct {
 
 func (x *GetHistoryResp) Reset() {
 	*x = GetHistoryResp{}
-	mi := &file_hi_club_chat_proto_msgTypes[2]
+	mi := &file_hi_club_chat_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -207,7 +97,7 @@ func (x *GetHistoryResp) String() string {
 func (*GetHistoryResp) ProtoMessage() {}
 
 func (x *GetHistoryResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[2]
+	mi := &file_hi_club_chat_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -220,7 +110,7 @@ func (x *GetHistoryResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoryResp.ProtoReflect.Descriptor instead.
 func (*GetHistoryResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{2}
+	return file_hi_club_chat_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetHistoryResp) GetList() []*QA {
@@ -230,24 +120,48 @@ func (x *GetHistoryResp) GetList() []*QA {
 	return nil
 }
 
-// 客户端 tool-callback 两阶段对话入参(合并原 TextToText/SpeechToText/SpeechToSpeech;模态由 conts+style 决定)。
+// 对话入参(模态由 conts+style 决定;合原 TextToText/SpeechToText/SpeechToSpeech 与原 CompleteReq)。
+//
+// ⚠️ **`tools` 是「我这边能执行哪些工具」,不是「这轮可用的全部工具」** ——
+//
+//	ai 会把该 agent 的插件工具追加在它后面一起喂模型,返回后按名字分流。
+//	不上报(app / hiclub web)= 全部由服务端跑完 = 一次调用拿到最终答复。
 type ChatReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	Tools         []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"`
-	ToolChoice    *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
-	Custom        *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
-	State         *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	Style         *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出音色等;纯文本留空
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Agent      string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Cid        string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
+	Conts      []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
+	Tools      []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
+	ToolChoice *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
+	Custom     *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
+	State      *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
+	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出音色等;纯文本留空
+	// ── 过程回显开关(**只管输出,不管行为**)──────────────────────────────────────
+	// 与 hi.ai.ChatReq 的同名字段一一对应,club 原样透传。**仅流式有意义。**
+	// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这几个只决定
+	//
+	//	过程数据要不要一并流出去。
+	//
+	// ⚠️ 旧名 `return_plugin_use` / `return_training_data` / `return_context` 已随 ai 一并改名
+	//
+	//	(`return_` 像"要不要返回结果",而回的是**过程**;`plugin_use` 回的是 function call,
+	//	 不是"插件用量")。
+	//
+	// ⚠️ 这几个字段原属已删除的 `CompleteReq`。与 ai 侧同因同源:dev45 迁移
+	//
+	//	(Stream→CompleteStream)时从请求里漏掉过,而且 club 这层是**双层丢** ——
+	//	自己没有字段,转发给 ai 时自然也带不上,于是经 club 进来的调用方(app / hiclub web)
+	//	即便 ai 修好了也永远拿不到回显帧。搬家时别再漏第二次。
+	EchoToolCalls bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+	EchoMemory    bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
+	EchoContext   bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3" json:"echo_context,omitempty"`        // 发 type="echoContext" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ChatReq) Reset() {
 	*x = ChatReq{}
-	mi := &file_hi_club_chat_proto_msgTypes[3]
+	mi := &file_hi_club_chat_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -259,7 +173,7 @@ func (x *ChatReq) String() string {
 func (*ChatReq) ProtoMessage() {}
 
 func (x *ChatReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[3]
+	mi := &file_hi_club_chat_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -272,7 +186,7 @@ func (x *ChatReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatReq.ProtoReflect.Descriptor instead.
 func (*ChatReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{3}
+	return file_hi_club_chat_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ChatReq) GetAgent() string {
@@ -331,6 +245,27 @@ func (x *ChatReq) GetStyle() string {
 	return ""
 }
 
+func (x *ChatReq) GetEchoToolCalls() bool {
+	if x != nil {
+		return x.EchoToolCalls
+	}
+	return false
+}
+
+func (x *ChatReq) GetEchoMemory() bool {
+	if x != nil {
+		return x.EchoMemory
+	}
+	return false
+}
+
+func (x *ChatReq) GetEchoContext() bool {
+	if x != nil {
+		return x.EchoContext
+	}
+	return false
+}
+
 type ToolCallResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -341,7 +276,7 @@ type ToolCallResult struct {
 
 func (x *ToolCallResult) Reset() {
 	*x = ToolCallResult{}
-	mi := &file_hi_club_chat_proto_msgTypes[4]
+	mi := &file_hi_club_chat_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -353,7 +288,7 @@ func (x *ToolCallResult) String() string {
 func (*ToolCallResult) ProtoMessage() {}
 
 func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[4]
+	mi := &file_hi_club_chat_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -366,7 +301,7 @@ func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResult.ProtoReflect.Descriptor instead.
 func (*ToolCallResult) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{4}
+	return file_hi_club_chat_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ToolCallResult) GetId() string {
@@ -394,7 +329,7 @@ type ToolCallResultsReq struct {
 
 func (x *ToolCallResultsReq) Reset() {
 	*x = ToolCallResultsReq{}
-	mi := &file_hi_club_chat_proto_msgTypes[5]
+	mi := &file_hi_club_chat_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -406,7 +341,7 @@ func (x *ToolCallResultsReq) String() string {
 func (*ToolCallResultsReq) ProtoMessage() {}
 
 func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_chat_proto_msgTypes[5]
+	mi := &file_hi_club_chat_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -419,7 +354,7 @@ func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResultsReq.ProtoReflect.Descriptor instead.
 func (*ToolCallResultsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_chat_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_chat_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ToolCallResultsReq) GetId() string {
@@ -440,21 +375,12 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"\x90\x02\n" +
-	"\vCompleteReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
-	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
-	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12\x14\n" +
-	"\x05state\x18\x04 \x01(\tR\x05state\x12\x16\n" +
-	"\x06custom\x18\x05 \x01(\tR\x06custom\x12*\n" +
-	"\x11return_plugin_use\x18\x06 \x01(\bR\x0freturnPluginUse\x120\n" +
-	"\x14return_training_data\x18\a \x01(\bR\x12returnTrainingData\x12%\n" +
-	"\x0ereturn_context\x18\b \x01(\bR\rreturnContext\"D\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"D\n" +
 	"\x02QA\x12$\n" +
 	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x12\n" +
 	"\x01a\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x01a:\x04\x98\xb5\x18\x03\"=\n" +
 	"\x0eGetHistoryResp\x12%\n" +
-	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xaa\x02\n" +
+	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x96\x03\n" +
 	"\aChatReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
@@ -464,7 +390,12 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"toolChoice\x88\x01\x01\x12\x1b\n" +
 	"\x06custom\x18\x06 \x01(\tH\x01R\x06custom\x88\x01\x01\x12\x19\n" +
 	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01\x12\x19\n" +
-	"\x05style\x18\b \x01(\tH\x03R\x05style\x88\x01\x01B\x0e\n" +
+	"\x05style\x18\b \x01(\tH\x03R\x05style\x88\x01\x01\x12&\n" +
+	"\x0fecho_tool_calls\x18\t \x01(\bR\rechoToolCalls\x12\x1f\n" +
+	"\vecho_memory\x18\n" +
+	" \x01(\bR\n" +
+	"echoMemory\x12!\n" +
+	"\fecho_context\x18\v \x01(\bR\vechoContextB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
 	"\x06_stateB\b\n" +
@@ -474,17 +405,17 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x05conts\x18\x02 \x03(\v2\x10.hi.club.ContentR\x05conts\"Q\n" +
 	"\x12ToolCallResultsReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12+\n" +
-	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04list2\xd4\x03\n" +
+	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04list2\xe3\x03\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\n" +
 	"GetHistory\x12\x14.hi.ai.GetHistoryReq\x1a\x17.hi.club.GetHistoryResp\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
-	"\fClearHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
-	"\bComplete\x12\x14.hi.club.CompleteReq\x1a\x13.hi.ai.CompleteResp\"\x05\x8a\xb5\x18\x01\x02\x12J\n" +
-	"\x0eCompleteStream\x12\x14.hi.club.CompleteReq\x1a\x19.hi.ai.CompleteStreamResp\"\x05\x8a\xb5\x18\x01\x020\x01\x124\n" +
-	"\bConverse\x12\x10.hi.club.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
-	"\x06Resume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02B\x80\x01\n" +
+	"\fClearHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
+	"\bConverse\x12\x10.hi.club.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
+	"\x0eConverseStream\x12\x10.hi.club.ChatReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x020\x01\x12=\n" +
+	"\x06Resume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
+	"\fResumeStream\x12\x1b.hi.club.ToolCallResultsReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x020\x01B\x80\x01\n" +
 	"\vcom.hi.clubB\tChatProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -499,51 +430,48 @@ func file_hi_club_chat_proto_rawDescGZIP() []byte {
 	return file_hi_club_chat_proto_rawDescData
 }
 
-var file_hi_club_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_hi_club_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_club_chat_proto_goTypes = []any{
-	(*CompleteReq)(nil),           // 0: hi.club.CompleteReq
-	(*QA)(nil),                    // 1: hi.club.QA
-	(*GetHistoryResp)(nil),        // 2: hi.club.GetHistoryResp
-	(*ChatReq)(nil),               // 3: hi.club.ChatReq
-	(*ToolCallResult)(nil),        // 4: hi.club.ToolCallResult
-	(*ToolCallResultsReq)(nil),    // 5: hi.club.ToolCallResultsReq
-	(*Content)(nil),               // 6: hi.club.Content
-	(*ai.ToolSupply)(nil),         // 7: hi.ai.ToolSupply
-	(*emptypb.Empty)(nil),         // 8: google.protobuf.Empty
-	(*ai.GetHistoryReq)(nil),      // 9: hi.ai.GetHistoryReq
-	(*ai.ClearHistoryReq)(nil),    // 10: hi.ai.ClearHistoryReq
-	(*ai.NewSessionResp)(nil),     // 11: hi.ai.NewSessionResp
-	(*ai.CompleteResp)(nil),       // 12: hi.ai.CompleteResp
-	(*ai.CompleteStreamResp)(nil), // 13: hi.ai.CompleteStreamResp
-	(*ai.ChatResp)(nil),           // 14: hi.ai.ChatResp
+	(*QA)(nil),                    // 0: hi.club.QA
+	(*GetHistoryResp)(nil),        // 1: hi.club.GetHistoryResp
+	(*ChatReq)(nil),               // 2: hi.club.ChatReq
+	(*ToolCallResult)(nil),        // 3: hi.club.ToolCallResult
+	(*ToolCallResultsReq)(nil),    // 4: hi.club.ToolCallResultsReq
+	(*Content)(nil),               // 5: hi.club.Content
+	(*ai.ToolSupply)(nil),         // 6: hi.ai.ToolSupply
+	(*emptypb.Empty)(nil),         // 7: google.protobuf.Empty
+	(*ai.GetHistoryReq)(nil),      // 8: hi.ai.GetHistoryReq
+	(*ai.ClearHistoryReq)(nil),    // 9: hi.ai.ClearHistoryReq
+	(*ai.NewSessionResp)(nil),     // 10: hi.ai.NewSessionResp
+	(*ai.ChatResp)(nil),           // 11: hi.ai.ChatResp
+	(*ai.ConverseStreamResp)(nil), // 12: hi.ai.ConverseStreamResp
 }
 var file_hi_club_chat_proto_depIdxs = []int32{
-	6,  // 0: hi.club.CompleteReq.conts:type_name -> hi.club.Content
-	6,  // 1: hi.club.QA.q:type_name -> hi.club.Content
-	1,  // 2: hi.club.GetHistoryResp.list:type_name -> hi.club.QA
-	6,  // 3: hi.club.ChatReq.conts:type_name -> hi.club.Content
-	7,  // 4: hi.club.ChatReq.tools:type_name -> hi.ai.ToolSupply
-	6,  // 5: hi.club.ToolCallResult.conts:type_name -> hi.club.Content
-	4,  // 6: hi.club.ToolCallResultsReq.list:type_name -> hi.club.ToolCallResult
-	8,  // 7: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
-	9,  // 8: hi.club.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
-	10, // 9: hi.club.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
-	0,  // 10: hi.club.Chat.Complete:input_type -> hi.club.CompleteReq
-	0,  // 11: hi.club.Chat.CompleteStream:input_type -> hi.club.CompleteReq
-	3,  // 12: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
-	5,  // 13: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
-	11, // 14: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	2,  // 15: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
-	8,  // 16: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
-	12, // 17: hi.club.Chat.Complete:output_type -> hi.ai.CompleteResp
-	13, // 18: hi.club.Chat.CompleteStream:output_type -> hi.ai.CompleteStreamResp
-	14, // 19: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
-	14, // 20: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
-	14, // [14:21] is the sub-list for method output_type
-	7,  // [7:14] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	5,  // 0: hi.club.QA.q:type_name -> hi.club.Content
+	0,  // 1: hi.club.GetHistoryResp.list:type_name -> hi.club.QA
+	5,  // 2: hi.club.ChatReq.conts:type_name -> hi.club.Content
+	6,  // 3: hi.club.ChatReq.tools:type_name -> hi.ai.ToolSupply
+	5,  // 4: hi.club.ToolCallResult.conts:type_name -> hi.club.Content
+	3,  // 5: hi.club.ToolCallResultsReq.list:type_name -> hi.club.ToolCallResult
+	7,  // 6: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
+	8,  // 7: hi.club.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
+	9,  // 8: hi.club.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
+	2,  // 9: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
+	2,  // 10: hi.club.Chat.ConverseStream:input_type -> hi.club.ChatReq
+	4,  // 11: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
+	4,  // 12: hi.club.Chat.ResumeStream:input_type -> hi.club.ToolCallResultsReq
+	10, // 13: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	1,  // 14: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
+	7,  // 15: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
+	11, // 16: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
+	12, // 17: hi.club.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	11, // 18: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
+	12, // 19: hi.club.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
+	13, // [13:20] is the sub-list for method output_type
+	6,  // [6:13] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_chat_proto_init() }
@@ -552,14 +480,14 @@ func file_hi_club_chat_proto_init() {
 		return
 	}
 	file_hi_club_messaging_proto_init()
-	file_hi_club_chat_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_chat_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_chat_proto_rawDesc), len(file_hi_club_chat_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

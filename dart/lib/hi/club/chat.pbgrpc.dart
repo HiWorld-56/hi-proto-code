@@ -60,24 +60,7 @@ class ChatClient extends $grpc.Client {
     return $createUnaryCall(_$clearHistory, request, options: options);
   }
 
-  /// ── 服务端整流程执行(工具在服务端跑)──
-  $grpc.ResponseFuture<$1.CompleteResp> complete(
-    $2.CompleteReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$complete, request, options: options);
-  }
-
-  $grpc.ResponseStream<$1.CompleteStreamResp> completeStream(
-    $2.CompleteReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createStreamingCall(
-        _$completeStream, $async.Stream.fromIterable([request]),
-        options: options);
-  }
-
-  /// ── 客户端 tool-callback 两阶段 ──
+  /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
   $grpc.ResponseFuture<$1.ChatResp> converse(
     $2.ChatReq request, {
     $grpc.CallOptions? options,
@@ -85,11 +68,29 @@ class ChatClient extends $grpc.Client {
     return $createUnaryCall(_$converse, request, options: options);
   }
 
+  $grpc.ResponseStream<$1.ConverseStreamResp> converseStream(
+    $2.ChatReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(
+        _$converseStream, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
   $grpc.ResponseFuture<$1.ChatResp> resume(
     $2.ToolCallResultsReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$resume, request, options: options);
+  }
+
+  $grpc.ResponseStream<$1.ConverseStreamResp> resumeStream(
+    $2.ToolCallResultsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(
+        _$resumeStream, $async.Stream.fromIterable([request]),
+        options: options);
   }
 
   // method descriptors
@@ -108,24 +109,25 @@ class ChatClient extends $grpc.Client {
           '/hi.club.Chat/ClearHistory',
           ($1.ClearHistoryReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
-  static final _$complete = $grpc.ClientMethod<$2.CompleteReq, $1.CompleteResp>(
-      '/hi.club.Chat/Complete',
-      ($2.CompleteReq value) => value.writeToBuffer(),
-      $1.CompleteResp.fromBuffer);
-  static final _$completeStream =
-      $grpc.ClientMethod<$2.CompleteReq, $1.CompleteStreamResp>(
-          '/hi.club.Chat/CompleteStream',
-          ($2.CompleteReq value) => value.writeToBuffer(),
-          $1.CompleteStreamResp.fromBuffer);
   static final _$converse = $grpc.ClientMethod<$2.ChatReq, $1.ChatResp>(
       '/hi.club.Chat/Converse',
       ($2.ChatReq value) => value.writeToBuffer(),
       $1.ChatResp.fromBuffer);
+  static final _$converseStream =
+      $grpc.ClientMethod<$2.ChatReq, $1.ConverseStreamResp>(
+          '/hi.club.Chat/ConverseStream',
+          ($2.ChatReq value) => value.writeToBuffer(),
+          $1.ConverseStreamResp.fromBuffer);
   static final _$resume =
       $grpc.ClientMethod<$2.ToolCallResultsReq, $1.ChatResp>(
           '/hi.club.Chat/Resume',
           ($2.ToolCallResultsReq value) => value.writeToBuffer(),
           $1.ChatResp.fromBuffer);
+  static final _$resumeStream =
+      $grpc.ClientMethod<$2.ToolCallResultsReq, $1.ConverseStreamResp>(
+          '/hi.club.Chat/ResumeStream',
+          ($2.ToolCallResultsReq value) => value.writeToBuffer(),
+          $1.ConverseStreamResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Chat')
@@ -154,20 +156,6 @@ abstract class ChatServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.ClearHistoryReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.CompleteReq, $1.CompleteResp>(
-        'Complete',
-        complete_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $2.CompleteReq.fromBuffer(value),
-        ($1.CompleteResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.CompleteReq, $1.CompleteStreamResp>(
-        'CompleteStream',
-        completeStream_Pre,
-        false,
-        true,
-        ($core.List<$core.int> value) => $2.CompleteReq.fromBuffer(value),
-        ($1.CompleteStreamResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.ChatReq, $1.ChatResp>(
         'Converse',
         converse_Pre,
@@ -175,6 +163,13 @@ abstract class ChatServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.ChatReq.fromBuffer(value),
         ($1.ChatResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.ChatReq, $1.ConverseStreamResp>(
+        'ConverseStream',
+        converseStream_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $2.ChatReq.fromBuffer(value),
+        ($1.ConverseStreamResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.ToolCallResultsReq, $1.ChatResp>(
         'Resume',
         resume_Pre,
@@ -183,6 +178,15 @@ abstract class ChatServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $2.ToolCallResultsReq.fromBuffer(value),
         ($1.ChatResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$2.ToolCallResultsReq, $1.ConverseStreamResp>(
+            'ResumeStream',
+            resumeStream_Pre,
+            false,
+            true,
+            ($core.List<$core.int> value) =>
+                $2.ToolCallResultsReq.fromBuffer(value),
+            ($1.ConverseStreamResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.NewSessionResp> newSession_Pre(
@@ -209,22 +213,6 @@ abstract class ChatServiceBase extends $grpc.Service {
   $async.Future<$0.Empty> clearHistory(
       $grpc.ServiceCall call, $1.ClearHistoryReq request);
 
-  $async.Future<$1.CompleteResp> complete_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.CompleteReq> $request) async {
-    return complete($call, await $request);
-  }
-
-  $async.Future<$1.CompleteResp> complete(
-      $grpc.ServiceCall call, $2.CompleteReq request);
-
-  $async.Stream<$1.CompleteStreamResp> completeStream_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.CompleteReq> $request) async* {
-    yield* completeStream($call, await $request);
-  }
-
-  $async.Stream<$1.CompleteStreamResp> completeStream(
-      $grpc.ServiceCall call, $2.CompleteReq request);
-
   $async.Future<$1.ChatResp> converse_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.ChatReq> $request) async {
     return converse($call, await $request);
@@ -233,11 +221,27 @@ abstract class ChatServiceBase extends $grpc.Service {
   $async.Future<$1.ChatResp> converse(
       $grpc.ServiceCall call, $2.ChatReq request);
 
+  $async.Stream<$1.ConverseStreamResp> converseStream_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.ChatReq> $request) async* {
+    yield* converseStream($call, await $request);
+  }
+
+  $async.Stream<$1.ConverseStreamResp> converseStream(
+      $grpc.ServiceCall call, $2.ChatReq request);
+
   $async.Future<$1.ChatResp> resume_Pre($grpc.ServiceCall $call,
       $async.Future<$2.ToolCallResultsReq> $request) async {
     return resume($call, await $request);
   }
 
   $async.Future<$1.ChatResp> resume(
+      $grpc.ServiceCall call, $2.ToolCallResultsReq request);
+
+  $async.Stream<$1.ConverseStreamResp> resumeStream_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ToolCallResultsReq> $request) async* {
+    yield* resumeStream($call, await $request);
+  }
+
+  $async.Stream<$1.ConverseStreamResp> resumeStream(
       $grpc.ServiceCall call, $2.ToolCallResultsReq request);
 }

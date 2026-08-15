@@ -24,10 +24,10 @@ const (
 	Chat_NewSession_FullMethodName     = "/hi.club.Chat/NewSession"
 	Chat_GetHistory_FullMethodName     = "/hi.club.Chat/GetHistory"
 	Chat_ClearHistory_FullMethodName   = "/hi.club.Chat/ClearHistory"
-	Chat_Complete_FullMethodName       = "/hi.club.Chat/Complete"
-	Chat_CompleteStream_FullMethodName = "/hi.club.Chat/CompleteStream"
 	Chat_Converse_FullMethodName       = "/hi.club.Chat/Converse"
+	Chat_ConverseStream_FullMethodName = "/hi.club.Chat/ConverseStream"
 	Chat_Resume_FullMethodName         = "/hi.club.Chat/Resume"
+	Chat_ResumeStream_FullMethodName   = "/hi.club.Chat/ResumeStream"
 )
 
 // ChatClient is the client API for Chat service.
@@ -43,12 +43,11 @@ type ChatClient interface {
 	NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.NewSessionResp, error)
 	GetHistory(ctx context.Context, in *ai.GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error)
 	ClearHistory(ctx context.Context, in *ai.ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// ── 服务端整流程执行(工具在服务端跑)──
-	Complete(ctx context.Context, in *CompleteReq, opts ...grpc.CallOption) (*ai.CompleteResp, error)
-	CompleteStream(ctx context.Context, in *CompleteReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.CompleteStreamResp], error)
-	// ── 客户端 tool-callback 两阶段 ──
+	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
 	Converse(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
+	ConverseStream(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.ConverseStreamResp], error)
 	Resume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
+	ResumeStream(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.ConverseStreamResp], error)
 }
 
 type chatClient struct {
@@ -89,35 +88,6 @@ func (c *chatClient) ClearHistory(ctx context.Context, in *ai.ClearHistoryReq, o
 	return out, nil
 }
 
-func (c *chatClient) Complete(ctx context.Context, in *CompleteReq, opts ...grpc.CallOption) (*ai.CompleteResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.CompleteResp)
-	err := c.cc.Invoke(ctx, Chat_Complete_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chatClient) CompleteStream(ctx context.Context, in *CompleteReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.CompleteStreamResp], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_CompleteStream_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[CompleteReq, ai.CompleteStreamResp]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Chat_CompleteStreamClient = grpc.ServerStreamingClient[ai.CompleteStreamResp]
-
 func (c *chatClient) Converse(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.ChatResp)
@@ -128,6 +98,25 @@ func (c *chatClient) Converse(ctx context.Context, in *ChatReq, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *chatClient) ConverseStream(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.ConverseStreamResp], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_ConverseStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ChatReq, ai.ConverseStreamResp]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Chat_ConverseStreamClient = grpc.ServerStreamingClient[ai.ConverseStreamResp]
+
 func (c *chatClient) Resume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.ChatResp)
@@ -137,6 +126,25 @@ func (c *chatClient) Resume(ctx context.Context, in *ToolCallResultsReq, opts ..
 	}
 	return out, nil
 }
+
+func (c *chatClient) ResumeStream(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.ConverseStreamResp], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[1], Chat_ResumeStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ToolCallResultsReq, ai.ConverseStreamResp]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Chat_ResumeStreamClient = grpc.ServerStreamingClient[ai.ConverseStreamResp]
 
 // ChatServer is the server API for Chat service.
 // All implementations should embed UnimplementedChatServer
@@ -151,12 +159,11 @@ type ChatServer interface {
 	NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error)
 	GetHistory(context.Context, *ai.GetHistoryReq) (*GetHistoryResp, error)
 	ClearHistory(context.Context, *ai.ClearHistoryReq) (*emptypb.Empty, error)
-	// ── 服务端整流程执行(工具在服务端跑)──
-	Complete(context.Context, *CompleteReq) (*ai.CompleteResp, error)
-	CompleteStream(*CompleteReq, grpc.ServerStreamingServer[ai.CompleteStreamResp]) error
-	// ── 客户端 tool-callback 两阶段 ──
+	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
 	Converse(context.Context, *ChatReq) (*ai.ChatResp, error)
+	ConverseStream(*ChatReq, grpc.ServerStreamingServer[ai.ConverseStreamResp]) error
 	Resume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
+	ResumeStream(*ToolCallResultsReq, grpc.ServerStreamingServer[ai.ConverseStreamResp]) error
 }
 
 // UnimplementedChatServer should be embedded to have
@@ -175,17 +182,17 @@ func (UnimplementedChatServer) GetHistory(context.Context, *ai.GetHistoryReq) (*
 func (UnimplementedChatServer) ClearHistory(context.Context, *ai.ClearHistoryReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method ClearHistory not implemented")
 }
-func (UnimplementedChatServer) Complete(context.Context, *CompleteReq) (*ai.CompleteResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Complete not implemented")
-}
-func (UnimplementedChatServer) CompleteStream(*CompleteReq, grpc.ServerStreamingServer[ai.CompleteStreamResp]) error {
-	return status.Error(codes.Unimplemented, "method CompleteStream not implemented")
-}
 func (UnimplementedChatServer) Converse(context.Context, *ChatReq) (*ai.ChatResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Converse not implemented")
 }
+func (UnimplementedChatServer) ConverseStream(*ChatReq, grpc.ServerStreamingServer[ai.ConverseStreamResp]) error {
+	return status.Error(codes.Unimplemented, "method ConverseStream not implemented")
+}
 func (UnimplementedChatServer) Resume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Resume not implemented")
+}
+func (UnimplementedChatServer) ResumeStream(*ToolCallResultsReq, grpc.ServerStreamingServer[ai.ConverseStreamResp]) error {
+	return status.Error(codes.Unimplemented, "method ResumeStream not implemented")
 }
 func (UnimplementedChatServer) testEmbeddedByValue() {}
 
@@ -261,35 +268,6 @@ func _Chat_ClearHistory_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_Complete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CompleteReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).Complete(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_Complete_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).Complete(ctx, req.(*CompleteReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Chat_CompleteStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(CompleteReq)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(ChatServer).CompleteStream(m, &grpc.GenericServerStream[CompleteReq, ai.CompleteStreamResp]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Chat_CompleteStreamServer = grpc.ServerStreamingServer[ai.CompleteStreamResp]
-
 func _Chat_Converse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChatReq)
 	if err := dec(in); err != nil {
@@ -308,6 +286,17 @@ func _Chat_Converse_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Chat_ConverseStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ChatReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ChatServer).ConverseStream(m, &grpc.GenericServerStream[ChatReq, ai.ConverseStreamResp]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Chat_ConverseStreamServer = grpc.ServerStreamingServer[ai.ConverseStreamResp]
+
 func _Chat_Resume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ToolCallResultsReq)
 	if err := dec(in); err != nil {
@@ -325,6 +314,17 @@ func _Chat_Resume_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	return interceptor(ctx, in, info, handler)
 }
+
+func _Chat_ResumeStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ToolCallResultsReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ChatServer).ResumeStream(m, &grpc.GenericServerStream[ToolCallResultsReq, ai.ConverseStreamResp]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Chat_ResumeStreamServer = grpc.ServerStreamingServer[ai.ConverseStreamResp]
 
 // Chat_ServiceDesc is the grpc.ServiceDesc for Chat service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -346,10 +346,6 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Chat_ClearHistory_Handler,
 		},
 		{
-			MethodName: "Complete",
-			Handler:    _Chat_Complete_Handler,
-		},
-		{
 			MethodName: "Converse",
 			Handler:    _Chat_Converse_Handler,
 		},
@@ -360,8 +356,13 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "CompleteStream",
-			Handler:       _Chat_CompleteStream_Handler,
+			StreamName:    "ConverseStream",
+			Handler:       _Chat_ConverseStream_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ResumeStream",
+			Handler:       _Chat_ResumeStream_Handler,
 			ServerStreams: true,
 		},
 	},

@@ -19,149 +19,6 @@ import 'messaging.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// 服务端整流程执行入参(工具在服务端跑)。
-class CompleteReq extends $pb.GeneratedMessage {
-  factory CompleteReq({
-    $core.String? agent,
-    $core.String? cid,
-    $core.Iterable<$3.Content>? conts,
-    $core.String? state,
-    $core.String? custom,
-    $core.bool? returnPluginUse,
-    $core.bool? returnTrainingData,
-    $core.bool? returnContext,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (cid != null) result.cid = cid;
-    if (conts != null) result.conts.addAll(conts);
-    if (state != null) result.state = state;
-    if (custom != null) result.custom = custom;
-    if (returnPluginUse != null) result.returnPluginUse = returnPluginUse;
-    if (returnTrainingData != null)
-      result.returnTrainingData = returnTrainingData;
-    if (returnContext != null) result.returnContext = returnContext;
-    return result;
-  }
-
-  CompleteReq._();
-
-  factory CompleteReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CompleteReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CompleteReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'cid')
-    ..pPM<$3.Content>(3, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
-    ..aOS(4, _omitFieldNames ? '' : 'state')
-    ..aOS(5, _omitFieldNames ? '' : 'custom')
-    ..aOB(6, _omitFieldNames ? '' : 'returnPluginUse')
-    ..aOB(7, _omitFieldNames ? '' : 'returnTrainingData')
-    ..aOB(8, _omitFieldNames ? '' : 'returnContext')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteReq copyWith(void Function(CompleteReq) updates) =>
-      super.copyWith((message) => updates(message as CompleteReq))
-          as CompleteReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static CompleteReq create() => CompleteReq._();
-  @$core.override
-  CompleteReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static CompleteReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CompleteReq>(create);
-  static CompleteReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get cid => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set cid($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasCid() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCid() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $pb.PbList<$3.Content> get conts => $_getList(2);
-
-  @$pb.TagNumber(4)
-  $core.String get state => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set state($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasState() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearState() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.String get custom => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set custom($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasCustom() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearCustom() => $_clearField(5);
-
-  /// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
-  /// 与 hi.ai.CompleteReq 的同名字段一一对应,club 原样透传。
-  /// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这两个只决定
-  ///    过程数据要不要一并流给调用方。
-  ///
-  /// 与 ai 侧同因同源:dev45 迁移(Stream→CompleteStream)时从请求里漏掉了,
-  /// 而且 club 这层是**双层丢** —— 自己没有字段,转发给 ai 时自然也带不上,
-  /// 于是经 club 进来的调用方(app / hiclub web)即便 ai 修好了也永远拿不到 toolCalls。
-  @$pb.TagNumber(6)
-  $core.bool get returnPluginUse => $_getBF(5);
-  @$pb.TagNumber(6)
-  set returnPluginUse($core.bool value) => $_setBool(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasReturnPluginUse() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearReturnPluginUse() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.bool get returnTrainingData => $_getBF(6);
-  @$pb.TagNumber(7)
-  set returnTrainingData($core.bool value) => $_setBool(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasReturnTrainingData() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearReturnTrainingData() => $_clearField(7);
-
-  @$pb.TagNumber(8)
-  $core.bool get returnContext => $_getBF(7);
-  @$pb.TagNumber(8)
-  set returnContext($core.bool value) => $_setBool(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasReturnContext() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearReturnContext() => $_clearField(8);
-}
-
 class QA extends $pb.GeneratedMessage {
   factory QA({
     $core.Iterable<$3.Content>? q,
@@ -270,7 +127,11 @@ class GetHistoryResp extends $pb.GeneratedMessage {
   $pb.PbList<QA> get list => $_getList(0);
 }
 
-/// 客户端 tool-callback 两阶段对话入参(合并原 TextToText/SpeechToText/SpeechToSpeech;模态由 conts+style 决定)。
+/// 对话入参(模态由 conts+style 决定;合原 TextToText/SpeechToText/SpeechToSpeech 与原 CompleteReq)。
+///
+/// ⚠️ **`tools` 是「我这边能执行哪些工具」,不是「这轮可用的全部工具」** ——
+///    ai 会把该 agent 的插件工具追加在它后面一起喂模型,返回后按名字分流。
+///    不上报(app / hiclub web)= 全部由服务端跑完 = 一次调用拿到最终答复。
 class ChatReq extends $pb.GeneratedMessage {
   factory ChatReq({
     $core.String? agent,
@@ -281,6 +142,9 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.String? custom,
     $core.String? state,
     $core.String? style,
+    $core.bool? echoToolCalls,
+    $core.bool? echoMemory,
+    $core.bool? echoContext,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -291,6 +155,9 @@ class ChatReq extends $pb.GeneratedMessage {
     if (custom != null) result.custom = custom;
     if (state != null) result.state = state;
     if (style != null) result.style = style;
+    if (echoToolCalls != null) result.echoToolCalls = echoToolCalls;
+    if (echoMemory != null) result.echoMemory = echoMemory;
+    if (echoContext != null) result.echoContext = echoContext;
     return result;
   }
 
@@ -317,6 +184,9 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'custom')
     ..aOS(7, _omitFieldNames ? '' : 'state')
     ..aOS(8, _omitFieldNames ? '' : 'style')
+    ..aOB(9, _omitFieldNames ? '' : 'echoToolCalls')
+    ..aOB(10, _omitFieldNames ? '' : 'echoMemory')
+    ..aOB(11, _omitFieldNames ? '' : 'echoContext')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -396,6 +266,46 @@ class ChatReq extends $pb.GeneratedMessage {
   $core.bool hasStyle() => $_has(7);
   @$pb.TagNumber(8)
   void clearStyle() => $_clearField(8);
+
+  /// ── 过程回显开关(**只管输出,不管行为**)──────────────────────────────────────
+  /// 与 hi.ai.ChatReq 的同名字段一一对应,club 原样透传。**仅流式有意义。**
+  /// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这几个只决定
+  ///    过程数据要不要一并流出去。
+  ///
+  /// ⚠️ 旧名 `return_plugin_use` / `return_training_data` / `return_context` 已随 ai 一并改名
+  ///    (`return_` 像"要不要返回结果",而回的是**过程**;`plugin_use` 回的是 function call,
+  ///     不是"插件用量")。
+  ///
+  /// ⚠️ 这几个字段原属已删除的 `CompleteReq`。与 ai 侧同因同源:dev45 迁移
+  ///    (Stream→CompleteStream)时从请求里漏掉过,而且 club 这层是**双层丢** ——
+  ///    自己没有字段,转发给 ai 时自然也带不上,于是经 club 进来的调用方(app / hiclub web)
+  ///    即便 ai 修好了也永远拿不到回显帧。搬家时别再漏第二次。
+  @$pb.TagNumber(9)
+  $core.bool get echoToolCalls => $_getBF(8);
+  @$pb.TagNumber(9)
+  set echoToolCalls($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasEchoToolCalls() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearEchoToolCalls() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.bool get echoMemory => $_getBF(9);
+  @$pb.TagNumber(10)
+  set echoMemory($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasEchoMemory() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearEchoMemory() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.bool get echoContext => $_getBF(10);
+  @$pb.TagNumber(11)
+  set echoContext($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasEchoContext() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearEchoContext() => $_clearField(11);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {

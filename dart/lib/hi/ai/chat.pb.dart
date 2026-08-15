@@ -137,286 +137,6 @@ class NewSessionResp extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(1);
 }
 
-/// ── 服务端整流程执行(Complete 家族)────────────────────────────────────────
-/// 服务端把一轮对话**整个跑完**(function call 也在服务端执行),客户端不参与工具调用,直接拿最终答复。
-/// Complete = 一次性;CompleteStream = 流式。与下面 Converse/Resume(客户端 tool-callback 两阶段)是两条路。
-class CompleteReq extends $pb.GeneratedMessage {
-  factory CompleteReq({
-    $core.String? agent,
-    $core.String? cid,
-    $core.Iterable<Content>? conts,
-    $core.String? state,
-    $core.String? custom,
-    $core.bool? returnPluginUse,
-    $core.bool? returnTrainingData,
-    $core.bool? returnContext,
-  }) {
-    final result = create();
-    if (agent != null) result.agent = agent;
-    if (cid != null) result.cid = cid;
-    if (conts != null) result.conts.addAll(conts);
-    if (state != null) result.state = state;
-    if (custom != null) result.custom = custom;
-    if (returnPluginUse != null) result.returnPluginUse = returnPluginUse;
-    if (returnTrainingData != null)
-      result.returnTrainingData = returnTrainingData;
-    if (returnContext != null) result.returnContext = returnContext;
-    return result;
-  }
-
-  CompleteReq._();
-
-  factory CompleteReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CompleteReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CompleteReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOS(2, _omitFieldNames ? '' : 'cid')
-    ..pPM<Content>(3, _omitFieldNames ? '' : 'conts',
-        subBuilder: Content.create)
-    ..aOS(4, _omitFieldNames ? '' : 'state')
-    ..aOS(5, _omitFieldNames ? '' : 'custom')
-    ..aOB(6, _omitFieldNames ? '' : 'returnPluginUse')
-    ..aOB(7, _omitFieldNames ? '' : 'returnTrainingData')
-    ..aOB(8, _omitFieldNames ? '' : 'returnContext')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteReq copyWith(void Function(CompleteReq) updates) =>
-      super.copyWith((message) => updates(message as CompleteReq))
-          as CompleteReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static CompleteReq create() => CompleteReq._();
-  @$core.override
-  CompleteReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static CompleteReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CompleteReq>(create);
-  static CompleteReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get cid => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set cid($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasCid() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCid() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $pb.PbList<Content> get conts => $_getList(2);
-
-  @$pb.TagNumber(4)
-  $core.String get state => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set state($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasState() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearState() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.String get custom => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set custom($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasCustom() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearCustom() => $_clearField(5);
-
-  /// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
-  /// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
-  ///    模型看着 tools 自己决定 → 调 → 结果回喂 → 模型二次回复)。这两个开关只决定
-  ///    过程数据要不要一并流给调用方。
-  ///
-  /// 这两个字段在 dev45 那次迁移(Stream→CompleteStream)时**从请求里漏掉了**,
-  /// 而读它们的代码原样留着 → 恒 false → toolCalls 帧与训练数据从此再没发出去过,
-  /// 不报错、类型也对,只是值永远是零值。补回来。
-  @$pb.TagNumber(6)
-  $core.bool get returnPluginUse => $_getBF(5);
-  @$pb.TagNumber(6)
-  set returnPluginUse($core.bool value) => $_setBool(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasReturnPluginUse() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearReturnPluginUse() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.bool get returnTrainingData => $_getBF(6);
-  @$pb.TagNumber(7)
-  set returnTrainingData($core.bool value) => $_setBool(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasReturnTrainingData() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearReturnTrainingData() => $_clearField(7);
-
-  /// 发 type="context" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
-  /// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
-  /// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
-  @$pb.TagNumber(8)
-  $core.bool get returnContext => $_getBF(7);
-  @$pb.TagNumber(8)
-  set returnContext($core.bool value) => $_setBool(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasReturnContext() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearReturnContext() => $_clearField(8);
-}
-
-class CompleteResp extends $pb.GeneratedMessage {
-  factory CompleteResp({
-    $core.String? reply,
-  }) {
-    final result = create();
-    if (reply != null) result.reply = reply;
-    return result;
-  }
-
-  CompleteResp._();
-
-  factory CompleteResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CompleteResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CompleteResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'reply')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteResp copyWith(void Function(CompleteResp) updates) =>
-      super.copyWith((message) => updates(message as CompleteResp))
-          as CompleteResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static CompleteResp create() => CompleteResp._();
-  @$core.override
-  CompleteResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static CompleteResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CompleteResp>(create);
-  static CompleteResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get reply => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set reply($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasReply() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearReply() => $_clearField(1);
-}
-
-class CompleteStreamResp extends $pb.GeneratedMessage {
-  factory CompleteStreamResp({
-    $core.int? code,
-    $core.String? type,
-    $core.String? message,
-  }) {
-    final result = create();
-    if (code != null) result.code = code;
-    if (type != null) result.type = type;
-    if (message != null) result.message = message;
-    return result;
-  }
-
-  CompleteStreamResp._();
-
-  factory CompleteStreamResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CompleteStreamResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CompleteStreamResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'code')
-    ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOS(3, _omitFieldNames ? '' : 'message')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteStreamResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CompleteStreamResp copyWith(void Function(CompleteStreamResp) updates) =>
-      super.copyWith((message) => updates(message as CompleteStreamResp))
-          as CompleteStreamResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static CompleteStreamResp create() => CompleteStreamResp._();
-  @$core.override
-  CompleteStreamResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static CompleteStreamResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CompleteStreamResp>(create);
-  static CompleteStreamResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get code => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set code($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasCode() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearCode() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get type => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set type($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasType() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearType() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get message => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set message($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasMessage() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearMessage() => $_clearField(3);
-}
-
 class ClearHistoryReq extends $pb.GeneratedMessage {
   factory ClearHistoryReq({
     $core.String? cid,
@@ -632,9 +352,18 @@ class GetHistoryResp extends $pb.GeneratedMessage {
   $pb.PbList<QA> get list => $_getList(0);
 }
 
-/// ── 客户端 tool-callback 两阶段对话入参(Converse/Resume)────────────────────
-/// 一轮对话:Converse 返回最终答复,或返回**待客户端执行的工具**(final=false);客户端执行后调 Resume 交回结果续跑。
-/// 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech 三个按模态复制的方法。
+/// ── 对话入参(Converse/ConverseStream;续跑走 Resume/ResumeStream)──────────────
+///
+/// 一轮对话 = 服务端一个**循环**:模型要调工具就调、调完把结果喂回去接着问,直到模型给出答复。
+/// 循环中若遇到**必须由客户端执行**的工具(客户端在 `tools` 里上报的那些),就中途返回
+/// (`final=false`)把它们交出去;客户端执行完调 Resume 交回结果,**进同一个循环**继续。
+///
+/// ⚠️ **`tools` 是「我这边能执行哪些工具」,不是「这轮可用的全部工具」。**
+///    服务端会把该 agent 的插件工具**追加**在它后面一起喂给模型;模型返回后按名字分流 ——
+///    服务端插件服务端自己跑,客户端上报的那些才交回客户端。
+///    所以不上报 tools(web/软件机器人)= 全部由服务端跑完 = 一次调用拿到最终答复。
+///
+/// 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech。
 /// 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
 class ChatReq extends $pb.GeneratedMessage {
   factory ChatReq({
@@ -646,6 +375,9 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.String? custom,
     $core.String? state,
     $core.String? style,
+    $core.bool? echoToolCalls,
+    $core.bool? echoMemory,
+    $core.bool? echoContext,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -656,6 +388,9 @@ class ChatReq extends $pb.GeneratedMessage {
     if (custom != null) result.custom = custom;
     if (state != null) result.state = state;
     if (style != null) result.style = style;
+    if (echoToolCalls != null) result.echoToolCalls = echoToolCalls;
+    if (echoMemory != null) result.echoMemory = echoMemory;
+    if (echoContext != null) result.echoContext = echoContext;
     return result;
   }
 
@@ -682,6 +417,9 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'custom')
     ..aOS(7, _omitFieldNames ? '' : 'state')
     ..aOS(8, _omitFieldNames ? '' : 'style')
+    ..aOB(9, _omitFieldNames ? '' : 'echoToolCalls')
+    ..aOB(10, _omitFieldNames ? '' : 'echoMemory')
+    ..aOB(11, _omitFieldNames ? '' : 'echoContext')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -761,6 +499,51 @@ class ChatReq extends $pb.GeneratedMessage {
   $core.bool hasStyle() => $_has(7);
   @$pb.TagNumber(8)
   void clearStyle() => $_clearField(8);
+
+  /// ── 过程回显开关:要不要把中间过程一并流给调用方(**只管输出,不管行为**)──────────
+  ///
+  /// 一律 `echo_` 前缀,对应流式帧 `echoXxx`。**仅流式(ConverseStream/ResumeStream)有意义。**
+  ///
+  /// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
+  ///    模型看着 tools 自己决定 → 调 → 结果回喂 → 模型接着回复)。这几个开关只决定
+  ///    过程数据要不要一并流出去,与行为无关。
+  ///
+  /// ⚠️ 旧名是 `return_plugin_use` / `return_training_data` / `return_context` ——
+  ///    `return_` 读起来像"要不要返回结果",而它们回的是**过程**;`plugin_use` 更是词不达意
+  ///    (回的是 function call,不是"插件用量")。已统一改名。
+  ///
+  /// ⚠️ 这几个字段原属已删除的 `CompleteReq`。它们在 dev45 那次迁移(Stream→CompleteStream)时
+  ///    **从请求里漏掉过**,而读它们的代码原样留着 → 恒 false → 回显帧与记忆片段
+  ///    从此再没发出去过,**不报错、类型也对,只是值永远是零值**。搬家时别再漏第二次。
+  @$pb.TagNumber(9)
+  $core.bool get echoToolCalls => $_getBF(8);
+  @$pb.TagNumber(9)
+  set echoToolCalls($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasEchoToolCalls() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearEchoToolCalls() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.bool get echoMemory => $_getBF(9);
+  @$pb.TagNumber(10)
+  set echoMemory($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasEchoMemory() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearEchoMemory() => $_clearField(10);
+
+  /// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
+  /// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
+  /// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
+  @$pb.TagNumber(11)
+  $core.bool get echoContext => $_getBF(10);
+  @$pb.TagNumber(11)
+  set echoContext($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasEchoContext() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearEchoContext() => $_clearField(11);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {
@@ -1181,8 +964,16 @@ class ToolCall extends $pb.GeneratedMessage {
   ToolCall_Function ensureFunction() => $_ensure(2);
 }
 
-/// final == true  → result = text/url, tools = null
-/// final == false → result = tool_id,  tools = 待客户端执行的工具
+/// `final` = **这轮还需不需要你做事**,不是"模型有没有调工具"。
+///
+///   final == true  → 服务端已经跑完(可能内部调过若干轮工具),result = 最终答复 text/url,tools 空
+///   final == false → **轮到你了**:result = 续跑用的 tool_id,tools = 待客户端执行的工具
+///                    客户端执行完调 Resume(带上这个 id)接着跑
+///
+/// ⚠️ **判据只能是 `final`,不能是"tools 非空"。**
+///    模型这轮可能只调了服务端插件 —— 那些由服务端自己跑完,`final` 直接是 true;
+///    但也可能出现 tools 为空却 final=false 的边界(工具被过滤掉等),此时仍须调 Resume,
+///    否则整轮对话就停在半路,表现为"机器人不理我了"。
 class ChatResp extends $pb.GeneratedMessage {
   factory ChatResp({
     $core.bool? final_1,
@@ -1253,6 +1044,120 @@ class ChatResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(3)
   $pb.PbList<ToolCall> get tools => $_getList(2);
+}
+
+/// 流式帧(ConverseStream / ResumeStream)。
+///
+/// `type` 取值 —— **一条指令帧,其余全是回显帧**:
+///   text          —— 答复分片(正常输出)
+///   toolCalls     —— **指令**:轮到客户端执行工具了。见下,不可关
+///   echoToolCalls —— 回显:模型调了哪个函数、传了什么参数、工具返回什么(由 echo_tool_calls 打开)
+///   echoMemory    —— 回显:本轮命中的记忆片段(由 echo_memory 打开)
+///   echoContext   —— 回显:这次真正喂给模型的上下文(由 echo_context 打开)
+///
+/// ⚠️ **`toolCalls`(指令)与 `echoToolCalls`(回显)必须是两个 type,别合。**
+///    前者是**指令性**的:要你去执行,是流程的一环,**不可关**;
+///    后者是**信息性**的:只是给你看服务端调了什么,**可关**。
+///    合成一个的话有两个后果:①客户端分不清收到的是"给你看的"还是"要你做的";
+///    ②一个本该可关的调试开关会把流程必需的信号一起关掉。
+///
+/// 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
+class ConverseStreamResp extends $pb.GeneratedMessage {
+  factory ConverseStreamResp({
+    $core.int? code,
+    $core.String? type,
+    $core.String? message,
+    $core.String? id,
+    $core.Iterable<ToolCall>? tools,
+  }) {
+    final result = create();
+    if (code != null) result.code = code;
+    if (type != null) result.type = type;
+    if (message != null) result.message = message;
+    if (id != null) result.id = id;
+    if (tools != null) result.tools.addAll(tools);
+    return result;
+  }
+
+  ConverseStreamResp._();
+
+  factory ConverseStreamResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ConverseStreamResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ConverseStreamResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'code')
+    ..aOS(2, _omitFieldNames ? '' : 'type')
+    ..aOS(3, _omitFieldNames ? '' : 'message')
+    ..aOS(4, _omitFieldNames ? '' : 'id')
+    ..pPM<ToolCall>(5, _omitFieldNames ? '' : 'tools',
+        subBuilder: ToolCall.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConverseStreamResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConverseStreamResp copyWith(void Function(ConverseStreamResp) updates) =>
+      super.copyWith((message) => updates(message as ConverseStreamResp))
+          as ConverseStreamResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ConverseStreamResp create() => ConverseStreamResp._();
+  @$core.override
+  ConverseStreamResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ConverseStreamResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ConverseStreamResp>(create);
+  static ConverseStreamResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get code => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set code($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get type => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set type($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasType() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearType() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get message => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set message($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMessage() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMessage() => $_clearField(3);
+
+  /// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
+  @$pb.TagNumber(4)
+  $core.String get id => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set id($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearId() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $pb.PbList<ToolCall> get tools => $_getList(4);
 }
 
 const $core.bool _omitFieldNames =

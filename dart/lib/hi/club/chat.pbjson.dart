@@ -15,42 +15,6 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use completeReqDescriptor instead')
-const CompleteReq$json = {
-  '1': 'CompleteReq',
-  '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'cid', '3': 2, '4': 1, '5': 9, '10': 'cid'},
-    {
-      '1': 'conts',
-      '3': 3,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.club.Content',
-      '10': 'conts'
-    },
-    {'1': 'state', '3': 4, '4': 1, '5': 9, '10': 'state'},
-    {'1': 'custom', '3': 5, '4': 1, '5': 9, '10': 'custom'},
-    {'1': 'return_plugin_use', '3': 6, '4': 1, '5': 8, '10': 'returnPluginUse'},
-    {
-      '1': 'return_training_data',
-      '3': 7,
-      '4': 1,
-      '5': 8,
-      '10': 'returnTrainingData'
-    },
-    {'1': 'return_context', '3': 8, '4': 1, '5': 8, '10': 'returnContext'},
-  ],
-};
-
-/// Descriptor for `CompleteReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List completeReqDescriptor = $convert.base64Decode(
-    'CgtDb21wbGV0ZVJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEAoDY2lkGAIgASgJUgNjaWQSJg'
-    'oFY29udHMYAyADKAsyEC5oaS5jbHViLkNvbnRlbnRSBWNvbnRzEhQKBXN0YXRlGAQgASgJUgVz'
-    'dGF0ZRIWCgZjdXN0b20YBSABKAlSBmN1c3RvbRIqChFyZXR1cm5fcGx1Z2luX3VzZRgGIAEoCF'
-    'IPcmV0dXJuUGx1Z2luVXNlEjAKFHJldHVybl90cmFpbmluZ19kYXRhGAcgASgIUhJyZXR1cm5U'
-    'cmFpbmluZ0RhdGESJQoOcmV0dXJuX2NvbnRleHQYCCABKAhSDXJldHVybkNvbnRleHQ=');
-
 @$core.Deprecated('Use qADescriptor instead')
 const QA$json = {
   '1': 'QA',
@@ -130,6 +94,9 @@ const ChatReq$json = {
     {'1': 'custom', '3': 6, '4': 1, '5': 9, '9': 1, '10': 'custom', '17': true},
     {'1': 'state', '3': 7, '4': 1, '5': 9, '9': 2, '10': 'state', '17': true},
     {'1': 'style', '3': 8, '4': 1, '5': 9, '9': 3, '10': 'style', '17': true},
+    {'1': 'echo_tool_calls', '3': 9, '4': 1, '5': 8, '10': 'echoToolCalls'},
+    {'1': 'echo_memory', '3': 10, '4': 1, '5': 8, '10': 'echoMemory'},
+    {'1': 'echo_context', '3': 11, '4': 1, '5': 8, '10': 'echoContext'},
   ],
   '8': [
     {'1': '_tool_choice'},
@@ -145,8 +112,10 @@ final $typed_data.Uint8List chatReqDescriptor = $convert.base64Decode(
     '50cxgDIAMoCzIQLmhpLmNsdWIuQ29udGVudFIFY29udHMSJwoFdG9vbHMYBCADKAsyES5oaS5h'
     'aS5Ub29sU3VwcGx5UgV0b29scxIkCgt0b29sX2Nob2ljZRgFIAEoCUgAUgp0b29sQ2hvaWNliA'
     'EBEhsKBmN1c3RvbRgGIAEoCUgBUgZjdXN0b22IAQESGQoFc3RhdGUYByABKAlIAlIFc3RhdGWI'
-    'AQESGQoFc3R5bGUYCCABKAlIA1IFc3R5bGWIAQFCDgoMX3Rvb2xfY2hvaWNlQgkKB19jdXN0b2'
-    '1CCAoGX3N0YXRlQggKBl9zdHlsZQ==');
+    'AQESGQoFc3R5bGUYCCABKAlIA1IFc3R5bGWIAQESJgoPZWNob190b29sX2NhbGxzGAkgASgIUg'
+    '1lY2hvVG9vbENhbGxzEh8KC2VjaG9fbWVtb3J5GAogASgIUgplY2hvTWVtb3J5EiEKDGVjaG9f'
+    'Y29udGV4dBgLIAEoCFILZWNob0NvbnRleHRCDgoMX3Rvb2xfY2hvaWNlQgkKB19jdXN0b21CCA'
+    'oGX3N0YXRlQggKBl9zdHlsZQ==');
 
 @$core.Deprecated('Use toolCallResultDescriptor instead')
 const ToolCallResult$json = {

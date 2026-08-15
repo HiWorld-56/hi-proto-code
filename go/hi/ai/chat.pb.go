@@ -121,225 +121,6 @@ func (x *NewSessionResp) GetCid() string {
 	return ""
 }
 
-// ── 服务端整流程执行(Complete 家族)────────────────────────────────────────
-// 服务端把一轮对话**整个跑完**(function call 也在服务端执行),客户端不参与工具调用,直接拿最终答复。
-// Complete = 一次性;CompleteStream = 流式。与下面 Converse/Resume(客户端 tool-callback 两阶段)是两条路。
-type CompleteReq struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Agent  string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid    string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts  []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	State  string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
-	Custom string                 `protobuf:"bytes,5,opt,name=custom,proto3" json:"custom,omitempty"`
-	// ── 要不要把过程回给调用方(**只管输出,不管行为**)────────────────────────────
-	// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
-	//
-	//	模型看着 tools 自己决定 → 调 → 结果回喂 → 模型二次回复)。这两个开关只决定
-	//	过程数据要不要一并流给调用方。
-	//
-	// 这两个字段在 dev45 那次迁移(Stream→CompleteStream)时**从请求里漏掉了**,
-	// 而读它们的代码原样留着 → 恒 false → toolCalls 帧与训练数据从此再没发出去过,
-	// 不报错、类型也对,只是值永远是零值。补回来。
-	ReturnPluginUse    bool `protobuf:"varint,6,opt,name=return_plugin_use,json=returnPluginUse,proto3" json:"return_plugin_use,omitempty"`          // 发 type="toolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-	ReturnTrainingData bool `protobuf:"varint,7,opt,name=return_training_data,json=returnTrainingData,proto3" json:"return_training_data,omitempty"` // 回训练数据(命中的记忆片段)
-	// 发 type="context" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
-	// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
-	// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
-	ReturnContext bool `protobuf:"varint,8,opt,name=return_context,json=returnContext,proto3" json:"return_context,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CompleteReq) Reset() {
-	*x = CompleteReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CompleteReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CompleteReq) ProtoMessage() {}
-
-func (x *CompleteReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CompleteReq.ProtoReflect.Descriptor instead.
-func (*CompleteReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CompleteReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetCid() string {
-	if x != nil {
-		return x.Cid
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetConts() []*Content {
-	if x != nil {
-		return x.Conts
-	}
-	return nil
-}
-
-func (x *CompleteReq) GetState() string {
-	if x != nil {
-		return x.State
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetCustom() string {
-	if x != nil {
-		return x.Custom
-	}
-	return ""
-}
-
-func (x *CompleteReq) GetReturnPluginUse() bool {
-	if x != nil {
-		return x.ReturnPluginUse
-	}
-	return false
-}
-
-func (x *CompleteReq) GetReturnTrainingData() bool {
-	if x != nil {
-		return x.ReturnTrainingData
-	}
-	return false
-}
-
-func (x *CompleteReq) GetReturnContext() bool {
-	if x != nil {
-		return x.ReturnContext
-	}
-	return false
-}
-
-type CompleteResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Reply         string                 `protobuf:"bytes,1,opt,name=reply,proto3" json:"reply,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CompleteResp) Reset() {
-	*x = CompleteResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CompleteResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CompleteResp) ProtoMessage() {}
-
-func (x *CompleteResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CompleteResp.ProtoReflect.Descriptor instead.
-func (*CompleteResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *CompleteResp) GetReply() string {
-	if x != nil {
-		return x.Reply
-	}
-	return ""
-}
-
-type CompleteStreamResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	Message       string                 `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CompleteStreamResp) Reset() {
-	*x = CompleteStreamResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CompleteStreamResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CompleteStreamResp) ProtoMessage() {}
-
-func (x *CompleteStreamResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CompleteStreamResp.ProtoReflect.Descriptor instead.
-func (*CompleteStreamResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *CompleteStreamResp) GetCode() int32 {
-	if x != nil {
-		return x.Code
-	}
-	return 0
-}
-
-func (x *CompleteStreamResp) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-func (x *CompleteStreamResp) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
 type ClearHistoryReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Cid           string                 `protobuf:"bytes,1,opt,name=cid,proto3" json:"cid,omitempty"`
@@ -349,7 +130,7 @@ type ClearHistoryReq struct {
 
 func (x *ClearHistoryReq) Reset() {
 	*x = ClearHistoryReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[5]
+	mi := &file_hi_ai_chat_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -361,7 +142,7 @@ func (x *ClearHistoryReq) String() string {
 func (*ClearHistoryReq) ProtoMessage() {}
 
 func (x *ClearHistoryReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[5]
+	mi := &file_hi_ai_chat_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -374,7 +155,7 @@ func (x *ClearHistoryReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClearHistoryReq.ProtoReflect.Descriptor instead.
 func (*ClearHistoryReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{5}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ClearHistoryReq) GetCid() string {
@@ -393,7 +174,7 @@ type GetHistoryReq struct {
 
 func (x *GetHistoryReq) Reset() {
 	*x = GetHistoryReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[6]
+	mi := &file_hi_ai_chat_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -405,7 +186,7 @@ func (x *GetHistoryReq) String() string {
 func (*GetHistoryReq) ProtoMessage() {}
 
 func (x *GetHistoryReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[6]
+	mi := &file_hi_ai_chat_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -418,7 +199,7 @@ func (x *GetHistoryReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoryReq.ProtoReflect.Descriptor instead.
 func (*GetHistoryReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{6}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetHistoryReq) GetCid() string {
@@ -438,7 +219,7 @@ type QA struct {
 
 func (x *QA) Reset() {
 	*x = QA{}
-	mi := &file_hi_ai_chat_proto_msgTypes[7]
+	mi := &file_hi_ai_chat_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -450,7 +231,7 @@ func (x *QA) String() string {
 func (*QA) ProtoMessage() {}
 
 func (x *QA) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[7]
+	mi := &file_hi_ai_chat_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -463,7 +244,7 @@ func (x *QA) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QA.ProtoReflect.Descriptor instead.
 func (*QA) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{7}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *QA) GetA() string {
@@ -489,7 +270,7 @@ type GetHistoryResp struct {
 
 func (x *GetHistoryResp) Reset() {
 	*x = GetHistoryResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[8]
+	mi := &file_hi_ai_chat_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -501,7 +282,7 @@ func (x *GetHistoryResp) String() string {
 func (*GetHistoryResp) ProtoMessage() {}
 
 func (x *GetHistoryResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[8]
+	mi := &file_hi_ai_chat_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -514,7 +295,7 @@ func (x *GetHistoryResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoryResp.ProtoReflect.Descriptor instead.
 func (*GetHistoryResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{8}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetHistoryResp) GetList() []*QA {
@@ -524,27 +305,61 @@ func (x *GetHistoryResp) GetList() []*QA {
 	return nil
 }
 
-// ── 客户端 tool-callback 两阶段对话入参(Converse/Resume)────────────────────
-// 一轮对话:Converse 返回最终答复,或返回**待客户端执行的工具**(final=false);客户端执行后调 Resume 交回结果续跑。
-// 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech 三个按模态复制的方法。
+// ── 对话入参(Converse/ConverseStream;续跑走 Resume/ResumeStream)──────────────
+//
+// 一轮对话 = 服务端一个**循环**:模型要调工具就调、调完把结果喂回去接着问,直到模型给出答复。
+// 循环中若遇到**必须由客户端执行**的工具(客户端在 `tools` 里上报的那些),就中途返回
+// (`final=false`)把它们交出去;客户端执行完调 Resume 交回结果,**进同一个循环**继续。
+//
+// ⚠️ **`tools` 是「我这边能执行哪些工具」,不是「这轮可用的全部工具」。**
+//
+//	服务端会把该 agent 的插件工具**追加**在它后面一起喂给模型;模型返回后按名字分流 ——
+//	服务端插件服务端自己跑,客户端上报的那些才交回客户端。
+//	所以不上报 tools(web/软件机器人)= 全部由服务端跑完 = 一次调用拿到最终答复。
+//
+// 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech。
 // 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
 type ChatReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid           string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	Tools         []*ToolSupply          `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"`
-	ToolChoice    *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
-	Custom        *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
-	State         *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	Style         *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出的音色等;纯文本场景留空
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Agent      string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Cid        string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
+	Conts      []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
+	Tools      []*ToolSupply          `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
+	ToolChoice *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
+	Custom     *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
+	State      *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
+	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出的音色等;纯文本场景留空
+	// ── 过程回显开关:要不要把中间过程一并流给调用方(**只管输出,不管行为**)──────────
+	//
+	// 一律 `echo_` 前缀,对应流式帧 `echoXxx`。**仅流式(ConverseStream/ResumeStream)有意义。**
+	//
+	// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
+	//
+	//	模型看着 tools 自己决定 → 调 → 结果回喂 → 模型接着回复)。这几个开关只决定
+	//	过程数据要不要一并流出去,与行为无关。
+	//
+	// ⚠️ 旧名是 `return_plugin_use` / `return_training_data` / `return_context` ——
+	//
+	//	`return_` 读起来像"要不要返回结果",而它们回的是**过程**;`plugin_use` 更是词不达意
+	//	(回的是 function call,不是"插件用量")。已统一改名。
+	//
+	// ⚠️ 这几个字段原属已删除的 `CompleteReq`。它们在 dev45 那次迁移(Stream→CompleteStream)时
+	//
+	//	**从请求里漏掉过**,而读它们的代码原样留着 → 恒 false → 回显帧与记忆片段
+	//	从此再没发出去过,**不报错、类型也对,只是值永远是零值**。搬家时别再漏第二次。
+	EchoToolCalls bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+	EchoMemory    bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
+	// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
+	// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
+	// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
+	EchoContext   bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3" json:"echo_context,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ChatReq) Reset() {
 	*x = ChatReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[9]
+	mi := &file_hi_ai_chat_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -556,7 +371,7 @@ func (x *ChatReq) String() string {
 func (*ChatReq) ProtoMessage() {}
 
 func (x *ChatReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[9]
+	mi := &file_hi_ai_chat_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -569,7 +384,7 @@ func (x *ChatReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatReq.ProtoReflect.Descriptor instead.
 func (*ChatReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{9}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ChatReq) GetAgent() string {
@@ -628,6 +443,27 @@ func (x *ChatReq) GetStyle() string {
 	return ""
 }
 
+func (x *ChatReq) GetEchoToolCalls() bool {
+	if x != nil {
+		return x.EchoToolCalls
+	}
+	return false
+}
+
+func (x *ChatReq) GetEchoMemory() bool {
+	if x != nil {
+		return x.EchoMemory
+	}
+	return false
+}
+
+func (x *ChatReq) GetEchoContext() bool {
+	if x != nil {
+		return x.EchoContext
+	}
+	return false
+}
+
 type ToolCallResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -638,7 +474,7 @@ type ToolCallResult struct {
 
 func (x *ToolCallResult) Reset() {
 	*x = ToolCallResult{}
-	mi := &file_hi_ai_chat_proto_msgTypes[10]
+	mi := &file_hi_ai_chat_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -650,7 +486,7 @@ func (x *ToolCallResult) String() string {
 func (*ToolCallResult) ProtoMessage() {}
 
 func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[10]
+	mi := &file_hi_ai_chat_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -663,7 +499,7 @@ func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResult.ProtoReflect.Descriptor instead.
 func (*ToolCallResult) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{10}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ToolCallResult) GetId() string {
@@ -691,7 +527,7 @@ type ToolCallResultsReq struct {
 
 func (x *ToolCallResultsReq) Reset() {
 	*x = ToolCallResultsReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[11]
+	mi := &file_hi_ai_chat_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -703,7 +539,7 @@ func (x *ToolCallResultsReq) String() string {
 func (*ToolCallResultsReq) ProtoMessage() {}
 
 func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[11]
+	mi := &file_hi_ai_chat_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -716,7 +552,7 @@ func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResultsReq.ProtoReflect.Descriptor instead.
 func (*ToolCallResultsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{11}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ToolCallResultsReq) GetId() string {
@@ -743,7 +579,7 @@ type ToolSupply struct {
 
 func (x *ToolSupply) Reset() {
 	*x = ToolSupply{}
-	mi := &file_hi_ai_chat_proto_msgTypes[12]
+	mi := &file_hi_ai_chat_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -755,7 +591,7 @@ func (x *ToolSupply) String() string {
 func (*ToolSupply) ProtoMessage() {}
 
 func (x *ToolSupply) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[12]
+	mi := &file_hi_ai_chat_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -768,7 +604,7 @@ func (x *ToolSupply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolSupply.ProtoReflect.Descriptor instead.
 func (*ToolSupply) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{12}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ToolSupply) GetType() string {
@@ -796,7 +632,7 @@ type ToolCall struct {
 
 func (x *ToolCall) Reset() {
 	*x = ToolCall{}
-	mi := &file_hi_ai_chat_proto_msgTypes[13]
+	mi := &file_hi_ai_chat_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -808,7 +644,7 @@ func (x *ToolCall) String() string {
 func (*ToolCall) ProtoMessage() {}
 
 func (x *ToolCall) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[13]
+	mi := &file_hi_ai_chat_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -821,7 +657,7 @@ func (x *ToolCall) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCall.ProtoReflect.Descriptor instead.
 func (*ToolCall) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{13}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ToolCall) GetId() string {
@@ -845,8 +681,17 @@ func (x *ToolCall) GetFunction() *ToolCall_Function {
 	return nil
 }
 
-// final == true  → result = text/url, tools = null
-// final == false → result = tool_id,  tools = 待客户端执行的工具
+// `final` = **这轮还需不需要你做事**,不是"模型有没有调工具"。
+//
+//	final == true  → 服务端已经跑完(可能内部调过若干轮工具),result = 最终答复 text/url,tools 空
+//	final == false → **轮到你了**:result = 续跑用的 tool_id,tools = 待客户端执行的工具
+//	                 客户端执行完调 Resume(带上这个 id)接着跑
+//
+// ⚠️ **判据只能是 `final`,不能是"tools 非空"。**
+//
+//	模型这轮可能只调了服务端插件 —— 那些由服务端自己跑完,`final` 直接是 true;
+//	但也可能出现 tools 为空却 final=false 的边界(工具被过滤掉等),此时仍须调 Resume,
+//	否则整轮对话就停在半路,表现为"机器人不理我了"。
 type ChatResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Final         bool                   `protobuf:"varint,1,opt,name=final,proto3" json:"final,omitempty"`
@@ -858,7 +703,7 @@ type ChatResp struct {
 
 func (x *ChatResp) Reset() {
 	*x = ChatResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[14]
+	mi := &file_hi_ai_chat_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -870,7 +715,7 @@ func (x *ChatResp) String() string {
 func (*ChatResp) ProtoMessage() {}
 
 func (x *ChatResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[14]
+	mi := &file_hi_ai_chat_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -883,7 +728,7 @@ func (x *ChatResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatResp.ProtoReflect.Descriptor instead.
 func (*ChatResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{14}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ChatResp) GetFinal() bool {
@@ -907,6 +752,101 @@ func (x *ChatResp) GetTools() []*ToolCall {
 	return nil
 }
 
+// 流式帧(ConverseStream / ResumeStream)。
+//
+// `type` 取值 —— **一条指令帧,其余全是回显帧**:
+//
+//	text          —— 答复分片(正常输出)
+//	toolCalls     —— **指令**:轮到客户端执行工具了。见下,不可关
+//	echoToolCalls —— 回显:模型调了哪个函数、传了什么参数、工具返回什么(由 echo_tool_calls 打开)
+//	echoMemory    —— 回显:本轮命中的记忆片段(由 echo_memory 打开)
+//	echoContext   —— 回显:这次真正喂给模型的上下文(由 echo_context 打开)
+//
+// ⚠️ **`toolCalls`(指令)与 `echoToolCalls`(回显)必须是两个 type,别合。**
+//
+//	前者是**指令性**的:要你去执行,是流程的一环,**不可关**;
+//	后者是**信息性**的:只是给你看服务端调了什么,**可关**。
+//	合成一个的话有两个后果:①客户端分不清收到的是"给你看的"还是"要你做的";
+//	②一个本该可关的调试开关会把流程必需的信号一起关掉。
+//
+// 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
+type ConverseStreamResp struct {
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Code    int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
+	Type    string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Message string                 `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
+	Id            string      `protobuf:"bytes,4,opt,name=id,proto3" json:"id,omitempty"`       // 续跑 id(Resume 时带回)
+	Tools         []*ToolCall `protobuf:"bytes,5,rep,name=tools,proto3" json:"tools,omitempty"` // 待客户端执行的工具
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ConverseStreamResp) Reset() {
+	*x = ConverseStreamResp{}
+	mi := &file_hi_ai_chat_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConverseStreamResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConverseStreamResp) ProtoMessage() {}
+
+func (x *ConverseStreamResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_chat_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConverseStreamResp.ProtoReflect.Descriptor instead.
+func (*ConverseStreamResp) Descriptor() ([]byte, []int) {
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ConverseStreamResp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *ConverseStreamResp) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *ConverseStreamResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *ConverseStreamResp) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ConverseStreamResp) GetTools() []*ToolCall {
+	if x != nil {
+		return x.Tools
+	}
+	return nil
+}
+
 type ToolSupply_Function struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -918,7 +858,7 @@ type ToolSupply_Function struct {
 
 func (x *ToolSupply_Function) Reset() {
 	*x = ToolSupply_Function{}
-	mi := &file_hi_ai_chat_proto_msgTypes[15]
+	mi := &file_hi_ai_chat_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -930,7 +870,7 @@ func (x *ToolSupply_Function) String() string {
 func (*ToolSupply_Function) ProtoMessage() {}
 
 func (x *ToolSupply_Function) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[15]
+	mi := &file_hi_ai_chat_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -943,7 +883,7 @@ func (x *ToolSupply_Function) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolSupply_Function.ProtoReflect.Descriptor instead.
 func (*ToolSupply_Function) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{12, 0}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{9, 0}
 }
 
 func (x *ToolSupply_Function) GetName() string {
@@ -977,7 +917,7 @@ type ToolCall_Function struct {
 
 func (x *ToolCall_Function) Reset() {
 	*x = ToolCall_Function{}
-	mi := &file_hi_ai_chat_proto_msgTypes[16]
+	mi := &file_hi_ai_chat_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -989,7 +929,7 @@ func (x *ToolCall_Function) String() string {
 func (*ToolCall_Function) ProtoMessage() {}
 
 func (x *ToolCall_Function) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[16]
+	mi := &file_hi_ai_chat_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1002,7 +942,7 @@ func (x *ToolCall_Function) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCall_Function.ProtoReflect.Descriptor instead.
 func (*ToolCall_Function) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{13, 0}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{10, 0}
 }
 
 func (x *ToolCall_Function) GetName() string {
@@ -1028,22 +968,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1e\n" +
 	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\acontent:\x04\x98\xb5\x18\x03\".\n" +
 	"\x0eNewSessionResp\x12\x16\n" +
-	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03cid:\x04\x98\xb5\x18\x03\"\x8e\x02\n" +
-	"\vCompleteReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
-	"\x03cid\x18\x02 \x01(\tR\x03cid\x12$\n" +
-	"\x05conts\x18\x03 \x03(\v2\x0e.hi.ai.ContentR\x05conts\x12\x14\n" +
-	"\x05state\x18\x04 \x01(\tR\x05state\x12\x16\n" +
-	"\x06custom\x18\x05 \x01(\tR\x06custom\x12*\n" +
-	"\x11return_plugin_use\x18\x06 \x01(\bR\x0freturnPluginUse\x120\n" +
-	"\x14return_training_data\x18\a \x01(\bR\x12returnTrainingData\x12%\n" +
-	"\x0ereturn_context\x18\b \x01(\bR\rreturnContext\"0\n" +
-	"\fCompleteResp\x12\x1a\n" +
-	"\x05reply\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05reply:\x04\x98\xb5\x18\x03\"n\n" +
-	"\x12CompleteStreamResp\x12\x18\n" +
-	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x04code\x12\x18\n" +
-	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1e\n" +
-	"\amessage\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\amessage:\x04\x98\xb5\x18\x03\"#\n" +
+	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03cid:\x04\x98\xb5\x18\x03\"#\n" +
 	"\x0fClearHistoryReq\x12\x10\n" +
 	"\x03cid\x18\x01 \x01(\tR\x03cid\"!\n" +
 	"\rGetHistoryReq\x12\x10\n" +
@@ -1052,7 +977,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x01a\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x01a\x12\"\n" +
 	"\x01q\x18\x02 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x01q:\x04\x98\xb5\x18\x03\";\n" +
 	"\x0eGetHistoryResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xa8\x02\n" +
+	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x94\x03\n" +
 	"\aChatReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12$\n" +
@@ -1062,7 +987,12 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"toolChoice\x88\x01\x01\x12\x1b\n" +
 	"\x06custom\x18\x06 \x01(\tH\x01R\x06custom\x88\x01\x01\x12\x19\n" +
 	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01\x12\x19\n" +
-	"\x05style\x18\b \x01(\tH\x03R\x05style\x88\x01\x01B\x0e\n" +
+	"\x05style\x18\b \x01(\tH\x03R\x05style\x88\x01\x01\x12&\n" +
+	"\x0fecho_tool_calls\x18\t \x01(\bR\rechoToolCalls\x12\x1f\n" +
+	"\vecho_memory\x18\n" +
+	" \x01(\bR\n" +
+	"echoMemory\x12!\n" +
+	"\fecho_context\x18\v \x01(\bR\vechoContextB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
 	"\x06_stateB\b\n" +
@@ -1094,17 +1024,23 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\bChatResp\x12\x1a\n" +
 	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03R\x05final\x12\x1c\n" +
 	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06result\x12+\n" +
-	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x032\xca\x03\n" +
+	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x03\"\xb1\x01\n" +
+	"\x12ConverseStreamResp\x12\x18\n" +
+	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x04code\x12\x18\n" +
+	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1e\n" +
+	"\amessage\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\amessage\x12\x14\n" +
+	"\x02id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x02id\x12+\n" +
+	"\x05tools\x18\x05 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x032\xd9\x03\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
 	"\n" +
 	"GetHistory\x12\x14.hi.ai.GetHistoryReq\x1a\x15.hi.ai.GetHistoryResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
-	"\fClearHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12:\n" +
-	"\bComplete\x12\x12.hi.ai.CompleteReq\x1a\x13.hi.ai.CompleteResp\"\x05\x8a\xb5\x18\x01\x03\x12H\n" +
-	"\x0eCompleteStream\x12\x12.hi.ai.CompleteReq\x1a\x19.hi.ai.CompleteStreamResp\"\x05\x8a\xb5\x18\x01\x030\x01\x122\n" +
-	"\bConverse\x12\x0e.hi.ai.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
-	"\x06Resume\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x03Bt\n" +
+	"\fClearHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x122\n" +
+	"\bConverse\x12\x0e.hi.ai.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x03\x12D\n" +
+	"\x0eConverseStream\x12\x0e.hi.ai.ChatReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x030\x01\x12;\n" +
+	"\x06Resume\x12\x19.hi.ai.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x03\x12M\n" +
+	"\fResumeStream\x12\x19.hi.ai.ToolCallResultsReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x030\x01Bt\n" +
 	"\tcom.hi.aiB\tChatProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var (
@@ -1119,54 +1055,52 @@ func file_hi_ai_chat_proto_rawDescGZIP() []byte {
 	return file_hi_ai_chat_proto_rawDescData
 }
 
-var file_hi_ai_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_hi_ai_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_hi_ai_chat_proto_goTypes = []any{
 	(*Content)(nil),             // 0: hi.ai.Content
 	(*NewSessionResp)(nil),      // 1: hi.ai.NewSessionResp
-	(*CompleteReq)(nil),         // 2: hi.ai.CompleteReq
-	(*CompleteResp)(nil),        // 3: hi.ai.CompleteResp
-	(*CompleteStreamResp)(nil),  // 4: hi.ai.CompleteStreamResp
-	(*ClearHistoryReq)(nil),     // 5: hi.ai.ClearHistoryReq
-	(*GetHistoryReq)(nil),       // 6: hi.ai.GetHistoryReq
-	(*QA)(nil),                  // 7: hi.ai.QA
-	(*GetHistoryResp)(nil),      // 8: hi.ai.GetHistoryResp
-	(*ChatReq)(nil),             // 9: hi.ai.ChatReq
-	(*ToolCallResult)(nil),      // 10: hi.ai.ToolCallResult
-	(*ToolCallResultsReq)(nil),  // 11: hi.ai.ToolCallResultsReq
-	(*ToolSupply)(nil),          // 12: hi.ai.ToolSupply
-	(*ToolCall)(nil),            // 13: hi.ai.ToolCall
-	(*ChatResp)(nil),            // 14: hi.ai.ChatResp
-	(*ToolSupply_Function)(nil), // 15: hi.ai.ToolSupply.Function
-	(*ToolCall_Function)(nil),   // 16: hi.ai.ToolCall.Function
-	(*structpb.Struct)(nil),     // 17: google.protobuf.Struct
-	(*emptypb.Empty)(nil),       // 18: google.protobuf.Empty
+	(*ClearHistoryReq)(nil),     // 2: hi.ai.ClearHistoryReq
+	(*GetHistoryReq)(nil),       // 3: hi.ai.GetHistoryReq
+	(*QA)(nil),                  // 4: hi.ai.QA
+	(*GetHistoryResp)(nil),      // 5: hi.ai.GetHistoryResp
+	(*ChatReq)(nil),             // 6: hi.ai.ChatReq
+	(*ToolCallResult)(nil),      // 7: hi.ai.ToolCallResult
+	(*ToolCallResultsReq)(nil),  // 8: hi.ai.ToolCallResultsReq
+	(*ToolSupply)(nil),          // 9: hi.ai.ToolSupply
+	(*ToolCall)(nil),            // 10: hi.ai.ToolCall
+	(*ChatResp)(nil),            // 11: hi.ai.ChatResp
+	(*ConverseStreamResp)(nil),  // 12: hi.ai.ConverseStreamResp
+	(*ToolSupply_Function)(nil), // 13: hi.ai.ToolSupply.Function
+	(*ToolCall_Function)(nil),   // 14: hi.ai.ToolCall.Function
+	(*structpb.Struct)(nil),     // 15: google.protobuf.Struct
+	(*emptypb.Empty)(nil),       // 16: google.protobuf.Empty
 }
 var file_hi_ai_chat_proto_depIdxs = []int32{
-	0,  // 0: hi.ai.CompleteReq.conts:type_name -> hi.ai.Content
-	0,  // 1: hi.ai.QA.q:type_name -> hi.ai.Content
-	7,  // 2: hi.ai.GetHistoryResp.list:type_name -> hi.ai.QA
-	0,  // 3: hi.ai.ChatReq.conts:type_name -> hi.ai.Content
-	12, // 4: hi.ai.ChatReq.tools:type_name -> hi.ai.ToolSupply
-	0,  // 5: hi.ai.ToolCallResult.conts:type_name -> hi.ai.Content
-	10, // 6: hi.ai.ToolCallResultsReq.list:type_name -> hi.ai.ToolCallResult
-	15, // 7: hi.ai.ToolSupply.function:type_name -> hi.ai.ToolSupply.Function
-	16, // 8: hi.ai.ToolCall.function:type_name -> hi.ai.ToolCall.Function
-	13, // 9: hi.ai.ChatResp.tools:type_name -> hi.ai.ToolCall
-	17, // 10: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
-	18, // 11: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
-	6,  // 12: hi.ai.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
-	5,  // 13: hi.ai.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
-	2,  // 14: hi.ai.Chat.Complete:input_type -> hi.ai.CompleteReq
-	2,  // 15: hi.ai.Chat.CompleteStream:input_type -> hi.ai.CompleteReq
-	9,  // 16: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
-	11, // 17: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
+	0,  // 0: hi.ai.QA.q:type_name -> hi.ai.Content
+	4,  // 1: hi.ai.GetHistoryResp.list:type_name -> hi.ai.QA
+	0,  // 2: hi.ai.ChatReq.conts:type_name -> hi.ai.Content
+	9,  // 3: hi.ai.ChatReq.tools:type_name -> hi.ai.ToolSupply
+	0,  // 4: hi.ai.ToolCallResult.conts:type_name -> hi.ai.Content
+	7,  // 5: hi.ai.ToolCallResultsReq.list:type_name -> hi.ai.ToolCallResult
+	13, // 6: hi.ai.ToolSupply.function:type_name -> hi.ai.ToolSupply.Function
+	14, // 7: hi.ai.ToolCall.function:type_name -> hi.ai.ToolCall.Function
+	10, // 8: hi.ai.ChatResp.tools:type_name -> hi.ai.ToolCall
+	10, // 9: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
+	15, // 10: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
+	16, // 11: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
+	3,  // 12: hi.ai.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
+	2,  // 13: hi.ai.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
+	6,  // 14: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
+	6,  // 15: hi.ai.Chat.ConverseStream:input_type -> hi.ai.ChatReq
+	8,  // 16: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
+	8,  // 17: hi.ai.Chat.ResumeStream:input_type -> hi.ai.ToolCallResultsReq
 	1,  // 18: hi.ai.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	8,  // 19: hi.ai.Chat.GetHistory:output_type -> hi.ai.GetHistoryResp
-	18, // 20: hi.ai.Chat.ClearHistory:output_type -> google.protobuf.Empty
-	3,  // 21: hi.ai.Chat.Complete:output_type -> hi.ai.CompleteResp
-	4,  // 22: hi.ai.Chat.CompleteStream:output_type -> hi.ai.CompleteStreamResp
-	14, // 23: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
-	14, // 24: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
+	5,  // 19: hi.ai.Chat.GetHistory:output_type -> hi.ai.GetHistoryResp
+	16, // 20: hi.ai.Chat.ClearHistory:output_type -> google.protobuf.Empty
+	11, // 21: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
+	12, // 22: hi.ai.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	11, // 23: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
+	12, // 24: hi.ai.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
 	18, // [18:25] is the sub-list for method output_type
 	11, // [11:18] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
@@ -1179,15 +1113,15 @@ func file_hi_ai_chat_proto_init() {
 	if File_hi_ai_chat_proto != nil {
 		return
 	}
-	file_hi_ai_chat_proto_msgTypes[9].OneofWrappers = []any{}
-	file_hi_ai_chat_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_chat_proto_rawDesc), len(file_hi_ai_chat_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -742,6 +742,15 @@ impl serde::Serialize for ChatReq {
         if self.style.is_some() {
             len += 1;
         }
+        if self.echo_tool_calls {
+            len += 1;
+        }
+        if self.echo_memory {
+            len += 1;
+        }
+        if self.echo_context {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ChatReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -767,6 +776,15 @@ impl serde::Serialize for ChatReq {
         if let Some(v) = self.style.as_ref() {
             struct_ser.serialize_field("style", v)?;
         }
+        if self.echo_tool_calls {
+            struct_ser.serialize_field("echoToolCalls", &self.echo_tool_calls)?;
+        }
+        if self.echo_memory {
+            struct_ser.serialize_field("echoMemory", &self.echo_memory)?;
+        }
+        if self.echo_context {
+            struct_ser.serialize_field("echoContext", &self.echo_context)?;
+        }
         struct_ser.end()
     }
 }
@@ -786,6 +804,12 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
             "custom",
             "state",
             "style",
+            "echo_tool_calls",
+            "echoToolCalls",
+            "echo_memory",
+            "echoMemory",
+            "echo_context",
+            "echoContext",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -798,6 +822,9 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
             Custom,
             State,
             Style,
+            EchoToolCalls,
+            EchoMemory,
+            EchoContext,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -827,6 +854,9 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                             "custom" => Ok(GeneratedField::Custom),
                             "state" => Ok(GeneratedField::State),
                             "style" => Ok(GeneratedField::Style),
+                            "echoToolCalls" | "echo_tool_calls" => Ok(GeneratedField::EchoToolCalls),
+                            "echoMemory" | "echo_memory" => Ok(GeneratedField::EchoMemory),
+                            "echoContext" | "echo_context" => Ok(GeneratedField::EchoContext),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -854,6 +884,9 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                 let mut custom__ = None;
                 let mut state__ = None;
                 let mut style__ = None;
+                let mut echo_tool_calls__ = None;
+                let mut echo_memory__ = None;
+                let mut echo_context__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -904,6 +937,24 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                             }
                             style__ = map_.next_value()?;
                         }
+                        GeneratedField::EchoToolCalls => {
+                            if echo_tool_calls__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("echoToolCalls"));
+                            }
+                            echo_tool_calls__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::EchoMemory => {
+                            if echo_memory__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("echoMemory"));
+                            }
+                            echo_memory__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::EchoContext => {
+                            if echo_context__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("echoContext"));
+                            }
+                            echo_context__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(ChatReq {
@@ -915,223 +966,13 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                     custom: custom__,
                     state: state__,
                     style: style__,
+                    echo_tool_calls: echo_tool_calls__.unwrap_or_default(),
+                    echo_memory: echo_memory__.unwrap_or_default(),
+                    echo_context: echo_context__.unwrap_or_default(),
                 })
             }
         }
         deserializer.deserialize_struct("hi.club.ChatReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for CompleteReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.agent.is_empty() {
-            len += 1;
-        }
-        if !self.cid.is_empty() {
-            len += 1;
-        }
-        if !self.conts.is_empty() {
-            len += 1;
-        }
-        if !self.state.is_empty() {
-            len += 1;
-        }
-        if !self.custom.is_empty() {
-            len += 1;
-        }
-        if self.return_plugin_use {
-            len += 1;
-        }
-        if self.return_training_data {
-            len += 1;
-        }
-        if self.return_context {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.CompleteReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
-        }
-        if !self.cid.is_empty() {
-            struct_ser.serialize_field("cid", &self.cid)?;
-        }
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
-        }
-        if !self.state.is_empty() {
-            struct_ser.serialize_field("state", &self.state)?;
-        }
-        if !self.custom.is_empty() {
-            struct_ser.serialize_field("custom", &self.custom)?;
-        }
-        if self.return_plugin_use {
-            struct_ser.serialize_field("returnPluginUse", &self.return_plugin_use)?;
-        }
-        if self.return_training_data {
-            struct_ser.serialize_field("returnTrainingData", &self.return_training_data)?;
-        }
-        if self.return_context {
-            struct_ser.serialize_field("returnContext", &self.return_context)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for CompleteReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "agent",
-            "cid",
-            "conts",
-            "state",
-            "custom",
-            "return_plugin_use",
-            "returnPluginUse",
-            "return_training_data",
-            "returnTrainingData",
-            "return_context",
-            "returnContext",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Agent,
-            Cid,
-            Conts,
-            State,
-            Custom,
-            ReturnPluginUse,
-            ReturnTrainingData,
-            ReturnContext,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "agent" => Ok(GeneratedField::Agent),
-                            "cid" => Ok(GeneratedField::Cid),
-                            "conts" => Ok(GeneratedField::Conts),
-                            "state" => Ok(GeneratedField::State),
-                            "custom" => Ok(GeneratedField::Custom),
-                            "returnPluginUse" | "return_plugin_use" => Ok(GeneratedField::ReturnPluginUse),
-                            "returnTrainingData" | "return_training_data" => Ok(GeneratedField::ReturnTrainingData),
-                            "returnContext" | "return_context" => Ok(GeneratedField::ReturnContext),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CompleteReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.CompleteReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CompleteReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut agent__ = None;
-                let mut cid__ = None;
-                let mut conts__ = None;
-                let mut state__ = None;
-                let mut custom__ = None;
-                let mut return_plugin_use__ = None;
-                let mut return_training_data__ = None;
-                let mut return_context__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Agent => {
-                            if agent__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("agent"));
-                            }
-                            agent__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Cid => {
-                            if cid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("cid"));
-                            }
-                            cid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Custom => {
-                            if custom__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("custom"));
-                            }
-                            custom__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnPluginUse => {
-                            if return_plugin_use__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnPluginUse"));
-                            }
-                            return_plugin_use__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnTrainingData => {
-                            if return_training_data__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnTrainingData"));
-                            }
-                            return_training_data__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ReturnContext => {
-                            if return_context__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("returnContext"));
-                            }
-                            return_context__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(CompleteReq {
-                    agent: agent__.unwrap_or_default(),
-                    cid: cid__.unwrap_or_default(),
-                    conts: conts__.unwrap_or_default(),
-                    state: state__.unwrap_or_default(),
-                    custom: custom__.unwrap_or_default(),
-                    return_plugin_use: return_plugin_use__.unwrap_or_default(),
-                    return_training_data: return_training_data__.unwrap_or_default(),
-                    return_context: return_context__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.club.CompleteReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Content {
