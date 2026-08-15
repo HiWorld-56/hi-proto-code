@@ -224,6 +224,29 @@ final $typed_data.Uint8List marketGrantBriefDescriptor = $convert.base64Decode(
     'R0bGVNb2RlEhoKBXByaWNlGAcgASgJQgSQtRgCUgVwcmljZRIYCgRjb2luGAggASgJQgSQtRgC'
     'UgRjb2luOgSYtRgC');
 
+@$core.Deprecated('Use marketRenewBriefDescriptor instead')
+const MarketRenewBrief$json = {
+  '1': 'MarketRenewBrief',
+  '2': [
+    {'1': 'grant_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
+    {'1': 'title', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'title'},
+    {'1': 'payee', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'payee'},
+    {'1': 'amount', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'coin', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'coin'},
+    {'1': 'expire_at', '3': 6, '4': 1, '5': 3, '8': {}, '10': 'expireAt'},
+    {'1': 'auto_renew', '3': 7, '4': 1, '5': 8, '8': {}, '10': 'autoRenew'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `MarketRenewBrief`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketRenewBriefDescriptor = $convert.base64Decode(
+    'ChBNYXJrZXRSZW5ld0JyaWVmEiMKCmdyYW50X3V1aWQYASABKAlCBJC1GAJSCWdyYW50VXVpZB'
+    'IaCgV0aXRsZRgCIAEoCUIEkLUYAlIFdGl0bGUSGgoFcGF5ZWUYAyABKAlCBJC1GAJSBXBheWVl'
+    'EhwKBmFtb3VudBgEIAEoCUIEkLUYAlIGYW1vdW50EhgKBGNvaW4YBSABKAlCBJC1GAJSBGNvaW'
+    '4SIQoJZXhwaXJlX2F0GAYgASgDQgSQtRgCUghleHBpcmVBdBIjCgphdXRvX3JlbmV3GAcgASgI'
+    'QgSQtRgCUglhdXRvUmVuZXc6BJi1GAI=');
+
 @$core.Deprecated('Use marketGrantViewDescriptor instead')
 const MarketGrantView$json = {
   '1': 'MarketGrantView',
@@ -300,6 +323,7 @@ const MarketGrantView$json = {
       '8': {},
       '10': 'installedAt'
     },
+    {'1': 'auto_renew', '3': 19, '4': 1, '5': 8, '8': {}, '10': 'autoRenew'},
   ],
   '7': {},
 };
@@ -318,7 +342,8 @@ final $typed_data.Uint8List marketGrantViewDescriptor = $convert.base64Decode(
     'V4cGlyZV9hdBgNIAEoA0IEkLUYA1IIZXhwaXJlQXQSIwoKYWN0aW9uX3VybBgOIAEoCUIEkLUY'
     'A1IJYWN0aW9uVXJsEhwKBnJlYXNvbhgPIAEoCUIEkLUYA1IGcmVhc29uEiMKCmNyZWF0ZWRfYX'
     'QYECABKANCBJC1GANSCWNyZWF0ZWRBdBIjCgpkZWNpZGVkX2F0GBEgASgDQgSQtRgDUglkZWNp'
-    'ZGVkQXQSJwoMaW5zdGFsbGVkX2F0GBIgASgDQgSQtRgDUgtpbnN0YWxsZWRBdDoEmLUYAw==');
+    'ZGVkQXQSJwoMaW5zdGFsbGVkX2F0GBIgASgDQgSQtRgDUgtpbnN0YWxsZWRBdBIjCgphdXRvX3'
+    'JlbmV3GBMgASgIQgSQtRgDUglhdXRvUmVuZXc6BJi1GAM=');
 
 @$core.Deprecated('Use searchListingsReqDescriptor instead')
 const SearchListingsReq$json = {
@@ -766,6 +791,20 @@ const ListGrantsResp$json = {
 final $typed_data.Uint8List listGrantsRespDescriptor = $convert.base64Decode(
     'Cg5MaXN0R3JhbnRzUmVzcBIaCgV0b3RhbBgBIAEoBUIEkLUYA1IFdG90YWwSMgoEbGlzdBgCIA'
     'MoCzIYLmhpLmNsdWIuTWFya2V0R3JhbnRWaWV3QgSQtRgDUgRsaXN0OgSYtRgD');
+
+@$core.Deprecated('Use setAutoRenewReqDescriptor instead')
+const SetAutoRenewReq$json = {
+  '1': 'SetAutoRenewReq',
+  '2': [
+    {'1': 'grant_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
+    {'1': 'enabled', '3': 2, '4': 1, '5': 8, '10': 'enabled'},
+  ],
+};
+
+/// Descriptor for `SetAutoRenewReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setAutoRenewReqDescriptor = $convert.base64Decode(
+    'Cg9TZXRBdXRvUmVuZXdSZXESKwoKZ3JhbnRfdXVpZBgBIAEoCUIMukgJcgcyBV5cUyskUglncm'
+    'FudFV1aWQSGAoHZW5hYmxlZBgCIAEoCFIHZW5hYmxlZA==');
 
 @$core.Deprecated('Use setGrantVersionReqDescriptor instead')
 const SetGrantVersionReq$json = {

@@ -8566,6 +8566,9 @@ impl serde::Serialize for MarketGrantView {
         if self.installed_at != 0 {
             len += 1;
         }
+        if self.auto_renew {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.MarketGrantView", len)?;
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
@@ -8633,6 +8636,9 @@ impl serde::Serialize for MarketGrantView {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("installedAt", ToString::to_string(&self.installed_at).as_str())?;
         }
+        if self.auto_renew {
+            struct_ser.serialize_field("autoRenew", &self.auto_renew)?;
+        }
         struct_ser.end()
     }
 }
@@ -8671,6 +8677,8 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
             "decidedAt",
             "installed_at",
             "installedAt",
+            "auto_renew",
+            "autoRenew",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -8693,6 +8701,7 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
             CreatedAt,
             DecidedAt,
             InstalledAt,
+            AutoRenew,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8732,6 +8741,7 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
                             "decidedAt" | "decided_at" => Ok(GeneratedField::DecidedAt),
                             "installedAt" | "installed_at" => Ok(GeneratedField::InstalledAt),
+                            "autoRenew" | "auto_renew" => Ok(GeneratedField::AutoRenew),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8769,6 +8779,7 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                 let mut created_at__ = None;
                 let mut decided_at__ = None;
                 let mut installed_at__ = None;
+                let mut auto_renew__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -8887,6 +8898,12 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                                 Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
+                        GeneratedField::AutoRenew => {
+                            if auto_renew__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("autoRenew"));
+                            }
+                            auto_renew__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(MarketGrantView {
@@ -8908,6 +8925,7 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                     created_at: created_at__.unwrap_or_default(),
                     decided_at: decided_at__.unwrap_or_default(),
                     installed_at: installed_at__.unwrap_or_default(),
+                    auto_renew: auto_renew__.unwrap_or_default(),
                 })
             }
         }
@@ -10404,6 +10422,206 @@ impl<'de> serde::Deserialize<'de> for MarketPullResp {
             }
         }
         deserializer.deserialize_struct("hi.club.MarketPullResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for MarketRenewBrief {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.grant_uuid.is_empty() {
+            len += 1;
+        }
+        if !self.title.is_empty() {
+            len += 1;
+        }
+        if !self.payee.is_empty() {
+            len += 1;
+        }
+        if !self.amount.is_empty() {
+            len += 1;
+        }
+        if !self.coin.is_empty() {
+            len += 1;
+        }
+        if self.expire_at != 0 {
+            len += 1;
+        }
+        if self.auto_renew {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.MarketRenewBrief", len)?;
+        if !self.grant_uuid.is_empty() {
+            struct_ser.serialize_field("grantUuid", &self.grant_uuid)?;
+        }
+        if !self.title.is_empty() {
+            struct_ser.serialize_field("title", &self.title)?;
+        }
+        if !self.payee.is_empty() {
+            struct_ser.serialize_field("payee", &self.payee)?;
+        }
+        if !self.amount.is_empty() {
+            struct_ser.serialize_field("amount", &self.amount)?;
+        }
+        if !self.coin.is_empty() {
+            struct_ser.serialize_field("coin", &self.coin)?;
+        }
+        if self.expire_at != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("expireAt", ToString::to_string(&self.expire_at).as_str())?;
+        }
+        if self.auto_renew {
+            struct_ser.serialize_field("autoRenew", &self.auto_renew)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MarketRenewBrief {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "grant_uuid",
+            "grantUuid",
+            "title",
+            "payee",
+            "amount",
+            "coin",
+            "expire_at",
+            "expireAt",
+            "auto_renew",
+            "autoRenew",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            GrantUuid,
+            Title,
+            Payee,
+            Amount,
+            Coin,
+            ExpireAt,
+            AutoRenew,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "grantUuid" | "grant_uuid" => Ok(GeneratedField::GrantUuid),
+                            "title" => Ok(GeneratedField::Title),
+                            "payee" => Ok(GeneratedField::Payee),
+                            "amount" => Ok(GeneratedField::Amount),
+                            "coin" => Ok(GeneratedField::Coin),
+                            "expireAt" | "expire_at" => Ok(GeneratedField::ExpireAt),
+                            "autoRenew" | "auto_renew" => Ok(GeneratedField::AutoRenew),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MarketRenewBrief;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.MarketRenewBrief")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MarketRenewBrief, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut grant_uuid__ = None;
+                let mut title__ = None;
+                let mut payee__ = None;
+                let mut amount__ = None;
+                let mut coin__ = None;
+                let mut expire_at__ = None;
+                let mut auto_renew__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::GrantUuid => {
+                            if grant_uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("grantUuid"));
+                            }
+                            grant_uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Title => {
+                            if title__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("title"));
+                            }
+                            title__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Payee => {
+                            if payee__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payee"));
+                            }
+                            payee__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Amount => {
+                            if amount__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("amount"));
+                            }
+                            amount__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Coin => {
+                            if coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("coin"));
+                            }
+                            coin__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ExpireAt => {
+                            if expire_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("expireAt"));
+                            }
+                            expire_at__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::AutoRenew => {
+                            if auto_renew__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("autoRenew"));
+                            }
+                            auto_renew__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(MarketRenewBrief {
+                    grant_uuid: grant_uuid__.unwrap_or_default(),
+                    title: title__.unwrap_or_default(),
+                    payee: payee__.unwrap_or_default(),
+                    amount: amount__.unwrap_or_default(),
+                    coin: coin__.unwrap_or_default(),
+                    expire_at: expire_at__.unwrap_or_default(),
+                    auto_renew: auto_renew__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.MarketRenewBrief", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for MasterBindReq {
@@ -13480,6 +13698,115 @@ impl<'de> serde::Deserialize<'de> for SearchListingsResp {
             }
         }
         deserializer.deserialize_struct("hi.club.SearchListingsResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SetAutoRenewReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.grant_uuid.is_empty() {
+            len += 1;
+        }
+        if self.enabled {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.SetAutoRenewReq", len)?;
+        if !self.grant_uuid.is_empty() {
+            struct_ser.serialize_field("grantUuid", &self.grant_uuid)?;
+        }
+        if self.enabled {
+            struct_ser.serialize_field("enabled", &self.enabled)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetAutoRenewReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "grant_uuid",
+            "grantUuid",
+            "enabled",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            GrantUuid,
+            Enabled,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "grantUuid" | "grant_uuid" => Ok(GeneratedField::GrantUuid),
+                            "enabled" => Ok(GeneratedField::Enabled),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetAutoRenewReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.SetAutoRenewReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetAutoRenewReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut grant_uuid__ = None;
+                let mut enabled__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::GrantUuid => {
+                            if grant_uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("grantUuid"));
+                            }
+                            grant_uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Enabled => {
+                            if enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabled"));
+                            }
+                            enabled__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(SetAutoRenewReq {
+                    grant_uuid: grant_uuid__.unwrap_or_default(),
+                    enabled: enabled__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.SetAutoRenewReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for SetDndReq {

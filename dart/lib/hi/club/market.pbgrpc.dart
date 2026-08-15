@@ -234,6 +234,13 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$setGrantVersion, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> setAutoRenew(
+    $0.SetAutoRenewReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setAutoRenew, request, options: options);
+  }
+
   // method descriptors
 
   static final _$createListing =
@@ -290,6 +297,11 @@ class MarketClient extends $grpc.Client {
       $grpc.ClientMethod<$0.SetGrantVersionReq, $1.Empty>(
           '/hi.club.Market/SetGrantVersion',
           ($0.SetGrantVersionReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
+  static final _$setAutoRenew =
+      $grpc.ClientMethod<$0.SetAutoRenewReq, $1.Empty>(
+          '/hi.club.Market/SetAutoRenew',
+          ($0.SetAutoRenewReq value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
 }
 
@@ -383,6 +395,13 @@ abstract class MarketServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) =>
             $0.SetGrantVersionReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SetAutoRenewReq, $1.Empty>(
+        'SetAutoRenew',
+        setAutoRenew_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.SetAutoRenewReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
   }
 
@@ -482,6 +501,14 @@ abstract class MarketServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setGrantVersion(
       $grpc.ServiceCall call, $0.SetGrantVersionReq request);
+
+  $async.Future<$1.Empty> setAutoRenew_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.SetAutoRenewReq> $request) async {
+    return setAutoRenew($call, await $request);
+  }
+
+  $async.Future<$1.Empty> setAutoRenew(
+      $grpc.ServiceCall call, $0.SetAutoRenewReq request);
 }
 
 /// ── 外部结算:**商户来拉 + 回传**,club 不主动调商户 ──────────────────────────

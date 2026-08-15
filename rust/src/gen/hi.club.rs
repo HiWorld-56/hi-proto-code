@@ -5783,6 +5783,38 @@ pub struct MarketGrantBrief {
     #[prost(string, tag = "8")]
     pub coin: ::prost::alloc::string::String,
 }
+/// MarketRenewBrief 「快到期了」通知的载荷 —— **发给受让方机器人本人**。
+///
+/// 硬件机器人收到它之后:查自己的余额够不够 → 够且开了自动续费 → 自己付款 →
+/// 把 tx_hash 交回 `Market.ConfirmPayment` 完成续期。
+///
+/// ⚠️ **不做币种转换**:要付 USDT 而机器人只有 BTC,就是付不了,如实失败。
+/// 自动换币会把"续个费"变成"替用户做了一笔他没同意的兑换",不是这个功能该干的事。
+///
+/// ⚠️ 与其它 Notice extra 同理:audience 必须 ≥ PARTICIPANT
+/// (Any 是可见性 lint 唯一的结构性缺口,塞 SELF 的东西会静默泄漏)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketRenewBrief {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 插件标题
+    #[prost(string, tag = "2")]
+    pub title: ::prost::alloc::string::String,
+    /// 付给谁(后端推导,机器人别自己算)
+    #[prost(string, tag = "3")]
+    pub payee: ::prost::alloc::string::String,
+    /// 人类可读金额
+    #[prost(string, tag = "4")]
+    pub amount: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub coin: ::prost::alloc::string::String,
+    /// 到期时刻(秒)
+    #[prost(int64, tag = "6")]
+    pub expire_at: i64,
+    /// 用户开没开自动续费
+    #[prost(bool, tag = "7")]
+    pub auto_renew: bool,
+}
 /// MarketGrantView 我的授权 / 我收到的申请(SELF)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketGrantView {
@@ -5826,6 +5858,9 @@ pub struct MarketGrantView {
     pub decided_at: i64,
     #[prost(int64, tag = "18")]
     pub installed_at: i64,
+    /// 自动续费。**只有硬件机器人能开** —— 续费要它自己掏钱付款,软件机器人没有私钥。
+    #[prost(bool, tag = "19")]
+    pub auto_renew: bool,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SearchListingsReq {
@@ -6032,6 +6067,12 @@ pub struct DecideGrantReq {
 ///
 /// ⚠️ **同一个 tx_hash 只能兑换一次** —— 后端按 hash 全局去重,
 /// 不然一笔转账可以拿去把所有挂牌都买一遍。
+///
+/// **首购与续费共用这一个接口**:
+/// · grant 处于 PENDING → 首购,核验通过后装载;
+/// · grant 处于 INSTALLED → 续费,核验通过后 `expire_at += duration`。
+/// 续费**延长同一个 grant,不新建** —— 新建要先撤旧的,而撤销会删掉 ai 侧的 c/d 行,
+/// 用户在这个插件上攒的使用态配置(d.data)就没了。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ConfirmPaymentReq {
     #[prost(string, tag = "1")]
@@ -6059,6 +6100,19 @@ pub struct ListGrantsResp {
 /// 语义与 `hi.club.Plugin.SetActive` 一致 —— 若该 agent 对 (uuid, version) 还没有 d 行,
 /// 就**以当前激活版的 d.data 为模板建一行**再置 active。
 /// c 是壳级的、每 (agent,uuid) 只有一行、跨版本不变,**不需要复制**,要复制的只有 d.data。
+/// SetAutoRenewReq 开/关自动续费。
+///
+/// ⚠️ **只有受让方是硬件机器人时才能开** —— 续费是机器人自己掏钱付款,
+/// 软件机器人没有私钥,开了也只会到期时白失败一次。
+///
+/// 用户在 hiclub 里随手开关;真正执行续费的是机器人自己(见 plugin-grant-expiring 通知)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetAutoRenewReq {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(bool, tag = "2")]
+    pub enabled: bool,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetGrantVersionReq {
     #[prost(string, tag = "1")]
@@ -6819,6 +6873,27 @@ pub mod market_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Market", "SetGrantVersion"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_auto_renew(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetAutoRenewReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/SetAutoRenew",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "SetAutoRenew"));
             self.inner.unary(req, path, codec).await
         }
     }
