@@ -132,11 +132,15 @@ class GrantStatus extends $pb.ProtobufEnum {
 /// MarketPayInfo 这一笔要付多少、付给谁 —— **前端拿它直接唤起 hidid app**。
 ///
 /// 用户体验就是:点购买 → 弹出金额和币种 → 确认 → 跳 hidid 付款 → 回来即可用。
-/// 付完把 tx_hash 交回 `Market.ConfirmPayment`,club 调 `hi.did.Transfer.VerifyTransaction`
-/// 核验(那是个 AUTH_NONE 的公开接口,收 DID + 人类可读金额,内部解析地址与精度后比对)。
+/// 付完拿 **(order_id, tx_hash)** 调 `Market.ReportPayment` 认款
+/// (order_id 在同一个 `ApplyResp.order` 里,`pay` 只是它的摘要)。
 ///
-/// ⚠️ **club 全程只需要验签/验交易的能力,不需要签名。** 这条链路上持私钥的是用户的
-///    hidid app —— 与登录、授权登录用的是同一套现成流程。
+/// club 用 `hi.did.Transfer.TxDetail` 取链上事实、**自己按订单比对**,
+/// 而不是 `VerifyTransaction` —— 后者要求把付款方一并交给它(它不替调用方做假设),
+/// 而订单制**不看付款方**。两者的分工见 hi/did/transfer.proto。
+///
+/// ⚠️ **club 全程只需要读链/验签的能力,不需要签名。** 这条链路上持私钥的是用户的
+///    hidid app(或硬件机器人自己)—— 与登录、授权登录用的是同一套现成流程。
 /// ── 订单 ────────────────────────────────────────────────────────────────────
 ///
 /// **购买与续期共用同一个东西。** 两者的业务流程本来就是一样的:
