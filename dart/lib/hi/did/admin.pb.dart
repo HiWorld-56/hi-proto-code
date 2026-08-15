@@ -1371,6 +1371,74 @@ class BroadcastAppUpdateReq extends $pb.GeneratedMessage {
   void clearApp() => $_clearField(1);
 }
 
+/// 公共插件出了新版 —— 广播给全体机器人,而不是后台挨个去发。
+///
+/// 装了公共插件的机器人可能有几万台,逐台发通知既慢又要维护"谁装了"的名单;
+/// 而这条消息对所有人**内容完全相同**,正是广播该干的事。
+///
+/// ⚠️ **不带任何插件内容,只是"该去看看了"** —— 与 AppUpdate 同一个套路(触发式)。
+///    广播 topic 是全员可读的公共频道,往里塞具体内容等于把它讲给所有人听;
+///    况且每台机器人装的插件本来就不一样,真正该拉什么只有它自己查了才知道。
+///    收到后各自去查自己的插件列表,该更新的更新,没装的自然什么也不做。
+/// 收到的机器人**先在本地看一眼自己装没装这个 uuid**,没装就直接丢掉 ——
+/// 不查库、不发请求。所以哪怕每次发版都广播,对绝大多数机器人也是零成本,
+/// 后台更不必去维护一份"谁装了什么"的名单(那份名单迟早会与事实不符)。
+/// 这也是这里只放 uuid 的另一半理由:uuid 就是过滤器本身。
+class BroadcastPluginUpdateReq extends $pb.GeneratedMessage {
+  factory BroadcastPluginUpdateReq({
+    $core.String? pluginUuid,
+  }) {
+    final result = create();
+    if (pluginUuid != null) result.pluginUuid = pluginUuid;
+    return result;
+  }
+
+  BroadcastPluginUpdateReq._();
+
+  factory BroadcastPluginUpdateReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BroadcastPluginUpdateReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BroadcastPluginUpdateReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'pluginUuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BroadcastPluginUpdateReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BroadcastPluginUpdateReq copyWith(
+          void Function(BroadcastPluginUpdateReq) updates) =>
+      super.copyWith((message) => updates(message as BroadcastPluginUpdateReq))
+          as BroadcastPluginUpdateReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BroadcastPluginUpdateReq create() => BroadcastPluginUpdateReq._();
+  @$core.override
+  BroadcastPluginUpdateReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BroadcastPluginUpdateReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BroadcastPluginUpdateReq>(create);
+  static BroadcastPluginUpdateReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get pluginUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set pluginUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPluginUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPluginUuid() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

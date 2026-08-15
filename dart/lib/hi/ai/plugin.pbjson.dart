@@ -15,6 +15,20 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use pluginRuntimeDescriptor instead')
+const PluginRuntime$json = {
+  '1': 'PluginRuntime',
+  '2': [
+    {'1': 'PLUGIN_RUNTIME_PYTHON', '2': 0},
+    {'1': 'PLUGIN_RUNTIME_NATIVE', '2': 1},
+  ],
+};
+
+/// Descriptor for `PluginRuntime`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List pluginRuntimeDescriptor = $convert.base64Decode(
+    'Cg1QbHVnaW5SdW50aW1lEhkKFVBMVUdJTl9SVU5USU1FX1BZVEhPThAAEhkKFVBMVUdJTl9SVU'
+    '5USU1FX05BVElWRRAB');
+
 @$core.Deprecated('Use pluginSourceDescriptor instead')
 const PluginSource$json = {
   '1': 'PluginSource',
@@ -35,6 +49,15 @@ const PluginShell$json = {
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {
+      '1': 'runtime',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.ai.PluginRuntime',
+      '8': {},
+      '10': 'runtime'
+    },
   ],
   '7': {},
 };
@@ -42,7 +65,8 @@ const PluginShell$json = {
 /// Descriptor for `PluginShell`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginShellDescriptor = $convert.base64Decode(
     'CgtQbHVnaW5TaGVsbBIYCgR1dWlkGAEgASgJQgSQtRgDUgR1dWlkEhgKBG5hbWUYAiABKAlCBJ'
-    'C1GANSBG5hbWU6BJi1GAM=');
+    'C1GANSBG5hbWUSNAoHcnVudGltZRgDIAEoDjIULmhpLmFpLlBsdWdpblJ1bnRpbWVCBJC1GANS'
+    'B3J1bnRpbWU6BJi1GAM=');
 
 @$core.Deprecated('Use pluginVersionDescriptor instead')
 const PluginVersion$json = {
@@ -195,6 +219,14 @@ const CreateShellReq$json = {
       '6': '.google.protobuf.Struct',
       '10': 'data'
     },
+    {
+      '1': 'runtime',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.ai.PluginRuntime',
+      '10': 'runtime'
+    },
   ],
 };
 
@@ -202,7 +234,8 @@ const CreateShellReq$json = {
 final $typed_data.Uint8List createShellReqDescriptor = $convert.base64Decode(
     'Cg5DcmVhdGVTaGVsbFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudBIbCg'
     'RuYW1lGAIgASgJQge6SARyAhABUgRuYW1lEisKBGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9i'
-    'dWYuU3RydWN0UgRkYXRh');
+    'dWYuU3RydWN0UgRkYXRhEi4KB3J1bnRpbWUYBCABKA4yFC5oaS5haS5QbHVnaW5SdW50aW1lUg'
+    'dydW50aW1l');
 
 @$core.Deprecated('Use createShellRespDescriptor instead')
 const CreateShellResp$json = {

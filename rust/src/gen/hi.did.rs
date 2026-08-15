@@ -3159,6 +3159,25 @@ pub struct BroadcastAppUpdateReq {
     #[prost(string, tag = "1")]
     pub app: ::prost::alloc::string::String,
 }
+/// 公共插件出了新版 —— 广播给全体机器人,而不是后台挨个去发。
+///
+/// 装了公共插件的机器人可能有几万台,逐台发通知既慢又要维护"谁装了"的名单;
+/// 而这条消息对所有人**内容完全相同**,正是广播该干的事。
+///
+/// ⚠️ **不带任何插件内容,只是"该去看看了"** —— 与 AppUpdate 同一个套路(触发式)。
+/// 广播 topic 是全员可读的公共频道,往里塞具体内容等于把它讲给所有人听;
+/// 况且每台机器人装的插件本来就不一样,真正该拉什么只有它自己查了才知道。
+/// 收到后各自去查自己的插件列表,该更新的更新,没装的自然什么也不做。
+/// 收到的机器人**先在本地看一眼自己装没装这个 uuid**,没装就直接丢掉 ——
+/// 不查库、不发请求。所以哪怕每次发版都广播,对绝大多数机器人也是零成本,
+/// 后台更不必去维护一份"谁装了什么"的名单(那份名单迟早会与事实不符)。
+/// 这也是这里只放 uuid 的另一半理由:uuid 就是过滤器本身。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BroadcastPluginUpdateReq {
+    /// 哪个插件的壳;空=让大家把自己的插件全都核对一遍
+    #[prost(string, tag = "1")]
+    pub plugin_uuid: ::prost::alloc::string::String,
+}
 /// 商户权限位。**仅超管可读写**(提权/降权),商户自己看不到也改不了。
 ///
 /// 邀请码注册进来的是普通商户,权限字段默认 0 —— 什么附加能力都没有,
@@ -4002,6 +4021,122 @@ pub mod merchant_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.MerchantManage", "SetPermission"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod broadcast_internal_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 拆成独立 service 是因为**主体不同**:上面那条是超管在 web 上点的,这条是 hi.ai 转发的。
+    /// 同 service 混档会让"这个接口到底谁能调"取决于方法而不是服务,拦截器就没法整体挂。
+    #[derive(Debug, Clone)]
+    pub struct BroadcastInternalClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl BroadcastInternalClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> BroadcastInternalClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> BroadcastInternalClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            BroadcastInternalClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn plugin_update(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BroadcastPluginUpdateReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.BroadcastInternal/PluginUpdate",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.BroadcastInternal", "PluginUpdate"));
             self.inner.unary(req, path, codec).await
         }
     }

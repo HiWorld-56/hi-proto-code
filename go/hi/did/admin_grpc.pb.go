@@ -1007,6 +1007,112 @@ var MerchantManage_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	BroadcastInternal_PluginUpdate_FullMethodName = "/hi.did.BroadcastInternal/PluginUpdate"
+)
+
+// BroadcastInternalClient is the client API for BroadcastInternal service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 拆成独立 service 是因为**主体不同**:上面那条是超管在 web 上点的,这条是 hi.ai 转发的。
+// 同 service 混档会让"这个接口到底谁能调"取决于方法而不是服务,拦截器就没法整体挂。
+type BroadcastInternalClient interface {
+	PluginUpdate(ctx context.Context, in *BroadcastPluginUpdateReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type broadcastInternalClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBroadcastInternalClient(cc grpc.ClientConnInterface) BroadcastInternalClient {
+	return &broadcastInternalClient{cc}
+}
+
+func (c *broadcastInternalClient) PluginUpdate(ctx context.Context, in *BroadcastPluginUpdateReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, BroadcastInternal_PluginUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BroadcastInternalServer is the server API for BroadcastInternal service.
+// All implementations should embed UnimplementedBroadcastInternalServer
+// for forward compatibility.
+//
+// 拆成独立 service 是因为**主体不同**:上面那条是超管在 web 上点的,这条是 hi.ai 转发的。
+// 同 service 混档会让"这个接口到底谁能调"取决于方法而不是服务,拦截器就没法整体挂。
+type BroadcastInternalServer interface {
+	PluginUpdate(context.Context, *BroadcastPluginUpdateReq) (*emptypb.Empty, error)
+}
+
+// UnimplementedBroadcastInternalServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedBroadcastInternalServer struct{}
+
+func (UnimplementedBroadcastInternalServer) PluginUpdate(context.Context, *BroadcastPluginUpdateReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PluginUpdate not implemented")
+}
+func (UnimplementedBroadcastInternalServer) testEmbeddedByValue() {}
+
+// UnsafeBroadcastInternalServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BroadcastInternalServer will
+// result in compilation errors.
+type UnsafeBroadcastInternalServer interface {
+	mustEmbedUnimplementedBroadcastInternalServer()
+}
+
+func RegisterBroadcastInternalServer(s grpc.ServiceRegistrar, srv BroadcastInternalServer) {
+	// If the following call panics, it indicates UnimplementedBroadcastInternalServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&BroadcastInternal_ServiceDesc, srv)
+}
+
+func _BroadcastInternal_PluginUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BroadcastPluginUpdateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BroadcastInternalServer).PluginUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BroadcastInternal_PluginUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BroadcastInternalServer).PluginUpdate(ctx, req.(*BroadcastPluginUpdateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// BroadcastInternal_ServiceDesc is the grpc.ServiceDesc for BroadcastInternal service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var BroadcastInternal_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.BroadcastInternal",
+	HandlerType: (*BroadcastInternalServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "PluginUpdate",
+			Handler:    _BroadcastInternal_PluginUpdate_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/admin.proto",
+}
+
+const (
 	Broadcast_AppUpdate_FullMethodName = "/hi.did.Broadcast/AppUpdate"
 )
 

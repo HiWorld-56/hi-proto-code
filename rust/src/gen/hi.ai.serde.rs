@@ -2623,6 +2623,9 @@ impl serde::Serialize for CreateShellReq {
         if self.data.is_some() {
             len += 1;
         }
+        if self.runtime != 0 {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CreateShellReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -2632,6 +2635,11 @@ impl serde::Serialize for CreateShellReq {
         }
         if let Some(v) = self.data.as_ref() {
             struct_ser.serialize_field("data", v)?;
+        }
+        if self.runtime != 0 {
+            let v = PluginRuntime::try_from(self.runtime)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.runtime)))?;
+            struct_ser.serialize_field("runtime", &v)?;
         }
         struct_ser.end()
     }
@@ -2646,6 +2654,7 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
             "agent",
             "name",
             "data",
+            "runtime",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2653,6 +2662,7 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
             Agent,
             Name,
             Data,
+            Runtime,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2677,6 +2687,7 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
                             "agent" => Ok(GeneratedField::Agent),
                             "name" => Ok(GeneratedField::Name),
                             "data" => Ok(GeneratedField::Data),
+                            "runtime" => Ok(GeneratedField::Runtime),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2699,6 +2710,7 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
                 let mut agent__ = None;
                 let mut name__ = None;
                 let mut data__ = None;
+                let mut runtime__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -2719,12 +2731,19 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
                             }
                             data__ = map_.next_value()?;
                         }
+                        GeneratedField::Runtime => {
+                            if runtime__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("runtime"));
+                            }
+                            runtime__ = Some(map_.next_value::<PluginRuntime>()? as i32);
+                        }
                     }
                 }
                 Ok(CreateShellReq {
                     agent: agent__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
                     data: data__,
+                    runtime: runtime__.unwrap_or_default(),
                 })
             }
         }
@@ -9347,6 +9366,77 @@ impl<'de> serde::Deserialize<'de> for PluginLoaded {
         deserializer.deserialize_struct("hi.ai.PluginLoaded", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for PluginRuntime {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Python => "PLUGIN_RUNTIME_PYTHON",
+            Self::Native => "PLUGIN_RUNTIME_NATIVE",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for PluginRuntime {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "PLUGIN_RUNTIME_PYTHON",
+            "PLUGIN_RUNTIME_NATIVE",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = PluginRuntime;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PLUGIN_RUNTIME_PYTHON" => Ok(PluginRuntime::Python),
+                    "PLUGIN_RUNTIME_NATIVE" => Ok(PluginRuntime::Native),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for PluginShell {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -9361,12 +9451,20 @@ impl serde::Serialize for PluginShell {
         if !self.name.is_empty() {
             len += 1;
         }
+        if self.runtime != 0 {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginShell", len)?;
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
         }
         if !self.name.is_empty() {
             struct_ser.serialize_field("name", &self.name)?;
+        }
+        if self.runtime != 0 {
+            let v = PluginRuntime::try_from(self.runtime)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.runtime)))?;
+            struct_ser.serialize_field("runtime", &v)?;
         }
         struct_ser.end()
     }
@@ -9380,12 +9478,14 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
         const FIELDS: &[&str] = &[
             "uuid",
             "name",
+            "runtime",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Uuid,
             Name,
+            Runtime,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9409,6 +9509,7 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "name" => Ok(GeneratedField::Name),
+                            "runtime" => Ok(GeneratedField::Runtime),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9430,6 +9531,7 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
             {
                 let mut uuid__ = None;
                 let mut name__ = None;
+                let mut runtime__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -9444,11 +9546,18 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
                             }
                             name__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Runtime => {
+                            if runtime__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("runtime"));
+                            }
+                            runtime__ = Some(map_.next_value::<PluginRuntime>()? as i32);
+                        }
                     }
                 }
                 Ok(PluginShell {
                     uuid: uuid__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
+                    runtime: runtime__.unwrap_or_default(),
                 })
             }
         }

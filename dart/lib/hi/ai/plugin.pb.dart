@@ -26,10 +26,12 @@ class PluginShell extends $pb.GeneratedMessage {
   factory PluginShell({
     $core.String? uuid,
     $core.String? name,
+    PluginRuntime? runtime,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
     if (name != null) result.name = name;
+    if (runtime != null) result.runtime = runtime;
     return result;
   }
 
@@ -48,6 +50,8 @@ class PluginShell extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aE<PluginRuntime>(3, _omitFieldNames ? '' : 'runtime',
+        enumValues: PluginRuntime.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -86,6 +90,16 @@ class PluginShell extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
   void clearName() => $_clearField(2);
+
+  /// 跑在哪儿。建壳时定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
+  @$pb.TagNumber(3)
+  PluginRuntime get runtime => $_getN(2);
+  @$pb.TagNumber(3)
+  set runtime(PluginRuntime value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRuntime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRuntime() => $_clearField(3);
 }
 
 class PluginVersion extends $pb.GeneratedMessage {
@@ -544,11 +558,13 @@ class CreateShellReq extends $pb.GeneratedMessage {
     $core.String? agent,
     $core.String? name,
     $2.Struct? data,
+    PluginRuntime? runtime,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (name != null) result.name = name;
     if (data != null) result.data = data;
+    if (runtime != null) result.runtime = runtime;
     return result;
   }
 
@@ -569,6 +585,8 @@ class CreateShellReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOM<$2.Struct>(3, _omitFieldNames ? '' : 'data',
         subBuilder: $2.Struct.create)
+    ..aE<PluginRuntime>(4, _omitFieldNames ? '' : 'runtime',
+        enumValues: PluginRuntime.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -618,6 +636,16 @@ class CreateShellReq extends $pb.GeneratedMessage {
   void clearData() => $_clearField(3);
   @$pb.TagNumber(3)
   $2.Struct ensureData() => $_ensure(2);
+
+  /// 不填=PYTHON(历史行为)。NATIVE 的包是 rust 源码,由云端编译后下发到机器人本地跑。
+  @$pb.TagNumber(4)
+  PluginRuntime get runtime => $_getN(3);
+  @$pb.TagNumber(4)
+  set runtime(PluginRuntime value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRuntime() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRuntime() => $_clearField(4);
 }
 
 class CreateShellResp extends $pb.GeneratedMessage {

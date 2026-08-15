@@ -603,6 +603,60 @@ abstract class MerchantManageServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.MerchantSetPermissionReq request);
 }
 
+/// 拆成独立 service 是因为**主体不同**:上面那条是超管在 web 上点的,这条是 hi.ai 转发的。
+/// 同 service 混档会让"这个接口到底谁能调"取决于方法而不是服务,拦截器就没法整体挂。
+@$pb.GrpcServiceName('hi.did.BroadcastInternal')
+class BroadcastInternalClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  BroadcastInternalClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$0.Empty> pluginUpdate(
+    $1.BroadcastPluginUpdateReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$pluginUpdate, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$pluginUpdate =
+      $grpc.ClientMethod<$1.BroadcastPluginUpdateReq, $0.Empty>(
+          '/hi.did.BroadcastInternal/PluginUpdate',
+          ($1.BroadcastPluginUpdateReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.BroadcastInternal')
+abstract class BroadcastInternalServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.BroadcastInternal';
+
+  BroadcastInternalServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.BroadcastPluginUpdateReq, $0.Empty>(
+        'PluginUpdate',
+        pluginUpdate_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.BroadcastPluginUpdateReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.Empty> pluginUpdate_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.BroadcastPluginUpdateReq> $request) async {
+    return pluginUpdate($call, await $request);
+  }
+
+  $async.Future<$0.Empty> pluginUpdate(
+      $grpc.ServiceCall call, $1.BroadcastPluginUpdateReq request);
+}
+
 @$pb.GrpcServiceName('hi.did.Broadcast')
 class BroadcastClient extends $grpc.Client {
   /// The hostname for this service.

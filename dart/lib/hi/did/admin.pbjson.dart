@@ -386,3 +386,17 @@ const BroadcastAppUpdateReq$json = {
 /// Descriptor for `BroadcastAppUpdateReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List broadcastAppUpdateReqDescriptor = $convert
     .base64Decode('ChVCcm9hZGNhc3RBcHBVcGRhdGVSZXESEAoDYXBwGAEgASgJUgNhcHA=');
+
+@$core.Deprecated('Use broadcastPluginUpdateReqDescriptor instead')
+const BroadcastPluginUpdateReq$json = {
+  '1': 'BroadcastPluginUpdateReq',
+  '2': [
+    {'1': 'plugin_uuid', '3': 1, '4': 1, '5': 9, '10': 'pluginUuid'},
+  ],
+};
+
+/// Descriptor for `BroadcastPluginUpdateReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List broadcastPluginUpdateReqDescriptor =
+    $convert.base64Decode(
+        'ChhCcm9hZGNhc3RQbHVnaW5VcGRhdGVSZXESHwoLcGx1Z2luX3V1aWQYASABKAlSCnBsdWdpbl'
+        'V1aWQ=');

@@ -691,6 +691,9 @@ pub struct PluginShell {
     /// 脚本名
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
+    /// 跑在哪儿。建壳时定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
+    #[prost(enumeration = "PluginRuntime", tag = "3")]
+    pub runtime: i32,
 }
 /// b:按 (uuid,version) 冻结
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -789,6 +792,9 @@ pub struct CreateShellReq {
     /// c.data(插件级)
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
+    /// 不填=PYTHON(历史行为)。NATIVE 的包是 rust 源码,由云端编译后下发到机器人本地跑。
+    #[prost(enumeration = "PluginRuntime", tag = "4")]
+    pub runtime: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateShellResp {
@@ -994,6 +1000,50 @@ pub struct CreateReferenceReq {
     /// d.data
     #[prost(message, optional, tag = "5")]
     pub version_data: ::core::option::Option<::pbjson_types::Struct>,
+}
+/// 插件跑在哪儿 —— **壳的属性**(同一个包不会一半 py 一半 rust),发版后不该再改。
+///
+/// 这不只是个标签,它决定**谁执行**,而"谁执行"决定了一堆判据该由谁把关:
+///
+/// PYTHON —— 脚本包(main.py/requirements.txt/description.json),**hiai 服务端执行**。
+/// NATIVE —— rust 源码包(Cargo.toml/src/description.json),云端交叉编译成 .so
+/// **下发到机器人本地执行**,能碰摄像头、屏幕、GPIO、钱包。
+///
+/// ⚠️ **服务端装配 function-call 时只收 PYTHON。** 不是"顺手过滤一下",
+/// 而是 hiai 这个运行时**物理上跑不了 .so** —— 把 NATIVE 放进服务端 tools 数组,
+/// 模型迟早会调它,然后拿到一个假的成功。宁可它压根不在数组里。
+/// NATIVE 的 tools 由机器人自己在 ChatReq.tools 里上报(它才知道自己装了什么、加载成没成功)。
+///
+/// 由此,NATIVE 插件挂在一个**软件**机器人上是完全合法的 —— 那台机器人当"柜台":
+/// 只展示和存储、供人选购与下发,自己一个也跑不了。这样公共插件就不必挂在某台
+/// 硬件机器人上,免得那台机器一下线整个货架跟着消失。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PluginRuntime {
+    /// 服务端跑的 py 脚本包(默认,历史插件全是这个)
+    Python = 0,
+    /// 机器人本地跑的 rust 插件(源码上传,云端编译后下发)
+    Native = 1,
+}
+impl PluginRuntime {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Python => "PLUGIN_RUNTIME_PYTHON",
+            Self::Native => "PLUGIN_RUNTIME_NATIVE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PLUGIN_RUNTIME_PYTHON" => Some(Self::Python),
+            "PLUGIN_RUNTIME_NATIVE" => Some(Self::Native),
+            _ => None,
+        }
+    }
 }
 /// 插件在某机器人使用记录里的来源(历史事实;引用不是拷贝,只多一行 c 指向同壳)。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
