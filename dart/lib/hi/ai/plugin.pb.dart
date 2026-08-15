@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
@@ -235,6 +236,171 @@ class PluginVersion extends $pb.GeneratedMessage {
   void clearDescription() => $_clearField(6);
 }
 
+/// 一次构建的结果。**发版接口不返回它** —— 发版是立即返回的,构建在后台跑,
+/// 结果经 Get/ListVersions 回显给发版的人看(编译中 / 失败+日志 / 成功)。
+class PluginBuild extends $pb.GeneratedMessage {
+  factory PluginBuild({
+    $core.String? uuid,
+    $core.String? version,
+    PluginBuildStatus? status,
+    $core.String? artifactUrl,
+    $core.String? sha256,
+    $core.int? abiVersion,
+    $core.String? error,
+    $core.String? log,
+    $fixnum.Int64? startedAt,
+    $fixnum.Int64? finishedAt,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    if (status != null) result.status = status;
+    if (artifactUrl != null) result.artifactUrl = artifactUrl;
+    if (sha256 != null) result.sha256 = sha256;
+    if (abiVersion != null) result.abiVersion = abiVersion;
+    if (error != null) result.error = error;
+    if (log != null) result.log = log;
+    if (startedAt != null) result.startedAt = startedAt;
+    if (finishedAt != null) result.finishedAt = finishedAt;
+    return result;
+  }
+
+  PluginBuild._();
+
+  factory PluginBuild.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PluginBuild.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PluginBuild',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..aE<PluginBuildStatus>(3, _omitFieldNames ? '' : 'status',
+        enumValues: PluginBuildStatus.values)
+    ..aOS(4, _omitFieldNames ? '' : 'artifactUrl')
+    ..aOS(5, _omitFieldNames ? '' : 'sha256')
+    ..aI(6, _omitFieldNames ? '' : 'abiVersion', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(7, _omitFieldNames ? '' : 'error')
+    ..aOS(8, _omitFieldNames ? '' : 'log')
+    ..aInt64(9, _omitFieldNames ? '' : 'startedAt')
+    ..aInt64(10, _omitFieldNames ? '' : 'finishedAt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginBuild clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginBuild copyWith(void Function(PluginBuild) updates) =>
+      super.copyWith((message) => updates(message as PluginBuild))
+          as PluginBuild;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PluginBuild create() => PluginBuild._();
+  @$core.override
+  PluginBuild createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PluginBuild getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginBuild>(create);
+  static PluginBuild? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  PluginBuildStatus get status => $_getN(2);
+  @$pb.TagNumber(3)
+  set status(PluginBuildStatus value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStatus() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStatus() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get artifactUrl => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set artifactUrl($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasArtifactUrl() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearArtifactUrl() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get sha256 => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set sha256($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSha256() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSha256() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get abiVersion => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set abiVersion($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasAbiVersion() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAbiVersion() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get error => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set error($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasError() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearError() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get log => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set log($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasLog() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearLog() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get startedAt => $_getI64(8);
+  @$pb.TagNumber(9)
+  set startedAt($fixnum.Int64 value) => $_setInt64(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasStartedAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearStartedAt() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get finishedAt => $_getI64(9);
+  @$pb.TagNumber(10)
+  set finishedAt($fixnum.Int64 value) => $_setInt64(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasFinishedAt() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearFinishedAt() => $_clearField(10);
+}
+
 /// 某 agent 视角的一个插件:壳 + 激活版本内容 + 壳级使用(enabled/source/data)+ 激活版本的版本级 data + 引用计数。
 /// **每机器人各不相同的 = c(enabled/source/data,含 api_key)+ d(激活版 + 版本级 data)**,这正是拆表的意义。
 class PluginView extends $pb.GeneratedMessage {
@@ -246,6 +412,7 @@ class PluginView extends $pb.GeneratedMessage {
     $core.int? refCount,
     $2.Struct? data,
     $2.Struct? versionData,
+    PluginBuild? build,
   }) {
     final result = create();
     if (shell != null) result.shell = shell;
@@ -255,6 +422,7 @@ class PluginView extends $pb.GeneratedMessage {
     if (refCount != null) result.refCount = refCount;
     if (data != null) result.data = data;
     if (versionData != null) result.versionData = versionData;
+    if (build != null) result.build = build;
     return result;
   }
 
@@ -283,6 +451,8 @@ class PluginView extends $pb.GeneratedMessage {
         subBuilder: $2.Struct.create)
     ..aOM<$2.Struct>(7, _omitFieldNames ? '' : 'versionData',
         subBuilder: $2.Struct.create)
+    ..aOM<PluginBuild>(8, _omitFieldNames ? '' : 'build',
+        subBuilder: PluginBuild.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -373,6 +543,20 @@ class PluginView extends $pb.GeneratedMessage {
   void clearVersionData() => $_clearField(7);
   @$pb.TagNumber(7)
   $2.Struct ensureVersionData() => $_ensure(6);
+
+  /// 激活版本的构建态。**NATIVE 才有,PYTHON 恒空。**
+  /// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
+  /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
+  @$pb.TagNumber(8)
+  PluginBuild get build => $_getN(7);
+  @$pb.TagNumber(8)
+  set build(PluginBuild value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasBuild() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearBuild() => $_clearField(8);
+  @$pb.TagNumber(8)
+  PluginBuild ensureBuild() => $_ensure(7);
 }
 
 /// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
@@ -381,11 +565,13 @@ class PluginVersionView extends $pb.GeneratedMessage {
     PluginVersion? version,
     $core.bool? active,
     $2.Struct? data,
+    PluginBuild? build,
   }) {
     final result = create();
     if (version != null) result.version = version;
     if (active != null) result.active = active;
     if (data != null) result.data = data;
+    if (build != null) result.build = build;
     return result;
   }
 
@@ -407,6 +593,8 @@ class PluginVersionView extends $pb.GeneratedMessage {
     ..aOB(2, _omitFieldNames ? '' : 'active')
     ..aOM<$2.Struct>(3, _omitFieldNames ? '' : 'data',
         subBuilder: $2.Struct.create)
+    ..aOM<PluginBuild>(4, _omitFieldNames ? '' : 'build',
+        subBuilder: PluginBuild.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -458,6 +646,17 @@ class PluginVersionView extends $pb.GeneratedMessage {
   void clearData() => $_clearField(3);
   @$pb.TagNumber(3)
   $2.Struct ensureData() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  PluginBuild get build => $_getN(3);
+  @$pb.TagNumber(4)
+  set build(PluginBuild value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBuild() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBuild() => $_clearField(4);
+  @$pb.TagNumber(4)
+  PluginBuild ensureBuild() => $_ensure(3);
 }
 
 /// 插件加载完成通知(公开摘要,不带私产)。
@@ -2140,6 +2339,332 @@ class CreateReferenceReq extends $pb.GeneratedMessage {
   void clearVersionData() => $_clearField(5);
   @$pb.TagNumber(5)
   $2.Struct ensureVersionData() => $_ensure(4);
+}
+
+/// ── 下发面:机器人问「我该装哪些 NATIVE 插件」───────────────────────────────
+///
+/// 只回**该装的**:c.enabled ∧ d.active ∧ 壳是 NATIVE ∧ 该版本构建成功。
+/// 任一不成立就不该出现在清单里 —— 机器人拿到就会装,而装了就会喂给模型。
+///
+/// ⚠️ **清单是全量,不是增量。** 机器人按它对账:多的删、少的下、sha256 不同的换。
+/// 增量(只告诉"新增了什么")没法表达撤权与到期 —— 而那两件事恰恰必须传达到:
+/// 市场 revoke 删的是服务端的引用行,机器人本地那个 `.so` 不会自己消失。
+class NativePlugin extends $pb.GeneratedMessage {
+  factory NativePlugin({
+    $core.String? uuid,
+    $core.String? name,
+    $core.String? version,
+    $core.String? fnPrefix,
+    $core.String? url,
+    $core.String? sha256,
+    $core.int? abiVersion,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (name != null) result.name = name;
+    if (version != null) result.version = version;
+    if (fnPrefix != null) result.fnPrefix = fnPrefix;
+    if (url != null) result.url = url;
+    if (sha256 != null) result.sha256 = sha256;
+    if (abiVersion != null) result.abiVersion = abiVersion;
+    return result;
+  }
+
+  NativePlugin._();
+
+  factory NativePlugin.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory NativePlugin.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'NativePlugin',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..aOS(4, _omitFieldNames ? '' : 'fnPrefix')
+    ..aOS(5, _omitFieldNames ? '' : 'url')
+    ..aOS(6, _omitFieldNames ? '' : 'sha256')
+    ..aI(7, _omitFieldNames ? '' : 'abiVersion', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  NativePlugin clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  NativePlugin copyWith(void Function(NativePlugin) updates) =>
+      super.copyWith((message) => updates(message as NativePlugin))
+          as NativePlugin;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static NativePlugin create() => NativePlugin._();
+  @$core.override
+  NativePlugin createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static NativePlugin getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<NativePlugin>(create);
+  static NativePlugin? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+
+  /// 壳前缀。机器人**上报 tools 时要拼在方法名前**(`<fn_prefix>_<原名>`),
+  /// 分发时切第一个 `_` 切掉。
+  ///
+  /// ⚠️ 这个字段原本是 hiai 的内部实现细节(见 PluginVersion.description 那段注释),
+  /// 现在必须过线 —— 因为 `.so` 里编进去的 manifest 是**原始名**,
+  /// 而 py 插件那侧的改名是在发版预读时做掉的,`.so` 没有对应的时机。
+  /// 不给机器人前缀的话,两个厂商各卖一个提供 `search` 的插件,买家两个都买 →
+  /// 机器人本地撞名 → 整个插件拒绝加载,而失败原因只在机器人的本地日志里。
+  @$pb.TagNumber(4)
+  $core.String get fnPrefix => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set fnPrefix($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFnPrefix() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFnPrefix() => $_clearField(4);
+
+  /// `.so` 的下载地址。私有桶,**每次拉清单现签**(限期),不存库。
+  @$pb.TagNumber(5)
+  $core.String get url => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set url($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasUrl() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearUrl() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get sha256 => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set sha256($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSha256() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSha256() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get abiVersion => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set abiVersion($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasAbiVersion() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearAbiVersion() => $_clearField(7);
+}
+
+class ListNativeReq extends $pb.GeneratedMessage {
+  factory ListNativeReq({
+    $core.String? agent,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    return result;
+  }
+
+  ListNativeReq._();
+
+  factory ListNativeReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListNativeReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListNativeReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNativeReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNativeReq copyWith(void Function(ListNativeReq) updates) =>
+      super.copyWith((message) => updates(message as ListNativeReq))
+          as ListNativeReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListNativeReq create() => ListNativeReq._();
+  @$core.override
+  ListNativeReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListNativeReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListNativeReq>(create);
+  static ListNativeReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+}
+
+class ListNativeResp extends $pb.GeneratedMessage {
+  factory ListNativeResp({
+    $core.Iterable<NativePlugin>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ListNativeResp._();
+
+  factory ListNativeResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListNativeResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListNativeResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..pPM<NativePlugin>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: NativePlugin.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNativeResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNativeResp copyWith(void Function(ListNativeResp) updates) =>
+      super.copyWith((message) => updates(message as ListNativeResp))
+          as ListNativeResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListNativeResp create() => ListNativeResp._();
+  @$core.override
+  ListNativeResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListNativeResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListNativeResp>(create);
+  static ListNativeResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<NativePlugin> get list => $_getList(0);
+}
+
+/// 重编一版。编译失败(网络抖、依赖源挂了)后不必删版本重发一遍 ——
+/// 版本本体是冻结的,重编的是**产物**,不是版本。
+class RetryBuildReq extends $pb.GeneratedMessage {
+  factory RetryBuildReq({
+    $core.String? agent,
+    $core.String? uuid,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  RetryBuildReq._();
+
+  factory RetryBuildReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RetryBuildReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RetryBuildReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RetryBuildReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RetryBuildReq copyWith(void Function(RetryBuildReq) updates) =>
+      super.copyWith((message) => updates(message as RetryBuildReq))
+          as RetryBuildReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RetryBuildReq create() => RetryBuildReq._();
+  @$core.override
+  RetryBuildReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static RetryBuildReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RetryBuildReq>(create);
+  static RetryBuildReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
 }
 
 const $core.bool _omitFieldNames =

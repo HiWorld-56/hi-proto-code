@@ -733,6 +733,36 @@ pub struct PluginVersion {
     #[prost(string, tag = "6")]
     pub description: ::prost::alloc::string::String,
 }
+/// 一次构建的结果。**发版接口不返回它** —— 发版是立即返回的,构建在后台跑,
+/// 结果经 Get/ListVersions 回显给发版的人看(编译中 / 失败+日志 / 成功)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginBuild {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
+    #[prost(enumeration = "PluginBuildStatus", tag = "3")]
+    pub status: i32,
+    /// 编好的 .so(私有桶;下发时现签 presigned)
+    #[prost(string, tag = "4")]
+    pub artifact_url: ::prost::alloc::string::String,
+    /// 产物摘要,机器人下完照此核对
+    #[prost(string, tag = "5")]
+    pub sha256: ::prost::alloc::string::String,
+    /// 从 .so 里真读出来的(见 hi.ai.plugin.BuildResp)
+    #[prost(uint32, tag = "6")]
+    pub abi_version: u32,
+    /// 失败原因(一句话)
+    #[prost(string, tag = "7")]
+    pub error: ::prost::alloc::string::String,
+    /// 编译日志尾部
+    #[prost(string, tag = "8")]
+    pub log: ::prost::alloc::string::String,
+    #[prost(int64, tag = "9")]
+    pub started_at: i64,
+    #[prost(int64, tag = "10")]
+    pub finished_at: i64,
+}
 /// 某 agent 视角的一个插件:壳 + 激活版本内容 + 壳级使用(enabled/source/data)+ 激活版本的版本级 data + 引用计数。
 /// **每机器人各不相同的 = c(enabled/source/data,含 api_key)+ d(激活版 + 版本级 data)**,这正是拆表的意义。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -757,6 +787,11 @@ pub struct PluginView {
     /// 激活版本的 d.data:版本级扩展数据
     #[prost(message, optional, tag = "7")]
     pub version_data: ::core::option::Option<::pbjson_types::Struct>,
+    /// 激活版本的构建态。**NATIVE 才有,PYTHON 恒空。**
+    /// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
+    /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
+    #[prost(message, optional, tag = "8")]
+    pub build: ::core::option::Option<PluginBuild>,
 }
 /// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -768,6 +803,9 @@ pub struct PluginVersionView {
     /// d.data
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
+    /// 该版本的构建态(NATIVE 才有)
+    #[prost(message, optional, tag = "4")]
+    pub build: ::core::option::Option<PluginBuild>,
 }
 /// 插件加载完成通知(公开摘要,不带私产)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1001,6 +1039,65 @@ pub struct CreateReferenceReq {
     #[prost(message, optional, tag = "5")]
     pub version_data: ::core::option::Option<::pbjson_types::Struct>,
 }
+/// ── 下发面:机器人问「我该装哪些 NATIVE 插件」───────────────────────────────
+///
+/// 只回**该装的**:c.enabled ∧ d.active ∧ 壳是 NATIVE ∧ 该版本构建成功。
+/// 任一不成立就不该出现在清单里 —— 机器人拿到就会装,而装了就会喂给模型。
+///
+/// ⚠️ **清单是全量,不是增量。** 机器人按它对账:多的删、少的下、sha256 不同的换。
+/// 增量(只告诉"新增了什么")没法表达撤权与到期 —— 而那两件事恰恰必须传达到:
+/// 市场 revoke 删的是服务端的引用行,机器人本地那个 `.so` 不会自己消失。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct NativePlugin {
+    /// 壳 uuid。**落地文件名就是它**(`plugins/<uuid>.so`)
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 壳名,只用于机器人日志
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+    /// 壳前缀。机器人**上报 tools 时要拼在方法名前**(`<fn_prefix>_<原名>`),
+    /// 分发时切第一个 `_` 切掉。
+    ///
+    /// ⚠️ 这个字段原本是 hiai 的内部实现细节(见 PluginVersion.description 那段注释),
+    /// 现在必须过线 —— 因为 `.so` 里编进去的 manifest 是**原始名**,
+    /// 而 py 插件那侧的改名是在发版预读时做掉的,`.so` 没有对应的时机。
+    /// 不给机器人前缀的话,两个厂商各卖一个提供 `search` 的插件,买家两个都买 →
+    /// 机器人本地撞名 → 整个插件拒绝加载,而失败原因只在机器人的本地日志里。
+    #[prost(string, tag = "4")]
+    pub fn_prefix: ::prost::alloc::string::String,
+    /// `.so` 的下载地址。私有桶,**每次拉清单现签**(限期),不存库。
+    #[prost(string, tag = "5")]
+    pub url: ::prost::alloc::string::String,
+    /// 下完必须核对;对不上就是没下全或被改过
+    #[prost(string, tag = "6")]
+    pub sha256: ::prost::alloc::string::String,
+    /// 机器人可据此先筛掉对不上的,省一次下载
+    #[prost(uint32, tag = "7")]
+    pub abi_version: u32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListNativeReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListNativeResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<NativePlugin>,
+}
+/// 重编一版。编译失败(网络抖、依赖源挂了)后不必删版本重发一遍 ——
+/// 版本本体是冻结的,重编的是**产物**,不是版本。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RetryBuildReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+}
 /// 插件跑在哪儿 —— **壳的属性**(同一个包不会一半 py 一半 rust),发版后不该再改。
 ///
 /// 这不只是个标签,它决定**谁执行**,而"谁执行"决定了一堆判据该由谁把关:
@@ -1041,6 +1138,49 @@ impl PluginRuntime {
         match value {
             "PLUGIN_RUNTIME_PYTHON" => Some(Self::Python),
             "PLUGIN_RUNTIME_NATIVE" => Some(Self::Native),
+            _ => None,
+        }
+    }
+}
+/// ── NATIVE 的构建态 ────────────────────────────────────────────────────────
+///
+/// **只有 NATIVE 有这一段。** PYTHON 的包传上来就能跑,不存在"编不编得出来";
+/// NATIVE 传上来的是 rust 源码,要交叉编译成 arm64 `.so` 才谈得上下发。
+///
+/// 单独一张表、不并进 b(PluginVersion):b 是**发版即冻结**的本体,
+/// 而构建结果是几分钟后才回填的、还可能重试 —— 两种寿命塞进一行迟早打架。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PluginBuildStatus {
+    /// 已排队,还没开始(发版当场就是这个)
+    Pending = 0,
+    /// 正在编
+    Building = 1,
+    /// 编出来了、校验过了、产物已上传
+    Succeeded = 2,
+    /// 编不出来 / 校验没过。error+log 里有原因
+    Failed = 3,
+}
+impl PluginBuildStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Pending => "PLUGIN_BUILD_STATUS_PENDING",
+            Self::Building => "PLUGIN_BUILD_STATUS_BUILDING",
+            Self::Succeeded => "PLUGIN_BUILD_STATUS_SUCCEEDED",
+            Self::Failed => "PLUGIN_BUILD_STATUS_FAILED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PLUGIN_BUILD_STATUS_PENDING" => Some(Self::Pending),
+            "PLUGIN_BUILD_STATUS_BUILDING" => Some(Self::Building),
+            "PLUGIN_BUILD_STATUS_SUCCEEDED" => Some(Self::Succeeded),
+            "PLUGIN_BUILD_STATUS_FAILED" => Some(Self::Failed),
             _ => None,
         }
     }
@@ -1462,6 +1602,42 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/SetEnabled");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "SetEnabled"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_native(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListNativeReq>,
+        ) -> std::result::Result<tonic::Response<super::ListNativeResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/ListNative");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "ListNative"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn retry_build(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RetryBuildReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/RetryBuild");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "RetryBuild"));
             self.inner.unary(req, path, codec).await
         }
     }

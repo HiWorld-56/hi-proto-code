@@ -56,6 +56,73 @@ pub struct CleanupReq {
     #[prost(string, tag = "1")]
     pub code_archive_url: ::prost::alloc::string::String,
 }
+/// ── NATIVE 构建契约(独立构建服务实现,hiai 只作调用方)────────────────────────
+///
+/// NATIVE 插件(`PluginRuntime.PLUGIN_RUNTIME_NATIVE`)传上来的是 **rust 源码**,
+/// 要先交叉编译成 arm64 的 `.so` 才谈得上下发。这条契约就是那一步。
+///
+/// ## 它是**无状态纯函数**:给源码,还产物
+///
+/// 编译要几分钟,但**排队与状态不在这里** —— 全在 hi-ai 的构建表里。
+/// Builder 自己发 job id 再让 hi-ai 轮询的话就有了两处状态,两处都能崩、且要对账;
+/// 而 Runner 已经证明了「无状态执行器 + 父服务持状态」这个形状够用。
+/// 于是 `Build` 是一次**同步长调用**,hi-ai 在 goroutine 里等它。
+///
+/// 代价明写在这:hi-ai 重启会丢掉在途的构建,表里留一行 BUILDING。
+/// **所以 hi-ai 侧必须有「超时的 BUILDING 重置成 PENDING 重投」的扫描** ——
+/// 换成异步 job 模型也一样要有,不是本方案独有的债。
+///
+/// ## ABI 由**构建服务**说了算,不由三方的 Cargo.toml 说了算
+///
+/// 三方写 `hinj-plugin-sdk = "0.1"`,构建服务强制把它指到自己镜像里的那一份。
+/// 否则三方可以引一个改过的 SDK,编出一个**自称 ABI=1、形状却不对**的 `.so` ——
+/// 机器人那边先对 ABI 会放行,然后在某次调用时读错内存。
+///
+/// ## 编不出来**不是 rpc 错误**
+///
+/// 同 Runner 的「脚本层面的错不是 rpc 错误」:编译失败是**业务结果**,要连日志尾部
+/// 一起存进构建表给发版的人看。回一个 grpc Internal 的话,用户看到的是"服务器错误",
+/// 而他真正需要的是那段 `error\[E0432\]`。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BuildReq {
+    /// rust 源码包 zip(= 这一版的 b.url)
+    #[prost(string, tag = "1")]
+    pub code_archive_url: ::prost::alloc::string::String,
+    /// 壳 uuid(产物命名与日志用)
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 版本号
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BuildResp {
+    /// 编出来了没有。**false 时 rpc 本身仍是成功的**,理由见上。
+    #[prost(bool, tag = "1")]
+    pub ok: bool,
+    /// 编好的 .so(hiai 私有桶)
+    #[prost(string, tag = "2")]
+    pub artifact_url: ::prost::alloc::string::String,
+    /// 产物摘要,机器人下完照此核对
+    #[prost(string, tag = "3")]
+    pub sha256: ::prost::alloc::string::String,
+    /// 从**编出来的那个 `.so` 里真读出来的** ABI 版本(qemu 跑 aarch64 verifier 得到),
+    /// 不是从源码或 Cargo.toml 猜的。x86 上 dlopen 不了 aarch64 的 .so,
+    /// 只查 ELF machine + 导出符号是查不出这个值的。
+    #[prost(uint32, tag = "4")]
+    pub abi_version: u32,
+    /// 同样是从 .so 里真读出来的 manifest(OpenAI tools 数组,**原始名、不带壳前缀**)。
+    /// hi-ai 拿它跟包里的 description.json 比对 —— 两者不一致说明作者改了 json 却没改代码
+    /// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
+    #[prost(string, tag = "5")]
+    pub manifest: ::prost::alloc::string::String,
+    /// 失败原因(给发版的人看的一句话)
+    #[prost(string, tag = "6")]
+    pub error: ::prost::alloc::string::String,
+    /// 编译日志尾部(失败时才有意义)
+    #[prost(string, tag = "7")]
+    pub log: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
 pub mod runner_client {
     #![allow(
@@ -186,6 +253,124 @@ pub mod runner_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.plugin.Runner", "Cleanup"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod builder_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
+    ///
+    /// ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
+    /// 危险程度只高不低。必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+    #[derive(Debug, Clone)]
+    pub struct BuilderClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl BuilderClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> BuilderClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> BuilderClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            BuilderClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn build(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BuildReq>,
+        ) -> std::result::Result<tonic::Response<super::BuildResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.plugin.Builder/Build",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.plugin.Builder", "Build"));
             self.inner.unary(req, path, codec).await
         }
     }

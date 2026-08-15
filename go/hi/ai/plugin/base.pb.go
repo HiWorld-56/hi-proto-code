@@ -289,6 +289,192 @@ func (x *CleanupReq) GetCodeArchiveUrl() string {
 	return ""
 }
 
+// ── NATIVE 构建契约(独立构建服务实现,hiai 只作调用方)────────────────────────
+//
+// NATIVE 插件(`PluginRuntime.PLUGIN_RUNTIME_NATIVE`)传上来的是 **rust 源码**,
+// 要先交叉编译成 arm64 的 `.so` 才谈得上下发。这条契约就是那一步。
+//
+// ## 它是**无状态纯函数**:给源码,还产物
+//
+// 编译要几分钟,但**排队与状态不在这里** —— 全在 hi-ai 的构建表里。
+// Builder 自己发 job id 再让 hi-ai 轮询的话就有了两处状态,两处都能崩、且要对账;
+// 而 Runner 已经证明了「无状态执行器 + 父服务持状态」这个形状够用。
+// 于是 `Build` 是一次**同步长调用**,hi-ai 在 goroutine 里等它。
+//
+// 代价明写在这:hi-ai 重启会丢掉在途的构建,表里留一行 BUILDING。
+// **所以 hi-ai 侧必须有「超时的 BUILDING 重置成 PENDING 重投」的扫描** ——
+// 换成异步 job 模型也一样要有,不是本方案独有的债。
+//
+// ## ABI 由**构建服务**说了算,不由三方的 Cargo.toml 说了算
+//
+// 三方写 `hinj-plugin-sdk = "0.1"`,构建服务强制把它指到自己镜像里的那一份。
+// 否则三方可以引一个改过的 SDK,编出一个**自称 ABI=1、形状却不对**的 `.so` ——
+// 机器人那边先对 ABI 会放行,然后在某次调用时读错内存。
+//
+// ## 编不出来**不是 rpc 错误**
+//
+// 同 Runner 的「脚本层面的错不是 rpc 错误」:编译失败是**业务结果**,要连日志尾部
+// 一起存进构建表给发版的人看。回一个 grpc Internal 的话,用户看到的是"服务器错误",
+// 而他真正需要的是那段 `error[E0432]`。
+type BuildReq struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"` // rust 源码包 zip(= 这一版的 b.url)
+	Uuid           string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`                                             // 壳 uuid(产物命名与日志用)
+	Version        string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`                                       // 版本号
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *BuildReq) Reset() {
+	*x = BuildReq{}
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BuildReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BuildReq) ProtoMessage() {}
+
+func (x *BuildReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BuildReq.ProtoReflect.Descriptor instead.
+func (*BuildReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *BuildReq) GetCodeArchiveUrl() string {
+	if x != nil {
+		return x.CodeArchiveUrl
+	}
+	return ""
+}
+
+func (x *BuildReq) GetUuid() string {
+	if x != nil {
+		return x.Uuid
+	}
+	return ""
+}
+
+func (x *BuildReq) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+type BuildResp struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 编出来了没有。**false 时 rpc 本身仍是成功的**,理由见上。
+	Ok          bool   `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+	ArtifactUrl string `protobuf:"bytes,2,opt,name=artifact_url,json=artifactUrl,proto3" json:"artifact_url,omitempty"` // 编好的 .so(hiai 私有桶)
+	Sha256      string `protobuf:"bytes,3,opt,name=sha256,proto3" json:"sha256,omitempty"`                              // 产物摘要,机器人下完照此核对
+	// 从**编出来的那个 `.so` 里真读出来的** ABI 版本(qemu 跑 aarch64 verifier 得到),
+	// 不是从源码或 Cargo.toml 猜的。x86 上 dlopen 不了 aarch64 的 .so,
+	// 只查 ELF machine + 导出符号是查不出这个值的。
+	AbiVersion uint32 `protobuf:"varint,4,opt,name=abi_version,json=abiVersion,proto3" json:"abi_version,omitempty"`
+	// 同样是从 .so 里真读出来的 manifest(OpenAI tools 数组,**原始名、不带壳前缀**)。
+	// hi-ai 拿它跟包里的 description.json 比对 —— 两者不一致说明作者改了 json 却没改代码
+	// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
+	Manifest      string `protobuf:"bytes,5,opt,name=manifest,proto3" json:"manifest,omitempty"`
+	Error         string `protobuf:"bytes,6,opt,name=error,proto3" json:"error,omitempty"` // 失败原因(给发版的人看的一句话)
+	Log           string `protobuf:"bytes,7,opt,name=log,proto3" json:"log,omitempty"`     // 编译日志尾部(失败时才有意义)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BuildResp) Reset() {
+	*x = BuildResp{}
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BuildResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BuildResp) ProtoMessage() {}
+
+func (x *BuildResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BuildResp.ProtoReflect.Descriptor instead.
+func (*BuildResp) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *BuildResp) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
+func (x *BuildResp) GetArtifactUrl() string {
+	if x != nil {
+		return x.ArtifactUrl
+	}
+	return ""
+}
+
+func (x *BuildResp) GetSha256() string {
+	if x != nil {
+		return x.Sha256
+	}
+	return ""
+}
+
+func (x *BuildResp) GetAbiVersion() uint32 {
+	if x != nil {
+		return x.AbiVersion
+	}
+	return 0
+}
+
+func (x *BuildResp) GetManifest() string {
+	if x != nil {
+		return x.Manifest
+	}
+	return ""
+}
+
+func (x *BuildResp) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *BuildResp) GetLog() string {
+	if x != nil {
+		return x.Log
+	}
+	return ""
+}
+
 var File_hi_ai_plugin_base_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_base_proto_rawDesc = "" +
@@ -308,10 +494,25 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
 	"\n" +
 	"CleanupReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl2\x87\x01\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\"b\n" +
+	"\bBuildReq\x12(\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x12\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\tR\aversion\"\xeb\x01\n" +
+	"\tBuildResp\x12\x14\n" +
+	"\x02ok\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03R\x02ok\x12'\n" +
+	"\fartifact_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vartifactUrl\x12\x1c\n" +
+	"\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06sha256\x12%\n" +
+	"\vabi_version\x18\x04 \x01(\rB\x04\x90\xb5\x18\x03R\n" +
+	"abiVersion\x12 \n" +
+	"\bmanifest\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\bmanifest\x12\x1a\n" +
+	"\x05error\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x05error\x12\x16\n" +
+	"\x03log\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x03log:\x04\x98\xb5\x18\x032\x87\x01\n" +
 	"\x06Runner\x129\n" +
 	"\x03Run\x12\x14.hi.ai.plugin.RunReq\x1a\x15.hi.ai.plugin.RunResp\"\x05\x8a\xb5\x18\x01\x06\x12B\n" +
-	"\aCleanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06B\x9f\x01\n" +
+	"\aCleanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x062J\n" +
+	"\aBuilder\x12?\n" +
+	"\x05Build\x12\x16.hi.ai.plugin.BuildReq\x1a\x17.hi.ai.plugin.BuildResp\"\x05\x8a\xb5\x18\x01\x06B\x9f\x01\n" +
 	"\x10com.hi.ai.pluginB\tBaseProtoP\x01Z.github.com/HiWorld-56/hi-proto/go/hi/ai/plugin\xa2\x02\x03HAP\xaa\x02\fHi.Ai.Plugin\xca\x02\fHi\\Ai\\Plugin\xe2\x02\x18Hi\\Ai\\Plugin\\GPBMetadata\xea\x02\x0eHi::Ai::Pluginb\x06proto3"
 
 var (
@@ -326,26 +527,30 @@ func file_hi_ai_plugin_base_proto_rawDescGZIP() []byte {
 	return file_hi_ai_plugin_base_proto_rawDescData
 }
 
-var file_hi_ai_plugin_base_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_hi_ai_plugin_base_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_hi_ai_plugin_base_proto_goTypes = []any{
 	(*PluginAnnex)(nil),     // 0: hi.ai.plugin.PluginAnnex
 	(*RunReq)(nil),          // 1: hi.ai.plugin.RunReq
 	(*RunResp)(nil),         // 2: hi.ai.plugin.RunResp
 	(*CleanupReq)(nil),      // 3: hi.ai.plugin.CleanupReq
-	(*structpb.Struct)(nil), // 4: google.protobuf.Struct
-	(*ai.Content)(nil),      // 5: hi.ai.Content
-	(*emptypb.Empty)(nil),   // 6: google.protobuf.Empty
+	(*BuildReq)(nil),        // 4: hi.ai.plugin.BuildReq
+	(*BuildResp)(nil),       // 5: hi.ai.plugin.BuildResp
+	(*structpb.Struct)(nil), // 6: google.protobuf.Struct
+	(*ai.Content)(nil),      // 7: hi.ai.Content
+	(*emptypb.Empty)(nil),   // 8: google.protobuf.Empty
 }
 var file_hi_ai_plugin_base_proto_depIdxs = []int32{
-	4, // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
+	6, // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
 	0, // 1: hi.ai.plugin.RunReq.annex:type_name -> hi.ai.plugin.PluginAnnex
-	5, // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
+	7, // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
 	1, // 3: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
 	3, // 4: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
-	2, // 5: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
-	6, // 6: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
+	4, // 5: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
+	2, // 6: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
+	8, // 7: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
+	5, // 8: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -362,9 +567,9 @@ func file_hi_ai_plugin_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_plugin_base_proto_rawDesc), len(file_hi_ai_plugin_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_ai_plugin_base_proto_goTypes,
 		DependencyIndexes: file_hi_ai_plugin_base_proto_depIdxs,

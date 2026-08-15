@@ -95,3 +95,41 @@ const CleanupReq$json = {
 /// Descriptor for `CleanupReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List cleanupReqDescriptor = $convert.base64Decode(
     'CgpDbGVhbnVwUmVxEigKEGNvZGVfYXJjaGl2ZV91cmwYASABKAlSDmNvZGVBcmNoaXZlVXJs');
+
+@$core.Deprecated('Use buildReqDescriptor instead')
+const BuildReq$json = {
+  '1': 'BuildReq',
+  '2': [
+    {'1': 'code_archive_url', '3': 1, '4': 1, '5': 9, '10': 'codeArchiveUrl'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+  ],
+};
+
+/// Descriptor for `BuildReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List buildReqDescriptor = $convert.base64Decode(
+    'CghCdWlsZFJlcRIoChBjb2RlX2FyY2hpdmVfdXJsGAEgASgJUg5jb2RlQXJjaGl2ZVVybBISCg'
+    'R1dWlkGAIgASgJUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3ZlcnNpb24=');
+
+@$core.Deprecated('Use buildRespDescriptor instead')
+const BuildResp$json = {
+  '1': 'BuildResp',
+  '2': [
+    {'1': 'ok', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'ok'},
+    {'1': 'artifact_url', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'artifactUrl'},
+    {'1': 'sha256', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'sha256'},
+    {'1': 'abi_version', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'abiVersion'},
+    {'1': 'manifest', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'manifest'},
+    {'1': 'error', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'error'},
+    {'1': 'log', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'log'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `BuildResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List buildRespDescriptor = $convert.base64Decode(
+    'CglCdWlsZFJlc3ASFAoCb2sYASABKAhCBJC1GANSAm9rEicKDGFydGlmYWN0X3VybBgCIAEoCU'
+    'IEkLUYA1ILYXJ0aWZhY3RVcmwSHAoGc2hhMjU2GAMgASgJQgSQtRgDUgZzaGEyNTYSJQoLYWJp'
+    'X3ZlcnNpb24YBCABKA1CBJC1GANSCmFiaVZlcnNpb24SIAoIbWFuaWZlc3QYBSABKAlCBJC1GA'
+    'NSCG1hbmlmZXN0EhoKBWVycm9yGAYgASgJQgSQtRgDUgVlcnJvchIWCgNsb2cYByABKAlCBJC1'
+    'GANSA2xvZzoEmLUYAw==');

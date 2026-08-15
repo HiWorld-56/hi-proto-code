@@ -309,6 +309,242 @@ class CleanupReq extends $pb.GeneratedMessage {
   void clearCodeArchiveUrl() => $_clearField(1);
 }
 
+/// ── NATIVE 构建契约(独立构建服务实现,hiai 只作调用方)────────────────────────
+///
+/// NATIVE 插件(`PluginRuntime.PLUGIN_RUNTIME_NATIVE`)传上来的是 **rust 源码**,
+/// 要先交叉编译成 arm64 的 `.so` 才谈得上下发。这条契约就是那一步。
+///
+/// ## 它是**无状态纯函数**:给源码,还产物
+///
+/// 编译要几分钟,但**排队与状态不在这里** —— 全在 hi-ai 的构建表里。
+/// Builder 自己发 job id 再让 hi-ai 轮询的话就有了两处状态,两处都能崩、且要对账;
+/// 而 Runner 已经证明了「无状态执行器 + 父服务持状态」这个形状够用。
+/// 于是 `Build` 是一次**同步长调用**,hi-ai 在 goroutine 里等它。
+///
+/// 代价明写在这:hi-ai 重启会丢掉在途的构建,表里留一行 BUILDING。
+/// **所以 hi-ai 侧必须有「超时的 BUILDING 重置成 PENDING 重投」的扫描** ——
+/// 换成异步 job 模型也一样要有,不是本方案独有的债。
+///
+/// ## ABI 由**构建服务**说了算,不由三方的 Cargo.toml 说了算
+///
+/// 三方写 `hinj-plugin-sdk = "0.1"`,构建服务强制把它指到自己镜像里的那一份。
+/// 否则三方可以引一个改过的 SDK,编出一个**自称 ABI=1、形状却不对**的 `.so` ——
+/// 机器人那边先对 ABI 会放行,然后在某次调用时读错内存。
+///
+/// ## 编不出来**不是 rpc 错误**
+///
+/// 同 Runner 的「脚本层面的错不是 rpc 错误」:编译失败是**业务结果**,要连日志尾部
+/// 一起存进构建表给发版的人看。回一个 grpc Internal 的话,用户看到的是"服务器错误",
+/// 而他真正需要的是那段 `error[E0432]`。
+class BuildReq extends $pb.GeneratedMessage {
+  factory BuildReq({
+    $core.String? codeArchiveUrl,
+    $core.String? uuid,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (codeArchiveUrl != null) result.codeArchiveUrl = codeArchiveUrl;
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  BuildReq._();
+
+  factory BuildReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BuildReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'codeArchiveUrl')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildReq copyWith(void Function(BuildReq) updates) =>
+      super.copyWith((message) => updates(message as BuildReq)) as BuildReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BuildReq create() => BuildReq._();
+  @$core.override
+  BuildReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BuildReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BuildReq>(create);
+  static BuildReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get codeArchiveUrl => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set codeArchiveUrl($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCodeArchiveUrl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCodeArchiveUrl() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+}
+
+class BuildResp extends $pb.GeneratedMessage {
+  factory BuildResp({
+    $core.bool? ok,
+    $core.String? artifactUrl,
+    $core.String? sha256,
+    $core.int? abiVersion,
+    $core.String? manifest,
+    $core.String? error,
+    $core.String? log,
+  }) {
+    final result = create();
+    if (ok != null) result.ok = ok;
+    if (artifactUrl != null) result.artifactUrl = artifactUrl;
+    if (sha256 != null) result.sha256 = sha256;
+    if (abiVersion != null) result.abiVersion = abiVersion;
+    if (manifest != null) result.manifest = manifest;
+    if (error != null) result.error = error;
+    if (log != null) result.log = log;
+    return result;
+  }
+
+  BuildResp._();
+
+  factory BuildResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BuildResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'ok')
+    ..aOS(2, _omitFieldNames ? '' : 'artifactUrl')
+    ..aOS(3, _omitFieldNames ? '' : 'sha256')
+    ..aI(4, _omitFieldNames ? '' : 'abiVersion', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(5, _omitFieldNames ? '' : 'manifest')
+    ..aOS(6, _omitFieldNames ? '' : 'error')
+    ..aOS(7, _omitFieldNames ? '' : 'log')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildResp copyWith(void Function(BuildResp) updates) =>
+      super.copyWith((message) => updates(message as BuildResp)) as BuildResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BuildResp create() => BuildResp._();
+  @$core.override
+  BuildResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BuildResp getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BuildResp>(create);
+  static BuildResp? _defaultInstance;
+
+  /// 编出来了没有。**false 时 rpc 本身仍是成功的**,理由见上。
+  @$pb.TagNumber(1)
+  $core.bool get ok => $_getBF(0);
+  @$pb.TagNumber(1)
+  set ok($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOk() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOk() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get artifactUrl => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set artifactUrl($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasArtifactUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearArtifactUrl() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get sha256 => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set sha256($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSha256() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSha256() => $_clearField(3);
+
+  /// 从**编出来的那个 `.so` 里真读出来的** ABI 版本(qemu 跑 aarch64 verifier 得到),
+  /// 不是从源码或 Cargo.toml 猜的。x86 上 dlopen 不了 aarch64 的 .so,
+  /// 只查 ELF machine + 导出符号是查不出这个值的。
+  @$pb.TagNumber(4)
+  $core.int get abiVersion => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set abiVersion($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAbiVersion() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAbiVersion() => $_clearField(4);
+
+  /// 同样是从 .so 里真读出来的 manifest(OpenAI tools 数组,**原始名、不带壳前缀**)。
+  /// hi-ai 拿它跟包里的 description.json 比对 —— 两者不一致说明作者改了 json 却没改代码
+  /// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
+  @$pb.TagNumber(5)
+  $core.String get manifest => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set manifest($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasManifest() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearManifest() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get error => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set error($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasError() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearError() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get log => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set log($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasLog() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearLog() => $_clearField(7);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

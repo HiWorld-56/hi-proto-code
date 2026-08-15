@@ -35,6 +35,7 @@ const (
 	Plugin_SetActive_FullMethodName         = "/hi.club.Plugin/SetActive"
 	Plugin_SetEnabled_FullMethodName        = "/hi.club.Plugin/SetEnabled"
 	Plugin_ReloadApiKey_FullMethodName      = "/hi.club.Plugin/ReloadApiKey"
+	Plugin_RetryBuild_FullMethodName        = "/hi.club.Plugin/RetryBuild"
 )
 
 // PluginClient is the client API for Plugin service.
@@ -71,6 +72,7 @@ type PluginClient interface {
 	SetActive(ctx context.Context, in *ai.SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ReloadApiKey(ctx context.Context, in *ReloadApiKeyReq, opts ...grpc.CallOption) (*ReloadApiKeyResp, error)
+	RetryBuild(ctx context.Context, in *ai.RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type pluginClient struct {
@@ -221,6 +223,16 @@ func (c *pluginClient) ReloadApiKey(ctx context.Context, in *ReloadApiKeyReq, op
 	return out, nil
 }
 
+func (c *pluginClient) RetryBuild(ctx context.Context, in *ai.RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_RetryBuild_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PluginServer is the server API for Plugin service.
 // All implementations should embed UnimplementedPluginServer
 // for forward compatibility.
@@ -255,6 +267,7 @@ type PluginServer interface {
 	SetActive(context.Context, *ai.SetActiveReq) (*emptypb.Empty, error)
 	SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error)
 	ReloadApiKey(context.Context, *ReloadApiKeyReq) (*ReloadApiKeyResp, error)
+	RetryBuild(context.Context, *ai.RetryBuildReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedPluginServer should be embedded to have
@@ -305,6 +318,9 @@ func (UnimplementedPluginServer) SetEnabled(context.Context, *ai.SetEnabledReq) 
 }
 func (UnimplementedPluginServer) ReloadApiKey(context.Context, *ReloadApiKeyReq) (*ReloadApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReloadApiKey not implemented")
+}
+func (UnimplementedPluginServer) RetryBuild(context.Context, *ai.RetryBuildReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RetryBuild not implemented")
 }
 func (UnimplementedPluginServer) testEmbeddedByValue() {}
 
@@ -578,6 +594,24 @@ func _Plugin_ReloadApiKey_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_RetryBuild_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.RetryBuildReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).RetryBuild(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_RetryBuild_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).RetryBuild(ctx, req.(*ai.RetryBuildReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Plugin_ServiceDesc is the grpc.ServiceDesc for Plugin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -640,6 +674,140 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReloadApiKey",
 			Handler:    _Plugin_ReloadApiKey_Handler,
+		},
+		{
+			MethodName: "RetryBuild",
+			Handler:    _Plugin_RetryBuild_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/plugin.proto",
+}
+
+const (
+	AgentPlugin_ListNative_FullMethodName = "/hi.club.AgentPlugin/ListNative"
+)
+
+// AgentPluginClient is the client API for AgentPlugin service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ── 机器人自用面 ──────────────────────────────────────────────────────────
+//
+// **主体恒是调用者本人。** 上面那个 `Plugin` 的主体是**主人**(管自己机器人的插件),
+// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
+// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
+//
+// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+// 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
+//
+// 为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
+// core 的 `call` 网关只有 hiclub 一条(见 deps.md 坑②),够不着 hi.ai。club 穿透转发。
+type AgentPluginClient interface {
+	// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+	// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
+	// 机器人本地那个 `.so` 不会自己消失。
+	ListNative(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListNativeResp, error)
+}
+
+type agentPluginClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAgentPluginClient(cc grpc.ClientConnInterface) AgentPluginClient {
+	return &agentPluginClient{cc}
+}
+
+func (c *agentPluginClient) ListNative(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListNativeResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ai.ListNativeResp)
+	err := c.cc.Invoke(ctx, AgentPlugin_ListNative_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AgentPluginServer is the server API for AgentPlugin service.
+// All implementations should embed UnimplementedAgentPluginServer
+// for forward compatibility.
+//
+// ── 机器人自用面 ──────────────────────────────────────────────────────────
+//
+// **主体恒是调用者本人。** 上面那个 `Plugin` 的主体是**主人**(管自己机器人的插件),
+// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
+// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
+//
+// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+// 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
+//
+// 为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
+// core 的 `call` 网关只有 hiclub 一条(见 deps.md 坑②),够不着 hi.ai。club 穿透转发。
+type AgentPluginServer interface {
+	// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+	// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
+	// 机器人本地那个 `.so` 不会自己消失。
+	ListNative(context.Context, *emptypb.Empty) (*ai.ListNativeResp, error)
+}
+
+// UnimplementedAgentPluginServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedAgentPluginServer struct{}
+
+func (UnimplementedAgentPluginServer) ListNative(context.Context, *emptypb.Empty) (*ai.ListNativeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListNative not implemented")
+}
+func (UnimplementedAgentPluginServer) testEmbeddedByValue() {}
+
+// UnsafeAgentPluginServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AgentPluginServer will
+// result in compilation errors.
+type UnsafeAgentPluginServer interface {
+	mustEmbedUnimplementedAgentPluginServer()
+}
+
+func RegisterAgentPluginServer(s grpc.ServiceRegistrar, srv AgentPluginServer) {
+	// If the following call panics, it indicates UnimplementedAgentPluginServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&AgentPlugin_ServiceDesc, srv)
+}
+
+func _AgentPlugin_ListNative_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentPluginServer).ListNative(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentPlugin_ListNative_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentPluginServer).ListNative(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AgentPlugin_ServiceDesc is the grpc.ServiceDesc for AgentPlugin service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AgentPlugin_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.AgentPlugin",
+	HandlerType: (*AgentPluginServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListNative",
+			Handler:    _AgentPlugin_ListNative_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

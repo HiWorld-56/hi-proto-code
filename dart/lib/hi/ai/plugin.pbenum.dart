@@ -49,6 +49,42 @@ class PluginRuntime extends $pb.ProtobufEnum {
   const PluginRuntime._(super.value, super.name);
 }
 
+/// ── NATIVE 的构建态 ────────────────────────────────────────────────────────
+///
+/// **只有 NATIVE 有这一段。** PYTHON 的包传上来就能跑,不存在"编不编得出来";
+/// NATIVE 传上来的是 rust 源码,要交叉编译成 arm64 `.so` 才谈得上下发。
+///
+/// 单独一张表、不并进 b(PluginVersion):b 是**发版即冻结**的本体,
+/// 而构建结果是几分钟后才回填的、还可能重试 —— 两种寿命塞进一行迟早打架。
+class PluginBuildStatus extends $pb.ProtobufEnum {
+  static const PluginBuildStatus PLUGIN_BUILD_STATUS_PENDING =
+      PluginBuildStatus._(
+          0, _omitEnumNames ? '' : 'PLUGIN_BUILD_STATUS_PENDING');
+  static const PluginBuildStatus PLUGIN_BUILD_STATUS_BUILDING =
+      PluginBuildStatus._(
+          1, _omitEnumNames ? '' : 'PLUGIN_BUILD_STATUS_BUILDING');
+  static const PluginBuildStatus PLUGIN_BUILD_STATUS_SUCCEEDED =
+      PluginBuildStatus._(
+          2, _omitEnumNames ? '' : 'PLUGIN_BUILD_STATUS_SUCCEEDED');
+  static const PluginBuildStatus PLUGIN_BUILD_STATUS_FAILED =
+      PluginBuildStatus._(
+          3, _omitEnumNames ? '' : 'PLUGIN_BUILD_STATUS_FAILED');
+
+  static const $core.List<PluginBuildStatus> values = <PluginBuildStatus>[
+    PLUGIN_BUILD_STATUS_PENDING,
+    PLUGIN_BUILD_STATUS_BUILDING,
+    PLUGIN_BUILD_STATUS_SUCCEEDED,
+    PLUGIN_BUILD_STATUS_FAILED,
+  ];
+
+  static final $core.List<PluginBuildStatus?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static PluginBuildStatus? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const PluginBuildStatus._(super.value, super.name);
+}
+
 /// 插件在某机器人使用记录里的来源(历史事实;引用不是拷贝,只多一行 c 指向同壳)。
 class PluginSource extends $pb.ProtobufEnum {
   static const PluginSource PLUGIN_SOURCE_ORIGINAL =

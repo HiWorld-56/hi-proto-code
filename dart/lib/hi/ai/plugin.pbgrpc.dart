@@ -139,6 +139,20 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$setEnabled, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListNativeResp> listNative(
+    $0.ListNativeReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listNative, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> retryBuild(
+    $0.RetryBuildReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$retryBuild, request, options: options);
+  }
+
   // method descriptors
 
   static final _$createShell =
@@ -209,6 +223,15 @@ class PluginClient extends $grpc.Client {
   static final _$setEnabled = $grpc.ClientMethod<$0.SetEnabledReq, $1.Empty>(
       '/hi.ai.Plugin/SetEnabled',
       ($0.SetEnabledReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$listNative =
+      $grpc.ClientMethod<$0.ListNativeReq, $0.ListNativeResp>(
+          '/hi.ai.Plugin/ListNative',
+          ($0.ListNativeReq value) => value.writeToBuffer(),
+          $0.ListNativeResp.fromBuffer);
+  static final _$retryBuild = $grpc.ClientMethod<$0.RetryBuildReq, $1.Empty>(
+      '/hi.ai.Plugin/RetryBuild',
+      ($0.RetryBuildReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
 }
 
@@ -324,6 +347,20 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.SetEnabledReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListNativeReq, $0.ListNativeResp>(
+        'ListNative',
+        listNative_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ListNativeReq.fromBuffer(value),
+        ($0.ListNativeResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RetryBuildReq, $1.Empty>(
+        'RetryBuild',
+        retryBuild_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.RetryBuildReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
   }
 
@@ -446,4 +483,20 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setEnabled(
       $grpc.ServiceCall call, $0.SetEnabledReq request);
+
+  $async.Future<$0.ListNativeResp> listNative_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListNativeReq> $request) async {
+    return listNative($call, await $request);
+  }
+
+  $async.Future<$0.ListNativeResp> listNative(
+      $grpc.ServiceCall call, $0.ListNativeReq request);
+
+  $async.Future<$1.Empty> retryBuild_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.RetryBuildReq> $request) async {
+    return retryBuild($call, await $request);
+  }
+
+  $async.Future<$1.Empty> retryBuild(
+      $grpc.ServiceCall call, $0.RetryBuildReq request);
 }

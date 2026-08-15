@@ -146,6 +146,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$reloadApiKey, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> retryBuild(
+    $0.RetryBuildReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$retryBuild, request, options: options);
+  }
+
   // method descriptors
 
   static final _$createShell =
@@ -212,6 +219,10 @@ class PluginClient extends $grpc.Client {
           '/hi.club.Plugin/ReloadApiKey',
           ($2.ReloadApiKeyReq value) => value.writeToBuffer(),
           $2.ReloadApiKeyResp.fromBuffer);
+  static final _$retryBuild = $grpc.ClientMethod<$0.RetryBuildReq, $1.Empty>(
+      '/hi.club.Plugin/RetryBuild',
+      ($0.RetryBuildReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Plugin')
@@ -318,6 +329,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.ReloadApiKeyReq.fromBuffer(value),
         ($2.ReloadApiKeyResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RetryBuildReq, $1.Empty>(
+        'RetryBuild',
+        retryBuild_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.RetryBuildReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateShellResp> createShell_Pre($grpc.ServiceCall $call,
@@ -431,4 +449,76 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$2.ReloadApiKeyResp> reloadApiKey(
       $grpc.ServiceCall call, $2.ReloadApiKeyReq request);
+
+  $async.Future<$1.Empty> retryBuild_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.RetryBuildReq> $request) async {
+    return retryBuild($call, await $request);
+  }
+
+  $async.Future<$1.Empty> retryBuild(
+      $grpc.ServiceCall call, $0.RetryBuildReq request);
+}
+
+/// ── 机器人自用面 ──────────────────────────────────────────────────────────
+///
+/// **主体恒是调用者本人。** 上面那个 `Plugin` 的主体是**主人**(管自己机器人的插件),
+/// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
+/// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
+///
+/// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+/// 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
+///
+/// 为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
+/// core 的 `call` 网关只有 hiclub 一条(见 deps.md 坑②),够不着 hi.ai。club 穿透转发。
+@$pb.GrpcServiceName('hi.club.AgentPlugin')
+class AgentPluginClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  AgentPluginClient(super.channel, {super.options, super.interceptors});
+
+  /// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+  /// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
+  /// 机器人本地那个 `.so` 不会自己消失。
+  $grpc.ResponseFuture<$0.ListNativeResp> listNative(
+    $1.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listNative, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$listNative = $grpc.ClientMethod<$1.Empty, $0.ListNativeResp>(
+      '/hi.club.AgentPlugin/ListNative',
+      ($1.Empty value) => value.writeToBuffer(),
+      $0.ListNativeResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.club.AgentPlugin')
+abstract class AgentPluginServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.club.AgentPlugin';
+
+  AgentPluginServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.Empty, $0.ListNativeResp>(
+        'ListNative',
+        listNative_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
+        ($0.ListNativeResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.ListNativeResp> listNative_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+    return listNative($call, await $request);
+  }
+
+  $async.Future<$0.ListNativeResp> listNative(
+      $grpc.ServiceCall call, $1.Empty request);
 }

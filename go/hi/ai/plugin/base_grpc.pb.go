@@ -188,3 +188,113 @@ var Runner_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "hi/ai/plugin/base.proto",
 }
+
+const (
+	Builder_Build_FullMethodName = "/hi.ai.plugin.Builder/Build"
+)
+
+// BuilderClient is the client API for Builder service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
+//
+// ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
+// 危险程度只高不低。必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+type BuilderClient interface {
+	Build(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildResp, error)
+}
+
+type builderClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBuilderClient(cc grpc.ClientConnInterface) BuilderClient {
+	return &builderClient{cc}
+}
+
+func (c *builderClient) Build(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BuildResp)
+	err := c.cc.Invoke(ctx, Builder_Build_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BuilderServer is the server API for Builder service.
+// All implementations should embed UnimplementedBuilderServer
+// for forward compatibility.
+//
+// NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
+//
+// ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
+// 危险程度只高不低。必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+type BuilderServer interface {
+	Build(context.Context, *BuildReq) (*BuildResp, error)
+}
+
+// UnimplementedBuilderServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedBuilderServer struct{}
+
+func (UnimplementedBuilderServer) Build(context.Context, *BuildReq) (*BuildResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Build not implemented")
+}
+func (UnimplementedBuilderServer) testEmbeddedByValue() {}
+
+// UnsafeBuilderServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BuilderServer will
+// result in compilation errors.
+type UnsafeBuilderServer interface {
+	mustEmbedUnimplementedBuilderServer()
+}
+
+func RegisterBuilderServer(s grpc.ServiceRegistrar, srv BuilderServer) {
+	// If the following call panics, it indicates UnimplementedBuilderServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&Builder_ServiceDesc, srv)
+}
+
+func _Builder_Build_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BuildReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BuilderServer).Build(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Builder_Build_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BuilderServer).Build(ctx, req.(*BuildReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Builder_ServiceDesc is the grpc.ServiceDesc for Builder service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Builder_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.ai.plugin.Builder",
+	HandlerType: (*BuilderServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Build",
+			Handler:    _Builder_Build_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/ai/plugin/base.proto",
+}

@@ -35,6 +35,8 @@ const (
 	Plugin_DeleteByAgents_FullMethodName    = "/hi.ai.Plugin/DeleteByAgents"
 	Plugin_SetActive_FullMethodName         = "/hi.ai.Plugin/SetActive"
 	Plugin_SetEnabled_FullMethodName        = "/hi.ai.Plugin/SetEnabled"
+	Plugin_ListNative_FullMethodName        = "/hi.ai.Plugin/ListNative"
+	Plugin_RetryBuild_FullMethodName        = "/hi.ai.Plugin/RetryBuild"
 )
 
 // PluginClient is the client API for Plugin service.
@@ -58,6 +60,8 @@ type PluginClient interface {
 	DeleteByAgents(ctx context.Context, in *DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActive(ctx context.Context, in *SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error)
+	RetryBuild(ctx context.Context, in *RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type pluginClient struct {
@@ -218,6 +222,26 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts .
 	return out, nil
 }
 
+func (c *pluginClient) ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListNativeResp)
+	err := c.cc.Invoke(ctx, Plugin_ListNative_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pluginClient) RetryBuild(ctx context.Context, in *RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_RetryBuild_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PluginServer is the server API for Plugin service.
 // All implementations should embed UnimplementedPluginServer
 // for forward compatibility.
@@ -239,6 +263,8 @@ type PluginServer interface {
 	DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActive(context.Context, *SetActiveReq) (*emptypb.Empty, error)
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
+	ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error)
+	RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedPluginServer should be embedded to have
@@ -292,6 +318,12 @@ func (UnimplementedPluginServer) SetActive(context.Context, *SetActiveReq) (*emp
 }
 func (UnimplementedPluginServer) SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
+}
+func (UnimplementedPluginServer) ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListNative not implemented")
+}
+func (UnimplementedPluginServer) RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RetryBuild not implemented")
 }
 func (UnimplementedPluginServer) testEmbeddedByValue() {}
 
@@ -583,6 +615,42 @@ func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_ListNative_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNativeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).ListNative(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_ListNative_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).ListNative(ctx, req.(*ListNativeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Plugin_RetryBuild_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RetryBuildReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).RetryBuild(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_RetryBuild_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).RetryBuild(ctx, req.(*RetryBuildReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Plugin_ServiceDesc is the grpc.ServiceDesc for Plugin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -649,6 +717,14 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetEnabled",
 			Handler:    _Plugin_SetEnabled_Handler,
+		},
+		{
+			MethodName: "ListNative",
+			Handler:    _Plugin_ListNative_Handler,
+		},
+		{
+			MethodName: "RetryBuild",
+			Handler:    _Plugin_RetryBuild_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
