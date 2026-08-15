@@ -1304,7 +1304,7 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\x04Edit\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12P\n" +
 	"\rSetPermission\x12 .hi.did.MerchantSetPermissionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x042d\n" +
 	"\x11BroadcastInternal\x12O\n" +
-	"\fPluginUpdate\x12 .hi.did.BroadcastPluginUpdateReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x062V\n" +
+	"\fPluginUpdate\x12 .hi.did.BroadcastPluginUpdateReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032V\n" +
 	"\tBroadcast\x12I\n" +
 	"\tAppUpdate\x12\x1d.hi.did.BroadcastAppUpdateReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B{\n" +
 	"\n" +
