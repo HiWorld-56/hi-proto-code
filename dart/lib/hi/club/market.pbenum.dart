@@ -26,24 +26,31 @@ class SettleMode extends $pb.ProtobufEnum {
       SettleMode._(1, _omitEnumNames ? '' : 'SETTLE_MODE_FREE');
   static const SettleMode SETTLE_MODE_APPROVAL =
       SettleMode._(2, _omitEnumNames ? '' : 'SETTLE_MODE_APPROVAL');
-  static const SettleMode SETTLE_MODE_MERCHANT =
-      SettleMode._(3, _omitEnumNames ? '' : 'SETTLE_MODE_MERCHANT');
-  static const SettleMode SETTLE_MODE_AGENT =
-      SettleMode._(4, _omitEnumNames ? '' : 'SETTLE_MODE_AGENT');
+
+  /// 付费:**用户手里的 hidid app 直接付**,club 只负责验交易。
+  ///
+  /// 收款方**不由挂牌方选,而是按机器人类型自动定**(见 MarketPayInfo.payee):
+  ///   · 硬件机器人(Entity.type == robot)持私钥 → **收到它自己名下**,能独立收钱
+  ///   · 软件机器人没有私钥 → 只能收到它 master 名下
+  /// 所以这里不需要 MERCHANT / AGENT 两个档位 —— 那是同一件事的两种收款地址,
+  /// 让挂牌方去选反而会选错(软件机器人选了"自己收款"就收不到)。
+  ///
+  /// **注册 hisrv 商户是可选的**:卖插件不必先当商户,收款就是一笔普通的链上转账。
+  static const SettleMode SETTLE_MODE_PAID =
+      SettleMode._(3, _omitEnumNames ? '' : 'SETTLE_MODE_PAID');
   static const SettleMode SETTLE_MODE_EXTERNAL =
-      SettleMode._(5, _omitEnumNames ? '' : 'SETTLE_MODE_EXTERNAL');
+      SettleMode._(4, _omitEnumNames ? '' : 'SETTLE_MODE_EXTERNAL');
 
   static const $core.List<SettleMode> values = <SettleMode>[
     SETTLE_MODE_UNSPECIFIED,
     SETTLE_MODE_FREE,
     SETTLE_MODE_APPROVAL,
-    SETTLE_MODE_MERCHANT,
-    SETTLE_MODE_AGENT,
+    SETTLE_MODE_PAID,
     SETTLE_MODE_EXTERNAL,
   ];
 
   static final $core.List<SettleMode?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 5);
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
   static SettleMode? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

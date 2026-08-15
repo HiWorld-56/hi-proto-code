@@ -5979,9 +5979,33 @@ pub struct ApplyReq {
     #[prost(message, optional, tag = "4")]
     pub params: ::core::option::Option<::pbjson_types::Struct>,
 }
+/// MarketPayInfo 这一笔要付多少、付给谁 —— **前端拿它直接唤起 hidid app**。
+///
+/// 用户体验就是:点购买 → 弹出金额和币种 → 确认 → 跳 hidid 付款 → 回来即可用。
+/// 付完把 tx_hash 交回 `Market.ConfirmPayment`,club 调 `hi.did.Transfer.VerifyTransaction`
+/// 核验(那是个 AUTH_NONE 的公开接口,收 DID + 人类可读金额,内部解析地址与精度后比对)。
+///
+/// ⚠️ **club 全程只需要验签/验交易的能力,不需要签名。** 这条链路上持私钥的是用户的
+/// hidid app —— 与登录、授权登录用的是同一套现成流程。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketPayInfo {
+    /// 收款方 DID。**由后端按机器人类型自动定,不接受前端指定**:
+    /// 硬件机器人 → 机器人自己;软件机器人 → 它的 master。
+    /// 让前端传就等于把"钱打给谁"变成一个可篡改的入参。
+    #[prost(string, tag = "1")]
+    pub payee: ::prost::alloc::string::String,
+    /// 人类可读金额,如 "9.9"
+    #[prost(string, tag = "2")]
+    pub amount: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub coin: ::prost::alloc::string::String,
+}
 /// ApplyResp
 ///
-/// status=PENDING 且 action_url 非空 → 前端把用户带去那个地址(付款/填资料)。
+/// status=INSTALLED → 免费/已批,直接就能用了
+/// status=PENDING + pay 非空       → 去付款(唤起 hidid app)
+/// status=PENDING + action_url 非空 → 去外部流程办理(EXTERNAL)
+/// status=PENDING 且两者都空        → 等出让方 master 审批(APPROVAL)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ApplyResp {
     #[prost(string, tag = "1")]
@@ -5990,6 +6014,8 @@ pub struct ApplyResp {
     pub status: i32,
     #[prost(string, tag = "3")]
     pub action_url: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "4")]
+    pub pay: ::core::option::Option<MarketPayInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DecideGrantReq {
@@ -5999,11 +6025,13 @@ pub struct DecideGrantReq {
     #[prost(string, tag = "2")]
     pub reason: ::prost::alloc::string::String,
 }
-/// ConfirmPaymentReq `SETTLE_MODE_AGENT`(硬件机器人自己收款)用:
-/// 用户付完款把 tx_hash 交上来,club 调 `hi.did.Transfer.VerifyTransaction` 核验。
+/// ConfirmPaymentReq 付完款把 tx_hash 交回来,club 核验后放行插件。
 ///
-/// 那个接口是 AUTH_NONE、收 DID + 人类可读金额、did 内部解析地址与精度后比对 ——
-/// 所以**收款验证不需要商户体系,也不需要机器人在线**,club 自己就能验。
+/// club 调 `hi.did.Transfer.VerifyTransaction`(AUTH_NONE 公开接口,收 DID + 人类可读金额,
+/// 内部解析地址与精度后比对)。所以**收款验证不需要商户体系,也不需要卖方在线**。
+///
+/// ⚠️ **同一个 tx_hash 只能兑换一次** —— 后端按 hash 全局去重,
+/// 不然一笔转账可以拿去把所有挂牌都买一遍。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ConfirmPaymentReq {
     #[prost(string, tag = "1")]
@@ -6153,12 +6181,18 @@ pub enum SettleMode {
     Free = 1,
     /// 人工审批,不收钱 —— 出让方 master 点头即成立
     Approval = 2,
-    /// 走 master 的商户(hidid 结算系统)。要求 master 已注册商户
-    Merchant = 3,
-    /// 机器人自己收款。**仅硬件机器人(Entity.type == robot)** —— 软件机器人没有私钥
-    Agent = 4,
-    /// 三方自定义流程
-    External = 5,
+    /// 付费:**用户手里的 hidid app 直接付**,club 只负责验交易。
+    ///
+    /// 收款方**不由挂牌方选,而是按机器人类型自动定**(见 MarketPayInfo.payee):
+    /// · 硬件机器人(Entity.type == robot)持私钥 → **收到它自己名下**,能独立收钱
+    /// · 软件机器人没有私钥 → 只能收到它 master 名下
+    /// 所以这里不需要 MERCHANT / AGENT 两个档位 —— 那是同一件事的两种收款地址,
+    /// 让挂牌方去选反而会选错(软件机器人选了"自己收款"就收不到)。
+    ///
+    /// **注册 hisrv 商户是可选的**:卖插件不必先当商户,收款就是一笔普通的链上转账。
+    Paid = 3,
+    /// 三方自定义流程(需要审资质 / 走别的渠道时用,见 MarketCallback)
+    External = 4,
 }
 impl SettleMode {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -6170,8 +6204,7 @@ impl SettleMode {
             Self::Unspecified => "SETTLE_MODE_UNSPECIFIED",
             Self::Free => "SETTLE_MODE_FREE",
             Self::Approval => "SETTLE_MODE_APPROVAL",
-            Self::Merchant => "SETTLE_MODE_MERCHANT",
-            Self::Agent => "SETTLE_MODE_AGENT",
+            Self::Paid => "SETTLE_MODE_PAID",
             Self::External => "SETTLE_MODE_EXTERNAL",
         }
     }
@@ -6181,8 +6214,7 @@ impl SettleMode {
             "SETTLE_MODE_UNSPECIFIED" => Some(Self::Unspecified),
             "SETTLE_MODE_FREE" => Some(Self::Free),
             "SETTLE_MODE_APPROVAL" => Some(Self::Approval),
-            "SETTLE_MODE_MERCHANT" => Some(Self::Merchant),
-            "SETTLE_MODE_AGENT" => Some(Self::Agent),
+            "SETTLE_MODE_PAID" => Some(Self::Paid),
             "SETTLE_MODE_EXTERNAL" => Some(Self::External),
             _ => None,
         }

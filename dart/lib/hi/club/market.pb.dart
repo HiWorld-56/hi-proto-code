@@ -1730,19 +1730,113 @@ class ApplyReq extends $pb.GeneratedMessage {
   $3.Struct ensureParams() => $_ensure(3);
 }
 
+/// MarketPayInfo 这一笔要付多少、付给谁 —— **前端拿它直接唤起 hidid app**。
+///
+/// 用户体验就是:点购买 → 弹出金额和币种 → 确认 → 跳 hidid 付款 → 回来即可用。
+/// 付完把 tx_hash 交回 `Market.ConfirmPayment`,club 调 `hi.did.Transfer.VerifyTransaction`
+/// 核验(那是个 AUTH_NONE 的公开接口,收 DID + 人类可读金额,内部解析地址与精度后比对)。
+///
+/// ⚠️ **club 全程只需要验签/验交易的能力,不需要签名。** 这条链路上持私钥的是用户的
+///    hidid app —— 与登录、授权登录用的是同一套现成流程。
+class MarketPayInfo extends $pb.GeneratedMessage {
+  factory MarketPayInfo({
+    $core.String? payee,
+    $core.String? amount,
+    $core.String? coin,
+  }) {
+    final result = create();
+    if (payee != null) result.payee = payee;
+    if (amount != null) result.amount = amount;
+    if (coin != null) result.coin = coin;
+    return result;
+  }
+
+  MarketPayInfo._();
+
+  factory MarketPayInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketPayInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketPayInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'payee')
+    ..aOS(2, _omitFieldNames ? '' : 'amount')
+    ..aOS(3, _omitFieldNames ? '' : 'coin')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPayInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPayInfo copyWith(void Function(MarketPayInfo) updates) =>
+      super.copyWith((message) => updates(message as MarketPayInfo))
+          as MarketPayInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketPayInfo create() => MarketPayInfo._();
+  @$core.override
+  MarketPayInfo createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketPayInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketPayInfo>(create);
+  static MarketPayInfo? _defaultInstance;
+
+  /// 收款方 DID。**由后端按机器人类型自动定,不接受前端指定**:
+  /// 硬件机器人 → 机器人自己;软件机器人 → 它的 master。
+  /// 让前端传就等于把"钱打给谁"变成一个可篡改的入参。
+  @$pb.TagNumber(1)
+  $core.String get payee => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set payee($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPayee() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPayee() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get amount => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set amount($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAmount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAmount() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get coin => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set coin($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCoin() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCoin() => $_clearField(3);
+}
+
 /// ApplyResp
 ///
-/// status=PENDING 且 action_url 非空 → 前端把用户带去那个地址(付款/填资料)。
+///   status=INSTALLED → 免费/已批,直接就能用了
+///   status=PENDING + pay 非空       → 去付款(唤起 hidid app)
+///   status=PENDING + action_url 非空 → 去外部流程办理(EXTERNAL)
+///   status=PENDING 且两者都空        → 等出让方 master 审批(APPROVAL)
 class ApplyResp extends $pb.GeneratedMessage {
   factory ApplyResp({
     $core.String? grantUuid,
     GrantStatus? status,
     $core.String? actionUrl,
+    MarketPayInfo? pay,
   }) {
     final result = create();
     if (grantUuid != null) result.grantUuid = grantUuid;
     if (status != null) result.status = status;
     if (actionUrl != null) result.actionUrl = actionUrl;
+    if (pay != null) result.pay = pay;
     return result;
   }
 
@@ -1763,6 +1857,8 @@ class ApplyResp extends $pb.GeneratedMessage {
     ..aE<GrantStatus>(2, _omitFieldNames ? '' : 'status',
         enumValues: GrantStatus.values)
     ..aOS(3, _omitFieldNames ? '' : 'actionUrl')
+    ..aOM<MarketPayInfo>(4, _omitFieldNames ? '' : 'pay',
+        subBuilder: MarketPayInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1809,6 +1905,17 @@ class ApplyResp extends $pb.GeneratedMessage {
   $core.bool hasActionUrl() => $_has(2);
   @$pb.TagNumber(3)
   void clearActionUrl() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  MarketPayInfo get pay => $_getN(3);
+  @$pb.TagNumber(4)
+  set pay(MarketPayInfo value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPay() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPay() => $_clearField(4);
+  @$pb.TagNumber(4)
+  MarketPayInfo ensurePay() => $_ensure(3);
 }
 
 class DecideGrantReq extends $pb.GeneratedMessage {
@@ -1877,11 +1984,13 @@ class DecideGrantReq extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(2);
 }
 
-/// ConfirmPaymentReq `SETTLE_MODE_AGENT`(硬件机器人自己收款)用:
-/// 用户付完款把 tx_hash 交上来,club 调 `hi.did.Transfer.VerifyTransaction` 核验。
+/// ConfirmPaymentReq 付完款把 tx_hash 交回来,club 核验后放行插件。
 ///
-/// 那个接口是 AUTH_NONE、收 DID + 人类可读金额、did 内部解析地址与精度后比对 ——
-/// 所以**收款验证不需要商户体系,也不需要机器人在线**,club 自己就能验。
+/// club 调 `hi.did.Transfer.VerifyTransaction`(AUTH_NONE 公开接口,收 DID + 人类可读金额,
+/// 内部解析地址与精度后比对)。所以**收款验证不需要商户体系,也不需要卖方在线**。
+///
+/// ⚠️ **同一个 tx_hash 只能兑换一次** —— 后端按 hash 全局去重,
+///    不然一笔转账可以拿去把所有挂牌都买一遍。
 class ConfirmPaymentReq extends $pb.GeneratedMessage {
   factory ConfirmPaymentReq({
     $core.String? grantUuid,

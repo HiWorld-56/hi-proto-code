@@ -22,17 +22,16 @@ const SettleMode$json = {
     {'1': 'SETTLE_MODE_UNSPECIFIED', '2': 0},
     {'1': 'SETTLE_MODE_FREE', '2': 1},
     {'1': 'SETTLE_MODE_APPROVAL', '2': 2},
-    {'1': 'SETTLE_MODE_MERCHANT', '2': 3},
-    {'1': 'SETTLE_MODE_AGENT', '2': 4},
-    {'1': 'SETTLE_MODE_EXTERNAL', '2': 5},
+    {'1': 'SETTLE_MODE_PAID', '2': 3},
+    {'1': 'SETTLE_MODE_EXTERNAL', '2': 4},
   ],
 };
 
 /// Descriptor for `SettleMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List settleModeDescriptor = $convert.base64Decode(
     'CgpTZXR0bGVNb2RlEhsKF1NFVFRMRV9NT0RFX1VOU1BFQ0lGSUVEEAASFAoQU0VUVExFX01PRE'
-    'VfRlJFRRABEhgKFFNFVFRMRV9NT0RFX0FQUFJPVkFMEAISGAoUU0VUVExFX01PREVfTUVSQ0hB'
-    'TlQQAxIVChFTRVRUTEVfTU9ERV9BR0VOVBAEEhgKFFNFVFRMRV9NT0RFX0VYVEVSTkFMEAU=');
+    'VfRlJFRRABEhgKFFNFVFRMRV9NT0RFX0FQUFJPVkFMEAISFAoQU0VUVExFX01PREVfUEFJRBAD'
+    'EhgKFFNFVFRMRV9NT0RFX0VYVEVSTkFMEAQ=');
 
 @$core.Deprecated('Use listingStatusDescriptor instead')
 const ListingStatus$json = {
@@ -638,6 +637,22 @@ final $typed_data.Uint8List applyReqDescriptor = $convert.base64Decode(
     'bGF0ZXN0GAMgASgIUgxmb2xsb3dMYXRlc3QSLwoGcGFyYW1zGAQgASgLMhcuZ29vZ2xlLnByb3'
     'RvYnVmLlN0cnVjdFIGcGFyYW1z');
 
+@$core.Deprecated('Use marketPayInfoDescriptor instead')
+const MarketPayInfo$json = {
+  '1': 'MarketPayInfo',
+  '2': [
+    {'1': 'payee', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'payee'},
+    {'1': 'amount', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'coin', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'coin'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `MarketPayInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketPayInfoDescriptor = $convert.base64Decode(
+    'Cg1NYXJrZXRQYXlJbmZvEhoKBXBheWVlGAEgASgJQgSQtRgDUgVwYXllZRIcCgZhbW91bnQYAi'
+    'ABKAlCBJC1GANSBmFtb3VudBIYCgRjb2luGAMgASgJQgSQtRgDUgRjb2luOgSYtRgD');
+
 @$core.Deprecated('Use applyRespDescriptor instead')
 const ApplyResp$json = {
   '1': 'ApplyResp',
@@ -653,6 +668,15 @@ const ApplyResp$json = {
       '10': 'status'
     },
     {'1': 'action_url', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'actionUrl'},
+    {
+      '1': 'pay',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.MarketPayInfo',
+      '8': {},
+      '10': 'pay'
+    },
   ],
   '7': {},
 };
@@ -661,7 +685,8 @@ const ApplyResp$json = {
 final $typed_data.Uint8List applyRespDescriptor = $convert.base64Decode(
     'CglBcHBseVJlc3ASIwoKZ3JhbnRfdXVpZBgBIAEoCUIEkLUYA1IJZ3JhbnRVdWlkEjIKBnN0YX'
     'R1cxgCIAEoDjIULmhpLmNsdWIuR3JhbnRTdGF0dXNCBJC1GANSBnN0YXR1cxIjCgphY3Rpb25f'
-    'dXJsGAMgASgJQgSQtRgDUglhY3Rpb25Vcmw6BJi1GAM=');
+    'dXJsGAMgASgJQgSQtRgDUglhY3Rpb25VcmwSLgoDcGF5GAQgASgLMhYuaGkuY2x1Yi5NYXJrZX'
+    'RQYXlJbmZvQgSQtRgDUgNwYXk6BJi1GAM=');
 
 @$core.Deprecated('Use decideGrantReqDescriptor instead')
 const DecideGrantReq$json = {
