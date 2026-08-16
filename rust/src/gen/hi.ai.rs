@@ -1834,6 +1834,14 @@ pub struct CreateContentReq {
     pub agent: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub content: ::prost::alloc::string::String,
+    /// 文件名。**可空** —— 空了后端按内容前 10 字派生一个。
+    ///
+    /// 为什么要收:文本训练在前端是让用户自己起名的(上传文件那条路天然带文件名),
+    /// 而派生出来的"前10字…"在列表里全是一个样,用户根本认不出自己传的是哪份。
+    /// 之前这一栏前端一直在传,后端没有这个字段 —— 请求照发、**字段静默丢掉**,
+    /// 谁都没发现(这正是 codegen/check_web_routes.py 存在的理由)。
+    #[prost(string, tag = "3")]
+    pub title: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateContentResp {

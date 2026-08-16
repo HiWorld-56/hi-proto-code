@@ -1116,10 +1116,12 @@ class CreateContentReq extends $pb.GeneratedMessage {
   factory CreateContentReq({
     $core.String? agent,
     $core.String? content,
+    $core.String? title,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (content != null) result.content = content;
+    if (title != null) result.title = title;
     return result;
   }
 
@@ -1138,6 +1140,7 @@ class CreateContentReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'content')
+    ..aOS(3, _omitFieldNames ? '' : 'title')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1176,6 +1179,21 @@ class CreateContentReq extends $pb.GeneratedMessage {
   $core.bool hasContent() => $_has(1);
   @$pb.TagNumber(2)
   void clearContent() => $_clearField(2);
+
+  /// 文件名。**可空** —— 空了后端按内容前 10 字派生一个。
+  ///
+  /// 为什么要收:文本训练在前端是让用户自己起名的(上传文件那条路天然带文件名),
+  /// 而派生出来的"前10字…"在列表里全是一个样,用户根本认不出自己传的是哪份。
+  /// 之前这一栏前端一直在传,后端没有这个字段 —— 请求照发、**字段静默丢掉**,
+  /// 谁都没发现(这正是 codegen/check_web_routes.py 存在的理由)。
+  @$pb.TagNumber(3)
+  $core.String get title => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set title($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTitle() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTitle() => $_clearField(3);
 }
 
 class CreateContentResp extends $pb.GeneratedMessage {

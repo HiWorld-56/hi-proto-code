@@ -2261,12 +2261,18 @@ impl serde::Serialize for CreateContentReq {
         if !self.content.is_empty() {
             len += 1;
         }
+        if !self.title.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CreateContentReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
         }
         if !self.content.is_empty() {
             struct_ser.serialize_field("content", &self.content)?;
+        }
+        if !self.title.is_empty() {
+            struct_ser.serialize_field("title", &self.title)?;
         }
         struct_ser.end()
     }
@@ -2280,12 +2286,14 @@ impl<'de> serde::Deserialize<'de> for CreateContentReq {
         const FIELDS: &[&str] = &[
             "agent",
             "content",
+            "title",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
             Content,
+            Title,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2309,6 +2317,7 @@ impl<'de> serde::Deserialize<'de> for CreateContentReq {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
                             "content" => Ok(GeneratedField::Content),
+                            "title" => Ok(GeneratedField::Title),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2330,6 +2339,7 @@ impl<'de> serde::Deserialize<'de> for CreateContentReq {
             {
                 let mut agent__ = None;
                 let mut content__ = None;
+                let mut title__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -2344,11 +2354,18 @@ impl<'de> serde::Deserialize<'de> for CreateContentReq {
                             }
                             content__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Title => {
+                            if title__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("title"));
+                            }
+                            title__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(CreateContentReq {
                     agent: agent__.unwrap_or_default(),
                     content: content__.unwrap_or_default(),
+                    title: title__.unwrap_or_default(),
                 })
             }
         }

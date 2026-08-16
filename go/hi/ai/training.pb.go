@@ -887,9 +887,16 @@ func (x *UpdateContentReq) GetContent() string {
 }
 
 type CreateContentReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Agent   string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Content string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	// 文件名。**可空** —— 空了后端按内容前 10 字派生一个。
+	//
+	// 为什么要收:文本训练在前端是让用户自己起名的(上传文件那条路天然带文件名),
+	// 而派生出来的"前10字…"在列表里全是一个样,用户根本认不出自己传的是哪份。
+	// 之前这一栏前端一直在传,后端没有这个字段 —— 请求照发、**字段静默丢掉**,
+	// 谁都没发现(这正是 codegen/check_web_routes.py 存在的理由)。
+	Title         string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -934,6 +941,13 @@ func (x *CreateContentReq) GetAgent() string {
 func (x *CreateContentReq) GetContent() string {
 	if x != nil {
 		return x.Content
+	}
+	return ""
+}
+
+func (x *CreateContentReq) GetTitle() string {
+	if x != nil {
+		return x.Title
 	}
 	return ""
 }
@@ -1109,10 +1123,11 @@ const file_hi_ai_training_proto_rawDesc = "" +
 	"\x10UpdateContentReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\"B\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\"X\n" +
 	"\x10CreateContentReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x18\n" +
-	"\acontent\x18\x02 \x01(\tR\acontent\"H\n" +
+	"\acontent\x18\x02 \x01(\tR\acontent\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\"H\n" +
 	"\x11CreateContentResp\x12-\n" +
 	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04file:\x04\x98\xb5\x18\x03\"Q\n" +
 	"\rEditDigestReq\x12\x12\n" +
