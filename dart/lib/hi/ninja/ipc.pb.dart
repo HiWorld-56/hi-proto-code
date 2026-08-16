@@ -432,6 +432,7 @@ enum BrainToFace_Cmd {
   membersInit,
   eventStatus,
   eventUpdate,
+  eventPluginProgress,
   notSet
 }
 
@@ -457,6 +458,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     GroupInfoList? membersInit,
     StatusEvent? eventStatus,
     UpdateInfo? eventUpdate,
+    PluginProgress? eventPluginProgress,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -478,6 +480,8 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (membersInit != null) result.membersInit = membersInit;
     if (eventStatus != null) result.eventStatus = eventStatus;
     if (eventUpdate != null) result.eventUpdate = eventUpdate;
+    if (eventPluginProgress != null)
+      result.eventPluginProgress = eventPluginProgress;
     return result;
   }
 
@@ -510,13 +514,15 @@ class BrainToFace extends $pb.GeneratedMessage {
     17: BrainToFace_Cmd.membersInit,
     18: BrainToFace_Cmd.eventStatus,
     19: BrainToFace_Cmd.eventUpdate,
+    20: BrainToFace_Cmd.eventPluginProgress,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'BrainToFace',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+    ..oo(0,
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
     ..aE<StateToggle>(2, _omitFieldNames ? '' : 'showListen',
@@ -555,6 +561,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: StatusEvent.create)
     ..aOM<UpdateInfo>(19, _omitFieldNames ? '' : 'eventUpdate',
         subBuilder: UpdateInfo.create)
+    ..aOM<PluginProgress>(20, _omitFieldNames ? '' : 'eventPluginProgress',
+        subBuilder: PluginProgress.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -595,6 +603,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   @$pb.TagNumber(18)
   @$pb.TagNumber(19)
+  @$pb.TagNumber(20)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -615,6 +624,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   @$pb.TagNumber(18)
   @$pb.TagNumber(19)
+  @$pb.TagNumber(20)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -830,6 +840,17 @@ class BrainToFace extends $pb.GeneratedMessage {
   void clearEventUpdate() => $_clearField(19);
   @$pb.TagNumber(19)
   UpdateInfo ensureEventUpdate() => $_ensure(18);
+
+  @$pb.TagNumber(20)
+  PluginProgress get eventPluginProgress => $_getN(19);
+  @$pb.TagNumber(20)
+  set eventPluginProgress(PluginProgress value) => $_setField(20, value);
+  @$pb.TagNumber(20)
+  $core.bool hasEventPluginProgress() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearEventPluginProgress() => $_clearField(20);
+  @$pb.TagNumber(20)
+  PluginProgress ensureEventPluginProgress() => $_ensure(19);
 }
 
 /// 系统状态快照
@@ -1182,6 +1203,147 @@ class FaceToBrain extends $pb.GeneratedMessage {
   void clearUpdateAction() => $_clearField(2);
   @$pb.TagNumber(2)
   UpdateAction ensureUpdateAction() => $_ensure(1);
+}
+
+/// 插件下载/安装进度。
+///
+/// NATIVE 插件是**云端交叉编译好的 .so,机器人自己去取** —— 几百 KB 到几 MB,
+/// 机器人的网可能很差。没有进度的话,用户在市场点了"购买"之后,face 上什么都不会变,
+/// 直到某一刻插件突然出现;中间那段沉默里,用户只会以为没买成、然后再点一次。
+///
+/// 字段有意与固件更新(UpdaterStatus)同形:state / progress / 已下/共多少字节。
+/// **face 那边不该为"插件"和"固件"学两套进度模型。**
+class PluginProgress extends $pb.GeneratedMessage {
+  factory PluginProgress({
+    $core.String? uuid,
+    $core.String? title,
+    PluginProgress_State? state,
+    $core.int? progress,
+    $fixnum.Int64? downloadedBytes,
+    $fixnum.Int64? totalBytes,
+    $core.String? message,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (title != null) result.title = title;
+    if (state != null) result.state = state;
+    if (progress != null) result.progress = progress;
+    if (downloadedBytes != null) result.downloadedBytes = downloadedBytes;
+    if (totalBytes != null) result.totalBytes = totalBytes;
+    if (message != null) result.message = message;
+    return result;
+  }
+
+  PluginProgress._();
+
+  factory PluginProgress.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PluginProgress.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PluginProgress',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'title')
+    ..aE<PluginProgress_State>(3, _omitFieldNames ? '' : 'state',
+        enumValues: PluginProgress_State.values)
+    ..aI(4, _omitFieldNames ? '' : 'progress', fieldType: $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(
+        5, _omitFieldNames ? '' : 'downloadedBytes', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        6, _omitFieldNames ? '' : 'totalBytes', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOS(7, _omitFieldNames ? '' : 'message')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginProgress clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginProgress copyWith(void Function(PluginProgress) updates) =>
+      super.copyWith((message) => updates(message as PluginProgress))
+          as PluginProgress;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PluginProgress create() => PluginProgress._();
+  @$core.override
+  PluginProgress createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PluginProgress getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginProgress>(create);
+  static PluginProgress? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get title => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set title($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTitle() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTitle() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  PluginProgress_State get state => $_getN(2);
+  @$pb.TagNumber(3)
+  set state(PluginProgress_State value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasState() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearState() => $_clearField(3);
+
+  /// 0-100。**总长度未知时恒为 0** —— 服务端不给 Content-Length 是有可能的,
+  /// 那时候宁可不显示百分比,也别编一个会往回跳的数字。
+  @$pb.TagNumber(4)
+  $core.int get progress => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set progress($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasProgress() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearProgress() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get downloadedBytes => $_getI64(4);
+  @$pb.TagNumber(5)
+  set downloadedBytes($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDownloadedBytes() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDownloadedBytes() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $fixnum.Int64 get totalBytes => $_getI64(5);
+  @$pb.TagNumber(6)
+  set totalBytes($fixnum.Int64 value) => $_setInt64(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasTotalBytes() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearTotalBytes() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get message => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set message($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasMessage() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMessage() => $_clearField(7);
 }
 
 /// 更新动作

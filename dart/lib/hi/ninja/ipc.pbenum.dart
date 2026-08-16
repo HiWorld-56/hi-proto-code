@@ -63,6 +63,34 @@ class Emotion extends $pb.ProtobufEnum {
   const Emotion._(super.value, super.name);
 }
 
+class PluginProgress_State extends $pb.ProtobufEnum {
+  static const PluginProgress_State STATE_UNKNOWN =
+      PluginProgress_State._(0, _omitEnumNames ? '' : 'STATE_UNKNOWN');
+  static const PluginProgress_State STATE_DOWNLOADING =
+      PluginProgress_State._(1, _omitEnumNames ? '' : 'STATE_DOWNLOADING');
+  static const PluginProgress_State STATE_INSTALLING =
+      PluginProgress_State._(2, _omitEnumNames ? '' : 'STATE_INSTALLING');
+  static const PluginProgress_State STATE_DONE =
+      PluginProgress_State._(3, _omitEnumNames ? '' : 'STATE_DONE');
+  static const PluginProgress_State STATE_FAILED =
+      PluginProgress_State._(4, _omitEnumNames ? '' : 'STATE_FAILED');
+
+  static const $core.List<PluginProgress_State> values = <PluginProgress_State>[
+    STATE_UNKNOWN,
+    STATE_DOWNLOADING,
+    STATE_INSTALLING,
+    STATE_DONE,
+    STATE_FAILED,
+  ];
+
+  static final $core.List<PluginProgress_State?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static PluginProgress_State? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const PluginProgress_State._(super.value, super.name);
+}
+
 class UpdateAction_Action extends $pb.ProtobufEnum {
   static const UpdateAction_Action ACTION_UNKNOWN =
       UpdateAction_Action._(0, _omitEnumNames ? '' : 'ACTION_UNKNOWN');

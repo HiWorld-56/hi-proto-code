@@ -236,6 +236,15 @@ const BrainToFace$json = {
       '10': 'eventPlugin'
     },
     {
+      '1': 'event_plugin_progress',
+      '3': 20,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.PluginProgress',
+      '9': 0,
+      '10': 'eventPluginProgress'
+    },
+    {
       '1': 'event_transaction',
       '3': 12,
       '4': 1,
@@ -326,16 +335,17 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'KAsyCi5oaS5FbnRpdHlIAFIKZXZlbnRSb2JvdBI6CgxldmVudF9tYXN0ZXIYCSABKAsyFS5oaS'
     '5uaW5qYS5NYXN0ZXJFdmVudEgAUgtldmVudE1hc3RlchI5Cg1ldmVudF9tZW1iZXJzGAogASgL'
     'MhIuaGkuY2x1Yi5Hcm91cEluZm9IAFIMZXZlbnRNZW1iZXJzEjYKDGV2ZW50X3BsdWdpbhgLIA'
-    'EoCzIRLmhpLmFpLlBsdWdpblZpZXdIAFILZXZlbnRQbHVnaW4SQgoRZXZlbnRfdHJhbnNhY3Rp'
-    'b24YDCABKAsyEy5oaS5kaWQuVHJhbnNhY3Rpb25IAFIQZXZlbnRUcmFuc2FjdGlvbhI0CgpwbG'
-    'F5X2F1ZGlvGA0gASgLMhMuaGkubmluamEuQXVkaW9QbGF5SABSCXBsYXlBdWRpbxI7Cg1ldmVu'
-    'dF9mcmllbmRzGA8gASgLMhQuaGkubmluamEuRnJpZW5kTGlzdEgAUgxldmVudEZyaWVuZHMSPA'
-    'oTZXZlbnRfZnJpZW5kX2RlbGV0ZRgOIAEoCzIKLmhpLkVudGl0eUgAUhFldmVudEZyaWVuZERl'
-    'bGV0ZRI2ChBldmVudF9mcmllbmRfYWRkGBAgASgLMgouaGkuRW50aXR5SABSDmV2ZW50RnJpZW'
-    '5kQWRkEjwKDG1lbWJlcnNfaW5pdBgRIAEoCzIXLmhpLm5pbmphLkdyb3VwSW5mb0xpc3RIAFIL'
-    'bWVtYmVyc0luaXQSOgoMZXZlbnRfc3RhdHVzGBIgASgLMhUuaGkubmluamEuU3RhdHVzRXZlbn'
-    'RIAFILZXZlbnRTdGF0dXMSOQoMZXZlbnRfdXBkYXRlGBMgASgLMhQuaGkubmluamEuVXBkYXRl'
-    'SW5mb0gAUgtldmVudFVwZGF0ZUIFCgNjbWQ=');
+    'EoCzIRLmhpLmFpLlBsdWdpblZpZXdIAFILZXZlbnRQbHVnaW4STgoVZXZlbnRfcGx1Z2luX3By'
+    'b2dyZXNzGBQgASgLMhguaGkubmluamEuUGx1Z2luUHJvZ3Jlc3NIAFITZXZlbnRQbHVnaW5Qcm'
+    '9ncmVzcxJCChFldmVudF90cmFuc2FjdGlvbhgMIAEoCzITLmhpLmRpZC5UcmFuc2FjdGlvbkgA'
+    'UhBldmVudFRyYW5zYWN0aW9uEjQKCnBsYXlfYXVkaW8YDSABKAsyEy5oaS5uaW5qYS5BdWRpb1'
+    'BsYXlIAFIJcGxheUF1ZGlvEjsKDWV2ZW50X2ZyaWVuZHMYDyABKAsyFC5oaS5uaW5qYS5Gcmll'
+    'bmRMaXN0SABSDGV2ZW50RnJpZW5kcxI8ChNldmVudF9mcmllbmRfZGVsZXRlGA4gASgLMgouaG'
+    'kuRW50aXR5SABSEWV2ZW50RnJpZW5kRGVsZXRlEjYKEGV2ZW50X2ZyaWVuZF9hZGQYECABKAsy'
+    'Ci5oaS5FbnRpdHlIAFIOZXZlbnRGcmllbmRBZGQSPAoMbWVtYmVyc19pbml0GBEgASgLMhcuaG'
+    'kubmluamEuR3JvdXBJbmZvTGlzdEgAUgttZW1iZXJzSW5pdBI6CgxldmVudF9zdGF0dXMYEiAB'
+    'KAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudFN0YXR1cxI5CgxldmVudF91cGRhdG'
+    'UYEyABKAsyFC5oaS5uaW5qYS5VcGRhdGVJbmZvSABSC2V2ZW50VXBkYXRlQgUKA2NtZA==');
 
 @$core.Deprecated('Use statusEventDescriptor instead')
 const StatusEvent$json = {
@@ -413,6 +423,50 @@ final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     'CgtGYWNlVG9CcmFpbhI4Cgt2b2ljZV9zdGF0ZRgBIAEoDjIVLmhpLm5pbmphLlN0YXRlVG9nZ2'
     'xlSABSCnZvaWNlU3RhdGUSPQoNdXBkYXRlX2FjdGlvbhgCIAEoCzIWLmhpLm5pbmphLlVwZGF0'
     'ZUFjdGlvbkgAUgx1cGRhdGVBY3Rpb25CBQoDY21k');
+
+@$core.Deprecated('Use pluginProgressDescriptor instead')
+const PluginProgress$json = {
+  '1': 'PluginProgress',
+  '2': [
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'title', '3': 2, '4': 1, '5': 9, '10': 'title'},
+    {
+      '1': 'state',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.ninja.PluginProgress.State',
+      '10': 'state'
+    },
+    {'1': 'progress', '3': 4, '4': 1, '5': 13, '10': 'progress'},
+    {'1': 'downloaded_bytes', '3': 5, '4': 1, '5': 4, '10': 'downloadedBytes'},
+    {'1': 'total_bytes', '3': 6, '4': 1, '5': 4, '10': 'totalBytes'},
+    {'1': 'message', '3': 7, '4': 1, '5': 9, '10': 'message'},
+  ],
+  '4': [PluginProgress_State$json],
+};
+
+@$core.Deprecated('Use pluginProgressDescriptor instead')
+const PluginProgress_State$json = {
+  '1': 'State',
+  '2': [
+    {'1': 'STATE_UNKNOWN', '2': 0},
+    {'1': 'STATE_DOWNLOADING', '2': 1},
+    {'1': 'STATE_INSTALLING', '2': 2},
+    {'1': 'STATE_DONE', '2': 3},
+    {'1': 'STATE_FAILED', '2': 4},
+  ],
+};
+
+/// Descriptor for `PluginProgress`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pluginProgressDescriptor = $convert.base64Decode(
+    'Cg5QbHVnaW5Qcm9ncmVzcxISCgR1dWlkGAEgASgJUgR1dWlkEhQKBXRpdGxlGAIgASgJUgV0aX'
+    'RsZRI0CgVzdGF0ZRgDIAEoDjIeLmhpLm5pbmphLlBsdWdpblByb2dyZXNzLlN0YXRlUgVzdGF0'
+    'ZRIaCghwcm9ncmVzcxgEIAEoDVIIcHJvZ3Jlc3MSKQoQZG93bmxvYWRlZF9ieXRlcxgFIAEoBF'
+    'IPZG93bmxvYWRlZEJ5dGVzEh8KC3RvdGFsX2J5dGVzGAYgASgEUgp0b3RhbEJ5dGVzEhgKB21l'
+    'c3NhZ2UYByABKAlSB21lc3NhZ2UiaQoFU3RhdGUSEQoNU1RBVEVfVU5LTk9XThAAEhUKEVNUQV'
+    'RFX0RPV05MT0FESU5HEAESFAoQU1RBVEVfSU5TVEFMTElORxACEg4KClNUQVRFX0RPTkUQAxIQ'
+    'CgxTVEFURV9GQUlMRUQQBA==');
 
 @$core.Deprecated('Use updateActionDescriptor instead')
 const UpdateAction$json = {

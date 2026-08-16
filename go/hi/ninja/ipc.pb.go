@@ -129,6 +129,61 @@ func (Emotion) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{1}
 }
 
+type PluginProgress_State int32
+
+const (
+	PluginProgress_STATE_UNKNOWN     PluginProgress_State = 0
+	PluginProgress_STATE_DOWNLOADING PluginProgress_State = 1 // 正在下载
+	PluginProgress_STATE_INSTALLING  PluginProgress_State = 2 // 已下完,正在落盘/加载
+	PluginProgress_STATE_DONE        PluginProgress_State = 3 // 装好了(已热加载,可以用了)
+	PluginProgress_STATE_FAILED      PluginProgress_State = 4 // 这一个失败了 —— **不影响其它插件**
+)
+
+// Enum value maps for PluginProgress_State.
+var (
+	PluginProgress_State_name = map[int32]string{
+		0: "STATE_UNKNOWN",
+		1: "STATE_DOWNLOADING",
+		2: "STATE_INSTALLING",
+		3: "STATE_DONE",
+		4: "STATE_FAILED",
+	}
+	PluginProgress_State_value = map[string]int32{
+		"STATE_UNKNOWN":     0,
+		"STATE_DOWNLOADING": 1,
+		"STATE_INSTALLING":  2,
+		"STATE_DONE":        3,
+		"STATE_FAILED":      4,
+	}
+)
+
+func (x PluginProgress_State) Enum() *PluginProgress_State {
+	p := new(PluginProgress_State)
+	*p = x
+	return p
+}
+
+func (x PluginProgress_State) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PluginProgress_State) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_ipc_proto_enumTypes[2].Descriptor()
+}
+
+func (PluginProgress_State) Type() protoreflect.EnumType {
+	return &file_hi_ninja_ipc_proto_enumTypes[2]
+}
+
+func (x PluginProgress_State) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PluginProgress_State.Descriptor instead.
+func (PluginProgress_State) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{10, 0}
+}
+
 type UpdateAction_Action int32
 
 const (
@@ -165,11 +220,11 @@ func (x UpdateAction_Action) String() string {
 }
 
 func (UpdateAction_Action) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ipc_proto_enumTypes[2].Descriptor()
+	return file_hi_ninja_ipc_proto_enumTypes[3].Descriptor()
 }
 
 func (UpdateAction_Action) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ipc_proto_enumTypes[2]
+	return &file_hi_ninja_ipc_proto_enumTypes[3]
 }
 
 func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
@@ -178,7 +233,7 @@ func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UpdateAction_Action.Descriptor instead.
 func (UpdateAction_Action) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{10, 0}
+	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{11, 0}
 }
 
 // 机器人初始化：自身身份 + 当前所有者
@@ -512,6 +567,7 @@ type BrainToFace struct {
 	//	*BrainToFace_EventMaster
 	//	*BrainToFace_EventMembers
 	//	*BrainToFace_EventPlugin
+	//	*BrainToFace_EventPluginProgress
 	//	*BrainToFace_EventTransaction
 	//	*BrainToFace_PlayAudio
 	//	*BrainToFace_EventFriends
@@ -661,6 +717,15 @@ func (x *BrainToFace) GetEventPlugin() *ai.PluginView {
 	return nil
 }
 
+func (x *BrainToFace) GetEventPluginProgress() *PluginProgress {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToFace_EventPluginProgress); ok {
+			return x.EventPluginProgress
+		}
+	}
+	return nil
+}
+
 func (x *BrainToFace) GetEventTransaction() *did.Transaction {
 	if x != nil {
 		if x, ok := x.Cmd.(*BrainToFace_EventTransaction); ok {
@@ -785,6 +850,10 @@ type BrainToFace_EventPlugin struct {
 	EventPlugin *ai.PluginView `protobuf:"bytes,11,opt,name=event_plugin,json=eventPlugin,proto3,oneof"` // 插件加载完成
 }
 
+type BrainToFace_EventPluginProgress struct {
+	EventPluginProgress *PluginProgress `protobuf:"bytes,20,opt,name=event_plugin_progress,json=eventPluginProgress,proto3,oneof"` // 插件下载/安装进度
+}
+
 type BrainToFace_EventTransaction struct {
 	EventTransaction *did.Transaction `protobuf:"bytes,12,opt,name=event_transaction,json=eventTransaction,proto3,oneof"` // 收到转账
 }
@@ -843,6 +912,8 @@ func (*BrainToFace_EventMaster) isBrainToFace_Cmd() {}
 func (*BrainToFace_EventMembers) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_EventPlugin) isBrainToFace_Cmd() {}
+
+func (*BrainToFace_EventPluginProgress) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_EventTransaction) isBrainToFace_Cmd() {}
 
@@ -1142,6 +1213,108 @@ func (*FaceToBrain_VoiceState) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_UpdateAction) isFaceToBrain_Cmd() {}
 
+// 插件下载/安装进度。
+//
+// NATIVE 插件是**云端交叉编译好的 .so,机器人自己去取** —— 几百 KB 到几 MB,
+// 机器人的网可能很差。没有进度的话,用户在市场点了"购买"之后,face 上什么都不会变,
+// 直到某一刻插件突然出现;中间那段沉默里,用户只会以为没买成、然后再点一次。
+//
+// 字段有意与固件更新(UpdaterStatus)同形:state / progress / 已下/共多少字节。
+// **face 那边不该为"插件"和"固件"学两套进度模型。**
+type PluginProgress struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Uuid  string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Title string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"` // 给用户看的名字;取不到就退回 uuid
+	State PluginProgress_State   `protobuf:"varint,3,opt,name=state,proto3,enum=hi.ninja.PluginProgress_State" json:"state,omitempty"`
+	// 0-100。**总长度未知时恒为 0** —— 服务端不给 Content-Length 是有可能的,
+	// 那时候宁可不显示百分比,也别编一个会往回跳的数字。
+	Progress        uint32 `protobuf:"varint,4,opt,name=progress,proto3" json:"progress,omitempty"`
+	DownloadedBytes uint64 `protobuf:"varint,5,opt,name=downloaded_bytes,json=downloadedBytes,proto3" json:"downloaded_bytes,omitempty"`
+	TotalBytes      uint64 `protobuf:"varint,6,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"` // 0 = 未知
+	Message         string `protobuf:"bytes,7,opt,name=message,proto3" json:"message,omitempty"`                          // 失败原因(state=FAILED 时)
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *PluginProgress) Reset() {
+	*x = PluginProgress{}
+	mi := &file_hi_ninja_ipc_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PluginProgress) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PluginProgress) ProtoMessage() {}
+
+func (x *PluginProgress) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_ipc_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PluginProgress.ProtoReflect.Descriptor instead.
+func (*PluginProgress) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *PluginProgress) GetUuid() string {
+	if x != nil {
+		return x.Uuid
+	}
+	return ""
+}
+
+func (x *PluginProgress) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *PluginProgress) GetState() PluginProgress_State {
+	if x != nil {
+		return x.State
+	}
+	return PluginProgress_STATE_UNKNOWN
+}
+
+func (x *PluginProgress) GetProgress() uint32 {
+	if x != nil {
+		return x.Progress
+	}
+	return 0
+}
+
+func (x *PluginProgress) GetDownloadedBytes() uint64 {
+	if x != nil {
+		return x.DownloadedBytes
+	}
+	return 0
+}
+
+func (x *PluginProgress) GetTotalBytes() uint64 {
+	if x != nil {
+		return x.TotalBytes
+	}
+	return 0
+}
+
+func (x *PluginProgress) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 // 更新动作
 type UpdateAction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1152,7 +1325,7 @@ type UpdateAction struct {
 
 func (x *UpdateAction) Reset() {
 	*x = UpdateAction{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[10]
+	mi := &file_hi_ninja_ipc_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1164,7 +1337,7 @@ func (x *UpdateAction) String() string {
 func (*UpdateAction) ProtoMessage() {}
 
 func (x *UpdateAction) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[10]
+	mi := &file_hi_ninja_ipc_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1177,7 +1350,7 @@ func (x *UpdateAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAction.ProtoReflect.Descriptor instead.
 func (*UpdateAction) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{10}
+	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UpdateAction) GetAction() UpdateAction_Action {
@@ -1212,7 +1385,7 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value\"5\n" +
 	"\tAudioPlay\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05audio\x18\x02 \x01(\fR\x05audio\"\xf0\b\n" +
+	"\x05audio\x18\x02 \x01(\fR\x05audio\"\xc0\t\n" +
 	"\vBrainToFace\x124\n" +
 	"\n" +
 	"init_robot\x18\x01 \x01(\v2\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x128\n" +
@@ -1230,7 +1403,8 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\fevent_master\x18\t \x01(\v2\x15.hi.ninja.MasterEventH\x00R\veventMaster\x129\n" +
 	"\revent_members\x18\n" +
 	" \x01(\v2\x12.hi.club.GroupInfoH\x00R\feventMembers\x126\n" +
-	"\fevent_plugin\x18\v \x01(\v2\x11.hi.ai.PluginViewH\x00R\veventPlugin\x12B\n" +
+	"\fevent_plugin\x18\v \x01(\v2\x11.hi.ai.PluginViewH\x00R\veventPlugin\x12N\n" +
+	"\x15event_plugin_progress\x18\x14 \x01(\v2\x18.hi.ninja.PluginProgressH\x00R\x13eventPluginProgress\x12B\n" +
 	"\x11event_transaction\x18\f \x01(\v2\x13.hi.did.TransactionH\x00R\x10eventTransaction\x124\n" +
 	"\n" +
 	"play_audio\x18\r \x01(\v2\x13.hi.ninja.AudioPlayH\x00R\tplayAudio\x12;\n" +
@@ -1267,7 +1441,23 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\vvoice_state\x18\x01 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"voiceState\x12=\n" +
 	"\rupdate_action\x18\x02 \x01(\v2\x16.hi.ninja.UpdateActionH\x00R\fupdateActionB\x05\n" +
-	"\x03cmd\"\x9b\x01\n" +
+	"\x03cmd\"\xdd\x02\n" +
+	"\x0ePluginProgress\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x124\n" +
+	"\x05state\x18\x03 \x01(\x0e2\x1e.hi.ninja.PluginProgress.StateR\x05state\x12\x1a\n" +
+	"\bprogress\x18\x04 \x01(\rR\bprogress\x12)\n" +
+	"\x10downloaded_bytes\x18\x05 \x01(\x04R\x0fdownloadedBytes\x12\x1f\n" +
+	"\vtotal_bytes\x18\x06 \x01(\x04R\n" +
+	"totalBytes\x12\x18\n" +
+	"\amessage\x18\a \x01(\tR\amessage\"i\n" +
+	"\x05State\x12\x11\n" +
+	"\rSTATE_UNKNOWN\x10\x00\x12\x15\n" +
+	"\x11STATE_DOWNLOADING\x10\x01\x12\x14\n" +
+	"\x10STATE_INSTALLING\x10\x02\x12\x0e\n" +
+	"\n" +
+	"STATE_DONE\x10\x03\x12\x10\n" +
+	"\fSTATE_FAILED\x10\x04\"\x9b\x01\n" +
 	"\fUpdateAction\x125\n" +
 	"\x06action\x18\x01 \x01(\x0e2\x1d.hi.ninja.UpdateAction.ActionR\x06action\"T\n" +
 	"\x06Action\x12\x12\n" +
@@ -1298,63 +1488,67 @@ func file_hi_ninja_ipc_proto_rawDescGZIP() []byte {
 	return file_hi_ninja_ipc_proto_rawDescData
 }
 
-var file_hi_ninja_ipc_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_hi_ninja_ipc_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_ninja_ipc_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_hi_ninja_ipc_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_hi_ninja_ipc_proto_goTypes = []any{
-	(StateToggle)(0),         // 0: hi.ninja.StateToggle
-	(Emotion)(0),             // 1: hi.ninja.Emotion
-	(UpdateAction_Action)(0), // 2: hi.ninja.UpdateAction.Action
-	(*RobotInit)(nil),        // 3: hi.ninja.RobotInit
-	(*FriendList)(nil),       // 4: hi.ninja.FriendList
-	(*GroupInfoList)(nil),    // 5: hi.ninja.GroupInfoList
-	(*MasterEvent)(nil),      // 6: hi.ninja.MasterEvent
-	(*TextReply)(nil),        // 7: hi.ninja.TextReply
-	(*AudioPlay)(nil),        // 8: hi.ninja.AudioPlay
-	(*BrainToFace)(nil),      // 9: hi.ninja.BrainToFace
-	(*StatusEvent)(nil),      // 10: hi.ninja.StatusEvent
-	(*UpdateInfo)(nil),       // 11: hi.ninja.UpdateInfo
-	(*FaceToBrain)(nil),      // 12: hi.ninja.FaceToBrain
-	(*UpdateAction)(nil),     // 13: hi.ninja.UpdateAction
-	(*hi.Entity)(nil),        // 14: hi.Entity
-	(*club.GroupInfo)(nil),   // 15: hi.club.GroupInfo
-	(*club.Message)(nil),     // 16: hi.club.Message
-	(*emptypb.Empty)(nil),    // 17: google.protobuf.Empty
-	(*ai.PluginView)(nil),    // 18: hi.ai.PluginView
-	(*did.Transaction)(nil),  // 19: hi.did.Transaction
+	(StateToggle)(0),          // 0: hi.ninja.StateToggle
+	(Emotion)(0),              // 1: hi.ninja.Emotion
+	(PluginProgress_State)(0), // 2: hi.ninja.PluginProgress.State
+	(UpdateAction_Action)(0),  // 3: hi.ninja.UpdateAction.Action
+	(*RobotInit)(nil),         // 4: hi.ninja.RobotInit
+	(*FriendList)(nil),        // 5: hi.ninja.FriendList
+	(*GroupInfoList)(nil),     // 6: hi.ninja.GroupInfoList
+	(*MasterEvent)(nil),       // 7: hi.ninja.MasterEvent
+	(*TextReply)(nil),         // 8: hi.ninja.TextReply
+	(*AudioPlay)(nil),         // 9: hi.ninja.AudioPlay
+	(*BrainToFace)(nil),       // 10: hi.ninja.BrainToFace
+	(*StatusEvent)(nil),       // 11: hi.ninja.StatusEvent
+	(*UpdateInfo)(nil),        // 12: hi.ninja.UpdateInfo
+	(*FaceToBrain)(nil),       // 13: hi.ninja.FaceToBrain
+	(*PluginProgress)(nil),    // 14: hi.ninja.PluginProgress
+	(*UpdateAction)(nil),      // 15: hi.ninja.UpdateAction
+	(*hi.Entity)(nil),         // 16: hi.Entity
+	(*club.GroupInfo)(nil),    // 17: hi.club.GroupInfo
+	(*club.Message)(nil),      // 18: hi.club.Message
+	(*emptypb.Empty)(nil),     // 19: google.protobuf.Empty
+	(*ai.PluginView)(nil),     // 20: hi.ai.PluginView
+	(*did.Transaction)(nil),   // 21: hi.did.Transaction
 }
 var file_hi_ninja_ipc_proto_depIdxs = []int32{
-	14, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
-	14, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
-	14, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
-	15, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
-	14, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
-	3,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
+	16, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
+	16, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
+	16, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
+	17, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
+	16, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
+	4,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
 	0,  // 6: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
 	1,  // 7: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	16, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
-	7,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
-	7,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	17, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	14, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
-	6,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	15, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	18, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
-	19, // 16: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
-	8,  // 17: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
-	4,  // 18: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	14, // 19: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	14, // 20: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
-	5,  // 21: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
-	10, // 22: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	11, // 23: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateInfo
-	0,  // 24: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	13, // 25: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	2,  // 26: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	27, // [27:27] is the sub-list for method output_type
-	27, // [27:27] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	18, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	8,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
+	8,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
+	19, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	16, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	7,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
+	17, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	20, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	14, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
+	21, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	9,  // 18: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
+	5,  // 19: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
+	16, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	16, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	6,  // 22: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
+	11, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
+	12, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateInfo
+	0,  // 25: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
+	15, // 26: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	2,  // 27: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	3,  // 28: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	29, // [29:29] is the sub-list for method output_type
+	29, // [29:29] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ipc_proto_init() }
@@ -1374,6 +1568,7 @@ func file_hi_ninja_ipc_proto_init() {
 		(*BrainToFace_EventMaster)(nil),
 		(*BrainToFace_EventMembers)(nil),
 		(*BrainToFace_EventPlugin)(nil),
+		(*BrainToFace_EventPluginProgress)(nil),
 		(*BrainToFace_EventTransaction)(nil),
 		(*BrainToFace_PlayAudio)(nil),
 		(*BrainToFace_EventFriends)(nil),
@@ -1392,8 +1587,8 @@ func file_hi_ninja_ipc_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ipc_proto_rawDesc), len(file_hi_ninja_ipc_proto_rawDesc)),
-			NumEnums:      3,
-			NumMessages:   11,
+			NumEnums:      4,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

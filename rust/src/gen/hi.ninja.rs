@@ -59,7 +59,7 @@ pub struct AudioPlay {
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 16, 17, 18, 19"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -108,6 +108,9 @@ pub mod brain_to_face {
         /// 插件加载完成
         #[prost(message, tag = "11")]
         EventPlugin(super::super::ai::PluginView),
+        /// 插件下载/安装进度
+        #[prost(message, tag = "20")]
+        EventPluginProgress(super::PluginProgress),
         /// 收到转账
         #[prost(message, tag = "12")]
         EventTransaction(super::super::did::Transaction),
@@ -203,6 +206,88 @@ pub mod face_to_brain {
         /// 更新动作
         #[prost(message, tag = "2")]
         UpdateAction(super::UpdateAction),
+    }
+}
+/// 插件下载/安装进度。
+///
+/// NATIVE 插件是**云端交叉编译好的 .so,机器人自己去取** —— 几百 KB 到几 MB,
+/// 机器人的网可能很差。没有进度的话,用户在市场点了"购买"之后,face 上什么都不会变,
+/// 直到某一刻插件突然出现;中间那段沉默里,用户只会以为没买成、然后再点一次。
+///
+/// 字段有意与固件更新(UpdaterStatus)同形:state / progress / 已下/共多少字节。
+/// **face 那边不该为"插件"和"固件"学两套进度模型。**
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginProgress {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 给用户看的名字;取不到就退回 uuid
+    #[prost(string, tag = "2")]
+    pub title: ::prost::alloc::string::String,
+    #[prost(enumeration = "plugin_progress::State", tag = "3")]
+    pub state: i32,
+    /// 0-100。**总长度未知时恒为 0** —— 服务端不给 Content-Length 是有可能的,
+    /// 那时候宁可不显示百分比,也别编一个会往回跳的数字。
+    #[prost(uint32, tag = "4")]
+    pub progress: u32,
+    #[prost(uint64, tag = "5")]
+    pub downloaded_bytes: u64,
+    /// 0 = 未知
+    #[prost(uint64, tag = "6")]
+    pub total_bytes: u64,
+    /// 失败原因(state=FAILED 时)
+    #[prost(string, tag = "7")]
+    pub message: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `PluginProgress`.
+pub mod plugin_progress {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unknown = 0,
+        /// 正在下载
+        Downloading = 1,
+        /// 已下完,正在落盘/加载
+        Installing = 2,
+        /// 装好了(已热加载,可以用了)
+        Done = 3,
+        /// 这一个失败了 —— **不影响其它插件**
+        Failed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "STATE_UNKNOWN",
+                Self::Downloading => "STATE_DOWNLOADING",
+                Self::Installing => "STATE_INSTALLING",
+                Self::Done => "STATE_DONE",
+                Self::Failed => "STATE_FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNKNOWN" => Some(Self::Unknown),
+                "STATE_DOWNLOADING" => Some(Self::Downloading),
+                "STATE_INSTALLING" => Some(Self::Installing),
+                "STATE_DONE" => Some(Self::Done),
+                "STATE_FAILED" => Some(Self::Failed),
+                _ => None,
+            }
+        }
     }
 }
 /// 更新动作

@@ -161,6 +161,9 @@ impl serde::Serialize for BrainToFace {
                 brain_to_face::Cmd::EventPlugin(v) => {
                     struct_ser.serialize_field("eventPlugin", v)?;
                 }
+                brain_to_face::Cmd::EventPluginProgress(v) => {
+                    struct_ser.serialize_field("eventPluginProgress", v)?;
+                }
                 brain_to_face::Cmd::EventTransaction(v) => {
                     struct_ser.serialize_field("eventTransaction", v)?;
                 }
@@ -219,6 +222,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             "eventMembers",
             "event_plugin",
             "eventPlugin",
+            "event_plugin_progress",
+            "eventPluginProgress",
             "event_transaction",
             "eventTransaction",
             "play_audio",
@@ -250,6 +255,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             EventMaster,
             EventMembers,
             EventPlugin,
+            EventPluginProgress,
             EventTransaction,
             PlayAudio,
             EventFriends,
@@ -290,6 +296,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             "eventMaster" | "event_master" => Ok(GeneratedField::EventMaster),
                             "eventMembers" | "event_members" => Ok(GeneratedField::EventMembers),
                             "eventPlugin" | "event_plugin" => Ok(GeneratedField::EventPlugin),
+                            "eventPluginProgress" | "event_plugin_progress" => Ok(GeneratedField::EventPluginProgress),
                             "eventTransaction" | "event_transaction" => Ok(GeneratedField::EventTransaction),
                             "playAudio" | "play_audio" => Ok(GeneratedField::PlayAudio),
                             "eventFriends" | "event_friends" => Ok(GeneratedField::EventFriends),
@@ -393,6 +400,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                                 return Err(serde::de::Error::duplicate_field("eventPlugin"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::EventPlugin)
+;
+                        }
+                        GeneratedField::EventPluginProgress => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("eventPluginProgress"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::EventPluginProgress)
 ;
                         }
                         GeneratedField::EventTransaction => {
@@ -938,6 +952,293 @@ impl<'de> serde::Deserialize<'de> for MasterEvent {
             }
         }
         deserializer.deserialize_struct("hi.ninja.MasterEvent", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PluginProgress {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.uuid.is_empty() {
+            len += 1;
+        }
+        if !self.title.is_empty() {
+            len += 1;
+        }
+        if self.state != 0 {
+            len += 1;
+        }
+        if self.progress != 0 {
+            len += 1;
+        }
+        if self.downloaded_bytes != 0 {
+            len += 1;
+        }
+        if self.total_bytes != 0 {
+            len += 1;
+        }
+        if !self.message.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.PluginProgress", len)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
+        }
+        if !self.title.is_empty() {
+            struct_ser.serialize_field("title", &self.title)?;
+        }
+        if self.state != 0 {
+            let v = plugin_progress::State::try_from(self.state)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.state)))?;
+            struct_ser.serialize_field("state", &v)?;
+        }
+        if self.progress != 0 {
+            struct_ser.serialize_field("progress", &self.progress)?;
+        }
+        if self.downloaded_bytes != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("downloadedBytes", ToString::to_string(&self.downloaded_bytes).as_str())?;
+        }
+        if self.total_bytes != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("totalBytes", ToString::to_string(&self.total_bytes).as_str())?;
+        }
+        if !self.message.is_empty() {
+            struct_ser.serialize_field("message", &self.message)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PluginProgress {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "uuid",
+            "title",
+            "state",
+            "progress",
+            "downloaded_bytes",
+            "downloadedBytes",
+            "total_bytes",
+            "totalBytes",
+            "message",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Uuid,
+            Title,
+            State,
+            Progress,
+            DownloadedBytes,
+            TotalBytes,
+            Message,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "title" => Ok(GeneratedField::Title),
+                            "state" => Ok(GeneratedField::State),
+                            "progress" => Ok(GeneratedField::Progress),
+                            "downloadedBytes" | "downloaded_bytes" => Ok(GeneratedField::DownloadedBytes),
+                            "totalBytes" | "total_bytes" => Ok(GeneratedField::TotalBytes),
+                            "message" => Ok(GeneratedField::Message),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PluginProgress;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.PluginProgress")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginProgress, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                let mut title__ = None;
+                let mut state__ = None;
+                let mut progress__ = None;
+                let mut downloaded_bytes__ = None;
+                let mut total_bytes__ = None;
+                let mut message__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Title => {
+                            if title__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("title"));
+                            }
+                            title__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = Some(map_.next_value::<plugin_progress::State>()? as i32);
+                        }
+                        GeneratedField::Progress => {
+                            if progress__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("progress"));
+                            }
+                            progress__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::DownloadedBytes => {
+                            if downloaded_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("downloadedBytes"));
+                            }
+                            downloaded_bytes__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::TotalBytes => {
+                            if total_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("totalBytes"));
+                            }
+                            total_bytes__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Message => {
+                            if message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("message"));
+                            }
+                            message__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(PluginProgress {
+                    uuid: uuid__.unwrap_or_default(),
+                    title: title__.unwrap_or_default(),
+                    state: state__.unwrap_or_default(),
+                    progress: progress__.unwrap_or_default(),
+                    downloaded_bytes: downloaded_bytes__.unwrap_or_default(),
+                    total_bytes: total_bytes__.unwrap_or_default(),
+                    message: message__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.PluginProgress", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for plugin_progress::State {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "STATE_UNKNOWN",
+            Self::Downloading => "STATE_DOWNLOADING",
+            Self::Installing => "STATE_INSTALLING",
+            Self::Done => "STATE_DONE",
+            Self::Failed => "STATE_FAILED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for plugin_progress::State {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "STATE_UNKNOWN",
+            "STATE_DOWNLOADING",
+            "STATE_INSTALLING",
+            "STATE_DONE",
+            "STATE_FAILED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = plugin_progress::State;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "STATE_UNKNOWN" => Ok(plugin_progress::State::Unknown),
+                    "STATE_DOWNLOADING" => Ok(plugin_progress::State::Downloading),
+                    "STATE_INSTALLING" => Ok(plugin_progress::State::Installing),
+                    "STATE_DONE" => Ok(plugin_progress::State::Done),
+                    "STATE_FAILED" => Ok(plugin_progress::State::Failed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for RobotInit {
