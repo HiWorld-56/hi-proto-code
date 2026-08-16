@@ -1831,18 +1831,20 @@ type MarketPayment struct {
 	CreatedAt int64               `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// 作废/失效的原因。不可推导,而它是人工查账退款的依据。
 	Reason string `protobuf:"bytes,7,opt,name=reason,proto3" json:"reason,omitempty"`
-	// ── 交易记录用的四样。前两个**落库时快照**,不是查询时现算 ──────────────
+	// ── 交易记录用的四样 ────────────────────────────────────────────────
 	//
-	// ⚠️ payer/payee 必须是**快照**:机器人转让之后 master 会变,
+	// payer:**真的把钱付出去的那个人**,认款时才落 —— 付款之前这一栏就是空的,
 	//
-	//	现算的话历史交易记录会跟着改归属 —— 一笔一年前的付款,明年查出来
-	//	成了新主人的记录。账本记的是"当时是谁跟谁的交易",不是"现在归谁"。
-	//	(与"派生值不要存两份"不冲突:那条说的是同一时刻的同一事实存两处会漂;
-	//	 这里的来源本身会随时间合法地变,快照才是唯一正确的做法。)
-	Payer string `protobuf:"bytes,8,opt,name=payer,proto3" json:"payer,omitempty"` // 账单开给谁(受让方 master)
-	Payee string `protobuf:"bytes,9,opt,name=payee,proto3" json:"payee,omitempty"` // 收款方
-	// amount/coin 是**读时从订单带出来**的:它们在订单上不可变,不存在漂的问题,
-	// 没必要再存一份。
+	//	因为那时候还没有"交易"。
+	//	⚠️ 它**不是判据**:市场认款从来不看谁掏的钱(订单写明了给谁履约)。
+	//	   落它只是记账,以及让当事人查得到自己的交易。
+	//
+	// payee:收款方,**从订单带出来**(订单开出时就定了,之后不变)。
+	//
+	// 两个都不在这张表上另存一份:payee/amount/coin 在订单上不可变,
+	// 读的时候 join 出来即可,存两份只会给自己留一个会漂的口子。
+	Payer         string `protobuf:"bytes,8,opt,name=payer,proto3" json:"payer,omitempty"`
+	Payee         string `protobuf:"bytes,9,opt,name=payee,proto3" json:"payee,omitempty"`
 	Amount        string `protobuf:"bytes,10,opt,name=amount,proto3" json:"amount,omitempty"`
 	Coin          string `protobuf:"bytes,11,opt,name=coin,proto3" json:"coin,omitempty"`
 	unknownFields protoimpl.UnknownFields
