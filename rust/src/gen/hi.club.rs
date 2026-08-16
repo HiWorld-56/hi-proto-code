@@ -5904,6 +5904,11 @@ pub struct MarketListingDetail {
     /// 可选版本列表(引用方装好后可在其中切换)。
     #[prost(string, repeated, tag = "4")]
     pub versions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
+    /// 出让方自己那张表 —— 用的:草稿/挂牌中/隐藏/已下架必须分得出来,
+    /// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
+    #[prost(enumeration = "ListingStatus", tag = "5")]
+    pub status: i32,
 }
 /// MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。
 ///

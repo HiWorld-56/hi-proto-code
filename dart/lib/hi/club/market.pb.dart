@@ -203,12 +203,14 @@ class MarketListingDetail extends $pb.GeneratedMessage {
     $core.String? capabilities,
     $core.bool? allowFollowLatest,
     $core.Iterable<$core.String>? versions,
+    ListingStatus? status,
   }) {
     final result = create();
     if (brief != null) result.brief = brief;
     if (capabilities != null) result.capabilities = capabilities;
     if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
     if (versions != null) result.versions.addAll(versions);
+    if (status != null) result.status = status;
     return result;
   }
 
@@ -230,6 +232,8 @@ class MarketListingDetail extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'capabilities')
     ..aOB(3, _omitFieldNames ? '' : 'allowFollowLatest')
     ..pPS(4, _omitFieldNames ? '' : 'versions')
+    ..aE<ListingStatus>(5, _omitFieldNames ? '' : 'status',
+        enumValues: ListingStatus.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -286,6 +290,18 @@ class MarketListingDetail extends $pb.GeneratedMessage {
   /// 可选版本列表(引用方装好后可在其中切换)。
   @$pb.TagNumber(4)
   $pb.PbList<$core.String> get versions => $_getList(3);
+
+  /// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
+  /// 出让方自己那张表 —— 用的:草稿/挂牌中/隐藏/已下架必须分得出来,
+  /// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
+  @$pb.TagNumber(5)
+  ListingStatus get status => $_getN(4);
+  @$pb.TagNumber(5)
+  set status(ListingStatus value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasStatus() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearStatus() => $_clearField(5);
 }
 
 /// MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。

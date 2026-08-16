@@ -205,6 +205,15 @@ const MarketListingDetail$json = {
       '10': 'allowFollowLatest'
     },
     {'1': 'versions', '3': 4, '4': 3, '5': 9, '8': {}, '10': 'versions'},
+    {
+      '1': 'status',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ListingStatus',
+      '8': {},
+      '10': 'status'
+    },
   ],
   '7': {},
 };
@@ -214,7 +223,8 @@ final $typed_data.Uint8List marketListingDetailDescriptor = $convert.base64Decod
     'ChNNYXJrZXRMaXN0aW5nRGV0YWlsEjcKBWJyaWVmGAEgASgLMhsuaGkuY2x1Yi5NYXJrZXRMaX'
     'N0aW5nQnJpZWZCBJC1GAFSBWJyaWVmEigKDGNhcGFiaWxpdGllcxgCIAEoCUIEkLUYAVIMY2Fw'
     'YWJpbGl0aWVzEjQKE2FsbG93X2ZvbGxvd19sYXRlc3QYAyABKAhCBJC1GAFSEWFsbG93Rm9sbG'
-    '93TGF0ZXN0EiAKCHZlcnNpb25zGAQgAygJQgSQtRgBUgh2ZXJzaW9uczoEmLUYAQ==');
+    '93TGF0ZXN0EiAKCHZlcnNpb25zGAQgAygJQgSQtRgBUgh2ZXJzaW9ucxI0CgZzdGF0dXMYBSAB'
+    'KA4yFi5oaS5jbHViLkxpc3RpbmdTdGF0dXNCBJC1GAFSBnN0YXR1czoEmLUYAQ==');
 
 @$core.Deprecated('Use marketGrantBriefDescriptor instead')
 const MarketGrantBrief$json = {
