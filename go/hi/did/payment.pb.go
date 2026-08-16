@@ -23,11 +23,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 付款方付完款交给 hidid 的回执载荷(`Pay.Notify` 的 SignedData.Data 反序列化进它,JSON)。
 type Order struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // req_id
-	Did           string                 `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
-	Hash          string                 `protobuf:"bytes,3,opt,name=hash,proto3" json:"hash,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 订单号。**由三方定义,hidid 不解释它** —— GenerateReq 出的 req_id 是一种,
+	// 三方自己的业务单号(如插件市场的 `MKT-xxx`)也是一种,原样转给商户即可。
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// **商户DID**,不是付款人 —— 付款人是 SignedData 的签名者。
+	// hidid 按它查出商户注册的 endpoint,回调 `PayCallback.Pay`。
+	// 这正是"付款方不必认识三方接口"的支点:银行 app 不该知道美团的 API 长什么样。
+	Did           string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	Hash          string `protobuf:"bytes,3,opt,name=hash,proto3" json:"hash,omitempty"` // 链上交易 hash
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

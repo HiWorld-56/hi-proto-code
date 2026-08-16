@@ -4739,13 +4739,19 @@ pub mod user_client {
         }
     }
 }
+/// 付款方付完款交给 hidid 的回执载荷(`Pay.Notify` 的 SignedData.Data 反序列化进它,JSON)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Order {
-    /// req_id
+    /// 订单号。**由三方定义,hidid 不解释它** —— GenerateReq 出的 req_id 是一种,
+    /// 三方自己的业务单号(如插件市场的 `MKT-xxx`)也是一种,原样转给商户即可。
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
+    /// **商户DID**,不是付款人 —— 付款人是 SignedData 的签名者。
+    /// hidid 按它查出商户注册的 endpoint,回调 `PayCallback.Pay`。
+    /// 这正是"付款方不必认识三方接口"的支点:银行 app 不该知道美团的 API 长什么样。
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
+    /// 链上交易 hash
     #[prost(string, tag = "3")]
     pub hash: ::prost::alloc::string::String,
 }

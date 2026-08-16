@@ -16,6 +16,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// 付款方付完款交给 hidid 的回执载荷(`Pay.Notify` 的 SignedData.Data 反序列化进它,JSON)。
 class Order extends $pb.GeneratedMessage {
   factory Order({
     $core.String? id,
@@ -65,6 +66,8 @@ class Order extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Order>(create);
   static Order? _defaultInstance;
 
+  /// 订单号。**由三方定义,hidid 不解释它** —— GenerateReq 出的 req_id 是一种,
+  /// 三方自己的业务单号(如插件市场的 `MKT-xxx`)也是一种,原样转给商户即可。
   @$pb.TagNumber(1)
   $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -74,6 +77,9 @@ class Order extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearId() => $_clearField(1);
 
+  /// **商户DID**,不是付款人 —— 付款人是 SignedData 的签名者。
+  /// hidid 按它查出商户注册的 endpoint,回调 `PayCallback.Pay`。
+  /// 这正是"付款方不必认识三方接口"的支点:银行 app 不该知道美团的 API 长什么样。
   @$pb.TagNumber(2)
   $core.String get did => $_getSZ(1);
   @$pb.TagNumber(2)
