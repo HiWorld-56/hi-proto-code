@@ -2072,16 +2072,18 @@ class MarketPayment extends $pb.GeneratedMessage {
   void clearCoin() => $_clearField(11);
 }
 
-/// 我的交易记录。
+/// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。
 ///
 /// **不给详情,只给凭据号** —— 用户拿着 pay_id 就能对上一笔入账,而这已经够了。
 /// 查询范围靠"你必须是付款人或收款人"限死:两边都不是的人,列不出来、也查不到单笔。
 /// 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
 class ListTransactionsReq extends $pb.GeneratedMessage {
   factory ListTransactionsReq({
+    $core.String? did,
     $2.Pagination? pagination,
   }) {
     final result = create();
+    if (did != null) result.did = did;
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -2099,7 +2101,8 @@ class ListTransactionsReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListTransactionsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
@@ -2122,16 +2125,30 @@ class ListTransactionsReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListTransactionsReq>(create);
   static ListTransactionsReq? _defaultInstance;
 
+  /// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人** ——
+  /// 机器人自动续费是它自己掏钱付的(payer 是机器人的 did),主人要查得到那些账。
+  ///
+  /// ⚠️ 只多这一条验证,不要顺手放宽成"填谁都行":那样它就成了拿别人 did
+  ///    翻别人交易的口子,而这一栏看起来只是个筛选条件,很容易被当成无害的。
   @$pb.TagNumber(1)
-  $2.Pagination get pagination => $_getN(0);
+  $core.String get did => $_getSZ(0);
   @$pb.TagNumber(1)
-  set pagination($2.Pagination value) => $_setField(1, value);
+  set did($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasPagination() => $_has(0);
+  $core.bool hasDid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearPagination() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $2.Pagination ensurePagination() => $_ensure(0);
+  void clearDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($2.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListTransactionsResp extends $pb.GeneratedMessage {
@@ -2183,8 +2200,11 @@ class ListTransactionsResp extends $pb.GeneratedMessage {
   $pb.PbList<MarketPayment> get list => $_getList(0);
 }
 
-/// 查单笔 —— 同样只有付款人 / 收款人查得到。
+/// 查单笔 —— 当事人是我、**或是我的仆从机器人**,才查得到。
 /// 查不到与不属于你**回同一个错**:否则这就成了探测别人交易是否存在的口子。
+///
+/// 这里不收 did:该看谁由后端按"我 + 我的仆从"算出来,让调用方传就等于
+/// 把范围交给了它 —— 而范围正是这个接口唯一在守的东西。
 class GetTransactionReq extends $pb.GeneratedMessage {
   factory GetTransactionReq({
     $core.String? payId,

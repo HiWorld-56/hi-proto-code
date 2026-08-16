@@ -8349,10 +8349,16 @@ impl serde::Serialize for ListTransactionsReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
         if self.pagination.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.ListTransactionsReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
@@ -8366,11 +8372,13 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "did",
             "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Did,
             Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -8393,6 +8401,7 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "did" => Ok(GeneratedField::Did),
                             "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -8413,9 +8422,16 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut did__ = None;
                 let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("pagination"));
@@ -8425,6 +8441,7 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsReq {
                     }
                 }
                 Ok(ListTransactionsReq {
+                    did: did__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }

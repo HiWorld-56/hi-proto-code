@@ -1958,14 +1958,21 @@ func (x *MarketPayment) GetCoin() string {
 	return ""
 }
 
-// 我的交易记录。
+// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。
 //
 // **不给详情,只给凭据号** —— 用户拿着 pay_id 就能对上一笔入账,而这已经够了。
 // 查询范围靠"你必须是付款人或收款人"限死:两边都不是的人,列不出来、也查不到单笔。
 // 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
 type ListTransactionsReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人** ——
+	// 机器人自动续费是它自己掏钱付的(payer 是机器人的 did),主人要查得到那些账。
+	//
+	// ⚠️ 只多这一条验证,不要顺手放宽成"填谁都行":那样它就成了拿别人 did
+	//
+	//	翻别人交易的口子,而这一栏看起来只是个筛选条件,很容易被当成无害的。
+	Did           string         `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Pagination    *hi.Pagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1998,6 +2005,13 @@ func (x *ListTransactionsReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListTransactionsReq.ProtoReflect.Descriptor instead.
 func (*ListTransactionsReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_market_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListTransactionsReq) GetDid() string {
+	if x != nil {
+		return x.Did
+	}
+	return ""
 }
 
 func (x *ListTransactionsReq) GetPagination() *hi.Pagination {
@@ -2051,8 +2065,11 @@ func (x *ListTransactionsResp) GetList() []*MarketPayment {
 	return nil
 }
 
-// 查单笔 —— 同样只有付款人 / 收款人查得到。
+// 查单笔 —— 当事人是我、**或是我的仆从机器人**,才查得到。
 // 查不到与不属于你**回同一个错**:否则这就成了探测别人交易是否存在的口子。
+//
+// 这里不收 did:该看谁由后端按"我 + 我的仆从"算出来,让调用方传就等于
+// 把范围交给了它 —— 而范围正是这个接口唯一在守的东西。
 type GetTransactionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PayId         string                 `protobuf:"bytes,1,opt,name=pay_id,json=payId,proto3" json:"pay_id,omitempty"`
@@ -3516,10 +3533,11 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05payee\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12\x1c\n" +
 	"\x06amount\x18\n" +
 	" \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
-	"\x04coin\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x04coin:\x04\x98\xb5\x18\x03\"E\n" +
-	"\x13ListTransactionsReq\x12.\n" +
+	"\x04coin\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x04coin:\x04\x98\xb5\x18\x03\"W\n" +
+	"\x13ListTransactionsReq\x12\x10\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
-	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\"N\n" +
 	"\x14ListTransactionsResp\x120\n" +
 	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +

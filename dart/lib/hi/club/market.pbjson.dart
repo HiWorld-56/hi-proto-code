@@ -754,9 +754,10 @@ final $typed_data.Uint8List marketPaymentDescriptor = $convert.base64Decode(
 const ListTransactionsReq$json = {
   '1': 'ListTransactionsReq',
   '2': [
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
     {
       '1': 'pagination',
-      '3': 1,
+      '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.Pagination',
@@ -767,8 +768,8 @@ const ListTransactionsReq$json = {
 
 /// Descriptor for `ListTransactionsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listTransactionsReqDescriptor = $convert.base64Decode(
-    'ChNMaXN0VHJhbnNhY3Rpb25zUmVxEi4KCnBhZ2luYXRpb24YASABKAsyDi5oaS5QYWdpbmF0aW'
-    '9uUgpwYWdpbmF0aW9u');
+    'ChNMaXN0VHJhbnNhY3Rpb25zUmVxEhAKA2RpZBgBIAEoCVIDZGlkEi4KCnBhZ2luYXRpb24YAi'
+    'ABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9u');
 
 @$core.Deprecated('Use listTransactionsRespDescriptor instead')
 const ListTransactionsResp$json = {

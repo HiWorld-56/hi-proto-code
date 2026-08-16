@@ -6211,14 +6211,21 @@ pub struct MarketPayment {
     #[prost(string, tag = "11")]
     pub coin: ::prost::alloc::string::String,
 }
-/// 我的交易记录。
+/// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。
 ///
 /// **不给详情,只给凭据号** —— 用户拿着 pay_id 就能对上一笔入账,而这已经够了。
 /// 查询范围靠"你必须是付款人或收款人"限死:两边都不是的人,列不出来、也查不到单笔。
 /// 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListTransactionsReq {
-    #[prost(message, optional, tag = "1")]
+    /// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人** ——
+    /// 机器人自动续费是它自己掏钱付的(payer 是机器人的 did),主人要查得到那些账。
+    ///
+    /// ⚠️ 只多这一条验证,不要顺手放宽成"填谁都行":那样它就成了拿别人 did
+    /// 翻别人交易的口子,而这一栏看起来只是个筛选条件,很容易被当成无害的。
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -6226,8 +6233,11 @@ pub struct ListTransactionsResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<MarketPayment>,
 }
-/// 查单笔 —— 同样只有付款人 / 收款人查得到。
+/// 查单笔 —— 当事人是我、**或是我的仆从机器人**,才查得到。
 /// 查不到与不属于你**回同一个错**:否则这就成了探测别人交易是否存在的口子。
+///
+/// 这里不收 did:该看谁由后端按"我 + 我的仆从"算出来,让调用方传就等于
+/// 把范围交给了它 —— 而范围正是这个接口唯一在守的东西。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTransactionReq {
     #[prost(string, tag = "1")]
