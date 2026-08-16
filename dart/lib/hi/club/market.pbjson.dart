@@ -731,6 +731,10 @@ const MarketPayment$json = {
     {'1': 'expire_at', '3': 5, '4': 1, '5': 3, '8': {}, '10': 'expireAt'},
     {'1': 'created_at', '3': 6, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
     {'1': 'reason', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'reason'},
+    {'1': 'payer', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'payer'},
+    {'1': 'payee', '3': 9, '4': 1, '5': 9, '8': {}, '10': 'payee'},
+    {'1': 'amount', '3': 10, '4': 1, '5': 9, '8': {}, '10': 'amount'},
+    {'1': 'coin', '3': 11, '4': 1, '5': 9, '8': {}, '10': 'coin'},
   ],
   '7': {},
 };
@@ -741,7 +745,65 @@ final $typed_data.Uint8List marketPaymentDescriptor = $convert.base64Decode(
     'QYAiABKAlCBJC1GANSB29yZGVySWQSOgoGc3RhdHVzGAMgASgOMhwuaGkuY2x1Yi5NYXJrZXRQ'
     'YXltZW50U3RhdHVzQgSQtRgDUgZzdGF0dXMSHQoHdHhfaGFzaBgEIAEoCUIEkLUYA1IGdHhIYX'
     'NoEiEKCWV4cGlyZV9hdBgFIAEoA0IEkLUYA1IIZXhwaXJlQXQSIwoKY3JlYXRlZF9hdBgGIAEo'
-    'A0IEkLUYA1IJY3JlYXRlZEF0EhwKBnJlYXNvbhgHIAEoCUIEkLUYA1IGcmVhc29uOgSYtRgD');
+    'A0IEkLUYA1IJY3JlYXRlZEF0EhwKBnJlYXNvbhgHIAEoCUIEkLUYA1IGcmVhc29uEhoKBXBheW'
+    'VyGAggASgJQgSQtRgDUgVwYXllchIaCgVwYXllZRgJIAEoCUIEkLUYA1IFcGF5ZWUSHAoGYW1v'
+    'dW50GAogASgJQgSQtRgDUgZhbW91bnQSGAoEY29pbhgLIAEoCUIEkLUYA1IEY29pbjoEmLUYAw'
+    '==');
+
+@$core.Deprecated('Use listTransactionsReqDescriptor instead')
+const ListTransactionsReq$json = {
+  '1': 'ListTransactionsReq',
+  '2': [
+    {
+      '1': 'pagination',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListTransactionsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listTransactionsReqDescriptor = $convert.base64Decode(
+    'ChNMaXN0VHJhbnNhY3Rpb25zUmVxEi4KCnBhZ2luYXRpb24YASABKAsyDi5oaS5QYWdpbmF0aW'
+    '9uUgpwYWdpbmF0aW9u');
+
+@$core.Deprecated('Use listTransactionsRespDescriptor instead')
+const ListTransactionsResp$json = {
+  '1': 'ListTransactionsResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.MarketPayment',
+      '8': {},
+      '10': 'list'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListTransactionsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listTransactionsRespDescriptor = $convert.base64Decode(
+    'ChRMaXN0VHJhbnNhY3Rpb25zUmVzcBIwCgRsaXN0GAEgAygLMhYuaGkuY2x1Yi5NYXJrZXRQYX'
+    'ltZW50QgSQtRgDUgRsaXN0OgSYtRgD');
+
+@$core.Deprecated('Use getTransactionReqDescriptor instead')
+const GetTransactionReq$json = {
+  '1': 'GetTransactionReq',
+  '2': [
+    {'1': 'pay_id', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'payId'},
+  ],
+};
+
+/// Descriptor for `GetTransactionReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getTransactionReqDescriptor = $convert.base64Decode(
+    'ChFHZXRUcmFuc2FjdGlvblJlcRIjCgZwYXlfaWQYASABKAlCDLpICXIHMgVeXFMrJFIFcGF5SW'
+    'Q=');
 
 @$core.Deprecated('Use marketOrderDescriptor instead')
 const MarketOrder$json = {

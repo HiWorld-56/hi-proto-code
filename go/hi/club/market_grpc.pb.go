@@ -221,6 +221,8 @@ const (
 	Market_CreateRenewOrder_FullMethodName     = "/hi.club.Market/CreateRenewOrder"
 	Market_IssuePayment_FullMethodName         = "/hi.club.Market/IssuePayment"
 	Market_ListPayments_FullMethodName         = "/hi.club.Market/ListPayments"
+	Market_ListTransactions_FullMethodName     = "/hi.club.Market/ListTransactions"
+	Market_GetTransaction_FullMethodName       = "/hi.club.Market/GetTransaction"
 	Market_ListMyGrants_FullMethodName         = "/hi.club.Market/ListMyGrants"
 	Market_SetGrantVersion_FullMethodName      = "/hi.club.Market/SetGrantVersion"
 	Market_SetAutoRenew_FullMethodName         = "/hi.club.Market/SetAutoRenew"
@@ -247,6 +249,8 @@ type MarketClient interface {
 	CreateRenewOrder(ctx context.Context, in *CreateRenewOrderReq, opts ...grpc.CallOption) (*MarketOrder, error)
 	IssuePayment(ctx context.Context, in *IssuePaymentReq, opts ...grpc.CallOption) (*MarketOrder, error)
 	ListPayments(ctx context.Context, in *ListPaymentsReq, opts ...grpc.CallOption) (*ListPaymentsResp, error)
+	ListTransactions(ctx context.Context, in *ListTransactionsReq, opts ...grpc.CallOption) (*ListTransactionsResp, error)
+	GetTransaction(ctx context.Context, in *GetTransactionReq, opts ...grpc.CallOption) (*MarketPayment, error)
 	ListMyGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
 	SetGrantVersion(ctx context.Context, in *SetGrantVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetAutoRenew(ctx context.Context, in *SetAutoRenewReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -380,6 +384,26 @@ func (c *marketClient) ListPayments(ctx context.Context, in *ListPaymentsReq, op
 	return out, nil
 }
 
+func (c *marketClient) ListTransactions(ctx context.Context, in *ListTransactionsReq, opts ...grpc.CallOption) (*ListTransactionsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListTransactionsResp)
+	err := c.cc.Invoke(ctx, Market_ListTransactions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketClient) GetTransaction(ctx context.Context, in *GetTransactionReq, opts ...grpc.CallOption) (*MarketPayment, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MarketPayment)
+	err := c.cc.Invoke(ctx, Market_GetTransaction_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *marketClient) ListMyGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListGrantsResp)
@@ -431,6 +455,8 @@ type MarketServer interface {
 	CreateRenewOrder(context.Context, *CreateRenewOrderReq) (*MarketOrder, error)
 	IssuePayment(context.Context, *IssuePaymentReq) (*MarketOrder, error)
 	ListPayments(context.Context, *ListPaymentsReq) (*ListPaymentsResp, error)
+	ListTransactions(context.Context, *ListTransactionsReq) (*ListTransactionsResp, error)
+	GetTransaction(context.Context, *GetTransactionReq) (*MarketPayment, error)
 	ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error)
 	SetGrantVersion(context.Context, *SetGrantVersionReq) (*emptypb.Empty, error)
 	SetAutoRenew(context.Context, *SetAutoRenewReq) (*emptypb.Empty, error)
@@ -478,6 +504,12 @@ func (UnimplementedMarketServer) IssuePayment(context.Context, *IssuePaymentReq)
 }
 func (UnimplementedMarketServer) ListPayments(context.Context, *ListPaymentsReq) (*ListPaymentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListPayments not implemented")
+}
+func (UnimplementedMarketServer) ListTransactions(context.Context, *ListTransactionsReq) (*ListTransactionsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTransactions not implemented")
+}
+func (UnimplementedMarketServer) GetTransaction(context.Context, *GetTransactionReq) (*MarketPayment, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTransaction not implemented")
 }
 func (UnimplementedMarketServer) ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMyGrants not implemented")
@@ -724,6 +756,42 @@ func _Market_ListPayments_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Market_ListTransactions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTransactionsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).ListTransactions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_ListTransactions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).ListTransactions(ctx, req.(*ListTransactionsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Market_GetTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTransactionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).GetTransaction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_GetTransaction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).GetTransaction(ctx, req.(*GetTransactionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Market_ListMyGrants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListGrantsReq)
 	if err := dec(in); err != nil {
@@ -832,6 +900,14 @@ var Market_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPayments",
 			Handler:    _Market_ListPayments_Handler,
+		},
+		{
+			MethodName: "ListTransactions",
+			Handler:    _Market_ListTransactions_Handler,
+		},
+		{
+			MethodName: "GetTransaction",
+			Handler:    _Market_GetTransaction_Handler,
 		},
 		{
 			MethodName: "ListMyGrants",

@@ -1893,6 +1893,10 @@ class MarketPayment extends $pb.GeneratedMessage {
     $fixnum.Int64? expireAt,
     $fixnum.Int64? createdAt,
     $core.String? reason,
+    $core.String? payer,
+    $core.String? payee,
+    $core.String? amount,
+    $core.String? coin,
   }) {
     final result = create();
     if (payId != null) result.payId = payId;
@@ -1902,6 +1906,10 @@ class MarketPayment extends $pb.GeneratedMessage {
     if (expireAt != null) result.expireAt = expireAt;
     if (createdAt != null) result.createdAt = createdAt;
     if (reason != null) result.reason = reason;
+    if (payer != null) result.payer = payer;
+    if (payee != null) result.payee = payee;
+    if (amount != null) result.amount = amount;
+    if (coin != null) result.coin = coin;
     return result;
   }
 
@@ -1926,6 +1934,10 @@ class MarketPayment extends $pb.GeneratedMessage {
     ..aInt64(5, _omitFieldNames ? '' : 'expireAt')
     ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
     ..aOS(7, _omitFieldNames ? '' : 'reason')
+    ..aOS(8, _omitFieldNames ? '' : 'payer')
+    ..aOS(9, _omitFieldNames ? '' : 'payee')
+    ..aOS(10, _omitFieldNames ? '' : 'amount')
+    ..aOS(11, _omitFieldNames ? '' : 'coin')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2012,6 +2024,218 @@ class MarketPayment extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(6);
   @$pb.TagNumber(7)
   void clearReason() => $_clearField(7);
+
+  /// ── 交易记录用的四样。前两个**落库时快照**,不是查询时现算 ──────────────
+  ///
+  /// ⚠️ payer/payee 必须是**快照**:机器人转让之后 master 会变,
+  ///    现算的话历史交易记录会跟着改归属 —— 一笔一年前的付款,明年查出来
+  ///    成了新主人的记录。账本记的是"当时是谁跟谁的交易",不是"现在归谁"。
+  ///    (与"派生值不要存两份"不冲突:那条说的是同一时刻的同一事实存两处会漂;
+  ///     这里的来源本身会随时间合法地变,快照才是唯一正确的做法。)
+  @$pb.TagNumber(8)
+  $core.String get payer => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set payer($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasPayer() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearPayer() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.String get payee => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set payee($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasPayee() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearPayee() => $_clearField(9);
+
+  /// amount/coin 是**读时从订单带出来**的:它们在订单上不可变,不存在漂的问题,
+  /// 没必要再存一份。
+  @$pb.TagNumber(10)
+  $core.String get amount => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set amount($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAmount() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAmount() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.String get coin => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set coin($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasCoin() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearCoin() => $_clearField(11);
+}
+
+/// 我的交易记录。
+///
+/// **不给详情,只给凭据号** —— 用户拿着 pay_id 就能对上一笔入账,而这已经够了。
+/// 查询范围靠"你必须是付款人或收款人"限死:两边都不是的人,列不出来、也查不到单笔。
+/// 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
+class ListTransactionsReq extends $pb.GeneratedMessage {
+  factory ListTransactionsReq({
+    $2.Pagination? pagination,
+  }) {
+    final result = create();
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListTransactionsReq._();
+
+  factory ListTransactionsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListTransactionsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListTransactionsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListTransactionsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListTransactionsReq copyWith(void Function(ListTransactionsReq) updates) =>
+      super.copyWith((message) => updates(message as ListTransactionsReq))
+          as ListTransactionsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListTransactionsReq create() => ListTransactionsReq._();
+  @$core.override
+  ListTransactionsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListTransactionsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListTransactionsReq>(create);
+  static ListTransactionsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $2.Pagination get pagination => $_getN(0);
+  @$pb.TagNumber(1)
+  set pagination($2.Pagination value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPagination() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPagination() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $2.Pagination ensurePagination() => $_ensure(0);
+}
+
+class ListTransactionsResp extends $pb.GeneratedMessage {
+  factory ListTransactionsResp({
+    $core.Iterable<MarketPayment>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ListTransactionsResp._();
+
+  factory ListTransactionsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListTransactionsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListTransactionsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<MarketPayment>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: MarketPayment.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListTransactionsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListTransactionsResp copyWith(void Function(ListTransactionsResp) updates) =>
+      super.copyWith((message) => updates(message as ListTransactionsResp))
+          as ListTransactionsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListTransactionsResp create() => ListTransactionsResp._();
+  @$core.override
+  ListTransactionsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListTransactionsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListTransactionsResp>(create);
+  static ListTransactionsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<MarketPayment> get list => $_getList(0);
+}
+
+/// 查单笔 —— 同样只有付款人 / 收款人查得到。
+/// 查不到与不属于你**回同一个错**:否则这就成了探测别人交易是否存在的口子。
+class GetTransactionReq extends $pb.GeneratedMessage {
+  factory GetTransactionReq({
+    $core.String? payId,
+  }) {
+    final result = create();
+    if (payId != null) result.payId = payId;
+    return result;
+  }
+
+  GetTransactionReq._();
+
+  factory GetTransactionReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetTransactionReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetTransactionReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'payId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetTransactionReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetTransactionReq copyWith(void Function(GetTransactionReq) updates) =>
+      super.copyWith((message) => updates(message as GetTransactionReq))
+          as GetTransactionReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetTransactionReq create() => GetTransactionReq._();
+  @$core.override
+  GetTransactionReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetTransactionReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetTransactionReq>(create);
+  static GetTransactionReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get payId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set payId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPayId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPayId() => $_clearField(1);
 }
 
 class MarketOrder extends $pb.GeneratedMessage {

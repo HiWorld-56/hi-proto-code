@@ -6192,6 +6192,48 @@ pub struct MarketPayment {
     /// 作废/失效的原因。不可推导,而它是人工查账退款的依据。
     #[prost(string, tag = "7")]
     pub reason: ::prost::alloc::string::String,
+    /// ── 交易记录用的四样。前两个**落库时快照**,不是查询时现算 ──────────────
+    ///
+    /// ⚠️ payer/payee 必须是**快照**:机器人转让之后 master 会变,
+    /// 现算的话历史交易记录会跟着改归属 —— 一笔一年前的付款,明年查出来
+    /// 成了新主人的记录。账本记的是"当时是谁跟谁的交易",不是"现在归谁"。
+    /// (与"派生值不要存两份"不冲突:那条说的是同一时刻的同一事实存两处会漂;
+    /// 这里的来源本身会随时间合法地变,快照才是唯一正确的做法。)
+    ///
+    /// 账单开给谁(受让方 master)
+    #[prost(string, tag = "8")]
+    pub payer: ::prost::alloc::string::String,
+    /// 收款方
+    #[prost(string, tag = "9")]
+    pub payee: ::prost::alloc::string::String,
+    /// amount/coin 是**读时从订单带出来**的:它们在订单上不可变,不存在漂的问题,
+    /// 没必要再存一份。
+    #[prost(string, tag = "10")]
+    pub amount: ::prost::alloc::string::String,
+    #[prost(string, tag = "11")]
+    pub coin: ::prost::alloc::string::String,
+}
+/// 我的交易记录。
+///
+/// **不给详情,只给凭据号** —— 用户拿着 pay_id 就能对上一笔入账,而这已经够了。
+/// 查询范围靠"你必须是付款人或收款人"限死:两边都不是的人,列不出来、也查不到单笔。
+/// 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListTransactionsReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTransactionsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<MarketPayment>,
+}
+/// 查单笔 —— 同样只有付款人 / 收款人查得到。
+/// 查不到与不属于你**回同一个错**:否则这就成了探测别人交易是否存在的口子。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetTransactionReq {
+    #[prost(string, tag = "1")]
+    pub pay_id: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketOrder {
@@ -7244,6 +7286,51 @@ pub mod market_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Market", "ListPayments"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_transactions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTransactionsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListTransactionsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ListTransactions",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ListTransactions"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_transaction(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTransactionReq>,
+        ) -> std::result::Result<tonic::Response<super::MarketPayment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/GetTransaction",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "GetTransaction"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_my_grants(
