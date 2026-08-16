@@ -219,7 +219,6 @@ const (
 	Market_Revoke_FullMethodName               = "/hi.club.Market/Revoke"
 	Market_Apply_FullMethodName                = "/hi.club.Market/Apply"
 	Market_CreateRenewOrder_FullMethodName     = "/hi.club.Market/CreateRenewOrder"
-	Market_ReportPayment_FullMethodName        = "/hi.club.Market/ReportPayment"
 	Market_ListMyGrants_FullMethodName         = "/hi.club.Market/ListMyGrants"
 	Market_SetGrantVersion_FullMethodName      = "/hi.club.Market/SetGrantVersion"
 	Market_SetAutoRenew_FullMethodName         = "/hi.club.Market/SetAutoRenew"
@@ -244,8 +243,6 @@ type MarketClient interface {
 	Apply(ctx context.Context, in *ApplyReq, opts ...grpc.CallOption) (*ApplyResp, error)
 	// 开一张续期账单(购买的账单由 Apply 顺带开出)。
 	CreateRenewOrder(ctx context.Context, in *CreateRenewOrderReq, opts ...grpc.CallOption) (*MarketOrder, error)
-	// 认领一笔付款并履约。**不看付款方是谁**,见 MarketPayReport。
-	ReportPayment(ctx context.Context, in *MarketPayReport, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMyGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
 	SetGrantVersion(ctx context.Context, in *SetGrantVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetAutoRenew(ctx context.Context, in *SetAutoRenewReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -359,16 +356,6 @@ func (c *marketClient) CreateRenewOrder(ctx context.Context, in *CreateRenewOrde
 	return out, nil
 }
 
-func (c *marketClient) ReportPayment(ctx context.Context, in *MarketPayReport, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Market_ReportPayment_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *marketClient) ListMyGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListGrantsResp)
@@ -418,8 +405,6 @@ type MarketServer interface {
 	Apply(context.Context, *ApplyReq) (*ApplyResp, error)
 	// 开一张续期账单(购买的账单由 Apply 顺带开出)。
 	CreateRenewOrder(context.Context, *CreateRenewOrderReq) (*MarketOrder, error)
-	// 认领一笔付款并履约。**不看付款方是谁**,见 MarketPayReport。
-	ReportPayment(context.Context, *MarketPayReport) (*emptypb.Empty, error)
 	ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error)
 	SetGrantVersion(context.Context, *SetGrantVersionReq) (*emptypb.Empty, error)
 	SetAutoRenew(context.Context, *SetAutoRenewReq) (*emptypb.Empty, error)
@@ -461,9 +446,6 @@ func (UnimplementedMarketServer) Apply(context.Context, *ApplyReq) (*ApplyResp, 
 }
 func (UnimplementedMarketServer) CreateRenewOrder(context.Context, *CreateRenewOrderReq) (*MarketOrder, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateRenewOrder not implemented")
-}
-func (UnimplementedMarketServer) ReportPayment(context.Context, *MarketPayReport) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method ReportPayment not implemented")
 }
 func (UnimplementedMarketServer) ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMyGrants not implemented")
@@ -674,24 +656,6 @@ func _Market_CreateRenewOrder_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Market_ReportPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MarketPayReport)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MarketServer).ReportPayment(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Market_ReportPayment_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MarketServer).ReportPayment(ctx, req.(*MarketPayReport))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Market_ListMyGrants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListGrantsReq)
 	if err := dec(in); err != nil {
@@ -792,10 +756,6 @@ var Market_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateRenewOrder",
 			Handler:    _Market_CreateRenewOrder_Handler,
-		},
-		{
-			MethodName: "ReportPayment",
-			Handler:    _Market_ReportPayment_Handler,
 		},
 		{
 			MethodName: "ListMyGrants",

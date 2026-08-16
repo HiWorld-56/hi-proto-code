@@ -1896,6 +1896,7 @@ class MarketOrder extends $pb.GeneratedMessage {
     $core.String? coin,
     $fixnum.Int64? expireAt,
     $fixnum.Int64? createdAt,
+    $core.String? merchant,
   }) {
     final result = create();
     if (orderId != null) result.orderId = orderId;
@@ -1908,6 +1909,7 @@ class MarketOrder extends $pb.GeneratedMessage {
     if (coin != null) result.coin = coin;
     if (expireAt != null) result.expireAt = expireAt;
     if (createdAt != null) result.createdAt = createdAt;
+    if (merchant != null) result.merchant = merchant;
     return result;
   }
 
@@ -1936,6 +1938,7 @@ class MarketOrder extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'coin')
     ..aInt64(9, _omitFieldNames ? '' : 'expireAt')
     ..aInt64(10, _omitFieldNames ? '' : 'createdAt')
+    ..aOS(11, _omitFieldNames ? '' : 'merchant')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2048,6 +2051,24 @@ class MarketOrder extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(9);
   @$pb.TagNumber(10)
   void clearCreatedAt() => $_clearField(10);
+
+  /// 把付款结果**报给哪个商户** —— 即图示里唤起 hidid 时要带的「商户DID」。
+  ///
+  /// 付款方(hidid app / 机器人里的 hidid 模块)付完款调 `hi.did.Pay.Notify`,
+  /// 载荷 `Order{id=order_id, did=merchant, hash=tx_hash}`;hidid 按这个 did 查到
+  /// 商户注册的 endpoint,回调过去。**付款方全程不需要认识插件市场的任何接口** ——
+  /// 银行 app 不该知道美团的 API 长什么样。
+  ///
+  /// ⚠️ 由订单带出来,**不让机器人硬编码**:它随环境变(dev/prod 是两个商户),
+  ///    写死在设备里就意味着换环境要刷全网机器人。
+  @$pb.TagNumber(11)
+  $core.String get merchant => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set merchant($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasMerchant() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearMerchant() => $_clearField(11);
 }
 
 /// 开一张续期账单。购买的账单由 Apply 顺带开出来,这条是**单独续期**用的。
@@ -2106,95 +2127,6 @@ class CreateRenewOrderReq extends $pb.GeneratedMessage {
   $core.bool hasGrantUuid() => $_has(0);
   @$pb.TagNumber(1)
   void clearGrantUuid() => $_clearField(1);
-}
-
-/// 付款回报:告诉市场"这张单我付了,钱在这笔转账里"。
-///
-/// ## **不看付款方是谁** —— 这是有意的
-///
-/// 卖家关心的是"这张单要的钱到账了没有",不是"谁掏的"。订单上写明给 A 续期,
-/// 那么谁付的款都一样给 A 续 —— master 付、机器人自己付、将来某台机器人替别的机器人付,
-/// 全是同一条路,不需要为每种情况放宽一次判据。
-/// (原来那版把"付款方必须是谁"当判据,机器人替自己付款时就对不上,只能一路打补丁。)
-///
-/// ## 判据(全部与付款方无关)
-///
-///   ① 订单 OPEN 且未过期        ② 这笔 tx 没被别的单用过(全局唯一)
-///   ③ 链上 success              ④ 收款方/金额/币种与订单一致
-///   ⑤ **链上时间不早于订单创建时间**
-///
-/// ⑤ 挡的是"拿一笔早就存在、恰好金额相符的旧转账来认领新订单" ——
-/// 它只看时间,不看付款方,所以不违背上面那条原则。
-///
-/// ⚠️ 已知且**接受**的残留风险:订单号写不进链上转账(Aptos 的
-///    primary_fungible_store::transfer 没有 memo 字段),所以同一挂牌、同价、
-///    同收款地址的两张单,链上那两笔钱长得一模一样 —— 理论上谁先报谁认走。
-///    这是"不看付款方"的必然代价,已知情采纳。真要堵,得让每张单的金额带一点随机尾数
-///    使其链上唯一,代价是金额变得不好看。
-class MarketPayReport extends $pb.GeneratedMessage {
-  factory MarketPayReport({
-    $core.String? orderId,
-    $core.String? txHash,
-  }) {
-    final result = create();
-    if (orderId != null) result.orderId = orderId;
-    if (txHash != null) result.txHash = txHash;
-    return result;
-  }
-
-  MarketPayReport._();
-
-  factory MarketPayReport.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory MarketPayReport.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MarketPayReport',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'orderId')
-    ..aOS(2, _omitFieldNames ? '' : 'txHash')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarketPayReport clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarketPayReport copyWith(void Function(MarketPayReport) updates) =>
-      super.copyWith((message) => updates(message as MarketPayReport))
-          as MarketPayReport;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static MarketPayReport create() => MarketPayReport._();
-  @$core.override
-  MarketPayReport createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static MarketPayReport getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MarketPayReport>(create);
-  static MarketPayReport? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get orderId => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set orderId($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasOrderId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearOrderId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get txHash => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set txHash($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasTxHash() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearTxHash() => $_clearField(2);
 }
 
 class MarketPayInfo extends $pb.GeneratedMessage {

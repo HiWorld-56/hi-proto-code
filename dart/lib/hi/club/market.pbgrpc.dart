@@ -221,14 +221,6 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$createRenewOrder, request, options: options);
   }
 
-  /// 认领一笔付款并履约。**不看付款方是谁**,见 MarketPayReport。
-  $grpc.ResponseFuture<$1.Empty> reportPayment(
-    $0.MarketPayReport request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$reportPayment, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.ListGrantsResp> listMyGrants(
     $0.ListGrantsReq request, {
     $grpc.CallOptions? options,
@@ -297,11 +289,6 @@ class MarketClient extends $grpc.Client {
           '/hi.club.Market/CreateRenewOrder',
           ($0.CreateRenewOrderReq value) => value.writeToBuffer(),
           $0.MarketOrder.fromBuffer);
-  static final _$reportPayment =
-      $grpc.ClientMethod<$0.MarketPayReport, $1.Empty>(
-          '/hi.club.Market/ReportPayment',
-          ($0.MarketPayReport value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
   static final _$listMyGrants =
       $grpc.ClientMethod<$0.ListGrantsReq, $0.ListGrantsResp>(
           '/hi.club.Market/ListMyGrants',
@@ -396,13 +383,6 @@ abstract class MarketServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.CreateRenewOrderReq.fromBuffer(value),
         ($0.MarketOrder value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.MarketPayReport, $1.Empty>(
-        'ReportPayment',
-        reportPayment_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.MarketPayReport.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListGrantsReq, $0.ListGrantsResp>(
         'ListMyGrants',
         listMyGrants_Pre,
@@ -507,14 +487,6 @@ abstract class MarketServiceBase extends $grpc.Service {
 
   $async.Future<$0.MarketOrder> createRenewOrder(
       $grpc.ServiceCall call, $0.CreateRenewOrderReq request);
-
-  $async.Future<$1.Empty> reportPayment_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.MarketPayReport> $request) async {
-    return reportPayment($call, await $request);
-  }
-
-  $async.Future<$1.Empty> reportPayment(
-      $grpc.ServiceCall call, $0.MarketPayReport request);
 
   $async.Future<$0.ListGrantsResp> listMyGrants_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListGrantsReq> $request) async {

@@ -723,6 +723,7 @@ const MarketOrder$json = {
     {'1': 'coin', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'coin'},
     {'1': 'expire_at', '3': 9, '4': 1, '5': 3, '8': {}, '10': 'expireAt'},
     {'1': 'created_at', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+    {'1': 'merchant', '3': 11, '4': 1, '5': 9, '8': {}, '10': 'merchant'},
   ],
   '7': {},
 };
@@ -736,7 +737,7 @@ final $typed_data.Uint8List marketOrderDescriptor = $convert.base64Decode(
     'kLUYA1IGc3RhdHVzEhoKBXBheWVlGAYgASgJQgSQtRgDUgVwYXllZRIcCgZhbW91bnQYByABKA'
     'lCBJC1GANSBmFtb3VudBIYCgRjb2luGAggASgJQgSQtRgDUgRjb2luEiEKCWV4cGlyZV9hdBgJ'
     'IAEoA0IEkLUYA1IIZXhwaXJlQXQSIwoKY3JlYXRlZF9hdBgKIAEoA0IEkLUYA1IJY3JlYXRlZE'
-    'F0OgSYtRgD');
+    'F0EiAKCG1lcmNoYW50GAsgASgJQgSQtRgDUghtZXJjaGFudDoEmLUYAw==');
 
 @$core.Deprecated('Use createRenewOrderReqDescriptor instead')
 const CreateRenewOrderReq$json = {
@@ -750,20 +751,6 @@ const CreateRenewOrderReq$json = {
 final $typed_data.Uint8List createRenewOrderReqDescriptor = $convert.base64Decode(
     'ChNDcmVhdGVSZW5ld09yZGVyUmVxEisKCmdyYW50X3V1aWQYASABKAlCDLpICXIHMgVeXFMrJF'
     'IJZ3JhbnRVdWlk');
-
-@$core.Deprecated('Use marketPayReportDescriptor instead')
-const MarketPayReport$json = {
-  '1': 'MarketPayReport',
-  '2': [
-    {'1': 'order_id', '3': 1, '4': 1, '5': 9, '10': 'orderId'},
-    {'1': 'tx_hash', '3': 2, '4': 1, '5': 9, '10': 'txHash'},
-  ],
-};
-
-/// Descriptor for `MarketPayReport`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List marketPayReportDescriptor = $convert.base64Decode(
-    'Cg9NYXJrZXRQYXlSZXBvcnQSGQoIb3JkZXJfaWQYASABKAlSB29yZGVySWQSFwoHdHhfaGFzaB'
-    'gCIAEoCVIGdHhIYXNo');
 
 @$core.Deprecated('Use marketPayInfoDescriptor instead')
 const MarketPayInfo$json = {

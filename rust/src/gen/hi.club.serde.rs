@@ -9838,6 +9838,9 @@ impl serde::Serialize for MarketOrder {
         if self.created_at != 0 {
             len += 1;
         }
+        if !self.merchant.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.MarketOrder", len)?;
         if !self.order_id.is_empty() {
             struct_ser.serialize_field("orderId", &self.order_id)?;
@@ -9877,6 +9880,9 @@ impl serde::Serialize for MarketOrder {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("createdAt", ToString::to_string(&self.created_at).as_str())?;
         }
+        if !self.merchant.is_empty() {
+            struct_ser.serialize_field("merchant", &self.merchant)?;
+        }
         struct_ser.end()
     }
 }
@@ -9902,6 +9908,7 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
             "expireAt",
             "created_at",
             "createdAt",
+            "merchant",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -9916,6 +9923,7 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
             Coin,
             ExpireAt,
             CreatedAt,
+            Merchant,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9947,6 +9955,7 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                             "coin" => Ok(GeneratedField::Coin),
                             "expireAt" | "expire_at" => Ok(GeneratedField::ExpireAt),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            "merchant" => Ok(GeneratedField::Merchant),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9976,6 +9985,7 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                 let mut coin__ = None;
                 let mut expire_at__ = None;
                 let mut created_at__ = None;
+                let mut merchant__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::OrderId => {
@@ -10042,6 +10052,12 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                                 Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
+                        GeneratedField::Merchant => {
+                            if merchant__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("merchant"));
+                            }
+                            merchant__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(MarketOrder {
@@ -10055,6 +10071,7 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                     coin: coin__.unwrap_or_default(),
                     expire_at: expire_at__.unwrap_or_default(),
                     created_at: created_at__.unwrap_or_default(),
+                    merchant: merchant__.unwrap_or_default(),
                 })
             }
         }
@@ -10332,116 +10349,6 @@ impl<'de> serde::Deserialize<'de> for MarketPayInfo {
             }
         }
         deserializer.deserialize_struct("hi.club.MarketPayInfo", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MarketPayReport {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.order_id.is_empty() {
-            len += 1;
-        }
-        if !self.tx_hash.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.MarketPayReport", len)?;
-        if !self.order_id.is_empty() {
-            struct_ser.serialize_field("orderId", &self.order_id)?;
-        }
-        if !self.tx_hash.is_empty() {
-            struct_ser.serialize_field("txHash", &self.tx_hash)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MarketPayReport {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "order_id",
-            "orderId",
-            "tx_hash",
-            "txHash",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            OrderId,
-            TxHash,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "orderId" | "order_id" => Ok(GeneratedField::OrderId),
-                            "txHash" | "tx_hash" => Ok(GeneratedField::TxHash),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MarketPayReport;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.MarketPayReport")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MarketPayReport, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut order_id__ = None;
-                let mut tx_hash__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::OrderId => {
-                            if order_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("orderId"));
-                            }
-                            order_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::TxHash => {
-                            if tx_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("txHash"));
-                            }
-                            tx_hash__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(MarketPayReport {
-                    order_id: order_id__.unwrap_or_default(),
-                    tx_hash: tx_hash__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.club.MarketPayReport", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for MarketPendingGrant {
