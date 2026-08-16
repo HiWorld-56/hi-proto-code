@@ -221,6 +221,20 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$createRenewOrder, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.MarketOrder> issuePayment(
+    $0.IssuePaymentReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$issuePayment, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.ListPaymentsResp> listPayments(
+    $0.ListPaymentsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listPayments, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.ListGrantsResp> listMyGrants(
     $0.ListGrantsReq request, {
     $grpc.CallOptions? options,
@@ -289,6 +303,16 @@ class MarketClient extends $grpc.Client {
           '/hi.club.Market/CreateRenewOrder',
           ($0.CreateRenewOrderReq value) => value.writeToBuffer(),
           $0.MarketOrder.fromBuffer);
+  static final _$issuePayment =
+      $grpc.ClientMethod<$0.IssuePaymentReq, $0.MarketOrder>(
+          '/hi.club.Market/IssuePayment',
+          ($0.IssuePaymentReq value) => value.writeToBuffer(),
+          $0.MarketOrder.fromBuffer);
+  static final _$listPayments =
+      $grpc.ClientMethod<$0.ListPaymentsReq, $0.ListPaymentsResp>(
+          '/hi.club.Market/ListPayments',
+          ($0.ListPaymentsReq value) => value.writeToBuffer(),
+          $0.ListPaymentsResp.fromBuffer);
   static final _$listMyGrants =
       $grpc.ClientMethod<$0.ListGrantsReq, $0.ListGrantsResp>(
           '/hi.club.Market/ListMyGrants',
@@ -383,6 +407,20 @@ abstract class MarketServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.CreateRenewOrderReq.fromBuffer(value),
         ($0.MarketOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.IssuePaymentReq, $0.MarketOrder>(
+        'IssuePayment',
+        issuePayment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.IssuePaymentReq.fromBuffer(value),
+        ($0.MarketOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListPaymentsReq, $0.ListPaymentsResp>(
+        'ListPayments',
+        listPayments_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ListPaymentsReq.fromBuffer(value),
+        ($0.ListPaymentsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListGrantsReq, $0.ListGrantsResp>(
         'ListMyGrants',
         listMyGrants_Pre,
@@ -487,6 +525,22 @@ abstract class MarketServiceBase extends $grpc.Service {
 
   $async.Future<$0.MarketOrder> createRenewOrder(
       $grpc.ServiceCall call, $0.CreateRenewOrderReq request);
+
+  $async.Future<$0.MarketOrder> issuePayment_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.IssuePaymentReq> $request) async {
+    return issuePayment($call, await $request);
+  }
+
+  $async.Future<$0.MarketOrder> issuePayment(
+      $grpc.ServiceCall call, $0.IssuePaymentReq request);
+
+  $async.Future<$0.ListPaymentsResp> listPayments_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ListPaymentsReq> $request) async {
+    return listPayments($call, await $request);
+  }
+
+  $async.Future<$0.ListPaymentsResp> listPayments(
+      $grpc.ServiceCall call, $0.ListPaymentsReq request);
 
   $async.Future<$0.ListGrantsResp> listMyGrants_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListGrantsReq> $request) async {

@@ -184,9 +184,6 @@ class MarketOrderStatus extends $pb.ProtobufEnum {
       MarketOrderStatus._(0, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_OPEN');
   static const MarketOrderStatus MARKET_ORDER_STATUS_PAID =
       MarketOrderStatus._(1, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_PAID');
-  static const MarketOrderStatus MARKET_ORDER_STATUS_EXPIRED =
-      MarketOrderStatus._(
-          2, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_EXPIRED');
   static const MarketOrderStatus MARKET_ORDER_STATUS_CANCELED =
       MarketOrderStatus._(
           3, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_CANCELED');
@@ -194,7 +191,6 @@ class MarketOrderStatus extends $pb.ProtobufEnum {
   static const $core.List<MarketOrderStatus> values = <MarketOrderStatus>[
     MARKET_ORDER_STATUS_OPEN,
     MARKET_ORDER_STATUS_PAID,
-    MARKET_ORDER_STATUS_EXPIRED,
     MARKET_ORDER_STATUS_CANCELED,
   ];
 
@@ -204,6 +200,51 @@ class MarketOrderStatus extends $pb.ProtobufEnum {
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const MarketOrderStatus._(super.value, super.name);
+}
+
+/// ── 付款凭据(子订单)────────────────────────────────────────────────────────
+///
+/// **一次付款尝试 = 一行,身份永不改写。** 上一张超时了就再开一张,旧的置 SUPERSEDED 留档。
+///
+/// 为什么不能让主订单号兼任付款凭据(原来就是这么做的,是错的):
+///   · 凭据要有有效期(价格会变,不能让一张老账单永远能付),而业务单不该跟着作废;
+///   · 于是超时后只能**整张单重开**,新单与旧单毫无关联 —— 这台机器人到底为这次续期
+///     付过几次、每次为什么没成,一点都查不到;
+///   · 人工退款查账的抓手就是"客人给的那个号"对上一笔入账,号一换就断了。
+///
+/// 与中间人交易的子订单是**同一个模式**(见 hi_trade_sub_order):一次尝试一行、
+/// 换号靠复制、旧行标出局。两边是独立的子系统,共用的是模式而不是表。
+class MarketPaymentStatus extends $pb.ProtobufEnum {
+  static const MarketPaymentStatus MARKET_PAYMENT_STATUS_PENDING =
+      MarketPaymentStatus._(
+          0, _omitEnumNames ? '' : 'MARKET_PAYMENT_STATUS_PENDING');
+  static const MarketPaymentStatus MARKET_PAYMENT_STATUS_PAID =
+      MarketPaymentStatus._(
+          1, _omitEnumNames ? '' : 'MARKET_PAYMENT_STATUS_PAID');
+  static const MarketPaymentStatus MARKET_PAYMENT_STATUS_EXPIRED =
+      MarketPaymentStatus._(
+          2, _omitEnumNames ? '' : 'MARKET_PAYMENT_STATUS_EXPIRED');
+
+  /// 已失效:被**新开的一张凭据**接替,它自己出局了。
+  /// 与 EXPIRED 分开是因为前端要按主订单号查详情:滤掉 SUPERSEDED 就恰好剩当前那张,
+  /// 而列"付款记录"时全部原样列出,换过几次、每次为什么没成一眼可见。
+  static const MarketPaymentStatus MARKET_PAYMENT_STATUS_SUPERSEDED =
+      MarketPaymentStatus._(
+          3, _omitEnumNames ? '' : 'MARKET_PAYMENT_STATUS_SUPERSEDED');
+
+  static const $core.List<MarketPaymentStatus> values = <MarketPaymentStatus>[
+    MARKET_PAYMENT_STATUS_PENDING,
+    MARKET_PAYMENT_STATUS_PAID,
+    MARKET_PAYMENT_STATUS_EXPIRED,
+    MARKET_PAYMENT_STATUS_SUPERSEDED,
+  ];
+
+  static final $core.List<MarketPaymentStatus?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static MarketPaymentStatus? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MarketPaymentStatus._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =

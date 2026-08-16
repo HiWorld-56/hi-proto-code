@@ -1884,6 +1884,136 @@ class ApplyReq extends $pb.GeneratedMessage {
   $3.Struct ensureParams() => $_ensure(3);
 }
 
+class MarketPayment extends $pb.GeneratedMessage {
+  factory MarketPayment({
+    $core.String? payId,
+    $core.String? orderId,
+    MarketPaymentStatus? status,
+    $core.String? txHash,
+    $fixnum.Int64? expireAt,
+    $fixnum.Int64? createdAt,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (payId != null) result.payId = payId;
+    if (orderId != null) result.orderId = orderId;
+    if (status != null) result.status = status;
+    if (txHash != null) result.txHash = txHash;
+    if (expireAt != null) result.expireAt = expireAt;
+    if (createdAt != null) result.createdAt = createdAt;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  MarketPayment._();
+
+  factory MarketPayment.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketPayment.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketPayment',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'payId')
+    ..aOS(2, _omitFieldNames ? '' : 'orderId')
+    ..aE<MarketPaymentStatus>(3, _omitFieldNames ? '' : 'status',
+        enumValues: MarketPaymentStatus.values)
+    ..aOS(4, _omitFieldNames ? '' : 'txHash')
+    ..aInt64(5, _omitFieldNames ? '' : 'expireAt')
+    ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
+    ..aOS(7, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPayment clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketPayment copyWith(void Function(MarketPayment) updates) =>
+      super.copyWith((message) => updates(message as MarketPayment))
+          as MarketPayment;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketPayment create() => MarketPayment._();
+  @$core.override
+  MarketPayment createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketPayment getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketPayment>(create);
+  static MarketPayment? _defaultInstance;
+
+  /// 付款凭据号。**对外给出去的是它,不是主订单号** ——
+  /// 付款方唤起 hidid 时带的、回调里回来的、人工查账时客人报的,都是这个号。
+  @$pb.TagNumber(1)
+  $core.String get payId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set payId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPayId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPayId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get orderId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set orderId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOrderId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOrderId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  MarketPaymentStatus get status => $_getN(2);
+  @$pb.TagNumber(3)
+  set status(MarketPaymentStatus value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStatus() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStatus() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get txHash => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set txHash($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTxHash() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTxHash() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get expireAt => $_getI64(4);
+  @$pb.TagNumber(5)
+  set expireAt($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasExpireAt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearExpireAt() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $fixnum.Int64 get createdAt => $_getI64(5);
+  @$pb.TagNumber(6)
+  set createdAt($fixnum.Int64 value) => $_setInt64(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCreatedAt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCreatedAt() => $_clearField(6);
+
+  /// 作废/失效的原因。不可推导,而它是人工查账退款的依据。
+  @$pb.TagNumber(7)
+  $core.String get reason => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set reason($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasReason() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearReason() => $_clearField(7);
+}
+
 class MarketOrder extends $pb.GeneratedMessage {
   factory MarketOrder({
     $core.String? orderId,
@@ -1894,9 +2024,9 @@ class MarketOrder extends $pb.GeneratedMessage {
     $core.String? payee,
     $core.String? amount,
     $core.String? coin,
-    $fixnum.Int64? expireAt,
     $fixnum.Int64? createdAt,
     $core.String? merchant,
+    MarketPayment? payment,
   }) {
     final result = create();
     if (orderId != null) result.orderId = orderId;
@@ -1907,9 +2037,9 @@ class MarketOrder extends $pb.GeneratedMessage {
     if (payee != null) result.payee = payee;
     if (amount != null) result.amount = amount;
     if (coin != null) result.coin = coin;
-    if (expireAt != null) result.expireAt = expireAt;
     if (createdAt != null) result.createdAt = createdAt;
     if (merchant != null) result.merchant = merchant;
+    if (payment != null) result.payment = payment;
     return result;
   }
 
@@ -1936,9 +2066,10 @@ class MarketOrder extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'payee')
     ..aOS(7, _omitFieldNames ? '' : 'amount')
     ..aOS(8, _omitFieldNames ? '' : 'coin')
-    ..aInt64(9, _omitFieldNames ? '' : 'expireAt')
     ..aInt64(10, _omitFieldNames ? '' : 'createdAt')
     ..aOS(11, _omitFieldNames ? '' : 'merchant')
+    ..aOM<MarketPayment>(12, _omitFieldNames ? '' : 'payment',
+        subBuilder: MarketPayment.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2033,22 +2164,12 @@ class MarketOrder extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearCoin() => $_clearField(8);
 
-  /// 订单自己的有效期(秒)。过了就作废重开 —— 价格会变,不能让一张老账单永远能付。
-  @$pb.TagNumber(9)
-  $fixnum.Int64 get expireAt => $_getI64(8);
-  @$pb.TagNumber(9)
-  set expireAt($fixnum.Int64 value) => $_setInt64(8, value);
-  @$pb.TagNumber(9)
-  $core.bool hasExpireAt() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearExpireAt() => $_clearField(9);
-
   @$pb.TagNumber(10)
-  $fixnum.Int64 get createdAt => $_getI64(9);
+  $fixnum.Int64 get createdAt => $_getI64(8);
   @$pb.TagNumber(10)
-  set createdAt($fixnum.Int64 value) => $_setInt64(9, value);
+  set createdAt($fixnum.Int64 value) => $_setInt64(8, value);
   @$pb.TagNumber(10)
-  $core.bool hasCreatedAt() => $_has(9);
+  $core.bool hasCreatedAt() => $_has(8);
   @$pb.TagNumber(10)
   void clearCreatedAt() => $_clearField(10);
 
@@ -2062,13 +2183,189 @@ class MarketOrder extends $pb.GeneratedMessage {
   /// ⚠️ 由订单带出来,**不让机器人硬编码**:它随环境变(dev/prod 是两个商户),
   ///    写死在设备里就意味着换环境要刷全网机器人。
   @$pb.TagNumber(11)
-  $core.String get merchant => $_getSZ(10);
+  $core.String get merchant => $_getSZ(9);
   @$pb.TagNumber(11)
-  set merchant($core.String value) => $_setString(10, value);
+  set merchant($core.String value) => $_setString(9, value);
   @$pb.TagNumber(11)
-  $core.bool hasMerchant() => $_has(10);
+  $core.bool hasMerchant() => $_has(9);
   @$pb.TagNumber(11)
   void clearMerchant() => $_clearField(11);
+
+  /// **当前这张付款凭据**(没被接替、也没超时的那一张)。付款方要用的号在它里面。
+  /// 历史凭据不在这里 —— 要看换号过程走 ListPayments。
+  @$pb.TagNumber(12)
+  MarketPayment get payment => $_getN(10);
+  @$pb.TagNumber(12)
+  set payment(MarketPayment value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasPayment() => $_has(10);
+  @$pb.TagNumber(12)
+  void clearPayment() => $_clearField(12);
+  @$pb.TagNumber(12)
+  MarketPayment ensurePayment() => $_ensure(10);
+}
+
+/// 再开一张付款凭据。
+///
+/// 用在"上一张超时了、或者付失败了,想再付一次"——**主订单不动**,只换凭据。
+/// 幂等:当前凭据还活着(未超时未认款)就原样返回它,不会开出一堆。
+class IssuePaymentReq extends $pb.GeneratedMessage {
+  factory IssuePaymentReq({
+    $core.String? orderId,
+  }) {
+    final result = create();
+    if (orderId != null) result.orderId = orderId;
+    return result;
+  }
+
+  IssuePaymentReq._();
+
+  factory IssuePaymentReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory IssuePaymentReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'IssuePaymentReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'orderId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IssuePaymentReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IssuePaymentReq copyWith(void Function(IssuePaymentReq) updates) =>
+      super.copyWith((message) => updates(message as IssuePaymentReq))
+          as IssuePaymentReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static IssuePaymentReq create() => IssuePaymentReq._();
+  @$core.override
+  IssuePaymentReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static IssuePaymentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<IssuePaymentReq>(create);
+  static IssuePaymentReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get orderId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set orderId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOrderId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderId() => $_clearField(1);
+}
+
+/// 这张业务单的**全部**付款凭据,按时间正序 —— 换过几次号、每次为什么没成,就是它。
+/// 人工查账退款看的就是这个列表 + 客人报的那个 pay_id。
+class ListPaymentsReq extends $pb.GeneratedMessage {
+  factory ListPaymentsReq({
+    $core.String? orderId,
+  }) {
+    final result = create();
+    if (orderId != null) result.orderId = orderId;
+    return result;
+  }
+
+  ListPaymentsReq._();
+
+  factory ListPaymentsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListPaymentsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPaymentsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'orderId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPaymentsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPaymentsReq copyWith(void Function(ListPaymentsReq) updates) =>
+      super.copyWith((message) => updates(message as ListPaymentsReq))
+          as ListPaymentsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListPaymentsReq create() => ListPaymentsReq._();
+  @$core.override
+  ListPaymentsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListPaymentsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPaymentsReq>(create);
+  static ListPaymentsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get orderId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set orderId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOrderId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderId() => $_clearField(1);
+}
+
+class ListPaymentsResp extends $pb.GeneratedMessage {
+  factory ListPaymentsResp({
+    $core.Iterable<MarketPayment>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ListPaymentsResp._();
+
+  factory ListPaymentsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListPaymentsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPaymentsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<MarketPayment>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: MarketPayment.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPaymentsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPaymentsResp copyWith(void Function(ListPaymentsResp) updates) =>
+      super.copyWith((message) => updates(message as ListPaymentsResp))
+          as ListPaymentsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListPaymentsResp create() => ListPaymentsResp._();
+  @$core.override
+  ListPaymentsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListPaymentsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPaymentsResp>(create);
+  static ListPaymentsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<MarketPayment> get list => $_getList(0);
 }
 
 /// 开一张续期账单。购买的账单由 Apply 顺带开出来,这条是**单独续期**用的。

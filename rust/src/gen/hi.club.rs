@@ -6171,6 +6171,29 @@ pub struct ApplyReq {
     pub params: ::core::option::Option<::pbjson_types::Struct>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketPayment {
+    /// 付款凭据号。**对外给出去的是它,不是主订单号** ——
+    /// 付款方唤起 hidid 时带的、回调里回来的、人工查账时客人报的,都是这个号。
+    #[prost(string, tag = "1")]
+    pub pay_id: ::prost::alloc::string::String,
+    /// 属于哪张业务单
+    #[prost(string, tag = "2")]
+    pub order_id: ::prost::alloc::string::String,
+    #[prost(enumeration = "MarketPaymentStatus", tag = "3")]
+    pub status: i32,
+    /// 认走它的那笔转账
+    #[prost(string, tag = "4")]
+    pub tx_hash: ::prost::alloc::string::String,
+    /// 这张凭据的有效期(秒)
+    #[prost(int64, tag = "5")]
+    pub expire_at: i64,
+    #[prost(int64, tag = "6")]
+    pub created_at: i64,
+    /// 作废/失效的原因。不可推导,而它是人工查账退款的依据。
+    #[prost(string, tag = "7")]
+    pub reason: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketOrder {
     /// 付款回报时的唯一凭据
     #[prost(string, tag = "1")]
@@ -6193,9 +6216,6 @@ pub struct MarketOrder {
     pub amount: ::prost::alloc::string::String,
     #[prost(string, tag = "8")]
     pub coin: ::prost::alloc::string::String,
-    /// 订单自己的有效期(秒)。过了就作废重开 —— 价格会变,不能让一张老账单永远能付。
-    #[prost(int64, tag = "9")]
-    pub expire_at: i64,
     #[prost(int64, tag = "10")]
     pub created_at: i64,
     /// 把付款结果**报给哪个商户** —— 即图示里唤起 hidid 时要带的「商户DID」。
@@ -6209,6 +6229,31 @@ pub struct MarketOrder {
     /// 写死在设备里就意味着换环境要刷全网机器人。
     #[prost(string, tag = "11")]
     pub merchant: ::prost::alloc::string::String,
+    /// **当前这张付款凭据**(没被接替、也没超时的那一张)。付款方要用的号在它里面。
+    /// 历史凭据不在这里 —— 要看换号过程走 ListPayments。
+    #[prost(message, optional, tag = "12")]
+    pub payment: ::core::option::Option<MarketPayment>,
+}
+/// 再开一张付款凭据。
+///
+/// 用在"上一张超时了、或者付失败了,想再付一次"——**主订单不动**,只换凭据。
+/// 幂等:当前凭据还活着(未超时未认款)就原样返回它,不会开出一堆。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IssuePaymentReq {
+    #[prost(string, tag = "1")]
+    pub order_id: ::prost::alloc::string::String,
+}
+/// 这张业务单的**全部**付款凭据,按时间正序 —— 换过几次号、每次为什么没成,就是它。
+/// 人工查账退款看的就是这个列表 + 客人报的那个 pay_id。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListPaymentsReq {
+    #[prost(string, tag = "1")]
+    pub order_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPaymentsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<MarketPayment>,
 }
 /// 开一张续期账单。购买的账单由 Apply 顺带开出来,这条是**单独续期**用的。
 ///
@@ -6617,8 +6662,6 @@ pub enum MarketOrderStatus {
     Open = 0,
     /// 已付款并履行完毕
     Paid = 1,
-    /// 订单过期作废(**不是授权到期**)
-    Expired = 2,
     Canceled = 3,
 }
 impl MarketOrderStatus {
@@ -6630,7 +6673,6 @@ impl MarketOrderStatus {
         match self {
             Self::Open => "MARKET_ORDER_STATUS_OPEN",
             Self::Paid => "MARKET_ORDER_STATUS_PAID",
-            Self::Expired => "MARKET_ORDER_STATUS_EXPIRED",
             Self::Canceled => "MARKET_ORDER_STATUS_CANCELED",
         }
     }
@@ -6639,8 +6681,57 @@ impl MarketOrderStatus {
         match value {
             "MARKET_ORDER_STATUS_OPEN" => Some(Self::Open),
             "MARKET_ORDER_STATUS_PAID" => Some(Self::Paid),
-            "MARKET_ORDER_STATUS_EXPIRED" => Some(Self::Expired),
             "MARKET_ORDER_STATUS_CANCELED" => Some(Self::Canceled),
+            _ => None,
+        }
+    }
+}
+/// ── 付款凭据(子订单)────────────────────────────────────────────────────────
+///
+/// **一次付款尝试 = 一行,身份永不改写。** 上一张超时了就再开一张,旧的置 SUPERSEDED 留档。
+///
+/// 为什么不能让主订单号兼任付款凭据(原来就是这么做的,是错的):
+/// · 凭据要有有效期(价格会变,不能让一张老账单永远能付),而业务单不该跟着作废;
+/// · 于是超时后只能**整张单重开**,新单与旧单毫无关联 —— 这台机器人到底为这次续期
+/// 付过几次、每次为什么没成,一点都查不到;
+/// · 人工退款查账的抓手就是"客人给的那个号"对上一笔入账,号一换就断了。
+///
+/// 与中间人交易的子订单是**同一个模式**(见 hi_trade_sub_order):一次尝试一行、
+/// 换号靠复制、旧行标出局。两边是独立的子系统,共用的是模式而不是表。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum MarketPaymentStatus {
+    /// 待付款
+    Pending = 0,
+    /// 已认款(链上核验通过、业务已履行)
+    Paid = 1,
+    /// 超时作废
+    Expired = 2,
+    /// 已失效:被**新开的一张凭据**接替,它自己出局了。
+    /// 与 EXPIRED 分开是因为前端要按主订单号查详情:滤掉 SUPERSEDED 就恰好剩当前那张,
+    /// 而列"付款记录"时全部原样列出,换过几次、每次为什么没成一眼可见。
+    Superseded = 3,
+}
+impl MarketPaymentStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Pending => "MARKET_PAYMENT_STATUS_PENDING",
+            Self::Paid => "MARKET_PAYMENT_STATUS_PAID",
+            Self::Expired => "MARKET_PAYMENT_STATUS_EXPIRED",
+            Self::Superseded => "MARKET_PAYMENT_STATUS_SUPERSEDED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MARKET_PAYMENT_STATUS_PENDING" => Some(Self::Pending),
+            "MARKET_PAYMENT_STATUS_PAID" => Some(Self::Paid),
+            "MARKET_PAYMENT_STATUS_EXPIRED" => Some(Self::Expired),
+            "MARKET_PAYMENT_STATUS_SUPERSEDED" => Some(Self::Superseded),
             _ => None,
         }
     }
@@ -7108,6 +7199,51 @@ pub mod market_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Market", "CreateRenewOrder"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn issue_payment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::IssuePaymentReq>,
+        ) -> std::result::Result<tonic::Response<super::MarketOrder>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/IssuePayment",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "IssuePayment"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_payments(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPaymentsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListPaymentsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ListPayments",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ListPayments"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_my_grants(
