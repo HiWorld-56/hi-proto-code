@@ -11459,6 +11459,207 @@ impl<'de> serde::Deserialize<'de> for RetryBuildReq {
         deserializer.deserialize_struct("hi.ai.RetryBuildReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for SetActiveAllReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.uuid.is_empty() {
+            len += 1;
+        }
+        if !self.version.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.SetActiveAllReq", len)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
+        }
+        if !self.version.is_empty() {
+            struct_ser.serialize_field("version", &self.version)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetActiveAllReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "uuid",
+            "version",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Uuid,
+            Version,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "version" => Ok(GeneratedField::Version),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetActiveAllReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.SetActiveAllReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetActiveAllReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                let mut version__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(SetActiveAllReq {
+                    uuid: uuid__.unwrap_or_default(),
+                    version: version__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.SetActiveAllReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SetActiveAllResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.switched != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.SetActiveAllResp", len)?;
+        if self.switched != 0 {
+            struct_ser.serialize_field("switched", &self.switched)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetActiveAllResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "switched",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Switched,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "switched" => Ok(GeneratedField::Switched),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetActiveAllResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.SetActiveAllResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetActiveAllResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut switched__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Switched => {
+                            if switched__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("switched"));
+                            }
+                            switched__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(SetActiveAllResp {
+                    switched: switched__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.SetActiveAllResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for SetActiveReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

@@ -37,6 +37,7 @@ class MarketListingBrief extends $pb.GeneratedMessage {
     $core.String? coin,
     $fixnum.Int64? duration,
     $core.int? installCount,
+    MarketListingKind? kind,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -50,6 +51,7 @@ class MarketListingBrief extends $pb.GeneratedMessage {
     if (coin != null) result.coin = coin;
     if (duration != null) result.duration = duration;
     if (installCount != null) result.installCount = installCount;
+    if (kind != null) result.kind = kind;
     return result;
   }
 
@@ -79,6 +81,8 @@ class MarketListingBrief extends $pb.GeneratedMessage {
     ..aOS(9, _omitFieldNames ? '' : 'coin')
     ..aInt64(10, _omitFieldNames ? '' : 'duration')
     ..aI(11, _omitFieldNames ? '' : 'installCount')
+    ..aE<MarketListingKind>(12, _omitFieldNames ? '' : 'kind',
+        enumValues: MarketListingKind.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -194,6 +198,17 @@ class MarketListingBrief extends $pb.GeneratedMessage {
   $core.bool hasInstallCount() => $_has(10);
   @$pb.TagNumber(11)
   void clearInstallCount() => $_clearField(11);
+
+  /// 这一摊是谁的货(普通 / 官方 / 内置)。公开 —— 买家要能看出哪个是官方出品,
+  /// 那正是这个字段存在的意义;藏起来等于白设。
+  @$pb.TagNumber(12)
+  MarketListingKind get kind => $_getN(11);
+  @$pb.TagNumber(12)
+  set kind(MarketListingKind value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasKind() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearKind() => $_clearField(12);
 }
 
 /// MarketListingDetail 挂牌详情。
@@ -1216,6 +1231,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? tags,
     $core.bool? allowFollowLatest,
     $core.String? actionUrl,
+    MarketListingKind? kind,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1230,6 +1246,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     if (tags != null) result.tags.addAll(tags);
     if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
     if (actionUrl != null) result.actionUrl = actionUrl;
+    if (kind != null) result.kind = kind;
     return result;
   }
 
@@ -1259,6 +1276,8 @@ class CreateListingReq extends $pb.GeneratedMessage {
     ..pPS(10, _omitFieldNames ? '' : 'tags')
     ..aOB(11, _omitFieldNames ? '' : 'allowFollowLatest')
     ..aOS(12, _omitFieldNames ? '' : 'actionUrl')
+    ..aE<MarketListingKind>(13, _omitFieldNames ? '' : 'kind',
+        enumValues: MarketListingKind.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1385,6 +1404,18 @@ class CreateListingReq extends $pb.GeneratedMessage {
   $core.bool hasActionUrl() => $_has(11);
   @$pb.TagNumber(12)
   void clearActionUrl() => $_clearField(12);
+
+  /// 挂牌类型。**只有平台那个 did 能设 OFFICIAL / BUILTIN**,别人传了直接拒。
+  /// BUILTIN 会被强制成免费 / 永久 / 免审(见 MarketListingKind) ——
+  /// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
+  @$pb.TagNumber(13)
+  MarketListingKind get kind => $_getN(12);
+  @$pb.TagNumber(13)
+  set kind(MarketListingKind value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasKind() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearKind() => $_clearField(13);
 }
 
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。

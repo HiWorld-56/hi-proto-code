@@ -132,6 +132,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$setActive, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.SetActiveAllResp> setActiveAll(
+    $0.SetActiveAllReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setActiveAll, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> setEnabled(
     $0.SetEnabledReq request, {
     $grpc.CallOptions? options,
@@ -220,6 +227,11 @@ class PluginClient extends $grpc.Client {
       '/hi.ai.Plugin/SetActive',
       ($0.SetActiveReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$setActiveAll =
+      $grpc.ClientMethod<$0.SetActiveAllReq, $0.SetActiveAllResp>(
+          '/hi.ai.Plugin/SetActiveAll',
+          ($0.SetActiveAllReq value) => value.writeToBuffer(),
+          $0.SetActiveAllResp.fromBuffer);
   static final _$setEnabled = $grpc.ClientMethod<$0.SetEnabledReq, $1.Empty>(
       '/hi.ai.Plugin/SetEnabled',
       ($0.SetEnabledReq value) => value.writeToBuffer(),
@@ -341,6 +353,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.SetActiveReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SetActiveAllReq, $0.SetActiveAllResp>(
+        'SetActiveAll',
+        setActiveAll_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.SetActiveAllReq.fromBuffer(value),
+        ($0.SetActiveAllResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetEnabledReq, $1.Empty>(
         'SetEnabled',
         setEnabled_Pre,
@@ -475,6 +494,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setActive(
       $grpc.ServiceCall call, $0.SetActiveReq request);
+
+  $async.Future<$0.SetActiveAllResp> setActiveAll_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.SetActiveAllReq> $request) async {
+    return setActiveAll($call, await $request);
+  }
+
+  $async.Future<$0.SetActiveAllResp> setActiveAll(
+      $grpc.ServiceCall call, $0.SetActiveAllReq request);
 
   $async.Future<$1.Empty> setEnabled_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SetEnabledReq> $request) async {

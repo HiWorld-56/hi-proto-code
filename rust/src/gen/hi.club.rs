@@ -5888,6 +5888,10 @@ pub struct MarketListingBrief {
     /// 装机数
     #[prost(int32, tag = "11")]
     pub install_count: i32,
+    /// 这一摊是谁的货(普通 / 官方 / 内置)。公开 —— 买家要能看出哪个是官方出品,
+    /// 那正是这个字段存在的意义;藏起来等于白设。
+    #[prost(enumeration = "MarketListingKind", tag = "12")]
+    pub kind: i32,
 }
 /// MarketListingDetail 挂牌详情。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6095,6 +6099,11 @@ pub struct CreateListingReq {
     /// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
     #[prost(string, tag = "12")]
     pub action_url: ::prost::alloc::string::String,
+    /// 挂牌类型。**只有平台那个 did 能设 OFFICIAL / BUILTIN**,别人传了直接拒。
+    /// BUILTIN 会被强制成免费 / 永久 / 免审(见 MarketListingKind) ——
+    /// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
+    #[prost(enumeration = "MarketListingKind", tag = "13")]
+    pub kind: i32,
 }
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
 ///
@@ -6595,6 +6604,57 @@ impl ListingStatus {
             "LISTING_STATUS_LISTED" => Some(Self::Listed),
             "LISTING_STATUS_HIDDEN" => Some(Self::Hidden),
             "LISTING_STATUS_DELISTED" => Some(Self::Delisted),
+            _ => None,
+        }
+    }
+}
+/// MarketListingKind 挂牌类型 —— 这一摊是谁的货。
+///
+/// **只有平台自己那个用户能设 OFFICIAL / BUILTIN**（club 配置里那一个 did，见
+/// backend-hi-club 的 `Market.OFFICIAL_DID`）。别人传了直接拒 ——
+/// 否则任何商户都能给自己的插件贴个"官方"，而"官方"这两个字的全部价值就是没人能自封。
+///
+/// ## BUILTIN 是「每台硬件机器人都该有」的那一档
+///
+/// 它不是一个更醒目的 OFFICIAL，而是多了两条**机制**：
+///
+/// · 新硬件机器人在 club 注册时**自动引用**它（不走申请，不需要主人点头）；
+/// · 发新版时**全网一起切**（`hi.ai.Plugin.SetActiveAll`），不看 follow_latest ——
+/// 内置能力跟 brain 的 ABI 绑在一起，一台机器人停在老版就是设备能力与固件对不上。
+///
+/// 所以 BUILTIN 强制：免费、永久、免审。收费的"内置"是自相矛盾的 ——
+/// 出厂就该有的能力，不能等用户付款。
+///
+/// ⚠️ **它照样挂在市场里**，而不是藏在系统里：主人把内置插件关了/删了之后，
+/// 得有个地方让他自己拿回来（0 元购）。藏起来的东西找不回来。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum MarketListingKind {
+    /// = NORMAL,三方商户的货
+    Unspecified = 0,
+    /// 官方出品(可以收费、走正常申请流程)
+    Official = 1,
+    /// 内置:每台硬件机器人自动引用 + 全网跟版 + 免费永久免审
+    Builtin = 2,
+}
+impl MarketListingKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "MARKET_LISTING_KIND_UNSPECIFIED",
+            Self::Official => "MARKET_LISTING_KIND_OFFICIAL",
+            Self::Builtin => "MARKET_LISTING_KIND_BUILTIN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MARKET_LISTING_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "MARKET_LISTING_KIND_OFFICIAL" => Some(Self::Official),
+            "MARKET_LISTING_KIND_BUILTIN" => Some(Self::Builtin),
             _ => None,
         }
     }

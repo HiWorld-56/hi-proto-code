@@ -1255,6 +1255,138 @@ class SetActiveReq extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(3);
 }
 
+/// SetActiveAll 把**所有使用方**切到同一版 —— 官方/内置插件发新版时用。
+///
+/// 为什么需要它:激活版是**每个使用方各一行**(d),发新版不会动别人那行。对普通插件这是
+/// 对的(作者发新版可能改坏,不该自动打穿所有引用方,所以有 follow_latest 这个开关);
+/// 但**内置插件的版本必须全网统一** —— 它是平台能力,还跟 brain 的 ABI 绑在一起,
+/// 一台机器人停在老版就是一台设备的能力与固件对不上。
+///
+/// ⚠️ **没有 agent 参数**,也没有"要切哪些"的名单:主体就是"这个壳的所有使用方"。
+///    给了名单就等于让调用方去枚举几千个 did,而那份名单迟早与事实不符。
+///
+/// ⚠️ 与 SetActive 同一套语义(没有 d 行就以当前激活版的 d.data 为模板补一行再激活),
+///    所以引用方不必发过版也切得动。
+class SetActiveAllReq extends $pb.GeneratedMessage {
+  factory SetActiveAllReq({
+    $core.String? uuid,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  SetActiveAllReq._();
+
+  factory SetActiveAllReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetActiveAllReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetActiveAllReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetActiveAllReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetActiveAllReq copyWith(void Function(SetActiveAllReq) updates) =>
+      super.copyWith((message) => updates(message as SetActiveAllReq))
+          as SetActiveAllReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetActiveAllReq create() => SetActiveAllReq._();
+  @$core.override
+  SetActiveAllReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetActiveAllReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetActiveAllReq>(create);
+  static SetActiveAllReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+}
+
+class SetActiveAllResp extends $pb.GeneratedMessage {
+  factory SetActiveAllResp({
+    $core.int? switched,
+  }) {
+    final result = create();
+    if (switched != null) result.switched = switched;
+    return result;
+  }
+
+  SetActiveAllResp._();
+
+  factory SetActiveAllResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetActiveAllResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetActiveAllResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'switched')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetActiveAllResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetActiveAllResp copyWith(void Function(SetActiveAllResp) updates) =>
+      super.copyWith((message) => updates(message as SetActiveAllResp))
+          as SetActiveAllResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetActiveAllResp create() => SetActiveAllResp._();
+  @$core.override
+  SetActiveAllResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetActiveAllResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetActiveAllResp>(create);
+  static SetActiveAllResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get switched => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set switched($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSwitched() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSwitched() => $_clearField(1);
+}
+
 class DownloadScriptReq extends $pb.GeneratedMessage {
   factory DownloadScriptReq({
     $core.String? agent,

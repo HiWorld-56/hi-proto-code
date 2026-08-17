@@ -34,6 +34,7 @@ const (
 	Plugin_CreateReference_FullMethodName   = "/hi.ai.Plugin/CreateReference"
 	Plugin_DeleteByAgents_FullMethodName    = "/hi.ai.Plugin/DeleteByAgents"
 	Plugin_SetActive_FullMethodName         = "/hi.ai.Plugin/SetActive"
+	Plugin_SetActiveAll_FullMethodName      = "/hi.ai.Plugin/SetActiveAll"
 	Plugin_SetEnabled_FullMethodName        = "/hi.ai.Plugin/SetEnabled"
 	Plugin_ListNative_FullMethodName        = "/hi.ai.Plugin/ListNative"
 	Plugin_RetryBuild_FullMethodName        = "/hi.ai.Plugin/RetryBuild"
@@ -59,6 +60,7 @@ type PluginClient interface {
 	CreateReference(ctx context.Context, in *CreateReferenceReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteByAgents(ctx context.Context, in *DeletePluginByAgentsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActive(ctx context.Context, in *SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetActiveAll(ctx context.Context, in *SetActiveAllReq, opts ...grpc.CallOption) (*SetActiveAllResp, error)
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error)
 	RetryBuild(ctx context.Context, in *RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -212,6 +214,16 @@ func (c *pluginClient) SetActive(ctx context.Context, in *SetActiveReq, opts ...
 	return out, nil
 }
 
+func (c *pluginClient) SetActiveAll(ctx context.Context, in *SetActiveAllReq, opts ...grpc.CallOption) (*SetActiveAllResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetActiveAllResp)
+	err := c.cc.Invoke(ctx, Plugin_SetActiveAll_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -262,6 +274,7 @@ type PluginServer interface {
 	CreateReference(context.Context, *CreateReferenceReq) (*emptypb.Empty, error)
 	DeleteByAgents(context.Context, *DeletePluginByAgentsReq) (*emptypb.Empty, error)
 	SetActive(context.Context, *SetActiveReq) (*emptypb.Empty, error)
+	SetActiveAll(context.Context, *SetActiveAllReq) (*SetActiveAllResp, error)
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
 	ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error)
 	RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error)
@@ -315,6 +328,9 @@ func (UnimplementedPluginServer) DeleteByAgents(context.Context, *DeletePluginBy
 }
 func (UnimplementedPluginServer) SetActive(context.Context, *SetActiveReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetActive not implemented")
+}
+func (UnimplementedPluginServer) SetActiveAll(context.Context, *SetActiveAllReq) (*SetActiveAllResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetActiveAll not implemented")
 }
 func (UnimplementedPluginServer) SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
@@ -597,6 +613,24 @@ func _Plugin_SetActive_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_SetActiveAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetActiveAllReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).SetActiveAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_SetActiveAll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).SetActiveAll(ctx, req.(*SetActiveAllReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetEnabledReq)
 	if err := dec(in); err != nil {
@@ -713,6 +747,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetActive",
 			Handler:    _Plugin_SetActive_Handler,
+		},
+		{
+			MethodName: "SetActiveAll",
+			Handler:    _Plugin_SetActiveAll_Handler,
 		},
 		{
 			MethodName: "SetEnabled",

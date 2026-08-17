@@ -434,6 +434,34 @@ final $typed_data.Uint8List setActiveReqDescriptor = $convert.base64Decode(
     'CgxTZXRBY3RpdmVSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHV1aWQYAiABKAlSBHV1aW'
     'QSGAoHdmVyc2lvbhgDIAEoCVIHdmVyc2lvbg==');
 
+@$core.Deprecated('Use setActiveAllReqDescriptor instead')
+const SetActiveAllReq$json = {
+  '1': 'SetActiveAllReq',
+  '2': [
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'version', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'version'},
+  ],
+};
+
+/// Descriptor for `SetActiveAllReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setActiveAllReqDescriptor = $convert.base64Decode(
+    'Cg9TZXRBY3RpdmVBbGxSZXESIAoEdXVpZBgBIAEoCUIMukgJcgcyBV5cUyskUgR1dWlkEiYKB3'
+    'ZlcnNpb24YAiABKAlCDLpICXIHMgVeXFMrJFIHdmVyc2lvbg==');
+
+@$core.Deprecated('Use setActiveAllRespDescriptor instead')
+const SetActiveAllResp$json = {
+  '1': 'SetActiveAllResp',
+  '2': [
+    {'1': 'switched', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'switched'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `SetActiveAllResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setActiveAllRespDescriptor = $convert.base64Decode(
+    'ChBTZXRBY3RpdmVBbGxSZXNwEiAKCHN3aXRjaGVkGAEgASgFQgSQtRgDUghzd2l0Y2hlZDoEmL'
+    'UYAw==');
+
 @$core.Deprecated('Use downloadScriptReqDescriptor instead')
 const DownloadScriptReq$json = {
   '1': 'DownloadScriptReq',

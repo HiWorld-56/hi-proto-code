@@ -51,6 +51,22 @@ final $typed_data.Uint8List listingStatusDescriptor = $convert.base64Decode(
     'lOR19TVEFUVVNfRFJBRlQQARIZChVMSVNUSU5HX1NUQVRVU19MSVNURUQQAhIZChVMSVNUSU5H'
     'X1NUQVRVU19ISURERU4QAxIbChdMSVNUSU5HX1NUQVRVU19ERUxJU1RFRBAE');
 
+@$core.Deprecated('Use marketListingKindDescriptor instead')
+const MarketListingKind$json = {
+  '1': 'MarketListingKind',
+  '2': [
+    {'1': 'MARKET_LISTING_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'MARKET_LISTING_KIND_OFFICIAL', '2': 1},
+    {'1': 'MARKET_LISTING_KIND_BUILTIN', '2': 2},
+  ],
+};
+
+/// Descriptor for `MarketListingKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List marketListingKindDescriptor = $convert.base64Decode(
+    'ChFNYXJrZXRMaXN0aW5nS2luZBIjCh9NQVJLRVRfTElTVElOR19LSU5EX1VOU1BFQ0lGSUVEEA'
+    'ASIAocTUFSS0VUX0xJU1RJTkdfS0lORF9PRkZJQ0lBTBABEh8KG01BUktFVF9MSVNUSU5HX0tJ'
+    'TkRfQlVJTFRJThAC');
+
 @$core.Deprecated('Use grantStatusDescriptor instead')
 const GrantStatus$json = {
   '1': 'GrantStatus',
@@ -160,6 +176,15 @@ const MarketListingBrief$json = {
       '8': {},
       '10': 'installCount'
     },
+    {
+      '1': 'kind',
+      '3': 12,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.MarketListingKind',
+      '8': {},
+      '10': 'kind'
+    },
   ],
   '7': {},
 };
@@ -173,7 +198,8 @@ final $typed_data.Uint8List marketListingBriefDescriptor = $convert.base64Decode
     'aGkuY2x1Yi5TZXR0bGVNb2RlQgSQtRgBUgpzZXR0bGVNb2RlEhoKBXByaWNlGAggASgJQgSQtR'
     'gBUgVwcmljZRIYCgRjb2luGAkgASgJQgSQtRgBUgRjb2luEiAKCGR1cmF0aW9uGAogASgDQgSQ'
     'tRgBUghkdXJhdGlvbhIpCg1pbnN0YWxsX2NvdW50GAsgASgFQgSQtRgBUgxpbnN0YWxsQ291bn'
-    'Q6BJi1GAE=');
+    'QSNAoEa2luZBgMIAEoDjIaLmhpLmNsdWIuTWFya2V0TGlzdGluZ0tpbmRCBJC1GAFSBGtpbmQ6'
+    'BJi1GAE=');
 
 @$core.Deprecated('Use marketListingDetailDescriptor instead')
 const MarketListingDetail$json = {
@@ -535,6 +561,14 @@ const CreateListingReq$json = {
       '10': 'allowFollowLatest'
     },
     {'1': 'action_url', '3': 12, '4': 1, '5': 9, '10': 'actionUrl'},
+    {
+      '1': 'kind',
+      '3': 13,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.MarketListingKind',
+      '10': 'kind'
+    },
   ],
 };
 
@@ -547,7 +581,8 @@ final $typed_data.Uint8List createListingReqDescriptor = $convert.base64Decode(
     'aW9uEh0KBXRpdGxlGAcgASgJQge6SARyAhABUgV0aXRsZRIYCgdzdW1tYXJ5GAggASgJUgdzdW'
     '1tYXJ5EhIKBGxvZ28YCSABKAlSBGxvZ28SEgoEdGFncxgKIAMoCVIEdGFncxIuChNhbGxvd19m'
     'b2xsb3dfbGF0ZXN0GAsgASgIUhFhbGxvd0ZvbGxvd0xhdGVzdBIdCgphY3Rpb25fdXJsGAwgAS'
-    'gJUglhY3Rpb25Vcmw=');
+    'gJUglhY3Rpb25VcmwSLgoEa2luZBgNIAEoDjIaLmhpLmNsdWIuTWFya2V0TGlzdGluZ0tpbmRS'
+    'BGtpbmQ=');
 
 @$core.Deprecated('Use editListingReqDescriptor instead')
 const EditListingReq$json = {

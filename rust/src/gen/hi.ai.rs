@@ -903,6 +903,31 @@ pub struct SetActiveReq {
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
 }
+/// SetActiveAll 把**所有使用方**切到同一版 —— 官方/内置插件发新版时用。
+///
+/// 为什么需要它:激活版是**每个使用方各一行**(d),发新版不会动别人那行。对普通插件这是
+/// 对的(作者发新版可能改坏,不该自动打穿所有引用方,所以有 follow_latest 这个开关);
+/// 但**内置插件的版本必须全网统一** —— 它是平台能力,还跟 brain 的 ABI 绑在一起,
+/// 一台机器人停在老版就是一台设备的能力与固件对不上。
+///
+/// ⚠️ **没有 agent 参数**,也没有"要切哪些"的名单:主体就是"这个壳的所有使用方"。
+/// 给了名单就等于让调用方去枚举几千个 did,而那份名单迟早与事实不符。
+///
+/// ⚠️ 与 SetActive 同一套语义(没有 d 行就以当前激活版的 d.data 为模板补一行再激活),
+/// 所以引用方不必发过版也切得动。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetActiveAllReq {
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetActiveAllResp {
+    /// 切过去的使用方个数(日志/回显用)
+    #[prost(int32, tag = "1")]
+    pub switched: i32,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptReq {
     #[prost(string, tag = "1")]
@@ -1612,6 +1637,29 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/SetActive");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "SetActive"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_active_all(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetActiveAllReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SetActiveAllResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/SetActiveAll",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "SetActiveAll"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_enabled(
