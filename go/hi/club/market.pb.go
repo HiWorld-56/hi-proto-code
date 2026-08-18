@@ -1958,14 +1958,25 @@ type MarketPayment struct {
 	//	⚠️ 它**不是判据**:市场认款从来不看谁掏的钱(订单写明了给谁履约)。
 	//	   落它只是记账,以及让当事人查得到自己的交易。
 	//
+	// to_account:**这一笔要打到哪个账户** —— 开凭据那一刻解析并写死。
+	//
+	// 单笔交易只认账号,不涉及"谁在交易" —— 执行方(hidid app / PC 工具)拿它去查
+	// 对应链的地址就能付,**不需要、也不该再判断"这个主体的钱该进谁的账户"**。
+	// 认款比对的也是它:付给谁与比对谁从此是同一个值,不是两次独立计算。
+	//
+	// 为什么落在凭据上而不是业务单上:凭据就是"这一笔"。换一张凭据会重新解析 ——
+	// 卖家中途改了 server,新凭据用新账号、旧凭据保留旧账号,天然是快照。
 	// payee:收款方,**从订单带出来**(订单开出时就定了,之后不变)。
 	//
 	// 两个都不在这张表上另存一份:payee/amount/coin 在订单上不可变,
 	// 读的时候 join 出来即可,存两份只会给自己留一个会漂的口子。
-	Payer         string `protobuf:"bytes,8,opt,name=payer,proto3" json:"payer,omitempty"`
-	Payee         string `protobuf:"bytes,9,opt,name=payee,proto3" json:"payee,omitempty"`
-	Amount        string `protobuf:"bytes,10,opt,name=amount,proto3" json:"amount,omitempty"`
-	Coin          string `protobuf:"bytes,11,opt,name=coin,proto3" json:"coin,omitempty"`
+	Payer  string `protobuf:"bytes,8,opt,name=payer,proto3" json:"payer,omitempty"`
+	Payee  string `protobuf:"bytes,9,opt,name=payee,proto3" json:"payee,omitempty"`
+	Amount string `protobuf:"bytes,10,opt,name=amount,proto3" json:"amount,omitempty"`
+	Coin   string `protobuf:"bytes,11,opt,name=coin,proto3" json:"coin,omitempty"`
+	// **这一笔打到哪个账户**。与 payee(收款人)分开:见上面那段。
+	// 它是**落库的快照**,不是 join 出来的 —— 因为 server 可以被改,而这一笔的目标不能变。
+	ToAccount     string `protobuf:"bytes,12,opt,name=to_account,json=toAccount,proto3" json:"to_account,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2073,6 +2084,13 @@ func (x *MarketPayment) GetAmount() string {
 func (x *MarketPayment) GetCoin() string {
 	if x != nil {
 		return x.Coin
+	}
+	return ""
+}
+
+func (x *MarketPayment) GetToAccount() string {
+	if x != nil {
+		return x.ToAccount
 	}
 	return ""
 }
@@ -2240,8 +2258,29 @@ type MarketOrder struct {
 	TargetAgent string                 `protobuf:"bytes,3,opt,name=target_agent,json=targetAgent,proto3" json:"target_agent,omitempty"` // 给**哪台机器人**
 	Kind        MarketOrderKind        `protobuf:"varint,4,opt,name=kind,proto3,enum=hi.club.MarketOrderKind" json:"kind,omitempty"`
 	Status      MarketOrderStatus      `protobuf:"varint,5,opt,name=status,proto3,enum=hi.club.MarketOrderStatus" json:"status,omitempty"`
-	// 收款方 DID。**后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
-	Payee     string `protobuf:"bytes,6,opt,name=payee,proto3" json:"payee,omitempty"`
+	// ⭐ **收款人与收款账号是两件事,各记一行** —— 去银行存钱要姓名也要账号,缺一不可。
+	//
+	//	payee         = **谁在收款**(交易者):硬件机器人自己 / 软件机器人的 master。
+	//	                界面显示、权属判断用它。
+	//	payee_account = **钱进哪个账户**(结算实体):`MerchantPub.Server` 解析的结果,
+	//	                默认 = payee 本人。商户可以把结算实体改到别的账号
+	//	                (`MerchantOwner.SetServer`,改它 = 改钱打给谁)。
+	//
+	// 混成一列的后果:那一列会随"谁改了 server"变,而"卖家是谁"不变 ——
+	// 两个变速不同的事实压在一起,迟早对不上。club-trade 早就是分开的
+	// (业务单记交易者、子单记账号),market 这边补齐,口径一致。
+	//
+	// ⚠️ **两个都由后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
+	// ⚠️ `payee_account` 在**开单那一刻解析并写死**(与价格/时长同批快照):
+	//
+	//	卖家之后改 server,旧单不能跟着飘。
+	Payee        string `protobuf:"bytes,6,opt,name=payee,proto3" json:"payee,omitempty"`
+	PayeeAccount string `protobuf:"bytes,13,opt,name=payee_account,json=payeeAccount,proto3" json:"payee_account,omitempty"`
+	// 付款人(买家)。**只记账,不作判据** —— 市场认款从来不看谁掏的钱,
+	// 判据是"这张单要的钱到账了没有"。记它是为了让当事人查得到自己的交易。
+	//
+	// 没有 payer_account:判据不看付款侧,加一个没人读的列只会让人以为它是判据。
+	Payer     string `protobuf:"bytes,14,opt,name=payer,proto3" json:"payer,omitempty"`
 	Amount    string `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
 	Coin      string `protobuf:"bytes,8,opt,name=coin,proto3" json:"coin,omitempty"`
 	CreatedAt int64  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
@@ -2331,6 +2370,20 @@ func (x *MarketOrder) GetStatus() MarketOrderStatus {
 func (x *MarketOrder) GetPayee() string {
 	if x != nil {
 		return x.Payee
+	}
+	return ""
+}
+
+func (x *MarketOrder) GetPayeeAccount() string {
+	if x != nil {
+		return x.PayeeAccount
+	}
+	return ""
+}
+
+func (x *MarketOrder) GetPayer() string {
+	if x != nil {
+		return x.Payer
 	}
 	return ""
 }
@@ -2557,13 +2610,14 @@ func (x *CreateRenewOrderReq) GetGrantUuid() string {
 }
 
 type MarketPayInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 收款方 DID。**由后端按机器人类型自动定,不接受前端指定**:
-	// 硬件机器人 → 机器人自己;软件机器人 → 它的 master。
-	// 让前端传就等于把"钱打给谁"变成一个可篡改的入参。
-	Payee         string `protobuf:"bytes,1,opt,name=payee,proto3" json:"payee,omitempty"`
-	Amount        string `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
-	Coin          string `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Amount string                 `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
+	Coin   string                 `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
+	// **钱打到这个 did 的地址上** —— 结算实体(默认=收款人本人)。付款方只认它。
+	PayeeAccount string `protobuf:"bytes,4,opt,name=payee_account,json=payeeAccount,proto3" json:"payee_account,omitempty"`
+	// **显示给用户看"你在付给谁"** —— 收款人本人。跳蚤市场下用户是把钱付给一个
+	// 陌生的机器人/用户,看不清收款人就不该让他按确认。
+	PayeeOwner    string `protobuf:"bytes,5,opt,name=payee_owner,json=payeeOwner,proto3" json:"payee_owner,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2598,13 +2652,6 @@ func (*MarketPayInfo) Descriptor() ([]byte, []int) {
 	return file_hi_club_market_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *MarketPayInfo) GetPayee() string {
-	if x != nil {
-		return x.Payee
-	}
-	return ""
-}
-
 func (x *MarketPayInfo) GetAmount() string {
 	if x != nil {
 		return x.Amount
@@ -2615,6 +2662,20 @@ func (x *MarketPayInfo) GetAmount() string {
 func (x *MarketPayInfo) GetCoin() string {
 	if x != nil {
 		return x.Coin
+	}
+	return ""
+}
+
+func (x *MarketPayInfo) GetPayeeAccount() string {
+	if x != nil {
+		return x.PayeeAccount
+	}
+	return ""
+}
+
+func (x *MarketPayInfo) GetPayeeOwner() string {
+	if x != nil {
+		return x.PayeeOwner
 	}
 	return ""
 }
@@ -3779,7 +3840,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\bApplyReq\x12/\n" +
 	"\flisting_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\vlistingUuid\x12'\n" +
 	"\bto_agent\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\atoAgent\x12/\n" +
-	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06paramsJ\x04\b\x03\x10\x04R\rfollow_latest\"\x84\x03\n" +
+	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06paramsJ\x04\b\x03\x10\x04R\rfollow_latest\"\xa9\x03\n" +
 	"\rMarketPayment\x12\x1b\n" +
 	"\x06pay_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05payId\x12\x1f\n" +
 	"\border_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12:\n" +
@@ -3793,7 +3854,9 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05payee\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12\x1c\n" +
 	"\x06amount\x18\n" +
 	" \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
-	"\x04coin\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x04coin:\x04\x98\xb5\x18\x03\"W\n" +
+	"\x04coin\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12#\n" +
+	"\n" +
+	"to_account\x18\f \x01(\tB\x04\x90\xb5\x18\x03R\ttoAccount:\x04\x98\xb5\x18\x03\"W\n" +
 	"\x13ListTransactionsReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
@@ -3802,7 +3865,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x14ListTransactionsResp\x120\n" +
 	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +
 	"\x11GetTransactionReq\x12#\n" +
-	"\x06pay_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05payId\"\xc9\x03\n" +
+	"\x06pay_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05payId\"\x90\x04\n" +
 	"\vMarketOrder\x12\x1f\n" +
 	"\border_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12#\n" +
 	"\n" +
@@ -3810,7 +3873,9 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\ftarget_agent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\vtargetAgent\x122\n" +
 	"\x04kind\x18\x04 \x01(\x0e2\x18.hi.club.MarketOrderKindB\x04\x90\xb5\x18\x03R\x04kind\x128\n" +
 	"\x06status\x18\x05 \x01(\x0e2\x1a.hi.club.MarketOrderStatusB\x04\x90\xb5\x18\x03R\x06status\x12\x1a\n" +
-	"\x05payee\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12\x1c\n" +
+	"\x05payee\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12)\n" +
+	"\rpayee_account\x18\r \x01(\tB\x04\x90\xb5\x18\x03R\fpayeeAccount\x12\x1a\n" +
+	"\x05payer\x18\x0e \x01(\tB\x04\x90\xb5\x18\x03R\x05payer\x12\x1c\n" +
 	"\x06amount\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
 	"\x04coin\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12#\n" +
 	"\n" +
@@ -3827,11 +3892,13 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"B\n" +
 	"\x13CreateRenewOrderReq\x12+\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\"i\n" +
-	"\rMarketPayInfo\x12\x1a\n" +
-	"\x05payee\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12\x1c\n" +
+	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\"\xac\x01\n" +
+	"\rMarketPayInfo\x12\x1c\n" +
 	"\x06amount\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
-	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04coin:\x04\x98\xb5\x18\x03\"\xf1\x01\n" +
+	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12)\n" +
+	"\rpayee_account\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\fpayeeAccount\x12%\n" +
+	"\vpayee_owner\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
+	"payeeOwner:\x04\x98\xb5\x18\x03J\x04\b\x01\x10\x02R\x05payee\"\xf1\x01\n" +
 	"\tApplyResp\x12#\n" +
 	"\n" +
 	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\tgrantUuid\x122\n" +

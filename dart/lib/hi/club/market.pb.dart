@@ -1874,6 +1874,7 @@ class MarketPayment extends $pb.GeneratedMessage {
     $core.String? payee,
     $core.String? amount,
     $core.String? coin,
+    $core.String? toAccount,
   }) {
     final result = create();
     if (payId != null) result.payId = payId;
@@ -1887,6 +1888,7 @@ class MarketPayment extends $pb.GeneratedMessage {
     if (payee != null) result.payee = payee;
     if (amount != null) result.amount = amount;
     if (coin != null) result.coin = coin;
+    if (toAccount != null) result.toAccount = toAccount;
     return result;
   }
 
@@ -1915,6 +1917,7 @@ class MarketPayment extends $pb.GeneratedMessage {
     ..aOS(9, _omitFieldNames ? '' : 'payee')
     ..aOS(10, _omitFieldNames ? '' : 'amount')
     ..aOS(11, _omitFieldNames ? '' : 'coin')
+    ..aOS(12, _omitFieldNames ? '' : 'toAccount')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2008,6 +2011,14 @@ class MarketPayment extends $pb.GeneratedMessage {
   ///   因为那时候还没有"交易"。
   ///   ⚠️ 它**不是判据**:市场认款从来不看谁掏的钱(订单写明了给谁履约)。
   ///      落它只是记账,以及让当事人查得到自己的交易。
+  /// to_account:**这一笔要打到哪个账户** —— 开凭据那一刻解析并写死。
+  ///
+  /// 单笔交易只认账号,不涉及"谁在交易" —— 执行方(hidid app / PC 工具)拿它去查
+  /// 对应链的地址就能付,**不需要、也不该再判断"这个主体的钱该进谁的账户"**。
+  /// 认款比对的也是它:付给谁与比对谁从此是同一个值,不是两次独立计算。
+  ///
+  /// 为什么落在凭据上而不是业务单上:凭据就是"这一笔"。换一张凭据会重新解析 ——
+  /// 卖家中途改了 server,新凭据用新账号、旧凭据保留旧账号,天然是快照。
   /// payee:收款方,**从订单带出来**(订单开出时就定了,之后不变)。
   ///
   /// 两个都不在这张表上另存一份:payee/amount/coin 在订单上不可变,
@@ -2047,6 +2058,17 @@ class MarketPayment extends $pb.GeneratedMessage {
   $core.bool hasCoin() => $_has(10);
   @$pb.TagNumber(11)
   void clearCoin() => $_clearField(11);
+
+  /// **这一笔打到哪个账户**。与 payee(收款人)分开:见上面那段。
+  /// 它是**落库的快照**,不是 join 出来的 —— 因为 server 可以被改,而这一笔的目标不能变。
+  @$pb.TagNumber(12)
+  $core.String get toAccount => $_getSZ(11);
+  @$pb.TagNumber(12)
+  set toAccount($core.String value) => $_setString(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasToAccount() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearToAccount() => $_clearField(12);
 }
 
 /// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。
@@ -2249,6 +2271,8 @@ class MarketOrder extends $pb.GeneratedMessage {
     $fixnum.Int64? createdAt,
     $core.String? merchant,
     MarketPayment? payment,
+    $core.String? payeeAccount,
+    $core.String? payer,
   }) {
     final result = create();
     if (orderId != null) result.orderId = orderId;
@@ -2262,6 +2286,8 @@ class MarketOrder extends $pb.GeneratedMessage {
     if (createdAt != null) result.createdAt = createdAt;
     if (merchant != null) result.merchant = merchant;
     if (payment != null) result.payment = payment;
+    if (payeeAccount != null) result.payeeAccount = payeeAccount;
+    if (payer != null) result.payer = payer;
     return result;
   }
 
@@ -2292,6 +2318,8 @@ class MarketOrder extends $pb.GeneratedMessage {
     ..aOS(11, _omitFieldNames ? '' : 'merchant')
     ..aOM<MarketPayment>(12, _omitFieldNames ? '' : 'payment',
         subBuilder: MarketPayment.create)
+    ..aOS(13, _omitFieldNames ? '' : 'payeeAccount')
+    ..aOS(14, _omitFieldNames ? '' : 'payer')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2358,7 +2386,21 @@ class MarketOrder extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearStatus() => $_clearField(5);
 
-  /// 收款方 DID。**后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
+  /// ⭐ **收款人与收款账号是两件事,各记一行** —— 去银行存钱要姓名也要账号,缺一不可。
+  ///
+  ///   payee         = **谁在收款**(交易者):硬件机器人自己 / 软件机器人的 master。
+  ///                   界面显示、权属判断用它。
+  ///   payee_account = **钱进哪个账户**(结算实体):`MerchantPub.Server` 解析的结果,
+  ///                   默认 = payee 本人。商户可以把结算实体改到别的账号
+  ///                   (`MerchantOwner.SetServer`,改它 = 改钱打给谁)。
+  ///
+  /// 混成一列的后果:那一列会随"谁改了 server"变,而"卖家是谁"不变 ——
+  /// 两个变速不同的事实压在一起,迟早对不上。club-trade 早就是分开的
+  /// (业务单记交易者、子单记账号),market 这边补齐,口径一致。
+  ///
+  /// ⚠️ **两个都由后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
+  /// ⚠️ `payee_account` 在**开单那一刻解析并写死**(与价格/时长同批快照):
+  ///    卖家之后改 server,旧单不能跟着飘。
   @$pb.TagNumber(6)
   $core.String get payee => $_getSZ(5);
   @$pb.TagNumber(6)
@@ -2425,6 +2467,28 @@ class MarketOrder extends $pb.GeneratedMessage {
   void clearPayment() => $_clearField(12);
   @$pb.TagNumber(12)
   MarketPayment ensurePayment() => $_ensure(10);
+
+  @$pb.TagNumber(13)
+  $core.String get payeeAccount => $_getSZ(11);
+  @$pb.TagNumber(13)
+  set payeeAccount($core.String value) => $_setString(11, value);
+  @$pb.TagNumber(13)
+  $core.bool hasPayeeAccount() => $_has(11);
+  @$pb.TagNumber(13)
+  void clearPayeeAccount() => $_clearField(13);
+
+  /// 付款人(买家)。**只记账,不作判据** —— 市场认款从来不看谁掏的钱,
+  /// 判据是"这张单要的钱到账了没有"。记它是为了让当事人查得到自己的交易。
+  ///
+  /// 没有 payer_account:判据不看付款侧,加一个没人读的列只会让人以为它是判据。
+  @$pb.TagNumber(14)
+  $core.String get payer => $_getSZ(12);
+  @$pb.TagNumber(14)
+  set payer($core.String value) => $_setString(12, value);
+  @$pb.TagNumber(14)
+  $core.bool hasPayer() => $_has(12);
+  @$pb.TagNumber(14)
+  void clearPayer() => $_clearField(14);
 }
 
 /// 再开一张付款凭据。
@@ -2650,14 +2714,16 @@ class CreateRenewOrderReq extends $pb.GeneratedMessage {
 
 class MarketPayInfo extends $pb.GeneratedMessage {
   factory MarketPayInfo({
-    $core.String? payee,
     $core.String? amount,
     $core.String? coin,
+    $core.String? payeeAccount,
+    $core.String? payeeOwner,
   }) {
     final result = create();
-    if (payee != null) result.payee = payee;
     if (amount != null) result.amount = amount;
     if (coin != null) result.coin = coin;
+    if (payeeAccount != null) result.payeeAccount = payeeAccount;
+    if (payeeOwner != null) result.payeeOwner = payeeOwner;
     return result;
   }
 
@@ -2674,9 +2740,10 @@ class MarketPayInfo extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'MarketPayInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'payee')
     ..aOS(2, _omitFieldNames ? '' : 'amount')
     ..aOS(3, _omitFieldNames ? '' : 'coin')
+    ..aOS(4, _omitFieldNames ? '' : 'payeeAccount')
+    ..aOS(5, _omitFieldNames ? '' : 'payeeOwner')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2698,35 +2765,44 @@ class MarketPayInfo extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<MarketPayInfo>(create);
   static MarketPayInfo? _defaultInstance;
 
-  /// 收款方 DID。**由后端按机器人类型自动定,不接受前端指定**:
-  /// 硬件机器人 → 机器人自己;软件机器人 → 它的 master。
-  /// 让前端传就等于把"钱打给谁"变成一个可篡改的入参。
-  @$pb.TagNumber(1)
-  $core.String get payee => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set payee($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasPayee() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearPayee() => $_clearField(1);
-
   @$pb.TagNumber(2)
-  $core.String get amount => $_getSZ(1);
+  $core.String get amount => $_getSZ(0);
   @$pb.TagNumber(2)
-  set amount($core.String value) => $_setString(1, value);
+  set amount($core.String value) => $_setString(0, value);
   @$pb.TagNumber(2)
-  $core.bool hasAmount() => $_has(1);
+  $core.bool hasAmount() => $_has(0);
   @$pb.TagNumber(2)
   void clearAmount() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get coin => $_getSZ(2);
+  $core.String get coin => $_getSZ(1);
   @$pb.TagNumber(3)
-  set coin($core.String value) => $_setString(2, value);
+  set coin($core.String value) => $_setString(1, value);
   @$pb.TagNumber(3)
-  $core.bool hasCoin() => $_has(2);
+  $core.bool hasCoin() => $_has(1);
   @$pb.TagNumber(3)
   void clearCoin() => $_clearField(3);
+
+  /// **钱打到这个 did 的地址上** —— 结算实体(默认=收款人本人)。付款方只认它。
+  @$pb.TagNumber(4)
+  $core.String get payeeAccount => $_getSZ(2);
+  @$pb.TagNumber(4)
+  set payeeAccount($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPayeeAccount() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearPayeeAccount() => $_clearField(4);
+
+  /// **显示给用户看"你在付给谁"** —— 收款人本人。跳蚤市场下用户是把钱付给一个
+  /// 陌生的机器人/用户,看不清收款人就不该让他按确认。
+  @$pb.TagNumber(5)
+  $core.String get payeeOwner => $_getSZ(3);
+  @$pb.TagNumber(5)
+  set payeeOwner($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPayeeOwner() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearPayeeOwner() => $_clearField(5);
 }
 
 /// ApplyResp

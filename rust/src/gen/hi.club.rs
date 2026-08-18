@@ -6248,6 +6248,14 @@ pub struct MarketPayment {
     /// 因为那时候还没有"交易"。
     /// ⚠️ 它**不是判据**:市场认款从来不看谁掏的钱(订单写明了给谁履约)。
     /// 落它只是记账,以及让当事人查得到自己的交易。
+    /// to_account:**这一笔要打到哪个账户** —— 开凭据那一刻解析并写死。
+    ///
+    /// 单笔交易只认账号,不涉及"谁在交易" —— 执行方(hidid app / PC 工具)拿它去查
+    /// 对应链的地址就能付,**不需要、也不该再判断"这个主体的钱该进谁的账户"**。
+    /// 认款比对的也是它:付给谁与比对谁从此是同一个值,不是两次独立计算。
+    ///
+    /// 为什么落在凭据上而不是业务单上:凭据就是"这一笔"。换一张凭据会重新解析 ——
+    /// 卖家中途改了 server,新凭据用新账号、旧凭据保留旧账号,天然是快照。
     /// payee:收款方,**从订单带出来**(订单开出时就定了,之后不变)。
     ///
     /// 两个都不在这张表上另存一份:payee/amount/coin 在订单上不可变,
@@ -6260,6 +6268,10 @@ pub struct MarketPayment {
     pub amount: ::prost::alloc::string::String,
     #[prost(string, tag = "11")]
     pub coin: ::prost::alloc::string::String,
+    /// **这一笔打到哪个账户**。与 payee(收款人)分开:见上面那段。
+    /// 它是**落库的快照**,不是 join 出来的 —— 因为 server 可以被改,而这一笔的目标不能变。
+    #[prost(string, tag = "12")]
+    pub to_account: ::prost::alloc::string::String,
 }
 /// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。
 ///
@@ -6308,9 +6320,31 @@ pub struct MarketOrder {
     pub kind: i32,
     #[prost(enumeration = "MarketOrderStatus", tag = "5")]
     pub status: i32,
-    /// 收款方 DID。**后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
+    /// ⭐ **收款人与收款账号是两件事,各记一行** —— 去银行存钱要姓名也要账号,缺一不可。
+    ///
+    /// payee         = **谁在收款**(交易者):硬件机器人自己 / 软件机器人的 master。
+    /// 界面显示、权属判断用它。
+    /// payee_account = **钱进哪个账户**(结算实体):`MerchantPub.Server` 解析的结果,
+    /// 默认 = payee 本人。商户可以把结算实体改到别的账号
+    /// (`MerchantOwner.SetServer`,改它 = 改钱打给谁)。
+    ///
+    /// 混成一列的后果:那一列会随"谁改了 server"变,而"卖家是谁"不变 ——
+    /// 两个变速不同的事实压在一起,迟早对不上。club-trade 早就是分开的
+    /// (业务单记交易者、子单记账号),market 这边补齐,口径一致。
+    ///
+    /// ⚠️ **两个都由后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
+    /// ⚠️ `payee_account` 在**开单那一刻解析并写死**(与价格/时长同批快照):
+    /// 卖家之后改 server,旧单不能跟着飘。
     #[prost(string, tag = "6")]
     pub payee: ::prost::alloc::string::String,
+    #[prost(string, tag = "13")]
+    pub payee_account: ::prost::alloc::string::String,
+    /// 付款人(买家)。**只记账,不作判据** —— 市场认款从来不看谁掏的钱,
+    /// 判据是"这张单要的钱到账了没有"。记它是为了让当事人查得到自己的交易。
+    ///
+    /// 没有 payer_account:判据不看付款侧,加一个没人读的列只会让人以为它是判据。
+    #[prost(string, tag = "14")]
+    pub payer: ::prost::alloc::string::String,
     /// 人类可读金额,如 "9.9"
     #[prost(string, tag = "7")]
     pub amount: ::prost::alloc::string::String,
@@ -6366,16 +6400,18 @@ pub struct CreateRenewOrderReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketPayInfo {
-    /// 收款方 DID。**由后端按机器人类型自动定,不接受前端指定**:
-    /// 硬件机器人 → 机器人自己;软件机器人 → 它的 master。
-    /// 让前端传就等于把"钱打给谁"变成一个可篡改的入参。
-    #[prost(string, tag = "1")]
-    pub payee: ::prost::alloc::string::String,
     /// 人类可读金额,如 "9.9"
     #[prost(string, tag = "2")]
     pub amount: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
     pub coin: ::prost::alloc::string::String,
+    /// **钱打到这个 did 的地址上** —— 结算实体(默认=收款人本人)。付款方只认它。
+    #[prost(string, tag = "4")]
+    pub payee_account: ::prost::alloc::string::String,
+    /// **显示给用户看"你在付给谁"** —— 收款人本人。跳蚤市场下用户是把钱付给一个
+    /// 陌生的机器人/用户,看不清收款人就不该让他按确认。
+    #[prost(string, tag = "5")]
+    pub payee_owner: ::prost::alloc::string::String,
 }
 /// ApplyResp
 ///

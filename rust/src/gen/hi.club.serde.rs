@@ -10606,6 +10606,12 @@ impl serde::Serialize for MarketOrder {
         if !self.payee.is_empty() {
             len += 1;
         }
+        if !self.payee_account.is_empty() {
+            len += 1;
+        }
+        if !self.payer.is_empty() {
+            len += 1;
+        }
         if !self.amount.is_empty() {
             len += 1;
         }
@@ -10644,6 +10650,12 @@ impl serde::Serialize for MarketOrder {
         if !self.payee.is_empty() {
             struct_ser.serialize_field("payee", &self.payee)?;
         }
+        if !self.payee_account.is_empty() {
+            struct_ser.serialize_field("payeeAccount", &self.payee_account)?;
+        }
+        if !self.payer.is_empty() {
+            struct_ser.serialize_field("payer", &self.payer)?;
+        }
         if !self.amount.is_empty() {
             struct_ser.serialize_field("amount", &self.amount)?;
         }
@@ -10680,6 +10692,9 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
             "kind",
             "status",
             "payee",
+            "payee_account",
+            "payeeAccount",
+            "payer",
             "amount",
             "coin",
             "created_at",
@@ -10696,6 +10711,8 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
             Kind,
             Status,
             Payee,
+            PayeeAccount,
+            Payer,
             Amount,
             Coin,
             CreatedAt,
@@ -10728,6 +10745,8 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                             "kind" => Ok(GeneratedField::Kind),
                             "status" => Ok(GeneratedField::Status),
                             "payee" => Ok(GeneratedField::Payee),
+                            "payeeAccount" | "payee_account" => Ok(GeneratedField::PayeeAccount),
+                            "payer" => Ok(GeneratedField::Payer),
                             "amount" => Ok(GeneratedField::Amount),
                             "coin" => Ok(GeneratedField::Coin),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
@@ -10758,6 +10777,8 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                 let mut kind__ = None;
                 let mut status__ = None;
                 let mut payee__ = None;
+                let mut payee_account__ = None;
+                let mut payer__ = None;
                 let mut amount__ = None;
                 let mut coin__ = None;
                 let mut created_at__ = None;
@@ -10801,6 +10822,18 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                             }
                             payee__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::PayeeAccount => {
+                            if payee_account__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payeeAccount"));
+                            }
+                            payee_account__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Payer => {
+                            if payer__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payer"));
+                            }
+                            payer__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Amount => {
                             if amount__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("amount"));
@@ -10842,6 +10875,8 @@ impl<'de> serde::Deserialize<'de> for MarketOrder {
                     kind: kind__.unwrap_or_default(),
                     status: status__.unwrap_or_default(),
                     payee: payee__.unwrap_or_default(),
+                    payee_account: payee_account__.unwrap_or_default(),
+                    payer: payer__.unwrap_or_default(),
                     amount: amount__.unwrap_or_default(),
                     coin: coin__.unwrap_or_default(),
                     created_at: created_at__.unwrap_or_default(),
@@ -11006,24 +11041,30 @@ impl serde::Serialize for MarketPayInfo {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.payee.is_empty() {
-            len += 1;
-        }
         if !self.amount.is_empty() {
             len += 1;
         }
         if !self.coin.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.MarketPayInfo", len)?;
-        if !self.payee.is_empty() {
-            struct_ser.serialize_field("payee", &self.payee)?;
+        if !self.payee_account.is_empty() {
+            len += 1;
         }
+        if !self.payee_owner.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.MarketPayInfo", len)?;
         if !self.amount.is_empty() {
             struct_ser.serialize_field("amount", &self.amount)?;
         }
         if !self.coin.is_empty() {
             struct_ser.serialize_field("coin", &self.coin)?;
+        }
+        if !self.payee_account.is_empty() {
+            struct_ser.serialize_field("payeeAccount", &self.payee_account)?;
+        }
+        if !self.payee_owner.is_empty() {
+            struct_ser.serialize_field("payeeOwner", &self.payee_owner)?;
         }
         struct_ser.end()
     }
@@ -11035,16 +11076,20 @@ impl<'de> serde::Deserialize<'de> for MarketPayInfo {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "payee",
             "amount",
             "coin",
+            "payee_account",
+            "payeeAccount",
+            "payee_owner",
+            "payeeOwner",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Payee,
             Amount,
             Coin,
+            PayeeAccount,
+            PayeeOwner,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -11066,9 +11111,10 @@ impl<'de> serde::Deserialize<'de> for MarketPayInfo {
                         E: serde::de::Error,
                     {
                         match value {
-                            "payee" => Ok(GeneratedField::Payee),
                             "amount" => Ok(GeneratedField::Amount),
                             "coin" => Ok(GeneratedField::Coin),
+                            "payeeAccount" | "payee_account" => Ok(GeneratedField::PayeeAccount),
+                            "payeeOwner" | "payee_owner" => Ok(GeneratedField::PayeeOwner),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -11088,17 +11134,12 @@ impl<'de> serde::Deserialize<'de> for MarketPayInfo {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut payee__ = None;
                 let mut amount__ = None;
                 let mut coin__ = None;
+                let mut payee_account__ = None;
+                let mut payee_owner__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Payee => {
-                            if payee__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("payee"));
-                            }
-                            payee__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Amount => {
                             if amount__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("amount"));
@@ -11111,12 +11152,25 @@ impl<'de> serde::Deserialize<'de> for MarketPayInfo {
                             }
                             coin__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::PayeeAccount => {
+                            if payee_account__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payeeAccount"));
+                            }
+                            payee_account__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::PayeeOwner => {
+                            if payee_owner__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payeeOwner"));
+                            }
+                            payee_owner__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(MarketPayInfo {
-                    payee: payee__.unwrap_or_default(),
                     amount: amount__.unwrap_or_default(),
                     coin: coin__.unwrap_or_default(),
+                    payee_account: payee_account__.unwrap_or_default(),
+                    payee_owner: payee_owner__.unwrap_or_default(),
                 })
             }
         }
@@ -11164,6 +11218,9 @@ impl serde::Serialize for MarketPayment {
         if !self.coin.is_empty() {
             len += 1;
         }
+        if !self.to_account.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.MarketPayment", len)?;
         if !self.pay_id.is_empty() {
             struct_ser.serialize_field("payId", &self.pay_id)?;
@@ -11204,6 +11261,9 @@ impl serde::Serialize for MarketPayment {
         if !self.coin.is_empty() {
             struct_ser.serialize_field("coin", &self.coin)?;
         }
+        if !self.to_account.is_empty() {
+            struct_ser.serialize_field("toAccount", &self.to_account)?;
+        }
         struct_ser.end()
     }
 }
@@ -11230,6 +11290,8 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
             "payee",
             "amount",
             "coin",
+            "to_account",
+            "toAccount",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -11245,6 +11307,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
             Payee,
             Amount,
             Coin,
+            ToAccount,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -11277,6 +11340,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                             "payee" => Ok(GeneratedField::Payee),
                             "amount" => Ok(GeneratedField::Amount),
                             "coin" => Ok(GeneratedField::Coin),
+                            "toAccount" | "to_account" => Ok(GeneratedField::ToAccount),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -11307,6 +11371,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                 let mut payee__ = None;
                 let mut amount__ = None;
                 let mut coin__ = None;
+                let mut to_account__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::PayId => {
@@ -11379,6 +11444,12 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                             }
                             coin__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::ToAccount => {
+                            if to_account__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("toAccount"));
+                            }
+                            to_account__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(MarketPayment {
@@ -11393,6 +11464,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                     payee: payee__.unwrap_or_default(),
                     amount: amount__.unwrap_or_default(),
                     coin: coin__.unwrap_or_default(),
+                    to_account: to_account__.unwrap_or_default(),
                 })
             }
         }

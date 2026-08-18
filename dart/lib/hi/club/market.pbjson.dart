@@ -791,6 +791,7 @@ const MarketPayment$json = {
     {'1': 'payee', '3': 9, '4': 1, '5': 9, '8': {}, '10': 'payee'},
     {'1': 'amount', '3': 10, '4': 1, '5': 9, '8': {}, '10': 'amount'},
     {'1': 'coin', '3': 11, '4': 1, '5': 9, '8': {}, '10': 'coin'},
+    {'1': 'to_account', '3': 12, '4': 1, '5': 9, '8': {}, '10': 'toAccount'},
   ],
   '7': {},
 };
@@ -803,8 +804,8 @@ final $typed_data.Uint8List marketPaymentDescriptor = $convert.base64Decode(
     'NoEiEKCWV4cGlyZV9hdBgFIAEoA0IEkLUYA1IIZXhwaXJlQXQSIwoKY3JlYXRlZF9hdBgGIAEo'
     'A0IEkLUYA1IJY3JlYXRlZEF0EhwKBnJlYXNvbhgHIAEoCUIEkLUYA1IGcmVhc29uEhoKBXBheW'
     'VyGAggASgJQgSQtRgDUgVwYXllchIaCgVwYXllZRgJIAEoCUIEkLUYA1IFcGF5ZWUSHAoGYW1v'
-    'dW50GAogASgJQgSQtRgDUgZhbW91bnQSGAoEY29pbhgLIAEoCUIEkLUYA1IEY29pbjoEmLUYAw'
-    '==');
+    'dW50GAogASgJQgSQtRgDUgZhbW91bnQSGAoEY29pbhgLIAEoCUIEkLUYA1IEY29pbhIjCgp0b1'
+    '9hY2NvdW50GAwgASgJQgSQtRgDUgl0b0FjY291bnQ6BJi1GAM=');
 
 @$core.Deprecated('Use listTransactionsReqDescriptor instead')
 const ListTransactionsReq$json = {
@@ -888,6 +889,15 @@ const MarketOrder$json = {
       '10': 'status'
     },
     {'1': 'payee', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'payee'},
+    {
+      '1': 'payee_account',
+      '3': 13,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'payeeAccount'
+    },
+    {'1': 'payer', '3': 14, '4': 1, '5': 9, '8': {}, '10': 'payer'},
     {'1': 'amount', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'amount'},
     {'1': 'coin', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'coin'},
     {'1': 'created_at', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
@@ -914,11 +924,12 @@ final $typed_data.Uint8List marketOrderDescriptor = $convert.base64Decode(
     '91dWlkGAIgASgJQgSQtRgDUglncmFudFV1aWQSJwoMdGFyZ2V0X2FnZW50GAMgASgJQgSQtRgD'
     'Ugt0YXJnZXRBZ2VudBIyCgRraW5kGAQgASgOMhguaGkuY2x1Yi5NYXJrZXRPcmRlcktpbmRCBJ'
     'C1GANSBGtpbmQSOAoGc3RhdHVzGAUgASgOMhouaGkuY2x1Yi5NYXJrZXRPcmRlclN0YXR1c0IE'
-    'kLUYA1IGc3RhdHVzEhoKBXBheWVlGAYgASgJQgSQtRgDUgVwYXllZRIcCgZhbW91bnQYByABKA'
-    'lCBJC1GANSBmFtb3VudBIYCgRjb2luGAggASgJQgSQtRgDUgRjb2luEiMKCmNyZWF0ZWRfYXQY'
-    'CiABKANCBJC1GANSCWNyZWF0ZWRBdBIgCghtZXJjaGFudBgLIAEoCUIEkLUYA1IIbWVyY2hhbn'
-    'QSNgoHcGF5bWVudBgMIAEoCzIWLmhpLmNsdWIuTWFya2V0UGF5bWVudEIEkLUYA1IHcGF5bWVu'
-    'dDoEmLUYA0oECAkQCg==');
+    'kLUYA1IGc3RhdHVzEhoKBXBheWVlGAYgASgJQgSQtRgDUgVwYXllZRIpCg1wYXllZV9hY2NvdW'
+    '50GA0gASgJQgSQtRgDUgxwYXllZUFjY291bnQSGgoFcGF5ZXIYDiABKAlCBJC1GANSBXBheWVy'
+    'EhwKBmFtb3VudBgHIAEoCUIEkLUYA1IGYW1vdW50EhgKBGNvaW4YCCABKAlCBJC1GANSBGNvaW'
+    '4SIwoKY3JlYXRlZF9hdBgKIAEoA0IEkLUYA1IJY3JlYXRlZEF0EiAKCG1lcmNoYW50GAsgASgJ'
+    'QgSQtRgDUghtZXJjaGFudBI2CgdwYXltZW50GAwgASgLMhYuaGkuY2x1Yi5NYXJrZXRQYXltZW'
+    '50QgSQtRgDUgdwYXltZW50OgSYtRgDSgQICRAK');
 
 @$core.Deprecated('Use issuePaymentReqDescriptor instead')
 const IssuePaymentReq$json = {
@@ -985,17 +996,31 @@ final $typed_data.Uint8List createRenewOrderReqDescriptor = $convert.base64Decod
 const MarketPayInfo$json = {
   '1': 'MarketPayInfo',
   '2': [
-    {'1': 'payee', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'payee'},
     {'1': 'amount', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'amount'},
     {'1': 'coin', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'coin'},
+    {
+      '1': 'payee_account',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'payeeAccount'
+    },
+    {'1': 'payee_owner', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'payeeOwner'},
   ],
   '7': {},
+  '9': [
+    {'1': 1, '2': 2},
+  ],
+  '10': ['payee'],
 };
 
 /// Descriptor for `MarketPayInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List marketPayInfoDescriptor = $convert.base64Decode(
-    'Cg1NYXJrZXRQYXlJbmZvEhoKBXBheWVlGAEgASgJQgSQtRgDUgVwYXllZRIcCgZhbW91bnQYAi'
-    'ABKAlCBJC1GANSBmFtb3VudBIYCgRjb2luGAMgASgJQgSQtRgDUgRjb2luOgSYtRgD');
+    'Cg1NYXJrZXRQYXlJbmZvEhwKBmFtb3VudBgCIAEoCUIEkLUYA1IGYW1vdW50EhgKBGNvaW4YAy'
+    'ABKAlCBJC1GANSBGNvaW4SKQoNcGF5ZWVfYWNjb3VudBgEIAEoCUIEkLUYA1IMcGF5ZWVBY2Nv'
+    'dW50EiUKC3BheWVlX293bmVyGAUgASgJQgSQtRgDUgpwYXllZU93bmVyOgSYtRgDSgQIARACUg'
+    'VwYXllZQ==');
 
 @$core.Deprecated('Use applyRespDescriptor instead')
 const ApplyResp$json = {
