@@ -36,6 +36,7 @@ const (
 	Plugin_SetActive_FullMethodName         = "/hi.ai.Plugin/SetActive"
 	Plugin_SetActiveAll_FullMethodName      = "/hi.ai.Plugin/SetActiveAll"
 	Plugin_SetEnabled_FullMethodName        = "/hi.ai.Plugin/SetEnabled"
+	Plugin_SetFollowLatest_FullMethodName   = "/hi.ai.Plugin/SetFollowLatest"
 	Plugin_ListNative_FullMethodName        = "/hi.ai.Plugin/ListNative"
 	Plugin_RetryBuild_FullMethodName        = "/hi.ai.Plugin/RetryBuild"
 	Plugin_PublicBriefs_FullMethodName      = "/hi.ai.Plugin/PublicBriefs"
@@ -63,6 +64,7 @@ type PluginClient interface {
 	SetActive(ctx context.Context, in *SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetActiveAll(ctx context.Context, in *SetActiveAllReq, opts ...grpc.CallOption) (*SetActiveAllResp, error)
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetFollowLatest(ctx context.Context, in *SetFollowLatestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error)
 	RetryBuild(ctx context.Context, in *RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PublicBriefs(ctx context.Context, in *PublicBriefsReq, opts ...grpc.CallOption) (*PublicBriefsResp, error)
@@ -236,6 +238,16 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *SetEnabledReq, opts .
 	return out, nil
 }
 
+func (c *pluginClient) SetFollowLatest(ctx context.Context, in *SetFollowLatestReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_SetFollowLatest_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListNativeResp)
@@ -288,6 +300,7 @@ type PluginServer interface {
 	SetActive(context.Context, *SetActiveReq) (*emptypb.Empty, error)
 	SetActiveAll(context.Context, *SetActiveAllReq) (*SetActiveAllResp, error)
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
+	SetFollowLatest(context.Context, *SetFollowLatestReq) (*emptypb.Empty, error)
 	ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error)
 	RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error)
 	PublicBriefs(context.Context, *PublicBriefsReq) (*PublicBriefsResp, error)
@@ -347,6 +360,9 @@ func (UnimplementedPluginServer) SetActiveAll(context.Context, *SetActiveAllReq)
 }
 func (UnimplementedPluginServer) SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
+}
+func (UnimplementedPluginServer) SetFollowLatest(context.Context, *SetFollowLatestReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetFollowLatest not implemented")
 }
 func (UnimplementedPluginServer) ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListNative not implemented")
@@ -665,6 +681,24 @@ func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_SetFollowLatest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetFollowLatestReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).SetFollowLatest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_SetFollowLatest_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).SetFollowLatest(ctx, req.(*SetFollowLatestReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_ListNative_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListNativeReq)
 	if err := dec(in); err != nil {
@@ -789,6 +823,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetEnabled",
 			Handler:    _Plugin_SetEnabled_Handler,
+		},
+		{
+			MethodName: "SetFollowLatest",
+			Handler:    _Plugin_SetFollowLatest_Handler,
 		},
 		{
 			MethodName: "ListNative",

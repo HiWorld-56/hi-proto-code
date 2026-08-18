@@ -256,13 +256,6 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$listMyGrants, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> setGrantVersion(
-    $0.SetGrantVersionReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$setGrantVersion, request, options: options);
-  }
-
   $grpc.ResponseFuture<$1.Empty> setAutoRenew(
     $0.SetAutoRenewReq request, {
     $grpc.CallOptions? options,
@@ -342,11 +335,6 @@ class MarketClient extends $grpc.Client {
           '/hi.club.Market/ListMyGrants',
           ($0.ListGrantsReq value) => value.writeToBuffer(),
           $0.ListGrantsResp.fromBuffer);
-  static final _$setGrantVersion =
-      $grpc.ClientMethod<$0.SetGrantVersionReq, $1.Empty>(
-          '/hi.club.Market/SetGrantVersion',
-          ($0.SetGrantVersionReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
   static final _$setAutoRenew =
       $grpc.ClientMethod<$0.SetAutoRenewReq, $1.Empty>(
           '/hi.club.Market/SetAutoRenew',
@@ -468,14 +456,6 @@ abstract class MarketServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ListGrantsReq.fromBuffer(value),
         ($0.ListGrantsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SetGrantVersionReq, $1.Empty>(
-        'SetGrantVersion',
-        setGrantVersion_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.SetGrantVersionReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetAutoRenewReq, $1.Empty>(
         'SetAutoRenew',
         setAutoRenew_Pre,
@@ -606,14 +586,6 @@ abstract class MarketServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListGrantsResp> listMyGrants(
       $grpc.ServiceCall call, $0.ListGrantsReq request);
-
-  $async.Future<$1.Empty> setGrantVersion_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.SetGrantVersionReq> $request) async {
-    return setGrantVersion($call, await $request);
-  }
-
-  $async.Future<$1.Empty> setGrantVersion(
-      $grpc.ServiceCall call, $0.SetGrantVersionReq request);
 
   $async.Future<$1.Empty> setAutoRenew_Pre($grpc.ServiceCall $call,
       $async.Future<$0.SetAutoRenewReq> $request) async {

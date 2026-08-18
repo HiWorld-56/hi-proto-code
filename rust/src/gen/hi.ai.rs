@@ -820,6 +820,18 @@ pub struct PluginView {
     /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
     #[prost(message, optional, tag = "8")]
     pub build: ::core::option::Option<PluginBuild>,
+    /// c.follow_latest:这台机器人要不要自动切到作者发的新版。
+    ///
+    /// ⭐ **这是使用方自己的事,归在使用行(c)上,不在挂牌上。**
+    /// 原先它是两半:挂牌上一个"卖家允不允许"(allow_follow_latest)+ grant 上一个"买家选不选"。
+    /// 那是错的 —— 买家买到的是这个插件,选哪一版、要不要自动跟,都是他自己的选择,
+    /// 卖家没有理由(也没有能力)替他决定;而且**引用不一定有 grant**
+    /// (内置插件是注册时自动建的引用,根本没有 grant 行),挂在 grant 上就漏掉一大片。
+    ///
+    /// 关掉 = 停在当前激活版,作者发新版也不动;打开 = 新版**构建成功后**自动切过去
+    /// (NATIVE 要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
+    #[prost(bool, tag = "9")]
+    pub follow_latest: bool,
 }
 /// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -908,6 +920,18 @@ pub struct SetEnabledReq {
     pub uuid: ::prost::alloc::string::String,
     #[prost(bool, tag = "3")]
     pub enabled: bool,
+}
+/// SetFollowLatestReq 改 c.follow_latest —— **在"机器人 → 插件"那一行上操作**。
+/// 打开之后,作者每发一版(NATIVE 是编成功之后)这台机器人就自动切过去;
+/// 关掉就停在当前激活版,由主人自己在版本管理里选。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetFollowLatestReq {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(bool, tag = "3")]
+    pub on: bool,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveReq {
@@ -1759,6 +1783,27 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/SetEnabled");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "SetEnabled"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_follow_latest(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetFollowLatestReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/SetFollowLatest",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Plugin", "SetFollowLatest"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_native(

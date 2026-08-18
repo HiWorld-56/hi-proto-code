@@ -146,6 +146,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$setEnabled, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.Empty> setFollowLatest(
+    $0.SetFollowLatestReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setFollowLatest, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.ListNativeResp> listNative(
     $0.ListNativeReq request, {
     $grpc.CallOptions? options,
@@ -243,6 +250,11 @@ class PluginClient extends $grpc.Client {
       '/hi.ai.Plugin/SetEnabled',
       ($0.SetEnabledReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$setFollowLatest =
+      $grpc.ClientMethod<$0.SetFollowLatestReq, $1.Empty>(
+          '/hi.ai.Plugin/SetFollowLatest',
+          ($0.SetFollowLatestReq value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
   static final _$listNative =
       $grpc.ClientMethod<$0.ListNativeReq, $0.ListNativeResp>(
           '/hi.ai.Plugin/ListNative',
@@ -378,6 +390,14 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.SetEnabledReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SetFollowLatestReq, $1.Empty>(
+        'SetFollowLatest',
+        setFollowLatest_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.SetFollowLatestReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListNativeReq, $0.ListNativeResp>(
         'ListNative',
@@ -529,6 +549,14 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> setEnabled(
       $grpc.ServiceCall call, $0.SetEnabledReq request);
+
+  $async.Future<$1.Empty> setFollowLatest_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.SetFollowLatestReq> $request) async {
+    return setFollowLatest($call, await $request);
+  }
+
+  $async.Future<$1.Empty> setFollowLatest(
+      $grpc.ServiceCall call, $0.SetFollowLatestReq request);
 
   $async.Future<$0.ListNativeResp> listNative_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListNativeReq> $request) async {

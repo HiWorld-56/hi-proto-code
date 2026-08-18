@@ -34,6 +34,7 @@ const (
 	Plugin_DeleteShells_FullMethodName      = "/hi.club.Plugin/DeleteShells"
 	Plugin_SetActive_FullMethodName         = "/hi.club.Plugin/SetActive"
 	Plugin_SetEnabled_FullMethodName        = "/hi.club.Plugin/SetEnabled"
+	Plugin_SetFollowLatest_FullMethodName   = "/hi.club.Plugin/SetFollowLatest"
 	Plugin_ReloadApiKey_FullMethodName      = "/hi.club.Plugin/ReloadApiKey"
 	Plugin_RetryBuild_FullMethodName        = "/hi.club.Plugin/RetryBuild"
 )
@@ -79,6 +80,7 @@ type PluginClient interface {
 	//	PermissionService 撤"插件权限"时直接调 hi.ai.Plugin.DeleteByAgents(grpc),不走 club 门面。
 	SetActive(ctx context.Context, in *ai.SetActiveReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetFollowLatest(ctx context.Context, in *ai.SetFollowLatestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ReloadApiKey(ctx context.Context, in *ReloadApiKeyReq, opts ...grpc.CallOption) (*ReloadApiKeyResp, error)
 	RetryBuild(ctx context.Context, in *ai.RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -221,6 +223,16 @@ func (c *pluginClient) SetEnabled(ctx context.Context, in *ai.SetEnabledReq, opt
 	return out, nil
 }
 
+func (c *pluginClient) SetFollowLatest(ctx context.Context, in *ai.SetFollowLatestReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Plugin_SetFollowLatest_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) ReloadApiKey(ctx context.Context, in *ReloadApiKeyReq, opts ...grpc.CallOption) (*ReloadApiKeyResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ReloadApiKeyResp)
@@ -282,6 +294,7 @@ type PluginServer interface {
 	//	PermissionService 撤"插件权限"时直接调 hi.ai.Plugin.DeleteByAgents(grpc),不走 club 门面。
 	SetActive(context.Context, *ai.SetActiveReq) (*emptypb.Empty, error)
 	SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error)
+	SetFollowLatest(context.Context, *ai.SetFollowLatestReq) (*emptypb.Empty, error)
 	ReloadApiKey(context.Context, *ReloadApiKeyReq) (*ReloadApiKeyResp, error)
 	RetryBuild(context.Context, *ai.RetryBuildReq) (*emptypb.Empty, error)
 }
@@ -331,6 +344,9 @@ func (UnimplementedPluginServer) SetActive(context.Context, *ai.SetActiveReq) (*
 }
 func (UnimplementedPluginServer) SetEnabled(context.Context, *ai.SetEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
+}
+func (UnimplementedPluginServer) SetFollowLatest(context.Context, *ai.SetFollowLatestReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetFollowLatest not implemented")
 }
 func (UnimplementedPluginServer) ReloadApiKey(context.Context, *ReloadApiKeyReq) (*ReloadApiKeyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReloadApiKey not implemented")
@@ -592,6 +608,24 @@ func _Plugin_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_SetFollowLatest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ai.SetFollowLatestReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).SetFollowLatest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_SetFollowLatest_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).SetFollowLatest(ctx, req.(*ai.SetFollowLatestReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_ReloadApiKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReloadApiKeyReq)
 	if err := dec(in); err != nil {
@@ -686,6 +720,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetEnabled",
 			Handler:    _Plugin_SetEnabled_Handler,
+		},
+		{
+			MethodName: "SetFollowLatest",
+			Handler:    _Plugin_SetFollowLatest_Handler,
 		},
 		{
 			MethodName: "ReloadApiKey",

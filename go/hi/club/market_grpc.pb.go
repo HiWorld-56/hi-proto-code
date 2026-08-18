@@ -224,7 +224,6 @@ const (
 	Market_ListTransactions_FullMethodName     = "/hi.club.Market/ListTransactions"
 	Market_GetTransaction_FullMethodName       = "/hi.club.Market/GetTransaction"
 	Market_ListMyGrants_FullMethodName         = "/hi.club.Market/ListMyGrants"
-	Market_SetGrantVersion_FullMethodName      = "/hi.club.Market/SetGrantVersion"
 	Market_SetAutoRenew_FullMethodName         = "/hi.club.Market/SetAutoRenew"
 )
 
@@ -252,7 +251,6 @@ type MarketClient interface {
 	ListTransactions(ctx context.Context, in *ListTransactionsReq, opts ...grpc.CallOption) (*ListTransactionsResp, error)
 	GetTransaction(ctx context.Context, in *GetTransactionReq, opts ...grpc.CallOption) (*MarketPayment, error)
 	ListMyGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
-	SetGrantVersion(ctx context.Context, in *SetGrantVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetAutoRenew(ctx context.Context, in *SetAutoRenewReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -414,16 +412,6 @@ func (c *marketClient) ListMyGrants(ctx context.Context, in *ListGrantsReq, opts
 	return out, nil
 }
 
-func (c *marketClient) SetGrantVersion(ctx context.Context, in *SetGrantVersionReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Market_SetGrantVersion_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *marketClient) SetAutoRenew(ctx context.Context, in *SetAutoRenewReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -458,7 +446,6 @@ type MarketServer interface {
 	ListTransactions(context.Context, *ListTransactionsReq) (*ListTransactionsResp, error)
 	GetTransaction(context.Context, *GetTransactionReq) (*MarketPayment, error)
 	ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error)
-	SetGrantVersion(context.Context, *SetGrantVersionReq) (*emptypb.Empty, error)
 	SetAutoRenew(context.Context, *SetAutoRenewReq) (*emptypb.Empty, error)
 }
 
@@ -513,9 +500,6 @@ func (UnimplementedMarketServer) GetTransaction(context.Context, *GetTransaction
 }
 func (UnimplementedMarketServer) ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMyGrants not implemented")
-}
-func (UnimplementedMarketServer) SetGrantVersion(context.Context, *SetGrantVersionReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetGrantVersion not implemented")
 }
 func (UnimplementedMarketServer) SetAutoRenew(context.Context, *SetAutoRenewReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetAutoRenew not implemented")
@@ -810,24 +794,6 @@ func _Market_ListMyGrants_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Market_SetGrantVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetGrantVersionReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MarketServer).SetGrantVersion(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Market_SetGrantVersion_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MarketServer).SetGrantVersion(ctx, req.(*SetGrantVersionReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Market_SetAutoRenew_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetAutoRenewReq)
 	if err := dec(in); err != nil {
@@ -912,10 +878,6 @@ var Market_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMyGrants",
 			Handler:    _Market_ListMyGrants_Handler,
-		},
-		{
-			MethodName: "SetGrantVersion",
-			Handler:    _Market_SetGrantVersion_Handler,
 		},
 		{
 			MethodName: "SetAutoRenew",

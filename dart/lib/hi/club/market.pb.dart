@@ -219,14 +219,12 @@ class MarketListingDetail extends $pb.GeneratedMessage {
   factory MarketListingDetail({
     MarketListingBrief? brief,
     $core.String? capabilities,
-    $core.bool? allowFollowLatest,
     $core.Iterable<$core.String>? versions,
     ListingStatus? status,
   }) {
     final result = create();
     if (brief != null) result.brief = brief;
     if (capabilities != null) result.capabilities = capabilities;
-    if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
     if (versions != null) result.versions.addAll(versions);
     if (status != null) result.status = status;
     return result;
@@ -248,7 +246,6 @@ class MarketListingDetail extends $pb.GeneratedMessage {
     ..aOM<MarketListingBrief>(1, _omitFieldNames ? '' : 'brief',
         subBuilder: MarketListingBrief.create)
     ..aOS(2, _omitFieldNames ? '' : 'capabilities')
-    ..aOB(3, _omitFieldNames ? '' : 'allowFollowLatest')
     ..pPS(4, _omitFieldNames ? '' : 'versions')
     ..aE<ListingStatus>(5, _omitFieldNames ? '' : 'status',
         enumValues: ListingStatus.values)
@@ -295,29 +292,19 @@ class MarketListingDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearCapabilities() => $_clearField(2);
 
-  /// 出让方是否允许引用方跟随最新版。引用方自己再选(见 ApplyReq.follow_latest)。
-  @$pb.TagNumber(3)
-  $core.bool get allowFollowLatest => $_getBF(2);
-  @$pb.TagNumber(3)
-  set allowFollowLatest($core.bool value) => $_setBool(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasAllowFollowLatest() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearAllowFollowLatest() => $_clearField(3);
-
   /// 可选版本列表(引用方装好后可在其中切换)。
   @$pb.TagNumber(4)
-  $pb.PbList<$core.String> get versions => $_getList(3);
+  $pb.PbList<$core.String> get versions => $_getList(2);
 
   /// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
   /// 出让方自己那张表 —— 用的:草稿/挂牌中/隐藏/已下架必须分得出来,
   /// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
   @$pb.TagNumber(5)
-  ListingStatus get status => $_getN(4);
+  ListingStatus get status => $_getN(3);
   @$pb.TagNumber(5)
   set status(ListingStatus value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasStatus() => $_has(4);
+  $core.bool hasStatus() => $_has(3);
   @$pb.TagNumber(5)
   void clearStatus() => $_clearField(5);
 }
@@ -630,7 +617,6 @@ class MarketGrantView extends $pb.GeneratedMessage {
     SettleMode? settleMode,
     $core.String? price,
     $core.String? coin,
-    $core.bool? followLatest,
     $core.String? version,
     $fixnum.Int64? expireAt,
     $core.String? actionUrl,
@@ -651,7 +637,6 @@ class MarketGrantView extends $pb.GeneratedMessage {
     if (settleMode != null) result.settleMode = settleMode;
     if (price != null) result.price = price;
     if (coin != null) result.coin = coin;
-    if (followLatest != null) result.followLatest = followLatest;
     if (version != null) result.version = version;
     if (expireAt != null) result.expireAt = expireAt;
     if (actionUrl != null) result.actionUrl = actionUrl;
@@ -691,7 +676,6 @@ class MarketGrantView extends $pb.GeneratedMessage {
         enumValues: SettleMode.values)
     ..aOS(9, _omitFieldNames ? '' : 'price')
     ..aOS(10, _omitFieldNames ? '' : 'coin')
-    ..aOB(11, _omitFieldNames ? '' : 'followLatest')
     ..aOS(12, _omitFieldNames ? '' : 'version')
     ..aInt64(13, _omitFieldNames ? '' : 'expireAt')
     ..aOS(14, _omitFieldNames ? '' : 'actionUrl')
@@ -817,85 +801,76 @@ class MarketGrantView extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   void clearCoin() => $_clearField(10);
 
-  @$pb.TagNumber(11)
-  $core.bool get followLatest => $_getBF(10);
-  @$pb.TagNumber(11)
-  set followLatest($core.bool value) => $_setBool(10, value);
-  @$pb.TagNumber(11)
-  $core.bool hasFollowLatest() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearFollowLatest() => $_clearField(11);
-
   @$pb.TagNumber(12)
-  $core.String get version => $_getSZ(11);
+  $core.String get version => $_getSZ(10);
   @$pb.TagNumber(12)
-  set version($core.String value) => $_setString(11, value);
+  set version($core.String value) => $_setString(10, value);
   @$pb.TagNumber(12)
-  $core.bool hasVersion() => $_has(11);
+  $core.bool hasVersion() => $_has(10);
   @$pb.TagNumber(12)
   void clearVersion() => $_clearField(12);
 
   @$pb.TagNumber(13)
-  $fixnum.Int64 get expireAt => $_getI64(12);
+  $fixnum.Int64 get expireAt => $_getI64(11);
   @$pb.TagNumber(13)
-  set expireAt($fixnum.Int64 value) => $_setInt64(12, value);
+  set expireAt($fixnum.Int64 value) => $_setInt64(11, value);
   @$pb.TagNumber(13)
-  $core.bool hasExpireAt() => $_has(12);
+  $core.bool hasExpireAt() => $_has(11);
   @$pb.TagNumber(13)
   void clearExpireAt() => $_clearField(13);
 
   @$pb.TagNumber(14)
-  $core.String get actionUrl => $_getSZ(13);
+  $core.String get actionUrl => $_getSZ(12);
   @$pb.TagNumber(14)
-  set actionUrl($core.String value) => $_setString(13, value);
+  set actionUrl($core.String value) => $_setString(12, value);
   @$pb.TagNumber(14)
-  $core.bool hasActionUrl() => $_has(13);
+  $core.bool hasActionUrl() => $_has(12);
   @$pb.TagNumber(14)
   void clearActionUrl() => $_clearField(14);
 
   @$pb.TagNumber(15)
-  $core.String get reason => $_getSZ(14);
+  $core.String get reason => $_getSZ(13);
   @$pb.TagNumber(15)
-  set reason($core.String value) => $_setString(14, value);
+  set reason($core.String value) => $_setString(13, value);
   @$pb.TagNumber(15)
-  $core.bool hasReason() => $_has(14);
+  $core.bool hasReason() => $_has(13);
   @$pb.TagNumber(15)
   void clearReason() => $_clearField(15);
 
   @$pb.TagNumber(16)
-  $fixnum.Int64 get createdAt => $_getI64(15);
+  $fixnum.Int64 get createdAt => $_getI64(14);
   @$pb.TagNumber(16)
-  set createdAt($fixnum.Int64 value) => $_setInt64(15, value);
+  set createdAt($fixnum.Int64 value) => $_setInt64(14, value);
   @$pb.TagNumber(16)
-  $core.bool hasCreatedAt() => $_has(15);
+  $core.bool hasCreatedAt() => $_has(14);
   @$pb.TagNumber(16)
   void clearCreatedAt() => $_clearField(16);
 
   @$pb.TagNumber(17)
-  $fixnum.Int64 get decidedAt => $_getI64(16);
+  $fixnum.Int64 get decidedAt => $_getI64(15);
   @$pb.TagNumber(17)
-  set decidedAt($fixnum.Int64 value) => $_setInt64(16, value);
+  set decidedAt($fixnum.Int64 value) => $_setInt64(15, value);
   @$pb.TagNumber(17)
-  $core.bool hasDecidedAt() => $_has(16);
+  $core.bool hasDecidedAt() => $_has(15);
   @$pb.TagNumber(17)
   void clearDecidedAt() => $_clearField(17);
 
   @$pb.TagNumber(18)
-  $fixnum.Int64 get installedAt => $_getI64(17);
+  $fixnum.Int64 get installedAt => $_getI64(16);
   @$pb.TagNumber(18)
-  set installedAt($fixnum.Int64 value) => $_setInt64(17, value);
+  set installedAt($fixnum.Int64 value) => $_setInt64(16, value);
   @$pb.TagNumber(18)
-  $core.bool hasInstalledAt() => $_has(17);
+  $core.bool hasInstalledAt() => $_has(16);
   @$pb.TagNumber(18)
   void clearInstalledAt() => $_clearField(18);
 
   /// 自动续费。**只有硬件机器人能开** —— 续费要它自己掏钱付款,软件机器人没有私钥。
   @$pb.TagNumber(19)
-  $core.bool get autoRenew => $_getBF(18);
+  $core.bool get autoRenew => $_getBF(17);
   @$pb.TagNumber(19)
-  set autoRenew($core.bool value) => $_setBool(18, value);
+  set autoRenew($core.bool value) => $_setBool(17, value);
   @$pb.TagNumber(19)
-  $core.bool hasAutoRenew() => $_has(18);
+  $core.bool hasAutoRenew() => $_has(17);
   @$pb.TagNumber(19)
   void clearAutoRenew() => $_clearField(19);
 }
@@ -1229,7 +1204,6 @@ class CreateListingReq extends $pb.GeneratedMessage {
     $core.String? coin,
     $fixnum.Int64? duration,
     $core.Iterable<$core.String>? tags,
-    $core.bool? allowFollowLatest,
     $core.String? actionUrl,
     MarketListingKind? kind,
   }) {
@@ -1241,7 +1215,6 @@ class CreateListingReq extends $pb.GeneratedMessage {
     if (coin != null) result.coin = coin;
     if (duration != null) result.duration = duration;
     if (tags != null) result.tags.addAll(tags);
-    if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
     if (actionUrl != null) result.actionUrl = actionUrl;
     if (kind != null) result.kind = kind;
     return result;
@@ -1268,7 +1241,6 @@ class CreateListingReq extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'coin')
     ..aInt64(6, _omitFieldNames ? '' : 'duration')
     ..pPS(10, _omitFieldNames ? '' : 'tags')
-    ..aOB(11, _omitFieldNames ? '' : 'allowFollowLatest')
     ..aOS(12, _omitFieldNames ? '' : 'actionUrl')
     ..aE<MarketListingKind>(13, _omitFieldNames ? '' : 'kind',
         enumValues: MarketListingKind.values)
@@ -1350,25 +1322,16 @@ class CreateListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $pb.PbList<$core.String> get tags => $_getList(6);
 
-  @$pb.TagNumber(11)
-  $core.bool get allowFollowLatest => $_getBF(7);
-  @$pb.TagNumber(11)
-  set allowFollowLatest($core.bool value) => $_setBool(7, value);
-  @$pb.TagNumber(11)
-  $core.bool hasAllowFollowLatest() => $_has(7);
-  @$pb.TagNumber(11)
-  void clearAllowFollowLatest() => $_clearField(11);
-
   /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
   ///
   /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
   /// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
   @$pb.TagNumber(12)
-  $core.String get actionUrl => $_getSZ(8);
+  $core.String get actionUrl => $_getSZ(7);
   @$pb.TagNumber(12)
-  set actionUrl($core.String value) => $_setString(8, value);
+  set actionUrl($core.String value) => $_setString(7, value);
   @$pb.TagNumber(12)
-  $core.bool hasActionUrl() => $_has(8);
+  $core.bool hasActionUrl() => $_has(7);
   @$pb.TagNumber(12)
   void clearActionUrl() => $_clearField(12);
 
@@ -1376,11 +1339,11 @@ class CreateListingReq extends $pb.GeneratedMessage {
   /// BUILTIN 会被强制成免费 / 永久 / 免审(见 MarketListingKind) ——
   /// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
   @$pb.TagNumber(13)
-  MarketListingKind get kind => $_getN(9);
+  MarketListingKind get kind => $_getN(8);
   @$pb.TagNumber(13)
   set kind(MarketListingKind value) => $_setField(13, value);
   @$pb.TagNumber(13)
-  $core.bool hasKind() => $_has(9);
+  $core.bool hasKind() => $_has(8);
   @$pb.TagNumber(13)
   void clearKind() => $_clearField(13);
 }
@@ -1396,7 +1359,6 @@ class EditListingReq extends $pb.GeneratedMessage {
     $core.String? coin,
     $fixnum.Int64? duration,
     $core.Iterable<$core.String>? tags,
-    $core.bool? allowFollowLatest,
     $core.String? actionUrl,
   }) {
     final result = create();
@@ -1405,7 +1367,6 @@ class EditListingReq extends $pb.GeneratedMessage {
     if (coin != null) result.coin = coin;
     if (duration != null) result.duration = duration;
     if (tags != null) result.tags.addAll(tags);
-    if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
     if (actionUrl != null) result.actionUrl = actionUrl;
     return result;
   }
@@ -1428,7 +1389,6 @@ class EditListingReq extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'coin')
     ..aInt64(4, _omitFieldNames ? '' : 'duration')
     ..pPS(8, _omitFieldNames ? '' : 'tags')
-    ..aOB(9, _omitFieldNames ? '' : 'allowFollowLatest')
     ..aOS(10, _omitFieldNames ? '' : 'actionUrl')
     ..hasRequiredFields = false;
 
@@ -1490,21 +1450,12 @@ class EditListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $pb.PbList<$core.String> get tags => $_getList(4);
 
-  @$pb.TagNumber(9)
-  $core.bool get allowFollowLatest => $_getBF(5);
-  @$pb.TagNumber(9)
-  set allowFollowLatest($core.bool value) => $_setBool(5, value);
-  @$pb.TagNumber(9)
-  $core.bool hasAllowFollowLatest() => $_has(5);
-  @$pb.TagNumber(9)
-  void clearAllowFollowLatest() => $_clearField(9);
-
   @$pb.TagNumber(10)
-  $core.String get actionUrl => $_getSZ(6);
+  $core.String get actionUrl => $_getSZ(5);
   @$pb.TagNumber(10)
-  set actionUrl($core.String value) => $_setString(6, value);
+  set actionUrl($core.String value) => $_setString(5, value);
   @$pb.TagNumber(10)
-  $core.bool hasActionUrl() => $_has(6);
+  $core.bool hasActionUrl() => $_has(5);
   @$pb.TagNumber(10)
   void clearActionUrl() => $_clearField(10);
 }
@@ -1774,13 +1725,11 @@ class ApplyReq extends $pb.GeneratedMessage {
   factory ApplyReq({
     $core.String? listingUuid,
     $core.String? toAgent,
-    $core.bool? followLatest,
     $3.Struct? params,
   }) {
     final result = create();
     if (listingUuid != null) result.listingUuid = listingUuid;
     if (toAgent != null) result.toAgent = toAgent;
-    if (followLatest != null) result.followLatest = followLatest;
     if (params != null) result.params = params;
     return result;
   }
@@ -1800,7 +1749,6 @@ class ApplyReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'listingUuid')
     ..aOS(2, _omitFieldNames ? '' : 'toAgent')
-    ..aOB(3, _omitFieldNames ? '' : 'followLatest')
     ..aOM<$3.Struct>(4, _omitFieldNames ? '' : 'params',
         subBuilder: $3.Struct.create)
     ..hasRequiredFields = false;
@@ -1841,25 +1789,16 @@ class ApplyReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearToAgent() => $_clearField(2);
 
-  @$pb.TagNumber(3)
-  $core.bool get followLatest => $_getBF(2);
-  @$pb.TagNumber(3)
-  set followLatest($core.bool value) => $_setBool(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasFollowLatest() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearFollowLatest() => $_clearField(3);
-
   @$pb.TagNumber(4)
-  $3.Struct get params => $_getN(3);
+  $3.Struct get params => $_getN(2);
   @$pb.TagNumber(4)
   set params($3.Struct value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasParams() => $_has(3);
+  $core.bool hasParams() => $_has(2);
   @$pb.TagNumber(4)
   void clearParams() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.Struct ensureParams() => $_ensure(3);
+  $3.Struct ensureParams() => $_ensure(2);
 }
 
 class MarketPayment extends $pb.GeneratedMessage {
@@ -3044,11 +2983,11 @@ class ListGrantsResp extends $pb.GeneratedMessage {
   $pb.PbList<MarketGrantView> get list => $_getList(1);
 }
 
-/// SetGrantVersionReq 引用方切换用哪个版本。
+/// ⚠️ **SetGrantVersion 已删。** 切换用哪个版本走 `hi.club.Plugin.SetActive`
+///    (「机器人 → 插件 → 版本管理」里选)—— 那本来就是同一件事的同一套语义,
+///    有两个入口只会让人问"这两个有什么区别"。而且**引用不一定有 grant**
+///    (内置插件是注册时自动建的),按 grant 走的那条路对它们根本不存在。
 ///
-/// 语义与 `hi.club.Plugin.SetActive` 一致 —— 若该 agent 对 (uuid, version) 还没有 d 行,
-/// 就**以当前激活版的 d.data 为模板建一行**再置 active。
-/// c 是壳级的、每 (agent,uuid) 只有一行、跨版本不变,**不需要复制**,要复制的只有 d.data。
 /// SetAutoRenewReq 开/关自动续费。
 ///
 /// ⚠️ **只有受让方是硬件机器人时才能开** —— 续费是机器人自己掏钱付款,
@@ -3119,72 +3058,6 @@ class SetAutoRenewReq extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(1);
   @$pb.TagNumber(2)
   void clearEnabled() => $_clearField(2);
-}
-
-class SetGrantVersionReq extends $pb.GeneratedMessage {
-  factory SetGrantVersionReq({
-    $core.String? grantUuid,
-    $core.String? version,
-  }) {
-    final result = create();
-    if (grantUuid != null) result.grantUuid = grantUuid;
-    if (version != null) result.version = version;
-    return result;
-  }
-
-  SetGrantVersionReq._();
-
-  factory SetGrantVersionReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SetGrantVersionReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SetGrantVersionReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'grantUuid')
-    ..aOS(2, _omitFieldNames ? '' : 'version')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetGrantVersionReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetGrantVersionReq copyWith(void Function(SetGrantVersionReq) updates) =>
-      super.copyWith((message) => updates(message as SetGrantVersionReq))
-          as SetGrantVersionReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SetGrantVersionReq create() => SetGrantVersionReq._();
-  @$core.override
-  SetGrantVersionReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SetGrantVersionReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SetGrantVersionReq>(create);
-  static SetGrantVersionReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get grantUuid => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set grantUuid($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasGrantUuid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearGrantUuid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get version => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set version($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasVersion() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearVersion() => $_clearField(2);
 }
 
 class MarketManageListListingsReq extends $pb.GeneratedMessage {

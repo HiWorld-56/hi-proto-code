@@ -426,6 +426,7 @@ class PluginView extends $pb.GeneratedMessage {
     $2.Struct? data,
     $2.Struct? versionData,
     PluginBuild? build,
+    $core.bool? followLatest,
   }) {
     final result = create();
     if (shell != null) result.shell = shell;
@@ -436,6 +437,7 @@ class PluginView extends $pb.GeneratedMessage {
     if (data != null) result.data = data;
     if (versionData != null) result.versionData = versionData;
     if (build != null) result.build = build;
+    if (followLatest != null) result.followLatest = followLatest;
     return result;
   }
 
@@ -466,6 +468,7 @@ class PluginView extends $pb.GeneratedMessage {
         subBuilder: $2.Struct.create)
     ..aOM<PluginBuild>(8, _omitFieldNames ? '' : 'build',
         subBuilder: PluginBuild.create)
+    ..aOB(9, _omitFieldNames ? '' : 'followLatest')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -570,6 +573,25 @@ class PluginView extends $pb.GeneratedMessage {
   void clearBuild() => $_clearField(8);
   @$pb.TagNumber(8)
   PluginBuild ensureBuild() => $_ensure(7);
+
+  /// c.follow_latest:这台机器人要不要自动切到作者发的新版。
+  ///
+  /// ⭐ **这是使用方自己的事,归在使用行(c)上,不在挂牌上。**
+  /// 原先它是两半:挂牌上一个"卖家允不允许"(allow_follow_latest)+ grant 上一个"买家选不选"。
+  /// 那是错的 —— 买家买到的是这个插件,选哪一版、要不要自动跟,都是他自己的选择,
+  /// 卖家没有理由(也没有能力)替他决定;而且**引用不一定有 grant**
+  /// (内置插件是注册时自动建的引用,根本没有 grant 行),挂在 grant 上就漏掉一大片。
+  ///
+  /// 关掉 = 停在当前激活版,作者发新版也不动;打开 = 新版**构建成功后**自动切过去
+  /// (NATIVE 要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
+  @$pb.TagNumber(9)
+  $core.bool get followLatest => $_getBF(8);
+  @$pb.TagNumber(9)
+  set followLatest($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasFollowLatest() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearFollowLatest() => $_clearField(9);
 }
 
 /// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
@@ -1178,6 +1200,87 @@ class SetEnabledReq extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(2);
   @$pb.TagNumber(3)
   void clearEnabled() => $_clearField(3);
+}
+
+/// SetFollowLatestReq 改 c.follow_latest —— **在"机器人 → 插件"那一行上操作**。
+/// 打开之后,作者每发一版(NATIVE 是编成功之后)这台机器人就自动切过去;
+/// 关掉就停在当前激活版,由主人自己在版本管理里选。
+class SetFollowLatestReq extends $pb.GeneratedMessage {
+  factory SetFollowLatestReq({
+    $core.String? agent,
+    $core.String? uuid,
+    $core.bool? on,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    if (on != null) result.on = on;
+    return result;
+  }
+
+  SetFollowLatestReq._();
+
+  factory SetFollowLatestReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetFollowLatestReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetFollowLatestReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOB(3, _omitFieldNames ? '' : 'on')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFollowLatestReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFollowLatestReq copyWith(void Function(SetFollowLatestReq) updates) =>
+      super.copyWith((message) => updates(message as SetFollowLatestReq))
+          as SetFollowLatestReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetFollowLatestReq create() => SetFollowLatestReq._();
+  @$core.override
+  SetFollowLatestReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetFollowLatestReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetFollowLatestReq>(create);
+  static SetFollowLatestReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get on => $_getBF(2);
+  @$pb.TagNumber(3)
+  set on($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOn() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOn() => $_clearField(3);
 }
 
 class SetActiveReq extends $pb.GeneratedMessage {

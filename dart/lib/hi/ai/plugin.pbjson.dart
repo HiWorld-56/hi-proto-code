@@ -203,6 +203,14 @@ const PluginView$json = {
       '8': {},
       '10': 'build'
     },
+    {
+      '1': 'follow_latest',
+      '3': 9,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '10': 'followLatest'
+    },
   ],
   '7': {},
 };
@@ -216,7 +224,7 @@ final $typed_data.Uint8List pluginViewDescriptor = $convert.base64Decode(
     'cmVmQ291bnQSMQoEZGF0YRgGIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RCBJC1GANSBG'
     'RhdGESQAoMdmVyc2lvbl9kYXRhGAcgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdEIEkLUY'
     'A1ILdmVyc2lvbkRhdGESLgoFYnVpbGQYCCABKAsyEi5oaS5haS5QbHVnaW5CdWlsZEIEkLUYA1'
-    'IFYnVpbGQ6BJi1GAM=');
+    'IFYnVpbGQSKQoNZm9sbG93X2xhdGVzdBgJIAEoCEIEkLUYA1IMZm9sbG93TGF0ZXN0OgSYtRgD');
 
 @$core.Deprecated('Use pluginVersionViewDescriptor instead')
 const PluginVersionView$json = {
@@ -414,6 +422,21 @@ const SetEnabledReq$json = {
 final $typed_data.Uint8List setEnabledReqDescriptor = $convert.base64Decode(
     'Cg1TZXRFbmFibGVkUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBISCgR1dWlkGAIgASgJUgR1dW'
     'lkEhgKB2VuYWJsZWQYAyABKAhSB2VuYWJsZWQ=');
+
+@$core.Deprecated('Use setFollowLatestReqDescriptor instead')
+const SetFollowLatestReq$json = {
+  '1': 'SetFollowLatestReq',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'on', '3': 3, '4': 1, '5': 8, '10': 'on'},
+  ],
+};
+
+/// Descriptor for `SetFollowLatestReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setFollowLatestReqDescriptor = $convert.base64Decode(
+    'ChJTZXRGb2xsb3dMYXRlc3RSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbn'
+    'QSIAoEdXVpZBgCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlkEg4KAm9uGAMgASgIUgJvbg==');
 
 @$core.Deprecated('Use setActiveReqDescriptor instead')
 const SetActiveReq$json = {

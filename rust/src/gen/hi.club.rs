@@ -3472,6 +3472,27 @@ pub mod plugin_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Plugin", "SetEnabled"));
             self.inner.unary(req, path, codec).await
         }
+        pub async fn set_follow_latest(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::SetFollowLatestReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Plugin/SetFollowLatest",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Plugin", "SetFollowLatest"));
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn reload_api_key(
             &mut self,
             request: impl tonic::IntoRequest<super::ReloadApiKeyReq>,
@@ -5920,9 +5941,6 @@ pub struct MarketListingDetail {
     /// 买家装之前就知道会得到什么能力。
     #[prost(string, tag = "2")]
     pub capabilities: ::prost::alloc::string::String,
-    /// 出让方是否允许引用方跟随最新版。引用方自己再选(见 ApplyReq.follow_latest)。
-    #[prost(bool, tag = "3")]
-    pub allow_follow_latest: bool,
     /// 可选版本列表(引用方装好后可在其中切换)。
     #[prost(string, repeated, tag = "4")]
     pub versions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -6021,8 +6039,6 @@ pub struct MarketGrantView {
     pub price: ::prost::alloc::string::String,
     #[prost(string, tag = "10")]
     pub coin: ::prost::alloc::string::String,
-    #[prost(bool, tag = "11")]
-    pub follow_latest: bool,
     /// 当前引用的版本
     #[prost(string, tag = "12")]
     pub version: ::prost::alloc::string::String,
@@ -6104,8 +6120,6 @@ pub struct CreateListingReq {
     /// 市场分类。**这个不删** —— 插件自身没有分类的概念
     #[prost(string, repeated, tag = "10")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(bool, tag = "11")]
-    pub allow_follow_latest: bool,
     /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
     ///
     /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
@@ -6134,8 +6148,6 @@ pub struct EditListingReq {
     pub duration: ::core::option::Option<i64>,
     #[prost(string, repeated, tag = "8")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(bool, optional, tag = "9")]
-    pub allow_follow_latest: ::core::option::Option<bool>,
     #[prost(string, optional, tag = "10")]
     pub action_url: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -6184,9 +6196,6 @@ pub struct ApplyReq {
     /// 装到哪台机器人上
     #[prost(string, tag = "2")]
     pub to_agent: ::prost::alloc::string::String,
-    /// 是否自动跟随出让方的新版本。**默认 false**(见下)
-    #[prost(bool, tag = "3")]
-    pub follow_latest: bool,
     /// 外部流程要的额外参数,原样转给商户后台
     #[prost(message, optional, tag = "4")]
     pub params: ::core::option::Option<::pbjson_types::Struct>,
@@ -6393,11 +6402,11 @@ pub struct ListGrantsResp {
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<MarketGrantView>,
 }
-/// SetGrantVersionReq 引用方切换用哪个版本。
+/// ⚠️ **SetGrantVersion 已删。** 切换用哪个版本走 `hi.club.Plugin.SetActive`
+/// (「机器人 → 插件 → 版本管理」里选)—— 那本来就是同一件事的同一套语义,
+/// 有两个入口只会让人问"这两个有什么区别"。而且**引用不一定有 grant**
+/// (内置插件是注册时自动建的),按 grant 走的那条路对它们根本不存在。
 ///
-/// 语义与 `hi.club.Plugin.SetActive` 一致 —— 若该 agent 对 (uuid, version) 还没有 d 行,
-/// 就**以当前激活版的 d.data 为模板建一行**再置 active。
-/// c 是壳级的、每 (agent,uuid) 只有一行、跨版本不变,**不需要复制**,要复制的只有 d.data。
 /// SetAutoRenewReq 开/关自动续费。
 ///
 /// ⚠️ **只有受让方是硬件机器人时才能开** —— 续费是机器人自己掏钱付款,
@@ -6410,13 +6419,6 @@ pub struct SetAutoRenewReq {
     pub grant_uuid: ::prost::alloc::string::String,
     #[prost(bool, tag = "2")]
     pub enabled: bool,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetGrantVersionReq {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketManageListListingsReq {
@@ -7432,27 +7434,6 @@ pub mod market_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Market", "ListMyGrants"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set_grant_version(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SetGrantVersionReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Market/SetGrantVersion",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Market", "SetGrantVersion"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_auto_renew(

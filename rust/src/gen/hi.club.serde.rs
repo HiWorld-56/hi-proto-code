@@ -542,9 +542,6 @@ impl serde::Serialize for ApplyReq {
         if !self.to_agent.is_empty() {
             len += 1;
         }
-        if self.follow_latest {
-            len += 1;
-        }
         if self.params.is_some() {
             len += 1;
         }
@@ -554,9 +551,6 @@ impl serde::Serialize for ApplyReq {
         }
         if !self.to_agent.is_empty() {
             struct_ser.serialize_field("toAgent", &self.to_agent)?;
-        }
-        if self.follow_latest {
-            struct_ser.serialize_field("followLatest", &self.follow_latest)?;
         }
         if let Some(v) = self.params.as_ref() {
             struct_ser.serialize_field("params", v)?;
@@ -575,8 +569,6 @@ impl<'de> serde::Deserialize<'de> for ApplyReq {
             "listingUuid",
             "to_agent",
             "toAgent",
-            "follow_latest",
-            "followLatest",
             "params",
         ];
 
@@ -584,7 +576,6 @@ impl<'de> serde::Deserialize<'de> for ApplyReq {
         enum GeneratedField {
             ListingUuid,
             ToAgent,
-            FollowLatest,
             Params,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -609,7 +600,6 @@ impl<'de> serde::Deserialize<'de> for ApplyReq {
                         match value {
                             "listingUuid" | "listing_uuid" => Ok(GeneratedField::ListingUuid),
                             "toAgent" | "to_agent" => Ok(GeneratedField::ToAgent),
-                            "followLatest" | "follow_latest" => Ok(GeneratedField::FollowLatest),
                             "params" => Ok(GeneratedField::Params),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -632,7 +622,6 @@ impl<'de> serde::Deserialize<'de> for ApplyReq {
             {
                 let mut listing_uuid__ = None;
                 let mut to_agent__ = None;
-                let mut follow_latest__ = None;
                 let mut params__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -648,12 +637,6 @@ impl<'de> serde::Deserialize<'de> for ApplyReq {
                             }
                             to_agent__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::FollowLatest => {
-                            if follow_latest__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("followLatest"));
-                            }
-                            follow_latest__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Params => {
                             if params__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("params"));
@@ -665,7 +648,6 @@ impl<'de> serde::Deserialize<'de> for ApplyReq {
                 Ok(ApplyReq {
                     listing_uuid: listing_uuid__.unwrap_or_default(),
                     to_agent: to_agent__.unwrap_or_default(),
-                    follow_latest: follow_latest__.unwrap_or_default(),
                     params: params__,
                 })
             }
@@ -1870,9 +1852,6 @@ impl serde::Serialize for CreateListingReq {
         if !self.tags.is_empty() {
             len += 1;
         }
-        if self.allow_follow_latest {
-            len += 1;
-        }
         if !self.action_url.is_empty() {
             len += 1;
         }
@@ -1905,9 +1884,6 @@ impl serde::Serialize for CreateListingReq {
         if !self.tags.is_empty() {
             struct_ser.serialize_field("tags", &self.tags)?;
         }
-        if self.allow_follow_latest {
-            struct_ser.serialize_field("allowFollowLatest", &self.allow_follow_latest)?;
-        }
         if !self.action_url.is_empty() {
             struct_ser.serialize_field("actionUrl", &self.action_url)?;
         }
@@ -1935,8 +1911,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
             "coin",
             "duration",
             "tags",
-            "allow_follow_latest",
-            "allowFollowLatest",
             "action_url",
             "actionUrl",
             "kind",
@@ -1951,7 +1925,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
             Coin,
             Duration,
             Tags,
-            AllowFollowLatest,
             ActionUrl,
             Kind,
         }
@@ -1982,7 +1955,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                             "coin" => Ok(GeneratedField::Coin),
                             "duration" => Ok(GeneratedField::Duration),
                             "tags" => Ok(GeneratedField::Tags),
-                            "allowFollowLatest" | "allow_follow_latest" => Ok(GeneratedField::AllowFollowLatest),
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
                             "kind" => Ok(GeneratedField::Kind),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -2011,7 +1983,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                 let mut coin__ = None;
                 let mut duration__ = None;
                 let mut tags__ = None;
-                let mut allow_follow_latest__ = None;
                 let mut action_url__ = None;
                 let mut kind__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -2060,12 +2031,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                             }
                             tags__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::AllowFollowLatest => {
-                            if allow_follow_latest__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowFollowLatest"));
-                            }
-                            allow_follow_latest__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::ActionUrl => {
                             if action_url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("actionUrl"));
@@ -2088,7 +2053,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                     coin: coin__.unwrap_or_default(),
                     duration: duration__.unwrap_or_default(),
                     tags: tags__.unwrap_or_default(),
-                    allow_follow_latest: allow_follow_latest__.unwrap_or_default(),
                     action_url: action_url__.unwrap_or_default(),
                     kind: kind__.unwrap_or_default(),
                 })
@@ -3054,9 +3018,6 @@ impl serde::Serialize for EditListingReq {
         if !self.tags.is_empty() {
             len += 1;
         }
-        if self.allow_follow_latest.is_some() {
-            len += 1;
-        }
         if self.action_url.is_some() {
             len += 1;
         }
@@ -3078,9 +3039,6 @@ impl serde::Serialize for EditListingReq {
         if !self.tags.is_empty() {
             struct_ser.serialize_field("tags", &self.tags)?;
         }
-        if let Some(v) = self.allow_follow_latest.as_ref() {
-            struct_ser.serialize_field("allowFollowLatest", v)?;
-        }
         if let Some(v) = self.action_url.as_ref() {
             struct_ser.serialize_field("actionUrl", v)?;
         }
@@ -3099,8 +3057,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
             "coin",
             "duration",
             "tags",
-            "allow_follow_latest",
-            "allowFollowLatest",
             "action_url",
             "actionUrl",
         ];
@@ -3112,7 +3068,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
             Coin,
             Duration,
             Tags,
-            AllowFollowLatest,
             ActionUrl,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3140,7 +3095,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                             "coin" => Ok(GeneratedField::Coin),
                             "duration" => Ok(GeneratedField::Duration),
                             "tags" => Ok(GeneratedField::Tags),
-                            "allowFollowLatest" | "allow_follow_latest" => Ok(GeneratedField::AllowFollowLatest),
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3166,7 +3120,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                 let mut coin__ = None;
                 let mut duration__ = None;
                 let mut tags__ = None;
-                let mut allow_follow_latest__ = None;
                 let mut action_url__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -3202,12 +3155,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                             }
                             tags__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::AllowFollowLatest => {
-                            if allow_follow_latest__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowFollowLatest"));
-                            }
-                            allow_follow_latest__ = map_.next_value()?;
-                        }
                         GeneratedField::ActionUrl => {
                             if action_url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("actionUrl"));
@@ -3222,7 +3169,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                     coin: coin__,
                     duration: duration__,
                     tags: tags__.unwrap_or_default(),
-                    allow_follow_latest: allow_follow_latest__,
                     action_url: action_url__,
                 })
             }
@@ -9024,9 +8970,6 @@ impl serde::Serialize for MarketGrantView {
         if !self.coin.is_empty() {
             len += 1;
         }
-        if self.follow_latest {
-            len += 1;
-        }
         if !self.version.is_empty() {
             len += 1;
         }
@@ -9086,9 +9029,6 @@ impl serde::Serialize for MarketGrantView {
         if !self.coin.is_empty() {
             struct_ser.serialize_field("coin", &self.coin)?;
         }
-        if self.follow_latest {
-            struct_ser.serialize_field("followLatest", &self.follow_latest)?;
-        }
         if !self.version.is_empty() {
             struct_ser.serialize_field("version", &self.version)?;
         }
@@ -9145,8 +9085,6 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
             "settleMode",
             "price",
             "coin",
-            "follow_latest",
-            "followLatest",
             "version",
             "expire_at",
             "expireAt",
@@ -9175,7 +9113,6 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
             SettleMode,
             Price,
             Coin,
-            FollowLatest,
             Version,
             ExpireAt,
             ActionUrl,
@@ -9215,7 +9152,6 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                             "settleMode" | "settle_mode" => Ok(GeneratedField::SettleMode),
                             "price" => Ok(GeneratedField::Price),
                             "coin" => Ok(GeneratedField::Coin),
-                            "followLatest" | "follow_latest" => Ok(GeneratedField::FollowLatest),
                             "version" => Ok(GeneratedField::Version),
                             "expireAt" | "expire_at" => Ok(GeneratedField::ExpireAt),
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
@@ -9253,7 +9189,6 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                 let mut settle_mode__ = None;
                 let mut price__ = None;
                 let mut coin__ = None;
-                let mut follow_latest__ = None;
                 let mut version__ = None;
                 let mut expire_at__ = None;
                 let mut action_url__ = None;
@@ -9324,12 +9259,6 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                             }
                             coin__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::FollowLatest => {
-                            if follow_latest__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("followLatest"));
-                            }
-                            follow_latest__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Version => {
                             if version__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("version"));
@@ -9399,7 +9328,6 @@ impl<'de> serde::Deserialize<'de> for MarketGrantView {
                     settle_mode: settle_mode__.unwrap_or_default(),
                     price: price__.unwrap_or_default(),
                     coin: coin__.unwrap_or_default(),
-                    follow_latest: follow_latest__.unwrap_or_default(),
                     version: version__.unwrap_or_default(),
                     expire_at: expire_at__.unwrap_or_default(),
                     action_url: action_url__.unwrap_or_default(),
@@ -9718,9 +9646,6 @@ impl serde::Serialize for MarketListingDetail {
         if !self.capabilities.is_empty() {
             len += 1;
         }
-        if self.allow_follow_latest {
-            len += 1;
-        }
         if !self.versions.is_empty() {
             len += 1;
         }
@@ -9733,9 +9658,6 @@ impl serde::Serialize for MarketListingDetail {
         }
         if !self.capabilities.is_empty() {
             struct_ser.serialize_field("capabilities", &self.capabilities)?;
-        }
-        if self.allow_follow_latest {
-            struct_ser.serialize_field("allowFollowLatest", &self.allow_follow_latest)?;
         }
         if !self.versions.is_empty() {
             struct_ser.serialize_field("versions", &self.versions)?;
@@ -9757,8 +9679,6 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
         const FIELDS: &[&str] = &[
             "brief",
             "capabilities",
-            "allow_follow_latest",
-            "allowFollowLatest",
             "versions",
             "status",
         ];
@@ -9767,7 +9687,6 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
         enum GeneratedField {
             Brief,
             Capabilities,
-            AllowFollowLatest,
             Versions,
             Status,
         }
@@ -9793,7 +9712,6 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                         match value {
                             "brief" => Ok(GeneratedField::Brief),
                             "capabilities" => Ok(GeneratedField::Capabilities),
-                            "allowFollowLatest" | "allow_follow_latest" => Ok(GeneratedField::AllowFollowLatest),
                             "versions" => Ok(GeneratedField::Versions),
                             "status" => Ok(GeneratedField::Status),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -9817,7 +9735,6 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
             {
                 let mut brief__ = None;
                 let mut capabilities__ = None;
-                let mut allow_follow_latest__ = None;
                 let mut versions__ = None;
                 let mut status__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -9833,12 +9750,6 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                                 return Err(serde::de::Error::duplicate_field("capabilities"));
                             }
                             capabilities__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::AllowFollowLatest => {
-                            if allow_follow_latest__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowFollowLatest"));
-                            }
-                            allow_follow_latest__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Versions => {
                             if versions__.is_some() {
@@ -9857,7 +9768,6 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                 Ok(MarketListingDetail {
                     brief: brief__,
                     capabilities: capabilities__.unwrap_or_default(),
-                    allow_follow_latest: allow_follow_latest__.unwrap_or_default(),
                     versions: versions__.unwrap_or_default(),
                     status: status__.unwrap_or_default(),
                 })
@@ -15280,115 +15190,6 @@ impl<'de> serde::Deserialize<'de> for SetDndReq {
             }
         }
         deserializer.deserialize_struct("hi.club.SetDndReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetGrantVersionReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.grant_uuid.is_empty() {
-            len += 1;
-        }
-        if !self.version.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.club.SetGrantVersionReq", len)?;
-        if !self.grant_uuid.is_empty() {
-            struct_ser.serialize_field("grantUuid", &self.grant_uuid)?;
-        }
-        if !self.version.is_empty() {
-            struct_ser.serialize_field("version", &self.version)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetGrantVersionReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "grant_uuid",
-            "grantUuid",
-            "version",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            GrantUuid,
-            Version,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "grantUuid" | "grant_uuid" => Ok(GeneratedField::GrantUuid),
-                            "version" => Ok(GeneratedField::Version),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetGrantVersionReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.SetGrantVersionReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetGrantVersionReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut grant_uuid__ = None;
-                let mut version__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::GrantUuid => {
-                            if grant_uuid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("grantUuid"));
-                            }
-                            grant_uuid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Version => {
-                            if version__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("version"));
-                            }
-                            version__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(SetGrantVersionReq {
-                    grant_uuid: grant_uuid__.unwrap_or_default(),
-                    version: version__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.club.SetGrantVersionReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for SetListingStatusReq {
