@@ -1976,7 +1976,13 @@ type MarketPayment struct {
 	Coin   string `protobuf:"bytes,11,opt,name=coin,proto3" json:"coin,omitempty"`
 	// **这一笔打到哪个账户**。与 payee(收款人)分开:见上面那段。
 	// 它是**落库的快照**,不是 join 出来的 —— 因为 server 可以被改,而这一笔的目标不能变。
-	ToAccount     string `protobuf:"bytes,12,opt,name=to_account,json=toAccount,proto3" json:"to_account,omitempty"`
+	ToAccount string `protobuf:"bytes,12,opt,name=to_account,json=toAccount,proto3" json:"to_account,omitempty"`
+	// **二维码里装的就是这个号**(hidid 的 `M` 号,见 hi.did.PayRequest)。
+	//
+	// 扫码方按它去 hidid 取要素(收款账号/币种/金额/业务单号),**改不了** ——
+	// 所以码里不需要金额和地址,被替换也只会"查不到这个号"。
+	// 空 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
+	PayReqId      string `protobuf:"bytes,13,opt,name=pay_req_id,json=payReqId,proto3" json:"pay_req_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2091,6 +2097,13 @@ func (x *MarketPayment) GetCoin() string {
 func (x *MarketPayment) GetToAccount() string {
 	if x != nil {
 		return x.ToAccount
+	}
+	return ""
+}
+
+func (x *MarketPayment) GetPayReqId() string {
+	if x != nil {
+		return x.PayReqId
 	}
 	return ""
 }
@@ -3840,7 +3853,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\bApplyReq\x12/\n" +
 	"\flisting_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\vlistingUuid\x12'\n" +
 	"\bto_agent\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\atoAgent\x12/\n" +
-	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06paramsJ\x04\b\x03\x10\x04R\rfollow_latest\"\xa9\x03\n" +
+	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06paramsJ\x04\b\x03\x10\x04R\rfollow_latest\"\xcd\x03\n" +
 	"\rMarketPayment\x12\x1b\n" +
 	"\x06pay_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05payId\x12\x1f\n" +
 	"\border_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12:\n" +
@@ -3856,7 +3869,9 @@ const file_hi_club_market_proto_rawDesc = "" +
 	" \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
 	"\x04coin\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12#\n" +
 	"\n" +
-	"to_account\x18\f \x01(\tB\x04\x90\xb5\x18\x03R\ttoAccount:\x04\x98\xb5\x18\x03\"W\n" +
+	"to_account\x18\f \x01(\tB\x04\x90\xb5\x18\x03R\ttoAccount\x12\"\n" +
+	"\n" +
+	"pay_req_id\x18\r \x01(\tB\x04\x90\xb5\x18\x03R\bpayReqId:\x04\x98\xb5\x18\x03\"W\n" +
 	"\x13ListTransactionsReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +

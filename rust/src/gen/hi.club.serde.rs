@@ -11221,6 +11221,9 @@ impl serde::Serialize for MarketPayment {
         if !self.to_account.is_empty() {
             len += 1;
         }
+        if !self.pay_req_id.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.MarketPayment", len)?;
         if !self.pay_id.is_empty() {
             struct_ser.serialize_field("payId", &self.pay_id)?;
@@ -11264,6 +11267,9 @@ impl serde::Serialize for MarketPayment {
         if !self.to_account.is_empty() {
             struct_ser.serialize_field("toAccount", &self.to_account)?;
         }
+        if !self.pay_req_id.is_empty() {
+            struct_ser.serialize_field("payReqId", &self.pay_req_id)?;
+        }
         struct_ser.end()
     }
 }
@@ -11292,6 +11298,8 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
             "coin",
             "to_account",
             "toAccount",
+            "pay_req_id",
+            "payReqId",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -11308,6 +11316,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
             Amount,
             Coin,
             ToAccount,
+            PayReqId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -11341,6 +11350,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                             "amount" => Ok(GeneratedField::Amount),
                             "coin" => Ok(GeneratedField::Coin),
                             "toAccount" | "to_account" => Ok(GeneratedField::ToAccount),
+                            "payReqId" | "pay_req_id" => Ok(GeneratedField::PayReqId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -11372,6 +11382,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                 let mut amount__ = None;
                 let mut coin__ = None;
                 let mut to_account__ = None;
+                let mut pay_req_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::PayId => {
@@ -11450,6 +11461,12 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                             }
                             to_account__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::PayReqId => {
+                            if pay_req_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payReqId"));
+                            }
+                            pay_req_id__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(MarketPayment {
@@ -11465,6 +11482,7 @@ impl<'de> serde::Deserialize<'de> for MarketPayment {
                     amount: amount__.unwrap_or_default(),
                     coin: coin__.unwrap_or_default(),
                     to_account: to_account__.unwrap_or_default(),
+                    pay_req_id: pay_req_id__.unwrap_or_default(),
                 })
             }
         }

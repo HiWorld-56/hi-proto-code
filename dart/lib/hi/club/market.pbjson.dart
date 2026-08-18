@@ -792,6 +792,7 @@ const MarketPayment$json = {
     {'1': 'amount', '3': 10, '4': 1, '5': 9, '8': {}, '10': 'amount'},
     {'1': 'coin', '3': 11, '4': 1, '5': 9, '8': {}, '10': 'coin'},
     {'1': 'to_account', '3': 12, '4': 1, '5': 9, '8': {}, '10': 'toAccount'},
+    {'1': 'pay_req_id', '3': 13, '4': 1, '5': 9, '8': {}, '10': 'payReqId'},
   ],
   '7': {},
 };
@@ -805,7 +806,8 @@ final $typed_data.Uint8List marketPaymentDescriptor = $convert.base64Decode(
     'A0IEkLUYA1IJY3JlYXRlZEF0EhwKBnJlYXNvbhgHIAEoCUIEkLUYA1IGcmVhc29uEhoKBXBheW'
     'VyGAggASgJQgSQtRgDUgVwYXllchIaCgVwYXllZRgJIAEoCUIEkLUYA1IFcGF5ZWUSHAoGYW1v'
     'dW50GAogASgJQgSQtRgDUgZhbW91bnQSGAoEY29pbhgLIAEoCUIEkLUYA1IEY29pbhIjCgp0b1'
-    '9hY2NvdW50GAwgASgJQgSQtRgDUgl0b0FjY291bnQ6BJi1GAM=');
+    '9hY2NvdW50GAwgASgJQgSQtRgDUgl0b0FjY291bnQSIgoKcGF5X3JlcV9pZBgNIAEoCUIEkLUY'
+    'A1IIcGF5UmVxSWQ6BJi1GAM=');
 
 @$core.Deprecated('Use listTransactionsReqDescriptor instead')
 const ListTransactionsReq$json = {

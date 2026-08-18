@@ -1875,6 +1875,7 @@ class MarketPayment extends $pb.GeneratedMessage {
     $core.String? amount,
     $core.String? coin,
     $core.String? toAccount,
+    $core.String? payReqId,
   }) {
     final result = create();
     if (payId != null) result.payId = payId;
@@ -1889,6 +1890,7 @@ class MarketPayment extends $pb.GeneratedMessage {
     if (amount != null) result.amount = amount;
     if (coin != null) result.coin = coin;
     if (toAccount != null) result.toAccount = toAccount;
+    if (payReqId != null) result.payReqId = payReqId;
     return result;
   }
 
@@ -1918,6 +1920,7 @@ class MarketPayment extends $pb.GeneratedMessage {
     ..aOS(10, _omitFieldNames ? '' : 'amount')
     ..aOS(11, _omitFieldNames ? '' : 'coin')
     ..aOS(12, _omitFieldNames ? '' : 'toAccount')
+    ..aOS(13, _omitFieldNames ? '' : 'payReqId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2069,6 +2072,20 @@ class MarketPayment extends $pb.GeneratedMessage {
   $core.bool hasToAccount() => $_has(11);
   @$pb.TagNumber(12)
   void clearToAccount() => $_clearField(12);
+
+  /// **二维码里装的就是这个号**(hidid 的 `M` 号,见 hi.did.PayRequest)。
+  ///
+  /// 扫码方按它去 hidid 取要素(收款账号/币种/金额/业务单号),**改不了** ——
+  /// 所以码里不需要金额和地址,被替换也只会"查不到这个号"。
+  /// 空 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
+  @$pb.TagNumber(13)
+  $core.String get payReqId => $_getSZ(12);
+  @$pb.TagNumber(13)
+  set payReqId($core.String value) => $_setString(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasPayReqId() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearPayReqId() => $_clearField(13);
 }
 
 /// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。

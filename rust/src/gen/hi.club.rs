@@ -6272,6 +6272,13 @@ pub struct MarketPayment {
     /// 它是**落库的快照**,不是 join 出来的 —— 因为 server 可以被改,而这一笔的目标不能变。
     #[prost(string, tag = "12")]
     pub to_account: ::prost::alloc::string::String,
+    /// **二维码里装的就是这个号**(hidid 的 `M` 号,见 hi.did.PayRequest)。
+    ///
+    /// 扫码方按它去 hidid 取要素(收款账号/币种/金额/业务单号),**改不了** ——
+    /// 所以码里不需要金额和地址,被替换也只会"查不到这个号"。
+    /// 空 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
+    #[prost(string, tag = "13")]
+    pub pay_req_id: ::prost::alloc::string::String,
 }
 /// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。
 ///
