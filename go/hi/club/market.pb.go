@@ -490,18 +490,22 @@ func (MarketPaymentStatus) EnumDescriptor() ([]byte, []int) {
 
 // MarketListingBrief 挂牌摘要(搜索结果一行)。
 type MarketListingBrief struct {
-	state        protoimpl.MessageState `protogen:"open.v1"`
-	Uuid         string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 挂牌 id
-	Agent        *hi.Entity             `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 出让方机器人(只到 Entity,**不吐它的 master**)
-	Title        string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Summary      string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`
-	Logo         string                 `protobuf:"bytes,5,opt,name=logo,proto3" json:"logo,omitempty"`
-	Tags         []string               `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
-	SettleMode   SettleMode             `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
-	Price        string                 `protobuf:"bytes,8,opt,name=price,proto3" json:"price,omitempty"` // 十进制字符串,免浮点误差
-	Coin         string                 `protobuf:"bytes,9,opt,name=coin,proto3" json:"coin,omitempty"`
-	Duration     int64                  `protobuf:"varint,10,opt,name=duration,proto3" json:"duration,omitempty"`                             // 商品规格:买一次能用多久(秒);0 = 永久
-	InstallCount int32                  `protobuf:"varint,11,opt,name=install_count,json=installCount,proto3" json:"install_count,omitempty"` // 装机数
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Uuid  string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 挂牌 id
+	Agent *hi.Entity             `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 出让方机器人(只到 Entity,**不吐它的 master**)
+	// ⭐ 下面三个是**读侧现取**的派生值,挂牌行里不存:
+	//
+	//	title ← 插件壳名;logo / summary ← 出让方**当前激活版**(与"引用跟版"同一口径)。
+	//	改插件名就是改市场标题 —— 单一来源,不会漂。
+	Title        string     `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Summary      string     `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`
+	Logo         string     `protobuf:"bytes,5,opt,name=logo,proto3" json:"logo,omitempty"`
+	Tags         []string   `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	SettleMode   SettleMode `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
+	Price        string     `protobuf:"bytes,8,opt,name=price,proto3" json:"price,omitempty"` // 十进制字符串,免浮点误差
+	Coin         string     `protobuf:"bytes,9,opt,name=coin,proto3" json:"coin,omitempty"`
+	Duration     int64      `protobuf:"varint,10,opt,name=duration,proto3" json:"duration,omitempty"`                             // 商品规格:买一次能用多久(秒);0 = 永久
+	InstallCount int32      `protobuf:"varint,11,opt,name=install_count,json=installCount,proto3" json:"install_count,omitempty"` // 装机数
 	// 这一摊是谁的货(普通 / 官方 / 内置)。公开 —— 买家要能看出哪个是官方出品,
 	// 那正是这个字段存在的意义;藏起来等于白设。
 	Kind          MarketListingKind `protobuf:"varint,12,opt,name=kind,proto3,enum=hi.club.MarketListingKind" json:"kind,omitempty"`
@@ -1379,10 +1383,7 @@ type CreateListingReq struct {
 	Price             string                 `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
 	Coin              string                 `protobuf:"bytes,5,opt,name=coin,proto3" json:"coin,omitempty"`
 	Duration          int64                  `protobuf:"varint,6,opt,name=duration,proto3" json:"duration,omitempty"` // 秒;0 = 永久
-	Title             string                 `protobuf:"bytes,7,opt,name=title,proto3" json:"title,omitempty"`
-	Summary           string                 `protobuf:"bytes,8,opt,name=summary,proto3" json:"summary,omitempty"`
-	Logo              string                 `protobuf:"bytes,9,opt,name=logo,proto3" json:"logo,omitempty"`
-	Tags              []string               `protobuf:"bytes,10,rep,name=tags,proto3" json:"tags,omitempty"`
+	Tags              []string               `protobuf:"bytes,10,rep,name=tags,proto3" json:"tags,omitempty"`         // 市场分类。**这个不删** —— 插件自身没有分类的概念
 	AllowFollowLatest bool                   `protobuf:"varint,11,opt,name=allow_follow_latest,json=allowFollowLatest,proto3" json:"allow_follow_latest,omitempty"`
 	// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
 	//
@@ -1469,27 +1470,6 @@ func (x *CreateListingReq) GetDuration() int64 {
 	return 0
 }
 
-func (x *CreateListingReq) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *CreateListingReq) GetSummary() string {
-	if x != nil {
-		return x.Summary
-	}
-	return ""
-}
-
-func (x *CreateListingReq) GetLogo() string {
-	if x != nil {
-		return x.Logo
-	}
-	return ""
-}
-
 func (x *CreateListingReq) GetTags() []string {
 	if x != nil {
 		return x.Tags
@@ -1529,9 +1509,6 @@ type EditListingReq struct {
 	Price             *string                `protobuf:"bytes,2,opt,name=price,proto3,oneof" json:"price,omitempty"`
 	Coin              *string                `protobuf:"bytes,3,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	Duration          *int64                 `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
-	Title             *string                `protobuf:"bytes,5,opt,name=title,proto3,oneof" json:"title,omitempty"`
-	Summary           *string                `protobuf:"bytes,6,opt,name=summary,proto3,oneof" json:"summary,omitempty"`
-	Logo              *string                `protobuf:"bytes,7,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
 	Tags              []string               `protobuf:"bytes,8,rep,name=tags,proto3" json:"tags,omitempty"`
 	AllowFollowLatest *bool                  `protobuf:"varint,9,opt,name=allow_follow_latest,json=allowFollowLatest,proto3,oneof" json:"allow_follow_latest,omitempty"`
 	ActionUrl         *string                `protobuf:"bytes,10,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"`
@@ -1595,27 +1572,6 @@ func (x *EditListingReq) GetDuration() int64 {
 		return *x.Duration
 	}
 	return 0
-}
-
-func (x *EditListingReq) GetTitle() string {
-	if x != nil && x.Title != nil {
-		return *x.Title
-	}
-	return ""
-}
-
-func (x *EditListingReq) GetSummary() string {
-	if x != nil && x.Summary != nil {
-		return *x.Summary
-	}
-	return ""
-}
-
-func (x *EditListingReq) GetLogo() string {
-	if x != nil && x.Logo != nil {
-		return *x.Logo
-	}
-	return ""
 }
 
 func (x *EditListingReq) GetTags() []string {
@@ -3564,7 +3520,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x125\n" +
 	"\x04list\x18\x02 \x03(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"R\n" +
 	"\x0eGetListingResp\x12:\n" +
-	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\xc1\x03\n" +
+	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\x9c\x03\n" +
 	"\x10CreateListingReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12-\n" +
 	"\vplugin_uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\n" +
@@ -3573,38 +3529,29 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"settleMode\x12\x14\n" +
 	"\x05price\x18\x04 \x01(\tR\x05price\x12\x12\n" +
 	"\x04coin\x18\x05 \x01(\tR\x04coin\x12\x1a\n" +
-	"\bduration\x18\x06 \x01(\x03R\bduration\x12\x1d\n" +
-	"\x05title\x18\a \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05title\x12\x18\n" +
-	"\asummary\x18\b \x01(\tR\asummary\x12\x12\n" +
-	"\x04logo\x18\t \x01(\tR\x04logo\x12\x12\n" +
+	"\bduration\x18\x06 \x01(\x03R\bduration\x12\x12\n" +
 	"\x04tags\x18\n" +
 	" \x03(\tR\x04tags\x12.\n" +
 	"\x13allow_follow_latest\x18\v \x01(\bR\x11allowFollowLatest\x12\x1d\n" +
 	"\n" +
 	"action_url\x18\f \x01(\tR\tactionUrl\x12.\n" +
-	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindR\x04kind\"\xad\x03\n" +
+	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindR\x04kindJ\x04\b\a\x10\bJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
+	"R\x05titleR\asummaryR\x04logo\"\xe3\x02\n" +
 	"\x0eEditListingReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12\x19\n" +
 	"\x05price\x18\x02 \x01(\tH\x00R\x05price\x88\x01\x01\x12\x17\n" +
 	"\x04coin\x18\x03 \x01(\tH\x01R\x04coin\x88\x01\x01\x12\x1f\n" +
-	"\bduration\x18\x04 \x01(\x03H\x02R\bduration\x88\x01\x01\x12\x19\n" +
-	"\x05title\x18\x05 \x01(\tH\x03R\x05title\x88\x01\x01\x12\x1d\n" +
-	"\asummary\x18\x06 \x01(\tH\x04R\asummary\x88\x01\x01\x12\x17\n" +
-	"\x04logo\x18\a \x01(\tH\x05R\x04logo\x88\x01\x01\x12\x12\n" +
+	"\bduration\x18\x04 \x01(\x03H\x02R\bduration\x88\x01\x01\x12\x12\n" +
 	"\x04tags\x18\b \x03(\tR\x04tags\x123\n" +
-	"\x13allow_follow_latest\x18\t \x01(\bH\x06R\x11allowFollowLatest\x88\x01\x01\x12\"\n" +
+	"\x13allow_follow_latest\x18\t \x01(\bH\x03R\x11allowFollowLatest\x88\x01\x01\x12\"\n" +
 	"\n" +
 	"action_url\x18\n" +
-	" \x01(\tH\aR\tactionUrl\x88\x01\x01B\b\n" +
+	" \x01(\tH\x04R\tactionUrl\x88\x01\x01B\b\n" +
 	"\x06_priceB\a\n" +
 	"\x05_coinB\v\n" +
-	"\t_durationB\b\n" +
-	"\x06_titleB\n" +
-	"\n" +
-	"\b_summaryB\a\n" +
-	"\x05_logoB\x16\n" +
+	"\t_durationB\x16\n" +
 	"\x14_allow_follow_latestB\r\n" +
-	"\v_action_url\"g\n" +
+	"\v_action_urlJ\x04\b\x05\x10\x06J\x04\b\x06\x10\aJ\x04\b\a\x10\bR\x05titleR\asummaryR\x04logo\"g\n" +
 	"\x13SetListingStatusReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12.\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x16.hi.club.ListingStatusR\x06status\"Y\n" +

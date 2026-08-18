@@ -83,7 +83,7 @@ const PluginShell$json = {
 /// Descriptor for `PluginShell`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginShellDescriptor = $convert.base64Decode(
     'CgtQbHVnaW5TaGVsbBIYCgR1dWlkGAEgASgJQgSQtRgDUgR1dWlkEhgKBG5hbWUYAiABKAlCBJ'
-    'C1GANSBG5hbWUSNAoHcnVudGltZRgDIAEoDjIULmhpLmFpLlBsdWdpblJ1bnRpbWVCBJC1GANS'
+    'C1GAFSBG5hbWUSNAoHcnVudGltZRgDIAEoDjIULmhpLmFpLlBsdWdpblJ1bnRpbWVCBJC1GANS'
     'B3J1bnRpbWU6BJi1GAM=');
 
 @$core.Deprecated('Use pluginVersionDescriptor instead')
@@ -103,9 +103,9 @@ const PluginVersion$json = {
 /// Descriptor for `PluginVersion`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginVersionDescriptor = $convert.base64Decode(
     'Cg1QbHVnaW5WZXJzaW9uEhgKBHV1aWQYASABKAlCBJC1GANSBHV1aWQSHgoHdmVyc2lvbhgCIA'
-    'EoCUIEkLUYA1IHdmVyc2lvbhIYCgRsb2dvGAMgASgJQgSQtRgDUgRsb2dvEh4KB3N1bW1hcnkY'
-    'BCABKAlCBJC1GANSB3N1bW1hcnkSFgoDdXJsGAUgASgJQgSQtRgDUgN1cmwSJgoLZGVzY3JpcH'
-    'Rpb24YBiABKAlCBJC1GANSC2Rlc2NyaXB0aW9uOgSYtRgD');
+    'EoCUIEkLUYAVIHdmVyc2lvbhIYCgRsb2dvGAMgASgJQgSQtRgBUgRsb2dvEh4KB3N1bW1hcnkY'
+    'BCABKAlCBJC1GAFSB3N1bW1hcnkSFgoDdXJsGAUgASgJQgSQtRgDUgN1cmwSJgoLZGVzY3JpcH'
+    'Rpb24YBiABKAlCBJC1GAFSC2Rlc2NyaXB0aW9uOgSYtRgD');
 
 @$core.Deprecated('Use pluginBuildDescriptor instead')
 const PluginBuild$json = {
@@ -735,6 +735,83 @@ final $typed_data.Uint8List createReferenceReqDescriptor = $convert.base64Decode
     'QSIAoEdXVpZBgCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3Zl'
     'cnNpb24SKwoEZGF0YRgEIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RSBGRhdGESOgoMdm'
     'Vyc2lvbl9kYXRhGAUgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFILdmVyc2lvbkRhdGE=');
+
+@$core.Deprecated('Use pluginRefDescriptor instead')
+const PluginRef$json = {
+  '1': 'PluginRef',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+  ],
+};
+
+/// Descriptor for `PluginRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pluginRefDescriptor = $convert.base64Decode(
+    'CglQbHVnaW5SZWYSIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQSIAoEdXVpZB'
+    'gCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlk');
+
+@$core.Deprecated('Use publicBriefsReqDescriptor instead')
+const PublicBriefsReq$json = {
+  '1': 'PublicBriefsReq',
+  '2': [
+    {
+      '1': 'refs',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.PluginRef',
+      '10': 'refs'
+    },
+  ],
+};
+
+/// Descriptor for `PublicBriefsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List publicBriefsReqDescriptor = $convert.base64Decode(
+    'Cg9QdWJsaWNCcmllZnNSZXESJAoEcmVmcxgBIAMoCzIQLmhpLmFpLlBsdWdpblJlZlIEcmVmcw'
+    '==');
+
+@$core.Deprecated('Use pluginPublicBriefDescriptor instead')
+const PluginPublicBrief$json = {
+  '1': 'PluginPublicBrief',
+  '2': [
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {'1': 'version', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'version'},
+    {'1': 'logo', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'logo'},
+    {'1': 'summary', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'summary'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `PluginPublicBrief`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pluginPublicBriefDescriptor = $convert.base64Decode(
+    'ChFQbHVnaW5QdWJsaWNCcmllZhIaCgVhZ2VudBgBIAEoCUIEkLUYAVIFYWdlbnQSGAoEdXVpZB'
+    'gCIAEoCUIEkLUYAVIEdXVpZBIYCgRuYW1lGAMgASgJQgSQtRgBUgRuYW1lEh4KB3ZlcnNpb24Y'
+    'BCABKAlCBJC1GAFSB3ZlcnNpb24SGAoEbG9nbxgFIAEoCUIEkLUYAVIEbG9nbxIeCgdzdW1tYX'
+    'J5GAYgASgJQgSQtRgBUgdzdW1tYXJ5OgSYtRgB');
+
+@$core.Deprecated('Use publicBriefsRespDescriptor instead')
+const PublicBriefsResp$json = {
+  '1': 'PublicBriefsResp',
+  '2': [
+    {
+      '1': 'briefs',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.PluginPublicBrief',
+      '8': {},
+      '10': 'briefs'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `PublicBriefsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List publicBriefsRespDescriptor = $convert.base64Decode(
+    'ChBQdWJsaWNCcmllZnNSZXNwEjYKBmJyaWVmcxgBIAMoCzIYLmhpLmFpLlBsdWdpblB1YmxpY0'
+    'JyaWVmQgSQtRgBUgZicmllZnM6BJi1GAE=');
 
 @$core.Deprecated('Use nativePluginDescriptor instead')
 const NativePlugin$json = {

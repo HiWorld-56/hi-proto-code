@@ -1867,15 +1867,6 @@ impl serde::Serialize for CreateListingReq {
         if self.duration != 0 {
             len += 1;
         }
-        if !self.title.is_empty() {
-            len += 1;
-        }
-        if !self.summary.is_empty() {
-            len += 1;
-        }
-        if !self.logo.is_empty() {
-            len += 1;
-        }
         if !self.tags.is_empty() {
             len += 1;
         }
@@ -1911,15 +1902,6 @@ impl serde::Serialize for CreateListingReq {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("duration", ToString::to_string(&self.duration).as_str())?;
         }
-        if !self.title.is_empty() {
-            struct_ser.serialize_field("title", &self.title)?;
-        }
-        if !self.summary.is_empty() {
-            struct_ser.serialize_field("summary", &self.summary)?;
-        }
-        if !self.logo.is_empty() {
-            struct_ser.serialize_field("logo", &self.logo)?;
-        }
         if !self.tags.is_empty() {
             struct_ser.serialize_field("tags", &self.tags)?;
         }
@@ -1952,9 +1934,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
             "price",
             "coin",
             "duration",
-            "title",
-            "summary",
-            "logo",
             "tags",
             "allow_follow_latest",
             "allowFollowLatest",
@@ -1971,9 +1950,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
             Price,
             Coin,
             Duration,
-            Title,
-            Summary,
-            Logo,
             Tags,
             AllowFollowLatest,
             ActionUrl,
@@ -2005,9 +1981,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                             "price" => Ok(GeneratedField::Price),
                             "coin" => Ok(GeneratedField::Coin),
                             "duration" => Ok(GeneratedField::Duration),
-                            "title" => Ok(GeneratedField::Title),
-                            "summary" => Ok(GeneratedField::Summary),
-                            "logo" => Ok(GeneratedField::Logo),
                             "tags" => Ok(GeneratedField::Tags),
                             "allowFollowLatest" | "allow_follow_latest" => Ok(GeneratedField::AllowFollowLatest),
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
@@ -2037,9 +2010,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                 let mut price__ = None;
                 let mut coin__ = None;
                 let mut duration__ = None;
-                let mut title__ = None;
-                let mut summary__ = None;
-                let mut logo__ = None;
                 let mut tags__ = None;
                 let mut allow_follow_latest__ = None;
                 let mut action_url__ = None;
@@ -2084,24 +2054,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                                 Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
-                        GeneratedField::Title => {
-                            if title__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("title"));
-                            }
-                            title__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Summary => {
-                            if summary__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("summary"));
-                            }
-                            summary__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Logo => {
-                            if logo__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("logo"));
-                            }
-                            logo__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Tags => {
                             if tags__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("tags"));
@@ -2135,9 +2087,6 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                     price: price__.unwrap_or_default(),
                     coin: coin__.unwrap_or_default(),
                     duration: duration__.unwrap_or_default(),
-                    title: title__.unwrap_or_default(),
-                    summary: summary__.unwrap_or_default(),
-                    logo: logo__.unwrap_or_default(),
                     tags: tags__.unwrap_or_default(),
                     allow_follow_latest: allow_follow_latest__.unwrap_or_default(),
                     action_url: action_url__.unwrap_or_default(),
@@ -3102,15 +3051,6 @@ impl serde::Serialize for EditListingReq {
         if self.duration.is_some() {
             len += 1;
         }
-        if self.title.is_some() {
-            len += 1;
-        }
-        if self.summary.is_some() {
-            len += 1;
-        }
-        if self.logo.is_some() {
-            len += 1;
-        }
         if !self.tags.is_empty() {
             len += 1;
         }
@@ -3135,15 +3075,6 @@ impl serde::Serialize for EditListingReq {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("duration", ToString::to_string(&v).as_str())?;
         }
-        if let Some(v) = self.title.as_ref() {
-            struct_ser.serialize_field("title", v)?;
-        }
-        if let Some(v) = self.summary.as_ref() {
-            struct_ser.serialize_field("summary", v)?;
-        }
-        if let Some(v) = self.logo.as_ref() {
-            struct_ser.serialize_field("logo", v)?;
-        }
         if !self.tags.is_empty() {
             struct_ser.serialize_field("tags", &self.tags)?;
         }
@@ -3167,9 +3098,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
             "price",
             "coin",
             "duration",
-            "title",
-            "summary",
-            "logo",
             "tags",
             "allow_follow_latest",
             "allowFollowLatest",
@@ -3183,9 +3111,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
             Price,
             Coin,
             Duration,
-            Title,
-            Summary,
-            Logo,
             Tags,
             AllowFollowLatest,
             ActionUrl,
@@ -3214,9 +3139,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                             "price" => Ok(GeneratedField::Price),
                             "coin" => Ok(GeneratedField::Coin),
                             "duration" => Ok(GeneratedField::Duration),
-                            "title" => Ok(GeneratedField::Title),
-                            "summary" => Ok(GeneratedField::Summary),
-                            "logo" => Ok(GeneratedField::Logo),
                             "tags" => Ok(GeneratedField::Tags),
                             "allowFollowLatest" | "allow_follow_latest" => Ok(GeneratedField::AllowFollowLatest),
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
@@ -3243,9 +3165,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                 let mut price__ = None;
                 let mut coin__ = None;
                 let mut duration__ = None;
-                let mut title__ = None;
-                let mut summary__ = None;
-                let mut logo__ = None;
                 let mut tags__ = None;
                 let mut allow_follow_latest__ = None;
                 let mut action_url__ = None;
@@ -3277,24 +3196,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
-                        GeneratedField::Title => {
-                            if title__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("title"));
-                            }
-                            title__ = map_.next_value()?;
-                        }
-                        GeneratedField::Summary => {
-                            if summary__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("summary"));
-                            }
-                            summary__ = map_.next_value()?;
-                        }
-                        GeneratedField::Logo => {
-                            if logo__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("logo"));
-                            }
-                            logo__ = map_.next_value()?;
-                        }
                         GeneratedField::Tags => {
                             if tags__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("tags"));
@@ -3320,9 +3221,6 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                     price: price__,
                     coin: coin__,
                     duration: duration__,
-                    title: title__,
-                    summary: summary__,
-                    logo: logo__,
                     tags: tags__.unwrap_or_default(),
                     allow_follow_latest: allow_follow_latest__,
                     action_url: action_url__,

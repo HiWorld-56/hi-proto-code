@@ -23,6 +23,13 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'plugin.pbenum.dart';
 
+/// ⚠️ **消息 audience 是 SELF,但里面几个字段是 PUBLIC —— 这不矛盾。**
+/// lint 规则是 `level(field) <= level(message)`(见 hi/options.proto),
+/// 挡的只有"把私字段塞进公消息",PUBLIC 字段放进 SELF 消息本来就合法。
+///
+/// 名字这类**展示物本身就是给别人看的** —— 市场标题就是它。
+/// 原先整条消息一路刷成 SELF,于是挂牌被迫另填一套 title/summary/logo,
+/// 同一个东西两份值、必然漂(叫法在市场和机器人插件列表里不一样,还没人会报错)。
 class PluginShell extends $pb.GeneratedMessage {
   factory PluginShell({
     $core.String? uuid,
@@ -92,7 +99,7 @@ class PluginShell extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearName() => $_clearField(2);
 
-  /// 跑在哪儿。建壳时定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
+  /// 跑在哪儿。首版由包结构自动判定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
   @$pb.TagNumber(3)
   PluginRuntime get runtime => $_getN(2);
   @$pb.TagNumber(3)
@@ -180,6 +187,9 @@ class PluginVersion extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearVersion() => $_clearField(2);
 
+  /// logo / summary 是**展示物**:市场页、插件详情页给买家看的就是这两个。
+  /// 标 PUBLIC 不是放松,是纠正 —— 它们本来就没有"只给自己看"的语义,
+  /// 而挂牌页要用它们(见 hi.club.MarketListingBrief:那边是门面,值从这儿来)。
   @$pb.TagNumber(3)
   $core.String get logo => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -226,6 +236,9 @@ class PluginVersion extends $pb.GeneratedMessage {
   /// 那一行物理上改不了,没有第二份可以跟它分叉。
   ///
   /// 拿它跟包里的文件比对会对不上,**这是预期行为,别当 bug 查**。
+  ///
+  /// PUBLIC:买家在挂牌页看的 `MarketListingDetail.capabilities` 就是这一份 ——
+  /// 那边早就是公开的了,源头这边却标着 SELF,两边对不上。以这边为准改成 PUBLIC。
   @$pb.TagNumber(6)
   $core.String get description => $_getSZ(5);
   @$pb.TagNumber(6)
@@ -2461,6 +2474,294 @@ class CreateReferenceReq extends $pb.GeneratedMessage {
   void clearVersionData() => $_clearField(5);
   @$pb.TagNumber(5)
   $2.Struct ensureVersionData() => $_ensure(4);
+}
+
+/// ── 展示面:市场要拿插件自己的名字/图/简介 ──────────────────────────────────
+///
+/// 为什么要**批量**:市场列表一页 N 条挂牌,逐条 `Get` 就是 N 次 grpc 往返。
+/// 而这三样东西正是"读侧现取"的代价 —— 代价必须是一次查询,不然下一个人
+/// 又会想着"要不还是在挂牌行里存一份吧",绕回那两套值。
+///
+/// 为什么带 agent:插件的**展示信息跟着出让方当前激活的那一版**走
+/// (与"引用跟版"同一口径),而 active 是每个使用方各自的(d 表),所以必须给主体。
+class PluginRef extends $pb.GeneratedMessage {
+  factory PluginRef({
+    $core.String? agent,
+    $core.String? uuid,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    return result;
+  }
+
+  PluginRef._();
+
+  factory PluginRef.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PluginRef.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PluginRef',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginRef clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginRef copyWith(void Function(PluginRef) updates) =>
+      super.copyWith((message) => updates(message as PluginRef)) as PluginRef;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PluginRef create() => PluginRef._();
+  @$core.override
+  PluginRef createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PluginRef getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PluginRef>(create);
+  static PluginRef? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+}
+
+class PublicBriefsReq extends $pb.GeneratedMessage {
+  factory PublicBriefsReq({
+    $core.Iterable<PluginRef>? refs,
+  }) {
+    final result = create();
+    if (refs != null) result.refs.addAll(refs);
+    return result;
+  }
+
+  PublicBriefsReq._();
+
+  factory PublicBriefsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PublicBriefsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PublicBriefsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..pPM<PluginRef>(1, _omitFieldNames ? '' : 'refs',
+        subBuilder: PluginRef.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PublicBriefsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PublicBriefsReq copyWith(void Function(PublicBriefsReq) updates) =>
+      super.copyWith((message) => updates(message as PublicBriefsReq))
+          as PublicBriefsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PublicBriefsReq create() => PublicBriefsReq._();
+  @$core.override
+  PublicBriefsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PublicBriefsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PublicBriefsReq>(create);
+  static PublicBriefsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<PluginRef> get refs => $_getList(0);
+}
+
+/// 一个插件对外能看到的全部展示信息。**没有 url / api_key / 扩展数据**。
+class PluginPublicBrief extends $pb.GeneratedMessage {
+  factory PluginPublicBrief({
+    $core.String? agent,
+    $core.String? uuid,
+    $core.String? name,
+    $core.String? version,
+    $core.String? logo,
+    $core.String? summary,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (uuid != null) result.uuid = uuid;
+    if (name != null) result.name = name;
+    if (version != null) result.version = version;
+    if (logo != null) result.logo = logo;
+    if (summary != null) result.summary = summary;
+    return result;
+  }
+
+  PluginPublicBrief._();
+
+  factory PluginPublicBrief.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PluginPublicBrief.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PluginPublicBrief',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aOS(4, _omitFieldNames ? '' : 'version')
+    ..aOS(5, _omitFieldNames ? '' : 'logo')
+    ..aOS(6, _omitFieldNames ? '' : 'summary')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginPublicBrief clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginPublicBrief copyWith(void Function(PluginPublicBrief) updates) =>
+      super.copyWith((message) => updates(message as PluginPublicBrief))
+          as PluginPublicBrief;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PluginPublicBrief create() => PluginPublicBrief._();
+  @$core.override
+  PluginPublicBrief createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PluginPublicBrief getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginPublicBrief>(create);
+  static PluginPublicBrief? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get version => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set version($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasVersion() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearVersion() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get logo => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set logo($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasLogo() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLogo() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get summary => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set summary($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSummary() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSummary() => $_clearField(6);
+}
+
+class PublicBriefsResp extends $pb.GeneratedMessage {
+  factory PublicBriefsResp({
+    $core.Iterable<PluginPublicBrief>? briefs,
+  }) {
+    final result = create();
+    if (briefs != null) result.briefs.addAll(briefs);
+    return result;
+  }
+
+  PublicBriefsResp._();
+
+  factory PublicBriefsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PublicBriefsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PublicBriefsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..pPM<PluginPublicBrief>(1, _omitFieldNames ? '' : 'briefs',
+        subBuilder: PluginPublicBrief.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PublicBriefsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PublicBriefsResp copyWith(void Function(PublicBriefsResp) updates) =>
+      super.copyWith((message) => updates(message as PublicBriefsResp))
+          as PublicBriefsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PublicBriefsResp create() => PublicBriefsResp._();
+  @$core.override
+  PublicBriefsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PublicBriefsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PublicBriefsResp>(create);
+  static PublicBriefsResp? _defaultInstance;
+
+  /// 查不到的 ref **直接不出现在结果里**(不是返回一个空壳条目)——
+  /// 调用方按 (agent,uuid) 对号入座,漏掉的那条自己决定怎么显示。
+  @$pb.TagNumber(1)
+  $pb.PbList<PluginPublicBrief> get briefs => $_getList(0);
 }
 
 /// ── 下发面:机器人问「我该装哪些 NATIVE 插件」───────────────────────────────

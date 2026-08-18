@@ -160,6 +160,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$retryBuild, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.PublicBriefsResp> publicBriefs(
+    $0.PublicBriefsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$publicBriefs, request, options: options);
+  }
+
   // method descriptors
 
   static final _$createShell =
@@ -245,6 +252,11 @@ class PluginClient extends $grpc.Client {
       '/hi.ai.Plugin/RetryBuild',
       ($0.RetryBuildReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$publicBriefs =
+      $grpc.ClientMethod<$0.PublicBriefsReq, $0.PublicBriefsResp>(
+          '/hi.ai.Plugin/PublicBriefs',
+          ($0.PublicBriefsReq value) => value.writeToBuffer(),
+          $0.PublicBriefsResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Plugin')
@@ -381,6 +393,13 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RetryBuildReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PublicBriefsReq, $0.PublicBriefsResp>(
+        'PublicBriefs',
+        publicBriefs_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PublicBriefsReq.fromBuffer(value),
+        ($0.PublicBriefsResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateShellResp> createShell_Pre($grpc.ServiceCall $call,
@@ -526,4 +545,12 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> retryBuild(
       $grpc.ServiceCall call, $0.RetryBuildReq request);
+
+  $async.Future<$0.PublicBriefsResp> publicBriefs_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.PublicBriefsReq> $request) async {
+    return publicBriefs($call, await $request);
+  }
+
+  $async.Future<$0.PublicBriefsResp> publicBriefs(
+      $grpc.ServiceCall call, $0.PublicBriefsReq request);
 }

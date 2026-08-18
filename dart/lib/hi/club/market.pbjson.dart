@@ -549,9 +549,6 @@ const CreateListingReq$json = {
     {'1': 'price', '3': 4, '4': 1, '5': 9, '10': 'price'},
     {'1': 'coin', '3': 5, '4': 1, '5': 9, '10': 'coin'},
     {'1': 'duration', '3': 6, '4': 1, '5': 3, '10': 'duration'},
-    {'1': 'title', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'title'},
-    {'1': 'summary', '3': 8, '4': 1, '5': 9, '10': 'summary'},
-    {'1': 'logo', '3': 9, '4': 1, '5': 9, '10': 'logo'},
     {'1': 'tags', '3': 10, '4': 3, '5': 9, '10': 'tags'},
     {
       '1': 'allow_follow_latest',
@@ -570,6 +567,12 @@ const CreateListingReq$json = {
       '10': 'kind'
     },
   ],
+  '9': [
+    {'1': 7, '2': 8},
+    {'1': 8, '2': 9},
+    {'1': 9, '2': 10},
+  ],
+  '10': ['title', 'summary', 'logo'],
 };
 
 /// Descriptor for `CreateListingReq`. Decode as a `google.protobuf.DescriptorProto`.
@@ -578,11 +581,10 @@ final $typed_data.Uint8List createListingReqDescriptor = $convert.base64Decode(
     '0KC3BsdWdpbl91dWlkGAIgASgJQgy6SAlyBzIFXlxTKyRSCnBsdWdpblV1aWQSNAoLc2V0dGxl'
     'X21vZGUYAyABKA4yEy5oaS5jbHViLlNldHRsZU1vZGVSCnNldHRsZU1vZGUSFAoFcHJpY2UYBC'
     'ABKAlSBXByaWNlEhIKBGNvaW4YBSABKAlSBGNvaW4SGgoIZHVyYXRpb24YBiABKANSCGR1cmF0'
-    'aW9uEh0KBXRpdGxlGAcgASgJQge6SARyAhABUgV0aXRsZRIYCgdzdW1tYXJ5GAggASgJUgdzdW'
-    '1tYXJ5EhIKBGxvZ28YCSABKAlSBGxvZ28SEgoEdGFncxgKIAMoCVIEdGFncxIuChNhbGxvd19m'
-    'b2xsb3dfbGF0ZXN0GAsgASgIUhFhbGxvd0ZvbGxvd0xhdGVzdBIdCgphY3Rpb25fdXJsGAwgAS'
-    'gJUglhY3Rpb25VcmwSLgoEa2luZBgNIAEoDjIaLmhpLmNsdWIuTWFya2V0TGlzdGluZ0tpbmRS'
-    'BGtpbmQ=');
+    'aW9uEhIKBHRhZ3MYCiADKAlSBHRhZ3MSLgoTYWxsb3dfZm9sbG93X2xhdGVzdBgLIAEoCFIRYW'
+    'xsb3dGb2xsb3dMYXRlc3QSHQoKYWN0aW9uX3VybBgMIAEoCVIJYWN0aW9uVXJsEi4KBGtpbmQY'
+    'DSABKA4yGi5oaS5jbHViLk1hcmtldExpc3RpbmdLaW5kUgRraW5kSgQIBxAISgQICBAJSgQICR'
+    'AKUgV0aXRsZVIHc3VtbWFyeVIEbG9nbw==');
 
 @$core.Deprecated('Use editListingReqDescriptor instead')
 const EditListingReq$json = {
@@ -600,24 +602,13 @@ const EditListingReq$json = {
       '10': 'duration',
       '17': true
     },
-    {'1': 'title', '3': 5, '4': 1, '5': 9, '9': 3, '10': 'title', '17': true},
-    {
-      '1': 'summary',
-      '3': 6,
-      '4': 1,
-      '5': 9,
-      '9': 4,
-      '10': 'summary',
-      '17': true
-    },
-    {'1': 'logo', '3': 7, '4': 1, '5': 9, '9': 5, '10': 'logo', '17': true},
     {'1': 'tags', '3': 8, '4': 3, '5': 9, '10': 'tags'},
     {
       '1': 'allow_follow_latest',
       '3': 9,
       '4': 1,
       '5': 8,
-      '9': 6,
+      '9': 3,
       '10': 'allowFollowLatest',
       '17': true
     },
@@ -626,7 +617,7 @@ const EditListingReq$json = {
       '3': 10,
       '4': 1,
       '5': 9,
-      '9': 7,
+      '9': 4,
       '10': 'actionUrl',
       '17': true
     },
@@ -635,24 +626,26 @@ const EditListingReq$json = {
     {'1': '_price'},
     {'1': '_coin'},
     {'1': '_duration'},
-    {'1': '_title'},
-    {'1': '_summary'},
-    {'1': '_logo'},
     {'1': '_allow_follow_latest'},
     {'1': '_action_url'},
   ],
+  '9': [
+    {'1': 5, '2': 6},
+    {'1': 6, '2': 7},
+    {'1': 7, '2': 8},
+  ],
+  '10': ['title', 'summary', 'logo'],
 };
 
 /// Descriptor for `EditListingReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List editListingReqDescriptor = $convert.base64Decode(
     'Cg5FZGl0TGlzdGluZ1JlcRIgCgR1dWlkGAEgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQSGQoFcH'
     'JpY2UYAiABKAlIAFIFcHJpY2WIAQESFwoEY29pbhgDIAEoCUgBUgRjb2luiAEBEh8KCGR1cmF0'
-    'aW9uGAQgASgDSAJSCGR1cmF0aW9uiAEBEhkKBXRpdGxlGAUgASgJSANSBXRpdGxliAEBEh0KB3'
-    'N1bW1hcnkYBiABKAlIBFIHc3VtbWFyeYgBARIXCgRsb2dvGAcgASgJSAVSBGxvZ2+IAQESEgoE'
-    'dGFncxgIIAMoCVIEdGFncxIzChNhbGxvd19mb2xsb3dfbGF0ZXN0GAkgASgISAZSEWFsbG93Rm'
-    '9sbG93TGF0ZXN0iAEBEiIKCmFjdGlvbl91cmwYCiABKAlIB1IJYWN0aW9uVXJsiAEBQggKBl9w'
-    'cmljZUIHCgVfY29pbkILCglfZHVyYXRpb25CCAoGX3RpdGxlQgoKCF9zdW1tYXJ5QgcKBV9sb2'
-    'dvQhYKFF9hbGxvd19mb2xsb3dfbGF0ZXN0Qg0KC19hY3Rpb25fdXJs');
+    'aW9uGAQgASgDSAJSCGR1cmF0aW9uiAEBEhIKBHRhZ3MYCCADKAlSBHRhZ3MSMwoTYWxsb3dfZm'
+    '9sbG93X2xhdGVzdBgJIAEoCEgDUhFhbGxvd0ZvbGxvd0xhdGVzdIgBARIiCgphY3Rpb25fdXJs'
+    'GAogASgJSARSCWFjdGlvblVybIgBAUIICgZfcHJpY2VCBwoFX2NvaW5CCwoJX2R1cmF0aW9uQh'
+    'YKFF9hbGxvd19mb2xsb3dfbGF0ZXN0Qg0KC19hY3Rpb25fdXJsSgQIBRAGSgQIBhAHSgQIBxAI'
+    'UgV0aXRsZVIHc3VtbWFyeVIEbG9nbw==');
 
 @$core.Deprecated('Use setListingStatusReqDescriptor instead')
 const SetListingStatusReq$json = {

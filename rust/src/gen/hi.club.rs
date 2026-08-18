@@ -5882,6 +5882,9 @@ pub struct MarketListingBrief {
     /// 出让方机器人(只到 Entity,**不吐它的 master**)
     #[prost(message, optional, tag = "2")]
     pub agent: ::core::option::Option<super::Entity>,
+    /// ⭐ 下面三个是**读侧现取**的派生值,挂牌行里不存:
+    /// title ← 插件壳名;logo / summary ← 出让方**当前激活版**(与"引用跟版"同一口径)。
+    /// 改插件名就是改市场标题 —— 单一来源,不会漂。
     #[prost(string, tag = "3")]
     pub title: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
@@ -6098,12 +6101,7 @@ pub struct CreateListingReq {
     /// 秒;0 = 永久
     #[prost(int64, tag = "6")]
     pub duration: i64,
-    #[prost(string, tag = "7")]
-    pub title: ::prost::alloc::string::String,
-    #[prost(string, tag = "8")]
-    pub summary: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
-    pub logo: ::prost::alloc::string::String,
+    /// 市场分类。**这个不删** —— 插件自身没有分类的概念
     #[prost(string, repeated, tag = "10")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(bool, tag = "11")]
@@ -6134,12 +6132,6 @@ pub struct EditListingReq {
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int64, optional, tag = "4")]
     pub duration: ::core::option::Option<i64>,
-    #[prost(string, optional, tag = "5")]
-    pub title: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub summary: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "7")]
-    pub logo: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "8")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(bool, optional, tag = "9")]

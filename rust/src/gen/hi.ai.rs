@@ -696,16 +696,24 @@ pub mod chat_client {
         }
     }
 }
+/// ⚠️ **消息 audience 是 SELF,但里面几个字段是 PUBLIC —— 这不矛盾。**
+/// lint 规则是 `level(field) <= level(message)`(见 hi/options.proto),
+/// 挡的只有"把私字段塞进公消息",PUBLIC 字段放进 SELF 消息本来就合法。
+///
+/// 名字这类**展示物本身就是给别人看的** —— 市场标题就是它。
+/// 原先整条消息一路刷成 SELF,于是挂牌被迫另填一套 title/summary/logo,
+/// 同一个东西两份值、必然漂(叫法在市场和机器人插件列表里不一样,还没人会报错)。
+///
 /// a
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginShell {
     /// 插件 id,后台分配(单一 id)
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
-    /// 脚本名
+    /// 插件名。**市场标题直接用它**,不另填
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// 跑在哪儿。建壳时定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
+    /// 跑在哪儿。首版由包结构自动判定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
     #[prost(enumeration = "PluginRuntime", tag = "3")]
     pub runtime: i32,
 }
@@ -718,6 +726,9 @@ pub struct PluginVersion {
     /// 版本号(前端按现有版本预填,后端校验须>现有最大)
     #[prost(string, tag = "2")]
     pub version: ::prost::alloc::string::String,
+    /// logo / summary 是**展示物**:市场页、插件详情页给买家看的就是这两个。
+    /// 标 PUBLIC 不是放松,是纠正 —— 它们本来就没有"只给自己看"的语义,
+    /// 而挂牌页要用它们(见 hi.club.MarketListingBrief:那边是门面,值从这儿来)。
     #[prost(string, tag = "3")]
     pub logo: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
@@ -744,6 +755,9 @@ pub struct PluginVersion {
     /// 那一行物理上改不了,没有第二份可以跟它分叉。
     ///
     /// 拿它跟包里的文件比对会对不上,**这是预期行为,别当 bug 查**。
+    ///
+    /// PUBLIC:买家在挂牌页看的 `MarketListingDetail.capabilities` 就是这一份 ——
+    /// 那边早就是公开的了,源头这边却标着 SELF,两边对不上。以这边为准改成 PUBLIC。
     #[prost(string, tag = "6")]
     pub description: ::prost::alloc::string::String,
 }
@@ -1078,6 +1092,53 @@ pub struct CreateReferenceReq {
     /// d.data
     #[prost(message, optional, tag = "5")]
     pub version_data: ::core::option::Option<::pbjson_types::Struct>,
+}
+/// ── 展示面:市场要拿插件自己的名字/图/简介 ──────────────────────────────────
+///
+/// 为什么要**批量**:市场列表一页 N 条挂牌,逐条 `Get` 就是 N 次 grpc 往返。
+/// 而这三样东西正是"读侧现取"的代价 —— 代价必须是一次查询,不然下一个人
+/// 又会想着"要不还是在挂牌行里存一份吧",绕回那两套值。
+///
+/// 为什么带 agent:插件的**展示信息跟着出让方当前激活的那一版**走
+/// (与"引用跟版"同一口径),而 active 是每个使用方各自的(d 表),所以必须给主体。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginRef {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PublicBriefsReq {
+    #[prost(message, repeated, tag = "1")]
+    pub refs: ::prost::alloc::vec::Vec<PluginRef>,
+}
+/// 一个插件对外能看到的全部展示信息。**没有 url / api_key / 扩展数据**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginPublicBrief {
+    #[prost(string, tag = "1")]
+    pub agent: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// 壳名
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// 该 agent 当前激活版(没有则空)
+    #[prost(string, tag = "4")]
+    pub version: ::prost::alloc::string::String,
+    /// 激活版的
+    #[prost(string, tag = "5")]
+    pub logo: ::prost::alloc::string::String,
+    /// 激活版的
+    #[prost(string, tag = "6")]
+    pub summary: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PublicBriefsResp {
+    /// 查不到的 ref **直接不出现在结果里**(不是返回一个空壳条目)——
+    /// 调用方按 (agent,uuid) 对号入座,漏掉的那条自己决定怎么显示。
+    #[prost(message, repeated, tag = "1")]
+    pub briefs: ::prost::alloc::vec::Vec<PluginPublicBrief>,
 }
 /// ── 下发面:机器人问「我该装哪些 NATIVE 插件」───────────────────────────────
 ///
@@ -1734,6 +1795,29 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/RetryBuild");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "RetryBuild"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn public_briefs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PublicBriefsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::PublicBriefsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/PublicBriefs",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "PublicBriefs"));
             self.inner.unary(req, path, codec).await
         }
     }

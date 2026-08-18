@@ -38,6 +38,7 @@ const (
 	Plugin_SetEnabled_FullMethodName        = "/hi.ai.Plugin/SetEnabled"
 	Plugin_ListNative_FullMethodName        = "/hi.ai.Plugin/ListNative"
 	Plugin_RetryBuild_FullMethodName        = "/hi.ai.Plugin/RetryBuild"
+	Plugin_PublicBriefs_FullMethodName      = "/hi.ai.Plugin/PublicBriefs"
 )
 
 // PluginClient is the client API for Plugin service.
@@ -64,6 +65,7 @@ type PluginClient interface {
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error)
 	RetryBuild(ctx context.Context, in *RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PublicBriefs(ctx context.Context, in *PublicBriefsReq, opts ...grpc.CallOption) (*PublicBriefsResp, error)
 }
 
 type pluginClient struct {
@@ -254,6 +256,16 @@ func (c *pluginClient) RetryBuild(ctx context.Context, in *RetryBuildReq, opts .
 	return out, nil
 }
 
+func (c *pluginClient) PublicBriefs(ctx context.Context, in *PublicBriefsReq, opts ...grpc.CallOption) (*PublicBriefsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublicBriefsResp)
+	err := c.cc.Invoke(ctx, Plugin_PublicBriefs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PluginServer is the server API for Plugin service.
 // All implementations should embed UnimplementedPluginServer
 // for forward compatibility.
@@ -278,6 +290,7 @@ type PluginServer interface {
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
 	ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error)
 	RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error)
+	PublicBriefs(context.Context, *PublicBriefsReq) (*PublicBriefsResp, error)
 }
 
 // UnimplementedPluginServer should be embedded to have
@@ -340,6 +353,9 @@ func (UnimplementedPluginServer) ListNative(context.Context, *ListNativeReq) (*L
 }
 func (UnimplementedPluginServer) RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method RetryBuild not implemented")
+}
+func (UnimplementedPluginServer) PublicBriefs(context.Context, *PublicBriefsReq) (*PublicBriefsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method PublicBriefs not implemented")
 }
 func (UnimplementedPluginServer) testEmbeddedByValue() {}
 
@@ -685,6 +701,24 @@ func _Plugin_RetryBuild_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_PublicBriefs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublicBriefsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).PublicBriefs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_PublicBriefs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).PublicBriefs(ctx, req.(*PublicBriefsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Plugin_ServiceDesc is the grpc.ServiceDesc for Plugin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -763,6 +797,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RetryBuild",
 			Handler:    _Plugin_RetryBuild_Handler,
+		},
+		{
+			MethodName: "PublicBriefs",
+			Handler:    _Plugin_PublicBriefs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

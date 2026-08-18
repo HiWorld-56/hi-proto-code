@@ -124,6 +124,9 @@ class MarketListingBrief extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $2.Entity ensureAgent() => $_ensure(1);
 
+  /// ⭐ 下面三个是**读侧现取**的派生值,挂牌行里不存:
+  ///    title ← 插件壳名;logo / summary ← 出让方**当前激活版**(与"引用跟版"同一口径)。
+  ///    改插件名就是改市场标题 —— 单一来源,不会漂。
   @$pb.TagNumber(3)
   $core.String get title => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -1225,9 +1228,6 @@ class CreateListingReq extends $pb.GeneratedMessage {
     $core.String? price,
     $core.String? coin,
     $fixnum.Int64? duration,
-    $core.String? title,
-    $core.String? summary,
-    $core.String? logo,
     $core.Iterable<$core.String>? tags,
     $core.bool? allowFollowLatest,
     $core.String? actionUrl,
@@ -1240,9 +1240,6 @@ class CreateListingReq extends $pb.GeneratedMessage {
     if (price != null) result.price = price;
     if (coin != null) result.coin = coin;
     if (duration != null) result.duration = duration;
-    if (title != null) result.title = title;
-    if (summary != null) result.summary = summary;
-    if (logo != null) result.logo = logo;
     if (tags != null) result.tags.addAll(tags);
     if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
     if (actionUrl != null) result.actionUrl = actionUrl;
@@ -1270,9 +1267,6 @@ class CreateListingReq extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'price')
     ..aOS(5, _omitFieldNames ? '' : 'coin')
     ..aInt64(6, _omitFieldNames ? '' : 'duration')
-    ..aOS(7, _omitFieldNames ? '' : 'title')
-    ..aOS(8, _omitFieldNames ? '' : 'summary')
-    ..aOS(9, _omitFieldNames ? '' : 'logo')
     ..pPS(10, _omitFieldNames ? '' : 'tags')
     ..aOB(11, _omitFieldNames ? '' : 'allowFollowLatest')
     ..aOS(12, _omitFieldNames ? '' : 'actionUrl')
@@ -1353,42 +1347,15 @@ class CreateListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearDuration() => $_clearField(6);
 
-  @$pb.TagNumber(7)
-  $core.String get title => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set title($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasTitle() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearTitle() => $_clearField(7);
-
-  @$pb.TagNumber(8)
-  $core.String get summary => $_getSZ(7);
-  @$pb.TagNumber(8)
-  set summary($core.String value) => $_setString(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasSummary() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearSummary() => $_clearField(8);
-
-  @$pb.TagNumber(9)
-  $core.String get logo => $_getSZ(8);
-  @$pb.TagNumber(9)
-  set logo($core.String value) => $_setString(8, value);
-  @$pb.TagNumber(9)
-  $core.bool hasLogo() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearLogo() => $_clearField(9);
-
   @$pb.TagNumber(10)
-  $pb.PbList<$core.String> get tags => $_getList(9);
+  $pb.PbList<$core.String> get tags => $_getList(6);
 
   @$pb.TagNumber(11)
-  $core.bool get allowFollowLatest => $_getBF(10);
+  $core.bool get allowFollowLatest => $_getBF(7);
   @$pb.TagNumber(11)
-  set allowFollowLatest($core.bool value) => $_setBool(10, value);
+  set allowFollowLatest($core.bool value) => $_setBool(7, value);
   @$pb.TagNumber(11)
-  $core.bool hasAllowFollowLatest() => $_has(10);
+  $core.bool hasAllowFollowLatest() => $_has(7);
   @$pb.TagNumber(11)
   void clearAllowFollowLatest() => $_clearField(11);
 
@@ -1397,11 +1364,11 @@ class CreateListingReq extends $pb.GeneratedMessage {
   /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
   /// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
   @$pb.TagNumber(12)
-  $core.String get actionUrl => $_getSZ(11);
+  $core.String get actionUrl => $_getSZ(8);
   @$pb.TagNumber(12)
-  set actionUrl($core.String value) => $_setString(11, value);
+  set actionUrl($core.String value) => $_setString(8, value);
   @$pb.TagNumber(12)
-  $core.bool hasActionUrl() => $_has(11);
+  $core.bool hasActionUrl() => $_has(8);
   @$pb.TagNumber(12)
   void clearActionUrl() => $_clearField(12);
 
@@ -1409,11 +1376,11 @@ class CreateListingReq extends $pb.GeneratedMessage {
   /// BUILTIN 会被强制成免费 / 永久 / 免审(见 MarketListingKind) ——
   /// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
   @$pb.TagNumber(13)
-  MarketListingKind get kind => $_getN(12);
+  MarketListingKind get kind => $_getN(9);
   @$pb.TagNumber(13)
   set kind(MarketListingKind value) => $_setField(13, value);
   @$pb.TagNumber(13)
-  $core.bool hasKind() => $_has(12);
+  $core.bool hasKind() => $_has(9);
   @$pb.TagNumber(13)
   void clearKind() => $_clearField(13);
 }
@@ -1428,9 +1395,6 @@ class EditListingReq extends $pb.GeneratedMessage {
     $core.String? price,
     $core.String? coin,
     $fixnum.Int64? duration,
-    $core.String? title,
-    $core.String? summary,
-    $core.String? logo,
     $core.Iterable<$core.String>? tags,
     $core.bool? allowFollowLatest,
     $core.String? actionUrl,
@@ -1440,9 +1404,6 @@ class EditListingReq extends $pb.GeneratedMessage {
     if (price != null) result.price = price;
     if (coin != null) result.coin = coin;
     if (duration != null) result.duration = duration;
-    if (title != null) result.title = title;
-    if (summary != null) result.summary = summary;
-    if (logo != null) result.logo = logo;
     if (tags != null) result.tags.addAll(tags);
     if (allowFollowLatest != null) result.allowFollowLatest = allowFollowLatest;
     if (actionUrl != null) result.actionUrl = actionUrl;
@@ -1466,9 +1427,6 @@ class EditListingReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'price')
     ..aOS(3, _omitFieldNames ? '' : 'coin')
     ..aInt64(4, _omitFieldNames ? '' : 'duration')
-    ..aOS(5, _omitFieldNames ? '' : 'title')
-    ..aOS(6, _omitFieldNames ? '' : 'summary')
-    ..aOS(7, _omitFieldNames ? '' : 'logo')
     ..pPS(8, _omitFieldNames ? '' : 'tags')
     ..aOB(9, _omitFieldNames ? '' : 'allowFollowLatest')
     ..aOS(10, _omitFieldNames ? '' : 'actionUrl')
@@ -1529,51 +1487,24 @@ class EditListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearDuration() => $_clearField(4);
 
-  @$pb.TagNumber(5)
-  $core.String get title => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set title($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasTitle() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearTitle() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.String get summary => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set summary($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasSummary() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearSummary() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.String get logo => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set logo($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasLogo() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearLogo() => $_clearField(7);
-
   @$pb.TagNumber(8)
-  $pb.PbList<$core.String> get tags => $_getList(7);
+  $pb.PbList<$core.String> get tags => $_getList(4);
 
   @$pb.TagNumber(9)
-  $core.bool get allowFollowLatest => $_getBF(8);
+  $core.bool get allowFollowLatest => $_getBF(5);
   @$pb.TagNumber(9)
-  set allowFollowLatest($core.bool value) => $_setBool(8, value);
+  set allowFollowLatest($core.bool value) => $_setBool(5, value);
   @$pb.TagNumber(9)
-  $core.bool hasAllowFollowLatest() => $_has(8);
+  $core.bool hasAllowFollowLatest() => $_has(5);
   @$pb.TagNumber(9)
   void clearAllowFollowLatest() => $_clearField(9);
 
   @$pb.TagNumber(10)
-  $core.String get actionUrl => $_getSZ(9);
+  $core.String get actionUrl => $_getSZ(6);
   @$pb.TagNumber(10)
-  set actionUrl($core.String value) => $_setString(9, value);
+  set actionUrl($core.String value) => $_setString(6, value);
   @$pb.TagNumber(10)
-  $core.bool hasActionUrl() => $_has(9);
+  $core.bool hasActionUrl() => $_has(6);
   @$pb.TagNumber(10)
   void clearActionUrl() => $_clearField(10);
 }
