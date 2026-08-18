@@ -224,6 +224,9 @@ const (
 	Market_ListTransactions_FullMethodName     = "/hi.club.Market/ListTransactions"
 	Market_GetTransaction_FullMethodName       = "/hi.club.Market/GetTransaction"
 	Market_ListMyGrants_FullMethodName         = "/hi.club.Market/ListMyGrants"
+	Market_Offer_FullMethodName                = "/hi.club.Market/Offer"
+	Market_AcceptOffer_FullMethodName          = "/hi.club.Market/AcceptOffer"
+	Market_DeclineOffer_FullMethodName         = "/hi.club.Market/DeclineOffer"
 	Market_SetAutoRenew_FullMethodName         = "/hi.club.Market/SetAutoRenew"
 )
 
@@ -251,6 +254,9 @@ type MarketClient interface {
 	ListTransactions(ctx context.Context, in *ListTransactionsReq, opts ...grpc.CallOption) (*ListTransactionsResp, error)
 	GetTransaction(ctx context.Context, in *GetTransactionReq, opts ...grpc.CallOption) (*MarketPayment, error)
 	ListMyGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
+	Offer(ctx context.Context, in *OfferReq, opts ...grpc.CallOption) (*OfferResp, error)
+	AcceptOffer(ctx context.Context, in *DecideOfferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeclineOffer(ctx context.Context, in *DecideOfferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetAutoRenew(ctx context.Context, in *SetAutoRenewReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -412,6 +418,36 @@ func (c *marketClient) ListMyGrants(ctx context.Context, in *ListGrantsReq, opts
 	return out, nil
 }
 
+func (c *marketClient) Offer(ctx context.Context, in *OfferReq, opts ...grpc.CallOption) (*OfferResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OfferResp)
+	err := c.cc.Invoke(ctx, Market_Offer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketClient) AcceptOffer(ctx context.Context, in *DecideOfferReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Market_AcceptOffer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketClient) DeclineOffer(ctx context.Context, in *DecideOfferReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Market_DeclineOffer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *marketClient) SetAutoRenew(ctx context.Context, in *SetAutoRenewReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -446,6 +482,9 @@ type MarketServer interface {
 	ListTransactions(context.Context, *ListTransactionsReq) (*ListTransactionsResp, error)
 	GetTransaction(context.Context, *GetTransactionReq) (*MarketPayment, error)
 	ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error)
+	Offer(context.Context, *OfferReq) (*OfferResp, error)
+	AcceptOffer(context.Context, *DecideOfferReq) (*emptypb.Empty, error)
+	DeclineOffer(context.Context, *DecideOfferReq) (*emptypb.Empty, error)
 	SetAutoRenew(context.Context, *SetAutoRenewReq) (*emptypb.Empty, error)
 }
 
@@ -500,6 +539,15 @@ func (UnimplementedMarketServer) GetTransaction(context.Context, *GetTransaction
 }
 func (UnimplementedMarketServer) ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMyGrants not implemented")
+}
+func (UnimplementedMarketServer) Offer(context.Context, *OfferReq) (*OfferResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Offer not implemented")
+}
+func (UnimplementedMarketServer) AcceptOffer(context.Context, *DecideOfferReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AcceptOffer not implemented")
+}
+func (UnimplementedMarketServer) DeclineOffer(context.Context, *DecideOfferReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeclineOffer not implemented")
 }
 func (UnimplementedMarketServer) SetAutoRenew(context.Context, *SetAutoRenewReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetAutoRenew not implemented")
@@ -794,6 +842,60 @@ func _Market_ListMyGrants_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Market_Offer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OfferReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).Offer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_Offer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).Offer(ctx, req.(*OfferReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Market_AcceptOffer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DecideOfferReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).AcceptOffer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_AcceptOffer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).AcceptOffer(ctx, req.(*DecideOfferReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Market_DeclineOffer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DecideOfferReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).DeclineOffer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_DeclineOffer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).DeclineOffer(ctx, req.(*DecideOfferReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Market_SetAutoRenew_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetAutoRenewReq)
 	if err := dec(in); err != nil {
@@ -878,6 +980,18 @@ var Market_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMyGrants",
 			Handler:    _Market_ListMyGrants_Handler,
+		},
+		{
+			MethodName: "Offer",
+			Handler:    _Market_Offer_Handler,
+		},
+		{
+			MethodName: "AcceptOffer",
+			Handler:    _Market_AcceptOffer_Handler,
+		},
+		{
+			MethodName: "DeclineOffer",
+			Handler:    _Market_DeclineOffer_Handler,
 		},
 		{
 			MethodName: "SetAutoRenew",

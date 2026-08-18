@@ -640,6 +640,7 @@ class MarketGrantView extends $pb.GeneratedMessage {
     $fixnum.Int64? decidedAt,
     $fixnum.Int64? installedAt,
     $core.bool? autoRenew,
+    GrantInitiator? initiator,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -660,6 +661,7 @@ class MarketGrantView extends $pb.GeneratedMessage {
     if (decidedAt != null) result.decidedAt = decidedAt;
     if (installedAt != null) result.installedAt = installedAt;
     if (autoRenew != null) result.autoRenew = autoRenew;
+    if (initiator != null) result.initiator = initiator;
     return result;
   }
 
@@ -699,6 +701,8 @@ class MarketGrantView extends $pb.GeneratedMessage {
     ..aInt64(17, _omitFieldNames ? '' : 'decidedAt')
     ..aInt64(18, _omitFieldNames ? '' : 'installedAt')
     ..aOB(19, _omitFieldNames ? '' : 'autoRenew')
+    ..aE<GrantInitiator>(20, _omitFieldNames ? '' : 'initiator',
+        enumValues: GrantInitiator.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -888,6 +892,17 @@ class MarketGrantView extends $pb.GeneratedMessage {
   $core.bool hasAutoRenew() => $_has(17);
   @$pb.TagNumber(19)
   void clearAutoRenew() => $_clearField(19);
+
+  /// 谁先开的口(申请 / 分享)。前端按它决定这一行给"同意/拒绝"还是"审批/驳回",
+  /// 后端按它决定 PENDING 时该问谁 —— 见 GrantInitiator。
+  @$pb.TagNumber(20)
+  GrantInitiator get initiator => $_getN(18);
+  @$pb.TagNumber(20)
+  set initiator(GrantInitiator value) => $_setField(20, value);
+  @$pb.TagNumber(20)
+  $core.bool hasInitiator() => $_has(18);
+  @$pb.TagNumber(20)
+  void clearInitiator() => $_clearField(20);
 }
 
 class SearchListingsReq extends $pb.GeneratedMessage {
@@ -1221,6 +1236,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? tags,
     $core.String? actionUrl,
     MarketListingKind? kind,
+    $core.bool? payeeToMaster,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1232,6 +1248,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     if (tags != null) result.tags.addAll(tags);
     if (actionUrl != null) result.actionUrl = actionUrl;
     if (kind != null) result.kind = kind;
+    if (payeeToMaster != null) result.payeeToMaster = payeeToMaster;
     return result;
   }
 
@@ -1259,6 +1276,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     ..aOS(12, _omitFieldNames ? '' : 'actionUrl')
     ..aE<MarketListingKind>(13, _omitFieldNames ? '' : 'kind',
         enumValues: MarketListingKind.values)
+    ..aOB(14, _omitFieldNames ? '' : 'payeeToMaster')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1361,6 +1379,21 @@ class CreateListingReq extends $pb.GeneratedMessage {
   $core.bool hasKind() => $_has(8);
   @$pb.TagNumber(13)
   void clearKind() => $_clearField(13);
+
+  /// 收款方是否收到 **master** 名下。
+  ///
+  /// 默认 false = 机器人自己收（硬件机器人持私钥，能独立收款）。
+  /// ⚠️ **软件机器人没得选**:它没有私钥,收不了款,后端一律按 master 处理,
+  ///    传 false 也会被纠正 —— 不是"帮你改",是那个值与"软件机器人"这件事互相矛盾。
+  /// 前端**暂时不给这个选项**(隐藏),先把能力放在契约里。
+  @$pb.TagNumber(14)
+  $core.bool get payeeToMaster => $_getBF(9);
+  @$pb.TagNumber(14)
+  set payeeToMaster($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(14)
+  $core.bool hasPayeeToMaster() => $_has(9);
+  @$pb.TagNumber(14)
+  void clearPayeeToMaster() => $_clearField(14);
 }
 
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
@@ -1375,6 +1408,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     $fixnum.Int64? duration,
     $core.Iterable<$core.String>? tags,
     $core.String? actionUrl,
+    $core.bool? payeeToMaster,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -1383,6 +1417,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     if (duration != null) result.duration = duration;
     if (tags != null) result.tags.addAll(tags);
     if (actionUrl != null) result.actionUrl = actionUrl;
+    if (payeeToMaster != null) result.payeeToMaster = payeeToMaster;
     return result;
   }
 
@@ -1405,6 +1440,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     ..aInt64(4, _omitFieldNames ? '' : 'duration')
     ..pPS(8, _omitFieldNames ? '' : 'tags')
     ..aOS(10, _omitFieldNames ? '' : 'actionUrl')
+    ..aOB(11, _omitFieldNames ? '' : 'payeeToMaster')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1473,6 +1509,15 @@ class EditListingReq extends $pb.GeneratedMessage {
   $core.bool hasActionUrl() => $_has(5);
   @$pb.TagNumber(10)
   void clearActionUrl() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.bool get payeeToMaster => $_getBF(6);
+  @$pb.TagNumber(11)
+  set payeeToMaster($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(11)
+  $core.bool hasPayeeToMaster() => $_has(6);
+  @$pb.TagNumber(11)
+  void clearPayeeToMaster() => $_clearField(11);
 }
 
 class SetListingStatusReq extends $pb.GeneratedMessage {
@@ -2867,14 +2912,19 @@ class DecideGrantReq extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(2);
 }
 
+/// ⚠️ `initiator` 是**过滤器**:不传=全部;传 OFFER 就是"收到的分享"那张表。
+/// 收到的分享与买来的授权混在一张列表里,用户分不清"这是我买的"还是"别人送我的",
+/// 而两者的下一步动作也不同(前者续费/切版本,后者同意/拒绝)。
 class ListGrantsReq extends $pb.GeneratedMessage {
   factory ListGrantsReq({
     GrantStatus? status,
     $2.Pagination? pagination,
+    GrantInitiator? initiator,
   }) {
     final result = create();
     if (status != null) result.status = status;
     if (pagination != null) result.pagination = pagination;
+    if (initiator != null) result.initiator = initiator;
     return result;
   }
 
@@ -2895,6 +2945,8 @@ class ListGrantsReq extends $pb.GeneratedMessage {
         enumValues: GrantStatus.values)
     ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
+    ..aE<GrantInitiator>(3, _omitFieldNames ? '' : 'initiator',
+        enumValues: GrantInitiator.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2935,6 +2987,15 @@ class ListGrantsReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
   $2.Pagination ensurePagination() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  GrantInitiator get initiator => $_getN(2);
+  @$pb.TagNumber(3)
+  set initiator(GrantInitiator value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInitiator() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInitiator() => $_clearField(3);
 }
 
 class ListGrantsResp extends $pb.GeneratedMessage {
@@ -3073,6 +3134,236 @@ class SetAutoRenewReq extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(1);
   @$pb.TagNumber(2)
   void clearEnabled() => $_clearField(2);
+}
+
+/// ── 分享(Offer)——「我想给」那条路 ───────────────────────────────────────────
+///
+/// 市场原来只有一个方向:受让方 `Apply`(我想要)→ 出让方 `Approve`。
+/// 分享是反过来的:出让方发起,受让方决定收不收。**装载发生在 Accept 之后,不在 Offer 之时**
+/// —— 这是"可以给陌生机器人分享"能成立的前提:发出去只是一条待处理的邀请,
+/// 对方不点就什么也不会发生。
+///
+/// 三条口径(2026-08-19 定):
+///   · **可以给陌生机器人分享**,不限好友/群成员;
+///   · **无主机器人自动拒绝** —— 没有 master 就没有可问的对象,
+///     直接 REJECTED 并说明原因,**不要留成永远 PENDING**(攒一堆没人处理的单,
+///     发起方还看不出为什么没动静);
+///   · **7 天未接受自动过期**(REJECTED + 理由"未接受")。
+///
+/// 分享一律**免费赠予、不开单**:挂牌是收费的也能送,出让方有权免单;
+/// grant 上记 initiator=OFFER 与买来的区分开,否则对账时看不出这份为什么没付款。
+class OfferReq extends $pb.GeneratedMessage {
+  factory OfferReq({
+    $core.String? listingUuid,
+    $core.String? toAgent,
+  }) {
+    final result = create();
+    if (listingUuid != null) result.listingUuid = listingUuid;
+    if (toAgent != null) result.toAgent = toAgent;
+    return result;
+  }
+
+  OfferReq._();
+
+  factory OfferReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OfferReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OfferReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'listingUuid')
+    ..aOS(2, _omitFieldNames ? '' : 'toAgent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OfferReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OfferReq copyWith(void Function(OfferReq) updates) =>
+      super.copyWith((message) => updates(message as OfferReq)) as OfferReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static OfferReq create() => OfferReq._();
+  @$core.override
+  OfferReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static OfferReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OfferReq>(create);
+  static OfferReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get listingUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set listingUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasListingUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearListingUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get toAgent => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set toAgent($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasToAgent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearToAgent() => $_clearField(2);
+}
+
+class OfferResp extends $pb.GeneratedMessage {
+  factory OfferResp({
+    $core.String? grantUuid,
+    GrantStatus? status,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (grantUuid != null) result.grantUuid = grantUuid;
+    if (status != null) result.status = status;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  OfferResp._();
+
+  factory OfferResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OfferResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OfferResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'grantUuid')
+    ..aE<GrantStatus>(2, _omitFieldNames ? '' : 'status',
+        enumValues: GrantStatus.values)
+    ..aOS(3, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OfferResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OfferResp copyWith(void Function(OfferResp) updates) =>
+      super.copyWith((message) => updates(message as OfferResp)) as OfferResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static OfferResp create() => OfferResp._();
+  @$core.override
+  OfferResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static OfferResp getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OfferResp>(create);
+  static OfferResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get grantUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set grantUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantUuid() => $_clearField(1);
+
+  /// 送给**自己名下**的机器人 → 不需要谁同意,直接 INSTALLED;
+  /// 送给别人的 → PENDING(等对方 master);对方无主 → REJECTED(reason 里写明)。
+  @$pb.TagNumber(2)
+  GrantStatus get status => $_getN(1);
+  @$pb.TagNumber(2)
+  set status(GrantStatus value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStatus() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStatus() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get reason => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set reason($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReason() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReason() => $_clearField(3);
+}
+
+/// DecideOfferReq 受让方 master 接受 / 拒绝一条分享。
+/// **主体是受让方**(与 DecideGrantReq 的主体是出让方正好相反,所以不复用那个类型 ——
+/// 复用会让"这个接口该校验哪一侧"变成一件要靠记忆的事)。
+class DecideOfferReq extends $pb.GeneratedMessage {
+  factory DecideOfferReq({
+    $core.String? grantUuid,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (grantUuid != null) result.grantUuid = grantUuid;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  DecideOfferReq._();
+
+  factory DecideOfferReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DecideOfferReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DecideOfferReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'grantUuid')
+    ..aOS(2, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DecideOfferReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DecideOfferReq copyWith(void Function(DecideOfferReq) updates) =>
+      super.copyWith((message) => updates(message as DecideOfferReq))
+          as DecideOfferReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DecideOfferReq create() => DecideOfferReq._();
+  @$core.override
+  DecideOfferReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DecideOfferReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DecideOfferReq>(create);
+  static DecideOfferReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get grantUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set grantUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get reason => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set reason($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReason() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReason() => $_clearField(2);
 }
 
 class MarketManageListListingsReq extends $pb.GeneratedMessage {

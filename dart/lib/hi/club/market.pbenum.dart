@@ -133,6 +133,36 @@ class MarketListingKind extends $pb.ProtobufEnum {
   const MarketListingKind._(super.value, super.name);
 }
 
+/// GrantInitiator 这笔授权是**谁先开的口**。
+///
+/// 为什么必须有它:`PENDING` 这一个状态下"等谁点头"是两种完全不同的事 ——
+///   · APPLY 来的:等**出让方** master 审批(ListReceivedRequests 里那批);
+///   · OFFER 来的:等**受让方** master 接受。
+/// 不分的话,我发出去的邀请会落进我自己的"收到的申请"列表,而 `Approve` 校验的是
+/// **出让方** master —— 于是我能自己批准自己送出去的东西,**绕过受让方的同意**。
+/// 这不是显示问题,是授权问题。
+class GrantInitiator extends $pb.ProtobufEnum {
+  static const GrantInitiator GRANT_INITIATOR_UNSPECIFIED =
+      GrantInitiator._(0, _omitEnumNames ? '' : 'GRANT_INITIATOR_UNSPECIFIED');
+  static const GrantInitiator GRANT_INITIATOR_APPLY =
+      GrantInitiator._(1, _omitEnumNames ? '' : 'GRANT_INITIATOR_APPLY');
+  static const GrantInitiator GRANT_INITIATOR_OFFER =
+      GrantInitiator._(2, _omitEnumNames ? '' : 'GRANT_INITIATOR_OFFER');
+
+  static const $core.List<GrantInitiator> values = <GrantInitiator>[
+    GRANT_INITIATOR_UNSPECIFIED,
+    GRANT_INITIATOR_APPLY,
+    GRANT_INITIATOR_OFFER,
+  ];
+
+  static final $core.List<GrantInitiator?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static GrantInitiator? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const GrantInitiator._(super.value, super.name);
+}
+
 /// GrantStatus 授权状态机。
 ///
 /// ⚠️ **`APPROVED` 与 `INSTALLED` 必须分开。** 前者是"授权成立"(club 的事实),

@@ -6065,6 +6065,10 @@ pub struct MarketGrantView {
     /// 自动续费。**只有硬件机器人能开** —— 续费要它自己掏钱付款,软件机器人没有私钥。
     #[prost(bool, tag = "19")]
     pub auto_renew: bool,
+    /// 谁先开的口(申请 / 分享)。前端按它决定这一行给"同意/拒绝"还是"审批/驳回",
+    /// 后端按它决定 PENDING 时该问谁 —— 见 GrantInitiator。
+    #[prost(enumeration = "GrantInitiator", tag = "20")]
+    pub initiator: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SearchListingsReq {
@@ -6125,6 +6129,14 @@ pub struct CreateListingReq {
     /// 市场分类。**这个不删** —— 插件自身没有分类的概念
     #[prost(string, repeated, tag = "10")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 收款方是否收到 **master** 名下。
+    ///
+    /// 默认 false = 机器人自己收（硬件机器人持私钥，能独立收款）。
+    /// ⚠️ **软件机器人没得选**:它没有私钥,收不了款,后端一律按 master 处理,
+    /// 传 false 也会被纠正 —— 不是"帮你改",是那个值与"软件机器人"这件事互相矛盾。
+    /// 前端**暂时不给这个选项**(隐藏),先把能力放在契约里。
+    #[prost(bool, tag = "14")]
+    pub payee_to_master: bool,
     /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
     ///
     /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
@@ -6153,6 +6165,9 @@ pub struct EditListingReq {
     pub duration: ::core::option::Option<i64>,
     #[prost(string, repeated, tag = "8")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 见 CreateListingReq:软件机器人没得选
+    #[prost(bool, optional, tag = "11")]
+    pub payee_to_master: ::core::option::Option<bool>,
     #[prost(string, optional, tag = "10")]
     pub action_url: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -6392,6 +6407,9 @@ pub struct DecideGrantReq {
     #[prost(string, tag = "2")]
     pub reason: ::prost::alloc::string::String,
 }
+/// ⚠️ `initiator` 是**过滤器**:不传=全部;传 OFFER 就是"收到的分享"那张表。
+/// 收到的分享与买来的授权混在一张列表里,用户分不清"这是我买的"还是"别人送我的",
+/// 而两者的下一步动作也不同(前者续费/切版本,后者同意/拒绝)。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGrantsReq {
     /// 可选:按状态筛
@@ -6399,6 +6417,9 @@ pub struct ListGrantsReq {
     pub status: i32,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
+    /// 可选:按"谁开的口"筛。传 OFFER 就是"收到的分享"那张表
+    #[prost(enumeration = "GrantInitiator", tag = "3")]
+    pub initiator: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGrantsResp {
@@ -6424,6 +6445,53 @@ pub struct SetAutoRenewReq {
     pub grant_uuid: ::prost::alloc::string::String,
     #[prost(bool, tag = "2")]
     pub enabled: bool,
+}
+/// ── 分享(Offer)——「我想给」那条路 ───────────────────────────────────────────
+///
+/// 市场原来只有一个方向:受让方 `Apply`(我想要)→ 出让方 `Approve`。
+/// 分享是反过来的:出让方发起,受让方决定收不收。**装载发生在 Accept 之后,不在 Offer 之时**
+/// —— 这是"可以给陌生机器人分享"能成立的前提:发出去只是一条待处理的邀请,
+/// 对方不点就什么也不会发生。
+///
+/// 三条口径(2026-08-19 定):
+/// · **可以给陌生机器人分享**,不限好友/群成员;
+/// · **无主机器人自动拒绝** —— 没有 master 就没有可问的对象,
+/// 直接 REJECTED 并说明原因,**不要留成永远 PENDING**(攒一堆没人处理的单,
+/// 发起方还看不出为什么没动静);
+/// · **7 天未接受自动过期**(REJECTED + 理由"未接受")。
+///
+/// 分享一律**免费赠予、不开单**:挂牌是收费的也能送,出让方有权免单;
+/// grant 上记 initiator=OFFER 与买来的区分开,否则对账时看不出这份为什么没付款。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OfferReq {
+    /// 分享哪个挂牌(HIDDEN 也行:不公开、只定向送)
+    #[prost(string, tag = "1")]
+    pub listing_uuid: ::prost::alloc::string::String,
+    /// 送给哪台机器人
+    #[prost(string, tag = "2")]
+    pub to_agent: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OfferResp {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 送给**自己名下**的机器人 → 不需要谁同意,直接 INSTALLED;
+    /// 送给别人的 → PENDING(等对方 master);对方无主 → REJECTED(reason 里写明)。
+    #[prost(enumeration = "GrantStatus", tag = "2")]
+    pub status: i32,
+    #[prost(string, tag = "3")]
+    pub reason: ::prost::alloc::string::String,
+}
+/// DecideOfferReq 受让方 master 接受 / 拒绝一条分享。
+/// **主体是受让方**(与 DecideGrantReq 的主体是出让方正好相反,所以不复用那个类型 ——
+/// 复用会让"这个接口该校验哪一侧"变成一件要靠记忆的事)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DecideOfferReq {
+    #[prost(string, tag = "1")]
+    pub grant_uuid: ::prost::alloc::string::String,
+    /// 拒绝理由(可空);接受时忽略
+    #[prost(string, tag = "2")]
+    pub reason: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketManageListListingsReq {
@@ -6669,6 +6737,46 @@ impl MarketListingKind {
             "MARKET_LISTING_KIND_UNSPECIFIED" => Some(Self::Unspecified),
             "MARKET_LISTING_KIND_OFFICIAL" => Some(Self::Official),
             "MARKET_LISTING_KIND_BUILTIN" => Some(Self::Builtin),
+            _ => None,
+        }
+    }
+}
+/// GrantInitiator 这笔授权是**谁先开的口**。
+///
+/// 为什么必须有它:`PENDING` 这一个状态下"等谁点头"是两种完全不同的事 ——
+/// · APPLY 来的:等**出让方** master 审批(ListReceivedRequests 里那批);
+/// · OFFER 来的:等**受让方** master 接受。
+/// 不分的话,我发出去的邀请会落进我自己的"收到的申请"列表,而 `Approve` 校验的是
+/// **出让方** master —— 于是我能自己批准自己送出去的东西,**绕过受让方的同意**。
+/// 这不是显示问题,是授权问题。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum GrantInitiator {
+    /// = APPLY(存量全是申请来的,default 0 天然正确)
+    Unspecified = 0,
+    /// 受让方申请(市场购买)
+    Apply = 1,
+    /// 出让方分享(赠予,不开单)
+    Offer = 2,
+}
+impl GrantInitiator {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "GRANT_INITIATOR_UNSPECIFIED",
+            Self::Apply => "GRANT_INITIATOR_APPLY",
+            Self::Offer => "GRANT_INITIATOR_OFFER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "GRANT_INITIATOR_UNSPECIFIED" => Some(Self::Unspecified),
+            "GRANT_INITIATOR_APPLY" => Some(Self::Apply),
+            "GRANT_INITIATOR_OFFER" => Some(Self::Offer),
             _ => None,
         }
     }
@@ -7439,6 +7547,66 @@ pub mod market_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Market", "ListMyGrants"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn offer(
+            &mut self,
+            request: impl tonic::IntoRequest<super::OfferReq>,
+        ) -> std::result::Result<tonic::Response<super::OfferResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Market/Offer");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Market", "Offer"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn accept_offer(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DecideOfferReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/AcceptOffer",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "AcceptOffer"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn decline_offer(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DecideOfferReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/DeclineOffer",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "DeclineOffer"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_auto_renew(

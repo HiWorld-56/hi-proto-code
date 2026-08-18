@@ -67,6 +67,21 @@ final $typed_data.Uint8List marketListingKindDescriptor = $convert.base64Decode(
     'ASIAocTUFSS0VUX0xJU1RJTkdfS0lORF9PRkZJQ0lBTBABEh8KG01BUktFVF9MSVNUSU5HX0tJ'
     'TkRfQlVJTFRJThAC');
 
+@$core.Deprecated('Use grantInitiatorDescriptor instead')
+const GrantInitiator$json = {
+  '1': 'GrantInitiator',
+  '2': [
+    {'1': 'GRANT_INITIATOR_UNSPECIFIED', '2': 0},
+    {'1': 'GRANT_INITIATOR_APPLY', '2': 1},
+    {'1': 'GRANT_INITIATOR_OFFER', '2': 2},
+  ],
+};
+
+/// Descriptor for `GrantInitiator`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List grantInitiatorDescriptor = $convert.base64Decode(
+    'Cg5HcmFudEluaXRpYXRvchIfChtHUkFOVF9JTklUSUFUT1JfVU5TUEVDSUZJRUQQABIZChVHUk'
+    'FOVF9JTklUSUFUT1JfQVBQTFkQARIZChVHUkFOVF9JTklUSUFUT1JfT0ZGRVIQAg==');
+
 @$core.Deprecated('Use grantStatusDescriptor instead')
 const GrantStatus$json = {
   '1': 'GrantStatus',
@@ -400,6 +415,15 @@ const MarketGrantView$json = {
       '10': 'installedAt'
     },
     {'1': 'auto_renew', '3': 19, '4': 1, '5': 8, '8': {}, '10': 'autoRenew'},
+    {
+      '1': 'initiator',
+      '3': 20,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.GrantInitiator',
+      '8': {},
+      '10': 'initiator'
+    },
   ],
   '7': {},
   '9': [
@@ -422,8 +446,9 @@ final $typed_data.Uint8List marketGrantViewDescriptor = $convert.base64Decode(
     'JsGA4gASgJQgSQtRgDUglhY3Rpb25VcmwSHAoGcmVhc29uGA8gASgJQgSQtRgDUgZyZWFzb24S'
     'IwoKY3JlYXRlZF9hdBgQIAEoA0IEkLUYA1IJY3JlYXRlZEF0EiMKCmRlY2lkZWRfYXQYESABKA'
     'NCBJC1GANSCWRlY2lkZWRBdBInCgxpbnN0YWxsZWRfYXQYEiABKANCBJC1GANSC2luc3RhbGxl'
-    'ZEF0EiMKCmF1dG9fcmVuZXcYEyABKAhCBJC1GANSCWF1dG9SZW5ldzoEmLUYA0oECAsQDFINZm'
-    '9sbG93X2xhdGVzdA==');
+    'ZEF0EiMKCmF1dG9fcmVuZXcYEyABKAhCBJC1GANSCWF1dG9SZW5ldxI7Cglpbml0aWF0b3IYFC'
+    'ABKA4yFy5oaS5jbHViLkdyYW50SW5pdGlhdG9yQgSQtRgDUglpbml0aWF0b3I6BJi1GANKBAgL'
+    'EAxSDWZvbGxvd19sYXRlc3Q=');
 
 @$core.Deprecated('Use searchListingsReqDescriptor instead')
 const SearchListingsReq$json = {
@@ -544,6 +569,7 @@ const CreateListingReq$json = {
     {'1': 'coin', '3': 5, '4': 1, '5': 9, '10': 'coin'},
     {'1': 'duration', '3': 6, '4': 1, '5': 3, '10': 'duration'},
     {'1': 'tags', '3': 10, '4': 3, '5': 9, '10': 'tags'},
+    {'1': 'payee_to_master', '3': 14, '4': 1, '5': 8, '10': 'payeeToMaster'},
     {'1': 'action_url', '3': 12, '4': 1, '5': 9, '10': 'actionUrl'},
     {
       '1': 'kind',
@@ -569,10 +595,10 @@ final $typed_data.Uint8List createListingReqDescriptor = $convert.base64Decode(
     '0KC3BsdWdpbl91dWlkGAIgASgJQgy6SAlyBzIFXlxTKyRSCnBsdWdpblV1aWQSNAoLc2V0dGxl'
     'X21vZGUYAyABKA4yEy5oaS5jbHViLlNldHRsZU1vZGVSCnNldHRsZU1vZGUSFAoFcHJpY2UYBC'
     'ABKAlSBXByaWNlEhIKBGNvaW4YBSABKAlSBGNvaW4SGgoIZHVyYXRpb24YBiABKANSCGR1cmF0'
-    'aW9uEhIKBHRhZ3MYCiADKAlSBHRhZ3MSHQoKYWN0aW9uX3VybBgMIAEoCVIJYWN0aW9uVXJsEi'
-    '4KBGtpbmQYDSABKA4yGi5oaS5jbHViLk1hcmtldExpc3RpbmdLaW5kUgRraW5kSgQIBxAISgQI'
-    'CBAJSgQICRAKSgQICxAMUgV0aXRsZVIHc3VtbWFyeVIEbG9nb1ITYWxsb3dfZm9sbG93X2xhdG'
-    'VzdA==');
+    'aW9uEhIKBHRhZ3MYCiADKAlSBHRhZ3MSJgoPcGF5ZWVfdG9fbWFzdGVyGA4gASgIUg1wYXllZV'
+    'RvTWFzdGVyEh0KCmFjdGlvbl91cmwYDCABKAlSCWFjdGlvblVybBIuCgRraW5kGA0gASgOMhou'
+    'aGkuY2x1Yi5NYXJrZXRMaXN0aW5nS2luZFIEa2luZEoECAcQCEoECAgQCUoECAkQCkoECAsQDF'
+    'IFdGl0bGVSB3N1bW1hcnlSBGxvZ29SE2FsbG93X2ZvbGxvd19sYXRlc3Q=');
 
 @$core.Deprecated('Use editListingReqDescriptor instead')
 const EditListingReq$json = {
@@ -592,11 +618,20 @@ const EditListingReq$json = {
     },
     {'1': 'tags', '3': 8, '4': 3, '5': 9, '10': 'tags'},
     {
+      '1': 'payee_to_master',
+      '3': 11,
+      '4': 1,
+      '5': 8,
+      '9': 3,
+      '10': 'payeeToMaster',
+      '17': true
+    },
+    {
       '1': 'action_url',
       '3': 10,
       '4': 1,
       '5': 9,
-      '9': 3,
+      '9': 4,
       '10': 'actionUrl',
       '17': true
     },
@@ -605,6 +640,7 @@ const EditListingReq$json = {
     {'1': '_price'},
     {'1': '_coin'},
     {'1': '_duration'},
+    {'1': '_payee_to_master'},
     {'1': '_action_url'},
   ],
   '9': [
@@ -620,10 +656,11 @@ const EditListingReq$json = {
 final $typed_data.Uint8List editListingReqDescriptor = $convert.base64Decode(
     'Cg5FZGl0TGlzdGluZ1JlcRIgCgR1dWlkGAEgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQSGQoFcH'
     'JpY2UYAiABKAlIAFIFcHJpY2WIAQESFwoEY29pbhgDIAEoCUgBUgRjb2luiAEBEh8KCGR1cmF0'
-    'aW9uGAQgASgDSAJSCGR1cmF0aW9uiAEBEhIKBHRhZ3MYCCADKAlSBHRhZ3MSIgoKYWN0aW9uX3'
-    'VybBgKIAEoCUgDUglhY3Rpb25VcmyIAQFCCAoGX3ByaWNlQgcKBV9jb2luQgsKCV9kdXJhdGlv'
-    'bkINCgtfYWN0aW9uX3VybEoECAUQBkoECAYQB0oECAcQCEoECAkQClIFdGl0bGVSB3N1bW1hcn'
-    'lSBGxvZ28=');
+    'aW9uGAQgASgDSAJSCGR1cmF0aW9uiAEBEhIKBHRhZ3MYCCADKAlSBHRhZ3MSKwoPcGF5ZWVfdG'
+    '9fbWFzdGVyGAsgASgISANSDXBheWVlVG9NYXN0ZXKIAQESIgoKYWN0aW9uX3VybBgKIAEoCUgE'
+    'UglhY3Rpb25VcmyIAQFCCAoGX3ByaWNlQgcKBV9jb2luQgsKCV9kdXJhdGlvbkISChBfcGF5ZW'
+    'VfdG9fbWFzdGVyQg0KC19hY3Rpb25fdXJsSgQIBRAGSgQIBhAHSgQIBxAISgQICRAKUgV0aXRs'
+    'ZVIHc3VtbWFyeVIEbG9nbw==');
 
 @$core.Deprecated('Use setListingStatusReqDescriptor instead')
 const SetListingStatusReq$json = {
@@ -1039,13 +1076,22 @@ const ListGrantsReq$json = {
       '6': '.hi.Pagination',
       '10': 'pagination'
     },
+    {
+      '1': 'initiator',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.GrantInitiator',
+      '10': 'initiator'
+    },
   ],
 };
 
 /// Descriptor for `ListGrantsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGrantsReqDescriptor = $convert.base64Decode(
     'Cg1MaXN0R3JhbnRzUmVxEiwKBnN0YXR1cxgBIAEoDjIULmhpLmNsdWIuR3JhbnRTdGF0dXNSBn'
-    'N0YXR1cxIuCgpwYWdpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+    'N0YXR1cxIuCgpwYWdpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbhI1'
+    'Cglpbml0aWF0b3IYAyABKA4yFy5oaS5jbHViLkdyYW50SW5pdGlhdG9yUglpbml0aWF0b3I=');
 
 @$core.Deprecated('Use listGrantsRespDescriptor instead')
 const ListGrantsResp$json = {
@@ -1083,6 +1129,59 @@ const SetAutoRenewReq$json = {
 final $typed_data.Uint8List setAutoRenewReqDescriptor = $convert.base64Decode(
     'Cg9TZXRBdXRvUmVuZXdSZXESKwoKZ3JhbnRfdXVpZBgBIAEoCUIMukgJcgcyBV5cUyskUglncm'
     'FudFV1aWQSGAoHZW5hYmxlZBgCIAEoCFIHZW5hYmxlZA==');
+
+@$core.Deprecated('Use offerReqDescriptor instead')
+const OfferReq$json = {
+  '1': 'OfferReq',
+  '2': [
+    {'1': 'listing_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'listingUuid'},
+    {'1': 'to_agent', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'toAgent'},
+  ],
+};
+
+/// Descriptor for `OfferReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List offerReqDescriptor = $convert.base64Decode(
+    'CghPZmZlclJlcRIvCgxsaXN0aW5nX3V1aWQYASABKAlCDLpICXIHMgVeXFMrJFILbGlzdGluZ1'
+    'V1aWQSJwoIdG9fYWdlbnQYAiABKAlCDLpICXIHMgVeXFMrJFIHdG9BZ2VudA==');
+
+@$core.Deprecated('Use offerRespDescriptor instead')
+const OfferResp$json = {
+  '1': 'OfferResp',
+  '2': [
+    {'1': 'grant_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
+    {
+      '1': 'status',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.GrantStatus',
+      '8': {},
+      '10': 'status'
+    },
+    {'1': 'reason', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'reason'},
+  ],
+  '7': {},
+};
+
+/// Descriptor for `OfferResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List offerRespDescriptor = $convert.base64Decode(
+    'CglPZmZlclJlc3ASIwoKZ3JhbnRfdXVpZBgBIAEoCUIEkLUYA1IJZ3JhbnRVdWlkEjIKBnN0YX'
+    'R1cxgCIAEoDjIULmhpLmNsdWIuR3JhbnRTdGF0dXNCBJC1GANSBnN0YXR1cxIcCgZyZWFzb24Y'
+    'AyABKAlCBJC1GANSBnJlYXNvbjoEmLUYAw==');
+
+@$core.Deprecated('Use decideOfferReqDescriptor instead')
+const DecideOfferReq$json = {
+  '1': 'DecideOfferReq',
+  '2': [
+    {'1': 'grant_uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'grantUuid'},
+    {'1': 'reason', '3': 2, '4': 1, '5': 9, '10': 'reason'},
+  ],
+};
+
+/// Descriptor for `DecideOfferReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List decideOfferReqDescriptor = $convert.base64Decode(
+    'Cg5EZWNpZGVPZmZlclJlcRIrCgpncmFudF91dWlkGAEgASgJQgy6SAlyBzIFXlxTKyRSCWdyYW'
+    '50VXVpZBIWCgZyZWFzb24YAiABKAlSBnJlYXNvbg==');
 
 @$core.Deprecated('Use marketManageListListingsReqDescriptor instead')
 const MarketManageListListingsReq$json = {

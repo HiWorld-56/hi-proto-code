@@ -256,6 +256,27 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$listMyGrants, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.OfferResp> offer(
+    $0.OfferReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$offer, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> acceptOffer(
+    $0.DecideOfferReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$acceptOffer, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.Empty> declineOffer(
+    $0.DecideOfferReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$declineOffer, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> setAutoRenew(
     $0.SetAutoRenewReq request, {
     $grpc.CallOptions? options,
@@ -335,6 +356,18 @@ class MarketClient extends $grpc.Client {
           '/hi.club.Market/ListMyGrants',
           ($0.ListGrantsReq value) => value.writeToBuffer(),
           $0.ListGrantsResp.fromBuffer);
+  static final _$offer = $grpc.ClientMethod<$0.OfferReq, $0.OfferResp>(
+      '/hi.club.Market/Offer',
+      ($0.OfferReq value) => value.writeToBuffer(),
+      $0.OfferResp.fromBuffer);
+  static final _$acceptOffer = $grpc.ClientMethod<$0.DecideOfferReq, $1.Empty>(
+      '/hi.club.Market/AcceptOffer',
+      ($0.DecideOfferReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
+  static final _$declineOffer = $grpc.ClientMethod<$0.DecideOfferReq, $1.Empty>(
+      '/hi.club.Market/DeclineOffer',
+      ($0.DecideOfferReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$setAutoRenew =
       $grpc.ClientMethod<$0.SetAutoRenewReq, $1.Empty>(
           '/hi.club.Market/SetAutoRenew',
@@ -456,6 +489,27 @@ abstract class MarketServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ListGrantsReq.fromBuffer(value),
         ($0.ListGrantsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.OfferReq, $0.OfferResp>(
+        'Offer',
+        offer_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.OfferReq.fromBuffer(value),
+        ($0.OfferResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DecideOfferReq, $1.Empty>(
+        'AcceptOffer',
+        acceptOffer_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DecideOfferReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DecideOfferReq, $1.Empty>(
+        'DeclineOffer',
+        declineOffer_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DecideOfferReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetAutoRenewReq, $1.Empty>(
         'SetAutoRenew',
         setAutoRenew_Pre,
@@ -586,6 +640,30 @@ abstract class MarketServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListGrantsResp> listMyGrants(
       $grpc.ServiceCall call, $0.ListGrantsReq request);
+
+  $async.Future<$0.OfferResp> offer_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.OfferReq> $request) async {
+    return offer($call, await $request);
+  }
+
+  $async.Future<$0.OfferResp> offer(
+      $grpc.ServiceCall call, $0.OfferReq request);
+
+  $async.Future<$1.Empty> acceptOffer_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DecideOfferReq> $request) async {
+    return acceptOffer($call, await $request);
+  }
+
+  $async.Future<$1.Empty> acceptOffer(
+      $grpc.ServiceCall call, $0.DecideOfferReq request);
+
+  $async.Future<$1.Empty> declineOffer_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DecideOfferReq> $request) async {
+    return declineOffer($call, await $request);
+  }
+
+  $async.Future<$1.Empty> declineOffer(
+      $grpc.ServiceCall call, $0.DecideOfferReq request);
 
   $async.Future<$1.Empty> setAutoRenew_Pre($grpc.ServiceCall $call,
       $async.Future<$0.SetAutoRenewReq> $request) async {
