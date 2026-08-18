@@ -26,7 +26,6 @@ const (
 	Auth_VerifyOffline_FullMethodName = "/hi.did.Auth/VerifyOffline"
 	Auth_GenerateReqId_FullMethodName = "/hi.did.Auth/GenerateReqId"
 	Auth_GetReqStatus_FullMethodName  = "/hi.did.Auth/GetReqStatus"
-	Auth_Notify_FullMethodName        = "/hi.did.Auth/Notify"
 	Auth_Logout_FullMethodName        = "/hi.did.Auth/Logout"
 )
 
@@ -36,13 +35,19 @@ const (
 //
 // Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 // 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
+//
+// ⭐ 扫码/授权登录对客户端**只有 Verify 这一个入口**,分叉在后端:按会话 did(发起方
+// GenerateReqId 时报的)分 —— 是 hi-did 自己的哨兵(hisrv 这类自家后台把自己冒充成三方
+// 接进同一条流程)就自己发 token;是某个商户就只验签+转发、回拨商户 LoginCallback,
+// token 由商户自己发。
+// 2026-08-18 删掉了 `Notify`:它是上面第二条那半截的单独入口,客户端拿到的是裸 reqId、
+// 无从判断该走哪条,调它就等于替后端决定"这一定是三方",自家会话会被报成"需要注册为商户"。
 type AuthClient interface {
 	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 	Verify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
 	VerifyOffline(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
 	GenerateReqId(ctx context.Context, in *GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*ReqStatusResp, error)
-	Notify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Logout(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -104,16 +109,6 @@ func (c *authClient) GetReqStatus(ctx context.Context, in *hi.RequestId, opts ..
 	return out, nil
 }
 
-func (c *authClient) Notify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Auth_Notify_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *authClient) Logout(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -130,13 +125,19 @@ func (c *authClient) Logout(ctx context.Context, in *hi.SignedData, opts ...grpc
 //
 // Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 // 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
+//
+// ⭐ 扫码/授权登录对客户端**只有 Verify 这一个入口**,分叉在后端:按会话 did(发起方
+// GenerateReqId 时报的)分 —— 是 hi-did 自己的哨兵(hisrv 这类自家后台把自己冒充成三方
+// 接进同一条流程)就自己发 token;是某个商户就只验签+转发、回拨商户 LoginCallback,
+// token 由商户自己发。
+// 2026-08-18 删掉了 `Notify`:它是上面第二条那半截的单独入口,客户端拿到的是裸 reqId、
+// 无从判断该走哪条,调它就等于替后端决定"这一定是三方",自家会话会被报成"需要注册为商户"。
 type AuthServer interface {
 	RefreshToken(context.Context, *RefreshTokenReq) (*hi.AuthToken, error)
 	Verify(context.Context, *hi.SignedData) (*LoginResp, error)
 	VerifyOffline(context.Context, *hi.SignedData) (*LoginResp, error)
 	GenerateReqId(context.Context, *GenerateReqIdReq) (*hi.RequestId, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*ReqStatusResp, error)
-	Notify(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 	Logout(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }
 
@@ -161,9 +162,6 @@ func (UnimplementedAuthServer) GenerateReqId(context.Context, *GenerateReqIdReq)
 }
 func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*ReqStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetReqStatus not implemented")
-}
-func (UnimplementedAuthServer) Notify(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Notify not implemented")
 }
 func (UnimplementedAuthServer) Logout(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
@@ -278,24 +276,6 @@ func _Auth_GetReqStatus_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_Notify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.SignedData)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServer).Notify(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Auth_Notify_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Notify(ctx, req.(*hi.SignedData))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
@@ -340,10 +320,6 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetReqStatus",
 			Handler:    _Auth_GetReqStatus_Handler,
-		},
-		{
-			MethodName: "Notify",
-			Handler:    _Auth_Notify_Handler,
 		},
 		{
 			MethodName: "Logout",

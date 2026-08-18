@@ -24,6 +24,13 @@ export 'auth.pb.dart';
 
 /// Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 /// 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
+///
+/// ⭐ 扫码/授权登录对客户端**只有 Verify 这一个入口**,分叉在后端:按会话 did(发起方
+/// GenerateReqId 时报的)分 —— 是 hi-did 自己的哨兵(hisrv 这类自家后台把自己冒充成三方
+/// 接进同一条流程)就自己发 token;是某个商户就只验签+转发、回拨商户 LoginCallback,
+/// token 由商户自己发。
+/// 2026-08-18 删掉了 `Notify`:它是上面第二条那半截的单独入口,客户端拿到的是裸 reqId、
+/// 无从判断该走哪条,调它就等于替后端决定"这一定是三方",自家会话会被报成"需要注册为商户"。
 @$pb.GrpcServiceName('hi.did.Auth')
 class AuthClient extends $grpc.Client {
   /// The hostname for this service.
@@ -71,13 +78,6 @@ class AuthClient extends $grpc.Client {
     return $createUnaryCall(_$getReqStatus, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.Empty> notify(
-    $1.SignedData request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$notify, request, options: options);
-  }
-
   $grpc.ResponseFuture<$2.Empty> logout(
     $1.SignedData request, {
     $grpc.CallOptions? options,
@@ -111,10 +111,6 @@ class AuthClient extends $grpc.Client {
           '/hi.did.Auth/GetReqStatus',
           ($1.RequestId value) => value.writeToBuffer(),
           $0.ReqStatusResp.fromBuffer);
-  static final _$notify = $grpc.ClientMethod<$1.SignedData, $2.Empty>(
-      '/hi.did.Auth/Notify',
-      ($1.SignedData value) => value.writeToBuffer(),
-      $2.Empty.fromBuffer);
   static final _$logout = $grpc.ClientMethod<$1.SignedData, $2.Empty>(
       '/hi.did.Auth/Logout',
       ($1.SignedData value) => value.writeToBuffer(),
@@ -161,13 +157,6 @@ abstract class AuthServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.RequestId.fromBuffer(value),
         ($0.ReqStatusResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SignedData, $2.Empty>(
-        'Notify',
-        notify_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.SignedData.fromBuffer(value),
-        ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.SignedData, $2.Empty>(
         'Logout',
         logout_Pre,
@@ -216,13 +205,6 @@ abstract class AuthServiceBase extends $grpc.Service {
 
   $async.Future<$0.ReqStatusResp> getReqStatus(
       $grpc.ServiceCall call, $1.RequestId request);
-
-  $async.Future<$2.Empty> notify_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {
-    return notify($call, await $request);
-  }
-
-  $async.Future<$2.Empty> notify($grpc.ServiceCall call, $1.SignedData request);
 
   $async.Future<$2.Empty> logout_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {

@@ -756,6 +756,13 @@ pub mod auth_client {
     use tonic::codegen::http::Uri;
     /// Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
     /// 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
+    ///
+    /// ⭐ 扫码/授权登录对客户端**只有 Verify 这一个入口**,分叉在后端:按会话 did(发起方
+    /// GenerateReqId 时报的)分 —— 是 hi-did 自己的哨兵(hisrv 这类自家后台把自己冒充成三方
+    /// 接进同一条流程)就自己发 token;是某个商户就只验签+转发、回拨商户 LoginCallback,
+    /// token 由商户自己发。
+    /// 2026-08-18 删掉了 `Notify`:它是上面第二条那半截的单独入口,客户端拿到的是裸 reqId、
+    /// 无从判断该走哪条,调它就等于替后端决定"这一定是三方",自家会话会被报成"需要注册为商户"。
     #[derive(Debug, Clone)]
     pub struct AuthClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -934,24 +941,6 @@ pub mod auth_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Auth/GetReqStatus");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Auth", "GetReqStatus"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn notify(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::SignedData>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Auth/Notify");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Auth", "Notify"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn logout(
