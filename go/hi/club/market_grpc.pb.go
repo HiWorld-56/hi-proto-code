@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	MarketDirectory_SearchListings_FullMethodName    = "/hi.club.MarketDirectory/SearchListings"
+	MarketDirectory_ListSellers_FullMethodName       = "/hi.club.MarketDirectory/ListSellers"
 	MarketDirectory_ListAgentListings_FullMethodName = "/hi.club.MarketDirectory/ListAgentListings"
 	MarketDirectory_GetListing_FullMethodName        = "/hi.club.MarketDirectory/GetListing"
 )
@@ -37,6 +38,7 @@ const (
 //	「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
 type MarketDirectoryClient interface {
 	SearchListings(ctx context.Context, in *SearchListingsReq, opts ...grpc.CallOption) (*SearchListingsResp, error)
+	ListSellers(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListSellersResp, error)
 	ListAgentListings(ctx context.Context, in *ListAgentListingsReq, opts ...grpc.CallOption) (*SearchListingsResp, error)
 	GetListing(ctx context.Context, in *GetListingReq, opts ...grpc.CallOption) (*GetListingResp, error)
 }
@@ -53,6 +55,16 @@ func (c *marketDirectoryClient) SearchListings(ctx context.Context, in *SearchLi
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SearchListingsResp)
 	err := c.cc.Invoke(ctx, MarketDirectory_SearchListings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketDirectoryClient) ListSellers(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListSellersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSellersResp)
+	err := c.cc.Invoke(ctx, MarketDirectory_ListSellers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,6 +102,7 @@ func (c *marketDirectoryClient) GetListing(ctx context.Context, in *GetListingRe
 //	「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
 type MarketDirectoryServer interface {
 	SearchListings(context.Context, *SearchListingsReq) (*SearchListingsResp, error)
+	ListSellers(context.Context, *hi.Pagination) (*ListSellersResp, error)
 	ListAgentListings(context.Context, *ListAgentListingsReq) (*SearchListingsResp, error)
 	GetListing(context.Context, *GetListingReq) (*GetListingResp, error)
 }
@@ -103,6 +116,9 @@ type UnimplementedMarketDirectoryServer struct{}
 
 func (UnimplementedMarketDirectoryServer) SearchListings(context.Context, *SearchListingsReq) (*SearchListingsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SearchListings not implemented")
+}
+func (UnimplementedMarketDirectoryServer) ListSellers(context.Context, *hi.Pagination) (*ListSellersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSellers not implemented")
 }
 func (UnimplementedMarketDirectoryServer) ListAgentListings(context.Context, *ListAgentListingsReq) (*SearchListingsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAgentListings not implemented")
@@ -144,6 +160,24 @@ func _MarketDirectory_SearchListings_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MarketDirectoryServer).SearchListings(ctx, req.(*SearchListingsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MarketDirectory_ListSellers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.Pagination)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDirectoryServer).ListSellers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketDirectory_ListSellers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDirectoryServer).ListSellers(ctx, req.(*hi.Pagination))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -194,6 +228,10 @@ var MarketDirectory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchListings",
 			Handler:    _MarketDirectory_SearchListings_Handler,
+		},
+		{
+			MethodName: "ListSellers",
+			Handler:    _MarketDirectory_ListSellers_Handler,
 		},
 		{
 			MethodName: "ListAgentListings",

@@ -6070,6 +6070,33 @@ pub struct MarketGrantView {
     #[prost(enumeration = "GrantInitiator", tag = "20")]
     pub initiator: i32,
 }
+/// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
+///
+/// 逛市场的顺序是「人 → 摊位 → 货」:先看见是谁在卖,再进他的摊位,再看待售的插件。
+/// 直接铺一页插件的话,买家没法判断"这东西是谁出的"，而插件是要装进自己机器人里的三方代码。
+///
+/// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
+/// 这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
+/// 没挂牌的机器人不会出现在这里。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MarketSeller {
+    /// 卖家(主人)
+    #[prost(message, optional, tag = "1")]
+    pub master: ::core::option::Option<super::Entity>,
+    /// 他名下**有在售挂牌**的摊位
+    #[prost(message, repeated, tag = "2")]
+    pub agents: ::prost::alloc::vec::Vec<super::Entity>,
+    /// 在售挂牌总数
+    #[prost(int32, tag = "3")]
+    pub listing_count: i32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSellersResp {
+    #[prost(int32, tag = "1")]
+    pub total: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub sellers: ::prost::alloc::vec::Vec<MarketSeller>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SearchListingsReq {
     /// 空 = 不过滤
@@ -7133,6 +7160,30 @@ pub mod market_directory_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.MarketDirectory", "SearchListings"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_sellers(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Pagination>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListSellersResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketDirectory/ListSellers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketDirectory", "ListSellers"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_agent_listings(

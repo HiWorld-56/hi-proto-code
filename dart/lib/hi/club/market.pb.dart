@@ -16,7 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $3;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $1;
 import 'market.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -27,7 +27,7 @@ export 'market.pbenum.dart';
 class MarketListingBrief extends $pb.GeneratedMessage {
   factory MarketListingBrief({
     $core.String? uuid,
-    $2.Entity? agent,
+    $1.Entity? agent,
     $core.String? title,
     $core.String? summary,
     $core.String? logo,
@@ -69,8 +69,8 @@ class MarketListingBrief extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
-    ..aOM<$2.Entity>(2, _omitFieldNames ? '' : 'agent',
-        subBuilder: $2.Entity.create)
+    ..aOM<$1.Entity>(2, _omitFieldNames ? '' : 'agent',
+        subBuilder: $1.Entity.create)
     ..aOS(3, _omitFieldNames ? '' : 'title')
     ..aOS(4, _omitFieldNames ? '' : 'summary')
     ..aOS(5, _omitFieldNames ? '' : 'logo')
@@ -114,15 +114,15 @@ class MarketListingBrief extends $pb.GeneratedMessage {
   void clearUuid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Entity get agent => $_getN(1);
+  $1.Entity get agent => $_getN(1);
   @$pb.TagNumber(2)
-  set agent($2.Entity value) => $_setField(2, value);
+  set agent($1.Entity value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasAgent() => $_has(1);
   @$pb.TagNumber(2)
   void clearAgent() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Entity ensureAgent() => $_ensure(1);
+  $1.Entity ensureAgent() => $_ensure(1);
 
   /// ⭐ 下面三个是**读侧现取**的派生值,挂牌行里不存:
   ///    title ← 插件壳名;logo / summary ← 出让方**当前激活版**(与"引用跟版"同一口径)。
@@ -334,9 +334,9 @@ class MarketGrantBrief extends $pb.GeneratedMessage {
   factory MarketGrantBrief({
     $core.String? grantUuid,
     $core.String? title,
-    $2.Entity? fromAgent,
-    $2.Entity? toAgent,
-    $2.Entity? applicant,
+    $1.Entity? fromAgent,
+    $1.Entity? toAgent,
+    $1.Entity? applicant,
     SettleMode? settleMode,
     $core.String? price,
     $core.String? coin,
@@ -368,12 +368,12 @@ class MarketGrantBrief extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'grantUuid')
     ..aOS(2, _omitFieldNames ? '' : 'title')
-    ..aOM<$2.Entity>(3, _omitFieldNames ? '' : 'fromAgent',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(4, _omitFieldNames ? '' : 'toAgent',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(5, _omitFieldNames ? '' : 'applicant',
-        subBuilder: $2.Entity.create)
+    ..aOM<$1.Entity>(3, _omitFieldNames ? '' : 'fromAgent',
+        subBuilder: $1.Entity.create)
+    ..aOM<$1.Entity>(4, _omitFieldNames ? '' : 'toAgent',
+        subBuilder: $1.Entity.create)
+    ..aOM<$1.Entity>(5, _omitFieldNames ? '' : 'applicant',
+        subBuilder: $1.Entity.create)
     ..aE<SettleMode>(6, _omitFieldNames ? '' : 'settleMode',
         enumValues: SettleMode.values)
     ..aOS(7, _omitFieldNames ? '' : 'price')
@@ -418,37 +418,37 @@ class MarketGrantBrief extends $pb.GeneratedMessage {
   void clearTitle() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $2.Entity get fromAgent => $_getN(2);
+  $1.Entity get fromAgent => $_getN(2);
   @$pb.TagNumber(3)
-  set fromAgent($2.Entity value) => $_setField(3, value);
+  set fromAgent($1.Entity value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFromAgent() => $_has(2);
   @$pb.TagNumber(3)
   void clearFromAgent() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Entity ensureFromAgent() => $_ensure(2);
+  $1.Entity ensureFromAgent() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $2.Entity get toAgent => $_getN(3);
+  $1.Entity get toAgent => $_getN(3);
   @$pb.TagNumber(4)
-  set toAgent($2.Entity value) => $_setField(4, value);
+  set toAgent($1.Entity value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasToAgent() => $_has(3);
   @$pb.TagNumber(4)
   void clearToAgent() => $_clearField(4);
   @$pb.TagNumber(4)
-  $2.Entity ensureToAgent() => $_ensure(3);
+  $1.Entity ensureToAgent() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $2.Entity get applicant => $_getN(4);
+  $1.Entity get applicant => $_getN(4);
   @$pb.TagNumber(5)
-  set applicant($2.Entity value) => $_setField(5, value);
+  set applicant($1.Entity value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasApplicant() => $_has(4);
   @$pb.TagNumber(5)
   void clearApplicant() => $_clearField(5);
   @$pb.TagNumber(5)
-  $2.Entity ensureApplicant() => $_ensure(4);
+  $1.Entity ensureApplicant() => $_ensure(4);
 
   @$pb.TagNumber(6)
   SettleMode get settleMode => $_getN(5);
@@ -625,9 +625,9 @@ class MarketGrantView extends $pb.GeneratedMessage {
     $core.String? uuid,
     $core.String? listingUuid,
     $core.String? title,
-    $2.Entity? fromAgent,
-    $2.Entity? toAgent,
-    $2.Entity? applicant,
+    $1.Entity? fromAgent,
+    $1.Entity? toAgent,
+    $1.Entity? applicant,
     GrantStatus? status,
     SettleMode? settleMode,
     $core.String? price,
@@ -681,12 +681,12 @@ class MarketGrantView extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'listingUuid')
     ..aOS(3, _omitFieldNames ? '' : 'title')
-    ..aOM<$2.Entity>(4, _omitFieldNames ? '' : 'fromAgent',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(5, _omitFieldNames ? '' : 'toAgent',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(6, _omitFieldNames ? '' : 'applicant',
-        subBuilder: $2.Entity.create)
+    ..aOM<$1.Entity>(4, _omitFieldNames ? '' : 'fromAgent',
+        subBuilder: $1.Entity.create)
+    ..aOM<$1.Entity>(5, _omitFieldNames ? '' : 'toAgent',
+        subBuilder: $1.Entity.create)
+    ..aOM<$1.Entity>(6, _omitFieldNames ? '' : 'applicant',
+        subBuilder: $1.Entity.create)
     ..aE<GrantStatus>(7, _omitFieldNames ? '' : 'status',
         enumValues: GrantStatus.values)
     ..aE<SettleMode>(8, _omitFieldNames ? '' : 'settleMode',
@@ -752,37 +752,37 @@ class MarketGrantView extends $pb.GeneratedMessage {
   void clearTitle() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $2.Entity get fromAgent => $_getN(3);
+  $1.Entity get fromAgent => $_getN(3);
   @$pb.TagNumber(4)
-  set fromAgent($2.Entity value) => $_setField(4, value);
+  set fromAgent($1.Entity value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasFromAgent() => $_has(3);
   @$pb.TagNumber(4)
   void clearFromAgent() => $_clearField(4);
   @$pb.TagNumber(4)
-  $2.Entity ensureFromAgent() => $_ensure(3);
+  $1.Entity ensureFromAgent() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $2.Entity get toAgent => $_getN(4);
+  $1.Entity get toAgent => $_getN(4);
   @$pb.TagNumber(5)
-  set toAgent($2.Entity value) => $_setField(5, value);
+  set toAgent($1.Entity value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasToAgent() => $_has(4);
   @$pb.TagNumber(5)
   void clearToAgent() => $_clearField(5);
   @$pb.TagNumber(5)
-  $2.Entity ensureToAgent() => $_ensure(4);
+  $1.Entity ensureToAgent() => $_ensure(4);
 
   @$pb.TagNumber(6)
-  $2.Entity get applicant => $_getN(5);
+  $1.Entity get applicant => $_getN(5);
   @$pb.TagNumber(6)
-  set applicant($2.Entity value) => $_setField(6, value);
+  set applicant($1.Entity value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasApplicant() => $_has(5);
   @$pb.TagNumber(6)
   void clearApplicant() => $_clearField(6);
   @$pb.TagNumber(6)
-  $2.Entity ensureApplicant() => $_ensure(5);
+  $1.Entity ensureApplicant() => $_ensure(5);
 
   @$pb.TagNumber(7)
   GrantStatus get status => $_getN(6);
@@ -905,11 +905,156 @@ class MarketGrantView extends $pb.GeneratedMessage {
   void clearInitiator() => $_clearField(20);
 }
 
+/// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
+///
+/// 逛市场的顺序是「人 → 摊位 → 货」:先看见是谁在卖,再进他的摊位,再看待售的插件。
+/// 直接铺一页插件的话,买家没法判断"这东西是谁出的"，而插件是要装进自己机器人里的三方代码。
+///
+/// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
+///    这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
+///    没挂牌的机器人不会出现在这里。
+class MarketSeller extends $pb.GeneratedMessage {
+  factory MarketSeller({
+    $1.Entity? master,
+    $core.Iterable<$1.Entity>? agents,
+    $core.int? listingCount,
+  }) {
+    final result = create();
+    if (master != null) result.master = master;
+    if (agents != null) result.agents.addAll(agents);
+    if (listingCount != null) result.listingCount = listingCount;
+    return result;
+  }
+
+  MarketSeller._();
+
+  factory MarketSeller.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketSeller.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketSeller',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'master',
+        subBuilder: $1.Entity.create)
+    ..pPM<$1.Entity>(2, _omitFieldNames ? '' : 'agents',
+        subBuilder: $1.Entity.create)
+    ..aI(3, _omitFieldNames ? '' : 'listingCount')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketSeller clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketSeller copyWith(void Function(MarketSeller) updates) =>
+      super.copyWith((message) => updates(message as MarketSeller))
+          as MarketSeller;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketSeller create() => MarketSeller._();
+  @$core.override
+  MarketSeller createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketSeller getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketSeller>(create);
+  static MarketSeller? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $1.Entity get master => $_getN(0);
+  @$pb.TagNumber(1)
+  set master($1.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMaster() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMaster() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.Entity ensureMaster() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$1.Entity> get agents => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $core.int get listingCount => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set listingCount($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasListingCount() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearListingCount() => $_clearField(3);
+}
+
+class ListSellersResp extends $pb.GeneratedMessage {
+  factory ListSellersResp({
+    $core.int? total,
+    $core.Iterable<MarketSeller>? sellers,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (sellers != null) result.sellers.addAll(sellers);
+    return result;
+  }
+
+  ListSellersResp._();
+
+  factory ListSellersResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListSellersResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListSellersResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<MarketSeller>(2, _omitFieldNames ? '' : 'sellers',
+        subBuilder: MarketSeller.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellersResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellersResp copyWith(void Function(ListSellersResp) updates) =>
+      super.copyWith((message) => updates(message as ListSellersResp))
+          as ListSellersResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListSellersResp create() => ListSellersResp._();
+  @$core.override
+  ListSellersResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListSellersResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSellersResp>(create);
+  static ListSellersResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<MarketSeller> get sellers => $_getList(1);
+}
+
 class SearchListingsReq extends $pb.GeneratedMessage {
   factory SearchListingsReq({
     $core.String? keyword,
     $core.Iterable<$core.String>? tags,
-    $2.Pagination? pagination,
+    $1.Pagination? pagination,
   }) {
     final result = create();
     if (keyword != null) result.keyword = keyword;
@@ -933,8 +1078,8 @@ class SearchListingsReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'keyword')
     ..pPS(2, _omitFieldNames ? '' : 'tags')
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$1.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -969,21 +1114,21 @@ class SearchListingsReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get tags => $_getList(1);
 
   @$pb.TagNumber(3)
-  $2.Pagination get pagination => $_getN(2);
+  $1.Pagination get pagination => $_getN(2);
   @$pb.TagNumber(3)
-  set pagination($2.Pagination value) => $_setField(3, value);
+  set pagination($1.Pagination value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasPagination() => $_has(2);
   @$pb.TagNumber(3)
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Pagination ensurePagination() => $_ensure(2);
+  $1.Pagination ensurePagination() => $_ensure(2);
 }
 
 class ListAgentListingsReq extends $pb.GeneratedMessage {
   factory ListAgentListingsReq({
     $core.String? agent,
-    $2.Pagination? pagination,
+    $1.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1005,8 +1150,8 @@ class ListAgentListingsReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1038,15 +1183,15 @@ class ListAgentListingsReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $1.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($1.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $1.Pagination ensurePagination() => $_ensure(1);
 }
 
 class GetListingReq extends $pb.GeneratedMessage {
@@ -1590,7 +1735,7 @@ class SetListingStatusReq extends $pb.GeneratedMessage {
 class ListMyListingsReq extends $pb.GeneratedMessage {
   factory ListMyListingsReq({
     $core.String? agent,
-    $2.Pagination? pagination,
+    $1.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1612,8 +1757,8 @@ class ListMyListingsReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1645,15 +1790,15 @@ class ListMyListingsReq extends $pb.GeneratedMessage {
   void clearAgent() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $1.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($1.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $1.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListMyListingsResp extends $pb.GeneratedMessage {
@@ -2096,7 +2241,7 @@ class MarketPayment extends $pb.GeneratedMessage {
 class ListTransactionsReq extends $pb.GeneratedMessage {
   factory ListTransactionsReq({
     $core.String? did,
-    $2.Pagination? pagination,
+    $1.Pagination? pagination,
   }) {
     final result = create();
     if (did != null) result.did = did;
@@ -2118,8 +2263,8 @@ class ListTransactionsReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2156,15 +2301,15 @@ class ListTransactionsReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $1.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($1.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $1.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListTransactionsResp extends $pb.GeneratedMessage {
@@ -3011,7 +3156,7 @@ class DecideGrantReq extends $pb.GeneratedMessage {
 class ListGrantsReq extends $pb.GeneratedMessage {
   factory ListGrantsReq({
     GrantStatus? status,
-    $2.Pagination? pagination,
+    $1.Pagination? pagination,
     GrantInitiator? initiator,
   }) {
     final result = create();
@@ -3036,8 +3181,8 @@ class ListGrantsReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aE<GrantStatus>(1, _omitFieldNames ? '' : 'status',
         enumValues: GrantStatus.values)
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
     ..aE<GrantInitiator>(3, _omitFieldNames ? '' : 'initiator',
         enumValues: GrantInitiator.values)
     ..hasRequiredFields = false;
@@ -3071,15 +3216,15 @@ class ListGrantsReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $1.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($1.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $1.Pagination ensurePagination() => $_ensure(1);
 
   @$pb.TagNumber(3)
   GrantInitiator get initiator => $_getN(2);
@@ -3463,7 +3608,7 @@ class MarketManageListListingsReq extends $pb.GeneratedMessage {
   factory MarketManageListListingsReq({
     $core.String? agent,
     ListingStatus? status,
-    $2.Pagination? pagination,
+    $1.Pagination? pagination,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -3488,8 +3633,8 @@ class MarketManageListListingsReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aE<ListingStatus>(2, _omitFieldNames ? '' : 'status',
         enumValues: ListingStatus.values)
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$1.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3533,22 +3678,22 @@ class MarketManageListListingsReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $2.Pagination get pagination => $_getN(2);
+  $1.Pagination get pagination => $_getN(2);
   @$pb.TagNumber(3)
-  set pagination($2.Pagination value) => $_setField(3, value);
+  set pagination($1.Pagination value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasPagination() => $_has(2);
   @$pb.TagNumber(3)
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Pagination ensurePagination() => $_ensure(2);
+  $1.Pagination ensurePagination() => $_ensure(2);
 }
 
 class MarketManageListGrantsReq extends $pb.GeneratedMessage {
   factory MarketManageListGrantsReq({
     $core.String? listingUuid,
     GrantStatus? status,
-    $2.Pagination? pagination,
+    $1.Pagination? pagination,
   }) {
     final result = create();
     if (listingUuid != null) result.listingUuid = listingUuid;
@@ -3573,8 +3718,8 @@ class MarketManageListGrantsReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'listingUuid')
     ..aE<GrantStatus>(2, _omitFieldNames ? '' : 'status',
         enumValues: GrantStatus.values)
-    ..aOM<$2.Pagination>(3, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$1.Pagination>(3, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3616,15 +3761,15 @@ class MarketManageListGrantsReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $2.Pagination get pagination => $_getN(2);
+  $1.Pagination get pagination => $_getN(2);
   @$pb.TagNumber(3)
-  set pagination($2.Pagination value) => $_setField(3, value);
+  set pagination($1.Pagination value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasPagination() => $_has(2);
   @$pb.TagNumber(3)
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Pagination ensurePagination() => $_ensure(2);
+  $1.Pagination ensurePagination() => $_ensure(2);
 }
 
 class ForceDelistReq extends $pb.GeneratedMessage {

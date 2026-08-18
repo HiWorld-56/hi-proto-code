@@ -15,9 +15,9 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $1;
 import 'market.pb.dart' as $0;
 
 export 'market.pb.dart';
@@ -45,6 +45,13 @@ class MarketDirectoryClient extends $grpc.Client {
     return $createUnaryCall(_$searchListings, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListSellersResp> listSellers(
+    $1.Pagination request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listSellers, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.SearchListingsResp> listAgentListings(
     $0.ListAgentListingsReq request, {
     $grpc.CallOptions? options,
@@ -66,6 +73,11 @@ class MarketDirectoryClient extends $grpc.Client {
           '/hi.club.MarketDirectory/SearchListings',
           ($0.SearchListingsReq value) => value.writeToBuffer(),
           $0.SearchListingsResp.fromBuffer);
+  static final _$listSellers =
+      $grpc.ClientMethod<$1.Pagination, $0.ListSellersResp>(
+          '/hi.club.MarketDirectory/ListSellers',
+          ($1.Pagination value) => value.writeToBuffer(),
+          $0.ListSellersResp.fromBuffer);
   static final _$listAgentListings =
       $grpc.ClientMethod<$0.ListAgentListingsReq, $0.SearchListingsResp>(
           '/hi.club.MarketDirectory/ListAgentListings',
@@ -90,6 +102,13 @@ abstract class MarketDirectoryServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.SearchListingsReq.fromBuffer(value),
         ($0.SearchListingsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.Pagination, $0.ListSellersResp>(
+        'ListSellers',
+        listSellers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.Pagination.fromBuffer(value),
+        ($0.ListSellersResp value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$0.ListAgentListingsReq, $0.SearchListingsResp>(
             'ListAgentListings',
@@ -116,6 +135,14 @@ abstract class MarketDirectoryServiceBase extends $grpc.Service {
 
   $async.Future<$0.SearchListingsResp> searchListings(
       $grpc.ServiceCall call, $0.SearchListingsReq request);
+
+  $async.Future<$0.ListSellersResp> listSellers_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.Pagination> $request) async {
+    return listSellers($call, await $request);
+  }
+
+  $async.Future<$0.ListSellersResp> listSellers(
+      $grpc.ServiceCall call, $1.Pagination request);
 
   $async.Future<$0.SearchListingsResp> listAgentListings_Pre(
       $grpc.ServiceCall $call,
@@ -156,14 +183,14 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$createListing, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> editListing(
+  $grpc.ResponseFuture<$2.Empty> editListing(
     $0.EditListingReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$editListing, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> setListingStatus(
+  $grpc.ResponseFuture<$2.Empty> setListingStatus(
     $0.SetListingStatusReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -184,21 +211,21 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$listReceivedRequests, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> approve(
+  $grpc.ResponseFuture<$2.Empty> approve(
     $0.DecideGrantReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$approve, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> reject(
+  $grpc.ResponseFuture<$2.Empty> reject(
     $0.DecideGrantReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$reject, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> revoke(
+  $grpc.ResponseFuture<$2.Empty> revoke(
     $0.DecideGrantReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -263,21 +290,21 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$offer, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> acceptOffer(
+  $grpc.ResponseFuture<$2.Empty> acceptOffer(
     $0.DecideOfferReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$acceptOffer, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> declineOffer(
+  $grpc.ResponseFuture<$2.Empty> declineOffer(
     $0.DecideOfferReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$declineOffer, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> setAutoRenew(
+  $grpc.ResponseFuture<$2.Empty> setAutoRenew(
     $0.SetAutoRenewReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -291,15 +318,15 @@ class MarketClient extends $grpc.Client {
           '/hi.club.Market/CreateListing',
           ($0.CreateListingReq value) => value.writeToBuffer(),
           $0.CreateListingResp.fromBuffer);
-  static final _$editListing = $grpc.ClientMethod<$0.EditListingReq, $1.Empty>(
+  static final _$editListing = $grpc.ClientMethod<$0.EditListingReq, $2.Empty>(
       '/hi.club.Market/EditListing',
       ($0.EditListingReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      $2.Empty.fromBuffer);
   static final _$setListingStatus =
-      $grpc.ClientMethod<$0.SetListingStatusReq, $1.Empty>(
+      $grpc.ClientMethod<$0.SetListingStatusReq, $2.Empty>(
           '/hi.club.Market/SetListingStatus',
           ($0.SetListingStatusReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
+          $2.Empty.fromBuffer);
   static final _$listMyListings =
       $grpc.ClientMethod<$0.ListMyListingsReq, $0.ListMyListingsResp>(
           '/hi.club.Market/ListMyListings',
@@ -310,18 +337,18 @@ class MarketClient extends $grpc.Client {
           '/hi.club.Market/ListReceivedRequests',
           ($0.ListGrantsReq value) => value.writeToBuffer(),
           $0.ListGrantsResp.fromBuffer);
-  static final _$approve = $grpc.ClientMethod<$0.DecideGrantReq, $1.Empty>(
+  static final _$approve = $grpc.ClientMethod<$0.DecideGrantReq, $2.Empty>(
       '/hi.club.Market/Approve',
       ($0.DecideGrantReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$reject = $grpc.ClientMethod<$0.DecideGrantReq, $1.Empty>(
+      $2.Empty.fromBuffer);
+  static final _$reject = $grpc.ClientMethod<$0.DecideGrantReq, $2.Empty>(
       '/hi.club.Market/Reject',
       ($0.DecideGrantReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$revoke = $grpc.ClientMethod<$0.DecideGrantReq, $1.Empty>(
+      $2.Empty.fromBuffer);
+  static final _$revoke = $grpc.ClientMethod<$0.DecideGrantReq, $2.Empty>(
       '/hi.club.Market/Revoke',
       ($0.DecideGrantReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      $2.Empty.fromBuffer);
   static final _$apply = $grpc.ClientMethod<$0.ApplyReq, $0.ApplyResp>(
       '/hi.club.Market/Apply',
       ($0.ApplyReq value) => value.writeToBuffer(),
@@ -360,19 +387,19 @@ class MarketClient extends $grpc.Client {
       '/hi.club.Market/Offer',
       ($0.OfferReq value) => value.writeToBuffer(),
       $0.OfferResp.fromBuffer);
-  static final _$acceptOffer = $grpc.ClientMethod<$0.DecideOfferReq, $1.Empty>(
+  static final _$acceptOffer = $grpc.ClientMethod<$0.DecideOfferReq, $2.Empty>(
       '/hi.club.Market/AcceptOffer',
       ($0.DecideOfferReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$declineOffer = $grpc.ClientMethod<$0.DecideOfferReq, $1.Empty>(
+      $2.Empty.fromBuffer);
+  static final _$declineOffer = $grpc.ClientMethod<$0.DecideOfferReq, $2.Empty>(
       '/hi.club.Market/DeclineOffer',
       ($0.DecideOfferReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      $2.Empty.fromBuffer);
   static final _$setAutoRenew =
-      $grpc.ClientMethod<$0.SetAutoRenewReq, $1.Empty>(
+      $grpc.ClientMethod<$0.SetAutoRenewReq, $2.Empty>(
           '/hi.club.Market/SetAutoRenew',
           ($0.SetAutoRenewReq value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
+          $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Market')
@@ -387,21 +414,21 @@ abstract class MarketServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CreateListingReq.fromBuffer(value),
         ($0.CreateListingResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.EditListingReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.EditListingReq, $2.Empty>(
         'EditListing',
         editListing_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.EditListingReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SetListingStatusReq, $1.Empty>(
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SetListingStatusReq, $2.Empty>(
         'SetListingStatus',
         setListingStatus_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
             $0.SetListingStatusReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListMyListingsReq, $0.ListMyListingsResp>(
         'ListMyListings',
         listMyListings_Pre,
@@ -416,27 +443,27 @@ abstract class MarketServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ListGrantsReq.fromBuffer(value),
         ($0.ListGrantsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DecideGrantReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.DecideGrantReq, $2.Empty>(
         'Approve',
         approve_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DecideGrantReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DecideGrantReq, $1.Empty>(
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DecideGrantReq, $2.Empty>(
         'Reject',
         reject_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DecideGrantReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DecideGrantReq, $1.Empty>(
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DecideGrantReq, $2.Empty>(
         'Revoke',
         revoke_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DecideGrantReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ApplyReq, $0.ApplyResp>(
         'Apply',
         apply_Pre,
@@ -496,27 +523,27 @@ abstract class MarketServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.OfferReq.fromBuffer(value),
         ($0.OfferResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DecideOfferReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.DecideOfferReq, $2.Empty>(
         'AcceptOffer',
         acceptOffer_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DecideOfferReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DecideOfferReq, $1.Empty>(
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DecideOfferReq, $2.Empty>(
         'DeclineOffer',
         declineOffer_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DecideOfferReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SetAutoRenewReq, $1.Empty>(
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SetAutoRenewReq, $2.Empty>(
         'SetAutoRenew',
         setAutoRenew_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.SetAutoRenewReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($2.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateListingResp> createListing_Pre($grpc.ServiceCall $call,
@@ -527,20 +554,20 @@ abstract class MarketServiceBase extends $grpc.Service {
   $async.Future<$0.CreateListingResp> createListing(
       $grpc.ServiceCall call, $0.CreateListingReq request);
 
-  $async.Future<$1.Empty> editListing_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> editListing_Pre($grpc.ServiceCall $call,
       $async.Future<$0.EditListingReq> $request) async {
     return editListing($call, await $request);
   }
 
-  $async.Future<$1.Empty> editListing(
+  $async.Future<$2.Empty> editListing(
       $grpc.ServiceCall call, $0.EditListingReq request);
 
-  $async.Future<$1.Empty> setListingStatus_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> setListingStatus_Pre($grpc.ServiceCall $call,
       $async.Future<$0.SetListingStatusReq> $request) async {
     return setListingStatus($call, await $request);
   }
 
-  $async.Future<$1.Empty> setListingStatus(
+  $async.Future<$2.Empty> setListingStatus(
       $grpc.ServiceCall call, $0.SetListingStatusReq request);
 
   $async.Future<$0.ListMyListingsResp> listMyListings_Pre(
@@ -560,28 +587,28 @@ abstract class MarketServiceBase extends $grpc.Service {
   $async.Future<$0.ListGrantsResp> listReceivedRequests(
       $grpc.ServiceCall call, $0.ListGrantsReq request);
 
-  $async.Future<$1.Empty> approve_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> approve_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DecideGrantReq> $request) async {
     return approve($call, await $request);
   }
 
-  $async.Future<$1.Empty> approve(
+  $async.Future<$2.Empty> approve(
       $grpc.ServiceCall call, $0.DecideGrantReq request);
 
-  $async.Future<$1.Empty> reject_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> reject_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DecideGrantReq> $request) async {
     return reject($call, await $request);
   }
 
-  $async.Future<$1.Empty> reject(
+  $async.Future<$2.Empty> reject(
       $grpc.ServiceCall call, $0.DecideGrantReq request);
 
-  $async.Future<$1.Empty> revoke_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> revoke_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DecideGrantReq> $request) async {
     return revoke($call, await $request);
   }
 
-  $async.Future<$1.Empty> revoke(
+  $async.Future<$2.Empty> revoke(
       $grpc.ServiceCall call, $0.DecideGrantReq request);
 
   $async.Future<$0.ApplyResp> apply_Pre(
@@ -649,28 +676,28 @@ abstract class MarketServiceBase extends $grpc.Service {
   $async.Future<$0.OfferResp> offer(
       $grpc.ServiceCall call, $0.OfferReq request);
 
-  $async.Future<$1.Empty> acceptOffer_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> acceptOffer_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DecideOfferReq> $request) async {
     return acceptOffer($call, await $request);
   }
 
-  $async.Future<$1.Empty> acceptOffer(
+  $async.Future<$2.Empty> acceptOffer(
       $grpc.ServiceCall call, $0.DecideOfferReq request);
 
-  $async.Future<$1.Empty> declineOffer_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> declineOffer_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DecideOfferReq> $request) async {
     return declineOffer($call, await $request);
   }
 
-  $async.Future<$1.Empty> declineOffer(
+  $async.Future<$2.Empty> declineOffer(
       $grpc.ServiceCall call, $0.DecideOfferReq request);
 
-  $async.Future<$1.Empty> setAutoRenew_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> setAutoRenew_Pre($grpc.ServiceCall $call,
       $async.Future<$0.SetAutoRenewReq> $request) async {
     return setAutoRenew($call, await $request);
   }
 
-  $async.Future<$1.Empty> setAutoRenew(
+  $async.Future<$2.Empty> setAutoRenew(
       $grpc.ServiceCall call, $0.SetAutoRenewReq request);
 }
 
@@ -711,14 +738,14 @@ class MarketCallbackClient extends $grpc.Client {
   MarketCallbackClient(super.channel, {super.options, super.interceptors});
 
   $grpc.ResponseFuture<$0.MarketPullResp> pull(
-    $2.SignedData request, {
+    $1.SignedData request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$pull, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> notify(
-    $2.SignedData request, {
+  $grpc.ResponseFuture<$2.Empty> notify(
+    $1.SignedData request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$notify, request, options: options);
@@ -726,14 +753,14 @@ class MarketCallbackClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$pull = $grpc.ClientMethod<$2.SignedData, $0.MarketPullResp>(
+  static final _$pull = $grpc.ClientMethod<$1.SignedData, $0.MarketPullResp>(
       '/hi.club.MarketCallback/Pull',
-      ($2.SignedData value) => value.writeToBuffer(),
+      ($1.SignedData value) => value.writeToBuffer(),
       $0.MarketPullResp.fromBuffer);
-  static final _$notify = $grpc.ClientMethod<$2.SignedData, $1.Empty>(
+  static final _$notify = $grpc.ClientMethod<$1.SignedData, $2.Empty>(
       '/hi.club.MarketCallback/Notify',
-      ($2.SignedData value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      ($1.SignedData value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.MarketCallback')
@@ -741,36 +768,36 @@ abstract class MarketCallbackServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.MarketCallback';
 
   MarketCallbackServiceBase() {
-    $addMethod($grpc.ServiceMethod<$2.SignedData, $0.MarketPullResp>(
+    $addMethod($grpc.ServiceMethod<$1.SignedData, $0.MarketPullResp>(
         'Pull',
         pull_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.SignedData.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.SignedData.fromBuffer(value),
         ($0.MarketPullResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.SignedData, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$1.SignedData, $2.Empty>(
         'Notify',
         notify_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.SignedData.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $1.SignedData.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.MarketPullResp> pull_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.SignedData> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {
     return pull($call, await $request);
   }
 
   $async.Future<$0.MarketPullResp> pull(
-      $grpc.ServiceCall call, $2.SignedData request);
+      $grpc.ServiceCall call, $1.SignedData request);
 
-  $async.Future<$1.Empty> notify_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.SignedData> $request) async {
+  $async.Future<$2.Empty> notify_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {
     return notify($call, await $request);
   }
 
-  $async.Future<$1.Empty> notify($grpc.ServiceCall call, $2.SignedData request);
+  $async.Future<$2.Empty> notify($grpc.ServiceCall call, $1.SignedData request);
 }
 
 /// 市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
@@ -800,7 +827,7 @@ class MarketManageClient extends $grpc.Client {
     return $createUnaryCall(_$listGrants, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> forceDelist(
+  $grpc.ResponseFuture<$2.Empty> forceDelist(
     $0.ForceDelistReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -819,10 +846,10 @@ class MarketManageClient extends $grpc.Client {
           '/hi.club.MarketManage/ListGrants',
           ($0.MarketManageListGrantsReq value) => value.writeToBuffer(),
           $0.ListGrantsResp.fromBuffer);
-  static final _$forceDelist = $grpc.ClientMethod<$0.ForceDelistReq, $1.Empty>(
+  static final _$forceDelist = $grpc.ClientMethod<$0.ForceDelistReq, $2.Empty>(
       '/hi.club.MarketManage/ForceDelist',
       ($0.ForceDelistReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.MarketManage')
@@ -848,13 +875,13 @@ abstract class MarketManageServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.MarketManageListGrantsReq.fromBuffer(value),
             ($0.ListGrantsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ForceDelistReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.ForceDelistReq, $2.Empty>(
         'ForceDelist',
         forceDelist_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.ForceDelistReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($2.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.SearchListingsResp> listListings_Pre($grpc.ServiceCall $call,
@@ -873,11 +900,11 @@ abstract class MarketManageServiceBase extends $grpc.Service {
   $async.Future<$0.ListGrantsResp> listGrants(
       $grpc.ServiceCall call, $0.MarketManageListGrantsReq request);
 
-  $async.Future<$1.Empty> forceDelist_Pre($grpc.ServiceCall $call,
+  $async.Future<$2.Empty> forceDelist_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ForceDelistReq> $request) async {
     return forceDelist($call, await $request);
   }
 
-  $async.Future<$1.Empty> forceDelist(
+  $async.Future<$2.Empty> forceDelist(
       $grpc.ServiceCall call, $0.ForceDelistReq request);
 }

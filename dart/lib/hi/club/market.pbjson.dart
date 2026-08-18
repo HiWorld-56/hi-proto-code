@@ -450,6 +450,69 @@ final $typed_data.Uint8List marketGrantViewDescriptor = $convert.base64Decode(
     'ABKA4yFy5oaS5jbHViLkdyYW50SW5pdGlhdG9yQgSQtRgDUglpbml0aWF0b3I6BJi1GANKBAgL'
     'EAxSDWZvbGxvd19sYXRlc3Q=');
 
+@$core.Deprecated('Use marketSellerDescriptor instead')
+const MarketSeller$json = {
+  '1': 'MarketSeller',
+  '2': [
+    {
+      '1': 'master',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'master'
+    },
+    {
+      '1': 'agents',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'agents'
+    },
+    {
+      '1': 'listing_count',
+      '3': 3,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '10': 'listingCount'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `MarketSeller`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketSellerDescriptor = $convert.base64Decode(
+    'CgxNYXJrZXRTZWxsZXISKAoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgZtYXN0ZX'
+    'ISKAoGYWdlbnRzGAIgAygLMgouaGkuRW50aXR5QgSQtRgBUgZhZ2VudHMSKQoNbGlzdGluZ19j'
+    'b3VudBgDIAEoBUIEkLUYAVIMbGlzdGluZ0NvdW50OgSYtRgB');
+
+@$core.Deprecated('Use listSellersRespDescriptor instead')
+const ListSellersResp$json = {
+  '1': 'ListSellersResp',
+  '2': [
+    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'sellers',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.MarketSeller',
+      '8': {},
+      '10': 'sellers'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListSellersResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listSellersRespDescriptor = $convert.base64Decode(
+    'Cg9MaXN0U2VsbGVyc1Jlc3ASGgoFdG90YWwYASABKAVCBJC1GAFSBXRvdGFsEjUKB3NlbGxlcn'
+    'MYAiADKAsyFS5oaS5jbHViLk1hcmtldFNlbGxlckIEkLUYAVIHc2VsbGVyczoEmLUYAQ==');
+
 @$core.Deprecated('Use searchListingsReqDescriptor instead')
 const SearchListingsReq$json = {
   '1': 'SearchListingsReq',
