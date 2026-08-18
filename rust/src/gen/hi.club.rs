@@ -862,10 +862,17 @@ pub struct ApiKeyInfo {
     pub created_at: i64,
 }
 /// ⚠️ **只有机器人能持 apikey** —— 原先设计里"人也能设 apikey",没必要,已废。
-/// 故这里是**机器人 did**,后端校验:调用者必须是该机器人的 master。
+/// 故这里是**机器人 did**。
+///
+/// ⚠️ **归属校验一律走 CheckAgentAccess(机器人自己 / master / 超管),不是"只有 master"。**
+/// 这把 key 就是**机器人自己的身份**(插件拿它以机器人身份调 club),
+/// 而 hiclub 的理念里人和机器人对等 —— 机器人能自己建插件、自己买插件,
+/// 却建不了自己的身份凭据,说不通。
+/// 而且绝大多数硬件机器人**无主**,"只有 master 能建"对它们等于这条路不存在。
+/// (原先废掉 caller==target 的理由是"人不需要 key",顺手把机器人自己也挡了。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateApiKeyReq {
-    /// 机器人 did;能设置的只有它的 master
+    /// 机器人 did;机器人自己 / 它的 master / 超管都能建
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
 }
@@ -3095,12 +3102,20 @@ pub mod plugin_client {
     use tonic::codegen::http::Uri;
     /// 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
     ///
-    /// 插件只剩 **py 脚本一种** —— 网搜/画图已随 ai 整体砍掉(可封装进 py 脚本)。
+    /// 插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
+    /// runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
     ///
     /// ⚠️ club 侧的实际代码活(不只是改名):
     ///
-    /// 1. **建壳(CreateShell)时,自动把该机器人的 club-apikey 塞进 c.data** ——
-    ///   根除"运行期回调三方要 apikey"那套机制的落地点;失效后经 ReloadApiKey 重取。
+    /// 1. **c.data 是 club 的私有区,不给用户填。** hi.ai 眼里它只是一袋不透明 JSON
+    ///   (hiai-web 那边确实开放给商户手填),但 club 征用它存 api_key ——
+    ///   故 club 的所有写入点一律 `c.data = {api_key: <该机器人的 key>}`,
+    ///   **丢弃调用方传来的壳级扩展数据**。用户自己的扩展数据走版本级 d.data。
+    ///   (只挡 api_key 一个键是不够的:那块地方本身就不该开着。)
+    /// 1. **每个建 c 行的入口都必须注入 api_key,一个都不能漏** ——
+    ///   建壳 / 改扩展数据 / 市场装载 / 内置插件自动装载。漏掉的表现是**静默**的:
+    ///   插件跑起来才发现自己没有身份,而那时已经在机器人上了。
+    ///   取不到就现造(ensure 语义),别报错让用户先去别处点一下。
     /// 1. apikey **挂机器人名下、不挂用户**,机器人换持有者后脚本照常跑。
     /// 1. **删 apikey 前必须查是否被插件引用,被引用则拒删**。
     ///

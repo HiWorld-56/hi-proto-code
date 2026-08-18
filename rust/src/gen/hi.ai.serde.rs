@@ -2640,9 +2640,6 @@ impl serde::Serialize for CreateShellReq {
         if self.data.is_some() {
             len += 1;
         }
-        if self.runtime != 0 {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CreateShellReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -2652,11 +2649,6 @@ impl serde::Serialize for CreateShellReq {
         }
         if let Some(v) = self.data.as_ref() {
             struct_ser.serialize_field("data", v)?;
-        }
-        if self.runtime != 0 {
-            let v = PluginRuntime::try_from(self.runtime)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.runtime)))?;
-            struct_ser.serialize_field("runtime", &v)?;
         }
         struct_ser.end()
     }
@@ -2671,7 +2663,6 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
             "agent",
             "name",
             "data",
-            "runtime",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2679,7 +2670,6 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
             Agent,
             Name,
             Data,
-            Runtime,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2704,7 +2694,6 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
                             "agent" => Ok(GeneratedField::Agent),
                             "name" => Ok(GeneratedField::Name),
                             "data" => Ok(GeneratedField::Data),
-                            "runtime" => Ok(GeneratedField::Runtime),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2727,7 +2716,6 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
                 let mut agent__ = None;
                 let mut name__ = None;
                 let mut data__ = None;
-                let mut runtime__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -2748,19 +2736,12 @@ impl<'de> serde::Deserialize<'de> for CreateShellReq {
                             }
                             data__ = map_.next_value()?;
                         }
-                        GeneratedField::Runtime => {
-                            if runtime__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("runtime"));
-                            }
-                            runtime__ = Some(map_.next_value::<PluginRuntime>()? as i32);
-                        }
                     }
                 }
                 Ok(CreateShellReq {
                     agent: agent__.unwrap_or_default(),
                     name: name__.unwrap_or_default(),
                     data: data__,
-                    runtime: runtime__.unwrap_or_default(),
                 })
             }
         }
@@ -10108,6 +10089,7 @@ impl serde::Serialize for PluginRuntime {
         let variant = match self {
             Self::Python => "PLUGIN_RUNTIME_PYTHON",
             Self::Native => "PLUGIN_RUNTIME_NATIVE",
+            Self::Undetermined => "PLUGIN_RUNTIME_UNDETERMINED",
         };
         serializer.serialize_str(variant)
     }
@@ -10121,6 +10103,7 @@ impl<'de> serde::Deserialize<'de> for PluginRuntime {
         const FIELDS: &[&str] = &[
             "PLUGIN_RUNTIME_PYTHON",
             "PLUGIN_RUNTIME_NATIVE",
+            "PLUGIN_RUNTIME_UNDETERMINED",
         ];
 
         struct GeneratedVisitor;
@@ -10163,6 +10146,7 @@ impl<'de> serde::Deserialize<'de> for PluginRuntime {
                 match value {
                     "PLUGIN_RUNTIME_PYTHON" => Ok(PluginRuntime::Python),
                     "PLUGIN_RUNTIME_NATIVE" => Ok(PluginRuntime::Native),
+                    "PLUGIN_RUNTIME_UNDETERMINED" => Ok(PluginRuntime::Undetermined),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

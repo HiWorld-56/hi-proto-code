@@ -750,20 +750,22 @@ class PluginLoaded extends $pb.GeneratedMessage {
   void clearEnabled() => $_clearField(4);
 }
 
-/// 建空壳:插 a{uuid,name} + owner 的 c{source=original, enabled}。uuid 后台分配返回;此时无版本、无激活。
+/// 建空壳:插 a{uuid,name,runtime=UNDETERMINED} + owner 的 c{source=original, enabled=false}。
+/// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
 /// data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
+///
+/// ⚠️ **没有 runtime 字段,不要再加回来。** 4 号留空是原 `runtime` 的位置。
+/// 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 class CreateShellReq extends $pb.GeneratedMessage {
   factory CreateShellReq({
     $core.String? agent,
     $core.String? name,
     $2.Struct? data,
-    PluginRuntime? runtime,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (name != null) result.name = name;
     if (data != null) result.data = data;
-    if (runtime != null) result.runtime = runtime;
     return result;
   }
 
@@ -784,8 +786,6 @@ class CreateShellReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOM<$2.Struct>(3, _omitFieldNames ? '' : 'data',
         subBuilder: $2.Struct.create)
-    ..aE<PluginRuntime>(4, _omitFieldNames ? '' : 'runtime',
-        enumValues: PluginRuntime.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -835,16 +835,6 @@ class CreateShellReq extends $pb.GeneratedMessage {
   void clearData() => $_clearField(3);
   @$pb.TagNumber(3)
   $2.Struct ensureData() => $_ensure(2);
-
-  /// 不填=PYTHON(历史行为)。NATIVE 的包是 rust 源码,由云端编译后下发到机器人本地跑。
-  @$pb.TagNumber(4)
-  PluginRuntime get runtime => $_getN(3);
-  @$pb.TagNumber(4)
-  set runtime(PluginRuntime value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasRuntime() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearRuntime() => $_clearField(4);
 }
 
 class CreateShellResp extends $pb.GeneratedMessage {

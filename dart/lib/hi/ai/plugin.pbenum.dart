@@ -42,19 +42,37 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// 由此,NATIVE 插件挂在一个**软件**机器人上是完全合法的 —— 那台机器人当"柜台":
 /// 只展示和存储、供人选购与下发,自己一个也跑不了。这样公共插件就不必挂在某台
 /// 硬件机器人上,免得那台机器一下线整个货架跟着消失。
+/// ⭐ **runtime 是自动判定的,不让用户声明。**
+///
+/// 建壳时**根本没有包**,谈不上语言 —— 所以空壳一律 UNDETERMINED;
+/// 首版上传时后端解开 zip 按**包结构**认:
+///
+///   Cargo.toml → NATIVE      main.py → PYTHON      两个都有 / 都没有 → 报错,不猜
+///
+/// 判定的材料早就在手上:`CreateVersion` 本来就要下载解压这个包去预读
+/// description.json(specFromPackage),顺手看一眼根目录有什么,零额外成本。
+///
+/// 让用户在表单里选一次"这是 rust 还是 py",等于要他把包里已经写死的事实再抄一遍 ——
+/// 抄错了还没人拦得住(选了 PYTHON 传 rust 包:不会编译、当脚本跑、报一个看不懂的语法错)。
+///
+/// 首版定下之后**壳的 runtime 冻结**:后续版本的包类型必须与壳一致,否则拒。
+/// 换语言等于换了个东西 —— uuid / fn_prefix / 已经装了它的那些机器人,一样都不能沿用。
 class PluginRuntime extends $pb.ProtobufEnum {
   static const PluginRuntime PLUGIN_RUNTIME_PYTHON =
       PluginRuntime._(0, _omitEnumNames ? '' : 'PLUGIN_RUNTIME_PYTHON');
   static const PluginRuntime PLUGIN_RUNTIME_NATIVE =
       PluginRuntime._(1, _omitEnumNames ? '' : 'PLUGIN_RUNTIME_NATIVE');
+  static const PluginRuntime PLUGIN_RUNTIME_UNDETERMINED =
+      PluginRuntime._(2, _omitEnumNames ? '' : 'PLUGIN_RUNTIME_UNDETERMINED');
 
   static const $core.List<PluginRuntime> values = <PluginRuntime>[
     PLUGIN_RUNTIME_PYTHON,
     PLUGIN_RUNTIME_NATIVE,
+    PLUGIN_RUNTIME_UNDETERMINED,
   ];
 
   static final $core.List<PluginRuntime?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 1);
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
   static PluginRuntime? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

@@ -21,13 +21,14 @@ const PluginRuntime$json = {
   '2': [
     {'1': 'PLUGIN_RUNTIME_PYTHON', '2': 0},
     {'1': 'PLUGIN_RUNTIME_NATIVE', '2': 1},
+    {'1': 'PLUGIN_RUNTIME_UNDETERMINED', '2': 2},
   ],
 };
 
 /// Descriptor for `PluginRuntime`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List pluginRuntimeDescriptor = $convert.base64Decode(
     'Cg1QbHVnaW5SdW50aW1lEhkKFVBMVUdJTl9SVU5USU1FX1BZVEhPThAAEhkKFVBMVUdJTl9SVU'
-    '5USU1FX05BVElWRRAB');
+    '5USU1FX05BVElWRRABEh8KG1BMVUdJTl9SVU5USU1FX1VOREVURVJNSU5FRBAC');
 
 @$core.Deprecated('Use pluginBuildStatusDescriptor instead')
 const PluginBuildStatus$json = {
@@ -292,23 +293,18 @@ const CreateShellReq$json = {
       '6': '.google.protobuf.Struct',
       '10': 'data'
     },
-    {
-      '1': 'runtime',
-      '3': 4,
-      '4': 1,
-      '5': 14,
-      '6': '.hi.ai.PluginRuntime',
-      '10': 'runtime'
-    },
   ],
+  '9': [
+    {'1': 4, '2': 5},
+  ],
+  '10': ['runtime'],
 };
 
 /// Descriptor for `CreateShellReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createShellReqDescriptor = $convert.base64Decode(
     'Cg5DcmVhdGVTaGVsbFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudBIbCg'
     'RuYW1lGAIgASgJQge6SARyAhABUgRuYW1lEisKBGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9i'
-    'dWYuU3RydWN0UgRkYXRhEi4KB3J1bnRpbWUYBCABKA4yFC5oaS5haS5QbHVnaW5SdW50aW1lUg'
-    'dydW50aW1l');
+    'dWYuU3RydWN0UgRkYXRhSgQIBBAFUgdydW50aW1l');
 
 @$core.Deprecated('Use createShellRespDescriptor instead')
 const CreateShellResp$json = {

@@ -54,11 +54,27 @@ const (
 // 由此,NATIVE 插件挂在一个**软件**机器人上是完全合法的 —— 那台机器人当"柜台":
 // 只展示和存储、供人选购与下发,自己一个也跑不了。这样公共插件就不必挂在某台
 // 硬件机器人上,免得那台机器一下线整个货架跟着消失。
+// ⭐ **runtime 是自动判定的,不让用户声明。**
+//
+// 建壳时**根本没有包**,谈不上语言 —— 所以空壳一律 UNDETERMINED;
+// 首版上传时后端解开 zip 按**包结构**认:
+//
+//	Cargo.toml → NATIVE      main.py → PYTHON      两个都有 / 都没有 → 报错,不猜
+//
+// 判定的材料早就在手上:`CreateVersion` 本来就要下载解压这个包去预读
+// description.json(specFromPackage),顺手看一眼根目录有什么,零额外成本。
+//
+// 让用户在表单里选一次"这是 rust 还是 py",等于要他把包里已经写死的事实再抄一遍 ——
+// 抄错了还没人拦得住(选了 PYTHON 传 rust 包:不会编译、当脚本跑、报一个看不懂的语法错)。
+//
+// 首版定下之后**壳的 runtime 冻结**:后续版本的包类型必须与壳一致,否则拒。
+// 换语言等于换了个东西 —— uuid / fn_prefix / 已经装了它的那些机器人,一样都不能沿用。
 type PluginRuntime int32
 
 const (
-	PluginRuntime_PLUGIN_RUNTIME_PYTHON PluginRuntime = 0 // 服务端跑的 py 脚本包(默认,历史插件全是这个)
-	PluginRuntime_PLUGIN_RUNTIME_NATIVE PluginRuntime = 1 // 机器人本地跑的 rust 插件(源码上传,云端编译后下发)
+	PluginRuntime_PLUGIN_RUNTIME_PYTHON       PluginRuntime = 0 // 服务端跑的 py 脚本包(历史插件全是这个,故占 0)
+	PluginRuntime_PLUGIN_RUNTIME_NATIVE       PluginRuntime = 1 // 机器人本地跑的 rust 插件(源码上传,云端编译后下发)
+	PluginRuntime_PLUGIN_RUNTIME_UNDETERMINED PluginRuntime = 2 // 空壳:还没有任何版本,包没上传过,语言未知
 )
 
 // Enum value maps for PluginRuntime.
@@ -66,10 +82,12 @@ var (
 	PluginRuntime_name = map[int32]string{
 		0: "PLUGIN_RUNTIME_PYTHON",
 		1: "PLUGIN_RUNTIME_NATIVE",
+		2: "PLUGIN_RUNTIME_UNDETERMINED",
 	}
 	PluginRuntime_value = map[string]int32{
-		"PLUGIN_RUNTIME_PYTHON": 0,
-		"PLUGIN_RUNTIME_NATIVE": 1,
+		"PLUGIN_RUNTIME_PYTHON":       0,
+		"PLUGIN_RUNTIME_NATIVE":       1,
+		"PLUGIN_RUNTIME_UNDETERMINED": 2,
 	}
 )
 
@@ -731,15 +749,17 @@ func (x *PluginLoaded) GetEnabled() bool {
 	return false
 }
 
-// 建空壳:插 a{uuid,name} + owner 的 c{source=original, enabled}。uuid 后台分配返回;此时无版本、无激活。
+// 建空壳:插 a{uuid,name,runtime=UNDETERMINED} + owner 的 c{source=original, enabled=false}。
+// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
 // data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
+//
+// ⚠️ **没有 runtime 字段,不要再加回来。** 4 号留空是原 `runtime` 的位置。
+// 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 type CreateShellReq struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Agent string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Data  *structpb.Struct       `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"` // c.data(插件级)
-	// 不填=PYTHON(历史行为)。NATIVE 的包是 rust 源码,由云端编译后下发到机器人本地跑。
-	Runtime       PluginRuntime `protobuf:"varint,4,opt,name=runtime,proto3,enum=hi.ai.PluginRuntime" json:"runtime,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Data          *structpb.Struct       `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"` // c.data(插件级)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -793,13 +813,6 @@ func (x *CreateShellReq) GetData() *structpb.Struct {
 		return x.Data
 	}
 	return nil
-}
-
-func (x *CreateShellReq) GetRuntime() PluginRuntime {
-	if x != nil {
-		return x.Runtime
-	}
-	return PluginRuntime_PLUGIN_RUNTIME_PYTHON
 }
 
 type CreateShellResp struct {
@@ -2387,12 +2400,11 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04uuid\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x04name\x12\x1e\n" +
 	"\aversion\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\aversion\x12\x1e\n" +
-	"\aenabled\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02R\aenabled:\x04\x98\xb5\x18\x02\"\xae\x01\n" +
+	"\aenabled\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02R\aenabled:\x04\x98\xb5\x18\x02\"\x8d\x01\n" +
 	"\x0eCreateShellReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12\x1b\n" +
 	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12+\n" +
-	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x04data\x12.\n" +
-	"\aruntime\x18\x04 \x01(\x0e2\x14.hi.ai.PluginRuntimeR\aruntime\"1\n" +
+	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x04dataJ\x04\b\x04\x10\x05R\aruntime\"1\n" +
 	"\x0fCreateShellResp\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"\x93\x01\n" +
 	"\x10CreateVersionReq\x12\"\n" +
@@ -2496,10 +2508,11 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\rRetryBuildReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12 \n" +
 	"\x04uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12&\n" +
-	"\aversion\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aversion*E\n" +
+	"\aversion\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aversion*f\n" +
 	"\rPluginRuntime\x12\x19\n" +
 	"\x15PLUGIN_RUNTIME_PYTHON\x10\x00\x12\x19\n" +
-	"\x15PLUGIN_RUNTIME_NATIVE\x10\x01*\x99\x01\n" +
+	"\x15PLUGIN_RUNTIME_NATIVE\x10\x01\x12\x1f\n" +
+	"\x1bPLUGIN_RUNTIME_UNDETERMINED\x10\x02*\x99\x01\n" +
 	"\x11PluginBuildStatus\x12\x1f\n" +
 	"\x1bPLUGIN_BUILD_STATUS_PENDING\x10\x00\x12 \n" +
 	"\x1cPLUGIN_BUILD_STATUS_BUILDING\x10\x01\x12!\n" +
@@ -2600,60 +2613,59 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	36, // 9: hi.ai.PluginVersionView.data:type_name -> google.protobuf.Struct
 	5,  // 10: hi.ai.PluginVersionView.build:type_name -> hi.ai.PluginBuild
 	36, // 11: hi.ai.CreateShellReq.data:type_name -> google.protobuf.Struct
-	0,  // 12: hi.ai.CreateShellReq.runtime:type_name -> hi.ai.PluginRuntime
-	4,  // 13: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
-	36, // 14: hi.ai.CreateVersionReq.data:type_name -> google.protobuf.Struct
-	36, // 15: hi.ai.EditPluginReq.data:type_name -> google.protobuf.Struct
-	36, // 16: hi.ai.EditPluginReq.version_data:type_name -> google.protobuf.Struct
-	37, // 17: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
-	37, // 18: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
-	6,  // 19: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
-	7,  // 20: hi.ai.ListVersionsResp.list:type_name -> hi.ai.PluginVersionView
-	6,  // 21: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
-	36, // 22: hi.ai.CreateReferenceReq.data:type_name -> google.protobuf.Struct
-	36, // 23: hi.ai.CreateReferenceReq.version_data:type_name -> google.protobuf.Struct
-	32, // 24: hi.ai.ListNativeResp.list:type_name -> hi.ai.NativePlugin
-	9,  // 25: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
-	11, // 26: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
-	12, // 27: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	23, // 28: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	19, // 29: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
-	20, // 30: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
-	25, // 31: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
-	26, // 32: hi.ai.Plugin.DeleteVersions:input_type -> hi.ai.DeleteVersionsReq
-	27, // 33: hi.ai.Plugin.DeleteVersionList:input_type -> hi.ai.DeleteVersionListReq
-	28, // 34: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
-	29, // 35: hi.ai.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
-	31, // 36: hi.ai.Plugin.CreateReference:input_type -> hi.ai.CreateReferenceReq
-	30, // 37: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	14, // 38: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
-	15, // 39: hi.ai.Plugin.SetActiveAll:input_type -> hi.ai.SetActiveAllReq
-	13, // 40: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
-	33, // 41: hi.ai.Plugin.ListNative:input_type -> hi.ai.ListNativeReq
-	35, // 42: hi.ai.Plugin.RetryBuild:input_type -> hi.ai.RetryBuildReq
-	10, // 43: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
-	38, // 44: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
-	38, // 45: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	24, // 46: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	21, // 47: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
-	22, // 48: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
-	38, // 49: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	38, // 50: hi.ai.Plugin.DeleteVersions:output_type -> google.protobuf.Empty
-	38, // 51: hi.ai.Plugin.DeleteVersionList:output_type -> google.protobuf.Empty
-	38, // 52: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
-	38, // 53: hi.ai.Plugin.DeleteShells:output_type -> google.protobuf.Empty
-	38, // 54: hi.ai.Plugin.CreateReference:output_type -> google.protobuf.Empty
-	38, // 55: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	38, // 56: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
-	16, // 57: hi.ai.Plugin.SetActiveAll:output_type -> hi.ai.SetActiveAllResp
-	38, // 58: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
-	34, // 59: hi.ai.Plugin.ListNative:output_type -> hi.ai.ListNativeResp
-	38, // 60: hi.ai.Plugin.RetryBuild:output_type -> google.protobuf.Empty
-	43, // [43:61] is the sub-list for method output_type
-	25, // [25:43] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	4,  // 12: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
+	36, // 13: hi.ai.CreateVersionReq.data:type_name -> google.protobuf.Struct
+	36, // 14: hi.ai.EditPluginReq.data:type_name -> google.protobuf.Struct
+	36, // 15: hi.ai.EditPluginReq.version_data:type_name -> google.protobuf.Struct
+	37, // 16: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
+	37, // 17: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
+	6,  // 18: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
+	7,  // 19: hi.ai.ListVersionsResp.list:type_name -> hi.ai.PluginVersionView
+	6,  // 20: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
+	36, // 21: hi.ai.CreateReferenceReq.data:type_name -> google.protobuf.Struct
+	36, // 22: hi.ai.CreateReferenceReq.version_data:type_name -> google.protobuf.Struct
+	32, // 23: hi.ai.ListNativeResp.list:type_name -> hi.ai.NativePlugin
+	9,  // 24: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
+	11, // 25: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
+	12, // 26: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	23, // 27: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
+	19, // 28: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
+	20, // 29: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
+	25, // 30: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
+	26, // 31: hi.ai.Plugin.DeleteVersions:input_type -> hi.ai.DeleteVersionsReq
+	27, // 32: hi.ai.Plugin.DeleteVersionList:input_type -> hi.ai.DeleteVersionListReq
+	28, // 33: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
+	29, // 34: hi.ai.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
+	31, // 35: hi.ai.Plugin.CreateReference:input_type -> hi.ai.CreateReferenceReq
+	30, // 36: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
+	14, // 37: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
+	15, // 38: hi.ai.Plugin.SetActiveAll:input_type -> hi.ai.SetActiveAllReq
+	13, // 39: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	33, // 40: hi.ai.Plugin.ListNative:input_type -> hi.ai.ListNativeReq
+	35, // 41: hi.ai.Plugin.RetryBuild:input_type -> hi.ai.RetryBuildReq
+	10, // 42: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
+	38, // 43: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
+	38, // 44: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	24, // 45: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	21, // 46: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
+	22, // 47: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
+	38, // 48: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	38, // 49: hi.ai.Plugin.DeleteVersions:output_type -> google.protobuf.Empty
+	38, // 50: hi.ai.Plugin.DeleteVersionList:output_type -> google.protobuf.Empty
+	38, // 51: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
+	38, // 52: hi.ai.Plugin.DeleteShells:output_type -> google.protobuf.Empty
+	38, // 53: hi.ai.Plugin.CreateReference:output_type -> google.protobuf.Empty
+	38, // 54: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
+	38, // 55: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
+	16, // 56: hi.ai.Plugin.SetActiveAll:output_type -> hi.ai.SetActiveAllResp
+	38, // 57: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	34, // 58: hi.ai.Plugin.ListNative:output_type -> hi.ai.ListNativeResp
+	38, // 59: hi.ai.Plugin.RetryBuild:output_type -> google.protobuf.Empty
+	42, // [42:60] is the sub-list for method output_type
+	24, // [24:42] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_proto_init() }
