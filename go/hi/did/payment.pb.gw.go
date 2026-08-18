@@ -119,7 +119,7 @@ func local_request_PayRequest_Register_0(ctx context.Context, marshaler runtime.
 
 func request_PayRequestPayer_Get_0(ctx context.Context, marshaler runtime.Marshaler, client PayRequestPayerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq hi.RequestId
+		protoReq hi.SignedData
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -134,7 +134,7 @@ func request_PayRequestPayer_Get_0(ctx context.Context, marshaler runtime.Marsha
 
 func local_request_PayRequestPayer_Get_0(ctx context.Context, marshaler runtime.Marshaler, server PayRequestPayerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq hi.RequestId
+		protoReq hi.SignedData
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

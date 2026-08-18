@@ -283,13 +283,8 @@ const (
 // PayRequestPayerClient is the client API for PayRequestPayer service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
-//
-// 为什么不是 AUTH_NONE:号虽然不可猜(33 位),但公开就等于给了一个匿名探测接口
-// (拿到号的人能看到金额与收款人)。扫码的人一定已经登录钱包,要一次登录不增加任何摩擦。
 type PayRequestPayerClient interface {
-	Get(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*PayRequestSpec, error)
+	Get(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*PayRequestSpec, error)
 }
 
 type payRequestPayerClient struct {
@@ -300,7 +295,7 @@ func NewPayRequestPayerClient(cc grpc.ClientConnInterface) PayRequestPayerClient
 	return &payRequestPayerClient{cc}
 }
 
-func (c *payRequestPayerClient) Get(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*PayRequestSpec, error) {
+func (c *payRequestPayerClient) Get(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*PayRequestSpec, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PayRequestSpec)
 	err := c.cc.Invoke(ctx, PayRequestPayer_Get_FullMethodName, in, out, cOpts...)
@@ -313,13 +308,8 @@ func (c *payRequestPayerClient) Get(ctx context.Context, in *hi.RequestId, opts 
 // PayRequestPayerServer is the server API for PayRequestPayer service.
 // All implementations should embed UnimplementedPayRequestPayerServer
 // for forward compatibility.
-//
-// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
-//
-// 为什么不是 AUTH_NONE:号虽然不可猜(33 位),但公开就等于给了一个匿名探测接口
-// (拿到号的人能看到金额与收款人)。扫码的人一定已经登录钱包,要一次登录不增加任何摩擦。
 type PayRequestPayerServer interface {
-	Get(context.Context, *hi.RequestId) (*PayRequestSpec, error)
+	Get(context.Context, *hi.SignedData) (*PayRequestSpec, error)
 }
 
 // UnimplementedPayRequestPayerServer should be embedded to have
@@ -329,7 +319,7 @@ type PayRequestPayerServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPayRequestPayerServer struct{}
 
-func (UnimplementedPayRequestPayerServer) Get(context.Context, *hi.RequestId) (*PayRequestSpec, error) {
+func (UnimplementedPayRequestPayerServer) Get(context.Context, *hi.SignedData) (*PayRequestSpec, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedPayRequestPayerServer) testEmbeddedByValue() {}
@@ -353,7 +343,7 @@ func RegisterPayRequestPayerServer(s grpc.ServiceRegistrar, srv PayRequestPayerS
 }
 
 func _PayRequestPayer_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.RequestId)
+	in := new(hi.SignedData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -365,7 +355,7 @@ func _PayRequestPayer_Get_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: PayRequestPayer_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PayRequestPayerServer).Get(ctx, req.(*hi.RequestId))
+		return srv.(PayRequestPayerServer).Get(ctx, req.(*hi.SignedData))
 	}
 	return interceptor(ctx, in, info, handler)
 }

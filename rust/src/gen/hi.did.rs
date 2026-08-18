@@ -4783,6 +4783,20 @@ pub struct PayRequestSpec {
     #[prost(int64, tag = "7")]
     pub expire_at: i64,
 }
+/// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
+///
+/// 档位是 **AUTH_WEB3(验签)**,不是 AUTH_USER:
+/// · 付款方是**钱包**,它天然会签名,但**不一定有 hidid 的登录态**
+/// (我们自己的 hidid-simple-app 就只有钱包、没有登录 token);
+/// · 也不做 AUTH_NONE —— 号虽不可猜,公开就等于给了一个匿名探测接口
+/// (拿到号就能看金额与收款人)。签一下既证明"是个真实 did",又不要求登录。
+///
+/// 载荷(SignedData.Data,JSON):`{"req_id":"M…"}`。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PayRequestQuery {
+    #[prost(string, tag = "1")]
+    pub req_id: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
 pub mod pay_client {
     #![allow(
@@ -5050,10 +5064,6 @@ pub mod pay_request_payer_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
-    ///
-    /// 为什么不是 AUTH_NONE:号虽然不可猜(33 位),但公开就等于给了一个匿名探测接口
-    /// (拿到号的人能看到金额与收款人)。扫码的人一定已经登录钱包,要一次登录不增加任何摩擦。
     #[derive(Debug, Clone)]
     pub struct PayRequestPayerClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -5136,7 +5146,7 @@ pub mod pay_request_payer_client {
         }
         pub async fn get(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::RequestId>,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
         ) -> std::result::Result<tonic::Response<super::PayRequestSpec>, tonic::Status> {
             self.inner
                 .ready()

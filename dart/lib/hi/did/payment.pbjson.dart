@@ -59,3 +59,15 @@ final $typed_data.Uint8List payRequestSpecDescriptor = $convert.base64Decode(
     'CUIEkLUYA1IEY29pbhIcCgZhbW91bnQYBCABKAlCBJC1GANSBmFtb3VudBIfCghvcmRlcl9pZB'
     'gFIAEoCUIEkLUYA1IHb3JkZXJJZBIgCghtZXJjaGFudBgGIAEoCUIEkLUYA1IIbWVyY2hhbnQS'
     'IQoJZXhwaXJlX2F0GAcgASgDQgSQtRgDUghleHBpcmVBdDoEmLUYAw==');
+
+@$core.Deprecated('Use payRequestQueryDescriptor instead')
+const PayRequestQuery$json = {
+  '1': 'PayRequestQuery',
+  '2': [
+    {'1': 'req_id', '3': 1, '4': 1, '5': 9, '10': 'reqId'},
+  ],
+};
+
+/// Descriptor for `PayRequestQuery`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List payRequestQueryDescriptor = $convert
+    .base64Decode('Cg9QYXlSZXF1ZXN0UXVlcnkSFQoGcmVxX2lkGAEgASgJUgVyZXFJZA==');

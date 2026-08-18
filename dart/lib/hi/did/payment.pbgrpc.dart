@@ -154,10 +154,6 @@ abstract class PayRequestServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $2.PayRequestSpec request);
 }
 
-/// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
-///
-/// 为什么不是 AUTH_NONE:号虽然不可猜(33 位),但公开就等于给了一个匿名探测接口
-/// (拿到号的人能看到金额与收款人)。扫码的人一定已经登录钱包,要一次登录不增加任何摩擦。
 @$pb.GrpcServiceName('hi.did.PayRequestPayer')
 class PayRequestPayerClient extends $grpc.Client {
   /// The hostname for this service.
@@ -171,7 +167,7 @@ class PayRequestPayerClient extends $grpc.Client {
   PayRequestPayerClient(super.channel, {super.options, super.interceptors});
 
   $grpc.ResponseFuture<$2.PayRequestSpec> get(
-    $0.RequestId request, {
+    $0.SignedData request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
@@ -179,9 +175,9 @@ class PayRequestPayerClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.RequestId, $2.PayRequestSpec>(
+  static final _$get = $grpc.ClientMethod<$0.SignedData, $2.PayRequestSpec>(
       '/hi.did.PayRequestPayer/Get',
-      ($0.RequestId value) => value.writeToBuffer(),
+      ($0.SignedData value) => value.writeToBuffer(),
       $2.PayRequestSpec.fromBuffer);
 }
 
@@ -190,20 +186,20 @@ abstract class PayRequestPayerServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.PayRequestPayer';
 
   PayRequestPayerServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.RequestId, $2.PayRequestSpec>(
+    $addMethod($grpc.ServiceMethod<$0.SignedData, $2.PayRequestSpec>(
         'Get',
         get_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.RequestId.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.SignedData.fromBuffer(value),
         ($2.PayRequestSpec value) => value.writeToBuffer()));
   }
 
   $async.Future<$2.PayRequestSpec> get_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.RequestId> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$0.SignedData> $request) async {
     return get($call, await $request);
   }
 
   $async.Future<$2.PayRequestSpec> get(
-      $grpc.ServiceCall call, $0.RequestId request);
+      $grpc.ServiceCall call, $0.SignedData request);
 }

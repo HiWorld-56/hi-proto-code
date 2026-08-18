@@ -246,6 +246,69 @@ class PayRequestSpec extends $pb.GeneratedMessage {
   void clearExpireAt() => $_clearField(7);
 }
 
+/// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
+///
+/// 档位是 **AUTH_WEB3(验签)**,不是 AUTH_USER:
+///   · 付款方是**钱包**,它天然会签名,但**不一定有 hidid 的登录态**
+///     (我们自己的 hidid-simple-app 就只有钱包、没有登录 token);
+///   · 也不做 AUTH_NONE —— 号虽不可猜,公开就等于给了一个匿名探测接口
+///     (拿到号就能看金额与收款人)。签一下既证明"是个真实 did",又不要求登录。
+///
+/// 载荷(SignedData.Data,JSON):`{"req_id":"M…"}`。
+class PayRequestQuery extends $pb.GeneratedMessage {
+  factory PayRequestQuery({
+    $core.String? reqId,
+  }) {
+    final result = create();
+    if (reqId != null) result.reqId = reqId;
+    return result;
+  }
+
+  PayRequestQuery._();
+
+  factory PayRequestQuery.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PayRequestQuery.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PayRequestQuery',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'reqId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PayRequestQuery clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PayRequestQuery copyWith(void Function(PayRequestQuery) updates) =>
+      super.copyWith((message) => updates(message as PayRequestQuery))
+          as PayRequestQuery;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PayRequestQuery create() => PayRequestQuery._();
+  @$core.override
+  PayRequestQuery createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PayRequestQuery getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PayRequestQuery>(create);
+  static PayRequestQuery? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get reqId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set reqId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasReqId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearReqId() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =
