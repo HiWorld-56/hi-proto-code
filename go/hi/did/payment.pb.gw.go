@@ -90,6 +90,60 @@ func local_request_Pay_Notify_0(ctx context.Context, marshaler runtime.Marshaler
 	return msg, metadata, err
 }
 
+func request_PayRequest_Register_0(ctx context.Context, marshaler runtime.Marshaler, client PayRequestClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq PayRequestSpec
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.Register(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_PayRequest_Register_0(ctx context.Context, marshaler runtime.Marshaler, server PayRequestServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq PayRequestSpec
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.Register(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_PayRequestPayer_Get_0(ctx context.Context, marshaler runtime.Marshaler, client PayRequestPayerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq hi.RequestId
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.Get(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_PayRequestPayer_Get_0(ctx context.Context, marshaler runtime.Marshaler, server PayRequestPayerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq hi.RequestId
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.Get(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 // RegisterPayHandlerServer registers the http handlers for service Pay to "mux".
 // UnaryRPC     :call PayServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -135,6 +189,66 @@ func RegisterPayHandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 			return
 		}
 		forward_Pay_Notify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	return nil
+}
+
+// RegisterPayRequestHandlerServer registers the http handlers for service PayRequest to "mux".
+// UnaryRPC     :call PayRequestServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterPayRequestHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
+func RegisterPayRequestHandlerServer(ctx context.Context, mux *runtime.ServeMux, server PayRequestServer) error {
+	mux.Handle(http.MethodPost, pattern_PayRequest_Register_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.PayRequest/Register", runtime.WithHTTPPathPattern("/hi.did.PayRequest/Register"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_PayRequest_Register_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PayRequest_Register_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	return nil
+}
+
+// RegisterPayRequestPayerHandlerServer registers the http handlers for service PayRequestPayer to "mux".
+// UnaryRPC     :call PayRequestPayerServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterPayRequestPayerHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
+func RegisterPayRequestPayerHandlerServer(ctx context.Context, mux *runtime.ServeMux, server PayRequestPayerServer) error {
+	mux.Handle(http.MethodPost, pattern_PayRequestPayer_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.PayRequestPayer/Get", runtime.WithHTTPPathPattern("/hi.did.PayRequestPayer/Get"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_PayRequestPayer_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PayRequestPayer_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -221,4 +335,132 @@ var (
 var (
 	forward_Pay_GenerateReq_0 = runtime.ForwardResponseMessage
 	forward_Pay_Notify_0      = runtime.ForwardResponseMessage
+)
+
+// RegisterPayRequestHandlerFromEndpoint is same as RegisterPayRequestHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterPayRequestHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.NewClient(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+	return RegisterPayRequestHandler(ctx, mux, conn)
+}
+
+// RegisterPayRequestHandler registers the http handlers for service PayRequest to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterPayRequestHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterPayRequestHandlerClient(ctx, mux, NewPayRequestClient(conn))
+}
+
+// RegisterPayRequestHandlerClient registers the http handlers for service PayRequest
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "PayRequestClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "PayRequestClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "PayRequestClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterPayRequestHandlerClient(ctx context.Context, mux *runtime.ServeMux, client PayRequestClient) error {
+	mux.Handle(http.MethodPost, pattern_PayRequest_Register_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.PayRequest/Register", runtime.WithHTTPPathPattern("/hi.did.PayRequest/Register"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_PayRequest_Register_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PayRequest_Register_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	return nil
+}
+
+var (
+	pattern_PayRequest_Register_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.PayRequest", "Register"}, ""))
+)
+
+var (
+	forward_PayRequest_Register_0 = runtime.ForwardResponseMessage
+)
+
+// RegisterPayRequestPayerHandlerFromEndpoint is same as RegisterPayRequestPayerHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterPayRequestPayerHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.NewClient(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+	return RegisterPayRequestPayerHandler(ctx, mux, conn)
+}
+
+// RegisterPayRequestPayerHandler registers the http handlers for service PayRequestPayer to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterPayRequestPayerHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterPayRequestPayerHandlerClient(ctx, mux, NewPayRequestPayerClient(conn))
+}
+
+// RegisterPayRequestPayerHandlerClient registers the http handlers for service PayRequestPayer
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "PayRequestPayerClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "PayRequestPayerClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "PayRequestPayerClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterPayRequestPayerHandlerClient(ctx context.Context, mux *runtime.ServeMux, client PayRequestPayerClient) error {
+	mux.Handle(http.MethodPost, pattern_PayRequestPayer_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.PayRequestPayer/Get", runtime.WithHTTPPathPattern("/hi.did.PayRequestPayer/Get"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_PayRequestPayer_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PayRequestPayer_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	return nil
+}
+
+var (
+	pattern_PayRequestPayer_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.PayRequestPayer", "Get"}, ""))
+)
+
+var (
+	forward_PayRequestPayer_Get_0 = runtime.ForwardResponseMessage
 )

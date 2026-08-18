@@ -163,3 +163,225 @@ var Pay_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "hi/did/payment.proto",
 }
+
+const (
+	PayRequest_Register_FullMethodName = "/hi.did.PayRequest/Register"
+)
+
+// PayRequestClient is the client API for PayRequest service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// PayRequest —— **主体=三方商户**:登记一笔明码标价的付款请求,拿到 `M` 号画成二维码。
+//
+// 与下面的 PayRequestPayer 拆开,是因为**主体不同**(商户 vs 付款方)——
+// 同一个 service 里混档位就说明主体归类错了(见 hi/options.proto 的设计要点二)。
+type PayRequestClient interface {
+	// merchant 取自**调用者身份**,不收入参 —— 收了就等于让人把别人的付款结果引到自己那儿。
+	Register(ctx context.Context, in *PayRequestSpec, opts ...grpc.CallOption) (*hi.RequestId, error)
+}
+
+type payRequestClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPayRequestClient(cc grpc.ClientConnInterface) PayRequestClient {
+	return &payRequestClient{cc}
+}
+
+func (c *payRequestClient) Register(ctx context.Context, in *PayRequestSpec, opts ...grpc.CallOption) (*hi.RequestId, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.RequestId)
+	err := c.cc.Invoke(ctx, PayRequest_Register_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PayRequestServer is the server API for PayRequest service.
+// All implementations should embed UnimplementedPayRequestServer
+// for forward compatibility.
+//
+// PayRequest —— **主体=三方商户**:登记一笔明码标价的付款请求,拿到 `M` 号画成二维码。
+//
+// 与下面的 PayRequestPayer 拆开,是因为**主体不同**(商户 vs 付款方)——
+// 同一个 service 里混档位就说明主体归类错了(见 hi/options.proto 的设计要点二)。
+type PayRequestServer interface {
+	// merchant 取自**调用者身份**,不收入参 —— 收了就等于让人把别人的付款结果引到自己那儿。
+	Register(context.Context, *PayRequestSpec) (*hi.RequestId, error)
+}
+
+// UnimplementedPayRequestServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPayRequestServer struct{}
+
+func (UnimplementedPayRequestServer) Register(context.Context, *PayRequestSpec) (*hi.RequestId, error) {
+	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedPayRequestServer) testEmbeddedByValue() {}
+
+// UnsafePayRequestServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PayRequestServer will
+// result in compilation errors.
+type UnsafePayRequestServer interface {
+	mustEmbedUnimplementedPayRequestServer()
+}
+
+func RegisterPayRequestServer(s grpc.ServiceRegistrar, srv PayRequestServer) {
+	// If the following call panics, it indicates UnimplementedPayRequestServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PayRequest_ServiceDesc, srv)
+}
+
+func _PayRequest_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PayRequestSpec)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PayRequestServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PayRequest_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PayRequestServer).Register(ctx, req.(*PayRequestSpec))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PayRequest_ServiceDesc is the grpc.ServiceDesc for PayRequest service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PayRequest_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.PayRequest",
+	HandlerType: (*PayRequestServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Register",
+			Handler:    _PayRequest_Register_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/payment.proto",
+}
+
+const (
+	PayRequestPayer_Get_FullMethodName = "/hi.did.PayRequestPayer/Get"
+)
+
+// PayRequestPayerClient is the client API for PayRequestPayer service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
+//
+// 为什么不是 AUTH_NONE:号虽然不可猜(33 位),但公开就等于给了一个匿名探测接口
+// (拿到号的人能看到金额与收款人)。扫码的人一定已经登录钱包,要一次登录不增加任何摩擦。
+type PayRequestPayerClient interface {
+	Get(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*PayRequestSpec, error)
+}
+
+type payRequestPayerClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPayRequestPayerClient(cc grpc.ClientConnInterface) PayRequestPayerClient {
+	return &payRequestPayerClient{cc}
+}
+
+func (c *payRequestPayerClient) Get(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*PayRequestSpec, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PayRequestSpec)
+	err := c.cc.Invoke(ctx, PayRequestPayer_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PayRequestPayerServer is the server API for PayRequestPayer service.
+// All implementations should embed UnimplementedPayRequestPayerServer
+// for forward compatibility.
+//
+// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
+//
+// 为什么不是 AUTH_NONE:号虽然不可猜(33 位),但公开就等于给了一个匿名探测接口
+// (拿到号的人能看到金额与收款人)。扫码的人一定已经登录钱包,要一次登录不增加任何摩擦。
+type PayRequestPayerServer interface {
+	Get(context.Context, *hi.RequestId) (*PayRequestSpec, error)
+}
+
+// UnimplementedPayRequestPayerServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPayRequestPayerServer struct{}
+
+func (UnimplementedPayRequestPayerServer) Get(context.Context, *hi.RequestId) (*PayRequestSpec, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedPayRequestPayerServer) testEmbeddedByValue() {}
+
+// UnsafePayRequestPayerServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PayRequestPayerServer will
+// result in compilation errors.
+type UnsafePayRequestPayerServer interface {
+	mustEmbedUnimplementedPayRequestPayerServer()
+}
+
+func RegisterPayRequestPayerServer(s grpc.ServiceRegistrar, srv PayRequestPayerServer) {
+	// If the following call panics, it indicates UnimplementedPayRequestPayerServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PayRequestPayer_ServiceDesc, srv)
+}
+
+func _PayRequestPayer_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.RequestId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PayRequestPayerServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PayRequestPayer_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PayRequestPayerServer).Get(ctx, req.(*hi.RequestId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PayRequestPayer_ServiceDesc is the grpc.ServiceDesc for PayRequestPayer service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PayRequestPayer_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.PayRequestPayer",
+	HandlerType: (*PayRequestPayerServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Get",
+			Handler:    _PayRequestPayer_Get_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/payment.proto",
+}

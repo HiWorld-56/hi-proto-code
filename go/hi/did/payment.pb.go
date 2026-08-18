@@ -89,6 +89,119 @@ func (x *Order) GetHash() string {
 	return ""
 }
 
+// ── 明码标价的付款请求(reqid 带要素)───────────────────────────────────────
+//
+// **两种付款请求,靠 reqid 的前缀分流** —— 与登录的 `L` 号同一套形状:
+//
+//	`P` + 32  老的:hidid 只拿到号,**要素靠唤起时的深链参数给**;
+//	          跨设备扫码给不了参数,而且金额要用户自己填(hi-club-trade 那种)。
+//	`M` + 32  新的:三方**先把要素登记进来**,付款方扫到号后按号取 ——
+//	          收款账号/币种/金额都是登记好的,**用户不能改**(明码标价)。
+//
+// 为什么是"号 + 后台取"而不是"把要素塞进码里":二维码是可以被替换的,
+// 要素写在码里,扫码方无从分辨;而号是不可猜的 33 位,换掉只会"查不到这个号"。
+// 这也与登录那条完全对称(裸 reqId + 后端查会话 + 网页轮询),app 只多一个分支。
+//
+// ⚠️ **hidid 不解释业务单号**:`order_id` 原样存、原样回 —— 付款方回执时把它填进
+//
+//	`Order.id`,商户按自己的号找自己的单(见 Order.id 的注释)。
+type PayRequestSpec struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 钱打到**这个 did 的地址**上 —— 结算实体(三方已解析好,hidid 不再转换)。
+	PayeeAccount string `protobuf:"bytes,1,opt,name=payee_account,json=payeeAccount,proto3" json:"payee_account,omitempty"`
+	// 显示用:**谁在收款**。跳蚤市场下付款方是把钱给一个陌生主体,看不清收款人不该让他确认。
+	PayeeOwner string `protobuf:"bytes,2,opt,name=payee_owner,json=payeeOwner,proto3" json:"payee_owner,omitempty"`
+	Coin       string `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
+	Amount     string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读,如 "9.9"
+	// 三方业务单号。**付款方回执时原样填进 `Order.id`**,hidid 不解释它。
+	OrderId string `protobuf:"bytes,5,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	// 把付款结果报给哪个商户(回执路由)。登记时由 hidid 按调用者身份填,**不收入参** ——
+	// 收了就等于让人把别人的付款结果引到自己这儿。
+	Merchant      string `protobuf:"bytes,6,opt,name=merchant,proto3" json:"merchant,omitempty"`
+	ExpireAt      int64  `protobuf:"varint,7,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"` // 秒;过期后 GetRequest 查不到
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PayRequestSpec) Reset() {
+	*x = PayRequestSpec{}
+	mi := &file_hi_did_payment_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PayRequestSpec) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PayRequestSpec) ProtoMessage() {}
+
+func (x *PayRequestSpec) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_payment_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PayRequestSpec.ProtoReflect.Descriptor instead.
+func (*PayRequestSpec) Descriptor() ([]byte, []int) {
+	return file_hi_did_payment_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PayRequestSpec) GetPayeeAccount() string {
+	if x != nil {
+		return x.PayeeAccount
+	}
+	return ""
+}
+
+func (x *PayRequestSpec) GetPayeeOwner() string {
+	if x != nil {
+		return x.PayeeOwner
+	}
+	return ""
+}
+
+func (x *PayRequestSpec) GetCoin() string {
+	if x != nil {
+		return x.Coin
+	}
+	return ""
+}
+
+func (x *PayRequestSpec) GetAmount() string {
+	if x != nil {
+		return x.Amount
+	}
+	return ""
+}
+
+func (x *PayRequestSpec) GetOrderId() string {
+	if x != nil {
+		return x.OrderId
+	}
+	return ""
+}
+
+func (x *PayRequestSpec) GetMerchant() string {
+	if x != nil {
+		return x.Merchant
+	}
+	return ""
+}
+
+func (x *PayRequestSpec) GetExpireAt() int64 {
+	if x != nil {
+		return x.ExpireAt
+	}
+	return 0
+}
+
 var File_hi_did_payment_proto protoreflect.FileDescriptor
 
 const file_hi_did_payment_proto_rawDesc = "" +
@@ -97,10 +210,24 @@ const file_hi_did_payment_proto_rawDesc = "" +
 	"\x05Order\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03did\x18\x02 \x01(\tR\x03did\x12\x12\n" +
-	"\x04hash\x18\x03 \x01(\tR\x04hash2s\n" +
+	"\x04hash\x18\x03 \x01(\tR\x04hash\"\x86\x02\n" +
+	"\x0ePayRequestSpec\x12)\n" +
+	"\rpayee_account\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\fpayeeAccount\x12%\n" +
+	"\vpayee_owner\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
+	"payeeOwner\x12\x18\n" +
+	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12\x1c\n" +
+	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x1f\n" +
+	"\border_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12 \n" +
+	"\bmerchant\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\bmerchant\x12!\n" +
+	"\texpire_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03R\bexpireAt:\x04\x98\xb5\x18\x032s\n" +
 	"\x03Pay\x123\n" +
 	"\vGenerateReq\x12\x0e.hi.ClientInfo\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x127\n" +
-	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B}\n" +
+	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x052F\n" +
+	"\n" +
+	"PayRequest\x128\n" +
+	"\bRegister\x12\x16.hi.did.PayRequestSpec\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x032F\n" +
+	"\x0fPayRequestPayer\x123\n" +
+	"\x03Get\x12\r.hi.RequestId\x1a\x16.hi.did.PayRequestSpec\"\x05\x8a\xb5\x18\x01\x02B}\n" +
 	"\n" +
 	"com.hi.didB\fPaymentProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -116,21 +243,26 @@ func file_hi_did_payment_proto_rawDescGZIP() []byte {
 	return file_hi_did_payment_proto_rawDescData
 }
 
-var file_hi_did_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_hi_did_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_did_payment_proto_goTypes = []any{
-	(*Order)(nil),         // 0: hi.did.Order
-	(*hi.ClientInfo)(nil), // 1: hi.ClientInfo
-	(*hi.SignedData)(nil), // 2: hi.SignedData
-	(*hi.RequestId)(nil),  // 3: hi.RequestId
-	(*emptypb.Empty)(nil), // 4: google.protobuf.Empty
+	(*Order)(nil),          // 0: hi.did.Order
+	(*PayRequestSpec)(nil), // 1: hi.did.PayRequestSpec
+	(*hi.ClientInfo)(nil),  // 2: hi.ClientInfo
+	(*hi.SignedData)(nil),  // 3: hi.SignedData
+	(*hi.RequestId)(nil),   // 4: hi.RequestId
+	(*emptypb.Empty)(nil),  // 5: google.protobuf.Empty
 }
 var file_hi_did_payment_proto_depIdxs = []int32{
-	1, // 0: hi.did.Pay.GenerateReq:input_type -> hi.ClientInfo
-	2, // 1: hi.did.Pay.Notify:input_type -> hi.SignedData
-	3, // 2: hi.did.Pay.GenerateReq:output_type -> hi.RequestId
-	4, // 3: hi.did.Pay.Notify:output_type -> google.protobuf.Empty
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	2, // 0: hi.did.Pay.GenerateReq:input_type -> hi.ClientInfo
+	3, // 1: hi.did.Pay.Notify:input_type -> hi.SignedData
+	1, // 2: hi.did.PayRequest.Register:input_type -> hi.did.PayRequestSpec
+	4, // 3: hi.did.PayRequestPayer.Get:input_type -> hi.RequestId
+	4, // 4: hi.did.Pay.GenerateReq:output_type -> hi.RequestId
+	5, // 5: hi.did.Pay.Notify:output_type -> google.protobuf.Empty
+	4, // 6: hi.did.PayRequest.Register:output_type -> hi.RequestId
+	1, // 7: hi.did.PayRequestPayer.Get:output_type -> hi.did.PayRequestSpec
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -147,9 +279,9 @@ func file_hi_did_payment_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_payment_proto_rawDesc), len(file_hi_did_payment_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   3,
 		},
 		GoTypes:           file_hi_did_payment_proto_goTypes,
 		DependencyIndexes: file_hi_did_payment_proto_depIdxs,

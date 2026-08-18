@@ -9026,6 +9026,207 @@ impl<'de> serde::Deserialize<'de> for Packet {
         deserializer.deserialize_struct("hi.did.Packet", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for PayRequestSpec {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.payee_account.is_empty() {
+            len += 1;
+        }
+        if !self.payee_owner.is_empty() {
+            len += 1;
+        }
+        if !self.coin.is_empty() {
+            len += 1;
+        }
+        if !self.amount.is_empty() {
+            len += 1;
+        }
+        if !self.order_id.is_empty() {
+            len += 1;
+        }
+        if !self.merchant.is_empty() {
+            len += 1;
+        }
+        if self.expire_at != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.PayRequestSpec", len)?;
+        if !self.payee_account.is_empty() {
+            struct_ser.serialize_field("payeeAccount", &self.payee_account)?;
+        }
+        if !self.payee_owner.is_empty() {
+            struct_ser.serialize_field("payeeOwner", &self.payee_owner)?;
+        }
+        if !self.coin.is_empty() {
+            struct_ser.serialize_field("coin", &self.coin)?;
+        }
+        if !self.amount.is_empty() {
+            struct_ser.serialize_field("amount", &self.amount)?;
+        }
+        if !self.order_id.is_empty() {
+            struct_ser.serialize_field("orderId", &self.order_id)?;
+        }
+        if !self.merchant.is_empty() {
+            struct_ser.serialize_field("merchant", &self.merchant)?;
+        }
+        if self.expire_at != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("expireAt", ToString::to_string(&self.expire_at).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PayRequestSpec {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "payee_account",
+            "payeeAccount",
+            "payee_owner",
+            "payeeOwner",
+            "coin",
+            "amount",
+            "order_id",
+            "orderId",
+            "merchant",
+            "expire_at",
+            "expireAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            PayeeAccount,
+            PayeeOwner,
+            Coin,
+            Amount,
+            OrderId,
+            Merchant,
+            ExpireAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "payeeAccount" | "payee_account" => Ok(GeneratedField::PayeeAccount),
+                            "payeeOwner" | "payee_owner" => Ok(GeneratedField::PayeeOwner),
+                            "coin" => Ok(GeneratedField::Coin),
+                            "amount" => Ok(GeneratedField::Amount),
+                            "orderId" | "order_id" => Ok(GeneratedField::OrderId),
+                            "merchant" => Ok(GeneratedField::Merchant),
+                            "expireAt" | "expire_at" => Ok(GeneratedField::ExpireAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PayRequestSpec;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.PayRequestSpec")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PayRequestSpec, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut payee_account__ = None;
+                let mut payee_owner__ = None;
+                let mut coin__ = None;
+                let mut amount__ = None;
+                let mut order_id__ = None;
+                let mut merchant__ = None;
+                let mut expire_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::PayeeAccount => {
+                            if payee_account__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payeeAccount"));
+                            }
+                            payee_account__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::PayeeOwner => {
+                            if payee_owner__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payeeOwner"));
+                            }
+                            payee_owner__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Coin => {
+                            if coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("coin"));
+                            }
+                            coin__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Amount => {
+                            if amount__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("amount"));
+                            }
+                            amount__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::OrderId => {
+                            if order_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("orderId"));
+                            }
+                            order_id__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Merchant => {
+                            if merchant__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("merchant"));
+                            }
+                            merchant__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ExpireAt => {
+                            if expire_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("expireAt"));
+                            }
+                            expire_at__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(PayRequestSpec {
+                    payee_account: payee_account__.unwrap_or_default(),
+                    payee_owner: payee_owner__.unwrap_or_default(),
+                    coin: coin__.unwrap_or_default(),
+                    amount: amount__.unwrap_or_default(),
+                    order_id: order_id__.unwrap_or_default(),
+                    merchant: merchant__.unwrap_or_default(),
+                    expire_at: expire_at__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.PayRequestSpec", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for PublishReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

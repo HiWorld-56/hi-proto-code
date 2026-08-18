@@ -4744,6 +4744,45 @@ pub struct Order {
     #[prost(string, tag = "3")]
     pub hash: ::prost::alloc::string::String,
 }
+/// ── 明码标价的付款请求(reqid 带要素)───────────────────────────────────────
+///
+/// **两种付款请求,靠 reqid 的前缀分流** —— 与登录的 `L` 号同一套形状:
+///
+/// `P` + 32  老的:hidid 只拿到号,**要素靠唤起时的深链参数给**;
+/// 跨设备扫码给不了参数,而且金额要用户自己填(hi-club-trade 那种)。
+/// `M` + 32  新的:三方**先把要素登记进来**,付款方扫到号后按号取 ——
+/// 收款账号/币种/金额都是登记好的,**用户不能改**(明码标价)。
+///
+/// 为什么是"号 + 后台取"而不是"把要素塞进码里":二维码是可以被替换的,
+/// 要素写在码里,扫码方无从分辨;而号是不可猜的 33 位,换掉只会"查不到这个号"。
+/// 这也与登录那条完全对称(裸 reqId + 后端查会话 + 网页轮询),app 只多一个分支。
+///
+/// ⚠️ **hidid 不解释业务单号**:`order_id` 原样存、原样回 —— 付款方回执时把它填进
+/// `Order.id`,商户按自己的号找自己的单(见 Order.id 的注释)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PayRequestSpec {
+    /// 钱打到**这个 did 的地址**上 —— 结算实体(三方已解析好,hidid 不再转换)。
+    #[prost(string, tag = "1")]
+    pub payee_account: ::prost::alloc::string::String,
+    /// 显示用:**谁在收款**。跳蚤市场下付款方是把钱给一个陌生主体,看不清收款人不该让他确认。
+    #[prost(string, tag = "2")]
+    pub payee_owner: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub coin: ::prost::alloc::string::String,
+    /// 人类可读,如 "9.9"
+    #[prost(string, tag = "4")]
+    pub amount: ::prost::alloc::string::String,
+    /// 三方业务单号。**付款方回执时原样填进 `Order.id`**,hidid 不解释它。
+    #[prost(string, tag = "5")]
+    pub order_id: ::prost::alloc::string::String,
+    /// 把付款结果报给哪个商户(回执路由)。登记时由 hidid 按调用者身份填,**不收入参** ——
+    /// 收了就等于让人把别人的付款结果引到自己这儿。
+    #[prost(string, tag = "6")]
+    pub merchant: ::prost::alloc::string::String,
+    /// 秒;过期后 GetRequest 查不到
+    #[prost(int64, tag = "7")]
+    pub expire_at: i64,
+}
 /// Generated client implementations.
 pub mod pay_client {
     #![allow(
@@ -4874,6 +4913,246 @@ pub mod pay_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Pay/Notify");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Pay", "Notify"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod pay_request_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// PayRequest —— **主体=三方商户**:登记一笔明码标价的付款请求,拿到 `M` 号画成二维码。
+    ///
+    /// 与下面的 PayRequestPayer 拆开,是因为**主体不同**(商户 vs 付款方)——
+    /// 同一个 service 里混档位就说明主体归类错了(见 hi/options.proto 的设计要点二)。
+    #[derive(Debug, Clone)]
+    pub struct PayRequestClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl PayRequestClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> PayRequestClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PayRequestClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            PayRequestClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// merchant 取自**调用者身份**,不收入参 —— 收了就等于让人把别人的付款结果引到自己那儿。
+        pub async fn register(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PayRequestSpec>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::RequestId>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.PayRequest/Register",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.PayRequest", "Register"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod pay_request_payer_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
+    ///
+    /// 为什么不是 AUTH_NONE:号虽然不可猜(33 位),但公开就等于给了一个匿名探测接口
+    /// (拿到号的人能看到金额与收款人)。扫码的人一定已经登录钱包,要一次登录不增加任何摩擦。
+    #[derive(Debug, Clone)]
+    pub struct PayRequestPayerClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl PayRequestPayerClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> PayRequestPayerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PayRequestPayerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            PayRequestPayerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::RequestId>,
+        ) -> std::result::Result<tonic::Response<super::PayRequestSpec>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.PayRequestPayer/Get",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.PayRequestPayer", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }
