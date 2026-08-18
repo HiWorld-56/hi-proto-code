@@ -232,6 +232,7 @@ const MarketListingDetail$json = {
       '8': {},
       '10': 'status'
     },
+    {'1': 'plugin_uuid', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'pluginUuid'},
   ],
   '7': {},
   '9': [
@@ -245,8 +246,9 @@ final $typed_data.Uint8List marketListingDetailDescriptor = $convert.base64Decod
     'ChNNYXJrZXRMaXN0aW5nRGV0YWlsEjcKBWJyaWVmGAEgASgLMhsuaGkuY2x1Yi5NYXJrZXRMaX'
     'N0aW5nQnJpZWZCBJC1GAFSBWJyaWVmEigKDGNhcGFiaWxpdGllcxgCIAEoCUIEkLUYAVIMY2Fw'
     'YWJpbGl0aWVzEiAKCHZlcnNpb25zGAQgAygJQgSQtRgBUgh2ZXJzaW9ucxI0CgZzdGF0dXMYBS'
-    'ABKA4yFi5oaS5jbHViLkxpc3RpbmdTdGF0dXNCBJC1GAFSBnN0YXR1czoEmLUYAUoECAMQBFIT'
-    'YWxsb3dfZm9sbG93X2xhdGVzdA==');
+    'ABKA4yFi5oaS5jbHViLkxpc3RpbmdTdGF0dXNCBJC1GAFSBnN0YXR1cxIlCgtwbHVnaW5fdXVp'
+    'ZBgGIAEoCUIEkLUYAVIKcGx1Z2luVXVpZDoEmLUYAUoECAMQBFITYWxsb3dfZm9sbG93X2xhdG'
+    'VzdA==');
 
 @$core.Deprecated('Use marketGrantBriefDescriptor instead')
 const MarketGrantBrief$json = {

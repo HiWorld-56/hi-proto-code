@@ -221,12 +221,14 @@ class MarketListingDetail extends $pb.GeneratedMessage {
     $core.String? capabilities,
     $core.Iterable<$core.String>? versions,
     ListingStatus? status,
+    $core.String? pluginUuid,
   }) {
     final result = create();
     if (brief != null) result.brief = brief;
     if (capabilities != null) result.capabilities = capabilities;
     if (versions != null) result.versions.addAll(versions);
     if (status != null) result.status = status;
+    if (pluginUuid != null) result.pluginUuid = pluginUuid;
     return result;
   }
 
@@ -249,6 +251,7 @@ class MarketListingDetail extends $pb.GeneratedMessage {
     ..pPS(4, _omitFieldNames ? '' : 'versions')
     ..aE<ListingStatus>(5, _omitFieldNames ? '' : 'status',
         enumValues: ListingStatus.values)
+    ..aOS(6, _omitFieldNames ? '' : 'pluginUuid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -307,6 +310,18 @@ class MarketListingDetail extends $pb.GeneratedMessage {
   $core.bool hasStatus() => $_has(3);
   @$pb.TagNumber(5)
   void clearStatus() => $_clearField(5);
+
+  /// 这个挂牌卖的是哪个插件。**出让方那张表要它** —— 「版本」按钮跳到
+  /// 「机器人 → 插件」并直接打开这个插件的版本管理,没有它就只能让人自己去翻。
+  /// 公开无妨:壳 uuid 不是秘密(装了它的机器人本来就拿得到),真正私有的是脚本 url。
+  @$pb.TagNumber(6)
+  $core.String get pluginUuid => $_getSZ(4);
+  @$pb.TagNumber(6)
+  set pluginUuid($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(6)
+  $core.bool hasPluginUuid() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearPluginUuid() => $_clearField(6);
 }
 
 /// MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。

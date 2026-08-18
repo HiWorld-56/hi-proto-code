@@ -639,7 +639,11 @@ type MarketListingDetail struct {
 	// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
 	// 出让方自己那张表 —— 用的:草稿/挂牌中/隐藏/已下架必须分得出来,
 	// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
-	Status        ListingStatus `protobuf:"varint,5,opt,name=status,proto3,enum=hi.club.ListingStatus" json:"status,omitempty"`
+	Status ListingStatus `protobuf:"varint,5,opt,name=status,proto3,enum=hi.club.ListingStatus" json:"status,omitempty"`
+	// 这个挂牌卖的是哪个插件。**出让方那张表要它** —— 「版本」按钮跳到
+	// 「机器人 → 插件」并直接打开这个插件的版本管理,没有它就只能让人自己去翻。
+	// 公开无妨:壳 uuid 不是秘密(装了它的机器人本来就拿得到),真正私有的是脚本 url。
+	PluginUuid    string `protobuf:"bytes,6,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -700,6 +704,13 @@ func (x *MarketListingDetail) GetStatus() ListingStatus {
 		return x.Status
 	}
 	return ListingStatus_LISTING_STATUS_UNSPECIFIED
+}
+
+func (x *MarketListingDetail) GetPluginUuid() string {
+	if x != nil {
+		return x.PluginUuid
+	}
+	return ""
 }
 
 // MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。
@@ -3349,12 +3360,14 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\bduration\x18\n" +
 	" \x01(\x03B\x04\x90\xb5\x18\x01R\bduration\x12)\n" +
 	"\rinstall_count\x18\v \x01(\x05B\x04\x90\xb5\x18\x01R\finstallCount\x124\n" +
-	"\x04kind\x18\f \x01(\x0e2\x1a.hi.club.MarketListingKindB\x04\x90\xb5\x18\x01R\x04kind:\x04\x98\xb5\x18\x01\"\xf1\x01\n" +
+	"\x04kind\x18\f \x01(\x0e2\x1a.hi.club.MarketListingKindB\x04\x90\xb5\x18\x01R\x04kind:\x04\x98\xb5\x18\x01\"\x98\x02\n" +
 	"\x13MarketListingDetail\x127\n" +
 	"\x05brief\x18\x01 \x01(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x05brief\x12(\n" +
 	"\fcapabilities\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\fcapabilities\x12 \n" +
 	"\bversions\x18\x04 \x03(\tB\x04\x90\xb5\x18\x01R\bversions\x124\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x16.hi.club.ListingStatusB\x04\x90\xb5\x18\x01R\x06status:\x04\x98\xb5\x18\x01J\x04\b\x03\x10\x04R\x13allow_follow_latest\"\xd9\x02\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x16.hi.club.ListingStatusB\x04\x90\xb5\x18\x01R\x06status\x12%\n" +
+	"\vplugin_uuid\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\n" +
+	"pluginUuid:\x04\x98\xb5\x18\x01J\x04\b\x03\x10\x04R\x13allow_follow_latest\"\xd9\x02\n" +
 	"\x10MarketGrantBrief\x12#\n" +
 	"\n" +
 	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\tgrantUuid\x12\x1a\n" +

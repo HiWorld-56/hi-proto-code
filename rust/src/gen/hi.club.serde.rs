@@ -9652,6 +9652,9 @@ impl serde::Serialize for MarketListingDetail {
         if self.status != 0 {
             len += 1;
         }
+        if !self.plugin_uuid.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.MarketListingDetail", len)?;
         if let Some(v) = self.brief.as_ref() {
             struct_ser.serialize_field("brief", v)?;
@@ -9667,6 +9670,9 @@ impl serde::Serialize for MarketListingDetail {
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.status)))?;
             struct_ser.serialize_field("status", &v)?;
         }
+        if !self.plugin_uuid.is_empty() {
+            struct_ser.serialize_field("pluginUuid", &self.plugin_uuid)?;
+        }
         struct_ser.end()
     }
 }
@@ -9681,6 +9687,8 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
             "capabilities",
             "versions",
             "status",
+            "plugin_uuid",
+            "pluginUuid",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -9689,6 +9697,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
             Capabilities,
             Versions,
             Status,
+            PluginUuid,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9714,6 +9723,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                             "capabilities" => Ok(GeneratedField::Capabilities),
                             "versions" => Ok(GeneratedField::Versions),
                             "status" => Ok(GeneratedField::Status),
+                            "pluginUuid" | "plugin_uuid" => Ok(GeneratedField::PluginUuid),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9737,6 +9747,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                 let mut capabilities__ = None;
                 let mut versions__ = None;
                 let mut status__ = None;
+                let mut plugin_uuid__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Brief => {
@@ -9763,6 +9774,12 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                             }
                             status__ = Some(map_.next_value::<ListingStatus>()? as i32);
                         }
+                        GeneratedField::PluginUuid => {
+                            if plugin_uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pluginUuid"));
+                            }
+                            plugin_uuid__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(MarketListingDetail {
@@ -9770,6 +9787,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                     capabilities: capabilities__.unwrap_or_default(),
                     versions: versions__.unwrap_or_default(),
                     status: status__.unwrap_or_default(),
+                    plugin_uuid: plugin_uuid__.unwrap_or_default(),
                 })
             }
         }

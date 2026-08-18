@@ -5949,6 +5949,11 @@ pub struct MarketListingDetail {
     /// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
     #[prost(enumeration = "ListingStatus", tag = "5")]
     pub status: i32,
+    /// 这个挂牌卖的是哪个插件。**出让方那张表要它** —— 「版本」按钮跳到
+    /// 「机器人 → 插件」并直接打开这个插件的版本管理,没有它就只能让人自己去翻。
+    /// 公开无妨:壳 uuid 不是秘密(装了它的机器人本来就拿得到),真正私有的是脚本 url。
+    #[prost(string, tag = "6")]
+    pub plugin_uuid: ::prost::alloc::string::String,
 }
 /// MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。
 ///
