@@ -197,13 +197,13 @@ const PluginView$json = {
       '10': 'versionData'
     },
     {
-      '1': 'build',
-      '3': 8,
-      '4': 1,
+      '1': 'builds',
+      '3': 12,
+      '4': 3,
       '5': 11,
       '6': '.hi.ai.PluginBuild',
       '8': {},
-      '10': 'build'
+      '10': 'builds'
     },
     {
       '1': 'follow_latest',
@@ -225,8 +225,9 @@ final $typed_data.Uint8List pluginViewDescriptor = $convert.base64Decode(
     'FpLlBsdWdpblNvdXJjZUIEkLUYA1IGc291cmNlEiEKCXJlZl9jb3VudBgFIAEoBUIEkLUYA1II'
     'cmVmQ291bnQSMQoEZGF0YRgGIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RCBJC1GANSBG'
     'RhdGESQAoMdmVyc2lvbl9kYXRhGAcgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdEIEkLUY'
-    'A1ILdmVyc2lvbkRhdGESLgoFYnVpbGQYCCABKAsyEi5oaS5haS5QbHVnaW5CdWlsZEIEkLUYA1'
-    'IFYnVpbGQSKQoNZm9sbG93X2xhdGVzdBgJIAEoCEIEkLUYA1IMZm9sbG93TGF0ZXN0OgSYtRgD');
+    'A1ILdmVyc2lvbkRhdGESMAoGYnVpbGRzGAwgAygLMhIuaGkuYWkuUGx1Z2luQnVpbGRCBJC1GA'
+    'NSBmJ1aWxkcxIpCg1mb2xsb3dfbGF0ZXN0GAkgASgIQgSQtRgDUgxmb2xsb3dMYXRlc3Q6BJi1'
+    'GAM=');
 
 @$core.Deprecated('Use pluginVersionViewDescriptor instead')
 const PluginVersionView$json = {

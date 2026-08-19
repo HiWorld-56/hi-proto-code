@@ -819,11 +819,14 @@ pub struct PluginView {
     /// 激活版本的 d.data:版本级扩展数据
     #[prost(message, optional, tag = "7")]
     pub version_data: ::core::option::Option<::pbjson_types::Struct>,
-    /// 激活版本的构建态。**NATIVE 才有,PYTHON 恒空。**
+    /// 激活版本的构建态,**每个架构一条**(aarch64 / x86_64)。NATIVE 才有,PYTHON 恒空。
     /// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
     /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
-    #[prost(message, optional, tag = "8")]
-    pub build: ::core::option::Option<PluginBuild>,
+    ///
+    /// ⚠️ 8 号那个单数 `build` 已删:一版多架构,单个字段只能显示其中一个,
+    /// 另一个编失败就看不见 —— 页面"绿了"而实际半残。
+    #[prost(message, repeated, tag = "12")]
+    pub builds: ::prost::alloc::vec::Vec<PluginBuild>,
     /// c.follow_latest:这台机器人要不要自动切到作者发的新版。
     ///
     /// ⭐ **这是使用方自己的事,归在使用行(c)上,不在挂牌上。**

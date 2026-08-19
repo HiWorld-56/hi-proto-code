@@ -11034,7 +11034,7 @@ impl serde::Serialize for PluginView {
         if self.version_data.is_some() {
             len += 1;
         }
-        if self.build.is_some() {
+        if !self.builds.is_empty() {
             len += 1;
         }
         if self.follow_latest {
@@ -11064,8 +11064,8 @@ impl serde::Serialize for PluginView {
         if let Some(v) = self.version_data.as_ref() {
             struct_ser.serialize_field("versionData", v)?;
         }
-        if let Some(v) = self.build.as_ref() {
-            struct_ser.serialize_field("build", v)?;
+        if !self.builds.is_empty() {
+            struct_ser.serialize_field("builds", &self.builds)?;
         }
         if self.follow_latest {
             struct_ser.serialize_field("followLatest", &self.follow_latest)?;
@@ -11089,7 +11089,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             "data",
             "version_data",
             "versionData",
-            "build",
+            "builds",
             "follow_latest",
             "followLatest",
         ];
@@ -11103,7 +11103,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             RefCount,
             Data,
             VersionData,
-            Build,
+            Builds,
             FollowLatest,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -11133,7 +11133,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                             "refCount" | "ref_count" => Ok(GeneratedField::RefCount),
                             "data" => Ok(GeneratedField::Data),
                             "versionData" | "version_data" => Ok(GeneratedField::VersionData),
-                            "build" => Ok(GeneratedField::Build),
+                            "builds" => Ok(GeneratedField::Builds),
                             "followLatest" | "follow_latest" => Ok(GeneratedField::FollowLatest),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -11161,7 +11161,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                 let mut ref_count__ = None;
                 let mut data__ = None;
                 let mut version_data__ = None;
-                let mut build__ = None;
+                let mut builds__ = None;
                 let mut follow_latest__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -11209,11 +11209,11 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                             }
                             version_data__ = map_.next_value()?;
                         }
-                        GeneratedField::Build => {
-                            if build__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("build"));
+                        GeneratedField::Builds => {
+                            if builds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("builds"));
                             }
-                            build__ = map_.next_value()?;
+                            builds__ = Some(map_.next_value()?);
                         }
                         GeneratedField::FollowLatest => {
                             if follow_latest__.is_some() {
@@ -11231,7 +11231,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                     ref_count: ref_count__.unwrap_or_default(),
                     data: data__,
                     version_data: version_data__,
-                    build: build__,
+                    builds: builds__.unwrap_or_default(),
                     follow_latest: follow_latest__.unwrap_or_default(),
                 })
             }

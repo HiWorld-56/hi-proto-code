@@ -439,8 +439,8 @@ class PluginView extends $pb.GeneratedMessage {
     $core.int? refCount,
     $2.Struct? data,
     $2.Struct? versionData,
-    PluginBuild? build,
     $core.bool? followLatest,
+    $core.Iterable<PluginBuild>? builds,
   }) {
     final result = create();
     if (shell != null) result.shell = shell;
@@ -450,8 +450,8 @@ class PluginView extends $pb.GeneratedMessage {
     if (refCount != null) result.refCount = refCount;
     if (data != null) result.data = data;
     if (versionData != null) result.versionData = versionData;
-    if (build != null) result.build = build;
     if (followLatest != null) result.followLatest = followLatest;
+    if (builds != null) result.builds.addAll(builds);
     return result;
   }
 
@@ -480,9 +480,9 @@ class PluginView extends $pb.GeneratedMessage {
         subBuilder: $2.Struct.create)
     ..aOM<$2.Struct>(7, _omitFieldNames ? '' : 'versionData',
         subBuilder: $2.Struct.create)
-    ..aOM<PluginBuild>(8, _omitFieldNames ? '' : 'build',
-        subBuilder: PluginBuild.create)
     ..aOB(9, _omitFieldNames ? '' : 'followLatest')
+    ..pPM<PluginBuild>(12, _omitFieldNames ? '' : 'builds',
+        subBuilder: PluginBuild.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -574,20 +574,6 @@ class PluginView extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $2.Struct ensureVersionData() => $_ensure(6);
 
-  /// 激活版本的构建态。**NATIVE 才有,PYTHON 恒空。**
-  /// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
-  /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
-  @$pb.TagNumber(8)
-  PluginBuild get build => $_getN(7);
-  @$pb.TagNumber(8)
-  set build(PluginBuild value) => $_setField(8, value);
-  @$pb.TagNumber(8)
-  $core.bool hasBuild() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearBuild() => $_clearField(8);
-  @$pb.TagNumber(8)
-  PluginBuild ensureBuild() => $_ensure(7);
-
   /// c.follow_latest:这台机器人要不要自动切到作者发的新版。
   ///
   /// ⭐ **这是使用方自己的事,归在使用行(c)上,不在挂牌上。**
@@ -599,13 +585,22 @@ class PluginView extends $pb.GeneratedMessage {
   /// 关掉 = 停在当前激活版,作者发新版也不动;打开 = 新版**构建成功后**自动切过去
   /// (NATIVE 要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
   @$pb.TagNumber(9)
-  $core.bool get followLatest => $_getBF(8);
+  $core.bool get followLatest => $_getBF(7);
   @$pb.TagNumber(9)
-  set followLatest($core.bool value) => $_setBool(8, value);
+  set followLatest($core.bool value) => $_setBool(7, value);
   @$pb.TagNumber(9)
-  $core.bool hasFollowLatest() => $_has(8);
+  $core.bool hasFollowLatest() => $_has(7);
   @$pb.TagNumber(9)
   void clearFollowLatest() => $_clearField(9);
+
+  /// 激活版本的构建态,**每个架构一条**(aarch64 / x86_64)。NATIVE 才有,PYTHON 恒空。
+  /// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
+  /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
+  ///
+  /// ⚠️ 8 号那个单数 `build` 已删:一版多架构,单个字段只能显示其中一个,
+  ///    另一个编失败就看不见 —— 页面"绿了"而实际半残。
+  @$pb.TagNumber(12)
+  $pb.PbList<PluginBuild> get builds => $_getList(8);
 }
 
 /// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。

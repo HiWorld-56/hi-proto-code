@@ -540,10 +540,14 @@ type PluginView struct {
 	RefCount    int32                  `protobuf:"varint,5,opt,name=ref_count,json=refCount,proto3" json:"ref_count,omitempty"`         // 被多少机器人引用(实时 COUNT)
 	Data        *structpb.Struct       `protobuf:"bytes,6,opt,name=data,proto3" json:"data,omitempty"`                                  // c.data:插件级扩展数据(含 api_key)
 	VersionData *structpb.Struct       `protobuf:"bytes,7,opt,name=version_data,json=versionData,proto3" json:"version_data,omitempty"` // 激活版本的 d.data:版本级扩展数据
-	// 激活版本的构建态。**NATIVE 才有,PYTHON 恒空。**
+	// 激活版本的构建态,**每个架构一条**(aarch64 / x86_64)。NATIVE 才有,PYTHON 恒空。
 	// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
 	// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
-	Build *PluginBuild `protobuf:"bytes,8,opt,name=build,proto3" json:"build,omitempty"`
+	//
+	// ⚠️ 8 号那个单数 `build` 已删:一版多架构,单个字段只能显示其中一个,
+	//
+	//	另一个编失败就看不见 —— 页面"绿了"而实际半残。
+	Builds []*PluginBuild `protobuf:"bytes,12,rep,name=builds,proto3" json:"builds,omitempty"`
 	// c.follow_latest:这台机器人要不要自动切到作者发的新版。
 	//
 	// ⭐ **这是使用方自己的事,归在使用行(c)上,不在挂牌上。**
@@ -638,9 +642,9 @@ func (x *PluginView) GetVersionData() *structpb.Struct {
 	return nil
 }
 
-func (x *PluginView) GetBuild() *PluginBuild {
+func (x *PluginView) GetBuilds() []*PluginBuild {
 	if x != nil {
-		return x.Build
+		return x.Builds
 	}
 	return nil
 }
@@ -2747,7 +2751,7 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"started_at\x18\t \x01(\x03B\x04\x90\xb5\x18\x03R\tstartedAt\x12%\n" +
 	"\vfinished_at\x18\n" +
 	" \x01(\x03B\x04\x90\xb5\x18\x03R\n" +
-	"finishedAt:\x04\x98\xb5\x18\x03\"\xbc\x03\n" +
+	"finishedAt:\x04\x98\xb5\x18\x03\"\xbe\x03\n" +
 	"\n" +
 	"PluginView\x12.\n" +
 	"\x05shell\x18\x01 \x01(\v2\x12.hi.ai.PluginShellB\x04\x90\xb5\x18\x03R\x05shell\x122\n" +
@@ -2756,8 +2760,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x06source\x18\x04 \x01(\x0e2\x13.hi.ai.PluginSourceB\x04\x90\xb5\x18\x03R\x06source\x12!\n" +
 	"\tref_count\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03R\brefCount\x121\n" +
 	"\x04data\x18\x06 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data\x12@\n" +
-	"\fversion_data\x18\a \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\vversionData\x12.\n" +
-	"\x05build\x18\b \x01(\v2\x12.hi.ai.PluginBuildB\x04\x90\xb5\x18\x03R\x05build\x12)\n" +
+	"\fversion_data\x18\a \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\vversionData\x120\n" +
+	"\x06builds\x18\f \x03(\v2\x12.hi.ai.PluginBuildB\x04\x90\xb5\x18\x03R\x06builds\x12)\n" +
 	"\rfollow_latest\x18\t \x01(\bB\x04\x90\xb5\x18\x03R\ffollowLatest:\x04\x98\xb5\x18\x03\"\xd2\x01\n" +
 	"\x11PluginVersionView\x124\n" +
 	"\aversion\x18\x01 \x01(\v2\x14.hi.ai.PluginVersionB\x04\x90\xb5\x18\x03R\aversion\x12\x1c\n" +
@@ -3003,7 +3007,7 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	2,  // 4: hi.ai.PluginView.source:type_name -> hi.ai.PluginSource
 	41, // 5: hi.ai.PluginView.data:type_name -> google.protobuf.Struct
 	41, // 6: hi.ai.PluginView.version_data:type_name -> google.protobuf.Struct
-	5,  // 7: hi.ai.PluginView.build:type_name -> hi.ai.PluginBuild
+	5,  // 7: hi.ai.PluginView.builds:type_name -> hi.ai.PluginBuild
 	4,  // 8: hi.ai.PluginVersionView.version:type_name -> hi.ai.PluginVersion
 	41, // 9: hi.ai.PluginVersionView.data:type_name -> google.protobuf.Struct
 	5,  // 10: hi.ai.PluginVersionView.builds:type_name -> hi.ai.PluginBuild
