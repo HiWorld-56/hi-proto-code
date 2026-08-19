@@ -784,7 +784,7 @@ func (x *PluginLoaded) GetEnabled() bool {
 // uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
 // data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
 //
-// ⚠️ **没有 runtime 字段,不要再加回来。** 4 号留空是原 `runtime` 的位置。
+// ⚠️ **没有 runtime 字段,不要再加回来。**
 // 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 type CreateShellReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -2730,11 +2730,11 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04uuid\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x04name\x12\x1e\n" +
 	"\aversion\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\aversion\x12\x1e\n" +
-	"\aenabled\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02R\aenabled:\x04\x98\xb5\x18\x02\"\x8d\x01\n" +
+	"\aenabled\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02R\aenabled:\x04\x98\xb5\x18\x02\"~\n" +
 	"\x0eCreateShellReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12\x1b\n" +
 	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12+\n" +
-	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x04dataJ\x04\b\x04\x10\x05R\aruntime\"1\n" +
+	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x04data\"1\n" +
 	"\x0fCreateShellResp\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"\x93\x01\n" +
 	"\x10CreateVersionReq\x12\"\n" +

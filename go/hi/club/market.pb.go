@@ -712,6 +712,10 @@ type MarketListingDetail struct {
 	// 这个包提供哪些方法。直接取自 hi.ai 那份 tools 数组(已是最终形态、name 带壳前缀),
 	// 买家装之前就知道会得到什么能力。
 	Capabilities string `protobuf:"bytes,2,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
+	// ⚠️ **没有 allow_follow_latest,不要再加回来。**
+	// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
+	// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。
+	// 卖家没有理由替买家决定他用哪一版 —— 买家买到的是这个插件,选版本是他的权利。
 	// 可选版本列表(引用方装好后可在其中切换)。
 	Versions []string `protobuf:"bytes,4,rep,name=versions,proto3" json:"versions,omitempty"`
 	// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
@@ -1021,13 +1025,14 @@ type MarketGrantView struct {
 	SettleMode  SettleMode             `protobuf:"varint,8,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
 	Price       string                 `protobuf:"bytes,9,opt,name=price,proto3" json:"price,omitempty"`
 	Coin        string                 `protobuf:"bytes,10,opt,name=coin,proto3" json:"coin,omitempty"`
-	Version     string                 `protobuf:"bytes,12,opt,name=version,proto3" json:"version,omitempty"`                      // 当前引用的版本
-	ExpireAt    int64                  `protobuf:"varint,13,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"`   // installed_at + duration;0 = 永久
-	ActionUrl   string                 `protobuf:"bytes,14,opt,name=action_url,json=actionUrl,proto3" json:"action_url,omitempty"` // 外部流程给的"去付款/去填资料"地址(可空)
-	Reason      string                 `protobuf:"bytes,15,opt,name=reason,proto3" json:"reason,omitempty"`                        // 拒绝/撤销原因
-	CreatedAt   int64                  `protobuf:"varint,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	DecidedAt   int64                  `protobuf:"varint,17,opt,name=decided_at,json=decidedAt,proto3" json:"decided_at,omitempty"`
-	InstalledAt int64                  `protobuf:"varint,18,opt,name=installed_at,json=installedAt,proto3" json:"installed_at,omitempty"`
+	// ⚠️ 没有 follow_latest:见 hi.ai.PluginView.follow_latest —— 归使用行,不归授权。
+	Version     string `protobuf:"bytes,12,opt,name=version,proto3" json:"version,omitempty"`                      // 当前引用的版本
+	ExpireAt    int64  `protobuf:"varint,13,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"`   // installed_at + duration;0 = 永久
+	ActionUrl   string `protobuf:"bytes,14,opt,name=action_url,json=actionUrl,proto3" json:"action_url,omitempty"` // 外部流程给的"去付款/去填资料"地址(可空)
+	Reason      string `protobuf:"bytes,15,opt,name=reason,proto3" json:"reason,omitempty"`                        // 拒绝/撤销原因
+	CreatedAt   int64  `protobuf:"varint,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	DecidedAt   int64  `protobuf:"varint,17,opt,name=decided_at,json=decidedAt,proto3" json:"decided_at,omitempty"`
+	InstalledAt int64  `protobuf:"varint,18,opt,name=installed_at,json=installedAt,proto3" json:"installed_at,omitempty"`
 	// 自动续费。**只有硬件机器人能开** —— 续费要它自己掏钱付款,软件机器人没有私钥。
 	AutoRenew bool `protobuf:"varint,19,opt,name=auto_renew,json=autoRenew,proto3" json:"auto_renew,omitempty"`
 	// 谁先开的口(申请 / 分享)。前端按它决定这一行给"同意/拒绝"还是"审批/驳回",
@@ -1586,7 +1591,13 @@ type CreateListingReq struct {
 	Price      string                 `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
 	Coin       string                 `protobuf:"bytes,5,opt,name=coin,proto3" json:"coin,omitempty"`
 	Duration   int64                  `protobuf:"varint,6,opt,name=duration,proto3" json:"duration,omitempty"` // 秒;0 = 永久
-	Tags       []string               `protobuf:"bytes,10,rep,name=tags,proto3" json:"tags,omitempty"`         // 市场分类。**这个不删** —— 插件自身没有分类的概念
+	// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
+	//
+	// 那三个是插件**自己就有**的东西(`hi.ai.PluginShell.name`、激活版的 `logo`/`summary`),
+	// 挂牌时再填一遍就是同一个东西存两份 —— 必然漂:市场里叫「超强天气」、
+	// 机器人插件列表里叫「weather」,而且没有任何一处会报错。
+	// 市场展示一律**读侧现取**(见 MarketListingBrief 的注释)。
+	Tags []string `protobuf:"bytes,10,rep,name=tags,proto3" json:"tags,omitempty"` // 市场分类。**这个不删** —— 插件自身没有分类的概念
 	// 收款方是否收到 **master** 名下。
 	//
 	// 默认 false = 机器人自己收（硬件机器人持私钥，能独立收款）。
@@ -1596,6 +1607,7 @@ type CreateListingReq struct {
 	//
 	// 前端**暂时不给这个选项**(隐藏),先把能力放在契约里。
 	PayeeToMaster bool `protobuf:"varint,14,opt,name=payee_to_master,json=payeeToMaster,proto3" json:"payee_to_master,omitempty"`
+	// ⚠️ 没有 allow_follow_latest:见 MarketListingDetail —— 这件事归使用方,不归挂牌。
 	// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
 	//
 	// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
@@ -1715,14 +1727,15 @@ func (x *CreateListingReq) GetKind() MarketListingKind {
 //
 //	重新挂牌复用同一行),该字段在首次 LISTED 之后禁止 UPDATE。否则"下架再上架"就绕过去了。
 type EditListingReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Price         *string                `protobuf:"bytes,2,opt,name=price,proto3,oneof" json:"price,omitempty"`
-	Coin          *string                `protobuf:"bytes,3,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
-	Duration      *int64                 `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
-	Tags          []string               `protobuf:"bytes,8,rep,name=tags,proto3" json:"tags,omitempty"`
-	PayeeToMaster *bool                  `protobuf:"varint,11,opt,name=payee_to_master,json=payeeToMaster,proto3,oneof" json:"payee_to_master,omitempty"` // 见 CreateListingReq:软件机器人没得选
-	ActionUrl     *string                `protobuf:"bytes,10,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Uuid     string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Price    *string                `protobuf:"bytes,2,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	Coin     *string                `protobuf:"bytes,3,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Duration *int64                 `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
+	// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
+	Tags          []string `protobuf:"bytes,8,rep,name=tags,proto3" json:"tags,omitempty"`
+	PayeeToMaster *bool    `protobuf:"varint,11,opt,name=payee_to_master,json=payeeToMaster,proto3,oneof" json:"payee_to_master,omitempty"` // 见 CreateListingReq:软件机器人没得选
+	ActionUrl     *string  `protobuf:"bytes,10,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2019,10 +2032,11 @@ func (x *CreateListingResp) GetUuid() string {
 //	AUTH_USER + AUTH_MERCHANT(apikey 主体)即可,**接口形状一个字不用改**。
 //	反过来现在写成 user-only 的形状,将来就是破坏性改动。
 type ApplyReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ListingUuid   string                 `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"`
-	ToAgent       string                 `protobuf:"bytes,2,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"` // 装到哪台机器人上
-	Params        *structpb.Struct       `protobuf:"bytes,4,opt,name=params,proto3" json:"params,omitempty"`                  // 外部流程要的额外参数,原样转给商户后台
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	ListingUuid string                 `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"`
+	ToAgent     string                 `protobuf:"bytes,2,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"` // 装到哪台机器人上
+	// ⚠️ 没有 follow_latest:买完之后在"机器人 → 插件"那一行上自己开关(hi.ai 的 c.follow_latest)。
+	Params        *structpb.Struct `protobuf:"bytes,4,opt,name=params,proto3" json:"params,omitempty"` // 外部流程要的额外参数,原样转给商户后台
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2433,10 +2447,12 @@ type MarketOrder struct {
 	// 判据是"这张单要的钱到账了没有"。记它是为了让当事人查得到自己的交易。
 	//
 	// 没有 payer_account:判据不看付款侧,加一个没人读的列只会让人以为它是判据。
-	Payer     string `protobuf:"bytes,14,opt,name=payer,proto3" json:"payer,omitempty"`
-	Amount    string `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
-	Coin      string `protobuf:"bytes,8,opt,name=coin,proto3" json:"coin,omitempty"`
-	CreatedAt int64  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Payer  string `protobuf:"bytes,14,opt,name=payer,proto3" json:"payer,omitempty"`
+	Amount string `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
+	Coin   string `protobuf:"bytes,8,opt,name=coin,proto3" json:"coin,omitempty"`
+	// ⚠️ **没有 expire_at** —— 有效期挪到**付款凭据**上了(MarketPayment.expire_at)。
+	// 业务单不过期:凭据超时只是那一次付款作废,这台机器人要续期这件事还在。
+	CreatedAt int64 `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// 把付款结果**报给哪个商户** —— 即图示里唤起 hidid 时要带的「商户DID」。
 	//
 	// 付款方(hidid app / 机器人里的 hidid 模块)付完款调 `hi.did.Pay.Notify`,
@@ -2763,9 +2779,13 @@ func (x *CreateRenewOrderReq) GetGrantUuid() string {
 }
 
 type MarketPayInfo struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Amount string                 `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
-	Coin   string                 `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ⚠️ **没有 `payee` 这个字段,不要加回来。** 它原来的语义是"收款方 DID",
+	//
+	//	而付款方拿它**直接当转账目标**。现在收款人与收款账号分开了,叫 payee 会让人
+	//	不知道该拿哪个去付款 —— 所以换成下面两个名字,各自说清自己是什么。
+	Amount string `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
+	Coin   string `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
 	// **钱打到这个 did 的地址上** —— 结算实体(默认=收款人本人)。付款方只认它。
 	PayeeAccount string `protobuf:"bytes,4,opt,name=payee_account,json=payeeAccount,proto3" json:"payee_account,omitempty"`
 	// **显示给用户看"你在付给谁"** —— 收款人本人。跳蚤市场下用户是把钱付给一个
@@ -3864,14 +3884,14 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\bduration\x18\n" +
 	" \x01(\x03B\x04\x90\xb5\x18\x01R\bduration\x12)\n" +
 	"\rinstall_count\x18\v \x01(\x05B\x04\x90\xb5\x18\x01R\finstallCount\x124\n" +
-	"\x04kind\x18\f \x01(\x0e2\x1a.hi.club.MarketListingKindB\x04\x90\xb5\x18\x01R\x04kind:\x04\x98\xb5\x18\x01\"\x98\x02\n" +
+	"\x04kind\x18\f \x01(\x0e2\x1a.hi.club.MarketListingKindB\x04\x90\xb5\x18\x01R\x04kind:\x04\x98\xb5\x18\x01\"\xfd\x01\n" +
 	"\x13MarketListingDetail\x127\n" +
 	"\x05brief\x18\x01 \x01(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x05brief\x12(\n" +
 	"\fcapabilities\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\fcapabilities\x12 \n" +
 	"\bversions\x18\x04 \x03(\tB\x04\x90\xb5\x18\x01R\bversions\x124\n" +
 	"\x06status\x18\x05 \x01(\x0e2\x16.hi.club.ListingStatusB\x04\x90\xb5\x18\x01R\x06status\x12%\n" +
 	"\vplugin_uuid\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\n" +
-	"pluginUuid:\x04\x98\xb5\x18\x01J\x04\b\x03\x10\x04R\x13allow_follow_latest\"\xd9\x02\n" +
+	"pluginUuid:\x04\x98\xb5\x18\x01\"\xd9\x02\n" +
 	"\x10MarketGrantBrief\x12#\n" +
 	"\n" +
 	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\tgrantUuid\x12\x1a\n" +
@@ -3896,7 +3916,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x04coin\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02R\x04coin\x12!\n" +
 	"\texpire_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x02R\bexpireAt\x12#\n" +
 	"\n" +
-	"auto_renew\x18\a \x01(\bB\x04\x90\xb5\x18\x02R\tautoRenew:\x04\x98\xb5\x18\x02\"\x9a\x06\n" +
+	"auto_renew\x18\a \x01(\bB\x04\x90\xb5\x18\x02R\tautoRenew:\x04\x98\xb5\x18\x02\"\x85\x06\n" +
 	"\x0fMarketGrantView\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12'\n" +
 	"\flisting_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vlistingUuid\x12\x1a\n" +
@@ -3926,7 +3946,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\finstalled_at\x18\x12 \x01(\x03B\x04\x90\xb5\x18\x03R\vinstalledAt\x12#\n" +
 	"\n" +
 	"auto_renew\x18\x13 \x01(\bB\x04\x90\xb5\x18\x03R\tautoRenew\x12;\n" +
-	"\tinitiator\x18\x14 \x01(\x0e2\x17.hi.club.GrantInitiatorB\x04\x90\xb5\x18\x03R\tinitiator:\x04\x98\xb5\x18\x03J\x04\b\v\x10\fR\rfollow_latest\"\x93\x01\n" +
+	"\tinitiator\x18\x14 \x01(\x0e2\x17.hi.club.GrantInitiatorB\x04\x90\xb5\x18\x03R\tinitiator:\x04\x98\xb5\x18\x03\"\x93\x01\n" +
 	"\fMarketSeller\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master\x12(\n" +
@@ -3953,7 +3973,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x125\n" +
 	"\x04list\x18\x02 \x03(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"R\n" +
 	"\x0eGetListingResp\x12:\n" +
-	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\xaf\x03\n" +
+	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\xec\x02\n" +
 	"\x10CreateListingReq\x12\"\n" +
 	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12-\n" +
 	"\vplugin_uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\n" +
@@ -3968,8 +3988,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x0fpayee_to_master\x18\x0e \x01(\bR\rpayeeToMaster\x12\x1d\n" +
 	"\n" +
 	"action_url\x18\f \x01(\tR\tactionUrl\x12.\n" +
-	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindR\x04kindJ\x04\b\a\x10\bJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
-	"J\x04\b\v\x10\fR\x05titleR\asummaryR\x04logoR\x13allow_follow_latest\"\xdd\x02\n" +
+	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindR\x04kind\"\xaf\x02\n" +
 	"\x0eEditListingReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12\x19\n" +
 	"\x05price\x18\x02 \x01(\tH\x00R\x05price\x88\x01\x01\x12\x17\n" +
@@ -3984,8 +4003,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05_coinB\v\n" +
 	"\t_durationB\x12\n" +
 	"\x10_payee_to_masterB\r\n" +
-	"\v_action_urlJ\x04\b\x05\x10\x06J\x04\b\x06\x10\aJ\x04\b\a\x10\bJ\x04\b\t\x10\n" +
-	"R\x05titleR\asummaryR\x04logo\"g\n" +
+	"\v_action_url\"g\n" +
 	"\x13SetListingStatusReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12.\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x16.hi.club.ListingStatusR\x06status\"Y\n" +
@@ -3998,11 +4016,11 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x126\n" +
 	"\x04list\x18\x02 \x03(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"3\n" +
 	"\x11CreateListingResp\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"\xaa\x01\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"\x95\x01\n" +
 	"\bApplyReq\x12/\n" +
 	"\flisting_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\vlistingUuid\x12'\n" +
 	"\bto_agent\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\atoAgent\x12/\n" +
-	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06paramsJ\x04\b\x03\x10\x04R\rfollow_latest\"\xcd\x03\n" +
+	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06params\"\xcd\x03\n" +
 	"\rMarketPayment\x12\x1b\n" +
 	"\x06pay_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05payId\x12\x1f\n" +
 	"\border_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12:\n" +
@@ -4029,7 +4047,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x14ListTransactionsResp\x120\n" +
 	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +
 	"\x11GetTransactionReq\x12#\n" +
-	"\x06pay_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05payId\"\x90\x04\n" +
+	"\x06pay_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05payId\"\x8a\x04\n" +
 	"\vMarketOrder\x12\x1f\n" +
 	"\border_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12#\n" +
 	"\n" +
@@ -4046,8 +4064,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12 \n" +
 	"\bmerchant\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\bmerchant\x126\n" +
-	"\apayment\x18\f \x01(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\apayment:\x04\x98\xb5\x18\x03J\x04\b\t\x10\n" +
-	"\":\n" +
+	"\apayment\x18\f \x01(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\apayment:\x04\x98\xb5\x18\x03\":\n" +
 	"\x0fIssuePaymentReq\x12'\n" +
 	"\border_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aorderId\":\n" +
 	"\x0fListPaymentsReq\x12'\n" +
@@ -4056,13 +4073,13 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"B\n" +
 	"\x13CreateRenewOrderReq\x12+\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\"\xac\x01\n" +
+	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\"\x9f\x01\n" +
 	"\rMarketPayInfo\x12\x1c\n" +
 	"\x06amount\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
 	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12)\n" +
 	"\rpayee_account\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\fpayeeAccount\x12%\n" +
 	"\vpayee_owner\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
-	"payeeOwner:\x04\x98\xb5\x18\x03J\x04\b\x01\x10\x02R\x05payee\"\xf1\x01\n" +
+	"payeeOwner:\x04\x98\xb5\x18\x03\"\xf1\x01\n" +
 	"\tApplyResp\x12#\n" +
 	"\n" +
 	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\tgrantUuid\x122\n" +

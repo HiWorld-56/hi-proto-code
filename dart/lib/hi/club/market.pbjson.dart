@@ -254,10 +254,6 @@ const MarketListingDetail$json = {
     {'1': 'plugin_uuid', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'pluginUuid'},
   ],
   '7': {},
-  '9': [
-    {'1': 3, '2': 4},
-  ],
-  '10': ['allow_follow_latest'],
 };
 
 /// Descriptor for `MarketListingDetail`. Decode as a `google.protobuf.DescriptorProto`.
@@ -266,8 +262,7 @@ final $typed_data.Uint8List marketListingDetailDescriptor = $convert.base64Decod
     'N0aW5nQnJpZWZCBJC1GAFSBWJyaWVmEigKDGNhcGFiaWxpdGllcxgCIAEoCUIEkLUYAVIMY2Fw'
     'YWJpbGl0aWVzEiAKCHZlcnNpb25zGAQgAygJQgSQtRgBUgh2ZXJzaW9ucxI0CgZzdGF0dXMYBS'
     'ABKA4yFi5oaS5jbHViLkxpc3RpbmdTdGF0dXNCBJC1GAFSBnN0YXR1cxIlCgtwbHVnaW5fdXVp'
-    'ZBgGIAEoCUIEkLUYAVIKcGx1Z2luVXVpZDoEmLUYAUoECAMQBFITYWxsb3dfZm9sbG93X2xhdG'
-    'VzdA==');
+    'ZBgGIAEoCUIEkLUYAVIKcGx1Z2luVXVpZDoEmLUYAQ==');
 
 @$core.Deprecated('Use marketGrantBriefDescriptor instead')
 const MarketGrantBrief$json = {
@@ -430,10 +425,6 @@ const MarketGrantView$json = {
     },
   ],
   '7': {},
-  '9': [
-    {'1': 11, '2': 12},
-  ],
-  '10': ['follow_latest'],
 };
 
 /// Descriptor for `MarketGrantView`. Decode as a `google.protobuf.DescriptorProto`.
@@ -451,8 +442,7 @@ final $typed_data.Uint8List marketGrantViewDescriptor = $convert.base64Decode(
     'IwoKY3JlYXRlZF9hdBgQIAEoA0IEkLUYA1IJY3JlYXRlZEF0EiMKCmRlY2lkZWRfYXQYESABKA'
     'NCBJC1GANSCWRlY2lkZWRBdBInCgxpbnN0YWxsZWRfYXQYEiABKANCBJC1GANSC2luc3RhbGxl'
     'ZEF0EiMKCmF1dG9fcmVuZXcYEyABKAhCBJC1GANSCWF1dG9SZW5ldxI7Cglpbml0aWF0b3IYFC'
-    'ABKA4yFy5oaS5jbHViLkdyYW50SW5pdGlhdG9yQgSQtRgDUglpbml0aWF0b3I6BJi1GANKBAgL'
-    'EAxSDWZvbGxvd19sYXRlc3Q=');
+    'ABKA4yFy5oaS5jbHViLkdyYW50SW5pdGlhdG9yQgSQtRgDUglpbml0aWF0b3I6BJi1GAM=');
 
 @$core.Deprecated('Use marketSellerDescriptor instead')
 const MarketSeller$json = {
@@ -647,13 +637,6 @@ const CreateListingReq$json = {
       '10': 'kind'
     },
   ],
-  '9': [
-    {'1': 7, '2': 8},
-    {'1': 8, '2': 9},
-    {'1': 9, '2': 10},
-    {'1': 11, '2': 12},
-  ],
-  '10': ['title', 'summary', 'logo', 'allow_follow_latest'],
 };
 
 /// Descriptor for `CreateListingReq`. Decode as a `google.protobuf.DescriptorProto`.
@@ -664,8 +647,7 @@ final $typed_data.Uint8List createListingReqDescriptor = $convert.base64Decode(
     'ABKAlSBXByaWNlEhIKBGNvaW4YBSABKAlSBGNvaW4SGgoIZHVyYXRpb24YBiABKANSCGR1cmF0'
     'aW9uEhIKBHRhZ3MYCiADKAlSBHRhZ3MSJgoPcGF5ZWVfdG9fbWFzdGVyGA4gASgIUg1wYXllZV'
     'RvTWFzdGVyEh0KCmFjdGlvbl91cmwYDCABKAlSCWFjdGlvblVybBIuCgRraW5kGA0gASgOMhou'
-    'aGkuY2x1Yi5NYXJrZXRMaXN0aW5nS2luZFIEa2luZEoECAcQCEoECAgQCUoECAkQCkoECAsQDF'
-    'IFdGl0bGVSB3N1bW1hcnlSBGxvZ29SE2FsbG93X2ZvbGxvd19sYXRlc3Q=');
+    'aGkuY2x1Yi5NYXJrZXRMaXN0aW5nS2luZFIEa2luZA==');
 
 @$core.Deprecated('Use editListingReqDescriptor instead')
 const EditListingReq$json = {
@@ -710,13 +692,6 @@ const EditListingReq$json = {
     {'1': '_payee_to_master'},
     {'1': '_action_url'},
   ],
-  '9': [
-    {'1': 5, '2': 6},
-    {'1': 6, '2': 7},
-    {'1': 7, '2': 8},
-    {'1': 9, '2': 10},
-  ],
-  '10': ['title', 'summary', 'logo'],
 };
 
 /// Descriptor for `EditListingReq`. Decode as a `google.protobuf.DescriptorProto`.
@@ -726,8 +701,7 @@ final $typed_data.Uint8List editListingReqDescriptor = $convert.base64Decode(
     'aW9uGAQgASgDSAJSCGR1cmF0aW9uiAEBEhIKBHRhZ3MYCCADKAlSBHRhZ3MSKwoPcGF5ZWVfdG'
     '9fbWFzdGVyGAsgASgISANSDXBheWVlVG9NYXN0ZXKIAQESIgoKYWN0aW9uX3VybBgKIAEoCUgE'
     'UglhY3Rpb25VcmyIAQFCCAoGX3ByaWNlQgcKBV9jb2luQgsKCV9kdXJhdGlvbkISChBfcGF5ZW'
-    'VfdG9fbWFzdGVyQg0KC19hY3Rpb25fdXJsSgQIBRAGSgQIBhAHSgQIBxAISgQICRAKUgV0aXRs'
-    'ZVIHc3VtbWFyeVIEbG9nbw==');
+    'VfdG9fbWFzdGVyQg0KC19hY3Rpb25fdXJs');
 
 @$core.Deprecated('Use setListingStatusReqDescriptor instead')
 const SetListingStatusReq$json = {
@@ -822,18 +796,13 @@ const ApplyReq$json = {
       '10': 'params'
     },
   ],
-  '9': [
-    {'1': 3, '2': 4},
-  ],
-  '10': ['follow_latest'],
 };
 
 /// Descriptor for `ApplyReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List applyReqDescriptor = $convert.base64Decode(
     'CghBcHBseVJlcRIvCgxsaXN0aW5nX3V1aWQYASABKAlCDLpICXIHMgVeXFMrJFILbGlzdGluZ1'
     'V1aWQSJwoIdG9fYWdlbnQYAiABKAlCDLpICXIHMgVeXFMrJFIHdG9BZ2VudBIvCgZwYXJhbXMY'
-    'BCABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0UgZwYXJhbXNKBAgDEARSDWZvbGxvd19sYX'
-    'Rlc3Q=');
+    'BCABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0UgZwYXJhbXM=');
 
 @$core.Deprecated('Use marketPaymentDescriptor instead')
 const MarketPayment$json = {
@@ -982,9 +951,6 @@ const MarketOrder$json = {
     },
   ],
   '7': {},
-  '9': [
-    {'1': 9, '2': 10},
-  ],
 };
 
 /// Descriptor for `MarketOrder`. Decode as a `google.protobuf.DescriptorProto`.
@@ -998,7 +964,7 @@ final $typed_data.Uint8List marketOrderDescriptor = $convert.base64Decode(
     'EhwKBmFtb3VudBgHIAEoCUIEkLUYA1IGYW1vdW50EhgKBGNvaW4YCCABKAlCBJC1GANSBGNvaW'
     '4SIwoKY3JlYXRlZF9hdBgKIAEoA0IEkLUYA1IJY3JlYXRlZEF0EiAKCG1lcmNoYW50GAsgASgJ'
     'QgSQtRgDUghtZXJjaGFudBI2CgdwYXltZW50GAwgASgLMhYuaGkuY2x1Yi5NYXJrZXRQYXltZW'
-    '50QgSQtRgDUgdwYXltZW50OgSYtRgDSgQICRAK');
+    '50QgSQtRgDUgdwYXltZW50OgSYtRgD');
 
 @$core.Deprecated('Use issuePaymentReqDescriptor instead')
 const IssuePaymentReq$json = {
@@ -1078,18 +1044,13 @@ const MarketPayInfo$json = {
     {'1': 'payee_owner', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'payeeOwner'},
   ],
   '7': {},
-  '9': [
-    {'1': 1, '2': 2},
-  ],
-  '10': ['payee'],
 };
 
 /// Descriptor for `MarketPayInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List marketPayInfoDescriptor = $convert.base64Decode(
     'Cg1NYXJrZXRQYXlJbmZvEhwKBmFtb3VudBgCIAEoCUIEkLUYA1IGYW1vdW50EhgKBGNvaW4YAy'
     'ABKAlCBJC1GANSBGNvaW4SKQoNcGF5ZWVfYWNjb3VudBgEIAEoCUIEkLUYA1IMcGF5ZWVBY2Nv'
-    'dW50EiUKC3BheWVlX293bmVyGAUgASgJQgSQtRgDUgpwYXllZU93bmVyOgSYtRgDSgQIARACUg'
-    'VwYXllZQ==');
+    'dW50EiUKC3BheWVlX293bmVyGAUgASgJQgSQtRgDUgpwYXllZU93bmVyOgSYtRgD');
 
 @$core.Deprecated('Use applyRespDescriptor instead')
 const ApplyResp$json = {

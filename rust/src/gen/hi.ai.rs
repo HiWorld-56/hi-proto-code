@@ -863,7 +863,7 @@ pub struct PluginLoaded {
 /// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
 /// data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
 ///
-/// ⚠️ **没有 runtime 字段,不要再加回来。** 4 号留空是原 `runtime` 的位置。
+/// ⚠️ **没有 runtime 字段,不要再加回来。**
 /// 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateShellReq {

@@ -5941,6 +5941,10 @@ pub struct MarketListingDetail {
     /// 买家装之前就知道会得到什么能力。
     #[prost(string, tag = "2")]
     pub capabilities: ::prost::alloc::string::String,
+    /// ⚠️ **没有 allow_follow_latest,不要再加回来。**
+    /// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
+    /// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。
+    /// 卖家没有理由替买家决定他用哪一版 —— 买家买到的是这个插件,选版本是他的权利。
     /// 可选版本列表(引用方装好后可在其中切换)。
     #[prost(string, repeated, tag = "4")]
     pub versions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -6044,6 +6048,8 @@ pub struct MarketGrantView {
     pub price: ::prost::alloc::string::String,
     #[prost(string, tag = "10")]
     pub coin: ::prost::alloc::string::String,
+    /// ⚠️ 没有 follow_latest:见 hi.ai.PluginView.follow_latest —— 归使用行,不归授权。
+    ///
     /// 当前引用的版本
     #[prost(string, tag = "12")]
     pub version: ::prost::alloc::string::String,
@@ -6153,6 +6159,13 @@ pub struct CreateListingReq {
     /// 秒;0 = 永久
     #[prost(int64, tag = "6")]
     pub duration: i64,
+    /// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
+    ///
+    /// 那三个是插件**自己就有**的东西(`hi.ai.PluginShell.name`、激活版的 `logo`/`summary`),
+    /// 挂牌时再填一遍就是同一个东西存两份 —— 必然漂:市场里叫「超强天气」、
+    /// 机器人插件列表里叫「weather」,而且没有任何一处会报错。
+    /// 市场展示一律**读侧现取**(见 MarketListingBrief 的注释)。
+    ///
     /// 市场分类。**这个不删** —— 插件自身没有分类的概念
     #[prost(string, repeated, tag = "10")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -6164,6 +6177,7 @@ pub struct CreateListingReq {
     /// 前端**暂时不给这个选项**(隐藏),先把能力放在契约里。
     #[prost(bool, tag = "14")]
     pub payee_to_master: bool,
+    /// ⚠️ 没有 allow_follow_latest:见 MarketListingDetail —— 这件事归使用方,不归挂牌。
     /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
     ///
     /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
@@ -6190,6 +6204,7 @@ pub struct EditListingReq {
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int64, optional, tag = "4")]
     pub duration: ::core::option::Option<i64>,
+    /// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
     #[prost(string, repeated, tag = "8")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// 见 CreateListingReq:软件机器人没得选
@@ -6243,6 +6258,8 @@ pub struct ApplyReq {
     /// 装到哪台机器人上
     #[prost(string, tag = "2")]
     pub to_agent: ::prost::alloc::string::String,
+    /// ⚠️ 没有 follow_latest:买完之后在"机器人 → 插件"那一行上自己开关(hi.ai 的 c.follow_latest)。
+    ///
     /// 外部流程要的额外参数,原样转给商户后台
     #[prost(message, optional, tag = "4")]
     pub params: ::core::option::Option<::pbjson_types::Struct>,
@@ -6384,6 +6401,8 @@ pub struct MarketOrder {
     pub amount: ::prost::alloc::string::String,
     #[prost(string, tag = "8")]
     pub coin: ::prost::alloc::string::String,
+    /// ⚠️ **没有 expire_at** —— 有效期挪到**付款凭据**上了(MarketPayment.expire_at)。
+    /// 业务单不过期:凭据超时只是那一次付款作废,这台机器人要续期这件事还在。
     #[prost(int64, tag = "10")]
     pub created_at: i64,
     /// 把付款结果**报给哪个商户** —— 即图示里唤起 hidid 时要带的「商户DID」。
@@ -6434,6 +6453,10 @@ pub struct CreateRenewOrderReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketPayInfo {
+    /// ⚠️ **没有 `payee` 这个字段,不要加回来。** 它原来的语义是"收款方 DID",
+    /// 而付款方拿它**直接当转账目标**。现在收款人与收款账号分开了,叫 payee 会让人
+    /// 不知道该拿哪个去付款 —— 所以换成下面两个名字,各自说清自己是什么。
+    ///
     /// 人类可读金额,如 "9.9"
     #[prost(string, tag = "2")]
     pub amount: ::prost::alloc::string::String,

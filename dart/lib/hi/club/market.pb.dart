@@ -295,6 +295,10 @@ class MarketListingDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearCapabilities() => $_clearField(2);
 
+  /// ⚠️ **没有 allow_follow_latest,不要再加回来。**
+  /// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
+  /// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。
+  /// 卖家没有理由替买家决定他用哪一版 —— 买家买到的是这个插件,选版本是他的权利。
   /// 可选版本列表(引用方装好后可在其中切换)。
   @$pb.TagNumber(4)
   $pb.PbList<$core.String> get versions => $_getList(2);
@@ -820,6 +824,7 @@ class MarketGrantView extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   void clearCoin() => $_clearField(10);
 
+  /// ⚠️ 没有 follow_latest:见 hi.ai.PluginView.follow_latest —— 归使用行,不归授权。
   @$pb.TagNumber(12)
   $core.String get version => $_getSZ(10);
   @$pb.TagNumber(12)
@@ -1497,9 +1502,16 @@ class CreateListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearDuration() => $_clearField(6);
 
+  /// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
+  ///
+  /// 那三个是插件**自己就有**的东西(`hi.ai.PluginShell.name`、激活版的 `logo`/`summary`),
+  /// 挂牌时再填一遍就是同一个东西存两份 —— 必然漂:市场里叫「超强天气」、
+  /// 机器人插件列表里叫「weather」,而且没有任何一处会报错。
+  /// 市场展示一律**读侧现取**(见 MarketListingBrief 的注释)。
   @$pb.TagNumber(10)
   $pb.PbList<$core.String> get tags => $_getList(6);
 
+  /// ⚠️ 没有 allow_follow_latest:见 MarketListingDetail —— 这件事归使用方,不归挂牌。
   /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
   ///
   /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
@@ -1643,6 +1655,7 @@ class EditListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearDuration() => $_clearField(4);
 
+  /// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
   @$pb.TagNumber(8)
   $pb.PbList<$core.String> get tags => $_getList(4);
 
@@ -1994,6 +2007,7 @@ class ApplyReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearToAgent() => $_clearField(2);
 
+  /// ⚠️ 没有 follow_latest:买完之后在"机器人 → 插件"那一行上自己开关(hi.ai 的 c.follow_latest)。
   @$pb.TagNumber(4)
   $3.Struct get params => $_getN(2);
   @$pb.TagNumber(4)
@@ -2590,6 +2604,8 @@ class MarketOrder extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearCoin() => $_clearField(8);
 
+  /// ⚠️ **没有 expire_at** —— 有效期挪到**付款凭据**上了(MarketPayment.expire_at)。
+  /// 业务单不过期:凭据超时只是那一次付款作废,这台机器人要续期这件事还在。
   @$pb.TagNumber(10)
   $fixnum.Int64 get createdAt => $_getI64(8);
   @$pb.TagNumber(10)
@@ -2927,6 +2943,9 @@ class MarketPayInfo extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<MarketPayInfo>(create);
   static MarketPayInfo? _defaultInstance;
 
+  /// ⚠️ **没有 `payee` 这个字段,不要加回来。** 它原来的语义是"收款方 DID",
+  ///    而付款方拿它**直接当转账目标**。现在收款人与收款账号分开了,叫 payee 会让人
+  ///    不知道该拿哪个去付款 —— 所以换成下面两个名字,各自说清自己是什么。
   @$pb.TagNumber(2)
   $core.String get amount => $_getSZ(0);
   @$pb.TagNumber(2)

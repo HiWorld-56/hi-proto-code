@@ -302,17 +302,13 @@ const CreateShellReq$json = {
       '10': 'data'
     },
   ],
-  '9': [
-    {'1': 4, '2': 5},
-  ],
-  '10': ['runtime'],
 };
 
 /// Descriptor for `CreateShellReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createShellReqDescriptor = $convert.base64Decode(
     'Cg5DcmVhdGVTaGVsbFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudBIbCg'
     'RuYW1lGAIgASgJQge6SARyAhABUgRuYW1lEisKBGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9i'
-    'dWYuU3RydWN0UgRkYXRhSgQIBBAFUgdydW50aW1l');
+    'dWYuU3RydWN0UgRkYXRh');
 
 @$core.Deprecated('Use createShellRespDescriptor instead')
 const CreateShellResp$json = {
