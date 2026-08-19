@@ -433,8 +433,11 @@ func (MarketOrderKind) EnumDescriptor() ([]byte, []int) {
 type MarketOrderStatus int32
 
 const (
-	MarketOrderStatus_MARKET_ORDER_STATUS_OPEN     MarketOrderStatus = 0 // 待付款
-	MarketOrderStatus_MARKET_ORDER_STATUS_PAID     MarketOrderStatus = 1 // 已付款并履行完毕
+	MarketOrderStatus_MARKET_ORDER_STATUS_OPEN MarketOrderStatus = 0 // 待付款
+	MarketOrderStatus_MARKET_ORDER_STATUS_PAID MarketOrderStatus = 1 // 已付款并履行完毕
+	// ⚠️ **没有 EXPIRED,不要加回来** —— 过期的是**付款凭据**,不是这张业务单。
+	// 一张凭据超时作废,业务上"这台机器人要续期"这件事并没有作废:
+	// 主订单还开着,换一张新凭据继续付即可。
 	MarketOrderStatus_MARKET_ORDER_STATUS_CANCELED MarketOrderStatus = 3
 )
 
@@ -4195,11 +4198,11 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x14GRANT_STATUS_EXPIRED\x10\x06*N\n" +
 	"\x0fMarketOrderKind\x12\x1e\n" +
 	"\x1aMARKET_ORDER_KIND_PURCHASE\x10\x00\x12\x1b\n" +
-	"\x17MARKET_ORDER_KIND_RENEW\x10\x01*w\n" +
+	"\x17MARKET_ORDER_KIND_RENEW\x10\x01*q\n" +
 	"\x11MarketOrderStatus\x12\x1c\n" +
 	"\x18MARKET_ORDER_STATUS_OPEN\x10\x00\x12\x1c\n" +
 	"\x18MARKET_ORDER_STATUS_PAID\x10\x01\x12 \n" +
-	"\x1cMARKET_ORDER_STATUS_CANCELED\x10\x03\"\x04\b\x02\x10\x02*\xe9\x01\n" +
+	"\x1cMARKET_ORDER_STATUS_CANCELED\x10\x03*\xe9\x01\n" +
 	"\x13MarketPaymentStatus\x12!\n" +
 	"\x1dMARKET_PAYMENT_STATUS_PENDING\x10\x00\x12\x1e\n" +
 	"\x1aMARKET_PAYMENT_STATUS_PAID\x10\x01\x12!\n" +

@@ -125,16 +125,13 @@ const MarketOrderStatus$json = {
     {'1': 'MARKET_ORDER_STATUS_PAID', '2': 1},
     {'1': 'MARKET_ORDER_STATUS_CANCELED', '2': 3},
   ],
-  '4': [
-    {'1': 2, '2': 2},
-  ],
 };
 
 /// Descriptor for `MarketOrderStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List marketOrderStatusDescriptor = $convert.base64Decode(
     'ChFNYXJrZXRPcmRlclN0YXR1cxIcChhNQVJLRVRfT1JERVJfU1RBVFVTX09QRU4QABIcChhNQV'
     'JLRVRfT1JERVJfU1RBVFVTX1BBSUQQARIgChxNQVJLRVRfT1JERVJfU1RBVFVTX0NBTkNFTEVE'
-    'EAMiBAgCEAI=');
+    'EAM=');
 
 @$core.Deprecated('Use marketPaymentStatusDescriptor instead')
 const MarketPaymentStatus$json = {

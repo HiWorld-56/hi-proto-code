@@ -258,6 +258,10 @@ class MarketOrderStatus extends $pb.ProtobufEnum {
       MarketOrderStatus._(0, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_OPEN');
   static const MarketOrderStatus MARKET_ORDER_STATUS_PAID =
       MarketOrderStatus._(1, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_PAID');
+
+  /// ⚠️ **没有 EXPIRED,不要加回来** —— 过期的是**付款凭据**,不是这张业务单。
+  /// 一张凭据超时作废,业务上"这台机器人要续期"这件事并没有作废:
+  /// 主订单还开着,换一张新凭据继续付即可。
   static const MarketOrderStatus MARKET_ORDER_STATUS_CANCELED =
       MarketOrderStatus._(
           3, _omitEnumNames ? '' : 'MARKET_ORDER_STATUS_CANCELED');
