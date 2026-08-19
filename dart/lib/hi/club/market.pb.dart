@@ -645,6 +645,7 @@ class MarketGrantView extends $pb.GeneratedMessage {
     $fixnum.Int64? installedAt,
     $core.bool? autoRenew,
     GrantInitiator? initiator,
+    $core.String? pluginUuid,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -666,6 +667,7 @@ class MarketGrantView extends $pb.GeneratedMessage {
     if (installedAt != null) result.installedAt = installedAt;
     if (autoRenew != null) result.autoRenew = autoRenew;
     if (initiator != null) result.initiator = initiator;
+    if (pluginUuid != null) result.pluginUuid = pluginUuid;
     return result;
   }
 
@@ -707,6 +709,7 @@ class MarketGrantView extends $pb.GeneratedMessage {
     ..aOB(19, _omitFieldNames ? '' : 'autoRenew')
     ..aE<GrantInitiator>(20, _omitFieldNames ? '' : 'initiator',
         enumValues: GrantInitiator.values)
+    ..aOS(21, _omitFieldNames ? '' : 'pluginUuid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -908,6 +911,19 @@ class MarketGrantView extends $pb.GeneratedMessage {
   $core.bool hasInitiator() => $_has(18);
   @$pb.TagNumber(20)
   void clearInitiator() => $_clearField(20);
+
+  /// 这条授权是哪个插件。**给前端定位用**:从"我买到的/卖出的"跳到那台机器人的插件页时,
+  /// 要用它把插件管理直接打开(`/robot/plugin/<did>?plugin=<uuid>`)——
+  /// 只有 listing_uuid 是不够的,插件页认的是插件。
+  /// ⚠️ 不复用 11 号(那是删掉的 follow_latest):号不要钱,复用只会让老客户端把 bool 读成 string。
+  @$pb.TagNumber(21)
+  $core.String get pluginUuid => $_getSZ(19);
+  @$pb.TagNumber(21)
+  set pluginUuid($core.String value) => $_setString(19, value);
+  @$pb.TagNumber(21)
+  $core.bool hasPluginUuid() => $_has(19);
+  @$pb.TagNumber(21)
+  void clearPluginUuid() => $_clearField(21);
 }
 
 /// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。

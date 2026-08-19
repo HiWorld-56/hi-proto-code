@@ -6075,6 +6075,12 @@ pub struct MarketGrantView {
     /// 后端按它决定 PENDING 时该问谁 —— 见 GrantInitiator。
     #[prost(enumeration = "GrantInitiator", tag = "20")]
     pub initiator: i32,
+    /// 这条授权是哪个插件。**给前端定位用**:从"我买到的/卖出的"跳到那台机器人的插件页时,
+    /// 要用它把插件管理直接打开(`/robot/plugin/<did>?plugin=<uuid>`)——
+    /// 只有 listing_uuid 是不够的,插件页认的是插件。
+    /// ⚠️ 不复用 11 号(那是删掉的 follow_latest):号不要钱,复用只会让老客户端把 bool 读成 string。
+    #[prost(string, tag = "21")]
+    pub plugin_uuid: ::prost::alloc::string::String,
 }
 /// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
 ///

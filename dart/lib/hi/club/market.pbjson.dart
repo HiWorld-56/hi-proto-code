@@ -420,6 +420,7 @@ const MarketGrantView$json = {
       '8': {},
       '10': 'initiator'
     },
+    {'1': 'plugin_uuid', '3': 21, '4': 1, '5': 9, '8': {}, '10': 'pluginUuid'},
   ],
   '7': {},
 };
@@ -439,7 +440,8 @@ final $typed_data.Uint8List marketGrantViewDescriptor = $convert.base64Decode(
     'IwoKY3JlYXRlZF9hdBgQIAEoA0IEkLUYA1IJY3JlYXRlZEF0EiMKCmRlY2lkZWRfYXQYESABKA'
     'NCBJC1GANSCWRlY2lkZWRBdBInCgxpbnN0YWxsZWRfYXQYEiABKANCBJC1GANSC2luc3RhbGxl'
     'ZEF0EiMKCmF1dG9fcmVuZXcYEyABKAhCBJC1GANSCWF1dG9SZW5ldxI7Cglpbml0aWF0b3IYFC'
-    'ABKA4yFy5oaS5jbHViLkdyYW50SW5pdGlhdG9yQgSQtRgDUglpbml0aWF0b3I6BJi1GAM=');
+    'ABKA4yFy5oaS5jbHViLkdyYW50SW5pdGlhdG9yQgSQtRgDUglpbml0aWF0b3ISJQoLcGx1Z2lu'
+    'X3V1aWQYFSABKAlCBJC1GANSCnBsdWdpblV1aWQ6BJi1GAM=');
 
 @$core.Deprecated('Use marketSellerDescriptor instead')
 const MarketSeller$json = {

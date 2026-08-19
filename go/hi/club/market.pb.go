@@ -1040,7 +1040,12 @@ type MarketGrantView struct {
 	AutoRenew bool `protobuf:"varint,19,opt,name=auto_renew,json=autoRenew,proto3" json:"auto_renew,omitempty"`
 	// 谁先开的口(申请 / 分享)。前端按它决定这一行给"同意/拒绝"还是"审批/驳回",
 	// 后端按它决定 PENDING 时该问谁 —— 见 GrantInitiator。
-	Initiator     GrantInitiator `protobuf:"varint,20,opt,name=initiator,proto3,enum=hi.club.GrantInitiator" json:"initiator,omitempty"`
+	Initiator GrantInitiator `protobuf:"varint,20,opt,name=initiator,proto3,enum=hi.club.GrantInitiator" json:"initiator,omitempty"`
+	// 这条授权是哪个插件。**给前端定位用**:从"我买到的/卖出的"跳到那台机器人的插件页时,
+	// 要用它把插件管理直接打开(`/robot/plugin/<did>?plugin=<uuid>`)——
+	// 只有 listing_uuid 是不够的,插件页认的是插件。
+	// ⚠️ 不复用 11 号(那是删掉的 follow_latest):号不要钱,复用只会让老客户端把 bool 读成 string。
+	PluginUuid    string `protobuf:"bytes,21,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1206,6 +1211,13 @@ func (x *MarketGrantView) GetInitiator() GrantInitiator {
 		return x.Initiator
 	}
 	return GrantInitiator_GRANT_INITIATOR_UNSPECIFIED
+}
+
+func (x *MarketGrantView) GetPluginUuid() string {
+	if x != nil {
+		return x.PluginUuid
+	}
+	return ""
 }
 
 // ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
@@ -3919,7 +3931,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x04coin\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02R\x04coin\x12!\n" +
 	"\texpire_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x02R\bexpireAt\x12#\n" +
 	"\n" +
-	"auto_renew\x18\a \x01(\bB\x04\x90\xb5\x18\x02R\tautoRenew:\x04\x98\xb5\x18\x02\"\x85\x06\n" +
+	"auto_renew\x18\a \x01(\bB\x04\x90\xb5\x18\x02R\tautoRenew:\x04\x98\xb5\x18\x02\"\xac\x06\n" +
 	"\x0fMarketGrantView\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12'\n" +
 	"\flisting_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vlistingUuid\x12\x1a\n" +
@@ -3949,7 +3961,9 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\finstalled_at\x18\x12 \x01(\x03B\x04\x90\xb5\x18\x03R\vinstalledAt\x12#\n" +
 	"\n" +
 	"auto_renew\x18\x13 \x01(\bB\x04\x90\xb5\x18\x03R\tautoRenew\x12;\n" +
-	"\tinitiator\x18\x14 \x01(\x0e2\x17.hi.club.GrantInitiatorB\x04\x90\xb5\x18\x03R\tinitiator:\x04\x98\xb5\x18\x03\"\x93\x01\n" +
+	"\tinitiator\x18\x14 \x01(\x0e2\x17.hi.club.GrantInitiatorB\x04\x90\xb5\x18\x03R\tinitiator\x12%\n" +
+	"\vplugin_uuid\x18\x15 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
+	"pluginUuid:\x04\x98\xb5\x18\x03\"\x93\x01\n" +
 	"\fMarketSeller\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master\x12(\n" +
