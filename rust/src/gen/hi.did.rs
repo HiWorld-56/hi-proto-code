@@ -5762,6 +5762,136 @@ pub mod gateway_client {
     }
 }
 /// Generated client implementations.
+pub mod gateway_device_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 网关配置(**设备读**)。与 Gateway 同一份数据,差别只在**主体怎么证明自己**:
+    ///
+    /// · `Gateway.List`      —— 主体是**登录用户/商户**,拿 token(web、app 登录后)。
+    /// · `GatewayDevice.List` —— 主体是**设备**:它有私钥、**没有登录态**。
+    ///
+    /// 机器人(hinj-brain)就是后者:它跟 hi-did 之间只走验签接口(UpdateAddresses / Pay.Notify),
+    /// 从来没有 token。而端点与 api_key 又必须从服务端取 —— 写死在固件里意味着
+    /// 换节点要重新 OTA,key 还会随镜像发到每台设备上。
+    ///
+    /// ⚠️ 档位不同就必须拆 service(同 service 档位必须一致),与
+    /// Gateway / GatewayAdmin、DApp / DAppAdmin 同一个范式。
+    ///
+    /// 载荷(SignedData.Data)不带任何字段(`{}` 即可)—— 这个方法**不依赖"我是谁"**,
+    /// 签名只用来证明"是一台持私钥的设备",挡住匿名抓取节点凭证。
+    #[derive(Debug, Clone)]
+    pub struct GatewayDeviceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl GatewayDeviceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> GatewayDeviceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> GatewayDeviceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            GatewayDeviceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
+        ) -> std::result::Result<
+            tonic::Response<super::GatewayConfigListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.GatewayDevice/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.GatewayDevice", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
 pub mod gateway_admin_client {
     #![allow(
         unused_variables,

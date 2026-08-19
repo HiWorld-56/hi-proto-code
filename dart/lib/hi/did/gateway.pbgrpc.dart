@@ -17,6 +17,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
+import '../common.pb.dart' as $2;
 import 'gateway.pb.dart' as $1;
 
 export 'gateway.pb.dart';
@@ -72,6 +73,71 @@ abstract class GatewayServiceBase extends $grpc.Service {
 
   $async.Future<$1.GatewayConfigListResp> list(
       $grpc.ServiceCall call, $0.Empty request);
+}
+
+/// 网关配置(**设备读**)。与 Gateway 同一份数据,差别只在**主体怎么证明自己**:
+///
+///   · `Gateway.List`      —— 主体是**登录用户/商户**,拿 token(web、app 登录后)。
+///   · `GatewayDevice.List` —— 主体是**设备**:它有私钥、**没有登录态**。
+///
+/// 机器人(hinj-brain)就是后者:它跟 hi-did 之间只走验签接口(UpdateAddresses / Pay.Notify),
+/// 从来没有 token。而端点与 api_key 又必须从服务端取 —— 写死在固件里意味着
+/// 换节点要重新 OTA,key 还会随镜像发到每台设备上。
+///
+/// ⚠️ 档位不同就必须拆 service(同 service 档位必须一致),与
+///    Gateway / GatewayAdmin、DApp / DAppAdmin 同一个范式。
+///
+/// 载荷(SignedData.Data)不带任何字段(`{}` 即可)—— 这个方法**不依赖"我是谁"**,
+/// 签名只用来证明"是一台持私钥的设备",挡住匿名抓取节点凭证。
+@$pb.GrpcServiceName('hi.did.GatewayDevice')
+class GatewayDeviceClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  GatewayDeviceClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.GatewayConfigListResp> list(
+    $2.SignedData request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$list =
+      $grpc.ClientMethod<$2.SignedData, $1.GatewayConfigListResp>(
+          '/hi.did.GatewayDevice/List',
+          ($2.SignedData value) => value.writeToBuffer(),
+          $1.GatewayConfigListResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.did.GatewayDevice')
+abstract class GatewayDeviceServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.did.GatewayDevice';
+
+  GatewayDeviceServiceBase() {
+    $addMethod($grpc.ServiceMethod<$2.SignedData, $1.GatewayConfigListResp>(
+        'List',
+        list_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.SignedData.fromBuffer(value),
+        ($1.GatewayConfigListResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.GatewayConfigListResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.SignedData> $request) async {
+    return list($call, await $request);
+  }
+
+  $async.Future<$1.GatewayConfigListResp> list(
+      $grpc.ServiceCall call, $2.SignedData request);
 }
 
 /// 网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。

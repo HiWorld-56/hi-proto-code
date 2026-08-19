@@ -8,6 +8,7 @@ package did
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -121,6 +122,138 @@ var Gateway_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _Gateway_List_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/did/gateway.proto",
+}
+
+const (
+	GatewayDevice_List_FullMethodName = "/hi.did.GatewayDevice/List"
+)
+
+// GatewayDeviceClient is the client API for GatewayDevice service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 网关配置(**设备读**)。与 Gateway 同一份数据,差别只在**主体怎么证明自己**:
+//
+//	· `Gateway.List`      —— 主体是**登录用户/商户**,拿 token(web、app 登录后)。
+//	· `GatewayDevice.List` —— 主体是**设备**:它有私钥、**没有登录态**。
+//
+// 机器人(hinj-brain)就是后者:它跟 hi-did 之间只走验签接口(UpdateAddresses / Pay.Notify),
+// 从来没有 token。而端点与 api_key 又必须从服务端取 —— 写死在固件里意味着
+// 换节点要重新 OTA,key 还会随镜像发到每台设备上。
+//
+// ⚠️ 档位不同就必须拆 service(同 service 档位必须一致),与
+//
+//	Gateway / GatewayAdmin、DApp / DAppAdmin 同一个范式。
+//
+// 载荷(SignedData.Data)不带任何字段(`{}` 即可)—— 这个方法**不依赖"我是谁"**,
+// 签名只用来证明"是一台持私钥的设备",挡住匿名抓取节点凭证。
+type GatewayDeviceClient interface {
+	List(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GatewayConfigListResp, error)
+}
+
+type gatewayDeviceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGatewayDeviceClient(cc grpc.ClientConnInterface) GatewayDeviceClient {
+	return &gatewayDeviceClient{cc}
+}
+
+func (c *gatewayDeviceClient) List(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*GatewayConfigListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GatewayConfigListResp)
+	err := c.cc.Invoke(ctx, GatewayDevice_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GatewayDeviceServer is the server API for GatewayDevice service.
+// All implementations should embed UnimplementedGatewayDeviceServer
+// for forward compatibility.
+//
+// 网关配置(**设备读**)。与 Gateway 同一份数据,差别只在**主体怎么证明自己**:
+//
+//	· `Gateway.List`      —— 主体是**登录用户/商户**,拿 token(web、app 登录后)。
+//	· `GatewayDevice.List` —— 主体是**设备**:它有私钥、**没有登录态**。
+//
+// 机器人(hinj-brain)就是后者:它跟 hi-did 之间只走验签接口(UpdateAddresses / Pay.Notify),
+// 从来没有 token。而端点与 api_key 又必须从服务端取 —— 写死在固件里意味着
+// 换节点要重新 OTA,key 还会随镜像发到每台设备上。
+//
+// ⚠️ 档位不同就必须拆 service(同 service 档位必须一致),与
+//
+//	Gateway / GatewayAdmin、DApp / DAppAdmin 同一个范式。
+//
+// 载荷(SignedData.Data)不带任何字段(`{}` 即可)—— 这个方法**不依赖"我是谁"**,
+// 签名只用来证明"是一台持私钥的设备",挡住匿名抓取节点凭证。
+type GatewayDeviceServer interface {
+	List(context.Context, *hi.SignedData) (*GatewayConfigListResp, error)
+}
+
+// UnimplementedGatewayDeviceServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGatewayDeviceServer struct{}
+
+func (UnimplementedGatewayDeviceServer) List(context.Context, *hi.SignedData) (*GatewayConfigListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedGatewayDeviceServer) testEmbeddedByValue() {}
+
+// UnsafeGatewayDeviceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GatewayDeviceServer will
+// result in compilation errors.
+type UnsafeGatewayDeviceServer interface {
+	mustEmbedUnimplementedGatewayDeviceServer()
+}
+
+func RegisterGatewayDeviceServer(s grpc.ServiceRegistrar, srv GatewayDeviceServer) {
+	// If the following call panics, it indicates UnimplementedGatewayDeviceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GatewayDevice_ServiceDesc, srv)
+}
+
+func _GatewayDevice_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.SignedData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayDeviceServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GatewayDevice_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayDeviceServer).List(ctx, req.(*hi.SignedData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GatewayDevice_ServiceDesc is the grpc.ServiceDesc for GatewayDevice service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GatewayDevice_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.did.GatewayDevice",
+	HandlerType: (*GatewayDeviceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _GatewayDevice_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -7,7 +7,7 @@
 package did
 
 import (
-	_ "github.com/HiWorld-56/hi-proto/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -184,7 +184,7 @@ var File_hi_did_gateway_proto protoreflect.FileDescriptor
 
 const file_hi_did_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"j\n" +
+	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"j\n" +
 	"\x11GatewayConfigUnit\x12\x18\n" +
 	"\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12\x16\n" +
 	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12\x1d\n" +
@@ -194,7 +194,9 @@ const file_hi_did_gateway_proto_rawDesc = "" +
 	"\x13GatewayConfigSetReq\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitR\x04list2P\n" +
 	"\aGateway\x12E\n" +
-	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x06\x8a\xb5\x18\x02\x02\x032Q\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x06\x8a\xb5\x18\x02\x02\x032M\n" +
+	"\rGatewayDevice\x12<\n" +
+	"\x04List\x12\x0e.hi.SignedData\x1a\x1d.hi.did.GatewayConfigListResp\"\x05\x8a\xb5\x18\x01\x052Q\n" +
 	"\fGatewayAdmin\x12A\n" +
 	"\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B}\n" +
 	"\n" +
@@ -218,16 +220,19 @@ var file_hi_did_gateway_proto_goTypes = []any{
 	(*GatewayConfigListResp)(nil), // 1: hi.did.GatewayConfigListResp
 	(*GatewayConfigSetReq)(nil),   // 2: hi.did.GatewayConfigSetReq
 	(*emptypb.Empty)(nil),         // 3: google.protobuf.Empty
+	(*hi.SignedData)(nil),         // 4: hi.SignedData
 }
 var file_hi_did_gateway_proto_depIdxs = []int32{
 	0, // 0: hi.did.GatewayConfigListResp.list:type_name -> hi.did.GatewayConfigUnit
 	0, // 1: hi.did.GatewayConfigSetReq.list:type_name -> hi.did.GatewayConfigUnit
 	3, // 2: hi.did.Gateway.List:input_type -> google.protobuf.Empty
-	2, // 3: hi.did.GatewayAdmin.Set:input_type -> hi.did.GatewayConfigSetReq
-	1, // 4: hi.did.Gateway.List:output_type -> hi.did.GatewayConfigListResp
-	3, // 5: hi.did.GatewayAdmin.Set:output_type -> google.protobuf.Empty
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
+	4, // 3: hi.did.GatewayDevice.List:input_type -> hi.SignedData
+	2, // 4: hi.did.GatewayAdmin.Set:input_type -> hi.did.GatewayConfigSetReq
+	1, // 5: hi.did.Gateway.List:output_type -> hi.did.GatewayConfigListResp
+	1, // 6: hi.did.GatewayDevice.List:output_type -> hi.did.GatewayConfigListResp
+	3, // 7: hi.did.GatewayAdmin.Set:output_type -> google.protobuf.Empty
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -246,7 +251,7 @@ func file_hi_did_gateway_proto_init() {
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_hi_did_gateway_proto_goTypes,
 		DependencyIndexes: file_hi_did_gateway_proto_depIdxs,
