@@ -398,15 +398,14 @@ const file_hi_did_auth_proto_rawDesc = "" +
 	"\x05token\x18\x03 \x01(\v2\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n" +
 	"\x04mqtt\x18\x04 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\"&\n" +
 	"\tLogoutReq\x12\x19\n" +
-	"\x03did\x18\x01 \x01(\v2\a.hi.DIDR\x03did2\xa4\x03\n" +
+	"\x03did\x18\x01 \x01(\v2\a.hi.DIDR\x03did2\xeb\x02\n" +
 	"\x04Auth\x12=\n" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x122\n" +
 	"\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x129\n" +
 	"\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x12?\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
 	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x127\n" +
-	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x127\n" +
-	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05Bz\n" +
+	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05Bz\n" +
 	"\n" +
 	"com.hi.didB\tAuthProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -456,16 +455,14 @@ var file_hi_did_auth_proto_depIdxs = []int32{
 	3,  // 13: hi.did.Auth.GenerateReqId:input_type -> hi.did.GenerateReqIdReq
 	12, // 14: hi.did.Auth.GetReqStatus:input_type -> hi.RequestId
 	11, // 15: hi.did.Auth.Logout:input_type -> hi.SignedData
-	11, // 16: hi.did.Auth.Notify:input_type -> hi.SignedData
-	8,  // 17: hi.did.Auth.RefreshToken:output_type -> hi.AuthToken
-	2,  // 18: hi.did.Auth.Verify:output_type -> hi.did.LoginResp
-	2,  // 19: hi.did.Auth.VerifyOffline:output_type -> hi.did.LoginResp
-	12, // 20: hi.did.Auth.GenerateReqId:output_type -> hi.RequestId
-	4,  // 21: hi.did.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
-	13, // 22: hi.did.Auth.Logout:output_type -> google.protobuf.Empty
-	13, // 23: hi.did.Auth.Notify:output_type -> google.protobuf.Empty
-	17, // [17:24] is the sub-list for method output_type
-	10, // [10:17] is the sub-list for method input_type
+	8,  // 16: hi.did.Auth.RefreshToken:output_type -> hi.AuthToken
+	2,  // 17: hi.did.Auth.Verify:output_type -> hi.did.LoginResp
+	2,  // 18: hi.did.Auth.VerifyOffline:output_type -> hi.did.LoginResp
+	12, // 19: hi.did.Auth.GenerateReqId:output_type -> hi.RequestId
+	4,  // 20: hi.did.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
+	13, // 21: hi.did.Auth.Logout:output_type -> google.protobuf.Empty
+	16, // [16:22] is the sub-list for method output_type
+	10, // [10:16] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
 	10, // [10:10] is the sub-list for extension extendee
 	0,  // [0:10] is the sub-list for field type_name
