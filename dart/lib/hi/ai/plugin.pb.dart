@@ -263,6 +263,7 @@ class PluginBuild extends $pb.GeneratedMessage {
     $core.String? log,
     $fixnum.Int64? startedAt,
     $fixnum.Int64? finishedAt,
+    $core.String? arch,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -275,6 +276,7 @@ class PluginBuild extends $pb.GeneratedMessage {
     if (log != null) result.log = log;
     if (startedAt != null) result.startedAt = startedAt;
     if (finishedAt != null) result.finishedAt = finishedAt;
+    if (arch != null) result.arch = arch;
     return result;
   }
 
@@ -302,6 +304,7 @@ class PluginBuild extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'log')
     ..aInt64(9, _omitFieldNames ? '' : 'startedAt')
     ..aInt64(10, _omitFieldNames ? '' : 'finishedAt')
+    ..aOS(11, _omitFieldNames ? '' : 'arch')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -412,6 +415,17 @@ class PluginBuild extends $pb.GeneratedMessage {
   $core.bool hasFinishedAt() => $_has(9);
   @$pb.TagNumber(10)
   void clearFinishedAt() => $_clearField(10);
+
+  /// 这一行是哪个架构的构建。**一版有多行**(aarch64 / x86_64 各一),
+  /// 状态、产物、错误、日志都各记各的 —— 合并显示会互相掩盖("有一个成了"看着像全成了)。
+  @$pb.TagNumber(11)
+  $core.String get arch => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set arch($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasArch() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearArch() => $_clearField(11);
 }
 
 /// 某 agent 视角的一个插件:壳 + 激活版本内容 + 壳级使用(enabled/source/data)+ 激活版本的版本级 data + 引用计数。
@@ -2884,6 +2898,7 @@ class NativePlugin extends $pb.GeneratedMessage {
     $core.String? url,
     $core.String? sha256,
     $core.int? abiVersion,
+    $core.String? arch,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -2893,6 +2908,7 @@ class NativePlugin extends $pb.GeneratedMessage {
     if (url != null) result.url = url;
     if (sha256 != null) result.sha256 = sha256;
     if (abiVersion != null) result.abiVersion = abiVersion;
+    if (arch != null) result.arch = arch;
     return result;
   }
 
@@ -2916,6 +2932,7 @@ class NativePlugin extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'url')
     ..aOS(6, _omitFieldNames ? '' : 'sha256')
     ..aI(7, _omitFieldNames ? '' : 'abiVersion', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(8, _omitFieldNames ? '' : 'arch')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3008,14 +3025,30 @@ class NativePlugin extends $pb.GeneratedMessage {
   $core.bool hasAbiVersion() => $_has(6);
   @$pb.TagNumber(7)
   void clearAbiVersion() => $_clearField(7);
+
+  /// 这份产物是给哪个架构的(`aarch64` / `x86_64`)。
+  ///
+  /// ⚠️ **abi_version 挡不住架构不对**:两台机器的 abi 一样,指令集却不同 ——
+  ///    装上去要到 dlopen 才炸,而那个错看着像"插件本身有问题"。
+  ///    机器人拿到清单先比这个,不符就跳过并说清楚。
+  @$pb.TagNumber(8)
+  $core.String get arch => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set arch($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasArch() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearArch() => $_clearField(8);
 }
 
 class ListNativeReq extends $pb.GeneratedMessage {
   factory ListNativeReq({
     $core.String? agent,
+    $core.String? arch,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
+    if (arch != null) result.arch = arch;
     return result;
   }
 
@@ -3033,6 +3066,7 @@ class ListNativeReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'arch')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3062,6 +3096,17 @@ class ListNativeReq extends $pb.GeneratedMessage {
   $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
   void clearAgent() => $_clearField(1);
+
+  /// 机器人自己的架构。**空 = aarch64** —— 现网机器人全是 arm64,
+  /// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
+  @$pb.TagNumber(2)
+  $core.String get arch => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set arch($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasArch() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearArch() => $_clearField(2);
 }
 
 class ListNativeResp extends $pb.GeneratedMessage {

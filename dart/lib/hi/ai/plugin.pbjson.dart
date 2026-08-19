@@ -113,6 +113,7 @@ const PluginBuild$json = {
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
     {'1': 'version', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'version'},
+    {'1': 'arch', '3': 11, '4': 1, '5': 9, '8': {}, '10': 'arch'},
     {
       '1': 'status',
       '3': 3,
@@ -136,12 +137,13 @@ const PluginBuild$json = {
 /// Descriptor for `PluginBuild`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginBuildDescriptor = $convert.base64Decode(
     'CgtQbHVnaW5CdWlsZBIYCgR1dWlkGAEgASgJQgSQtRgDUgR1dWlkEh4KB3ZlcnNpb24YAiABKA'
-    'lCBJC1GANSB3ZlcnNpb24SNgoGc3RhdHVzGAMgASgOMhguaGkuYWkuUGx1Z2luQnVpbGRTdGF0'
-    'dXNCBJC1GANSBnN0YXR1cxInCgxhcnRpZmFjdF91cmwYBCABKAlCBJC1GANSC2FydGlmYWN0VX'
-    'JsEhwKBnNoYTI1NhgFIAEoCUIEkLUYA1IGc2hhMjU2EiUKC2FiaV92ZXJzaW9uGAYgASgNQgSQ'
-    'tRgDUgphYmlWZXJzaW9uEhoKBWVycm9yGAcgASgJQgSQtRgDUgVlcnJvchIWCgNsb2cYCCABKA'
-    'lCBJC1GANSA2xvZxIjCgpzdGFydGVkX2F0GAkgASgDQgSQtRgDUglzdGFydGVkQXQSJQoLZmlu'
-    'aXNoZWRfYXQYCiABKANCBJC1GANSCmZpbmlzaGVkQXQ6BJi1GAM=');
+    'lCBJC1GANSB3ZlcnNpb24SGAoEYXJjaBgLIAEoCUIEkLUYA1IEYXJjaBI2CgZzdGF0dXMYAyAB'
+    'KA4yGC5oaS5haS5QbHVnaW5CdWlsZFN0YXR1c0IEkLUYA1IGc3RhdHVzEicKDGFydGlmYWN0X3'
+    'VybBgEIAEoCUIEkLUYA1ILYXJ0aWZhY3RVcmwSHAoGc2hhMjU2GAUgASgJQgSQtRgDUgZzaGEy'
+    'NTYSJQoLYWJpX3ZlcnNpb24YBiABKA1CBJC1GANSCmFiaVZlcnNpb24SGgoFZXJyb3IYByABKA'
+    'lCBJC1GANSBWVycm9yEhYKA2xvZxgIIAEoCUIEkLUYA1IDbG9nEiMKCnN0YXJ0ZWRfYXQYCSAB'
+    'KANCBJC1GANSCXN0YXJ0ZWRBdBIlCgtmaW5pc2hlZF9hdBgKIAEoA0IEkLUYA1IKZmluaXNoZW'
+    'RBdDoEmLUYAw==');
 
 @$core.Deprecated('Use pluginViewDescriptor instead')
 const PluginView$json = {
@@ -843,6 +845,7 @@ const NativePlugin$json = {
     {'1': 'url', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'url'},
     {'1': 'sha256', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'sha256'},
     {'1': 'abi_version', '3': 7, '4': 1, '5': 13, '8': {}, '10': 'abiVersion'},
+    {'1': 'arch', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'arch'},
   ],
   '7': {},
 };
@@ -853,19 +856,21 @@ final $typed_data.Uint8List nativePluginDescriptor = $convert.base64Decode(
     'SQtRgDUgRuYW1lEh4KB3ZlcnNpb24YAyABKAlCBJC1GANSB3ZlcnNpb24SIQoJZm5fcHJlZml4'
     'GAQgASgJQgSQtRgDUghmblByZWZpeBIWCgN1cmwYBSABKAlCBJC1GANSA3VybBIcCgZzaGEyNT'
     'YYBiABKAlCBJC1GANSBnNoYTI1NhIlCgthYmlfdmVyc2lvbhgHIAEoDUIEkLUYA1IKYWJpVmVy'
-    'c2lvbjoEmLUYAw==');
+    'c2lvbhIYCgRhcmNoGAggASgJQgSQtRgDUgRhcmNoOgSYtRgD');
 
 @$core.Deprecated('Use listNativeReqDescriptor instead')
 const ListNativeReq$json = {
   '1': 'ListNativeReq',
   '2': [
     {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {'1': 'arch', '3': 2, '4': 1, '5': 9, '10': 'arch'},
   ],
 };
 
 /// Descriptor for `ListNativeReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listNativeReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0TmF0aXZlUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50');
+    'Cg1MaXN0TmF0aXZlUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50EhIKBG'
+    'FyY2gYAiABKAlSBGFyY2g=');
 
 @$core.Deprecated('Use listNativeRespDescriptor instead')
 const ListNativeResp$json = {

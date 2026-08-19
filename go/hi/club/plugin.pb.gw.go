@@ -23,7 +23,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -479,7 +478,7 @@ func local_request_Plugin_RetryBuild_0(ctx context.Context, marshaler runtime.Ma
 
 func request_AgentPlugin_ListNative_0(ctx context.Context, marshaler runtime.Marshaler, client AgentPluginClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq ListNativeReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -494,7 +493,7 @@ func request_AgentPlugin_ListNative_0(ctx context.Context, marshaler runtime.Mar
 
 func local_request_AgentPlugin_ListNative_0(ctx context.Context, marshaler runtime.Marshaler, server AgentPluginServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq ListNativeReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

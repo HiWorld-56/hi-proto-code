@@ -746,12 +746,6 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// ── 机器人自用面 ──────────────────────────────────────────────────────────
-//
-// **主体恒是调用者本人。** 上面那个 `Plugin` 的主体是**主人**(管自己机器人的插件),
-// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
-// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
-//
 // 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
 // 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 //
@@ -761,7 +755,7 @@ type AgentPluginClient interface {
 	// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
 	// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
 	// 机器人本地那个 `.so` 不会自己消失。
-	ListNative(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListNativeResp, error)
+	ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ai.ListNativeResp, error)
 }
 
 type agentPluginClient struct {
@@ -772,7 +766,7 @@ func NewAgentPluginClient(cc grpc.ClientConnInterface) AgentPluginClient {
 	return &agentPluginClient{cc}
 }
 
-func (c *agentPluginClient) ListNative(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.ListNativeResp, error) {
+func (c *agentPluginClient) ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ai.ListNativeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ai.ListNativeResp)
 	err := c.cc.Invoke(ctx, AgentPlugin_ListNative_FullMethodName, in, out, cOpts...)
@@ -786,12 +780,6 @@ func (c *agentPluginClient) ListNative(ctx context.Context, in *emptypb.Empty, o
 // All implementations should embed UnimplementedAgentPluginServer
 // for forward compatibility.
 //
-// ── 机器人自用面 ──────────────────────────────────────────────────────────
-//
-// **主体恒是调用者本人。** 上面那个 `Plugin` 的主体是**主人**(管自己机器人的插件),
-// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
-// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
-//
 // 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
 // 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 //
@@ -801,7 +789,7 @@ type AgentPluginServer interface {
 	// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
 	// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
 	// 机器人本地那个 `.so` 不会自己消失。
-	ListNative(context.Context, *emptypb.Empty) (*ai.ListNativeResp, error)
+	ListNative(context.Context, *ListNativeReq) (*ai.ListNativeResp, error)
 }
 
 // UnimplementedAgentPluginServer should be embedded to have
@@ -811,7 +799,7 @@ type AgentPluginServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentPluginServer struct{}
 
-func (UnimplementedAgentPluginServer) ListNative(context.Context, *emptypb.Empty) (*ai.ListNativeResp, error) {
+func (UnimplementedAgentPluginServer) ListNative(context.Context, *ListNativeReq) (*ai.ListNativeResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListNative not implemented")
 }
 func (UnimplementedAgentPluginServer) testEmbeddedByValue() {}
@@ -835,7 +823,7 @@ func RegisterAgentPluginServer(s grpc.ServiceRegistrar, srv AgentPluginServer) {
 }
 
 func _AgentPlugin_ListNative_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListNativeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -847,7 +835,7 @@ func _AgentPlugin_ListNative_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: AgentPlugin_ListNative_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentPluginServer).ListNative(ctx, req.(*emptypb.Empty))
+		return srv.(AgentPluginServer).ListNative(ctx, req.(*ListNativeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

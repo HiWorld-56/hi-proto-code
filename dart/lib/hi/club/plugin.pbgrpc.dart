@@ -495,12 +495,6 @@ abstract class PluginServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.RetryBuildReq request);
 }
 
-/// ── 机器人自用面 ──────────────────────────────────────────────────────────
-///
-/// **主体恒是调用者本人。** 上面那个 `Plugin` 的主体是**主人**(管自己机器人的插件),
-/// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
-/// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
-///
 /// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
 /// 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 ///
@@ -522,7 +516,7 @@ class AgentPluginClient extends $grpc.Client {
   /// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
   /// 机器人本地那个 `.so` 不会自己消失。
   $grpc.ResponseFuture<$0.ListNativeResp> listNative(
-    $1.Empty request, {
+    $2.ListNativeReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listNative, request, options: options);
@@ -530,10 +524,11 @@ class AgentPluginClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$listNative = $grpc.ClientMethod<$1.Empty, $0.ListNativeResp>(
-      '/hi.club.AgentPlugin/ListNative',
-      ($1.Empty value) => value.writeToBuffer(),
-      $0.ListNativeResp.fromBuffer);
+  static final _$listNative =
+      $grpc.ClientMethod<$2.ListNativeReq, $0.ListNativeResp>(
+          '/hi.club.AgentPlugin/ListNative',
+          ($2.ListNativeReq value) => value.writeToBuffer(),
+          $0.ListNativeResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.AgentPlugin')
@@ -541,20 +536,20 @@ abstract class AgentPluginServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.AgentPlugin';
 
   AgentPluginServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.Empty, $0.ListNativeResp>(
+    $addMethod($grpc.ServiceMethod<$2.ListNativeReq, $0.ListNativeResp>(
         'ListNative',
         listNative_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.ListNativeReq.fromBuffer(value),
         ($0.ListNativeResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.ListNativeResp> listNative_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$2.ListNativeReq> $request) async {
     return listNative($call, await $request);
   }
 
   $async.Future<$0.ListNativeResp> listNative(
-      $grpc.ServiceCall call, $1.Empty request);
+      $grpc.ServiceCall call, $2.ListNativeReq request);
 }

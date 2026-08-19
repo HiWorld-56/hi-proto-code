@@ -404,17 +404,20 @@ func (x *PluginVersion) GetDescription() string {
 // 一次构建的结果。**发版接口不返回它** —— 发版是立即返回的,构建在后台跑,
 // 结果经 Get/ListVersions 回显给发版的人看(编译中 / 失败+日志 / 成功)。
 type PluginBuild struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
-	Status        PluginBuildStatus      `protobuf:"varint,3,opt,name=status,proto3,enum=hi.ai.PluginBuildStatus" json:"status,omitempty"`
-	ArtifactUrl   string                 `protobuf:"bytes,4,opt,name=artifact_url,json=artifactUrl,proto3" json:"artifact_url,omitempty"` // 编好的 .so(私有桶;下发时现签 presigned)
-	Sha256        string                 `protobuf:"bytes,5,opt,name=sha256,proto3" json:"sha256,omitempty"`                              // 产物摘要,机器人下完照此核对
-	AbiVersion    uint32                 `protobuf:"varint,6,opt,name=abi_version,json=abiVersion,proto3" json:"abi_version,omitempty"`   // 从 .so 里真读出来的(见 hi.ai.plugin.BuildResp)
-	Error         string                 `protobuf:"bytes,7,opt,name=error,proto3" json:"error,omitempty"`                                // 失败原因(一句话)
-	Log           string                 `protobuf:"bytes,8,opt,name=log,proto3" json:"log,omitempty"`                                    // 编译日志尾部
-	StartedAt     int64                  `protobuf:"varint,9,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
-	FinishedAt    int64                  `protobuf:"varint,10,opt,name=finished_at,json=finishedAt,proto3" json:"finished_at,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Uuid    string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Version string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
+	// 这一行是哪个架构的构建。**一版有多行**(aarch64 / x86_64 各一),
+	// 状态、产物、错误、日志都各记各的 —— 合并显示会互相掩盖("有一个成了"看着像全成了)。
+	Arch          string            `protobuf:"bytes,11,opt,name=arch,proto3" json:"arch,omitempty"`
+	Status        PluginBuildStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.ai.PluginBuildStatus" json:"status,omitempty"`
+	ArtifactUrl   string            `protobuf:"bytes,4,opt,name=artifact_url,json=artifactUrl,proto3" json:"artifact_url,omitempty"` // 编好的 .so(私有桶;下发时现签 presigned)
+	Sha256        string            `protobuf:"bytes,5,opt,name=sha256,proto3" json:"sha256,omitempty"`                              // 产物摘要,机器人下完照此核对
+	AbiVersion    uint32            `protobuf:"varint,6,opt,name=abi_version,json=abiVersion,proto3" json:"abi_version,omitempty"`   // 从 .so 里真读出来的(见 hi.ai.plugin.BuildResp)
+	Error         string            `protobuf:"bytes,7,opt,name=error,proto3" json:"error,omitempty"`                                // 失败原因(一句话)
+	Log           string            `protobuf:"bytes,8,opt,name=log,proto3" json:"log,omitempty"`                                    // 编译日志尾部
+	StartedAt     int64             `protobuf:"varint,9,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
+	FinishedAt    int64             `protobuf:"varint,10,opt,name=finished_at,json=finishedAt,proto3" json:"finished_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -459,6 +462,13 @@ func (x *PluginBuild) GetUuid() string {
 func (x *PluginBuild) GetVersion() string {
 	if x != nil {
 		return x.Version
+	}
+	return ""
+}
+
+func (x *PluginBuild) GetArch() string {
+	if x != nil {
+		return x.Arch
 	}
 	return ""
 }
@@ -2443,9 +2453,16 @@ type NativePlugin struct {
 	// 机器人本地撞名 → 整个插件拒绝加载,而失败原因只在机器人的本地日志里。
 	FnPrefix string `protobuf:"bytes,4,opt,name=fn_prefix,json=fnPrefix,proto3" json:"fn_prefix,omitempty"`
 	// `.so` 的下载地址。私有桶,**每次拉清单现签**(限期),不存库。
-	Url           string `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
-	Sha256        string `protobuf:"bytes,6,opt,name=sha256,proto3" json:"sha256,omitempty"`                            // 下完必须核对;对不上就是没下全或被改过
-	AbiVersion    uint32 `protobuf:"varint,7,opt,name=abi_version,json=abiVersion,proto3" json:"abi_version,omitempty"` // 机器人可据此先筛掉对不上的,省一次下载
+	Url        string `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
+	Sha256     string `protobuf:"bytes,6,opt,name=sha256,proto3" json:"sha256,omitempty"`                            // 下完必须核对;对不上就是没下全或被改过
+	AbiVersion uint32 `protobuf:"varint,7,opt,name=abi_version,json=abiVersion,proto3" json:"abi_version,omitempty"` // 机器人可据此先筛掉对不上的,省一次下载
+	// 这份产物是给哪个架构的(`aarch64` / `x86_64`)。
+	//
+	// ⚠️ **abi_version 挡不住架构不对**:两台机器的 abi 一样,指令集却不同 ——
+	//
+	//	装上去要到 dlopen 才炸,而那个错看着像"插件本身有问题"。
+	//	机器人拿到清单先比这个,不符就跳过并说清楚。
+	Arch          string `protobuf:"bytes,8,opt,name=arch,proto3" json:"arch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2529,9 +2546,19 @@ func (x *NativePlugin) GetAbiVersion() uint32 {
 	return 0
 }
 
+func (x *NativePlugin) GetArch() string {
+	if x != nil {
+		return x.Arch
+	}
+	return ""
+}
+
 type ListNativeReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Agent string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	// 机器人自己的架构。**空 = aarch64** —— 现网机器人全是 arm64,
+	// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
+	Arch          string `protobuf:"bytes,2,opt,name=arch,proto3" json:"arch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2569,6 +2596,13 @@ func (*ListNativeReq) Descriptor() ([]byte, []int) {
 func (x *ListNativeReq) GetAgent() string {
 	if x != nil {
 		return x.Agent
+	}
+	return ""
+}
+
+func (x *ListNativeReq) GetArch() string {
+	if x != nil {
+		return x.Arch
 	}
 	return ""
 }
@@ -2694,10 +2728,11 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04logo\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x04logo\x12\x1e\n" +
 	"\asummary\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\asummary\x12\x16\n" +
 	"\x03url\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\x03url\x12&\n" +
-	"\vdescription\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\vdescription:\x04\x98\xb5\x18\x03\"\xf3\x02\n" +
+	"\vdescription\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\vdescription:\x04\x98\xb5\x18\x03\"\x8d\x03\n" +
 	"\vPluginBuild\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x1e\n" +
-	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x126\n" +
+	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x12\x18\n" +
+	"\x04arch\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x04arch\x126\n" +
 	"\x06status\x18\x03 \x01(\x0e2\x18.hi.ai.PluginBuildStatusB\x04\x90\xb5\x18\x03R\x06status\x12'\n" +
 	"\fartifact_url\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\vartifactUrl\x12\x1c\n" +
 	"\x06sha256\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\x06sha256\x12%\n" +
@@ -2839,7 +2874,7 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04logo\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\x04logo\x12\x1e\n" +
 	"\asummary\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\asummary:\x04\x98\xb5\x18\x01\"P\n" +
 	"\x10PublicBriefsResp\x126\n" +
-	"\x06briefs\x18\x01 \x03(\v2\x18.hi.ai.PluginPublicBriefB\x04\x90\xb5\x18\x01R\x06briefs:\x04\x98\xb5\x18\x01\"\xe8\x01\n" +
+	"\x06briefs\x18\x01 \x03(\v2\x18.hi.ai.PluginPublicBriefB\x04\x90\xb5\x18\x01R\x06briefs:\x04\x98\xb5\x18\x01\"\x82\x02\n" +
 	"\fNativePlugin\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name\x12\x1e\n" +
@@ -2848,9 +2883,11 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x03url\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\x03url\x12\x1c\n" +
 	"\x06sha256\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x06sha256\x12%\n" +
 	"\vabi_version\x18\a \x01(\rB\x04\x90\xb5\x18\x03R\n" +
-	"abiVersion:\x04\x98\xb5\x18\x03\"3\n" +
+	"abiVersion\x12\x18\n" +
+	"\x04arch\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x04arch:\x04\x98\xb5\x18\x03\"G\n" +
 	"\rListNativeReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\"E\n" +
+	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12\x12\n" +
+	"\x04arch\x18\x02 \x01(\tR\x04arch\"E\n" +
 	"\x0eListNativeResp\x12-\n" +
 	"\x04list\x18\x01 \x03(\v2\x13.hi.ai.NativePluginB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"}\n" +
 	"\rRetryBuildReq\x12\"\n" +

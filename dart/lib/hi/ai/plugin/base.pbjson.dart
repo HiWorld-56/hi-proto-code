@@ -103,13 +103,15 @@ const BuildReq$json = {
     {'1': 'code_archive_url', '3': 1, '4': 1, '5': 9, '10': 'codeArchiveUrl'},
     {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
     {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+    {'1': 'arch', '3': 4, '4': 1, '5': 9, '10': 'arch'},
   ],
 };
 
 /// Descriptor for `BuildReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List buildReqDescriptor = $convert.base64Decode(
     'CghCdWlsZFJlcRIoChBjb2RlX2FyY2hpdmVfdXJsGAEgASgJUg5jb2RlQXJjaGl2ZVVybBISCg'
-    'R1dWlkGAIgASgJUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3ZlcnNpb24=');
+    'R1dWlkGAIgASgJUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3ZlcnNpb24SEgoEYXJjaBgEIAEo'
+    'CVIEYXJjaA==');
 
 @$core.Deprecated('Use buildRespDescriptor instead')
 const BuildResp$json = {

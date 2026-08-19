@@ -341,11 +341,13 @@ class BuildReq extends $pb.GeneratedMessage {
     $core.String? codeArchiveUrl,
     $core.String? uuid,
     $core.String? version,
+    $core.String? arch,
   }) {
     final result = create();
     if (codeArchiveUrl != null) result.codeArchiveUrl = codeArchiveUrl;
     if (uuid != null) result.uuid = uuid;
     if (version != null) result.version = version;
+    if (arch != null) result.arch = arch;
     return result;
   }
 
@@ -365,6 +367,7 @@ class BuildReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'codeArchiveUrl')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
     ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..aOS(4, _omitFieldNames ? '' : 'arch')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -411,6 +414,20 @@ class BuildReq extends $pb.GeneratedMessage {
   $core.bool hasVersion() => $_has(2);
   @$pb.TagNumber(3)
   void clearVersion() => $_clearField(3);
+
+  /// 目标架构:`aarch64` / `x86_64`(与 rust 的 `std::env::consts::ARCH` 同名,
+  /// 机器人上报的就是那个常量 —— 两边用同一套词,省掉一层映射)。
+  ///
+  /// ⚠️ **空 = aarch64**。老调用方(还没跟上的 hi-ai)发不带这个字段的请求,
+  /// 编出来的仍是硬件机器人那一份 —— 而不是编出个谁也装不上的东西。
+  @$pb.TagNumber(4)
+  $core.String get arch => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set arch($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasArch() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearArch() => $_clearField(4);
 }
 
 class BuildResp extends $pb.GeneratedMessage {

@@ -7100,9 +7100,15 @@ impl serde::Serialize for ListNativeReq {
         if !self.agent.is_empty() {
             len += 1;
         }
+        if !self.arch.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListNativeReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
+        }
+        if !self.arch.is_empty() {
+            struct_ser.serialize_field("arch", &self.arch)?;
         }
         struct_ser.end()
     }
@@ -7115,11 +7121,13 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
     {
         const FIELDS: &[&str] = &[
             "agent",
+            "arch",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
+            Arch,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7142,6 +7150,7 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
                     {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
+                            "arch" => Ok(GeneratedField::Arch),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7162,6 +7171,7 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut agent__ = None;
+                let mut arch__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -7170,10 +7180,17 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
                             }
                             agent__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Arch => {
+                            if arch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("arch"));
+                            }
+                            arch__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(ListNativeReq {
                     agent: agent__.unwrap_or_default(),
+                    arch: arch__.unwrap_or_default(),
                 })
             }
         }
@@ -8568,6 +8585,9 @@ impl serde::Serialize for NativePlugin {
         if self.abi_version != 0 {
             len += 1;
         }
+        if !self.arch.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.NativePlugin", len)?;
         if !self.uuid.is_empty() {
             struct_ser.serialize_field("uuid", &self.uuid)?;
@@ -8590,6 +8610,9 @@ impl serde::Serialize for NativePlugin {
         if self.abi_version != 0 {
             struct_ser.serialize_field("abiVersion", &self.abi_version)?;
         }
+        if !self.arch.is_empty() {
+            struct_ser.serialize_field("arch", &self.arch)?;
+        }
         struct_ser.end()
     }
 }
@@ -8609,6 +8632,7 @@ impl<'de> serde::Deserialize<'de> for NativePlugin {
             "sha256",
             "abi_version",
             "abiVersion",
+            "arch",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -8620,6 +8644,7 @@ impl<'de> serde::Deserialize<'de> for NativePlugin {
             Url,
             Sha256,
             AbiVersion,
+            Arch,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8648,6 +8673,7 @@ impl<'de> serde::Deserialize<'de> for NativePlugin {
                             "url" => Ok(GeneratedField::Url),
                             "sha256" => Ok(GeneratedField::Sha256),
                             "abiVersion" | "abi_version" => Ok(GeneratedField::AbiVersion),
+                            "arch" => Ok(GeneratedField::Arch),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8674,6 +8700,7 @@ impl<'de> serde::Deserialize<'de> for NativePlugin {
                 let mut url__ = None;
                 let mut sha256__ = None;
                 let mut abi_version__ = None;
+                let mut arch__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -8720,6 +8747,12 @@ impl<'de> serde::Deserialize<'de> for NativePlugin {
                                 Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
+                        GeneratedField::Arch => {
+                            if arch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("arch"));
+                            }
+                            arch__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(NativePlugin {
@@ -8730,6 +8763,7 @@ impl<'de> serde::Deserialize<'de> for NativePlugin {
                     url: url__.unwrap_or_default(),
                     sha256: sha256__.unwrap_or_default(),
                     abi_version: abi_version__.unwrap_or_default(),
+                    arch: arch__.unwrap_or_default(),
                 })
             }
         }
@@ -9615,6 +9649,9 @@ impl serde::Serialize for PluginBuild {
         if !self.version.is_empty() {
             len += 1;
         }
+        if !self.arch.is_empty() {
+            len += 1;
+        }
         if self.status != 0 {
             len += 1;
         }
@@ -9645,6 +9682,9 @@ impl serde::Serialize for PluginBuild {
         }
         if !self.version.is_empty() {
             struct_ser.serialize_field("version", &self.version)?;
+        }
+        if !self.arch.is_empty() {
+            struct_ser.serialize_field("arch", &self.arch)?;
         }
         if self.status != 0 {
             let v = PluginBuildStatus::try_from(self.status)
@@ -9688,6 +9728,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
         const FIELDS: &[&str] = &[
             "uuid",
             "version",
+            "arch",
             "status",
             "artifact_url",
             "artifactUrl",
@@ -9706,6 +9747,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
         enum GeneratedField {
             Uuid,
             Version,
+            Arch,
             Status,
             ArtifactUrl,
             Sha256,
@@ -9737,6 +9779,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "version" => Ok(GeneratedField::Version),
+                            "arch" => Ok(GeneratedField::Arch),
                             "status" => Ok(GeneratedField::Status),
                             "artifactUrl" | "artifact_url" => Ok(GeneratedField::ArtifactUrl),
                             "sha256" => Ok(GeneratedField::Sha256),
@@ -9766,6 +9809,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
             {
                 let mut uuid__ = None;
                 let mut version__ = None;
+                let mut arch__ = None;
                 let mut status__ = None;
                 let mut artifact_url__ = None;
                 let mut sha256__ = None;
@@ -9787,6 +9831,12 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
                                 return Err(serde::de::Error::duplicate_field("version"));
                             }
                             version__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Arch => {
+                            if arch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("arch"));
+                            }
+                            arch__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Status => {
                             if status__.is_some() {
@@ -9847,6 +9897,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
                 Ok(PluginBuild {
                     uuid: uuid__.unwrap_or_default(),
                     version: version__.unwrap_or_default(),
+                    arch: arch__.unwrap_or_default(),
                     status: status__.unwrap_or_default(),
                     artifact_url: artifact_url__.unwrap_or_default(),
                     sha256: sha256__.unwrap_or_default(),

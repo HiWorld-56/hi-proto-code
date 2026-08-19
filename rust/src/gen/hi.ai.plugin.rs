@@ -94,6 +94,13 @@ pub struct BuildReq {
     /// 版本号
     #[prost(string, tag = "3")]
     pub version: ::prost::alloc::string::String,
+    /// 目标架构:`aarch64` / `x86_64`(与 rust 的 `std::env::consts::ARCH` 同名,
+    /// 机器人上报的就是那个常量 —— 两边用同一套词,省掉一层映射)。
+    ///
+    /// ⚠️ **空 = aarch64**。老调用方(还没跟上的 hi-ai)发不带这个字段的请求,
+    /// 编出来的仍是硬件机器人那一份 —— 而不是编出个谁也装不上的东西。
+    #[prost(string, tag = "4")]
+    pub arch: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BuildResp {

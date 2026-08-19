@@ -769,6 +769,10 @@ pub struct PluginBuild {
     pub uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub version: ::prost::alloc::string::String,
+    /// 这一行是哪个架构的构建。**一版有多行**(aarch64 / x86_64 各一),
+    /// 状态、产物、错误、日志都各记各的 —— 合并显示会互相掩盖("有一个成了"看着像全成了)。
+    #[prost(string, tag = "11")]
+    pub arch: ::prost::alloc::string::String,
     #[prost(enumeration = "PluginBuildStatus", tag = "3")]
     pub status: i32,
     /// 编好的 .so(私有桶;下发时现签 presigned)
@@ -1201,11 +1205,22 @@ pub struct NativePlugin {
     /// 机器人可据此先筛掉对不上的,省一次下载
     #[prost(uint32, tag = "7")]
     pub abi_version: u32,
+    /// 这份产物是给哪个架构的(`aarch64` / `x86_64`)。
+    ///
+    /// ⚠️ **abi_version 挡不住架构不对**:两台机器的 abi 一样,指令集却不同 ——
+    /// 装上去要到 dlopen 才炸,而那个错看着像"插件本身有问题"。
+    /// 机器人拿到清单先比这个,不符就跳过并说清楚。
+    #[prost(string, tag = "8")]
+    pub arch: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListNativeReq {
     #[prost(string, tag = "1")]
     pub agent: ::prost::alloc::string::String,
+    /// 机器人自己的架构。**空 = aarch64** —— 现网机器人全是 arm64,
+    /// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
+    #[prost(string, tag = "2")]
+    pub arch: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNativeResp {

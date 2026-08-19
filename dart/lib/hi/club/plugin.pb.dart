@@ -16,6 +16,72 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// ── 机器人自用面 ──────────────────────────────────────────────────────────
+///
+/// **主体恒是调用者本人。** 上面那个 `Plugin` 的主体是**主人**(管自己机器人的插件),
+/// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
+/// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
+///
+/// ListNativeReq —— 见下面 ListNative:**没有 agent 字段**,主体只能从凭证里取。
+/// 只带机器人自己的架构:同一版插件两个架构各有一份产物,给错了要到 dlopen 才炸。
+///
+/// ⚠️ **空 = aarch64**。老 brain 发的是 `Empty`,在 protobuf 里与"字段缺省"等价,
+///    解出来就是空串 —— 于是它照旧拿到 arm64 那份,零改动继续跑。
+///    这条兼容是有意的,别改成"空就报错"。
+class ListNativeReq extends $pb.GeneratedMessage {
+  factory ListNativeReq({
+    $core.String? arch,
+  }) {
+    final result = create();
+    if (arch != null) result.arch = arch;
+    return result;
+  }
+
+  ListNativeReq._();
+
+  factory ListNativeReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListNativeReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListNativeReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'arch')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNativeReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNativeReq copyWith(void Function(ListNativeReq) updates) =>
+      super.copyWith((message) => updates(message as ListNativeReq))
+          as ListNativeReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListNativeReq create() => ListNativeReq._();
+  @$core.override
+  ListNativeReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListNativeReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListNativeReq>(create);
+  static ListNativeReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get arch => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set arch($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasArch() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearArch() => $_clearField(1);
+}
+
 /// ReloadApiKey —— club 专属(hi.ai 无 api_key 概念)。
 /// api_key 存在 c.data(该机器人自己的),用户可在别处删掉某个 apikey,导致插件里存的那个失效;
 /// 用户重建 apikey 后调此方法,后端**重新取**该机器人 apikey 列表的**第一个**覆盖写入 c.data 并发重载通知。

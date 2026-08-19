@@ -321,8 +321,14 @@ type BuildReq struct {
 	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"` // rust 源码包 zip(= 这一版的 b.url)
 	Uuid           string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`                                             // 壳 uuid(产物命名与日志用)
 	Version        string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`                                       // 版本号
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 目标架构:`aarch64` / `x86_64`(与 rust 的 `std::env::consts::ARCH` 同名,
+	// 机器人上报的就是那个常量 —— 两边用同一套词,省掉一层映射)。
+	//
+	// ⚠️ **空 = aarch64**。老调用方(还没跟上的 hi-ai)发不带这个字段的请求,
+	// 编出来的仍是硬件机器人那一份 —— 而不是编出个谁也装不上的东西。
+	Arch          string `protobuf:"bytes,4,opt,name=arch,proto3" json:"arch,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BuildReq) Reset() {
@@ -372,6 +378,13 @@ func (x *BuildReq) GetUuid() string {
 func (x *BuildReq) GetVersion() string {
 	if x != nil {
 		return x.Version
+	}
+	return ""
+}
+
+func (x *BuildReq) GetArch() string {
+	if x != nil {
+		return x.Arch
 	}
 	return ""
 }
@@ -494,11 +507,12 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
 	"\n" +
 	"CleanupReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\"b\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\"v\n" +
 	"\bBuildReq\x12(\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\tR\aversion\"\xeb\x01\n" +
+	"\aversion\x18\x03 \x01(\tR\aversion\x12\x12\n" +
+	"\x04arch\x18\x04 \x01(\tR\x04arch\"\xeb\x01\n" +
 	"\tBuildResp\x12\x14\n" +
 	"\x02ok\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03R\x02ok\x12'\n" +
 	"\fartifact_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vartifactUrl\x12\x1c\n" +
