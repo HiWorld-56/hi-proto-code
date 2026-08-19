@@ -27,6 +27,7 @@ const (
 	Auth_GenerateReqId_FullMethodName = "/hi.did.Auth/GenerateReqId"
 	Auth_GetReqStatus_FullMethodName  = "/hi.did.Auth/GetReqStatus"
 	Auth_Logout_FullMethodName        = "/hi.did.Auth/Logout"
+	Auth_Notify_FullMethodName        = "/hi.did.Auth/Notify"
 )
 
 // AuthClient is the client API for Auth service.
@@ -36,12 +37,23 @@ const (
 // Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 // 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 //
-// ⭐ 扫码/授权登录对客户端**只有 Verify 这一个入口**,分叉在后端:按会话 did(发起方
-// GenerateReqId 时报的)分 —— 是 hi-did 自己的哨兵(hisrv 这类自家后台把自己冒充成三方
-// 接进同一条流程)就自己发 token;是某个商户就只验签+转发、回拨商户 LoginCallback,
-// token 由商户自己发。
-// 2026-08-18 删掉了 `Notify`:它是上面第二条那半截的单独入口,客户端拿到的是裸 reqId、
-// 无从判断该走哪条,调它就等于替后端决定"这一定是三方",自家会话会被报成"需要注册为商户"。
+// ⭐ 登录有**两个入口**,按客户端**知不知道对方是谁**分,不要再合并:
+//
+//	· `Verify` —— **扫码**:拿到的是一个裸 reqId,会话 did 只存在服务端,客户端无从判断
+//	  该走哪条,所以一律交给它,分叉在后端(是 hi-did 自己的哨兵就自己发 token;
+//	  是某个商户就只验签+转发、回拨商户 LoginCallback,token 由商户自己发)。
+//	· `Notify` —— **深链**:三方 app 唤起 hidid 时,发起方是谁写在链接里
+//	  (`hidid://login?did=<商户did>&reqId=…`),这一刻"是三方"是**已知事实**,
+//	  直接走三方那条,不必再让后端去分一次。
+//
+// ⚠️ **2026-08-19 事故:`Notify` 曾被当成"后端内部第二跳"删掉,上生产后当天大面积
+//
+//	「hidid 授权 hiclub 登录失败」。** 当时的判据是生产日志里"三方码会同时出现 Verify 和
+//	Notify 两条" —— 那证的是**扫码**那条(app 调 Verify、后端自己转的第二跳),
+//	而**深链**那条从没被验过,shipped 的 app 一直直接调 `Notify`。
+//	gRPC 未知方法在进拦截器**之前**就被拒,服务端一个字都不记 —— 于是删掉之后
+//	线上安静地全挂,日志里连一条错都没有。
+//	**删任何一个 rpc 之前,先确认没有已发布的客户端在调它;"日志里没见过"不算证据。**
 type AuthClient interface {
 	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 	Verify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
@@ -49,6 +61,9 @@ type AuthClient interface {
 	GenerateReqId(ctx context.Context, in *GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*ReqStatusResp, error)
 	Logout(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 验签:**深链**授权登录(三方 app 唤起 hidid)。发起方是谁写在链接里,故直接走三方那条。
+	// 只验签+转发、回拨商户 LoginCallback,token 由商户自己发 —— 所以返回 Empty。
+	Notify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type authClient struct {
@@ -119,6 +134,16 @@ func (c *authClient) Logout(ctx context.Context, in *hi.SignedData, opts ...grpc
 	return out, nil
 }
 
+func (c *authClient) Notify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Auth_Notify_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServer is the server API for Auth service.
 // All implementations should embed UnimplementedAuthServer
 // for forward compatibility.
@@ -126,12 +151,23 @@ func (c *authClient) Logout(ctx context.Context, in *hi.SignedData, opts ...grpc
 // Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 // 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 //
-// ⭐ 扫码/授权登录对客户端**只有 Verify 这一个入口**,分叉在后端:按会话 did(发起方
-// GenerateReqId 时报的)分 —— 是 hi-did 自己的哨兵(hisrv 这类自家后台把自己冒充成三方
-// 接进同一条流程)就自己发 token;是某个商户就只验签+转发、回拨商户 LoginCallback,
-// token 由商户自己发。
-// 2026-08-18 删掉了 `Notify`:它是上面第二条那半截的单独入口,客户端拿到的是裸 reqId、
-// 无从判断该走哪条,调它就等于替后端决定"这一定是三方",自家会话会被报成"需要注册为商户"。
+// ⭐ 登录有**两个入口**,按客户端**知不知道对方是谁**分,不要再合并:
+//
+//	· `Verify` —— **扫码**:拿到的是一个裸 reqId,会话 did 只存在服务端,客户端无从判断
+//	  该走哪条,所以一律交给它,分叉在后端(是 hi-did 自己的哨兵就自己发 token;
+//	  是某个商户就只验签+转发、回拨商户 LoginCallback,token 由商户自己发)。
+//	· `Notify` —— **深链**:三方 app 唤起 hidid 时,发起方是谁写在链接里
+//	  (`hidid://login?did=<商户did>&reqId=…`),这一刻"是三方"是**已知事实**,
+//	  直接走三方那条,不必再让后端去分一次。
+//
+// ⚠️ **2026-08-19 事故:`Notify` 曾被当成"后端内部第二跳"删掉,上生产后当天大面积
+//
+//	「hidid 授权 hiclub 登录失败」。** 当时的判据是生产日志里"三方码会同时出现 Verify 和
+//	Notify 两条" —— 那证的是**扫码**那条(app 调 Verify、后端自己转的第二跳),
+//	而**深链**那条从没被验过,shipped 的 app 一直直接调 `Notify`。
+//	gRPC 未知方法在进拦截器**之前**就被拒,服务端一个字都不记 —— 于是删掉之后
+//	线上安静地全挂,日志里连一条错都没有。
+//	**删任何一个 rpc 之前,先确认没有已发布的客户端在调它;"日志里没见过"不算证据。**
 type AuthServer interface {
 	RefreshToken(context.Context, *RefreshTokenReq) (*hi.AuthToken, error)
 	Verify(context.Context, *hi.SignedData) (*LoginResp, error)
@@ -139,6 +175,9 @@ type AuthServer interface {
 	GenerateReqId(context.Context, *GenerateReqIdReq) (*hi.RequestId, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*ReqStatusResp, error)
 	Logout(context.Context, *hi.SignedData) (*emptypb.Empty, error)
+	// 验签:**深链**授权登录(三方 app 唤起 hidid)。发起方是谁写在链接里,故直接走三方那条。
+	// 只验签+转发、回拨商户 LoginCallback,token 由商户自己发 —— 所以返回 Empty。
+	Notify(context.Context, *hi.SignedData) (*emptypb.Empty, error)
 }
 
 // UnimplementedAuthServer should be embedded to have
@@ -165,6 +204,9 @@ func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*Re
 }
 func (UnimplementedAuthServer) Logout(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAuthServer) Notify(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Notify not implemented")
 }
 func (UnimplementedAuthServer) testEmbeddedByValue() {}
 
@@ -294,6 +336,24 @@ func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_Notify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.SignedData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).Notify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_Notify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).Notify(ctx, req.(*hi.SignedData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -324,6 +384,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Logout",
 			Handler:    _Auth_Logout_Handler,
+		},
+		{
+			MethodName: "Notify",
+			Handler:    _Auth_Notify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
