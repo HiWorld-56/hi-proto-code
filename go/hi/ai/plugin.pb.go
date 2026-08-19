@@ -654,11 +654,14 @@ func (x *PluginView) GetFollowLatest() bool {
 
 // 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
 type PluginVersionView struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Version       *PluginVersion         `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"`
-	Active        bool                   `protobuf:"varint,2,opt,name=active,proto3" json:"active,omitempty"`
-	Data          *structpb.Struct       `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`   // d.data
-	Build         *PluginBuild           `protobuf:"bytes,4,opt,name=build,proto3" json:"build,omitempty"` // 该版本的构建态(NATIVE 才有)
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Version *PluginVersion         `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"`
+	Active  bool                   `protobuf:"varint,2,opt,name=active,proto3" json:"active,omitempty"`
+	Data    *structpb.Struct       `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"` // d.data
+	// ⚠️ **单数那个 `build` 已删** —— 一版有**多个架构**各自的构建态(aarch64 / x86_64),
+	// 塞进一个字段就只能显示其中一个:另一个编失败也看不见,页面上"绿了"而实际半残。
+	// 前端要把每个架构一行地列出来。
+	Builds        []*PluginBuild `protobuf:"bytes,5,rep,name=builds,proto3" json:"builds,omitempty"` // 该版本各架构的构建态(NATIVE 才有)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -714,9 +717,9 @@ func (x *PluginVersionView) GetData() *structpb.Struct {
 	return nil
 }
 
-func (x *PluginVersionView) GetBuild() *PluginBuild {
+func (x *PluginVersionView) GetBuilds() []*PluginBuild {
 	if x != nil {
-		return x.Build
+		return x.Builds
 	}
 	return nil
 }
@@ -2755,12 +2758,12 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04data\x18\x06 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data\x12@\n" +
 	"\fversion_data\x18\a \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\vversionData\x12.\n" +
 	"\x05build\x18\b \x01(\v2\x12.hi.ai.PluginBuildB\x04\x90\xb5\x18\x03R\x05build\x12)\n" +
-	"\rfollow_latest\x18\t \x01(\bB\x04\x90\xb5\x18\x03R\ffollowLatest:\x04\x98\xb5\x18\x03\"\xd0\x01\n" +
+	"\rfollow_latest\x18\t \x01(\bB\x04\x90\xb5\x18\x03R\ffollowLatest:\x04\x98\xb5\x18\x03\"\xd2\x01\n" +
 	"\x11PluginVersionView\x124\n" +
 	"\aversion\x18\x01 \x01(\v2\x14.hi.ai.PluginVersionB\x04\x90\xb5\x18\x03R\aversion\x12\x1c\n" +
 	"\x06active\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03R\x06active\x121\n" +
-	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data\x12.\n" +
-	"\x05build\x18\x04 \x01(\v2\x12.hi.ai.PluginBuildB\x04\x90\xb5\x18\x03R\x05build:\x04\x98\xb5\x18\x03\"\x88\x01\n" +
+	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data\x120\n" +
+	"\x06builds\x18\x05 \x03(\v2\x12.hi.ai.PluginBuildB\x04\x90\xb5\x18\x03R\x06builds:\x04\x98\xb5\x18\x03\"\x88\x01\n" +
 	"\fPluginLoaded\x12\x18\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04uuid\x12\x18\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x04name\x12\x1e\n" +
@@ -3003,7 +3006,7 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	5,  // 7: hi.ai.PluginView.build:type_name -> hi.ai.PluginBuild
 	4,  // 8: hi.ai.PluginVersionView.version:type_name -> hi.ai.PluginVersion
 	41, // 9: hi.ai.PluginVersionView.data:type_name -> google.protobuf.Struct
-	5,  // 10: hi.ai.PluginVersionView.build:type_name -> hi.ai.PluginBuild
+	5,  // 10: hi.ai.PluginVersionView.builds:type_name -> hi.ai.PluginBuild
 	41, // 11: hi.ai.CreateShellReq.data:type_name -> google.protobuf.Struct
 	4,  // 12: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
 	41, // 13: hi.ai.CreateVersionReq.data:type_name -> google.protobuf.Struct

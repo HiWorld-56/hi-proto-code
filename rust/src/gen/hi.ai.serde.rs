@@ -10880,7 +10880,7 @@ impl serde::Serialize for PluginVersionView {
         if self.data.is_some() {
             len += 1;
         }
-        if self.build.is_some() {
+        if !self.builds.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginVersionView", len)?;
@@ -10893,8 +10893,8 @@ impl serde::Serialize for PluginVersionView {
         if let Some(v) = self.data.as_ref() {
             struct_ser.serialize_field("data", v)?;
         }
-        if let Some(v) = self.build.as_ref() {
-            struct_ser.serialize_field("build", v)?;
+        if !self.builds.is_empty() {
+            struct_ser.serialize_field("builds", &self.builds)?;
         }
         struct_ser.end()
     }
@@ -10909,7 +10909,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
             "version",
             "active",
             "data",
-            "build",
+            "builds",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -10917,7 +10917,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
             Version,
             Active,
             Data,
-            Build,
+            Builds,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10942,7 +10942,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                             "version" => Ok(GeneratedField::Version),
                             "active" => Ok(GeneratedField::Active),
                             "data" => Ok(GeneratedField::Data),
-                            "build" => Ok(GeneratedField::Build),
+                            "builds" => Ok(GeneratedField::Builds),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10965,7 +10965,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                 let mut version__ = None;
                 let mut active__ = None;
                 let mut data__ = None;
-                let mut build__ = None;
+                let mut builds__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Version => {
@@ -10986,11 +10986,11 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                             }
                             data__ = map_.next_value()?;
                         }
-                        GeneratedField::Build => {
-                            if build__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("build"));
+                        GeneratedField::Builds => {
+                            if builds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("builds"));
                             }
-                            build__ = map_.next_value()?;
+                            builds__ = Some(map_.next_value()?);
                         }
                     }
                 }
@@ -10998,7 +10998,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                     version: version__,
                     active: active__.unwrap_or_default(),
                     data: data__,
-                    build: build__,
+                    builds: builds__.unwrap_or_default(),
                 })
             }
         }

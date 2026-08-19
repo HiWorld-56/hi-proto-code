@@ -614,13 +614,13 @@ class PluginVersionView extends $pb.GeneratedMessage {
     PluginVersion? version,
     $core.bool? active,
     $2.Struct? data,
-    PluginBuild? build,
+    $core.Iterable<PluginBuild>? builds,
   }) {
     final result = create();
     if (version != null) result.version = version;
     if (active != null) result.active = active;
     if (data != null) result.data = data;
-    if (build != null) result.build = build;
+    if (builds != null) result.builds.addAll(builds);
     return result;
   }
 
@@ -642,7 +642,7 @@ class PluginVersionView extends $pb.GeneratedMessage {
     ..aOB(2, _omitFieldNames ? '' : 'active')
     ..aOM<$2.Struct>(3, _omitFieldNames ? '' : 'data',
         subBuilder: $2.Struct.create)
-    ..aOM<PluginBuild>(4, _omitFieldNames ? '' : 'build',
+    ..pPM<PluginBuild>(5, _omitFieldNames ? '' : 'builds',
         subBuilder: PluginBuild.create)
     ..hasRequiredFields = false;
 
@@ -696,16 +696,11 @@ class PluginVersionView extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $2.Struct ensureData() => $_ensure(2);
 
-  @$pb.TagNumber(4)
-  PluginBuild get build => $_getN(3);
-  @$pb.TagNumber(4)
-  set build(PluginBuild value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasBuild() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearBuild() => $_clearField(4);
-  @$pb.TagNumber(4)
-  PluginBuild ensureBuild() => $_ensure(3);
+  /// ⚠️ **单数那个 `build` 已删** —— 一版有**多个架构**各自的构建态(aarch64 / x86_64),
+  /// 塞进一个字段就只能显示其中一个:另一个编失败也看不见,页面上"绿了"而实际半残。
+  /// 前端要把每个架构一行地列出来。
+  @$pb.TagNumber(5)
+  $pb.PbList<PluginBuild> get builds => $_getList(3);
 }
 
 /// 插件加载完成通知(公开摘要,不带私产)。

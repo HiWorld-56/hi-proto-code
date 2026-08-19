@@ -847,9 +847,13 @@ pub struct PluginVersionView {
     /// d.data
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
-    /// 该版本的构建态(NATIVE 才有)
-    #[prost(message, optional, tag = "4")]
-    pub build: ::core::option::Option<PluginBuild>,
+    /// ⚠️ **单数那个 `build` 已删** —— 一版有**多个架构**各自的构建态(aarch64 / x86_64),
+    /// 塞进一个字段就只能显示其中一个:另一个编失败也看不见,页面上"绿了"而实际半残。
+    /// 前端要把每个架构一行地列出来。
+    ///
+    /// 该版本各架构的构建态(NATIVE 才有)
+    #[prost(message, repeated, tag = "5")]
+    pub builds: ::prost::alloc::vec::Vec<PluginBuild>,
 }
 /// 插件加载完成通知(公开摘要,不带私产)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

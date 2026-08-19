@@ -252,13 +252,13 @@ const PluginVersionView$json = {
       '10': 'data'
     },
     {
-      '1': 'build',
-      '3': 4,
-      '4': 1,
+      '1': 'builds',
+      '3': 5,
+      '4': 3,
       '5': 11,
       '6': '.hi.ai.PluginBuild',
       '8': {},
-      '10': 'build'
+      '10': 'builds'
     },
   ],
   '7': {},
@@ -268,8 +268,8 @@ const PluginVersionView$json = {
 final $typed_data.Uint8List pluginVersionViewDescriptor = $convert.base64Decode(
     'ChFQbHVnaW5WZXJzaW9uVmlldxI0Cgd2ZXJzaW9uGAEgASgLMhQuaGkuYWkuUGx1Z2luVmVyc2'
     'lvbkIEkLUYA1IHdmVyc2lvbhIcCgZhY3RpdmUYAiABKAhCBJC1GANSBmFjdGl2ZRIxCgRkYXRh'
-    'GAMgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdEIEkLUYA1IEZGF0YRIuCgVidWlsZBgEIA'
-    'EoCzISLmhpLmFpLlBsdWdpbkJ1aWxkQgSQtRgDUgVidWlsZDoEmLUYAw==');
+    'GAMgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdEIEkLUYA1IEZGF0YRIwCgZidWlsZHMYBS'
+    'ADKAsyEi5oaS5haS5QbHVnaW5CdWlsZEIEkLUYA1IGYnVpbGRzOgSYtRgD');
 
 @$core.Deprecated('Use pluginLoadedDescriptor instead')
 const PluginLoaded$json = {
