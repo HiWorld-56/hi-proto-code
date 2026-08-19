@@ -11610,6 +11610,8 @@ impl serde::Serialize for MarketPaymentStatus {
             Self::Paid => "MARKET_PAYMENT_STATUS_PAID",
             Self::Expired => "MARKET_PAYMENT_STATUS_EXPIRED",
             Self::Superseded => "MARKET_PAYMENT_STATUS_SUPERSEDED",
+            Self::Reported => "MARKET_PAYMENT_STATUS_REPORTED",
+            Self::Rejected => "MARKET_PAYMENT_STATUS_REJECTED",
         };
         serializer.serialize_str(variant)
     }
@@ -11625,6 +11627,8 @@ impl<'de> serde::Deserialize<'de> for MarketPaymentStatus {
             "MARKET_PAYMENT_STATUS_PAID",
             "MARKET_PAYMENT_STATUS_EXPIRED",
             "MARKET_PAYMENT_STATUS_SUPERSEDED",
+            "MARKET_PAYMENT_STATUS_REPORTED",
+            "MARKET_PAYMENT_STATUS_REJECTED",
         ];
 
         struct GeneratedVisitor;
@@ -11669,6 +11673,8 @@ impl<'de> serde::Deserialize<'de> for MarketPaymentStatus {
                     "MARKET_PAYMENT_STATUS_PAID" => Ok(MarketPaymentStatus::Paid),
                     "MARKET_PAYMENT_STATUS_EXPIRED" => Ok(MarketPaymentStatus::Expired),
                     "MARKET_PAYMENT_STATUS_SUPERSEDED" => Ok(MarketPaymentStatus::Superseded),
+                    "MARKET_PAYMENT_STATUS_REPORTED" => Ok(MarketPaymentStatus::Reported),
+                    "MARKET_PAYMENT_STATUS_REJECTED" => Ok(MarketPaymentStatus::Rejected),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

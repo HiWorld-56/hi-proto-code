@@ -502,6 +502,21 @@ const (
 	// 与 EXPIRED 分开是因为前端要按主订单号查详情:滤掉 SUPERSEDED 就恰好剩当前那张,
 	// 而列"付款记录"时全部原样列出,换过几次、每次为什么没成一眼可见。
 	MarketPaymentStatus_MARKET_PAYMENT_STATUS_SUPERSEDED MarketPaymentStatus = 3
+	// **已上报,待链上确认。**
+	//
+	// 钱包广播完就报 hash,而那一刻交易在索引器里必然还查不到(实测 `state=notfound`)。
+	// 原来把"收下 hash"与"链上已成功"压在同一个瞬间判,于是**正常付款必然被拒**,
+	// 而且 hash 根本没落库 —— 钱付了,系统这边一点痕迹都没有。
+	//
+	// 所以拆成两段:上报即落库并占住这个 hash(进本态),链上确认由后台异步做。
+	// ⚠️ 进了本态就**不再按 expire_at 作废** —— 钱已经出去了,凭据过没过期不再是判据;
+	//
+	//	改由"确认截止"兜底(见 club 的 confirmDeadline)。
+	MarketPaymentStatus_MARKET_PAYMENT_STATUS_REPORTED MarketPaymentStatus = 4
+	// 上报的那笔转账**链上明确不成立**(失败、或与订单对不上)。
+	// 与 EXPIRED 分开:这是"这笔钱不算数",不是"你没付" —— 下一步是重开一张凭据再付。
+	// ⚠️ 被否掉的 tx_hash **不释放**:释放就等于让人拿一笔失败交易反复试。
+	MarketPaymentStatus_MARKET_PAYMENT_STATUS_REJECTED MarketPaymentStatus = 5
 )
 
 // Enum value maps for MarketPaymentStatus.
@@ -511,12 +526,16 @@ var (
 		1: "MARKET_PAYMENT_STATUS_PAID",
 		2: "MARKET_PAYMENT_STATUS_EXPIRED",
 		3: "MARKET_PAYMENT_STATUS_SUPERSEDED",
+		4: "MARKET_PAYMENT_STATUS_REPORTED",
+		5: "MARKET_PAYMENT_STATUS_REJECTED",
 	}
 	MarketPaymentStatus_value = map[string]int32{
 		"MARKET_PAYMENT_STATUS_PENDING":    0,
 		"MARKET_PAYMENT_STATUS_PAID":       1,
 		"MARKET_PAYMENT_STATUS_EXPIRED":    2,
 		"MARKET_PAYMENT_STATUS_SUPERSEDED": 3,
+		"MARKET_PAYMENT_STATUS_REPORTED":   4,
+		"MARKET_PAYMENT_STATUS_REJECTED":   5,
 	}
 )
 
@@ -4163,12 +4182,14 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x11MarketOrderStatus\x12\x1c\n" +
 	"\x18MARKET_ORDER_STATUS_OPEN\x10\x00\x12\x1c\n" +
 	"\x18MARKET_ORDER_STATUS_PAID\x10\x01\x12 \n" +
-	"\x1cMARKET_ORDER_STATUS_CANCELED\x10\x03\"\x04\b\x02\x10\x02*\xa1\x01\n" +
+	"\x1cMARKET_ORDER_STATUS_CANCELED\x10\x03\"\x04\b\x02\x10\x02*\xe9\x01\n" +
 	"\x13MarketPaymentStatus\x12!\n" +
 	"\x1dMARKET_PAYMENT_STATUS_PENDING\x10\x00\x12\x1e\n" +
 	"\x1aMARKET_PAYMENT_STATUS_PAID\x10\x01\x12!\n" +
 	"\x1dMARKET_PAYMENT_STATUS_EXPIRED\x10\x02\x12$\n" +
-	" MARKET_PAYMENT_STATUS_SUPERSEDED\x10\x032\xc1\x02\n" +
+	" MARKET_PAYMENT_STATUS_SUPERSEDED\x10\x03\x12\"\n" +
+	"\x1eMARKET_PAYMENT_STATUS_REPORTED\x10\x04\x12\"\n" +
+	"\x1eMARKET_PAYMENT_STATUS_REJECTED\x10\x052\xc1\x02\n" +
 	"\x0fMarketDirectory\x12P\n" +
 	"\x0eSearchListings\x12\x1a.hi.club.SearchListingsReq\x1a\x1b.hi.club.SearchListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12>\n" +
 	"\vListSellers\x12\x0e.hi.Pagination\x1a\x18.hi.club.ListSellersResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
