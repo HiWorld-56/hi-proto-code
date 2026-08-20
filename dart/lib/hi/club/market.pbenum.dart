@@ -185,6 +185,15 @@ class GrantStatus extends $pb.ProtobufEnum {
   static const GrantStatus GRANT_STATUS_EXPIRED =
       GrantStatus._(6, _omitEnumNames ? '' : 'GRANT_STATUS_EXPIRED');
 
+  /// 受让方**自己把插件删了**。与 REVOKED 分开:一个是"卖家收回",一个是"买家不要了",
+  /// 对账时这两件事的结论完全不同。
+  ///
+  /// ⚠️ 它同时是**去重的解锁位**:GetLiveGrant 只把 PENDING/APPROVED/INSTALLED 当"还活着",
+  /// 买家删掉插件后授权若还停在 INSTALLED,他再买/再收同一个插件会被判成"已经有授权了",
+  /// 于是**永远装不回来**。
+  static const GrantStatus GRANT_STATUS_UNINSTALLED =
+      GrantStatus._(7, _omitEnumNames ? '' : 'GRANT_STATUS_UNINSTALLED');
+
   static const $core.List<GrantStatus> values = <GrantStatus>[
     GRANT_STATUS_UNSPECIFIED,
     GRANT_STATUS_PENDING,
@@ -193,10 +202,11 @@ class GrantStatus extends $pb.ProtobufEnum {
     GRANT_STATUS_REJECTED,
     GRANT_STATUS_REVOKED,
     GRANT_STATUS_EXPIRED,
+    GRANT_STATUS_UNINSTALLED,
   ];
 
   static final $core.List<GrantStatus?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 6);
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
   static GrantStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

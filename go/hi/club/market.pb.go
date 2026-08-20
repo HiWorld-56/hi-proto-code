@@ -300,6 +300,13 @@ const (
 	GrantStatus_GRANT_STATUS_REJECTED    GrantStatus = 4
 	GrantStatus_GRANT_STATUS_REVOKED     GrantStatus = 5 // 被出让方撤回
 	GrantStatus_GRANT_STATUS_EXPIRED     GrantStatus = 6 // 到期
+	// 受让方**自己把插件删了**。与 REVOKED 分开:一个是"卖家收回",一个是"买家不要了",
+	// 对账时这两件事的结论完全不同。
+	//
+	// ⚠️ 它同时是**去重的解锁位**:GetLiveGrant 只把 PENDING/APPROVED/INSTALLED 当"还活着",
+	// 买家删掉插件后授权若还停在 INSTALLED,他再买/再收同一个插件会被判成"已经有授权了",
+	// 于是**永远装不回来**。
+	GrantStatus_GRANT_STATUS_UNINSTALLED GrantStatus = 7 // 受让方已删除该插件
 )
 
 // Enum value maps for GrantStatus.
@@ -312,6 +319,7 @@ var (
 		4: "GRANT_STATUS_REJECTED",
 		5: "GRANT_STATUS_REVOKED",
 		6: "GRANT_STATUS_EXPIRED",
+		7: "GRANT_STATUS_UNINSTALLED",
 	}
 	GrantStatus_value = map[string]int32{
 		"GRANT_STATUS_UNSPECIFIED": 0,
@@ -321,6 +329,7 @@ var (
 		"GRANT_STATUS_REJECTED":    4,
 		"GRANT_STATUS_REVOKED":     5,
 		"GRANT_STATUS_EXPIRED":     6,
+		"GRANT_STATUS_UNINSTALLED": 7,
 	}
 )
 
@@ -4201,7 +4210,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x0eGrantInitiator\x12\x1f\n" +
 	"\x1bGRANT_INITIATOR_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15GRANT_INITIATOR_APPLY\x10\x01\x12\x19\n" +
-	"\x15GRANT_INITIATOR_OFFER\x10\x02*\xcb\x01\n" +
+	"\x15GRANT_INITIATOR_OFFER\x10\x02*\xe9\x01\n" +
 	"\vGrantStatus\x12\x1c\n" +
 	"\x18GRANT_STATUS_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14GRANT_STATUS_PENDING\x10\x01\x12\x19\n" +
@@ -4209,7 +4218,8 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x16GRANT_STATUS_INSTALLED\x10\x03\x12\x19\n" +
 	"\x15GRANT_STATUS_REJECTED\x10\x04\x12\x18\n" +
 	"\x14GRANT_STATUS_REVOKED\x10\x05\x12\x18\n" +
-	"\x14GRANT_STATUS_EXPIRED\x10\x06*N\n" +
+	"\x14GRANT_STATUS_EXPIRED\x10\x06\x12\x1c\n" +
+	"\x18GRANT_STATUS_UNINSTALLED\x10\a*N\n" +
 	"\x0fMarketOrderKind\x12\x1e\n" +
 	"\x1aMARKET_ORDER_KIND_PURCHASE\x10\x00\x12\x1b\n" +
 	"\x17MARKET_ORDER_KIND_RENEW\x10\x01*q\n" +

@@ -6912,6 +6912,15 @@ pub enum GrantStatus {
     Revoked = 5,
     /// 到期
     Expired = 6,
+    /// 受让方**自己把插件删了**。与 REVOKED 分开:一个是"卖家收回",一个是"买家不要了",
+    /// 对账时这两件事的结论完全不同。
+    ///
+    /// ⚠️ 它同时是**去重的解锁位**:GetLiveGrant 只把 PENDING/APPROVED/INSTALLED 当"还活着",
+    /// 买家删掉插件后授权若还停在 INSTALLED,他再买/再收同一个插件会被判成"已经有授权了",
+    /// 于是**永远装不回来**。
+    ///
+    /// 受让方已删除该插件
+    Uninstalled = 7,
 }
 impl GrantStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -6927,6 +6936,7 @@ impl GrantStatus {
             Self::Rejected => "GRANT_STATUS_REJECTED",
             Self::Revoked => "GRANT_STATUS_REVOKED",
             Self::Expired => "GRANT_STATUS_EXPIRED",
+            Self::Uninstalled => "GRANT_STATUS_UNINSTALLED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -6939,6 +6949,7 @@ impl GrantStatus {
             "GRANT_STATUS_REJECTED" => Some(Self::Rejected),
             "GRANT_STATUS_REVOKED" => Some(Self::Revoked),
             "GRANT_STATUS_EXPIRED" => Some(Self::Expired),
+            "GRANT_STATUS_UNINSTALLED" => Some(Self::Uninstalled),
             _ => None,
         }
     }

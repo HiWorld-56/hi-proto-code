@@ -4871,6 +4871,7 @@ impl serde::Serialize for GrantStatus {
             Self::Rejected => "GRANT_STATUS_REJECTED",
             Self::Revoked => "GRANT_STATUS_REVOKED",
             Self::Expired => "GRANT_STATUS_EXPIRED",
+            Self::Uninstalled => "GRANT_STATUS_UNINSTALLED",
         };
         serializer.serialize_str(variant)
     }
@@ -4889,6 +4890,7 @@ impl<'de> serde::Deserialize<'de> for GrantStatus {
             "GRANT_STATUS_REJECTED",
             "GRANT_STATUS_REVOKED",
             "GRANT_STATUS_EXPIRED",
+            "GRANT_STATUS_UNINSTALLED",
         ];
 
         struct GeneratedVisitor;
@@ -4936,6 +4938,7 @@ impl<'de> serde::Deserialize<'de> for GrantStatus {
                     "GRANT_STATUS_REJECTED" => Ok(GrantStatus::Rejected),
                     "GRANT_STATUS_REVOKED" => Ok(GrantStatus::Revoked),
                     "GRANT_STATUS_EXPIRED" => Ok(GrantStatus::Expired),
+                    "GRANT_STATUS_UNINSTALLED" => Ok(GrantStatus::Uninstalled),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
