@@ -3506,6 +3506,478 @@ impl<'de> serde::Deserialize<'de> for FriendRequestStatus {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for FundsKind {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "FUNDS_KIND_UNSPECIFIED",
+            Self::Withdraw => "FUNDS_KIND_WITHDRAW",
+            Self::Pay => "FUNDS_KIND_PAY",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for FundsKind {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "FUNDS_KIND_UNSPECIFIED",
+            "FUNDS_KIND_WITHDRAW",
+            "FUNDS_KIND_PAY",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = FundsKind;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "FUNDS_KIND_UNSPECIFIED" => Ok(FundsKind::Unspecified),
+                    "FUNDS_KIND_WITHDRAW" => Ok(FundsKind::Withdraw),
+                    "FUNDS_KIND_PAY" => Ok(FundsKind::Pay),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FundsRecord {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.uuid.is_empty() {
+            len += 1;
+        }
+        if self.kind != 0 {
+            len += 1;
+        }
+        if !self.payer.is_empty() {
+            len += 1;
+        }
+        if !self.payee.is_empty() {
+            len += 1;
+        }
+        if !self.to_address.is_empty() {
+            len += 1;
+        }
+        if !self.chain.is_empty() {
+            len += 1;
+        }
+        if !self.coin.is_empty() {
+            len += 1;
+        }
+        if !self.amount.is_empty() {
+            len += 1;
+        }
+        if !self.fee.is_empty() {
+            len += 1;
+        }
+        if !self.fee_coin.is_empty() {
+            len += 1;
+        }
+        if !self.tx_hash.is_empty() {
+            len += 1;
+        }
+        if self.status != 0 {
+            len += 1;
+        }
+        if !self.reason.is_empty() {
+            len += 1;
+        }
+        if self.created_at != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.FundsRecord", len)?;
+        if !self.uuid.is_empty() {
+            struct_ser.serialize_field("uuid", &self.uuid)?;
+        }
+        if self.kind != 0 {
+            let v = FundsKind::try_from(self.kind)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.kind)))?;
+            struct_ser.serialize_field("kind", &v)?;
+        }
+        if !self.payer.is_empty() {
+            struct_ser.serialize_field("payer", &self.payer)?;
+        }
+        if !self.payee.is_empty() {
+            struct_ser.serialize_field("payee", &self.payee)?;
+        }
+        if !self.to_address.is_empty() {
+            struct_ser.serialize_field("toAddress", &self.to_address)?;
+        }
+        if !self.chain.is_empty() {
+            struct_ser.serialize_field("chain", &self.chain)?;
+        }
+        if !self.coin.is_empty() {
+            struct_ser.serialize_field("coin", &self.coin)?;
+        }
+        if !self.amount.is_empty() {
+            struct_ser.serialize_field("amount", &self.amount)?;
+        }
+        if !self.fee.is_empty() {
+            struct_ser.serialize_field("fee", &self.fee)?;
+        }
+        if !self.fee_coin.is_empty() {
+            struct_ser.serialize_field("feeCoin", &self.fee_coin)?;
+        }
+        if !self.tx_hash.is_empty() {
+            struct_ser.serialize_field("txHash", &self.tx_hash)?;
+        }
+        if self.status != 0 {
+            let v = FundsStatus::try_from(self.status)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.status)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if !self.reason.is_empty() {
+            struct_ser.serialize_field("reason", &self.reason)?;
+        }
+        if self.created_at != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&self.created_at).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for FundsRecord {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "uuid",
+            "kind",
+            "payer",
+            "payee",
+            "to_address",
+            "toAddress",
+            "chain",
+            "coin",
+            "amount",
+            "fee",
+            "fee_coin",
+            "feeCoin",
+            "tx_hash",
+            "txHash",
+            "status",
+            "reason",
+            "created_at",
+            "createdAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Uuid,
+            Kind,
+            Payer,
+            Payee,
+            ToAddress,
+            Chain,
+            Coin,
+            Amount,
+            Fee,
+            FeeCoin,
+            TxHash,
+            Status,
+            Reason,
+            CreatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "kind" => Ok(GeneratedField::Kind),
+                            "payer" => Ok(GeneratedField::Payer),
+                            "payee" => Ok(GeneratedField::Payee),
+                            "toAddress" | "to_address" => Ok(GeneratedField::ToAddress),
+                            "chain" => Ok(GeneratedField::Chain),
+                            "coin" => Ok(GeneratedField::Coin),
+                            "amount" => Ok(GeneratedField::Amount),
+                            "fee" => Ok(GeneratedField::Fee),
+                            "feeCoin" | "fee_coin" => Ok(GeneratedField::FeeCoin),
+                            "txHash" | "tx_hash" => Ok(GeneratedField::TxHash),
+                            "status" => Ok(GeneratedField::Status),
+                            "reason" => Ok(GeneratedField::Reason),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = FundsRecord;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.FundsRecord")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<FundsRecord, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                let mut kind__ = None;
+                let mut payer__ = None;
+                let mut payee__ = None;
+                let mut to_address__ = None;
+                let mut chain__ = None;
+                let mut coin__ = None;
+                let mut amount__ = None;
+                let mut fee__ = None;
+                let mut fee_coin__ = None;
+                let mut tx_hash__ = None;
+                let mut status__ = None;
+                let mut reason__ = None;
+                let mut created_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Kind => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("kind"));
+                            }
+                            kind__ = Some(map_.next_value::<FundsKind>()? as i32);
+                        }
+                        GeneratedField::Payer => {
+                            if payer__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payer"));
+                            }
+                            payer__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Payee => {
+                            if payee__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payee"));
+                            }
+                            payee__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ToAddress => {
+                            if to_address__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("toAddress"));
+                            }
+                            to_address__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Chain => {
+                            if chain__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("chain"));
+                            }
+                            chain__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Coin => {
+                            if coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("coin"));
+                            }
+                            coin__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Amount => {
+                            if amount__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("amount"));
+                            }
+                            amount__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Fee => {
+                            if fee__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fee"));
+                            }
+                            fee__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::FeeCoin => {
+                            if fee_coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("feeCoin"));
+                            }
+                            fee_coin__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::TxHash => {
+                            if tx_hash__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("txHash"));
+                            }
+                            tx_hash__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = Some(map_.next_value::<FundsStatus>()? as i32);
+                        }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(FundsRecord {
+                    uuid: uuid__.unwrap_or_default(),
+                    kind: kind__.unwrap_or_default(),
+                    payer: payer__.unwrap_or_default(),
+                    payee: payee__.unwrap_or_default(),
+                    to_address: to_address__.unwrap_or_default(),
+                    chain: chain__.unwrap_or_default(),
+                    coin: coin__.unwrap_or_default(),
+                    amount: amount__.unwrap_or_default(),
+                    fee: fee__.unwrap_or_default(),
+                    fee_coin: fee_coin__.unwrap_or_default(),
+                    tx_hash: tx_hash__.unwrap_or_default(),
+                    status: status__.unwrap_or_default(),
+                    reason: reason__.unwrap_or_default(),
+                    created_at: created_at__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.FundsRecord", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FundsStatus {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "FUNDS_STATUS_UNSPECIFIED",
+            Self::Sent => "FUNDS_STATUS_SENT",
+            Self::Failed => "FUNDS_STATUS_FAILED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for FundsStatus {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "FUNDS_STATUS_UNSPECIFIED",
+            "FUNDS_STATUS_SENT",
+            "FUNDS_STATUS_FAILED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = FundsStatus;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "FUNDS_STATUS_UNSPECIFIED" => Ok(FundsStatus::Unspecified),
+                    "FUNDS_STATUS_SENT" => Ok(FundsStatus::Sent),
+                    "FUNDS_STATUS_FAILED" => Ok(FundsStatus::Failed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for GetGroupMemberTotalReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -6461,6 +6933,205 @@ impl<'de> serde::Deserialize<'de> for ListApiKeysResp {
             }
         }
         deserializer.deserialize_struct("hi.club.ListApiKeysResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListFundsReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.did.is_empty() {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListFundsReq", len)?;
+        if !self.did.is_empty() {
+            struct_ser.serialize_field("did", &self.did)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListFundsReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListFundsReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ListFundsReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListFundsReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListFundsReq {
+                    did: did__.unwrap_or_default(),
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ListFundsReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListFundsResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.list.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListFundsResp", len)?;
+        if !self.list.is_empty() {
+            struct_ser.serialize_field("list", &self.list)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListFundsResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "list",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            List,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "list" => Ok(GeneratedField::List),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListFundsResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ListFundsResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListFundsResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut list__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::List => {
+                            if list__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("list"));
+                            }
+                            list__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ListFundsResp {
+                    list: list__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ListFundsResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListGrantsReq {

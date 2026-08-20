@@ -848,6 +848,288 @@ pub mod order_client {
         }
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct FundsRecord {
+    /// 幂等键,**由机器人本地生成**(它先落账再动钱,uuid 那时就有了)。
+    /// 不用时间戳:补报第二次就会变成两行。
+    #[prost(string, tag = "1")]
+    pub uuid: ::prost::alloc::string::String,
+    #[prost(enumeration = "FundsKind", tag = "2")]
+    pub kind: i32,
+    /// 付款人 = 机器人自己。**上报时不看这一栏**(主体取自凭证),回读时才填 ——
+    /// 收在这里是为了让"我的仆从们的流水"一张表里分得清是哪台。
+    #[prost(string, tag = "3")]
+    pub payer: ::prost::alloc::string::String,
+    /// 收款人的 did。提款时就是主人。
+    #[prost(string, tag = "4")]
+    pub payee: ::prost::alloc::string::String,
+    /// 收款人在该链上的地址 —— did 是身份,地址是这一笔真正打到的地方,两个都要留:
+    /// 对账时人拿着地址去链上翻,而 did 才说得清"这是谁"。
+    #[prost(string, tag = "5")]
+    pub to_address: ::prost::alloc::string::String,
+    #[prost(string, tag = "6")]
+    pub chain: ::prost::alloc::string::String,
+    #[prost(string, tag = "7")]
+    pub coin: ::prost::alloc::string::String,
+    /// 人类可读金额,如 "12.5"。**实际发出去的数** —— 全提时它与余额必然不同。
+    #[prost(string, tag = "8")]
+    pub amount: ::prost::alloc::string::String,
+    /// 为手续费预留的量,以及它的币种。**手续费是本币** —— 转 USDT-TRC20 烧的是 TRX,
+    /// 只给一个数字不给币种,页面上会显示成"手续费 1.1 USDT"。
+    #[prost(string, tag = "9")]
+    pub fee: ::prost::alloc::string::String,
+    #[prost(string, tag = "10")]
+    pub fee_coin: ::prost::alloc::string::String,
+    #[prost(string, tag = "11")]
+    pub tx_hash: ::prost::alloc::string::String,
+    #[prost(enumeration = "FundsStatus", tag = "12")]
+    pub status: i32,
+    /// 失败原因(status=FAILED 时)。原样存机器人报上来的那句话 ——
+    /// 它是给人看的("有 USDT 但没 TRX 付手续费"),不参与任何判断。
+    #[prost(string, tag = "13")]
+    pub reason: ::prost::alloc::string::String,
+    /// 这笔钱**发生**的时间(机器人本地落账的时刻),不是上报到达的时刻。
+    /// 补报可能迟到几小时,按到达时间排会把顺序打乱。
+    #[prost(int64, tag = "14")]
+    pub created_at: i64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListFundsReq {
+    /// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人**。
+    ///
+    /// ⚠️ 与 `Market.ListTransactions` 同一条规矩,别顺手放宽成"填谁都行" ——
+    /// 那样它就成了拿别人 did 翻别人流水的口子,而这一栏看起来只是个筛选条件。
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListFundsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<FundsRecord>,
+}
+/// 这笔钱是干什么的。**只是分类,不是判据** —— 服务端不会因为它给或不给什么。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FundsKind {
+    Unspecified = 0,
+    /// 提款:机器人把收到的钱结算给**它的主人**。
+    Withdraw = 1,
+    /// 其它付款(三方插件发起的转账)。市场订单不走这里 —— 见文件头。
+    Pay = 2,
+}
+impl FundsKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "FUNDS_KIND_UNSPECIFIED",
+            Self::Withdraw => "FUNDS_KIND_WITHDRAW",
+            Self::Pay => "FUNDS_KIND_PAY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "FUNDS_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "FUNDS_KIND_WITHDRAW" => Some(Self::Withdraw),
+            "FUNDS_KIND_PAY" => Some(Self::Pay),
+            _ => None,
+        }
+    }
+}
+/// 这笔钱到哪一步了。
+///
+/// ⚠️ **没有"已确认上链"这一档。** 要有它就得有人去查链:club 不连链,
+/// 让机器人长轮询又会把它钉在一笔交易上。现在只记"广播出去了",
+/// 要确认状态拿 `tx_hash` 去区块浏览器 —— 那是链上公开事实,不必在这里再存一份。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FundsStatus {
+    Unspecified = 0,
+    /// 已广播,有 tx_hash。
+    Sent = 1,
+    /// **一分钱没动**就停了(收款人没有该链的地址、余额或手续费不够)。
+    /// 记它是因为"为什么没提成"也是主人要看的东西 —— 而且它恰恰是最常被问的那个。
+    Failed = 2,
+}
+impl FundsStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "FUNDS_STATUS_UNSPECIFIED",
+            Self::Sent => "FUNDS_STATUS_SENT",
+            Self::Failed => "FUNDS_STATUS_FAILED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "FUNDS_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "FUNDS_STATUS_SENT" => Some(Self::Sent),
+            "FUNDS_STATUS_FAILED" => Some(Self::Failed),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod ledger_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// ── 机器人的资金流水 ─────────────────────────────────────────────────────────
+    ///
+    /// **只装非市场支出。** 市场订单(买插件、续费)有自己的一份 `MarketPayment`,
+    /// 那份挂在订单上、由认款流程写。同一笔记两处必然漂 —— 一处改了另一处不会知道。
+    /// 页面上要"一张总表"就在**上层合并两个来源**,不要在库里存第二份。
+    ///
+    /// 第一种是**提款**:硬件机器人把自己收到的钱结算给主人。它不经市场、不产生订单,
+    /// 在此之前**全网没有任何地方看得到它** —— 出了事只能上链去翻。
+    ///
+    /// ## 为什么由机器人自己报
+    ///
+    /// 付款方是机器人(私钥在它手里,club 全程碰不到钱),所以只有它知道"这笔发出去了"。
+    /// 用的是它自己的已认证通道 —— `payer` 天然就是它,不接受入参
+    /// (让调用方传付款人,等于给自己开一个"以别人的名义记账"的口子)。
+    ///
+    /// ## 它是**留痕**,不是判据
+    ///
+    /// 防重复付款那本账在机器人本地(sqlite,先落意向再动钱)。本表是给人看的:
+    /// 上报失败不能让钱卡住,所以机器人是**攒着补报**的 —— 于是同一条可能报两次,
+    /// 靠 `uuid` 幂等。**别拿本表当"付没付过"的依据**:它可能迟到,也可能永远不到
+    /// (机器人在报出去之前就下线了)。
+    #[derive(Debug, Clone)]
+    pub struct LedgerClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl LedgerClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> LedgerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> LedgerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            LedgerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 机器人上报一笔自己花出去的钱。**幂等**:同 uuid 重复上报只更新,不新增。
+        pub async fn record(
+            &mut self,
+            request: impl tonic::IntoRequest<super::FundsRecord>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Ledger/Record");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Ledger", "Record"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 查流水。空 did = 看我自己;填了则**必须是我的仆从机器人**。
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListFundsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListFundsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Ledger/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Ledger", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// apikey 是用户机密(value 可鉴权),只发给归属用户本人。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ApiKeyInfo {
