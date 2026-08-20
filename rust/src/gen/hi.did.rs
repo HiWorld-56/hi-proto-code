@@ -5069,6 +5069,32 @@ pub mod pay_request_client {
                 .insert(GrpcMethod::new("hi.did.PayRequest", "Register"));
             self.inner.unary(req, path, codec).await
         }
+        /// Close 这个号**用掉了**,立刻作废。三方认款成功后调,不等它自然过期。
+        ///
+        /// 不作废的后果是真金白银:码还能扫,付款方(或者拿到码的任何人)可以照着**再付一次**,
+        /// 每一次在钱包那头都是"付款成功"。三方那边第二笔认不上单(订单已付),
+        /// 钱却已经出去了 —— 2026-08-20 测试反馈的就是这条。
+        ///
+        /// 只有**登记它的那个商户**能关(比对 spec.merchant);号不存在也返回成功 ——
+        /// 幂等,且不告诉调用方"这个号存在过"。
+        pub async fn close(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::RequestId>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.PayRequest/Close");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.PayRequest", "Close"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated client implementations.

@@ -166,6 +166,7 @@ var Pay_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	PayRequest_Register_FullMethodName = "/hi.did.PayRequest/Register"
+	PayRequest_Close_FullMethodName    = "/hi.did.PayRequest/Close"
 )
 
 // PayRequestClient is the client API for PayRequest service.
@@ -179,6 +180,15 @@ const (
 type PayRequestClient interface {
 	// merchant 取自**调用者身份**,不收入参 —— 收了就等于让人把别人的付款结果引到自己那儿。
 	Register(ctx context.Context, in *PayRequestSpec, opts ...grpc.CallOption) (*hi.RequestId, error)
+	// Close 这个号**用掉了**,立刻作废。三方认款成功后调,不等它自然过期。
+	//
+	// 不作废的后果是真金白银:码还能扫,付款方(或者拿到码的任何人)可以照着**再付一次**,
+	// 每一次在钱包那头都是"付款成功"。三方那边第二笔认不上单(订单已付),
+	// 钱却已经出去了 —— 2026-08-20 测试反馈的就是这条。
+	//
+	// 只有**登记它的那个商户**能关(比对 spec.merchant);号不存在也返回成功 ——
+	// 幂等,且不告诉调用方"这个号存在过"。
+	Close(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type payRequestClient struct {
@@ -199,6 +209,16 @@ func (c *payRequestClient) Register(ctx context.Context, in *PayRequestSpec, opt
 	return out, nil
 }
 
+func (c *payRequestClient) Close(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PayRequest_Close_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PayRequestServer is the server API for PayRequest service.
 // All implementations should embed UnimplementedPayRequestServer
 // for forward compatibility.
@@ -210,6 +230,15 @@ func (c *payRequestClient) Register(ctx context.Context, in *PayRequestSpec, opt
 type PayRequestServer interface {
 	// merchant 取自**调用者身份**,不收入参 —— 收了就等于让人把别人的付款结果引到自己那儿。
 	Register(context.Context, *PayRequestSpec) (*hi.RequestId, error)
+	// Close 这个号**用掉了**,立刻作废。三方认款成功后调,不等它自然过期。
+	//
+	// 不作废的后果是真金白银:码还能扫,付款方(或者拿到码的任何人)可以照着**再付一次**,
+	// 每一次在钱包那头都是"付款成功"。三方那边第二笔认不上单(订单已付),
+	// 钱却已经出去了 —— 2026-08-20 测试反馈的就是这条。
+	//
+	// 只有**登记它的那个商户**能关(比对 spec.merchant);号不存在也返回成功 ——
+	// 幂等,且不告诉调用方"这个号存在过"。
+	Close(context.Context, *hi.RequestId) (*emptypb.Empty, error)
 }
 
 // UnimplementedPayRequestServer should be embedded to have
@@ -221,6 +250,9 @@ type UnimplementedPayRequestServer struct{}
 
 func (UnimplementedPayRequestServer) Register(context.Context, *PayRequestSpec) (*hi.RequestId, error) {
 	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedPayRequestServer) Close(context.Context, *hi.RequestId) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Close not implemented")
 }
 func (UnimplementedPayRequestServer) testEmbeddedByValue() {}
 
@@ -260,6 +292,24 @@ func _PayRequest_Register_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PayRequest_Close_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.RequestId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PayRequestServer).Close(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PayRequest_Close_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PayRequestServer).Close(ctx, req.(*hi.RequestId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PayRequest_ServiceDesc is the grpc.ServiceDesc for PayRequest service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -270,6 +320,10 @@ var PayRequest_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Register",
 			Handler:    _PayRequest_Register_Handler,
+		},
+		{
+			MethodName: "Close",
+			Handler:    _PayRequest_Close_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

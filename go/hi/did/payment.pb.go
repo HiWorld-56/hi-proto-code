@@ -278,10 +278,11 @@ const file_hi_did_payment_proto_rawDesc = "" +
 	"\x06req_id\x18\x01 \x01(\tR\x05reqId2s\n" +
 	"\x03Pay\x123\n" +
 	"\vGenerateReq\x12\x0e.hi.ClientInfo\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x127\n" +
-	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x052F\n" +
+	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x052}\n" +
 	"\n" +
 	"PayRequest\x128\n" +
-	"\bRegister\x12\x16.hi.did.PayRequestSpec\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x032G\n" +
+	"\bRegister\x12\x16.hi.did.PayRequestSpec\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x03\x125\n" +
+	"\x05Close\x12\r.hi.RequestId\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x032G\n" +
 	"\x0fPayRequestPayer\x124\n" +
 	"\x03Get\x12\x0e.hi.SignedData\x1a\x16.hi.did.PayRequestSpec\"\x05\x8a\xb5\x18\x01\x05B}\n" +
 	"\n" +
@@ -313,13 +314,15 @@ var file_hi_did_payment_proto_depIdxs = []int32{
 	3, // 0: hi.did.Pay.GenerateReq:input_type -> hi.ClientInfo
 	4, // 1: hi.did.Pay.Notify:input_type -> hi.SignedData
 	1, // 2: hi.did.PayRequest.Register:input_type -> hi.did.PayRequestSpec
-	4, // 3: hi.did.PayRequestPayer.Get:input_type -> hi.SignedData
-	5, // 4: hi.did.Pay.GenerateReq:output_type -> hi.RequestId
-	6, // 5: hi.did.Pay.Notify:output_type -> google.protobuf.Empty
-	5, // 6: hi.did.PayRequest.Register:output_type -> hi.RequestId
-	1, // 7: hi.did.PayRequestPayer.Get:output_type -> hi.did.PayRequestSpec
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	5, // 3: hi.did.PayRequest.Close:input_type -> hi.RequestId
+	4, // 4: hi.did.PayRequestPayer.Get:input_type -> hi.SignedData
+	5, // 5: hi.did.Pay.GenerateReq:output_type -> hi.RequestId
+	6, // 6: hi.did.Pay.Notify:output_type -> google.protobuf.Empty
+	5, // 7: hi.did.PayRequest.Register:output_type -> hi.RequestId
+	6, // 8: hi.did.PayRequest.Close:output_type -> google.protobuf.Empty
+	1, // 9: hi.did.PayRequestPayer.Get:output_type -> hi.did.PayRequestSpec
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

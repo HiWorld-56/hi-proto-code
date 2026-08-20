@@ -123,12 +123,31 @@ class PayRequestClient extends $grpc.Client {
     return $createUnaryCall(_$register, request, options: options);
   }
 
+  /// Close 这个号**用掉了**,立刻作废。三方认款成功后调,不等它自然过期。
+  ///
+  /// 不作废的后果是真金白银:码还能扫,付款方(或者拿到码的任何人)可以照着**再付一次**,
+  /// 每一次在钱包那头都是"付款成功"。三方那边第二笔认不上单(订单已付),
+  /// 钱却已经出去了 —— 2026-08-20 测试反馈的就是这条。
+  ///
+  /// 只有**登记它的那个商户**能关(比对 spec.merchant);号不存在也返回成功 ——
+  /// 幂等,且不告诉调用方"这个号存在过"。
+  $grpc.ResponseFuture<$1.Empty> close(
+    $0.RequestId request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$close, request, options: options);
+  }
+
   // method descriptors
 
   static final _$register = $grpc.ClientMethod<$2.PayRequestSpec, $0.RequestId>(
       '/hi.did.PayRequest/Register',
       ($2.PayRequestSpec value) => value.writeToBuffer(),
       $0.RequestId.fromBuffer);
+  static final _$close = $grpc.ClientMethod<$0.RequestId, $1.Empty>(
+      '/hi.did.PayRequest/Close',
+      ($0.RequestId value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.PayRequest')
@@ -143,6 +162,13 @@ abstract class PayRequestServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.PayRequestSpec.fromBuffer(value),
         ($0.RequestId value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RequestId, $1.Empty>(
+        'Close',
+        close_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.RequestId.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.RequestId> register_Pre($grpc.ServiceCall $call,
@@ -152,6 +178,13 @@ abstract class PayRequestServiceBase extends $grpc.Service {
 
   $async.Future<$0.RequestId> register(
       $grpc.ServiceCall call, $2.PayRequestSpec request);
+
+  $async.Future<$1.Empty> close_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.RequestId> $request) async {
+    return close($call, await $request);
+  }
+
+  $async.Future<$1.Empty> close($grpc.ServiceCall call, $0.RequestId request);
 }
 
 @$pb.GrpcServiceName('hi.did.PayRequestPayer')
