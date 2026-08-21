@@ -29,11 +29,17 @@ class SettleMode extends $pb.ProtobufEnum {
 
   /// 付费:**用户手里的 hidid app 直接付**,club 只负责验交易。
   ///
-  /// 收款方**不由挂牌方选,而是按机器人类型自动定**(见 MarketPayInfo.payee):
-  ///   · 硬件机器人(Entity.type == robot)持私钥 → **收到它自己名下**,能独立收钱
-  ///   · 软件机器人没有私钥 → 只能收到它 master 名下
+  /// ⭐ **收款人恒等于摊主(出让方机器人),与它是软是硬无关。**
+  ///    钱实际落到谁的账户上是**另一件事**(`MarketOrder.payee_account`):
+  ///      · 硬件机器人持私钥 → 默认落它自己的地址;
+  ///      · 软件机器人没有私钥 → 落它 master 的地址。
+  ///    两者分开的理由:**订单要能归属给摊主**。压成一个值的话,软件机器人卖出去的单
+  ///    就记在 master 名下,摊主一旦转让/解绑,那些单既跟不走、也说不清是谁的货。
+  ///    (勘误 2026-08-21:原来这里写「收款方按机器人类型自动定」,把"收款人"与
+  ///     "收款账号"当成了一件事 —— 见 MarketOrder.payee / payee_account。)
+  ///
   /// 所以这里不需要 MERCHANT / AGENT 两个档位 —— 那是同一件事的两种收款地址,
-  /// 让挂牌方去选反而会选错(软件机器人选了"自己收款"就收不到)。
+  /// 让挂牌方去选反而会选错。
   ///
   /// **注册 hisrv 商户是可选的**:卖插件不必先当商户,收款就是一笔普通的链上转账。
   static const SettleMode SETTLE_MODE_PAID =
@@ -178,6 +184,10 @@ class GrantStatus extends $pb.ProtobufEnum {
       GrantStatus._(2, _omitEnumNames ? '' : 'GRANT_STATUS_APPROVED');
   static const GrantStatus GRANT_STATUS_INSTALLED =
       GrantStatus._(3, _omitEnumNames ? '' : 'GRANT_STATUS_INSTALLED');
+
+  /// 被出让方拒绝。**卖家把插件删了**也落这里,`reason` 写「该插件已删除」并通知申请人 ——
+  /// 留成 PENDING 的话,那批申请永远等不到人处理(挂牌已下架、插件已不存在),
+  /// 而申请人只看得到一行"进行中"、连插件叫什么都显示不出来。
   static const GrantStatus GRANT_STATUS_REJECTED =
       GrantStatus._(4, _omitEnumNames ? '' : 'GRANT_STATUS_REJECTED');
   static const GrantStatus GRANT_STATUS_REVOKED =

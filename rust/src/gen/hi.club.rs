@@ -6319,12 +6319,25 @@ pub struct MarketRenewBrief {
     pub auto_renew: bool,
 }
 /// MarketGrantView 我的授权 / 我收到的申请(SELF)。
+///
+/// ⚠️ **这是单据,不是活体** —— 归属键见文件头「归属」那节:
+/// 「我卖的」= 我**当前**名下机器人的 `from_agent`;「我买的」= 同理的 `to_agent`。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketGrantView {
     #[prost(string, tag = "1")]
     pub uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub listing_uuid: ::prost::alloc::string::String,
+    /// 插件标题。**成交时快照**,与 price/coin/duration/settle_mode 同一批。
+    ///
+    /// ⚠️ 这一条**不适用**「展示信息读侧现取」那条规矩 —— 那条管的是**活体**
+    /// (挂牌、市场列表、插件页:改插件名就是改市场标题,单一来源不会漂)。
+    /// 单据记的是「当时成交的是这个东西」,插件删了、摊主注销了都得照样说得出名字。
+    /// 2026-08-21 前这里是现取的,于是卖家一删插件,历史记录里那一列**整片变空**
+    /// (ai 侧按 (agent,uuid) 查使用行,行没了就查不到)——用户看到的是一张没有商品名的账单。
+    ///
+    /// ⚠️ 读的时候**只用快照,不做「取不到再现取」的回落** —— 回落会让同一行在不同时刻
+    /// 显示不同的名字,比空着更难查。
     #[prost(string, tag = "3")]
     pub title: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "4")]
@@ -6468,10 +6481,13 @@ pub struct CreateListingReq {
     /// 市场分类。**这个不删** —— 插件自身没有分类的概念
     #[prost(string, repeated, tag = "10")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// 收款方是否收到 **master** 名下。
+    /// 钱**落到 master 的账户**上吗。
     ///
-    /// 默认 false = 机器人自己收（硬件机器人持私钥，能独立收款）。
-    /// ⚠️ **软件机器人没得选**:它没有私钥,收不了款,后端一律按 master 处理,
+    /// ⚠️ **它改的是收款账号,不是收款人。** 收款人(`MarketOrder.payee`)恒等于摊主,
+    /// 这个开关一个字也动不了它 —— 否则订单就归不了摊。
+    ///
+    /// 默认 false = 落机器人自己的地址(硬件机器人持私钥,能独立收款)。
+    /// ⚠️ **软件机器人没得选**:它没有私钥,收不了款,后端一律按 master 的账户处理,
     /// 传 false 也会被纠正 —— 不是"帮你改",是那个值与"软件机器人"这件事互相矛盾。
     /// 前端**暂时不给这个选项**(隐藏),先把能力放在契约里。
     #[prost(bool, tag = "14")]
@@ -6630,8 +6646,9 @@ pub struct MarketPayment {
 /// 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListTransactionsReq {
-    /// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人** ——
-    /// 机器人自动续费是它自己掏钱付的(payer 是机器人的 did),主人要查得到那些账。
+    /// 看谁的。**空 = 我 + 我当前名下的全部机器人**(默认就该是全景:收款人是摊主,
+    /// 只看用户自己的 did 会把卖出收入整片漏掉,而且不报错);填了则**必须是我的仆从机器人**,
+    /// 只看那一台。
     ///
     /// ⚠️ 只多这一条验证,不要顺手放宽成"填谁都行":那样它就成了拿别人 did
     /// 翻别人交易的口子,而这一栏看起来只是个筛选条件,很容易被当成无害的。
@@ -6672,10 +6689,15 @@ pub struct MarketOrder {
     pub status: i32,
     /// ⭐ **收款人与收款账号是两件事,各记一行** —— 去银行存钱要姓名也要账号,缺一不可。
     ///
-    /// payee         = **谁在收款**(交易者):硬件机器人自己 / 软件机器人的 master。
-    /// 界面显示、权属判断用它。
-    /// payee_account = **钱进哪个账户**(结算实体):`MerchantPub.Server` 解析的结果,
-    /// 默认 = payee 本人。商户可以把结算实体改到别的账号
+    /// payee         = **谁在收款**(交易者):**恒等于摊主**(出让方机器人)。
+    /// 界面显示、权属判断用它 —— 订单归摊主,摊主转让/解绑时整摊跟着走。
+    /// ⚠️ 不是"硬件机器人自己 / 软件机器人的 master"(2026-08-21 前的写法):
+    /// 那是把「谁在收款」与「钱落哪个账户」当成了一件事,于是软件机器人
+    /// 卖出去的单全记在 master 名下,摊主一动就成了断头账。
+    /// payee_account = **钱进哪个账户**(结算实体):`MerchantPub.Server` 解析的结果。
+    /// 解析主体按"谁掏得出私钥"定:**硬件机器人 = 它自己**(默认;挂牌可选
+    /// `payee_to_master` 改成落主人名下),**软件机器人 = 它的 master**
+    /// (没有私钥,收不了款)。商户还可以把结算实体再改到别的账号
     /// (`MerchantOwner.SetServer`,改它 = 改钱打给谁)。
     ///
     /// 混成一列的后果:那一列会随"谁改了 server"变,而"卖家是谁"不变 ——
@@ -6764,8 +6786,11 @@ pub struct MarketPayInfo {
     /// **钱打到这个 did 的地址上** —— 结算实体(默认=收款人本人)。付款方只认它。
     #[prost(string, tag = "4")]
     pub payee_account: ::prost::alloc::string::String,
-    /// **显示给用户看"你在付给谁"** —— 收款人本人。跳蚤市场下用户是把钱付给一个
-    /// 陌生的机器人/用户,看不清收款人就不该让他按确认。
+    /// **显示给用户看"你在付给谁"** —— 收款人,即**摊主本人**(出让方机器人)。
+    /// 跳蚤市场下用户是把钱付给一个陌生的机器人,看不清收款人就不该让他按确认。
+    ///
+    /// ⚠️ 与 `payee_account` 常常**不是同一个 did**(软件机器人的钱落在它主人账户上),
+    /// 这正是两个字段分开的理由:付款方按 account 转账,界面按 owner 显示。
     #[prost(string, tag = "5")]
     pub payee_owner: ::prost::alloc::string::String,
 }
@@ -7002,11 +7027,17 @@ pub enum SettleMode {
     Approval = 2,
     /// 付费:**用户手里的 hidid app 直接付**,club 只负责验交易。
     ///
-    /// 收款方**不由挂牌方选,而是按机器人类型自动定**(见 MarketPayInfo.payee):
-    /// · 硬件机器人(Entity.type == robot)持私钥 → **收到它自己名下**,能独立收钱
-    /// · 软件机器人没有私钥 → 只能收到它 master 名下
+    /// ⭐ **收款人恒等于摊主(出让方机器人),与它是软是硬无关。**
+    /// 钱实际落到谁的账户上是**另一件事**(`MarketOrder.payee_account`):
+    /// · 硬件机器人持私钥 → 默认落它自己的地址;
+    /// · 软件机器人没有私钥 → 落它 master 的地址。
+    /// 两者分开的理由:**订单要能归属给摊主**。压成一个值的话,软件机器人卖出去的单
+    /// 就记在 master 名下,摊主一旦转让/解绑,那些单既跟不走、也说不清是谁的货。
+    /// (勘误 2026-08-21:原来这里写「收款方按机器人类型自动定」,把"收款人"与
+    /// "收款账号"当成了一件事 —— 见 MarketOrder.payee / payee_account。)
+    ///
     /// 所以这里不需要 MERCHANT / AGENT 两个档位 —— 那是同一件事的两种收款地址,
-    /// 让挂牌方去选反而会选错(软件机器人选了"自己收款"就收不到)。
+    /// 让挂牌方去选反而会选错。
     ///
     /// **注册 hisrv 商户是可选的**:卖插件不必先当商户,收款就是一笔普通的链上转账。
     Paid = 3,
@@ -7189,6 +7220,9 @@ pub enum GrantStatus {
     Approved = 2,
     /// 已装载(ai 侧 c/d 行就绪)
     Installed = 3,
+    /// 被出让方拒绝。**卖家把插件删了**也落这里,`reason` 写「该插件已删除」并通知申请人 ——
+    /// 留成 PENDING 的话,那批申请永远等不到人处理(挂牌已下架、插件已不存在),
+    /// 而申请人只看得到一行"进行中"、连插件叫什么都显示不出来。
     Rejected = 4,
     /// 被出让方撤回
     Revoked = 5,
@@ -7770,6 +7804,8 @@ pub mod market_client {
                 .insert(GrpcMethod::new("hi.club.Market", "ListMyListings"));
             self.inner.unary(req, path, codec).await
         }
+        /// 我**当前**名下机器人卖出去的(申请中 + 已成立 + 历史)。范围 = `from_agent ∈ 我现在的机器人`。
+        /// 摊主转让/解绑之后这里立刻没有它 —— 见文件头「归属」那节。
         pub async fn list_received_requests(
             &mut self,
             request: impl tonic::IntoRequest<super::ListGrantsReq>,
@@ -7931,6 +7967,8 @@ pub mod market_client {
                 .insert(GrpcMethod::new("hi.club.Market", "ListPayments"));
             self.inner.unary(req, path, codec).await
         }
+        /// 我的交易记录:付款人或收款人落在「我 + 我**当前**名下的机器人」里。
+        /// ⚠️ 收款人是**摊主**(机器人),所以只按用户自己的 did 去查是查不到卖出收入的。
         pub async fn list_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTransactionsReq>,
@@ -7976,6 +8014,7 @@ pub mod market_client {
                 .insert(GrpcMethod::new("hi.club.Market", "GetTransaction"));
             self.inner.unary(req, path, codec).await
         }
+        /// 我买到的 / 我收到的分享(按 initiator 过滤)。范围 = `to_agent ∈ 我现在的机器人`。
         pub async fn list_my_grants(
             &mut self,
             request: impl tonic::IntoRequest<super::ListGrantsReq>,

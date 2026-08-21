@@ -204,6 +204,8 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$listMyListings, request, options: options);
   }
 
+  /// 我**当前**名下机器人卖出去的(申请中 + 已成立 + 历史)。范围 = `from_agent ∈ 我现在的机器人`。
+  /// 摊主转让/解绑之后这里立刻没有它 —— 见文件头「归属」那节。
   $grpc.ResponseFuture<$0.ListGrantsResp> listReceivedRequests(
     $0.ListGrantsReq request, {
     $grpc.CallOptions? options,
@@ -262,6 +264,8 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$listPayments, request, options: options);
   }
 
+  /// 我的交易记录:付款人或收款人落在「我 + 我**当前**名下的机器人」里。
+  /// ⚠️ 收款人是**摊主**(机器人),所以只按用户自己的 did 去查是查不到卖出收入的。
   $grpc.ResponseFuture<$0.ListTransactionsResp> listTransactions(
     $0.ListTransactionsReq request, {
     $grpc.CallOptions? options,
@@ -276,6 +280,7 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$getTransaction, request, options: options);
   }
 
+  /// 我买到的 / 我收到的分享(按 initiator 过滤)。范围 = `to_agent ∈ 我现在的机器人`。
   $grpc.ResponseFuture<$0.ListGrantsResp> listMyGrants(
     $0.ListGrantsReq request, {
     $grpc.CallOptions? options,

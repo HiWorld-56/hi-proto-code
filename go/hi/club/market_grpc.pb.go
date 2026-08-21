@@ -279,6 +279,8 @@ type MarketClient interface {
 	EditListing(ctx context.Context, in *EditListingReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetListingStatus(ctx context.Context, in *SetListingStatusReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMyListings(ctx context.Context, in *ListMyListingsReq, opts ...grpc.CallOption) (*ListMyListingsResp, error)
+	// 我**当前**名下机器人卖出去的(申请中 + 已成立 + 历史)。范围 = `from_agent ∈ 我现在的机器人`。
+	// 摊主转让/解绑之后这里立刻没有它 —— 见文件头「归属」那节。
 	ListReceivedRequests(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
 	Approve(ctx context.Context, in *DecideGrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Reject(ctx context.Context, in *DecideGrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -289,8 +291,11 @@ type MarketClient interface {
 	CreateRenewOrder(ctx context.Context, in *CreateRenewOrderReq, opts ...grpc.CallOption) (*MarketOrder, error)
 	IssuePayment(ctx context.Context, in *IssuePaymentReq, opts ...grpc.CallOption) (*MarketOrder, error)
 	ListPayments(ctx context.Context, in *ListPaymentsReq, opts ...grpc.CallOption) (*ListPaymentsResp, error)
+	// 我的交易记录:付款人或收款人落在「我 + 我**当前**名下的机器人」里。
+	// ⚠️ 收款人是**摊主**(机器人),所以只按用户自己的 did 去查是查不到卖出收入的。
 	ListTransactions(ctx context.Context, in *ListTransactionsReq, opts ...grpc.CallOption) (*ListTransactionsResp, error)
 	GetTransaction(ctx context.Context, in *GetTransactionReq, opts ...grpc.CallOption) (*MarketPayment, error)
+	// 我买到的 / 我收到的分享(按 initiator 过滤)。范围 = `to_agent ∈ 我现在的机器人`。
 	ListMyGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
 	Offer(ctx context.Context, in *OfferReq, opts ...grpc.CallOption) (*OfferResp, error)
 	AcceptOffer(ctx context.Context, in *DecideOfferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -507,6 +512,8 @@ type MarketServer interface {
 	EditListing(context.Context, *EditListingReq) (*emptypb.Empty, error)
 	SetListingStatus(context.Context, *SetListingStatusReq) (*emptypb.Empty, error)
 	ListMyListings(context.Context, *ListMyListingsReq) (*ListMyListingsResp, error)
+	// 我**当前**名下机器人卖出去的(申请中 + 已成立 + 历史)。范围 = `from_agent ∈ 我现在的机器人`。
+	// 摊主转让/解绑之后这里立刻没有它 —— 见文件头「归属」那节。
 	ListReceivedRequests(context.Context, *ListGrantsReq) (*ListGrantsResp, error)
 	Approve(context.Context, *DecideGrantReq) (*emptypb.Empty, error)
 	Reject(context.Context, *DecideGrantReq) (*emptypb.Empty, error)
@@ -517,8 +524,11 @@ type MarketServer interface {
 	CreateRenewOrder(context.Context, *CreateRenewOrderReq) (*MarketOrder, error)
 	IssuePayment(context.Context, *IssuePaymentReq) (*MarketOrder, error)
 	ListPayments(context.Context, *ListPaymentsReq) (*ListPaymentsResp, error)
+	// 我的交易记录:付款人或收款人落在「我 + 我**当前**名下的机器人」里。
+	// ⚠️ 收款人是**摊主**(机器人),所以只按用户自己的 did 去查是查不到卖出收入的。
 	ListTransactions(context.Context, *ListTransactionsReq) (*ListTransactionsResp, error)
 	GetTransaction(context.Context, *GetTransactionReq) (*MarketPayment, error)
+	// 我买到的 / 我收到的分享(按 initiator 过滤)。范围 = `to_agent ∈ 我现在的机器人`。
 	ListMyGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error)
 	Offer(context.Context, *OfferReq) (*OfferResp, error)
 	AcceptOffer(context.Context, *DecideOfferReq) (*emptypb.Empty, error)
