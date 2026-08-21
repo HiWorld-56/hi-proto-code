@@ -542,7 +542,7 @@ func RegisterAgentHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Agent/BindMaster", runtime.WithHTTPPathPattern("/hi.club.Agent/BindMaster"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Agent/BindMaster", runtime.WithHTTPPathPattern("/api/v1/agent/bind_master"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -562,7 +562,7 @@ func RegisterAgentHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Agent/UnbindMaster", runtime.WithHTTPPathPattern("/hi.club.Agent/UnbindMaster"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Agent/UnbindMaster", runtime.WithHTTPPathPattern("/api/v1/agent/unbind_master"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -839,7 +839,7 @@ func RegisterAgentHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Agent/BindMaster", runtime.WithHTTPPathPattern("/hi.club.Agent/BindMaster"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Agent/BindMaster", runtime.WithHTTPPathPattern("/api/v1/agent/bind_master"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -856,7 +856,7 @@ func RegisterAgentHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Agent/UnbindMaster", runtime.WithHTTPPathPattern("/hi.club.Agent/UnbindMaster"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Agent/UnbindMaster", runtime.WithHTTPPathPattern("/api/v1/agent/unbind_master"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -914,8 +914,8 @@ var (
 	pattern_Agent_Get_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get"}, ""))
 	pattern_Agent_GetUsage_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_usage"}, ""))
 	pattern_Agent_GetDefaultConfig_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_default_config"}, ""))
-	pattern_Agent_BindMaster_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindMaster"}, ""))
-	pattern_Agent_UnbindMaster_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "UnbindMaster"}, ""))
+	pattern_Agent_BindMaster_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "bind_master"}, ""))
+	pattern_Agent_UnbindMaster_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "unbind_master"}, ""))
 	pattern_Agent_BindStatus_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindStatus"}, ""))
 	pattern_Agent_Transfer_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "transfer"}, ""))
 )
