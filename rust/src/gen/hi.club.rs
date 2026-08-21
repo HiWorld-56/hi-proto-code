@@ -6303,7 +6303,12 @@ pub struct MarketRenewBrief {
     /// 插件标题
     #[prost(string, tag = "2")]
     pub title: ::prost::alloc::string::String,
-    /// 付给谁(后端推导,机器人别自己算)
+    /// **钱打到这个 did 的地址上** —— 结算实体,不是摊主(后端推导,机器人别自己算)。
+    ///
+    /// ⚠️ 与 `MarketOrder.payee`(收款人 = 摊主)**不是一个东西**,名字撞了但语义不同:
+    /// 这里要的是"往哪儿转账",所以对齐的是 `MarketOrder.payee_account`。
+    /// 机器人真去续费时走的是 `CreateRenewOrder` 拿到的订单,以那张单为准;
+    /// 这一栏只是提醒里给人看的。
     #[prost(string, tag = "3")]
     pub payee: ::prost::alloc::string::String,
     /// 人类可读金额

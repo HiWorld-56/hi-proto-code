@@ -941,14 +941,21 @@ func (x *MarketGrantBrief) GetCoin() string {
 //
 //	(Any 是可见性 lint 唯一的结构性缺口,塞 SELF 的东西会静默泄漏)。
 type MarketRenewBrief struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid     string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`   // 插件标题
-	Payee         string                 `protobuf:"bytes,3,opt,name=payee,proto3" json:"payee,omitempty"`   // 付给谁(后端推导,机器人别自己算)
-	Amount        string                 `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额
-	Coin          string                 `protobuf:"bytes,5,opt,name=coin,proto3" json:"coin,omitempty"`
-	ExpireAt      int64                  `protobuf:"varint,6,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"`    // 到期时刻(秒)
-	AutoRenew     bool                   `protobuf:"varint,7,opt,name=auto_renew,json=autoRenew,proto3" json:"auto_renew,omitempty"` // 用户开没开自动续费
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	GrantUuid string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
+	Title     string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"` // 插件标题
+	// **钱打到这个 did 的地址上** —— 结算实体,不是摊主(后端推导,机器人别自己算)。
+	//
+	// ⚠️ 与 `MarketOrder.payee`(收款人 = 摊主)**不是一个东西**,名字撞了但语义不同:
+	//
+	//	这里要的是"往哪儿转账",所以对齐的是 `MarketOrder.payee_account`。
+	//	机器人真去续费时走的是 `CreateRenewOrder` 拿到的订单,以那张单为准;
+	//	这一栏只是提醒里给人看的。
+	Payee         string `protobuf:"bytes,3,opt,name=payee,proto3" json:"payee,omitempty"`
+	Amount        string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额
+	Coin          string `protobuf:"bytes,5,opt,name=coin,proto3" json:"coin,omitempty"`
+	ExpireAt      int64  `protobuf:"varint,6,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"`    // 到期时刻(秒)
+	AutoRenew     bool   `protobuf:"varint,7,opt,name=auto_renew,json=autoRenew,proto3" json:"auto_renew,omitempty"` // 用户开没开自动续费
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
