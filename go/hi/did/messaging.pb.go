@@ -11,6 +11,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -89,8 +90,11 @@ type Packet_Notice struct {
 
 func (*Packet_Notice) isPacket_Kind() {}
 
+// 钱包侧通知。载体是 MQTT 主题 `hidid/v1/single/<收件人did>`(Packet 的二进制)。
+//
 // type:
-// transaction: 其他人向自己发起交易
+// transaction: 其他人向自己发起交易 / extra: hi.did.Transaction
+// app-update:  app 有新版本(全体广播,走 `hi/v1/broadcast`,不是本主题)
 type Notice struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -171,7 +175,7 @@ var File_hi_did_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_did_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/did/messaging.proto\x12\x06hi.did\x1a\x19google/protobuf/any.proto\x1a\x0fhi/common.proto\":\n" +
+	"\x16hi/did/messaging.proto\x12\x06hi.did\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\":\n" +
 	"\x06Packet\x12(\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0e.hi.did.NoticeH\x00R\x06noticeB\x06\n" +
 	"\x04kind\"\x95\x01\n" +
@@ -181,7 +185,9 @@ const file_hi_did_messaging_proto_rawDesc = "" +
 	"\x04from\x18\x03 \x01(\v2\n" +
 	".hi.EntityR\x04from\x12*\n" +
 	"\x05extra\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\x05extra\x12\x17\n" +
-	"\aex_type\x18\x05 \x01(\tR\x06exTypeB\x7f\n" +
+	"\aex_type\x18\x05 \x01(\tR\x06exType2F\n" +
+	"\x06Notify\x12<\n" +
+	"\vTransaction\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B\x7f\n" +
 	"\n" +
 	"com.hi.didB\x0eMessagingProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -199,17 +205,21 @@ func file_hi_did_messaging_proto_rawDescGZIP() []byte {
 
 var file_hi_did_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_did_messaging_proto_goTypes = []any{
-	(*Packet)(nil),    // 0: hi.did.Packet
-	(*Notice)(nil),    // 1: hi.did.Notice
-	(*hi.Entity)(nil), // 2: hi.Entity
-	(*anypb.Any)(nil), // 3: google.protobuf.Any
+	(*Packet)(nil),        // 0: hi.did.Packet
+	(*Notice)(nil),        // 1: hi.did.Notice
+	(*hi.Entity)(nil),     // 2: hi.Entity
+	(*anypb.Any)(nil),     // 3: google.protobuf.Any
+	(*hi.SignedData)(nil), // 4: hi.SignedData
+	(*emptypb.Empty)(nil), // 5: google.protobuf.Empty
 }
 var file_hi_did_messaging_proto_depIdxs = []int32{
 	1, // 0: hi.did.Packet.notice:type_name -> hi.did.Notice
 	2, // 1: hi.did.Notice.from:type_name -> hi.Entity
 	3, // 2: hi.did.Notice.extra:type_name -> google.protobuf.Any
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
+	4, // 3: hi.did.Notify.Transaction:input_type -> hi.SignedData
+	5, // 4: hi.did.Notify.Transaction:output_type -> google.protobuf.Empty
+	4, // [4:5] is the sub-list for method output_type
+	3, // [3:4] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -220,6 +230,7 @@ func file_hi_did_messaging_proto_init() {
 	if File_hi_did_messaging_proto != nil {
 		return
 	}
+	file_hi_did_transfer_proto_init()
 	file_hi_did_messaging_proto_msgTypes[0].OneofWrappers = []any{
 		(*Packet_Notice)(nil),
 	}
@@ -231,7 +242,7 @@ func file_hi_did_messaging_proto_init() {
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   0,
+			NumServices:   1,
 		},
 		GoTypes:           file_hi_did_messaging_proto_goTypes,
 		DependencyIndexes: file_hi_did_messaging_proto_depIdxs,

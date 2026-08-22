@@ -5224,8 +5224,11 @@ pub mod packet {
         Notice(super::Notice),
     }
 }
+/// 钱包侧通知。载体是 MQTT 主题 `hidid/v1/single/<收件人did>`(Packet 的二进制)。
+///
 /// type:
-/// transaction: 其他人向自己发起交易
+/// transaction: 其他人向自己发起交易 / extra: hi.did.Transaction
+/// app-update:  app 有新版本(全体广播,走 `hi/v1/broadcast`,不是本主题)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Notice {
     #[prost(string, tag = "1")]
@@ -5238,6 +5241,144 @@ pub struct Notice {
     pub extra: ::core::option::Option<::pbjson_types::Any>,
     #[prost(string, tag = "5")]
     pub ex_type: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod notify_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Notify —— 付款方付完之后,叫 hidid 后台替它通知收款方。
+    ///
+    /// ## 为什么在后台发,而不是付款方自己发 MQTT
+    ///
+    /// 付款方**不一定连着 MQTT**:被三方唤起(deep link)去付款的那条路,
+    /// 拉起来就是付款页,压根没走过登录+连 broker 的流程,通知发不出去。
+    /// 而"付款成功"有好几条入口(钱包内转账 / 三方唤起 / DApp 内支付),
+    /// 各自记得发一次是靠不住的 —— 收口成一个方法,新增入口不会漏。
+    ///
+    /// 挪到后台之后,broker 的 `common:wacls` 就能把
+    /// **"任何认证客户端都能写别人的 `hidid/v1/single/+`"** 这条口子关掉。
+    ///
+    /// ## 这不是账目,是提醒
+    ///
+    /// 不落库、不重试、**收款方不在线就丢**(客户端一律 clean session,broker 不给离线的存)。
+    /// 谁都不会只凭这条通知认款 —— 要认款有 `Transfer.TxDetail` / `Transfer.VerifyTransaction`。
+    #[derive(Debug, Clone)]
+    pub struct NotifyClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl NotifyClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> NotifyClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> NotifyClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            NotifyClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 载荷 = `hi.did.Transaction` 的 protojson 文本(与本仓其它验签接口同形;
+        /// 验签走 FFI,那条通道只吃 UTF-8 文本,塞二进制会在第一个 NUL 处被截断)。
+        ///
+        /// ⚠️ `Transaction.from` **不收入参** —— 一律取自验签认出的签名者。
+        /// 收了就等于让任何人冒名发付款通知。
+        /// ⚠️ `Transaction.to.did` 必填:本生态业务层只认 did,链地址由后端按币种所在链查。
+        ///
+        /// 档位 AUTH_WEB3 与整条付款路径一致:付款方是**钱包**,它天然会签名,
+        /// 但不一定有 hidid 登录态(hidid-simple-app 与 hinj-brain 都只有钱包、没有 token)。
+        pub async fn transaction(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Notify/Transaction",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Notify", "Transaction"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
 }
 /// 单个文件的更新指令。**版本长在文件上**,而不是塞一堆产品专属的顶层字段
 /// (原先想放 extra.brain_version,那样每加一个组件就要动 schema)。

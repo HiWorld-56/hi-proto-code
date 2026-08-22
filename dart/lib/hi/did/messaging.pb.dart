@@ -13,7 +13,7 @@
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $2;
 
 import '../common.pb.dart' as $0;
 
@@ -87,14 +87,17 @@ class Packet extends $pb.GeneratedMessage {
 }
 
 ///
+/// 钱包侧通知。载体是 MQTT 主题 `hidid/v1/single/<收件人did>`(Packet 的二进制)。
+///
 /// type:
-/// transaction: 其他人向自己发起交易
+/// transaction: 其他人向自己发起交易 / extra: hi.did.Transaction
+/// app-update:  app 有新版本(全体广播,走 `hi/v1/broadcast`,不是本主题)
 class Notice extends $pb.GeneratedMessage {
   factory Notice({
     $core.String? uuid,
     $core.String? type,
     $0.Entity? from,
-    $1.Any? extra,
+    $2.Any? extra,
     $core.String? exType,
   }) {
     final result = create();
@@ -123,7 +126,7 @@ class Notice extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'type')
     ..aOM<$0.Entity>(3, _omitFieldNames ? '' : 'from',
         subBuilder: $0.Entity.create)
-    ..aOM<$1.Any>(4, _omitFieldNames ? '' : 'extra', subBuilder: $1.Any.create)
+    ..aOM<$2.Any>(4, _omitFieldNames ? '' : 'extra', subBuilder: $2.Any.create)
     ..aOS(5, _omitFieldNames ? '' : 'exType')
     ..hasRequiredFields = false;
 
@@ -175,15 +178,15 @@ class Notice extends $pb.GeneratedMessage {
   $0.Entity ensureFrom() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $1.Any get extra => $_getN(3);
+  $2.Any get extra => $_getN(3);
   @$pb.TagNumber(4)
-  set extra($1.Any value) => $_setField(4, value);
+  set extra($2.Any value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasExtra() => $_has(3);
   @$pb.TagNumber(4)
   void clearExtra() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.Any ensureExtra() => $_ensure(3);
+  $2.Any ensureExtra() => $_ensure(3);
 
   @$pb.TagNumber(5)
   $core.String get exType => $_getSZ(4);
