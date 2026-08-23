@@ -97,6 +97,8 @@ class RunReq extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? envs,
     PluginAnnex? annex,
     $core.String? function,
+    $core.String? asker,
+    $core.String? master,
   }) {
     final result = create();
     if (codeArchiveUrl != null) result.codeArchiveUrl = codeArchiveUrl;
@@ -105,6 +107,8 @@ class RunReq extends $pb.GeneratedMessage {
     if (envs != null) result.envs.addAll(envs);
     if (annex != null) result.annex = annex;
     if (function != null) result.function = function;
+    if (asker != null) result.asker = asker;
+    if (master != null) result.master = master;
     return result;
   }
 
@@ -128,6 +132,8 @@ class RunReq extends $pb.GeneratedMessage {
     ..aOM<PluginAnnex>(5, _omitFieldNames ? '' : 'annex',
         subBuilder: PluginAnnex.create)
     ..aOS(6, _omitFieldNames ? '' : 'function')
+    ..aOS(7, _omitFieldNames ? '' : 'asker')
+    ..aOS(8, _omitFieldNames ? '' : 'master')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -206,6 +212,31 @@ class RunReq extends $pb.GeneratedMessage {
   $core.bool hasFunction() => $_has(5);
   @$pb.TagNumber(6)
   void clearFunction() => $_clearField(6);
+
+  /// ── 本轮的两个身份 → 注入成脚本里的 plugin_builtin.asker / .master ───────────
+  ///
+  /// 与 `annex` 同为**注入面**(模型看不见、用户改不了),但**来源完全不同**:
+  /// annex 是插件安装时配的静态扩展数据(c.data ∪ d.data,其中 d.data 用户可填),
+  /// 这两个是**本轮对话现取的**。所以合并进 plugin_builtin 时
+  /// **内置键最后写、无条件覆盖** —— 否则用户在版本扩展数据里填一个同名键就能冒名,
+  /// 而且静默。
+  @$pb.TagNumber(7)
+  $core.String get asker => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set asker($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasAsker() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearAsker() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get master => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set master($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasMaster() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearMaster() => $_clearField(8);
 }
 
 class RunResp extends $pb.GeneratedMessage {

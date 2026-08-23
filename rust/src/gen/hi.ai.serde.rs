@@ -1123,6 +1123,12 @@ impl serde::Serialize for ChatReq {
         if self.echo_context {
             len += 1;
         }
+        if !self.asker.is_empty() {
+            len += 1;
+        }
+        if !self.master.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ChatReq", len)?;
         if !self.agent.is_empty() {
             struct_ser.serialize_field("agent", &self.agent)?;
@@ -1157,6 +1163,12 @@ impl serde::Serialize for ChatReq {
         if self.echo_context {
             struct_ser.serialize_field("echoContext", &self.echo_context)?;
         }
+        if !self.asker.is_empty() {
+            struct_ser.serialize_field("asker", &self.asker)?;
+        }
+        if !self.master.is_empty() {
+            struct_ser.serialize_field("master", &self.master)?;
+        }
         struct_ser.end()
     }
 }
@@ -1182,6 +1194,8 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
             "echoMemory",
             "echo_context",
             "echoContext",
+            "asker",
+            "master",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1197,6 +1211,8 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
             EchoToolCalls,
             EchoMemory,
             EchoContext,
+            Asker,
+            Master,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1229,6 +1245,8 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                             "echoToolCalls" | "echo_tool_calls" => Ok(GeneratedField::EchoToolCalls),
                             "echoMemory" | "echo_memory" => Ok(GeneratedField::EchoMemory),
                             "echoContext" | "echo_context" => Ok(GeneratedField::EchoContext),
+                            "asker" => Ok(GeneratedField::Asker),
+                            "master" => Ok(GeneratedField::Master),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1259,6 +1277,8 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                 let mut echo_tool_calls__ = None;
                 let mut echo_memory__ = None;
                 let mut echo_context__ = None;
+                let mut asker__ = None;
+                let mut master__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -1327,6 +1347,18 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                             }
                             echo_context__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Asker => {
+                            if asker__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("asker"));
+                            }
+                            asker__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Master => {
+                            if master__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("master"));
+                            }
+                            master__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(ChatReq {
@@ -1341,6 +1373,8 @@ impl<'de> serde::Deserialize<'de> for ChatReq {
                     echo_tool_calls: echo_tool_calls__.unwrap_or_default(),
                     echo_memory: echo_memory__.unwrap_or_default(),
                     echo_context: echo_context__.unwrap_or_default(),
+                    asker: asker__.unwrap_or_default(),
+                    master: master__.unwrap_or_default(),
                 })
             }
         }

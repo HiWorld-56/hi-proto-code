@@ -52,6 +52,8 @@ const RunReq$json = {
       '10': 'annex'
     },
     {'1': 'function', '3': 6, '4': 1, '5': 9, '10': 'function'},
+    {'1': 'asker', '3': 7, '4': 1, '5': 9, '10': 'asker'},
+    {'1': 'master', '3': 8, '4': 1, '5': 9, '10': 'master'},
   ],
 };
 
@@ -60,7 +62,8 @@ final $typed_data.Uint8List runReqDescriptor = $convert.base64Decode(
     'CgZSdW5SZXESKAoQY29kZV9hcmNoaXZlX3VybBgBIAEoCVIOY29kZUFyY2hpdmVVcmwSHwoLY2'
     '9kZV9wYXJhbXMYAiABKAlSCmNvZGVQYXJhbXMSEgoEdXVpZBgDIAEoCVIEdXVpZBISCgRlbnZz'
     'GAQgAygJUgRlbnZzEi8KBWFubmV4GAUgASgLMhkuaGkuYWkucGx1Z2luLlBsdWdpbkFubmV4Ug'
-    'Vhbm5leBIaCghmdW5jdGlvbhgGIAEoCVIIZnVuY3Rpb24=');
+    'Vhbm5leBIaCghmdW5jdGlvbhgGIAEoCVIIZnVuY3Rpb24SFAoFYXNrZXIYByABKAlSBWFza2Vy'
+    'EhYKBm1hc3RlchgIIAEoCVIGbWFzdGVy');
 
 @$core.Deprecated('Use runRespDescriptor instead')
 const RunResp$json = {

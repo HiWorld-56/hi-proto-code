@@ -45,6 +45,20 @@ pub struct RunReq {
     /// 但那是 hiai↔模型之间的事 —— 前缀在 hiai 侧切掉,包里和这里只认原始名。
     #[prost(string, tag = "6")]
     pub function: ::prost::alloc::string::String,
+    /// ── 本轮的两个身份 → 注入成脚本里的 plugin_builtin.asker / .master ───────────
+    ///
+    /// 与 `annex` 同为**注入面**(模型看不见、用户改不了),但**来源完全不同**:
+    /// annex 是插件安装时配的静态扩展数据(c.data ∪ d.data,其中 d.data 用户可填),
+    /// 这两个是**本轮对话现取的**。所以合并进 plugin_builtin 时
+    /// **内置键最后写、无条件覆盖** —— 否则用户在版本扩展数据里填一个同名键就能冒名,
+    /// 而且静默。
+    ///
+    /// 这句话是谁说的;**空 = 匿名**(如现场语音)。消息事实,不是权限凭据
+    #[prost(string, tag = "7")]
+    pub asker: ::prost::alloc::string::String,
+    /// 这台机器人的主人,**服务端现取的权威值**;判权限与动钱都用它
+    #[prost(string, tag = "8")]
+    pub master: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunResp {

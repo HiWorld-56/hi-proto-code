@@ -149,6 +149,8 @@ const ChatReq$json = {
     {'1': 'echo_tool_calls', '3': 9, '4': 1, '5': 8, '10': 'echoToolCalls'},
     {'1': 'echo_memory', '3': 10, '4': 1, '5': 8, '10': 'echoMemory'},
     {'1': 'echo_context', '3': 11, '4': 1, '5': 8, '10': 'echoContext'},
+    {'1': 'asker', '3': 12, '4': 1, '5': 9, '10': 'asker'},
+    {'1': 'master', '3': 13, '4': 1, '5': 9, '10': 'master'},
   ],
   '8': [
     {'1': '_tool_choice'},
@@ -166,8 +168,9 @@ final $typed_data.Uint8List chatReqDescriptor = $convert.base64Decode(
     'IbCgZjdXN0b20YBiABKAlIAVIGY3VzdG9tiAEBEhkKBXN0YXRlGAcgASgJSAJSBXN0YXRliAEB'
     'EhkKBXN0eWxlGAggASgJSANSBXN0eWxliAEBEiYKD2VjaG9fdG9vbF9jYWxscxgJIAEoCFINZW'
     'Nob1Rvb2xDYWxscxIfCgtlY2hvX21lbW9yeRgKIAEoCFIKZWNob01lbW9yeRIhCgxlY2hvX2Nv'
-    'bnRleHQYCyABKAhSC2VjaG9Db250ZXh0Qg4KDF90b29sX2Nob2ljZUIJCgdfY3VzdG9tQggKBl'
-    '9zdGF0ZUIICgZfc3R5bGU=');
+    'bnRleHQYCyABKAhSC2VjaG9Db250ZXh0EhQKBWFza2VyGAwgASgJUgVhc2tlchIWCgZtYXN0ZX'
+    'IYDSABKAlSBm1hc3RlckIOCgxfdG9vbF9jaG9pY2VCCQoHX2N1c3RvbUIICgZfc3RhdGVCCAoG'
+    'X3N0eWxl');
 
 @$core.Deprecated('Use toolCallResultDescriptor instead')
 const ToolCallResult$json = {

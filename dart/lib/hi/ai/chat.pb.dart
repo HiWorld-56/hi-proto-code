@@ -378,6 +378,8 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.bool? echoToolCalls,
     $core.bool? echoMemory,
     $core.bool? echoContext,
+    $core.String? asker,
+    $core.String? master,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -391,6 +393,8 @@ class ChatReq extends $pb.GeneratedMessage {
     if (echoToolCalls != null) result.echoToolCalls = echoToolCalls;
     if (echoMemory != null) result.echoMemory = echoMemory;
     if (echoContext != null) result.echoContext = echoContext;
+    if (asker != null) result.asker = asker;
+    if (master != null) result.master = master;
     return result;
   }
 
@@ -420,6 +424,8 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOB(9, _omitFieldNames ? '' : 'echoToolCalls')
     ..aOB(10, _omitFieldNames ? '' : 'echoMemory')
     ..aOB(11, _omitFieldNames ? '' : 'echoContext')
+    ..aOS(12, _omitFieldNames ? '' : 'asker')
+    ..aOS(13, _omitFieldNames ? '' : 'master')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -544,6 +550,36 @@ class ChatReq extends $pb.GeneratedMessage {
   $core.bool hasEchoContext() => $_has(10);
   @$pb.TagNumber(11)
   void clearEchoContext() => $_clearField(11);
+
+  /// 这句话是谁说的。**不是"谁在调"** —— 调用方几乎永远是机器人自己(`agent`),
+  /// 提问者在它收到的那条 mqtt 消息的 `from` 里,由 club 带过来。
+  /// **证明不了就空**(机器人语音路 = 现场人声,无法证明身份)。
+  ///
+  /// 🔴 它是**消息事实,不是权限凭据**。判权限用下面的 `master` 比对,别单独拿它当依据。
+  @$pb.TagNumber(12)
+  $core.String get asker => $_getSZ(11);
+  @$pb.TagNumber(12)
+  set asker($core.String value) => $_setString(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasAsker() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearAsker() => $_clearField(12);
+
+  /// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时为空。
+  ///
+  /// 🔴 **只能服务端算,不收客户端的** —— 所以 hi.club.ChatReq 里**故意没有**这个字段。
+  /// ⚠️ 每轮现取、不做长缓存:换主人(解绑/重绑)要立刻生效 —— 主人是活体,不是单据快照。
+  ///
+  /// 插件判"是不是主人"的唯一正确写法:`master` 非空且 `asker == master`;
+  /// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
+  @$pb.TagNumber(13)
+  $core.String get master => $_getSZ(12);
+  @$pb.TagNumber(13)
+  set master($core.String value) => $_setString(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasMaster() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearMaster() => $_clearField(13);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {

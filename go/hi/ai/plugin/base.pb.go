@@ -124,7 +124,16 @@ type RunReq struct {
 	// ⚠️ **不要把带前缀的名字传进来。** 喂给模型的工具名是 `<壳前缀>_<原名>`
 	// (前缀保证不同插件包的同名方法不撞,见 hi/ai/plugin.proto 的 PluginVersion.description),
 	// 但那是 hiai↔模型之间的事 —— 前缀在 hiai 侧切掉,包里和这里只认原始名。
-	Function      string `protobuf:"bytes,6,opt,name=function,proto3" json:"function,omitempty"`
+	Function string `protobuf:"bytes,6,opt,name=function,proto3" json:"function,omitempty"`
+	// ── 本轮的两个身份 → 注入成脚本里的 plugin_builtin.asker / .master ───────────
+	//
+	// 与 `annex` 同为**注入面**(模型看不见、用户改不了),但**来源完全不同**:
+	// annex 是插件安装时配的静态扩展数据(c.data ∪ d.data,其中 d.data 用户可填),
+	// 这两个是**本轮对话现取的**。所以合并进 plugin_builtin 时
+	// **内置键最后写、无条件覆盖** —— 否则用户在版本扩展数据里填一个同名键就能冒名,
+	// 而且静默。
+	Asker         string `protobuf:"bytes,7,opt,name=asker,proto3" json:"asker,omitempty"`   // 这句话是谁说的;**空 = 匿名**(如现场语音)。消息事实,不是权限凭据
+	Master        string `protobuf:"bytes,8,opt,name=master,proto3" json:"master,omitempty"` // 这台机器人的主人,**服务端现取的权威值**;判权限与动钱都用它
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -197,6 +206,20 @@ func (x *RunReq) GetAnnex() *PluginAnnex {
 func (x *RunReq) GetFunction() string {
 	if x != nil {
 		return x.Function
+	}
+	return ""
+}
+
+func (x *RunReq) GetAsker() string {
+	if x != nil {
+		return x.Asker
+	}
+	return ""
+}
+
+func (x *RunReq) GetMaster() string {
+	if x != nil {
+		return x.Master
 	}
 	return ""
 }
@@ -494,7 +517,7 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\n" +
 	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\":\n" +
 	"\vPluginAnnex\x12+\n" +
-	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xc8\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xf6\x01\n" +
 	"\x06RunReq\x12(\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x1f\n" +
 	"\vcode_params\x18\x02 \x01(\tR\n" +
@@ -502,7 +525,9 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x04uuid\x18\x03 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04envs\x18\x04 \x03(\tR\x04envs\x12/\n" +
 	"\x05annex\x18\x05 \x01(\v2\x19.hi.ai.plugin.PluginAnnexR\x05annex\x12\x1a\n" +
-	"\bfunction\x18\x06 \x01(\tR\bfunction\";\n" +
+	"\bfunction\x18\x06 \x01(\tR\bfunction\x12\x14\n" +
+	"\x05asker\x18\a \x01(\tR\x05asker\x12\x16\n" +
+	"\x06master\x18\b \x01(\tR\x06master\";\n" +
 	"\aRunResp\x12*\n" +
 	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
 	"\n" +

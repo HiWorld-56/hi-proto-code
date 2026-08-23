@@ -145,6 +145,7 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.bool? echoToolCalls,
     $core.bool? echoMemory,
     $core.bool? echoContext,
+    $core.String? asker,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -158,6 +159,7 @@ class ChatReq extends $pb.GeneratedMessage {
     if (echoToolCalls != null) result.echoToolCalls = echoToolCalls;
     if (echoMemory != null) result.echoMemory = echoMemory;
     if (echoContext != null) result.echoContext = echoContext;
+    if (asker != null) result.asker = asker;
     return result;
   }
 
@@ -187,6 +189,7 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOB(9, _omitFieldNames ? '' : 'echoToolCalls')
     ..aOB(10, _omitFieldNames ? '' : 'echoMemory')
     ..aOB(11, _omitFieldNames ? '' : 'echoContext')
+    ..aOS(12, _omitFieldNames ? '' : 'asker')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -306,6 +309,29 @@ class ChatReq extends $pb.GeneratedMessage {
   $core.bool hasEchoContext() => $_has(10);
   @$pb.TagNumber(11)
   void clearEchoContext() => $_clearField(11);
+
+  /// ── 这句话是谁说的 ─────────────────────────────────────────────────────────
+  ///
+  /// 🔴 **不是"谁在调这个接口"。** 调用方几乎永远是机器人自己(`agent` 就是它),
+  ///    而提问者在**它收到的那条 mqtt 消息的 `from`** 里 —— 只有收到消息的那一端知道,
+  ///    所以必须由客户端带上来,服务端无法从"谁在调"反推(反推出来的是机器人)。
+  ///
+  /// **证明不了就留空**:机器人的语音路(现场人声)无法证明身份,一律空。
+  /// 空 = 匿名提问,插件侧要认人的方法应当直接拒绝,**不许退回成"主人在问"**。
+  ///
+  /// ⚠️ 它只是**消息流转里的事实**,不是权限凭据。判"是不是主人"要拿服务端现取的
+  ///    权威值比对(见 hi.ai.ChatReq.master),动钱一律用那个权威值。
+  ///    别拿 `from` 去做流转之外的事。
+  ///
+  /// ⚠️ 人自己在 app/web 里直接跟助手聊时可以不传,服务端按登录主体推导。
+  @$pb.TagNumber(12)
+  $core.String get asker => $_getSZ(11);
+  @$pb.TagNumber(12)
+  set asker($core.String value) => $_setString(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasAsker() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearAsker() => $_clearField(12);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {

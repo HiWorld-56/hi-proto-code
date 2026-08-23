@@ -352,7 +352,21 @@ type ChatReq struct {
 	// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
 	// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
 	// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
-	EchoContext   bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3" json:"echo_context,omitempty"`
+	EchoContext bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3" json:"echo_context,omitempty"`
+	// 这句话是谁说的。**不是"谁在调"** —— 调用方几乎永远是机器人自己(`agent`),
+	// 提问者在它收到的那条 mqtt 消息的 `from` 里,由 club 带过来。
+	// **证明不了就空**(机器人语音路 = 现场人声,无法证明身份)。
+	//
+	// 🔴 它是**消息事实,不是权限凭据**。判权限用下面的 `master` 比对,别单独拿它当依据。
+	Asker string `protobuf:"bytes,12,opt,name=asker,proto3" json:"asker,omitempty"`
+	// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时为空。
+	//
+	// 🔴 **只能服务端算,不收客户端的** —— 所以 hi.club.ChatReq 里**故意没有**这个字段。
+	// ⚠️ 每轮现取、不做长缓存:换主人(解绑/重绑)要立刻生效 —— 主人是活体,不是单据快照。
+	//
+	// 插件判"是不是主人"的唯一正确写法:`master` 非空且 `asker == master`;
+	// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
+	Master        string `protobuf:"bytes,13,opt,name=master,proto3" json:"master,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -462,6 +476,20 @@ func (x *ChatReq) GetEchoContext() bool {
 		return x.EchoContext
 	}
 	return false
+}
+
+func (x *ChatReq) GetAsker() string {
+	if x != nil {
+		return x.Asker
+	}
+	return ""
+}
+
+func (x *ChatReq) GetMaster() string {
+	if x != nil {
+		return x.Master
+	}
+	return ""
 }
 
 type ToolCallResult struct {
@@ -993,7 +1021,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x01a\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x01a\x12\"\n" +
 	"\x01q\x18\x02 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x01q:\x04\x98\xb5\x18\x03\";\n" +
 	"\x0eGetHistoryResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x94\x03\n" +
+	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xc2\x03\n" +
 	"\aChatReq\x12\x14\n" +
 	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
 	"\x03cid\x18\x02 \x01(\tR\x03cid\x12$\n" +
@@ -1008,7 +1036,9 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\vecho_memory\x18\n" +
 	" \x01(\bR\n" +
 	"echoMemory\x12!\n" +
-	"\fecho_context\x18\v \x01(\bR\vechoContextB\x0e\n" +
+	"\fecho_context\x18\v \x01(\bR\vechoContext\x12\x14\n" +
+	"\x05asker\x18\f \x01(\tR\x05asker\x12\x16\n" +
+	"\x06master\x18\r \x01(\tR\x06masterB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
 	"\x06_stateB\b\n" +

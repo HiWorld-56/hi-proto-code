@@ -547,6 +547,12 @@ impl serde::Serialize for RunReq {
         if !self.function.is_empty() {
             len += 1;
         }
+        if !self.asker.is_empty() {
+            len += 1;
+        }
+        if !self.master.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.RunReq", len)?;
         if !self.code_archive_url.is_empty() {
             struct_ser.serialize_field("codeArchiveUrl", &self.code_archive_url)?;
@@ -566,6 +572,12 @@ impl serde::Serialize for RunReq {
         if !self.function.is_empty() {
             struct_ser.serialize_field("function", &self.function)?;
         }
+        if !self.asker.is_empty() {
+            struct_ser.serialize_field("asker", &self.asker)?;
+        }
+        if !self.master.is_empty() {
+            struct_ser.serialize_field("master", &self.master)?;
+        }
         struct_ser.end()
     }
 }
@@ -584,6 +596,8 @@ impl<'de> serde::Deserialize<'de> for RunReq {
             "envs",
             "annex",
             "function",
+            "asker",
+            "master",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -594,6 +608,8 @@ impl<'de> serde::Deserialize<'de> for RunReq {
             Envs,
             Annex,
             Function,
+            Asker,
+            Master,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -621,6 +637,8 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             "envs" => Ok(GeneratedField::Envs),
                             "annex" => Ok(GeneratedField::Annex),
                             "function" => Ok(GeneratedField::Function),
+                            "asker" => Ok(GeneratedField::Asker),
+                            "master" => Ok(GeneratedField::Master),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -646,6 +664,8 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                 let mut envs__ = None;
                 let mut annex__ = None;
                 let mut function__ = None;
+                let mut asker__ = None;
+                let mut master__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::CodeArchiveUrl => {
@@ -684,6 +704,18 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             }
                             function__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Asker => {
+                            if asker__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("asker"));
+                            }
+                            asker__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Master => {
+                            if master__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("master"));
+                            }
+                            master__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(RunReq {
@@ -693,6 +725,8 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                     envs: envs__.unwrap_or_default(),
                     annex: annex__,
                     function: function__.unwrap_or_default(),
+                    asker: asker__.unwrap_or_default(),
+                    master: master__.unwrap_or_default(),
                 })
             }
         }
