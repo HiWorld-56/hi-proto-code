@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 
 
-class BaseStub:
+class BaseStub(object):
     """基础数据(公开)。全档一致 —— 与 did 的 Base 对齐。
 
     ListCoins 原标 AUTH_TOKEN 但注释写着"不鉴权",而 did 的 Base.ListCoins 本就是公开的
@@ -32,7 +32,7 @@ class BaseStub:
                 _registered_method=True)
 
 
-class BaseServicer:
+class BaseServicer(object):
     """基础数据(公开)。全档一致 —— 与 did 的 Base 对齐。
 
     ListCoins 原标 AUTH_TOKEN 但注释写着"不鉴权",而 did 的 Base.ListCoins 本就是公开的
@@ -72,7 +72,7 @@ def add_BaseServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Base:
+class Base(object):
     """基础数据(公开)。全档一致 —— 与 did 的 Base 对齐。
 
     ListCoins 原标 AUTH_TOKEN 但注释写着"不鉴权",而 did 的 Base.ListCoins 本就是公开的
@@ -134,7 +134,7 @@ class Base:
             _registered_method=True)
 
 
-class SuperAdminStub:
+class SuperAdminStub(object):
     """超管名单(转发 hidid)。
 
     club **不留自己的表** —— 名单的唯一持有方是 hidid,这里只是替 club 的 web 前端
@@ -163,7 +163,7 @@ class SuperAdminStub:
                 _registered_method=True)
 
 
-class SuperAdminServicer:
+class SuperAdminServicer(object):
     """超管名单(转发 hidid)。
 
     club **不留自己的表** —— 名单的唯一持有方是 hidid,这里只是替 club 的 web 前端
@@ -201,7 +201,7 @@ def add_SuperAdminServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class SuperAdmin:
+class SuperAdmin(object):
     """超管名单(转发 hidid)。
 
     club **不留自己的表** —— 名单的唯一持有方是 hidid,这里只是替 club 的 web 前端

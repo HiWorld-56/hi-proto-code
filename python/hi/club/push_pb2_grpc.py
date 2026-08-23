@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.club import push_pb2 as hi_dot_club_dot_push__pb2
 
 
-class PushManagerStub:
+class PushManagerStub(object):
     """Token鉴权
     """
 
@@ -28,7 +28,7 @@ class PushManagerStub:
                 _registered_method=True)
 
 
-class PushManagerServicer:
+class PushManagerServicer(object):
     """Token鉴权
     """
 
@@ -65,7 +65,7 @@ def add_PushManagerServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class PushManager:
+class PushManager(object):
     """Token鉴权
     """
 

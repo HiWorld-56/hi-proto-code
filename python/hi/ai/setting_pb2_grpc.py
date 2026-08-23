@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import setting_pb2 as hi_dot_ai_dot_setting__pb2
 
 
-class SettingStub:
+class SettingStub(object):
     """hiai 服务级全局配置(主体=服务自身设置)。**超管档**。
 
     代理与 OpenAI 端点都是 **hiai 服务内部自用**的:整个服务对外连 OpenAI 就一套,
@@ -37,7 +37,7 @@ class SettingStub:
                 _registered_method=True)
 
 
-class SettingServicer:
+class SettingServicer(object):
     """hiai 服务级全局配置(主体=服务自身设置)。**超管档**。
 
     代理与 OpenAI 端点都是 **hiai 服务内部自用**的:整个服务对外连 OpenAI 就一套,
@@ -89,7 +89,7 @@ def add_SettingServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Setting:
+class Setting(object):
     """hiai 服务级全局配置(主体=服务自身设置)。**超管档**。
 
     代理与 OpenAI 端点都是 **hiai 服务内部自用**的:整个服务对外连 OpenAI 就一套,

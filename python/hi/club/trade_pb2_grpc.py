@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.club import trade_pb2 as hi_dot_club_dot_trade__pb2
 
 
-class TradeStub:
+class TradeStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -42,7 +42,7 @@ class TradeStub:
                 _registered_method=True)
 
 
-class TradeServicer:
+class TradeServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetFee(self, request, context):
@@ -112,7 +112,7 @@ def add_TradeServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Trade:
+class Trade(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -251,7 +251,7 @@ class Trade:
             _registered_method=True)
 
 
-class TradeManageStub:
+class TradeManageStub(object):
     """交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
     照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
 
@@ -273,7 +273,7 @@ class TradeManageStub:
                 _registered_method=True)
 
 
-class TradeManageServicer:
+class TradeManageServicer(object):
     """交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
     照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
 
@@ -304,7 +304,7 @@ def add_TradeManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class TradeManage:
+class TradeManage(object):
     """交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
     照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
 

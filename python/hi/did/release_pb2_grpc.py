@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import release_pb2 as hi_dot_did_dot_release__pb2
 
 
-class ReleaseManageStub:
+class ReleaseManageStub(object):
     """发布管理(**超管面**)。与公开面 `Release` 拆开,不是为了迎合 lint ——
     同一个 service 里混档意味着主体归类错了(照 DApp/DAppAdmin、Trade/TradeManage 范式):
     上传/发布是"谁能发版"的问题,查询/下载是"谁能拿到"的问题,两者的主体本就不同。
@@ -35,7 +35,7 @@ class ReleaseManageStub:
                 _registered_method=True)
 
 
-class ReleaseManageServicer:
+class ReleaseManageServicer(object):
     """发布管理(**超管面**)。与公开面 `Release` 拆开,不是为了迎合 lint ——
     同一个 service 里混档意味着主体归类错了(照 DApp/DAppAdmin、Trade/TradeManage 范式):
     上传/发布是"谁能发版"的问题,查询/下载是"谁能拿到"的问题,两者的主体本就不同。
@@ -81,7 +81,7 @@ def add_ReleaseManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class ReleaseManage:
+class ReleaseManage(object):
     """发布管理(**超管面**)。与公开面 `Release` 拆开,不是为了迎合 lint ——
     同一个 service 里混档意味着主体归类错了(照 DApp/DAppAdmin、Trade/TradeManage 范式):
     上传/发布是"谁能发版"的问题,查询/下载是"谁能拿到"的问题,两者的主体本就不同。
@@ -146,7 +146,7 @@ class ReleaseManage:
             _registered_method=True)
 
 
-class ReleaseStub:
+class ReleaseStub(object):
     """发布查询/下载(**公开面**)。客户端自查更新走这里,不需要任何凭证 ——
     发布信息与安装包本就是要给所有用户的。
     """
@@ -169,7 +169,7 @@ class ReleaseStub:
                 _registered_method=True)
 
 
-class ReleaseServicer:
+class ReleaseServicer(object):
     """发布查询/下载(**公开面**)。客户端自查更新走这里,不需要任何凭证 ——
     发布信息与安装包本就是要给所有用户的。
     """
@@ -210,7 +210,7 @@ def add_ReleaseServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Release:
+class Release(object):
     """发布查询/下载(**公开面**)。客户端自查更新走这里,不需要任何凭证 ——
     发布信息与安装包本就是要给所有用户的。
     """

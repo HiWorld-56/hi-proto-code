@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import training_pb2 as hi_dot_ai_dot_training__pb2
 
 
-class TrainingStub:
+class TrainingStub(object):
     """训练/记忆(主体=训练)。**hi.ai.Training 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     去 stutter(跟 ai 定稿):TrainingAgent/TrainingStatus/TrainingClear → Start/Status/Clear;
@@ -66,7 +66,7 @@ class TrainingStub:
                 _registered_method=True)
 
 
-class TrainingServicer:
+class TrainingServicer(object):
     """训练/记忆(主体=训练)。**hi.ai.Training 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     去 stutter(跟 ai 定稿):TrainingAgent/TrainingStatus/TrainingClear → Start/Status/Clear;
@@ -186,7 +186,7 @@ def add_TrainingServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Training:
+class Training(object):
     """训练/记忆(主体=训练)。**hi.ai.Training 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     去 stutter(跟 ai 定稿):TrainingAgent/TrainingStatus/TrainingClear → Start/Status/Clear;

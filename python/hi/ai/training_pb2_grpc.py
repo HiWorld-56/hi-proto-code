@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import training_pb2 as hi_dot_ai_dot_training__pb2
 
 
-class TrainingStub:
+class TrainingStub(object):
     """训练/记忆(主体=训练)。商户档:**hiai 自己的 web 与三方商户后台都会调**,
     故 token 与 apikey 都要收,两者解出同一个商户 did。
 
@@ -74,7 +74,7 @@ class TrainingStub:
                 _registered_method=True)
 
 
-class TrainingServicer:
+class TrainingServicer(object):
     """训练/记忆(主体=训练)。商户档:**hiai 自己的 web 与三方商户后台都会调**,
     故 token 与 apikey 都要收,两者解出同一个商户 did。
 
@@ -208,7 +208,7 @@ def add_TrainingServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Training:
+class Training(object):
     """训练/记忆(主体=训练)。商户档:**hiai 自己的 web 与三方商户后台都会调**,
     故 token 与 apikey 都要收,两者解出同一个商户 did。
 

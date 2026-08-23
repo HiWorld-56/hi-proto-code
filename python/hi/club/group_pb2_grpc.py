@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.club import group_pb2 as hi_dot_club_dot_group__pb2
 
 
-class GroupStub:
+class GroupStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -92,7 +92,7 @@ class GroupStub:
                 _registered_method=True)
 
 
-class GroupServicer:
+class GroupServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Get(self, request, context):
@@ -277,7 +277,7 @@ def add_GroupServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Group:
+class Group(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

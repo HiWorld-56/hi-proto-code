@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import admin_pb2 as hi_dot_did_dot_admin__pb2
 
 
-class InviteCodeStub:
+class InviteCodeStub(object):
     """邀请码管理:超管发/改/查/删邀请码。整个 service 都是超管面。
     (待注册用户"验码"是另一个主体,已拆到下面 InviteCodeVerify。)
     """
@@ -40,7 +40,7 @@ class InviteCodeStub:
                 _registered_method=True)
 
 
-class InviteCodeServicer:
+class InviteCodeServicer(object):
     """邀请码管理:超管发/改/查/删邀请码。整个 service 都是超管面。
     (待注册用户"验码"是另一个主体,已拆到下面 InviteCodeVerify。)
     """
@@ -100,7 +100,7 @@ def add_InviteCodeServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class InviteCode:
+class InviteCode(object):
     """邀请码管理:超管发/改/查/删邀请码。整个 service 都是超管面。
     (待注册用户"验码"是另一个主体,已拆到下面 InviteCodeVerify。)
     """
@@ -214,7 +214,7 @@ class InviteCode:
             _registered_method=True)
 
 
-class RegisterStub:
+class RegisterStub(object):
     """注册:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
     从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
     原名 InviteCodeVerify.Verify 是 stutter,改 Register.Verify。
@@ -233,7 +233,7 @@ class RegisterStub:
                 _registered_method=True)
 
 
-class RegisterServicer:
+class RegisterServicer(object):
     """注册:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
     从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
     原名 InviteCodeVerify.Verify 是 stutter,改 Register.Verify。
@@ -261,7 +261,7 @@ def add_RegisterServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Register:
+class Register(object):
     """注册:主体是**还没注册的人**,拿邀请码换 AuthToken 完成注册。
     从 InviteCode 拆出(主体不同:注册者 vs 超管;鉴权不同:公开 vs 超管)。
     原名 InviteCodeVerify.Verify 是 stutter,改 Register.Verify。
@@ -295,7 +295,7 @@ class Register:
             _registered_method=True)
 
 
-class DAppStub:
+class DAppStub(object):
     """DApp 浏览(app 面):普通登录用户看首页 DApp 列表。只读。
     """
 
@@ -322,7 +322,7 @@ class DAppStub:
                 _registered_method=True)
 
 
-class DAppServicer:
+class DAppServicer(object):
     """DApp 浏览(app 面):普通登录用户看首页 DApp 列表。只读。
     """
 
@@ -370,7 +370,7 @@ def add_DAppServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class DApp:
+class DApp(object):
     """DApp 浏览(app 面):普通登录用户看首页 DApp 列表。只读。
     """
 
@@ -456,7 +456,7 @@ class DApp:
             _registered_method=True)
 
 
-class DAppAdminStub:
+class DAppAdminStub(object):
     """DApp 维护(超管面):上架/下架/改/排序/置顶。handler 里本有超管校验,收敛到拦截器。
     """
 
@@ -493,7 +493,7 @@ class DAppAdminStub:
                 _registered_method=True)
 
 
-class DAppAdminServicer:
+class DAppAdminServicer(object):
     """DApp 维护(超管面):上架/下架/改/排序/置顶。handler 里本有超管校验,收敛到拦截器。
     """
 
@@ -563,7 +563,7 @@ def add_DAppAdminServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class DAppAdmin:
+class DAppAdmin(object):
     """DApp 维护(超管面):上架/下架/改/排序/置顶。handler 里本有超管校验,收敛到拦截器。
     """
 
@@ -703,7 +703,7 @@ class DAppAdmin:
             _registered_method=True)
 
 
-class MerchantManageStub:
+class MerchantManageStub(object):
     """商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_USER 且 handler 零校验
     (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
     ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
@@ -737,7 +737,7 @@ class MerchantManageStub:
                 _registered_method=True)
 
 
-class MerchantManageServicer:
+class MerchantManageServicer(object):
     """商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_USER 且 handler 零校验
     (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
     ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
@@ -798,7 +798,7 @@ def add_MerchantManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MerchantManage:
+class MerchantManage(object):
     """商户管理(超管面)。裁决 #11:此前 Delete/Edit 标 AUTH_USER 且 handler 零校验
     (任何登录用户可删改商户,是漏洞),已全部收紧为 AUTH_SUPERADMIN。
     ⚠️ handler 侧无内联校验,完全靠拦截器 —— 后端 bump 后必须实测"非超管调 Delete/Edit 被拒"。
@@ -913,7 +913,7 @@ class MerchantManage:
             _registered_method=True)
 
 
-class BroadcastInternalStub:
+class BroadcastInternalStub(object):
     """拆成独立 service 是因为**主体不同**:上面那条是超管在 web 上点的,这条是别的后端服务转发的。
     同 service 混档会让"这个接口到底谁能调"取决于方法而不是服务,拦截器就没法整体挂。
 
@@ -947,7 +947,7 @@ class BroadcastInternalStub:
                 _registered_method=True)
 
 
-class BroadcastInternalServicer:
+class BroadcastInternalServicer(object):
     """拆成独立 service 是因为**主体不同**:上面那条是超管在 web 上点的,这条是别的后端服务转发的。
     同 service 混档会让"这个接口到底谁能调"取决于方法而不是服务,拦截器就没法整体挂。
 
@@ -990,7 +990,7 @@ def add_BroadcastInternalServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class BroadcastInternal:
+class BroadcastInternal(object):
     """拆成独立 service 是因为**主体不同**:上面那条是超管在 web 上点的,这条是别的后端服务转发的。
     同 service 混档会让"这个接口到底谁能调"取决于方法而不是服务,拦截器就没法整体挂。
 
@@ -1039,7 +1039,7 @@ class BroadcastInternal:
             _registered_method=True)
 
 
-class BroadcastStub:
+class BroadcastStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -1055,7 +1055,7 @@ class BroadcastStub:
                 _registered_method=True)
 
 
-class BroadcastServicer:
+class BroadcastServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def AppUpdate(self, request, context):
@@ -1080,7 +1080,7 @@ def add_BroadcastServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Broadcast:
+class Broadcast(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

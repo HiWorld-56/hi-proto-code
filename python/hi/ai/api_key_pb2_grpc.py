@@ -7,7 +7,7 @@ from hi.ai import api_key_pb2 as hi_dot_ai_dot_api__key__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class ApiKeyStub:
+class ApiKeyStub(object):
     """商户的 apikey 管理(主体=apikey)。商户档。
 
     商户在 hiai web 后台(token)签发 apikey 给自己的后台服务用;但**商户后台调用时没有登录态**,
@@ -47,7 +47,7 @@ class ApiKeyStub:
                 _registered_method=True)
 
 
-class ApiKeyServicer:
+class ApiKeyServicer(object):
     """商户的 apikey 管理(主体=apikey)。商户档。
 
     商户在 hiai web 后台(token)签发 apikey 给自己的后台服务用;但**商户后台调用时没有登录态**,
@@ -114,7 +114,7 @@ def add_ApiKeyServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class ApiKey:
+class ApiKey(object):
     """商户的 apikey 管理(主体=apikey)。商户档。
 
     商户在 hiai web 后台(token)签发 apikey 给自己的后台服务用;但**商户后台调用时没有登录态**,

@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import plugin_pb2 as hi_dot_ai_dot_plugin__pb2
 
 
-class PluginStub:
+class PluginStub(object):
     """插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
     """
 
@@ -118,7 +118,7 @@ class PluginStub:
                 _registered_method=True)
 
 
-class PluginServicer:
+class PluginServicer(object):
     """插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
     """
 
@@ -353,7 +353,7 @@ def add_PluginServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Plugin:
+class Plugin(object):
     """插件管理(主体=插件)。商户档:hiai web 与三方商户后台(club)都会调。
     """
 

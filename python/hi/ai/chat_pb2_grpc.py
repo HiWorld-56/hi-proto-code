@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import chat_pb2 as hi_dot_ai_dot_chat__pb2
 
 
-class ChatStub:
+class ChatStub(object):
     """对话(主体=会话)。商户档:hiai web(token)与商户后台服务(apikey)都会调。
 
     ── 只有一条对话路 ──────────────────────────────────────────────────────────
@@ -75,7 +75,7 @@ class ChatStub:
                 _registered_method=True)
 
 
-class ChatServicer:
+class ChatServicer(object):
     """对话(主体=会话)。商户档:hiai web(token)与商户后台服务(apikey)都会调。
 
     ── 只有一条对话路 ──────────────────────────────────────────────────────────
@@ -191,7 +191,7 @@ def add_ChatServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Chat:
+class Chat(object):
     """对话(主体=会话)。商户档:hiai web(token)与商户后台服务(apikey)都会调。
 
     ── 只有一条对话路 ──────────────────────────────────────────────────────────

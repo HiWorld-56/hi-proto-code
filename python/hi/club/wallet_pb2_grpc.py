@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class WalletStub:
+class WalletStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -22,7 +22,7 @@ class WalletStub:
                 _registered_method=True)
 
 
-class WalletServicer:
+class WalletServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def UpdateAddresses(self, request, context):
@@ -47,7 +47,7 @@ def add_WalletServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Wallet:
+class Wallet(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

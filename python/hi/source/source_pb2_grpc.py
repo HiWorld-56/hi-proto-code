@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.source import source_pb2 as hi_dot_source_dot_source__pb2
 
 
-class FileStub:
+class FileStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -68,7 +68,7 @@ class FileStub:
                 _registered_method=True)
 
 
-class FileServicer:
+class FileServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Put(self, request, context):
@@ -192,7 +192,7 @@ def add_FileServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class File:
+class File(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -466,7 +466,7 @@ class File:
             _registered_method=True)
 
 
-class BaseStub:
+class BaseStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -482,7 +482,7 @@ class BaseStub:
                 _registered_method=True)
 
 
-class BaseServicer:
+class BaseServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def ServerVersion(self, request, context):
@@ -507,7 +507,7 @@ def add_BaseServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Base:
+class Base(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

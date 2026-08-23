@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import merchant_pb2 as hi_dot_ai_dot_merchant__pb2
 
 
-class MerchantStub:
+class MerchantStub(object):
     """商户目录(超管)。承接原 `UserACL.List(type="all")` —— 那查的是**注册用户/商户名录**,
     与"授权限"是两件事,混在一个方法里靠 type 分流,读的人看不懂,故拆出来。
     与 hi.did.MerchantManage.List 同形对齐(hiai 里没有普通用户,只有商户)。
@@ -30,7 +30,7 @@ class MerchantStub:
                 _registered_method=True)
 
 
-class MerchantServicer:
+class MerchantServicer(object):
     """商户目录(超管)。承接原 `UserACL.List(type="all")` —— 那查的是**注册用户/商户名录**,
     与"授权限"是两件事,混在一个方法里靠 type 分流,读的人看不懂,故拆出来。
     与 hi.did.MerchantManage.List 同形对齐(hiai 里没有普通用户,只有商户)。
@@ -69,7 +69,7 @@ def add_MerchantServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Merchant:
+class Merchant(object):
     """商户目录(超管)。承接原 `UserACL.List(type="all")` —— 那查的是**注册用户/商户名录**,
     与"授权限"是两件事,混在一个方法里靠 type 分流,读的人看不懂,故拆出来。
     与 hi.did.MerchantManage.List 同形对齐(hiai 里没有普通用户,只有商户)。

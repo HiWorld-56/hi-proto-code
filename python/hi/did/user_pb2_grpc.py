@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import user_pb2 as hi_dot_did_dot_user__pb2
 
 
-class UserStub:
+class UserStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -28,7 +28,7 @@ class UserStub:
                 _registered_method=True)
 
 
-class UserServicer:
+class UserServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Edit(self, request, context):
@@ -71,7 +71,7 @@ def add_UserServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class User:
+class User(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai.plugin import base_pb2 as hi_dot_ai_dot_plugin_dot_base__pb2
 
 
-class RunnerStub:
+class RunnerStub(object):
     """脚本执行器(内部面)。只由父服务 ai 经 grpc 转发调用;不鉴权、也不认识"调用者"
     —— 主体(商户/机器人)的校验在 `hi.ai.Plugin` 那一层完成。
     """
@@ -29,7 +29,7 @@ class RunnerStub:
                 _registered_method=True)
 
 
-class RunnerServicer:
+class RunnerServicer(object):
     """脚本执行器(内部面)。只由父服务 ai 经 grpc 转发调用;不鉴权、也不认识"调用者"
     —— 主体(商户/机器人)的校验在 `hi.ai.Plugin` 那一层完成。
     """
@@ -67,7 +67,7 @@ def add_RunnerServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Runner:
+class Runner(object):
     """脚本执行器(内部面)。只由父服务 ai 经 grpc 转发调用;不鉴权、也不认识"调用者"
     —— 主体(商户/机器人)的校验在 `hi.ai.Plugin` 那一层完成。
     """
@@ -127,7 +127,7 @@ class Runner:
             _registered_method=True)
 
 
-class BuilderStub:
+class BuilderStub(object):
     """NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
 
     ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
@@ -147,7 +147,7 @@ class BuilderStub:
                 _registered_method=True)
 
 
-class BuilderServicer:
+class BuilderServicer(object):
     """NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
 
     ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
@@ -176,7 +176,7 @@ def add_BuilderServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Builder:
+class Builder(object):
     """NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
 
     ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本

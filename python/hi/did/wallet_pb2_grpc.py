@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import wallet_pb2 as hi_dot_did_dot_wallet__pb2
 
 
-class WalletStub:
+class WalletStub(object):
     """用户自己的钱包(用户主体,token)。UpdateAddresses 需签名证明地址归属,故 web3 —— 已拆去 Assets。
     """
 
@@ -29,7 +29,7 @@ class WalletStub:
                 _registered_method=True)
 
 
-class WalletServicer:
+class WalletServicer(object):
     """用户自己的钱包(用户主体,token)。UpdateAddresses 需签名证明地址归属,故 web3 —— 已拆去 Assets。
     """
 
@@ -66,7 +66,7 @@ def add_WalletServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Wallet:
+class Wallet(object):
     """用户自己的钱包(用户主体,token)。UpdateAddresses 需签名证明地址归属,故 web3 —— 已拆去 Assets。
     """
 
@@ -125,7 +125,7 @@ class Wallet:
             _registered_method=True)
 
 
-class AssetsStub:
+class AssetsStub(object):
     """资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
     UpdateAddresses 用签名自证地址归属(不依赖登录 token),故归此。
     """
@@ -163,7 +163,7 @@ class AssetsStub:
                 _registered_method=True)
 
 
-class AssetsServicer:
+class AssetsServicer(object):
     """资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
     UpdateAddresses 用签名自证地址归属(不依赖登录 token),故归此。
     """
@@ -237,7 +237,7 @@ def add_AssetsServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Assets:
+class Assets(object):
     """资产/地址(公开 + web3,web3 视为无鉴权,档位一致)。资产查询是链上公开数据;
     UpdateAddresses 用签名自证地址归属(不依赖登录 token),故归此。
     """

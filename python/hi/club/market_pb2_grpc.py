@@ -7,7 +7,7 @@ from hi.club import market_pb2 as hi_dot_club_dot_market__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class MarketDirectoryStub:
+class MarketDirectoryStub(object):
     """── 服务 ─────────────────────────────────────────────────────────────────────
 
     ⚠️ **四个 service 必须拆开,不能合并** —— `check_auth.py` 要求「同一 service 内档位集合一致」。
@@ -48,7 +48,7 @@ class MarketDirectoryStub:
                 _registered_method=True)
 
 
-class MarketDirectoryServicer:
+class MarketDirectoryServicer(object):
     """── 服务 ─────────────────────────────────────────────────────────────────────
 
     ⚠️ **四个 service 必须拆开,不能合并** —— `check_auth.py` 要求「同一 service 内档位集合一致」。
@@ -116,7 +116,7 @@ def add_MarketDirectoryServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MarketDirectory:
+class MarketDirectory(object):
     """── 服务 ─────────────────────────────────────────────────────────────────────
 
     ⚠️ **四个 service 必须拆开,不能合并** —— `check_auth.py` 要求「同一 service 内档位集合一致」。
@@ -238,7 +238,7 @@ class MarketDirectory:
             _registered_method=True)
 
 
-class MarketStub:
+class MarketStub(object):
     """市场用户面:挂牌方与购买方都在这。
     """
 
@@ -345,7 +345,7 @@ class MarketStub:
                 _registered_method=True)
 
 
-class MarketServicer:
+class MarketServicer(object):
     """市场用户面:挂牌方与购买方都在这。
     """
 
@@ -577,7 +577,7 @@ def add_MarketServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Market:
+class Market(object):
     """市场用户面:挂牌方与购买方都在这。
     """
 
@@ -1095,7 +1095,7 @@ class Market:
             _registered_method=True)
 
 
-class MarketCallbackStub:
+class MarketCallbackStub(object):
     """── 外部结算:**商户来拉 + 回传**,club 不主动调商户 ──────────────────────────
 
     两个方法都是**商户后台调 club**,主体由载荷里的 web3 签名证明。
@@ -1140,7 +1140,7 @@ class MarketCallbackStub:
                 _registered_method=True)
 
 
-class MarketCallbackServicer:
+class MarketCallbackServicer(object):
     """── 外部结算:**商户来拉 + 回传**,club 不主动调商户 ──────────────────────────
 
     两个方法都是**商户后台调 club**,主体由载荷里的 web3 签名证明。
@@ -1200,7 +1200,7 @@ def add_MarketCallbackServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MarketCallback:
+class MarketCallback(object):
     """── 外部结算:**商户来拉 + 回传**,club 不主动调商户 ──────────────────────────
 
     两个方法都是**商户后台调 club**,主体由载荷里的 web3 签名证明。
@@ -1282,7 +1282,7 @@ class MarketCallback:
             _registered_method=True)
 
 
-class MarketManageStub:
+class MarketManageStub(object):
     """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
     """
 
@@ -1309,7 +1309,7 @@ class MarketManageStub:
                 _registered_method=True)
 
 
-class MarketManageServicer:
+class MarketManageServicer(object):
     """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
     """
 
@@ -1357,7 +1357,7 @@ def add_MarketManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MarketManage:
+class MarketManage(object):
     """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
     """
 

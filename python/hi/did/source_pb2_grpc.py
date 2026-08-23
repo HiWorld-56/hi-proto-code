@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class SourceStub:
+class SourceStub(object):
     """Source —— hidid 侧直接搬运二进制的方法。分法见 hi/club/source.proto 的说明。
 
     **所有身份实体的头像都落 hidid/avatar/**:用户、商户(logo 即商户头像)、机器人,
@@ -52,7 +52,7 @@ class SourceStub:
                 _registered_method=True)
 
 
-class SourceServicer:
+class SourceServicer(object):
     """Source —— hidid 侧直接搬运二进制的方法。分法见 hi/club/source.proto 的说明。
 
     **所有身份实体的头像都落 hidid/avatar/**:用户、商户(logo 即商户头像)、机器人,
@@ -145,7 +145,7 @@ def add_SourceServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Source:
+class Source(object):
     """Source —— hidid 侧直接搬运二进制的方法。分法见 hi/club/source.proto 的说明。
 
     **所有身份实体的头像都落 hidid/avatar/**:用户、商户(logo 即商户头像)、机器人,

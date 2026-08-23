@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class NotifyStub:
+class NotifyStub(object):
     """Notify —— 付款方付完之后,叫 hidid 后台替它通知收款方。
 
     ## 为什么在后台发,而不是付款方自己发 MQTT
@@ -38,7 +38,7 @@ class NotifyStub:
                 _registered_method=True)
 
 
-class NotifyServicer:
+class NotifyServicer(object):
     """Notify —— 付款方付完之后,叫 hidid 后台替它通知收款方。
 
     ## 为什么在后台发,而不是付款方自己发 MQTT
@@ -88,7 +88,7 @@ def add_NotifyServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Notify:
+class Notify(object):
     """Notify —— 付款方付完之后,叫 hidid 后台替它通知收款方。
 
     ## 为什么在后台发,而不是付款方自己发 MQTT

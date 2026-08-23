@@ -8,7 +8,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import auth_pb2 as hi_dot_did_dot_auth__pb2
 
 
-class AuthStub:
+class AuthStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -44,7 +44,7 @@ class AuthStub:
                 _registered_method=True)
 
 
-class AuthServicer:
+class AuthServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def RefreshToken(self, request, context):
@@ -113,7 +113,7 @@ def add_AuthServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Auth:
+class Auth(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

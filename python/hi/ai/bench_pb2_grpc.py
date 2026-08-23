@@ -5,7 +5,7 @@ import grpc
 from hi.ai import bench_pb2 as hi_dot_ai_dot_bench__pb2
 
 
-class AgentBenchStub:
+class AgentBenchStub(object):
     """智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
 
     **两个方法,因为本来就是两种查询**:
@@ -39,7 +39,7 @@ class AgentBenchStub:
                 _registered_method=True)
 
 
-class AgentBenchServicer:
+class AgentBenchServicer(object):
     """智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
 
     **两个方法,因为本来就是两种查询**:
@@ -88,7 +88,7 @@ def add_AgentBenchServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class AgentBench:
+class AgentBench(object):
     """智能体延迟基准(主体=测时数据)。从 Chat 拆出 —— 这是监控统计,不是对话。
 
     **两个方法,因为本来就是两种查询**:

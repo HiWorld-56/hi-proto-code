@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import merchant_pb2 as hi_dot_did_dot_merchant__pb2
 
 
-class MerchantStub:
+class MerchantStub(object):
     """商户(主体=商户,ExtendToken)。按主体归位:商户自身配置、对用户扩展数据的读写、授权,全在这。
     用户不能读自己的扩展(扩展是商户的地盘)。
 
@@ -97,7 +97,7 @@ class MerchantStub:
                 _registered_method=True)
 
 
-class MerchantServicer:
+class MerchantServicer(object):
     """商户(主体=商户,ExtendToken)。按主体归位:商户自身配置、对用户扩展数据的读写、授权,全在这。
     用户不能读自己的扩展(扩展是商户的地盘)。
 
@@ -295,7 +295,7 @@ def add_MerchantServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Merchant:
+class Merchant(object):
     """商户(主体=商户,ExtendToken)。按主体归位:商户自身配置、对用户扩展数据的读写、授权,全在这。
     用户不能读自己的扩展(扩展是商户的地盘)。
 
@@ -686,7 +686,7 @@ class Merchant:
             _registered_method=True)
 
 
-class MerchantPubStub:
+class MerchantPubStub(object):
     """商户公开信息(免鉴权)。主体=商户对外可见的那部分。
 
     用途:hidid app 被三方业务 app 唤起做签名认证时,按业务侧传来的**商户 did** 查回跳 scheme;
@@ -715,7 +715,7 @@ class MerchantPubStub:
                 _registered_method=True)
 
 
-class MerchantPubServicer:
+class MerchantPubServicer(object):
     """商户公开信息(免鉴权)。主体=商户对外可见的那部分。
 
     用途:hidid app 被三方业务 app 唤起做签名认证时,按业务侧传来的**商户 did** 查回跳 scheme;
@@ -759,7 +759,7 @@ def add_MerchantPubServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MerchantPub:
+class MerchantPub(object):
     """商户公开信息(免鉴权)。主体=商户对外可见的那部分。
 
     用途:hidid app 被三方业务 app 唤起做签名认证时,按业务侧传来的**商户 did** 查回跳 scheme;
@@ -825,7 +825,7 @@ class MerchantPub:
             _registered_method=True)
 
 
-class MerchantOwnerStub:
+class MerchantOwnerStub(object):
     """商户主人自服务 —— **主体 = 商户主人(登录 token)**,与 Merchant(服务持 ExtendToken 干活)主体不同,
     故不与 Merchant 合并。原名 MerchantExDB(只讲 ExDB,装不下商户主人的其他配置);
     更早叫 UserExtensionSettings(假名,跟"用户扩展设置"无关,ctx.did 就是商户 did)。
@@ -860,7 +860,7 @@ class MerchantOwnerStub:
                 _registered_method=True)
 
 
-class MerchantOwnerServicer:
+class MerchantOwnerServicer(object):
     """商户主人自服务 —— **主体 = 商户主人(登录 token)**,与 Merchant(服务持 ExtendToken 干活)主体不同,
     故不与 Merchant 合并。原名 MerchantExDB(只讲 ExDB,装不下商户主人的其他配置);
     更早叫 UserExtensionSettings(假名,跟"用户扩展设置"无关,ctx.did 就是商户 did)。
@@ -916,7 +916,7 @@ def add_MerchantOwnerServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MerchantOwner:
+class MerchantOwner(object):
     """商户主人自服务 —— **主体 = 商户主人(登录 token)**,与 Merchant(服务持 ExtendToken 干活)主体不同,
     故不与 Merchant 合并。原名 MerchantExDB(只讲 ExDB,装不下商户主人的其他配置);
     更早叫 UserExtensionSettings(假名,跟"用户扩展设置"无关,ctx.did 就是商户 did)。
@@ -1010,7 +1010,7 @@ class MerchantOwner:
             _registered_method=True)
 
 
-class OrderEventStub:
+class OrderEventStub(object):
     """── 订单通知/事件(web3 自动付款机制,裁决 #10)──────────────────────
     架构:PC 端跑 hidid-pc,通过 SSE 长连接(OrderEvent.Sub)与 hidid 后台保持连接(pc 无公网 IP)。
     流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 OrderNotify.Send → hidid 后端把通知
@@ -1036,7 +1036,7 @@ class OrderEventStub:
                 _registered_method=True)
 
 
-class OrderEventServicer:
+class OrderEventServicer(object):
     """── 订单通知/事件(web3 自动付款机制,裁决 #10)──────────────────────
     架构:PC 端跑 hidid-pc,通过 SSE 长连接(OrderEvent.Sub)与 hidid 后台保持连接(pc 无公网 IP)。
     流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 OrderNotify.Send → hidid 后端把通知
@@ -1077,7 +1077,7 @@ def add_OrderEventServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class OrderEvent:
+class OrderEvent(object):
     """── 订单通知/事件(web3 自动付款机制,裁决 #10)──────────────────────
     架构:PC 端跑 hidid-pc,通过 SSE 长连接(OrderEvent.Sub)与 hidid 后台保持连接(pc 无公网 IP)。
     流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 OrderNotify.Send → hidid 后端把通知
@@ -1118,7 +1118,7 @@ class OrderEvent:
             _registered_method=True)
 
 
-class OrderNotifyStub:
+class OrderNotifyStub(object):
     """订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
     公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
     与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
@@ -1137,7 +1137,7 @@ class OrderNotifyStub:
                 _registered_method=True)
 
 
-class OrderNotifyServicer:
+class OrderNotifyServicer(object):
     """订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
     公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
     与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
@@ -1165,7 +1165,7 @@ def add_OrderNotifyServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class OrderNotify:
+class OrderNotify(object):
     """订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
     公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
     与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
@@ -1199,7 +1199,7 @@ class OrderNotify:
             _registered_method=True)
 
 
-class MerchantGrantedStub:
+class MerchantGrantedStub(object):
     """跨商户读用户数据(**整个 service 走 requireGrant**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
@@ -1234,7 +1234,7 @@ class MerchantGrantedStub:
                 _registered_method=True)
 
 
-class MerchantGrantedServicer:
+class MerchantGrantedServicer(object):
     """跨商户读用户数据(**整个 service 走 requireGrant**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
@@ -1290,7 +1290,7 @@ def add_MerchantGrantedServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MerchantGranted:
+class MerchantGranted(object):
     """跨商户读用户数据(**整个 service 走 requireGrant**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走

@@ -7,7 +7,7 @@ from hi.ai import chat_pb2 as hi_dot_ai_dot_chat__pb2
 from hi.club import chat_pb2 as hi_dot_club_dot_chat__pb2
 
 
-class ChatStub:
+class ChatStub(object):
     """对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
     """
 
@@ -54,7 +54,7 @@ class ChatStub:
                 _registered_method=True)
 
 
-class ChatServicer:
+class ChatServicer(object):
     """对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
     """
 
@@ -151,7 +151,7 @@ def add_ChatServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Chat:
+class Chat(object):
     """对话(主体=会话)。用户 token 档,全档一致。hi.ai.Chat 的门面。
     """
 

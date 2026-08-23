@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import gateway_pb2 as hi_dot_did_dot_gateway__pb2
 
 
-class GatewayStub:
+class GatewayStub(object):
     """── 网关配置(区块链节点 url + api_key)──────────────────────────────────────
     这是**给前端用的配置**:hidid app 里的 hidid-core、以及 hiclub(内嵌 hidid-core)
     都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**(非用户私密),
@@ -39,7 +39,7 @@ class GatewayStub:
                 _registered_method=True)
 
 
-class GatewayServicer:
+class GatewayServicer(object):
     """── 网关配置(区块链节点 url + api_key)──────────────────────────────────────
     这是**给前端用的配置**:hidid app 里的 hidid-core、以及 hiclub(内嵌 hidid-core)
     都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**(非用户私密),
@@ -80,7 +80,7 @@ def add_GatewayServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Gateway:
+class Gateway(object):
     """── 网关配置(区块链节点 url + api_key)──────────────────────────────────────
     这是**给前端用的配置**:hidid app 里的 hidid-core、以及 hiclub(内嵌 hidid-core)
     都要拿它去连区块链节点。resp 里的 api_key 是**共享的节点访问凭证**(非用户私密),
@@ -127,7 +127,7 @@ class Gateway:
             _registered_method=True)
 
 
-class GatewayDeviceStub:
+class GatewayDeviceStub(object):
     """网关配置(**设备读**)。与 Gateway 同一份数据,差别只在**主体怎么证明自己**:
 
     · `Gateway.List`      —— 主体是**登录用户/商户**,拿 token(web、app 登录后)。
@@ -157,7 +157,7 @@ class GatewayDeviceStub:
                 _registered_method=True)
 
 
-class GatewayDeviceServicer:
+class GatewayDeviceServicer(object):
     """网关配置(**设备读**)。与 Gateway 同一份数据,差别只在**主体怎么证明自己**:
 
     · `Gateway.List`      —— 主体是**登录用户/商户**,拿 token(web、app 登录后)。
@@ -196,7 +196,7 @@ def add_GatewayDeviceServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class GatewayDevice:
+class GatewayDevice(object):
     """网关配置(**设备读**)。与 Gateway 同一份数据,差别只在**主体怎么证明自己**:
 
     · `Gateway.List`      —— 主体是**登录用户/商户**,拿 token(web、app 登录后)。
@@ -241,7 +241,7 @@ class GatewayDevice:
             _registered_method=True)
 
 
-class GatewayAdminStub:
+class GatewayAdminStub(object):
     """网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。
     """
 
@@ -258,7 +258,7 @@ class GatewayAdminStub:
                 _registered_method=True)
 
 
-class GatewayAdminServicer:
+class GatewayAdminServicer(object):
     """网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。
     """
 
@@ -284,7 +284,7 @@ def add_GatewayAdminServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class GatewayAdmin:
+class GatewayAdmin(object):
     """网关配置维护(超管写)。纯内部运维:改区块链节点 url + api_key。
     """
 

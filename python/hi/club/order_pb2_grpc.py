@@ -7,7 +7,7 @@ from hi.club import order_pb2 as hi_dot_club_dot_order__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class OrderStub:
+class OrderStub(object):
     """hidid-pc **拉单**并回传处理结果(web3 自证)。裁决#10 的 club 侧。
 
     为什么叫 Pull:hidid 后端**只转发"有新单"的通知**,订单本身由 PC 端直接来业务后台拉、
@@ -37,7 +37,7 @@ class OrderStub:
                 _registered_method=True)
 
 
-class OrderServicer:
+class OrderServicer(object):
     """hidid-pc **拉单**并回传处理结果(web3 自证)。裁决#10 的 club 侧。
 
     为什么叫 Pull:hidid 后端**只转发"有新单"的通知**,订单本身由 PC 端直接来业务后台拉、
@@ -82,7 +82,7 @@ def add_OrderServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Order:
+class Order(object):
     """hidid-pc **拉单**并回传处理结果(web3 自证)。裁决#10 的 club 侧。
 
     为什么叫 Pull:hidid 后端**只转发"有新单"的通知**,订单本身由 PC 端直接来业务后台拉、

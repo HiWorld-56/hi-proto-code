@@ -5,7 +5,7 @@ import grpc
 from hi.did import price_pb2 as hi_dot_did_dot_price__pb2
 
 
-class PriceStub:
+class PriceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -21,7 +21,7 @@ class PriceStub:
                 _registered_method=True)
 
 
-class PriceServicer:
+class PriceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Get(self, request, context):
@@ -46,7 +46,7 @@ def add_PriceServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Price:
+class Price(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

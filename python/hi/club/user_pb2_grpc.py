@@ -7,7 +7,7 @@ from hi.club import user_pb2 as hi_dot_club_dot_user__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class UserStub:
+class UserStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -88,7 +88,7 @@ class UserStub:
                 _registered_method=True)
 
 
-class UserServicer:
+class UserServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetCurrent(self, request, context):
@@ -264,7 +264,7 @@ def add_UserServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class User:
+class User(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -646,7 +646,7 @@ class User:
             _registered_method=True)
 
 
-class UserDirectoryStub:
+class UserDirectoryStub(object):
     """在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——
     User 里每个方法都是"我对我自己"(改我的资料、我的好友、我的系统消息),
     而这里是"查一批 did 谁在线",跟调用者是谁毫无关系,实现里也用不到调用者身份。
@@ -669,7 +669,7 @@ class UserDirectoryStub:
                 _registered_method=True)
 
 
-class UserDirectoryServicer:
+class UserDirectoryServicer(object):
     """在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——
     User 里每个方法都是"我对我自己"(改我的资料、我的好友、我的系统消息),
     而这里是"查一批 did 谁在线",跟调用者是谁毫无关系,实现里也用不到调用者身份。
@@ -701,7 +701,7 @@ def add_UserDirectoryServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class UserDirectory:
+class UserDirectory(object):
     """在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——
     User 里每个方法都是"我对我自己"(改我的资料、我的好友、我的系统消息),
     而这里是"查一批 did 谁在线",跟调用者是谁毫无关系,实现里也用不到调用者身份。

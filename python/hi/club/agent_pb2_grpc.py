@@ -8,7 +8,7 @@ from hi.club import agent_pb2 as hi_dot_club_dot_agent__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class AgentStub:
+class AgentStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -74,7 +74,7 @@ class AgentStub:
                 _registered_method=True)
 
 
-class AgentServicer:
+class AgentServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def List(self, request, context):
@@ -219,7 +219,7 @@ def add_AgentServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Agent:
+class Agent(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -520,7 +520,7 @@ class Agent:
             _registered_method=True)
 
 
-class AgentDirectoryStub:
+class AgentDirectoryStub(object):
     """智能体目录(公开)。从 Agent 拆出 —— 原来这三个免鉴权方法混在 token 档的 Agent 里(混档)。
     供三方看板/未登录页面列机器人、查在线与主人。
     公开目录。**只放真正该公开的东西。**
@@ -549,7 +549,7 @@ class AgentDirectoryStub:
                 _registered_method=True)
 
 
-class AgentDirectoryServicer:
+class AgentDirectoryServicer(object):
     """智能体目录(公开)。从 Agent 拆出 —— 原来这三个免鉴权方法混在 token 档的 Agent 里(混档)。
     供三方看板/未登录页面列机器人、查在线与主人。
     公开目录。**只放真正该公开的东西。**
@@ -587,7 +587,7 @@ def add_AgentDirectoryServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class AgentDirectory:
+class AgentDirectory(object):
     """智能体目录(公开)。从 Agent 拆出 —— 原来这三个免鉴权方法混在 token 档的 Agent 里(混档)。
     供三方看板/未登录页面列机器人、查在线与主人。
     公开目录。**只放真正该公开的东西。**
@@ -631,7 +631,7 @@ class AgentDirectory:
             _registered_method=True)
 
 
-class AgentManageStub:
+class AgentManageStub(object):
     """机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
     范式见 DApp/DAppAdmin、Merchant/MerchantManage。
 
@@ -653,7 +653,7 @@ class AgentManageStub:
                 _registered_method=True)
 
 
-class AgentManageServicer:
+class AgentManageServicer(object):
     """机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
     范式见 DApp/DAppAdmin、Merchant/MerchantManage。
 
@@ -684,7 +684,7 @@ def add_AgentManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class AgentManage:
+class AgentManage(object):
     """机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
     范式见 DApp/DAppAdmin、Merchant/MerchantManage。
 

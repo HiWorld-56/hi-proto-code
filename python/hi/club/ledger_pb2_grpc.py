@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.club import ledger_pb2 as hi_dot_club_dot_ledger__pb2
 
 
-class LedgerStub:
+class LedgerStub(object):
     """── 机器人的资金流水 ─────────────────────────────────────────────────────────
 
     **只装非市场支出。** 市场订单(买插件、续费)有自己的一份 `MarketPayment`,
@@ -48,7 +48,7 @@ class LedgerStub:
                 _registered_method=True)
 
 
-class LedgerServicer:
+class LedgerServicer(object):
     """── 机器人的资金流水 ─────────────────────────────────────────────────────────
 
     **只装非市场支出。** 市场订单(买插件、续费)有自己的一份 `MarketPayment`,
@@ -107,7 +107,7 @@ def add_LedgerServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Ledger:
+class Ledger(object):
     """── 机器人的资金流水 ─────────────────────────────────────────────────────────
 
     **只装非市场支出。** 市场订单(买插件、续费)有自己的一份 `MarketPayment`,

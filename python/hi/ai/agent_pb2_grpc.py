@@ -7,7 +7,7 @@ from hi.ai import agent_pb2 as hi_dot_ai_dot_agent__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class AgentStub:
+class AgentStub(object):
     """智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
     两者解出同一个商户 did。
 
@@ -68,7 +68,7 @@ class AgentStub:
                 _registered_method=True)
 
 
-class AgentServicer:
+class AgentServicer(object):
     """智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
     两者解出同一个商户 did。
 
@@ -197,7 +197,7 @@ def add_AgentServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Agent:
+class Agent(object):
     """智能体(主体=智能体)。商户档:hiai web(token)与商户后台服务(apikey)都会调,
     两者解出同一个商户 did。
 
@@ -449,7 +449,7 @@ class Agent:
             _registered_method=True)
 
 
-class AgentManageStub:
+class AgentManageStub(object):
     """机器人管理(**超管**)。与 Agent(商户档)**主体不同,故拆 service** ——
     范式见本仓的 Permission/PermissionManage。
 
@@ -471,7 +471,7 @@ class AgentManageStub:
                 _registered_method=True)
 
 
-class AgentManageServicer:
+class AgentManageServicer(object):
     """机器人管理(**超管**)。与 Agent(商户档)**主体不同,故拆 service** ——
     范式见本仓的 Permission/PermissionManage。
 
@@ -502,7 +502,7 @@ def add_AgentManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class AgentManage:
+class AgentManage(object):
     """机器人管理(**超管**)。与 Agent(商户档)**主体不同,故拆 service** ——
     范式见本仓的 Permission/PermissionManage。
 

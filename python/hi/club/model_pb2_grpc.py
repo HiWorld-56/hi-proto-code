@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import model_pb2 as hi_dot_ai_dot_model__pb2
 
 
-class ModelStub:
+class ModelStub(object):
     """模型目录(主体=模型)。**hi.ai.Model 的门面**,类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
     从 club.Agent 拆出 —— 跟 ai 一致:查"有哪些模型可用"与 agent CRUD 不是一个主体。
     """
@@ -39,7 +39,7 @@ class ModelStub:
                 _registered_method=True)
 
 
-class ModelServicer:
+class ModelServicer(object):
     """模型目录(主体=模型)。**hi.ai.Model 的门面**,类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
     从 club.Agent 拆出 —— 跟 ai 一致:查"有哪些模型可用"与 agent CRUD 不是一个主体。
     """
@@ -99,7 +99,7 @@ def add_ModelServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Model:
+class Model(object):
     """模型目录(主体=模型)。**hi.ai.Model 的门面**,类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
     从 club.Agent 拆出 —— 跟 ai 一致:查"有哪些模型可用"与 agent CRUD 不是一个主体。
     """

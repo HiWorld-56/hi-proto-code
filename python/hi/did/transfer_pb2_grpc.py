@@ -6,7 +6,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import transfer_pb2 as hi_dot_did_dot_transfer__pb2
 
 
-class TransferStub:
+class TransferStub(object):
     """Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
     链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
     """
@@ -44,7 +44,7 @@ class TransferStub:
                 _registered_method=True)
 
 
-class TransferServicer:
+class TransferServicer(object):
     """Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
     链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
     """
@@ -115,7 +115,7 @@ def add_TransferServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Transfer:
+class Transfer(object):
     """Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
     链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
     """

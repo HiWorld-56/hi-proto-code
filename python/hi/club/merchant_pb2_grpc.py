@@ -8,7 +8,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import merchant_pb2 as hi_dot_did_dot_merchant__pb2
 
 
-class MerchantStub:
+class MerchantStub(object):
     """商户(用户档)。**club 侧目前没有商户的概念** —— 本 service 只是**转发 hidid 的商户方法**。
     """
 
@@ -30,7 +30,7 @@ class MerchantStub:
                 _registered_method=True)
 
 
-class MerchantServicer:
+class MerchantServicer(object):
     """商户(用户档)。**club 侧目前没有商户的概念** —— 本 service 只是**转发 hidid 的商户方法**。
     """
 
@@ -71,7 +71,7 @@ def add_MerchantServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Merchant:
+class Merchant(object):
     """商户(用户档)。**club 侧目前没有商户的概念** —— 本 service 只是**转发 hidid 的商户方法**。
     """
 
@@ -130,7 +130,7 @@ class Merchant:
             _registered_method=True)
 
 
-class MerchantManageStub:
+class MerchantManageStub(object):
     """商户管理(超管)。原 `Merchant.ListAll` —— 超管方法蹲在用户面 service 里(混档),
     照 did 的 Merchant / MerchantManage 范式拆出来;拆出后 `ListAll` 改回 `List`
     (主体已由 service 名表达,再叫 ListAll 是冗余)。转发 did.MerchantManage.List。
@@ -149,7 +149,7 @@ class MerchantManageStub:
                 _registered_method=True)
 
 
-class MerchantManageServicer:
+class MerchantManageServicer(object):
     """商户管理(超管)。原 `Merchant.ListAll` —— 超管方法蹲在用户面 service 里(混档),
     照 did 的 Merchant / MerchantManage 范式拆出来;拆出后 `ListAll` 改回 `List`
     (主体已由 service 名表达,再叫 ListAll 是冗余)。转发 did.MerchantManage.List。
@@ -177,7 +177,7 @@ def add_MerchantManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class MerchantManage:
+class MerchantManage(object):
     """商户管理(超管)。原 `Merchant.ListAll` —— 超管方法蹲在用户面 service 里(混档),
     照 did 的 Merchant / MerchantManage 范式拆出来;拆出后 `ListAll` 改回 `List`
     (主体已由 service 名表达,再叫 ListAll 是冗余)。转发 did.MerchantManage.List。

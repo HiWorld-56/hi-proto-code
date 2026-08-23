@@ -5,7 +5,7 @@ import grpc
 from hi.did import wallet_pb2 as hi_dot_did_dot_wallet__pb2
 
 
-class AssetsStub:
+class AssetsStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -21,7 +21,7 @@ class AssetsStub:
                 _registered_method=True)
 
 
-class AssetsServicer:
+class AssetsServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Get(self, request, context):
@@ -46,7 +46,7 @@ def add_AssetsServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Assets:
+class Assets(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

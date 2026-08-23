@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import payment_pb2 as hi_dot_did_dot_payment__pb2
 
 
-class PayStub:
+class PayStub(object):
     """Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
     先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
     """
@@ -30,7 +30,7 @@ class PayStub:
                 _registered_method=True)
 
 
-class PayServicer:
+class PayServicer(object):
     """Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
     先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
     """
@@ -68,7 +68,7 @@ def add_PayServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Pay:
+class Pay(object):
     """Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
     先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
     """
@@ -128,7 +128,7 @@ class Pay:
             _registered_method=True)
 
 
-class PayRequestStub:
+class PayRequestStub(object):
     """PayRequest —— **主体=三方商户**:登记一笔明码标价的付款请求,拿到 `M` 号画成二维码。
 
     与下面的 PayRequestPayer 拆开,是因为**主体不同**(商户 vs 付款方)——
@@ -153,7 +153,7 @@ class PayRequestStub:
                 _registered_method=True)
 
 
-class PayRequestServicer:
+class PayRequestServicer(object):
     """PayRequest —— **主体=三方商户**:登记一笔明码标价的付款请求,拿到 `M` 号画成二维码。
 
     与下面的 PayRequestPayer 拆开,是因为**主体不同**(商户 vs 付款方)——
@@ -202,7 +202,7 @@ def add_PayRequestServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class PayRequest:
+class PayRequest(object):
     """PayRequest —— **主体=三方商户**:登记一笔明码标价的付款请求,拿到 `M` 号画成二维码。
 
     与下面的 PayRequestPayer 拆开,是因为**主体不同**(商户 vs 付款方)——
@@ -264,7 +264,7 @@ class PayRequest:
             _registered_method=True)
 
 
-class PayRequestPayerStub:
+class PayRequestPayerStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -280,7 +280,7 @@ class PayRequestPayerStub:
                 _registered_method=True)
 
 
-class PayRequestPayerServicer:
+class PayRequestPayerServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Get(self, request, context):
@@ -305,7 +305,7 @@ def add_PayRequestPayerServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class PayRequestPayer:
+class PayRequestPayer(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod

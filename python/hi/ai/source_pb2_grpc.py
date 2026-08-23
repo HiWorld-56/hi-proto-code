@@ -8,7 +8,7 @@ from hi.ai import training_pb2 as hi_dot_ai_dot_training__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class SourceStub:
+class SourceStub(object):
     """Source —— hi.ai 侧直接搬运二进制的方法(club 的同名 service 是它的门面)。
     分法见 hi/club/source.proto 的说明:按资源类别,不按实体。
 
@@ -71,7 +71,7 @@ class SourceStub:
                 _registered_method=True)
 
 
-class SourceServicer:
+class SourceServicer(object):
     """Source —— hi.ai 侧直接搬运二进制的方法(club 的同名 service 是它的门面)。
     分法见 hi/club/source.proto 的说明:按资源类别,不按实体。
 
@@ -206,7 +206,7 @@ def add_SourceServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Source:
+class Source(object):
     """Source —— hi.ai 侧直接搬运二进制的方法(club 的同名 service 是它的门面)。
     分法见 hi/club/source.proto 的说明:按资源类别,不按实体。
 

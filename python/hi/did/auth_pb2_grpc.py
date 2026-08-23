@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import auth_pb2 as hi_dot_did_dot_auth__pb2
 
 
-class AuthStub:
+class AuthStub(object):
     """Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
     公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 
@@ -75,7 +75,7 @@ class AuthStub:
                 _registered_method=True)
 
 
-class AuthServicer:
+class AuthServicer(object):
     """Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
     公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 
@@ -182,7 +182,7 @@ def add_AuthServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Auth:
+class Auth(object):
     """Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
     公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 

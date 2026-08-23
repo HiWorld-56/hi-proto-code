@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 
 
-class BaseStub:
+class BaseStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -23,7 +23,7 @@ class BaseStub:
                 _registered_method=True)
 
 
-class BaseServicer:
+class BaseServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def ServerVersion(self, request, context):
@@ -48,7 +48,7 @@ def add_BaseServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Base:
+class Base(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -79,7 +79,7 @@ class Base:
             _registered_method=True)
 
 
-class SuperAdminStub:
+class SuperAdminStub(object):
     """超管名单(转发 hidid)。与 hi.club.SuperAdmin 对称 —— hiai 的 web 登录后也要
     知道自己是不是超管,以决定显不显示内部菜单。
 
@@ -104,7 +104,7 @@ class SuperAdminStub:
                 _registered_method=True)
 
 
-class SuperAdminServicer:
+class SuperAdminServicer(object):
     """超管名单(转发 hidid)。与 hi.club.SuperAdmin 对称 —— hiai 的 web 登录后也要
     知道自己是不是超管,以决定显不显示内部菜单。
 
@@ -138,7 +138,7 @@ def add_SuperAdminServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class SuperAdmin:
+class SuperAdmin(object):
     """超管名单(转发 hidid)。与 hi.club.SuperAdmin 对称 —— hiai 的 web 登录后也要
     知道自己是不是超管,以决定显不显示内部菜单。
 

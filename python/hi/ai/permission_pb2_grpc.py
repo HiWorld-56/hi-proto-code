@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import permission_pb2 as hi_dot_ai_dot_permission__pb2
 
 
-class PermissionStub:
+class PermissionStub(object):
     """机器人权限(商户档)。**权威存储在 ai**,推理时由 ai 自己校验。
 
     ⚠️ 撤权**不删数据**:插件绑定、记忆文件都留着,只是不再参与推理;给回权限立刻恢复。
@@ -47,7 +47,7 @@ class PermissionStub:
                 _registered_method=True)
 
 
-class PermissionServicer:
+class PermissionServicer(object):
     """机器人权限(商户档)。**权威存储在 ai**,推理时由 ai 自己校验。
 
     ⚠️ 撤权**不删数据**:插件绑定、记忆文件都留着,只是不再参与推理;给回权限立刻恢复。
@@ -121,7 +121,7 @@ def add_PermissionServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Permission:
+class Permission(object):
     """机器人权限(商户档)。**权威存储在 ai**,推理时由 ai 自己校验。
 
     ⚠️ 撤权**不删数据**:插件绑定、记忆文件都留着,只是不再参与推理;给回权限立刻恢复。

@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class LoginCallbackStub:
+class LoginCallbackStub(object):
     """三方app/web登录回调
     回调契约:did 只定义,由**三方业务(club 等)实现并注册到自己的服务里**。
     did 侧无 handler 是正常的 —— 它是被 club 实现的。web3 验签:did 反向回调时载荷带签名。
@@ -25,7 +25,7 @@ class LoginCallbackStub:
                 _registered_method=True)
 
 
-class LoginCallbackServicer:
+class LoginCallbackServicer(object):
     """三方app/web登录回调
     回调契约:did 只定义,由**三方业务(club 等)实现并注册到自己的服务里**。
     did 侧无 handler 是正常的 —— 它是被 club 实现的。web3 验签:did 反向回调时载荷带签名。
@@ -53,7 +53,7 @@ def add_LoginCallbackServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class LoginCallback:
+class LoginCallback(object):
     """三方app/web登录回调
     回调契约:did 只定义,由**三方业务(club 等)实现并注册到自己的服务里**。
     did 侧无 handler 是正常的 —— 它是被 club 实现的。web3 验签:did 反向回调时载荷带签名。
@@ -87,7 +87,7 @@ class LoginCallback:
             _registered_method=True)
 
 
-class PayCallbackStub:
+class PayCallbackStub(object):
     """三方app/web支付回调
     回调契约:同 LoginCallback,由 club 实现。
     """
@@ -105,7 +105,7 @@ class PayCallbackStub:
                 _registered_method=True)
 
 
-class PayCallbackServicer:
+class PayCallbackServicer(object):
     """三方app/web支付回调
     回调契约:同 LoginCallback,由 club 实现。
     """
@@ -132,7 +132,7 @@ def add_PayCallbackServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class PayCallback:
+class PayCallback(object):
     """三方app/web支付回调
     回调契约:同 LoginCallback,由 club 实现。
     """

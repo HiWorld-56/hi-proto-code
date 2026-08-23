@@ -9,7 +9,7 @@ from hi.club import trade_pb2 as hi_dot_club_dot_trade__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-class TradeStub:
+class TradeStub(object):
     """交易(内部面)。父服务 club 已完成鉴权与归属校验,这里只按给定条件取数。
 
     归属校验为什么不在这儿做:那是**鉴权**,属于父服务。子服务做校验就得认识"谁是调用者",
@@ -50,7 +50,7 @@ class TradeStub:
                 _registered_method=True)
 
 
-class TradeServicer:
+class TradeServicer(object):
     """交易(内部面)。父服务 club 已完成鉴权与归属校验,这里只按给定条件取数。
 
     归属校验为什么不在这儿做:那是**鉴权**,属于父服务。子服务做校验就得认识"谁是调用者",
@@ -125,7 +125,7 @@ def add_TradeServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Trade:
+class Trade(object):
     """交易(内部面)。父服务 club 已完成鉴权与归属校验,这里只按给定条件取数。
 
     归属校验为什么不在这儿做:那是**鉴权**,属于父服务。子服务做校验就得认识"谁是调用者",
@@ -269,7 +269,7 @@ class Trade:
             _registered_method=True)
 
 
-class TradeManageStub:
+class TradeManageStub(object):
     """交易统计(内部面)。超管资格由 club 验(AUTH_SUPERADMIN),这里不重复验。
     """
 
@@ -286,7 +286,7 @@ class TradeManageStub:
                 _registered_method=True)
 
 
-class TradeManageServicer:
+class TradeManageServicer(object):
     """交易统计(内部面)。超管资格由 club 验(AUTH_SUPERADMIN),这里不重复验。
     """
 
@@ -312,7 +312,7 @@ def add_TradeManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class TradeManage:
+class TradeManage(object):
     """交易统计(内部面)。超管资格由 club 验(AUTH_SUPERADMIN),这里不重复验。
     """
 
@@ -344,7 +344,7 @@ class TradeManage:
             _registered_method=True)
 
 
-class OrderStub:
+class OrderStub(object):
     """hidid-pc 订单(内部面)。入参仍是 `hi.SignedData` 且**不加 did 字段** —— 这是对的,不是遗漏:
     这里的主体不是"登录用户",而是**载荷里的 web3 签名**,与 token/did 无关。
 
@@ -373,7 +373,7 @@ class OrderStub:
                 _registered_method=True)
 
 
-class OrderServicer:
+class OrderServicer(object):
     """hidid-pc 订单(内部面)。入参仍是 `hi.SignedData` 且**不加 did 字段** —— 这是对的,不是遗漏:
     这里的主体不是"登录用户",而是**载荷里的 web3 签名**,与 token/did 无关。
 
@@ -417,7 +417,7 @@ def add_OrderServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Order:
+class Order(object):
     """hidid-pc 订单(内部面)。入参仍是 `hi.SignedData` 且**不加 did 字段** —— 这是对的,不是遗漏:
     这里的主体不是"登录用户",而是**载荷里的 web3 签名**,与 token/did 无关。
 

@@ -5,7 +5,7 @@ import grpc
 from hi.ai import speech_pb2 as hi_dot_ai_dot_speech__pb2
 
 
-class SpeechStub:
+class SpeechStub(object):
     """语音转换(主体=语音)。**hi.ai.Speech 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     从 club.Chat 拆出,跟 ai 一致:这是纯格式转换,不涉及 agent/会话/工具。
@@ -31,7 +31,7 @@ class SpeechStub:
                 _registered_method=True)
 
 
-class SpeechServicer:
+class SpeechServicer(object):
     """语音转换(主体=语音)。**hi.ai.Speech 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     从 club.Chat 拆出,跟 ai 一致:这是纯格式转换,不涉及 agent/会话/工具。
@@ -72,7 +72,7 @@ def add_SpeechServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Speech:
+class Speech(object):
     """语音转换(主体=语音)。**hi.ai.Speech 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     从 club.Chat 拆出,跟 ai 一致:这是纯格式转换,不涉及 agent/会话/工具。

@@ -5,7 +5,7 @@ import grpc
 from hi.ai import speech_pb2 as hi_dot_ai_dot_speech__pb2
 
 
-class SpeechStub:
+class SpeechStub(object):
     """语音转换(主体=语音)。**纯格式转换,不涉及 agent / 会话 / 工具**。
 
     从 Chat 拆出,并借机解掉命名撞车:原 `Chat.SimpleSpeechToText`(真 STT)与
@@ -33,7 +33,7 @@ class SpeechStub:
                 _registered_method=True)
 
 
-class SpeechServicer:
+class SpeechServicer(object):
     """语音转换(主体=语音)。**纯格式转换,不涉及 agent / 会话 / 工具**。
 
     从 Chat 拆出,并借机解掉命名撞车:原 `Chat.SimpleSpeechToText`(真 STT)与
@@ -76,7 +76,7 @@ def add_SpeechServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Speech:
+class Speech(object):
     """语音转换(主体=语音)。**纯格式转换,不涉及 agent / 会话 / 工具**。
 
     从 Chat 拆出,并借机解掉命名撞车:原 `Chat.SimpleSpeechToText`(真 STT)与

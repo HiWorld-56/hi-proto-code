@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import admin_pb2 as hi_dot_did_dot_admin__pb2
 
 
-class InviteCodeStub:
+class InviteCodeStub(object):
     """邀请码管理(超管)。原先 Create/Edit/List/Delete 在 handler 里自己查超管、proto 却标 TOKEN,
     且和公开的 Verify 混在同一个 service —— 混档。现在:管理归超管、注册拆去 Register。
     超管名单穿透 hidid `SuperAdmin.List`(ai 不得自建超管表)。
@@ -41,7 +41,7 @@ class InviteCodeStub:
                 _registered_method=True)
 
 
-class InviteCodeServicer:
+class InviteCodeServicer(object):
     """邀请码管理(超管)。原先 Create/Edit/List/Delete 在 handler 里自己查超管、proto 却标 TOKEN,
     且和公开的 Verify 混在同一个 service —— 混档。现在:管理归超管、注册拆去 Register。
     超管名单穿透 hidid `SuperAdmin.List`(ai 不得自建超管表)。
@@ -102,7 +102,7 @@ def add_InviteCodeServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class InviteCode:
+class InviteCode(object):
     """邀请码管理(超管)。原先 Create/Edit/List/Delete 在 handler 里自己查超管、proto 却标 TOKEN,
     且和公开的 Verify 混在同一个 service —— 混档。现在:管理归超管、注册拆去 Register。
     超管名单穿透 hidid `SuperAdmin.List`(ai 不得自建超管表)。
@@ -217,7 +217,7 @@ class InviteCode:
             _registered_method=True)
 
 
-class RegisterStub:
+class RegisterStub(object):
     """注册(公开)。验邀请码(72h 内有效)→ 用户不存在则建 → 标记邀请码已用 → 签发 token。
     从 InviteCode 拆出:主体不同(注册者 vs 超管),档位不同。与 hi.did.Register.Verify 同形对齐。
     """
@@ -235,7 +235,7 @@ class RegisterStub:
                 _registered_method=True)
 
 
-class RegisterServicer:
+class RegisterServicer(object):
     """注册(公开)。验邀请码(72h 内有效)→ 用户不存在则建 → 标记邀请码已用 → 签发 token。
     从 InviteCode 拆出:主体不同(注册者 vs 超管),档位不同。与 hi.did.Register.Verify 同形对齐。
     """
@@ -262,7 +262,7 @@ def add_RegisterServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Register:
+class Register(object):
     """注册(公开)。验邀请码(72h 内有效)→ 用户不存在则建 → 标记邀请码已用 → 签发 token。
     从 InviteCode 拆出:主体不同(注册者 vs 超管),档位不同。与 hi.did.Register.Verify 同形对齐。
     """

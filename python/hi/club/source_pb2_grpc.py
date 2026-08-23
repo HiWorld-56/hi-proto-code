@@ -10,7 +10,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.source import source_pb2 as hi_dot_source_dot_source__pb2
 
 
-class SourceStub:
+class SourceStub(object):
     """Source —— **所有直接搬运二进制的方法**都收在这里。
 
     分法是**按资源类别**(落哪个桶、留多久、公开还是私有),不是按实体。
@@ -120,7 +120,7 @@ class SourceStub:
                 _registered_method=True)
 
 
-class SourceServicer:
+class SourceServicer(object):
     """Source —— **所有直接搬运二进制的方法**都收在这里。
 
     分法是**按资源类别**(落哪个桶、留多久、公开还是私有),不是按实体。
@@ -364,7 +364,7 @@ def add_SourceServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Source:
+class Source(object):
     """Source —— **所有直接搬运二进制的方法**都收在这里。
 
     分法是**按资源类别**(落哪个桶、留多久、公开还是私有),不是按实体。

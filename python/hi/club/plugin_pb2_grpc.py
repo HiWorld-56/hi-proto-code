@@ -7,7 +7,7 @@ from hi.ai import plugin_pb2 as hi_dot_ai_dot_plugin__pb2
 from hi.club import plugin_pb2 as hi_dot_club_dot_plugin__pb2
 
 
-class PluginStub:
+class PluginStub(object):
     """插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
@@ -118,7 +118,7 @@ class PluginStub:
                 _registered_method=True)
 
 
-class PluginServicer:
+class PluginServicer(object):
     """插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
@@ -330,7 +330,7 @@ def add_PluginServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Plugin:
+class Plugin(object):
     """插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
@@ -786,7 +786,7 @@ class Plugin:
             _registered_method=True)
 
 
-class AgentPluginStub:
+class AgentPluginStub(object):
     """所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
     照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 
@@ -807,7 +807,7 @@ class AgentPluginStub:
                 _registered_method=True)
 
 
-class AgentPluginServicer:
+class AgentPluginServicer(object):
     """所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
     照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 
@@ -840,7 +840,7 @@ def add_AgentPluginServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class AgentPlugin:
+class AgentPlugin(object):
     """所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
     照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 

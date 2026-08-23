@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import model_pb2 as hi_dot_ai_dot_model__pb2
 
 
-class ModelStub:
+class ModelStub(object):
     """模型目录(主体=模型)。从 Agent 拆出 —— 这些方法查的是"有哪些模型可用",
     与具体 agent 无关(按调用者商户取该类型模型集),和 agent CRUD 不是一个主体。
     商户档:hiai web 与商户后台服务都会调。
@@ -40,7 +40,7 @@ class ModelStub:
                 _registered_method=True)
 
 
-class ModelServicer:
+class ModelServicer(object):
     """模型目录(主体=模型)。从 Agent 拆出 —— 这些方法查的是"有哪些模型可用",
     与具体 agent 无关(按调用者商户取该类型模型集),和 agent CRUD 不是一个主体。
     商户档:hiai web 与商户后台服务都会调。
@@ -101,7 +101,7 @@ def add_ModelServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Model:
+class Model(object):
     """模型目录(主体=模型)。从 Agent 拆出 —— 这些方法查的是"有哪些模型可用",
     与具体 agent 无关(按调用者商户取该类型模型集),和 agent CRUD 不是一个主体。
     商户档:hiai web 与商户后台服务都会调。

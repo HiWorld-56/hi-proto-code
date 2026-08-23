@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import permission_pb2 as hi_dot_ai_dot_permission__pb2
 
 
-class PermissionStub:
+class PermissionStub(object):
     """── 权限(原 UserACL)────────────────────────────────────────────────────────
     **继承 hi.ai 的权限分类**(设计文档《HiClub.权限控制》开篇即写"继承 HiAI.模型权限控制"):
     normal 普通 / advanced 高级 / mem 记忆 / plugin 插件
@@ -66,7 +66,7 @@ class PermissionStub:
                 _registered_method=True)
 
 
-class PermissionServicer:
+class PermissionServicer(object):
     """── 权限(原 UserACL)────────────────────────────────────────────────────────
     **继承 hi.ai 的权限分类**(设计文档《HiClub.权限控制》开篇即写"继承 HiAI.模型权限控制"):
     normal 普通 / advanced 高级 / mem 记忆 / plugin 插件
@@ -146,7 +146,7 @@ def add_PermissionServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Permission:
+class Permission(object):
     """── 权限(原 UserACL)────────────────────────────────────────────────────────
     **继承 hi.ai 的权限分类**(设计文档《HiClub.权限控制》开篇即写"继承 HiAI.模型权限控制"):
     normal 普通 / advanced 高级 / mem 记忆 / plugin 插件
@@ -243,7 +243,7 @@ class Permission:
             _registered_method=True)
 
 
-class PermissionManageStub:
+class PermissionManageStub(object):
     """权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
     club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
 
@@ -282,7 +282,7 @@ class PermissionManageStub:
                 _registered_method=True)
 
 
-class PermissionManageServicer:
+class PermissionManageServicer(object):
     """权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
     club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
 
@@ -348,7 +348,7 @@ def add_PermissionManageServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class PermissionManage:
+class PermissionManage(object):
     """权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
     club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
 

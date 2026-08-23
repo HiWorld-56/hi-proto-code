@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 
 
-class BaseStub:
+class BaseStub(object):
     """Base —— 每个包统一的公共信息入口(币种/服务自身版本/用户总数),全部公开。
     生态约定:club/ai/media 也各有 Base.ServerVersion,保持一致。
 
@@ -38,7 +38,7 @@ class BaseStub:
                 _registered_method=True)
 
 
-class BaseServicer:
+class BaseServicer(object):
     """Base —— 每个包统一的公共信息入口(币种/服务自身版本/用户总数),全部公开。
     生态约定:club/ai/media 也各有 Base.ServerVersion,保持一致。
 
@@ -90,7 +90,7 @@ def add_BaseServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class Base:
+class Base(object):
     """Base —— 每个包统一的公共信息入口(币种/服务自身版本/用户总数),全部公开。
     生态约定:club/ai/media 也各有 Base.ServerVersion,保持一致。
 
@@ -180,7 +180,7 @@ class Base:
             _registered_method=True)
 
 
-class SuperAdminStub:
+class SuperAdminStub(object):
     """超管名单的**唯一持有方**。超管是内部团队的后门(方便快速做全局操作/查询),与业务无关,
     人员固定就那几个。club/ai/media 一律穿透到这里问,不许自己留表 ——
     此前四个服务四张表,实测已漂移(did 11 / club 14 / ai 15 / media 3),
@@ -206,7 +206,7 @@ class SuperAdminStub:
                 _registered_method=True)
 
 
-class SuperAdminServicer:
+class SuperAdminServicer(object):
     """超管名单的**唯一持有方**。超管是内部团队的后门(方便快速做全局操作/查询),与业务无关,
     人员固定就那几个。club/ai/media 一律穿透到这里问,不许自己留表 ——
     此前四个服务四张表,实测已漂移(did 11 / club 14 / ai 15 / media 3),
@@ -241,7 +241,7 @@ def add_SuperAdminServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class SuperAdmin:
+class SuperAdmin(object):
     """超管名单的**唯一持有方**。超管是内部团队的后门(方便快速做全局操作/查询),与业务无关,
     人员固定就那几个。club/ai/media 一律穿透到这里问,不许自己留表 ——
     此前四个服务四张表,实测已漂移(did 11 / club 14 / ai 15 / media 3),

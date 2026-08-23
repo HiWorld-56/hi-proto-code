@@ -7,7 +7,7 @@ from hi.ai import api_key_pb2 as hi_dot_ai_dot_api__key__pb2
 from hi.club import api_key_pb2 as hi_dot_club_dot_api__key__pb2
 
 
-class ApiKeyStub:
+class ApiKeyStub(object):
     """⚠️ 入参 `EditApiKeyReq` **复用 hi.ai 的**(字段完全一致,club 只是门面)。
     但 `ApiKeyInfo` / `ListApiKeysResp` **不复用** —— club 那份有意收窄
     (不吐 rate_limit / is_active),形状看着像、内容不是一回事。
@@ -41,7 +41,7 @@ class ApiKeyStub:
                 _registered_method=True)
 
 
-class ApiKeyServicer:
+class ApiKeyServicer(object):
     """⚠️ 入参 `EditApiKeyReq` **复用 hi.ai 的**(字段完全一致,club 只是门面)。
     但 `ApiKeyInfo` / `ListApiKeysResp` **不复用** —— club 那份有意收窄
     (不吐 rate_limit / is_active),形状看着像、内容不是一回事。
@@ -104,7 +104,7 @@ def add_ApiKeyServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class ApiKey:
+class ApiKey(object):
     """⚠️ 入参 `EditApiKeyReq` **复用 hi.ai 的**(字段完全一致,club 只是门面)。
     但 `ApiKeyInfo` / `ListApiKeysResp` **不复用** —— club 那份有意收窄
     (不吐 rate_limit / is_active),形状看着像、内容不是一回事。
