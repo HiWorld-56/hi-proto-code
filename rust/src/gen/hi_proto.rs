@@ -37,3 +37,9 @@ pub mod hi {
         include!("hi.source.serde.rs");
     }
 }
+
+/// 全量 FileDescriptorSet(含 hi.* 与 imports)。
+///
+/// 给需要**按方法名动态编解码**的宿主用(见 hinj-brain 的 ctx.call)。
+/// prost 不像 protobuf-go 那样有全局注册表,只能带着这份说明书。
+pub const FILE_DESCRIPTOR_SET: &[u8] = include_bytes!("hi_proto_descriptor.bin");
