@@ -2,6 +2,10 @@
 **/Cargo.lock
 .dart_tool/
 
-# rust-gen 的中间产物:生成后立即 remove_file,git add -A 曾撞上这个瞬间报
-# "unable to stat" 而整个 CI 失败。它本就不该入库。
-rust/src/gen/hi_proto_descriptor.bin
+# ⚠️ rust/src/gen/hi_proto_descriptor.bin **现在要入库**(2026-08-24)。
+# 它是全量 FileDescriptorSet,由 hinj-brain 用来按方法名动态编解码
+# (插件的 ctx.call 回调 hiclub 时要用;prost 没有 protobuf-go 那种全局注册表)。
+# 随 crate 走才不会与生成代码漂到两个版本 —— 那种漂的症状是"某个字段解出来是空的"。
+#
+# 原来这里忽略它,理由是"生成后立即 remove_file、本就不该入库";
+# rust-gen 已改成保留并 include_bytes! 导出为 FILE_DESCRIPTOR_SET。
