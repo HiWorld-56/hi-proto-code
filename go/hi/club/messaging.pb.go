@@ -123,13 +123,16 @@ func (*Packet_Message) isPacket_Kind() {}
 // 那么这条通知就是我唯一能知道"好友回来了"的信号,处理完(清掉会话的 severed)回执一下,
 // 免得每次上线都重复处理。
 type Notice struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Uuid       string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type       string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	From       *hi.Entity             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // Entity=公开门面
-	Timestamp  int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Expiration int64                  `protobuf:"varint,5,opt,name=expiration,proto3" json:"expiration,omitempty"`
-	Status     string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Uuid  string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Type  string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	// Entity=公开门面。**是真实发送者,broker 强制** —— 与 Message.from 同一条不变量,
+	// 详见下面 Message 上方那段。通知没有 ghost,所以这里没有任何回旋余地:
+	// 填成别人,这条通知发不出去(而且发送端看不到报错)。
+	From       *hi.Entity `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"`
+	Timestamp  int64      `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Expiration int64      `protobuf:"varint,5,opt,name=expiration,proto3" json:"expiration,omitempty"`
+	Status     string     `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
 	// ⚠️ **Any 是可见性 lint 唯一的结构性缺口**:装进去的真实类型 lint 看不见,
 	//
 	//	于是 `level(field.visibility) <= level(message.audience)` 这条规则在这里失效。
@@ -280,40 +283,53 @@ func (x *Prompt) GetState() string {
 	return ""
 }
 
-// Message.type
+// Message.type —— 这条消息是什么。取值就是下面这几个,**别自己发明**。
+//
+// chat     常规消息。**唯一会在聊天里显示的类型**
+// draft    草稿:后端照常落档,但**不推送、不触发 assistant**
+// (backend `isQ3GroupDraft`,目前只用在 Q3 群)
+// invalid  历史遗留,**没有任何一端实现,新代码别用**。
+// 原意是"未通过安全验证的消息",但伪造包现在一律在 broker 就被拒掉、
+// 根本不进网,不存在"投出来一条 invalid 让端自己判"这回事。
+//
 // ----------------------------------------------------------------------------------------------------
-// 常规消息: chat
-// example
-// A >>> Message
-// type = chat
-// from = A
-// ghost = null
-// ----------------------------------------------------------------------------------------------------
-// 草稿消息: draft
-// A创建原始消息，需要B修改确认后，作为一条新消息，由B发送出去，发送者显示为A。
+// ## `from` 是**真实发送者**,恒等于发这条 MQTT 包的那个身份
+//
+// ⚠️ 这是一条**被 broker 强制**的不变量,不是君子协定:
+// `hi-mqtt-fromguard` 插件在 `MOSQ_EVT_ACL_CHECK` 里解出 `from.did`,
+// 跟这条连接的 mqtt username(= 发送者 did)比对,对不上**直接拒,包根本不进网**。
+//
+// 所以任何时候都可以拿 `from` 当真实发送者用,收信方不需要再验一遍。
+// 由此推出两条:
+//
+// · **不许**把 `from` 填成别人。填了这条消息就发不出去 —— 而且在 MQTT 3.1.1 下
+// *发送端连报错都看不到**(QoS2 握手照常走完,只是没有任何人收得到)。
+// · 后端代发(`Publisher.Publish`)同样:`from` 由后端按调用方身份**覆盖**,
+// 入参里带的那份不作数。
+//
+// ## `ghost` 是**显示覆盖**,纯前端的事
+//
+// 挂了 `ghost` 时,聊天界面把这条消息**显示成 ghost 发的**;`from` 仍然是真实发送者,
+// 只是不显示。用途是"代笔":B 替 A 写,界面上显示 A。
+//
 // example:
-// A >>> Message_1
-// type = draft
-// from = A
-// ghost = B
-// B >>> Message_2
-// type = chat
-// from = A
-// ghost = B
-// ----------------------------------------------------------------------------------------------------
-// 代笔消息: chat
-// B创建的消息，由B发出，发送者显示为A。
-// example:
-// B >>> Message
-// type = chat
-// from = A
-// ghost = B
-// 非法消息: invalid
-// 未通过安全验证的消息
+// 常规   from = 发送者   ghost = null    → 显示为发送者
+// 代笔   from = B(真的是 B 发的)  ghost = A  → 显示为 A
+//
+// ⚠️ **ghost 只影响显示,不参与任何判据。** 归档、@解析、离线推送、触发 assistant、
+// 权限,一律看 `from`。"谁有资格给谁代笔"是**业务/前端**要不要管的事,协议层不管 ——
+// 协议层只负责保证 `from` 是真的。
+//
+// ⚠️ **这套语义是 2026-08-26 反过来的。** 原来是「`from` 写要显示的那个人、
+// `ghost` 写真实发送者」。反转的理由:旧语义下 broker 的判据必须写成
+// 「发送者 ∈ {from.did, ghost.did}」,而那等于承认"填了 ghost 就能署名任何人",
+// 等于没堵。反转之后判据退化成一行 `from.did == username`,不碰业务层。
+// 我们维护的端里当时没有任何一处设置 `ghost`(core-mqtt 全是 `ghost: None`,
+// backend 只是原样转发),所以反转不影响存量。
 // ----------------------------------------------------------------------------------------------------
 // 任意聊天中:
 // type != chat 时: 一律不显示
-// type == chat 时: 发送者显示为 from
+// type == chat 时: 发送者显示为 ghost,ghost 为空则显示 from
 type Message struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
