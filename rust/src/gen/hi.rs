@@ -230,7 +230,7 @@ pub struct Number {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ClientInfo {
-    /// HiDID、HiAI、HiClub、Third
+    /// HiDID、HiAI、HiClub、HiMedia、Third
     #[prost(string, tag = "1")]
     pub app: ::prost::alloc::string::String,
     /// web、app、pc、embeded

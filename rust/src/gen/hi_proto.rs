@@ -28,6 +28,9 @@ pub mod hi {
         include!("hi.did.rs");
         include!("hi.did.serde.rs");
     }
+    pub mod media {
+        include!("hi.media.rs");
+    }
     pub mod ninja {
         include!("hi.ninja.rs");
         include!("hi.ninja.serde.rs");

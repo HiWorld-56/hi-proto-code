@@ -497,7 +497,7 @@ func (x *Number) GetN() int64 {
 
 type ClientInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           string                 `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"` // HiDID、HiAI、HiClub、Third
+	App           string                 `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"` // HiDID、HiAI、HiClub、HiMedia、Third
 	Dev           string                 `protobuf:"bytes,2,opt,name=dev,proto3" json:"dev,omitempty"` // web、app、pc、embeded
 	Mac           string                 `protobuf:"bytes,3,opt,name=mac,proto3" json:"mac,omitempty"` // Null / Mac or Static UUID (Preventing being kicked off)
 	unknownFields protoimpl.UnknownFields
