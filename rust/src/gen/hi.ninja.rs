@@ -54,20 +54,25 @@ pub struct AudioPlay {
     #[prost(bytes = "vec", tag = "2")]
     pub audio: ::prost::alloc::vec::Vec<u8>,
 }
-/// 币安账户凭证及累计收益计算所需的初始金额。
-/// api_secret 属于敏感字段，只允许通过受信任的本地 IPC 传递。
+/// 币安接入设置。**凭证与业务参数分开放** —— 初始本金不是凭证，
+/// 它是算累计收益用的基数；混在一条里，改一次本金就得把 api_secret 整条重发一遍。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSettings {
+    #[prost(message, optional, tag = "1")]
+    pub credentials: ::core::option::Option<BinanceCredentials>,
+    /// 初始本金。**十进制字符串**，与本仓所有金额字段同口径（免浮点误差）。
+    #[prost(string, tag = "2")]
+    pub initial_capital: ::prost::alloc::string::String,
+}
+/// 币安 API 凭证。
+/// ⚠️ `api_secret` 是敏感字段，**只允许走 brain ↔ face 这条本地 ZMQ**，不出机器。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceCredentials {
     #[prost(string, tag = "1")]
     pub api_key: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub api_secret: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub initial_capital: ::prost::alloc::string::String,
 }
-/// face 向 brain 请求当前币安凭证。
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetBinanceCredentials {}
 /// brain -> face：所有指令通过 oneof 路由
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToFace {
@@ -153,9 +158,9 @@ pub mod brain_to_face {
         /// 资源更新信息同步
         #[prost(message, tag = "19")]
         EventUpdate(super::UpdateInfo),
-        /// 币安凭证同步（仅限受信任的 face IPC）
+        /// 币安设置同步（凭证 + 初始本金；仅限本地 face IPC）
         #[prost(message, tag = "21")]
-        BinanceCredentials(super::BinanceCredentials),
+        EventBinanceSettings(super::BinanceSettings),
     }
 }
 /// 系统状态快照
@@ -223,9 +228,9 @@ pub mod face_to_brain {
         /// 更新动作
         #[prost(message, tag = "2")]
         UpdateAction(super::UpdateAction),
-        /// 请求币安凭证与初始金额
+        /// face 重启后内存缓存是空的，用它主动要一次（本文件里空请求一律用 Empty，见 show_qr_code）
         #[prost(message, tag = "3")]
-        GetBinanceCredentials(super::GetBinanceCredentials),
+        GetBinanceSettings(::pbjson_types::Empty),
     }
 }
 /// 插件下载/安装进度。
