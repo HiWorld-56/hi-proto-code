@@ -9453,9 +9453,15 @@ impl serde::Serialize for ListTransactionsResp {
         if !self.list.is_empty() {
             len += 1;
         }
+        if self.total != 0 {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ListTransactionsResp", len)?;
         if !self.list.is_empty() {
             struct_ser.serialize_field("list", &self.list)?;
+        }
+        if self.total != 0 {
+            struct_ser.serialize_field("total", &self.total)?;
         }
         struct_ser.end()
     }
@@ -9468,11 +9474,13 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsResp {
     {
         const FIELDS: &[&str] = &[
             "list",
+            "total",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             List,
+            Total,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9495,6 +9503,7 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsResp {
                     {
                         match value {
                             "list" => Ok(GeneratedField::List),
+                            "total" => Ok(GeneratedField::Total),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9515,6 +9524,7 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsResp {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut list__ = None;
+                let mut total__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::List => {
@@ -9523,10 +9533,19 @@ impl<'de> serde::Deserialize<'de> for ListTransactionsResp {
                             }
                             list__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
                     }
                 }
                 Ok(ListTransactionsResp {
                     list: list__.unwrap_or_default(),
+                    total: total__.unwrap_or_default(),
                 })
             }
         }

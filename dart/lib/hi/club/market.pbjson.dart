@@ -880,6 +880,7 @@ const ListTransactionsResp$json = {
       '8': {},
       '10': 'list'
     },
+    {'1': 'total', '3': 2, '4': 1, '5': 5, '8': {}, '10': 'total'},
   ],
   '7': {},
 };
@@ -887,7 +888,7 @@ const ListTransactionsResp$json = {
 /// Descriptor for `ListTransactionsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listTransactionsRespDescriptor = $convert.base64Decode(
     'ChRMaXN0VHJhbnNhY3Rpb25zUmVzcBIwCgRsaXN0GAEgAygLMhYuaGkuY2x1Yi5NYXJrZXRQYX'
-    'ltZW50QgSQtRgDUgRsaXN0OgSYtRgD');
+    'ltZW50QgSQtRgDUgRsaXN0EhoKBXRvdGFsGAIgASgFQgSQtRgDUgV0b3RhbDoEmLUYAw==');
 
 @$core.Deprecated('Use getTransactionReqDescriptor instead')
 const GetTransactionReq$json = {

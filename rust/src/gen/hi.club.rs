@@ -6698,6 +6698,13 @@ pub struct ListTransactionsReq {
 pub struct ListTransactionsResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<MarketPayment>,
+    /// ⚠️ **收了 pagination 就必须回 total。** 没有 total,调用方分不出
+    /// "这一页就是全部"和"后面还有" —— 前端只能把 limit 拉满装作拉全了,
+    /// 而 club 的 repo 在 `limit > 100` 时**悄悄回落到 20**,于是页面上少行、不报错。
+    /// 这是 2026-08-26 前端接分页时补的:市场里其它列表(ListMyListings /
+    /// ListGrants / SearchListings / ListSellers)一直都有,只有这个漏了。
+    #[prost(int32, tag = "2")]
+    pub total: i32,
 }
 /// 查单笔 —— 当事人是我、**或是我的仆从机器人**,才查得到。
 /// 查不到与不属于你**回同一个错**:否则这就成了探测别人交易是否存在的口子。

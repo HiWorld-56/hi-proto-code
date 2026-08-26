@@ -2386,8 +2386,14 @@ func (x *ListTransactionsReq) GetPagination() *hi.Pagination {
 }
 
 type ListTransactionsResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*MarketPayment       `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	List  []*MarketPayment       `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	// ⚠️ **收了 pagination 就必须回 total。** 没有 total,调用方分不出
+	// "这一页就是全部"和"后面还有" —— 前端只能把 limit 拉满装作拉全了,
+	// 而 club 的 repo 在 `limit > 100` 时**悄悄回落到 20**,于是页面上少行、不报错。
+	// 这是 2026-08-26 前端接分页时补的:市场里其它列表(ListMyListings /
+	// ListGrants / SearchListings / ListSellers)一直都有,只有这个漏了。
+	Total         int32 `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2427,6 +2433,13 @@ func (x *ListTransactionsResp) GetList() []*MarketPayment {
 		return x.List
 	}
 	return nil
+}
+
+func (x *ListTransactionsResp) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 // 查单笔 —— 当事人是我、**或是我的仆从机器人**,才查得到。
@@ -4114,9 +4127,10 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"N\n" +
+	"pagination\"j\n" +
 	"\x14ListTransactionsResp\x120\n" +
-	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"8\n" +
+	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list\x12\x1a\n" +
+	"\x05total\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total:\x04\x98\xb5\x18\x03\"8\n" +
 	"\x11GetTransactionReq\x12#\n" +
 	"\x06pay_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05payId\"\x8a\x04\n" +
 	"\vMarketOrder\x12\x1f\n" +

@@ -2368,9 +2368,11 @@ class ListTransactionsReq extends $pb.GeneratedMessage {
 class ListTransactionsResp extends $pb.GeneratedMessage {
   factory ListTransactionsResp({
     $core.Iterable<MarketPayment>? list,
+    $core.int? total,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
+    if (total != null) result.total = total;
     return result;
   }
 
@@ -2389,6 +2391,7 @@ class ListTransactionsResp extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..pPM<MarketPayment>(1, _omitFieldNames ? '' : 'list',
         subBuilder: MarketPayment.create)
+    ..aI(2, _omitFieldNames ? '' : 'total')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2412,6 +2415,20 @@ class ListTransactionsResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<MarketPayment> get list => $_getList(0);
+
+  /// ⚠️ **收了 pagination 就必须回 total。** 没有 total,调用方分不出
+  /// "这一页就是全部"和"后面还有" —— 前端只能把 limit 拉满装作拉全了,
+  /// 而 club 的 repo 在 `limit > 100` 时**悄悄回落到 20**,于是页面上少行、不报错。
+  /// 这是 2026-08-26 前端接分页时补的:市场里其它列表(ListMyListings /
+  /// ListGrants / SearchListings / ListSellers)一直都有,只有这个漏了。
+  @$pb.TagNumber(2)
+  $core.int get total => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set total($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
 }
 
 /// 查单笔 —— 当事人是我、**或是我的仆从机器人**,才查得到。
