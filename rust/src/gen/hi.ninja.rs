@@ -54,12 +54,26 @@ pub struct AudioPlay {
     #[prost(bytes = "vec", tag = "2")]
     pub audio: ::prost::alloc::vec::Vec<u8>,
 }
+/// 币安账户凭证及累计收益计算所需的初始金额。
+/// api_secret 属于敏感字段，只允许通过受信任的本地 IPC 传递。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceCredentials {
+    #[prost(string, tag = "1")]
+    pub api_key: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub api_secret: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub initial_capital: ::prost::alloc::string::String,
+}
+/// face 向 brain 请求当前币安凭证。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetBinanceCredentials {}
 /// brain -> face：所有指令通过 oneof 路由
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -139,6 +153,9 @@ pub mod brain_to_face {
         /// 资源更新信息同步
         #[prost(message, tag = "19")]
         EventUpdate(super::UpdateInfo),
+        /// 币安凭证同步（仅限受信任的 face IPC）
+        #[prost(message, tag = "21")]
+        BinanceCredentials(super::BinanceCredentials),
     }
 }
 /// 系统状态快照
@@ -193,7 +210,7 @@ pub struct UpdateInfo {
 /// face -> brain
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
@@ -206,6 +223,9 @@ pub mod face_to_brain {
         /// 更新动作
         #[prost(message, tag = "2")]
         UpdateAction(super::UpdateAction),
+        /// 请求币安凭证与初始金额
+        #[prost(message, tag = "3")]
+        GetBinanceCredentials(super::GetBinanceCredentials),
     }
 }
 /// 插件下载/安装进度。

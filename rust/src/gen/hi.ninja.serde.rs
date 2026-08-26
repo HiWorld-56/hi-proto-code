@@ -110,6 +110,134 @@ impl<'de> serde::Deserialize<'de> for AudioPlay {
         deserializer.deserialize_struct("hi.ninja.AudioPlay", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for BinanceCredentials {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.api_key.is_empty() {
+            len += 1;
+        }
+        if !self.api_secret.is_empty() {
+            len += 1;
+        }
+        if !self.initial_capital.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.BinanceCredentials", len)?;
+        if !self.api_key.is_empty() {
+            struct_ser.serialize_field("apiKey", &self.api_key)?;
+        }
+        if !self.api_secret.is_empty() {
+            struct_ser.serialize_field("apiSecret", &self.api_secret)?;
+        }
+        if !self.initial_capital.is_empty() {
+            struct_ser.serialize_field("initialCapital", &self.initial_capital)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceCredentials {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "api_key",
+            "apiKey",
+            "api_secret",
+            "apiSecret",
+            "initial_capital",
+            "initialCapital",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ApiKey,
+            ApiSecret,
+            InitialCapital,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
+                            "apiSecret" | "api_secret" => Ok(GeneratedField::ApiSecret),
+                            "initialCapital" | "initial_capital" => Ok(GeneratedField::InitialCapital),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceCredentials;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.BinanceCredentials")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceCredentials, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut api_key__ = None;
+                let mut api_secret__ = None;
+                let mut initial_capital__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ApiKey => {
+                            if api_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiKey"));
+                            }
+                            api_key__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ApiSecret => {
+                            if api_secret__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiSecret"));
+                            }
+                            api_secret__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::InitialCapital => {
+                            if initial_capital__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("initialCapital"));
+                            }
+                            initial_capital__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(BinanceCredentials {
+                    api_key: api_key__.unwrap_or_default(),
+                    api_secret: api_secret__.unwrap_or_default(),
+                    initial_capital: initial_capital__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.BinanceCredentials", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for BrainToFace {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -188,6 +316,9 @@ impl serde::Serialize for BrainToFace {
                 brain_to_face::Cmd::EventUpdate(v) => {
                     struct_ser.serialize_field("eventUpdate", v)?;
                 }
+                brain_to_face::Cmd::BinanceCredentials(v) => {
+                    struct_ser.serialize_field("binanceCredentials", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -240,6 +371,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             "eventStatus",
             "event_update",
             "eventUpdate",
+            "binance_credentials",
+            "binanceCredentials",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -264,6 +397,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             MembersInit,
             EventStatus,
             EventUpdate,
+            BinanceCredentials,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -305,6 +439,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             "membersInit" | "members_init" => Ok(GeneratedField::MembersInit),
                             "eventStatus" | "event_status" => Ok(GeneratedField::EventStatus),
                             "eventUpdate" | "event_update" => Ok(GeneratedField::EventUpdate),
+                            "binanceCredentials" | "binance_credentials" => Ok(GeneratedField::BinanceCredentials),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -465,6 +600,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::EventUpdate)
 ;
                         }
+                        GeneratedField::BinanceCredentials => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binanceCredentials"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::BinanceCredentials)
+;
+                        }
                     }
                 }
                 Ok(BrainToFace {
@@ -574,6 +716,9 @@ impl serde::Serialize for FaceToBrain {
                 face_to_brain::Cmd::UpdateAction(v) => {
                     struct_ser.serialize_field("updateAction", v)?;
                 }
+                face_to_brain::Cmd::GetBinanceCredentials(v) => {
+                    struct_ser.serialize_field("getBinanceCredentials", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -590,12 +735,15 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
             "voiceState",
             "update_action",
             "updateAction",
+            "get_binance_credentials",
+            "getBinanceCredentials",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             VoiceState,
             UpdateAction,
+            GetBinanceCredentials,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -619,6 +767,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                         match value {
                             "voiceState" | "voice_state" => Ok(GeneratedField::VoiceState),
                             "updateAction" | "update_action" => Ok(GeneratedField::UpdateAction),
+                            "getBinanceCredentials" | "get_binance_credentials" => Ok(GeneratedField::GetBinanceCredentials),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -652,6 +801,13 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("updateAction"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::UpdateAction)
+;
+                        }
+                        GeneratedField::GetBinanceCredentials => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("getBinanceCredentials"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::GetBinanceCredentials)
 ;
                         }
                     }
@@ -753,6 +909,77 @@ impl<'de> serde::Deserialize<'de> for FriendList {
             }
         }
         deserializer.deserialize_struct("hi.ninja.FriendList", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetBinanceCredentials {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let len = 0;
+        let struct_ser = serializer.serialize_struct("hi.ninja.GetBinanceCredentials", len)?;
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetBinanceCredentials {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetBinanceCredentials;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.GetBinanceCredentials")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetBinanceCredentials, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                while map_.next_key::<GeneratedField>()?.is_some() {
+                    let _ = map_.next_value::<serde::de::IgnoredAny>()?;
+                }
+                Ok(GetBinanceCredentials {
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.GetBinanceCredentials", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GroupInfoList {

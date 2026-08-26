@@ -412,6 +412,126 @@ class AudioPlay extends $pb.GeneratedMessage {
   void clearAudio() => $_clearField(2);
 }
 
+/// 币安账户凭证及累计收益计算所需的初始金额。
+/// api_secret 属于敏感字段，只允许通过受信任的本地 IPC 传递。
+class BinanceCredentials extends $pb.GeneratedMessage {
+  factory BinanceCredentials({
+    $core.String? apiKey,
+    $core.String? apiSecret,
+    $core.String? initialCapital,
+  }) {
+    final result = create();
+    if (apiKey != null) result.apiKey = apiKey;
+    if (apiSecret != null) result.apiSecret = apiSecret;
+    if (initialCapital != null) result.initialCapital = initialCapital;
+    return result;
+  }
+
+  BinanceCredentials._();
+
+  factory BinanceCredentials.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceCredentials.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceCredentials',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'apiKey')
+    ..aOS(2, _omitFieldNames ? '' : 'apiSecret')
+    ..aOS(3, _omitFieldNames ? '' : 'initialCapital')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceCredentials clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceCredentials copyWith(void Function(BinanceCredentials) updates) =>
+      super.copyWith((message) => updates(message as BinanceCredentials))
+          as BinanceCredentials;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceCredentials create() => BinanceCredentials._();
+  @$core.override
+  BinanceCredentials createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceCredentials getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceCredentials>(create);
+  static BinanceCredentials? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get apiKey => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set apiKey($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasApiKey() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearApiKey() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get apiSecret => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set apiSecret($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasApiSecret() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearApiSecret() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get initialCapital => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set initialCapital($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInitialCapital() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInitialCapital() => $_clearField(3);
+}
+
+/// face 向 brain 请求当前币安凭证。
+class GetBinanceCredentials extends $pb.GeneratedMessage {
+  factory GetBinanceCredentials() => create();
+
+  GetBinanceCredentials._();
+
+  factory GetBinanceCredentials.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetBinanceCredentials.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetBinanceCredentials',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBinanceCredentials clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBinanceCredentials copyWith(
+          void Function(GetBinanceCredentials) updates) =>
+      super.copyWith((message) => updates(message as GetBinanceCredentials))
+          as GetBinanceCredentials;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetBinanceCredentials create() => GetBinanceCredentials._();
+  @$core.override
+  GetBinanceCredentials createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetBinanceCredentials getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetBinanceCredentials>(create);
+  static GetBinanceCredentials? _defaultInstance;
+}
+
 enum BrainToFace_Cmd {
   initRobot,
   showListen,
@@ -433,6 +553,7 @@ enum BrainToFace_Cmd {
   eventStatus,
   eventUpdate,
   eventPluginProgress,
+  binanceCredentials,
   notSet
 }
 
@@ -459,6 +580,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     StatusEvent? eventStatus,
     UpdateInfo? eventUpdate,
     PluginProgress? eventPluginProgress,
+    BinanceCredentials? binanceCredentials,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -482,6 +604,8 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (eventUpdate != null) result.eventUpdate = eventUpdate;
     if (eventPluginProgress != null)
       result.eventPluginProgress = eventPluginProgress;
+    if (binanceCredentials != null)
+      result.binanceCredentials = binanceCredentials;
     return result;
   }
 
@@ -515,14 +639,36 @@ class BrainToFace extends $pb.GeneratedMessage {
     18: BrainToFace_Cmd.eventStatus,
     19: BrainToFace_Cmd.eventUpdate,
     20: BrainToFace_Cmd.eventPluginProgress,
+    21: BrainToFace_Cmd.binanceCredentials,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'BrainToFace',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0,
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+    ..oo(0, [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
     ..aE<StateToggle>(2, _omitFieldNames ? '' : 'showListen',
@@ -563,6 +709,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: UpdateInfo.create)
     ..aOM<PluginProgress>(20, _omitFieldNames ? '' : 'eventPluginProgress',
         subBuilder: PluginProgress.create)
+    ..aOM<BinanceCredentials>(21, _omitFieldNames ? '' : 'binanceCredentials',
+        subBuilder: BinanceCredentials.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -604,6 +752,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   @$pb.TagNumber(19)
   @$pb.TagNumber(20)
+  @$pb.TagNumber(21)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -625,6 +774,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   @$pb.TagNumber(19)
   @$pb.TagNumber(20)
+  @$pb.TagNumber(21)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -851,6 +1001,18 @@ class BrainToFace extends $pb.GeneratedMessage {
   void clearEventPluginProgress() => $_clearField(20);
   @$pb.TagNumber(20)
   PluginProgress ensureEventPluginProgress() => $_ensure(19);
+
+  /// 币安凭证同步（仅限受信任的 face IPC）
+  @$pb.TagNumber(21)
+  BinanceCredentials get binanceCredentials => $_getN(20);
+  @$pb.TagNumber(21)
+  set binanceCredentials(BinanceCredentials value) => $_setField(21, value);
+  @$pb.TagNumber(21)
+  $core.bool hasBinanceCredentials() => $_has(20);
+  @$pb.TagNumber(21)
+  void clearBinanceCredentials() => $_clearField(21);
+  @$pb.TagNumber(21)
+  BinanceCredentials ensureBinanceCredentials() => $_ensure(20);
 }
 
 /// 系统状态快照
@@ -1119,17 +1281,20 @@ class UpdateInfo extends $pb.GeneratedMessage {
   void clearTotalBytes() => $_clearField(11);
 }
 
-enum FaceToBrain_Cmd { voiceState, updateAction, notSet }
+enum FaceToBrain_Cmd { voiceState, updateAction, getBinanceCredentials, notSet }
 
 /// face -> brain
 class FaceToBrain extends $pb.GeneratedMessage {
   factory FaceToBrain({
     StateToggle? voiceState,
     UpdateAction? updateAction,
+    GetBinanceCredentials? getBinanceCredentials,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
     if (updateAction != null) result.updateAction = updateAction;
+    if (getBinanceCredentials != null)
+      result.getBinanceCredentials = getBinanceCredentials;
     return result;
   }
 
@@ -1145,17 +1310,21 @@ class FaceToBrain extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, FaceToBrain_Cmd> _FaceToBrain_CmdByTag = {
     1: FaceToBrain_Cmd.voiceState,
     2: FaceToBrain_Cmd.updateAction,
+    3: FaceToBrain_Cmd.getBinanceCredentials,
     0: FaceToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2])
+    ..oo(0, [1, 2, 3])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
         subBuilder: UpdateAction.create)
+    ..aOM<GetBinanceCredentials>(
+        3, _omitFieldNames ? '' : 'getBinanceCredentials',
+        subBuilder: GetBinanceCredentials.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1179,9 +1348,11 @@ class FaceToBrain extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1203,6 +1374,18 @@ class FaceToBrain extends $pb.GeneratedMessage {
   void clearUpdateAction() => $_clearField(2);
   @$pb.TagNumber(2)
   UpdateAction ensureUpdateAction() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  GetBinanceCredentials get getBinanceCredentials => $_getN(2);
+  @$pb.TagNumber(3)
+  set getBinanceCredentials(GetBinanceCredentials value) =>
+      $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasGetBinanceCredentials() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearGetBinanceCredentials() => $_clearField(3);
+  @$pb.TagNumber(3)
+  GetBinanceCredentials ensureGetBinanceCredentials() => $_ensure(2);
 }
 
 /// 插件下载/安装进度。
