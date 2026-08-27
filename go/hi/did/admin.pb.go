@@ -335,358 +335,6 @@ func (x *InviteCodeVerifyReq) GetDid() string {
 	return ""
 }
 
-type DAppInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`               // uuid
-	Class         string                 `protobuf:"bytes,2,opt,name=class,proto3" json:"class,omitempty"`             // 分类
-	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`               // 应用图片
-	Title         string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`             // 应用标题
-	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"` // 应用描述
-	Url           string                 `protobuf:"bytes,6,opt,name=url,proto3" json:"url,omitempty"`                 // 应用链接
-	Nav           bool                   `protobuf:"varint,7,opt,name=nav,proto3" json:"nav,omitempty"`                // 是否在导航栏展示
-	External      bool                   `protobuf:"varint,8,opt,name=external,proto3" json:"external,omitempty"`      // 是否内置浏览器打开
-	Promotion     bool                   `protobuf:"varint,9,opt,name=promotion,proto3" json:"promotion,omitempty"`    // 是否推广
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DAppInfo) Reset() {
-	*x = DAppInfo{}
-	mi := &file_hi_did_admin_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DAppInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DAppInfo) ProtoMessage() {}
-
-func (x *DAppInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DAppInfo.ProtoReflect.Descriptor instead.
-func (*DAppInfo) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *DAppInfo) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
-func (x *DAppInfo) GetClass() string {
-	if x != nil {
-		return x.Class
-	}
-	return ""
-}
-
-func (x *DAppInfo) GetLogo() string {
-	if x != nil {
-		return x.Logo
-	}
-	return ""
-}
-
-func (x *DAppInfo) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *DAppInfo) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *DAppInfo) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
-func (x *DAppInfo) GetNav() bool {
-	if x != nil {
-		return x.Nav
-	}
-	return false
-}
-
-func (x *DAppInfo) GetExternal() bool {
-	if x != nil {
-		return x.External
-	}
-	return false
-}
-
-func (x *DAppInfo) GetPromotion() bool {
-	if x != nil {
-		return x.Promotion
-	}
-	return false
-}
-
-type DAppListByClassResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Top           []*DAppInfo            `protobuf:"bytes,1,rep,name=top,proto3" json:"top,omitempty"`             // 视频类 Dapp
-	Popular       []*DAppInfo            `protobuf:"bytes,2,rep,name=popular,proto3" json:"popular,omitempty"`     // 热门 Dapp
-	Recommend     []*DAppInfo            `protobuf:"bytes,3,rep,name=recommend,proto3" json:"recommend,omitempty"` // 推荐 Dapp
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DAppListByClassResp) Reset() {
-	*x = DAppListByClassResp{}
-	mi := &file_hi_did_admin_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DAppListByClassResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DAppListByClassResp) ProtoMessage() {}
-
-func (x *DAppListByClassResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DAppListByClassResp.ProtoReflect.Descriptor instead.
-func (*DAppListByClassResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *DAppListByClassResp) GetTop() []*DAppInfo {
-	if x != nil {
-		return x.Top
-	}
-	return nil
-}
-
-func (x *DAppListByClassResp) GetPopular() []*DAppInfo {
-	if x != nil {
-		return x.Popular
-	}
-	return nil
-}
-
-func (x *DAppListByClassResp) GetRecommend() []*DAppInfo {
-	if x != nil {
-		return x.Recommend
-	}
-	return nil
-}
-
-type DAppGetRWAResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DAppGetRWAResp) Reset() {
-	*x = DAppGetRWAResp{}
-	mi := &file_hi_did_admin_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DAppGetRWAResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DAppGetRWAResp) ProtoMessage() {}
-
-func (x *DAppGetRWAResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DAppGetRWAResp.ProtoReflect.Descriptor instead.
-func (*DAppGetRWAResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *DAppGetRWAResp) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
-type DAppUpdateTopReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
-	Cover         string                 `protobuf:"bytes,2,opt,name=cover,proto3" json:"cover,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DAppUpdateTopReq) Reset() {
-	*x = DAppUpdateTopReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DAppUpdateTopReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DAppUpdateTopReq) ProtoMessage() {}
-
-func (x *DAppUpdateTopReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DAppUpdateTopReq.ProtoReflect.Descriptor instead.
-func (*DAppUpdateTopReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *DAppUpdateTopReq) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
-func (x *DAppUpdateTopReq) GetCover() string {
-	if x != nil {
-		return x.Cover
-	}
-	return ""
-}
-
-type DAppUpdateOrderReq struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	List          []*DAppUpdateOrderReq_Unit `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DAppUpdateOrderReq) Reset() {
-	*x = DAppUpdateOrderReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DAppUpdateOrderReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DAppUpdateOrderReq) ProtoMessage() {}
-
-func (x *DAppUpdateOrderReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DAppUpdateOrderReq.ProtoReflect.Descriptor instead.
-func (*DAppUpdateOrderReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *DAppUpdateOrderReq) GetList() []*DAppUpdateOrderReq_Unit {
-	if x != nil {
-		return x.List
-	}
-	return nil
-}
-
-type DAppDeleteReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DAppDeleteReq) Reset() {
-	*x = DAppDeleteReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DAppDeleteReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DAppDeleteReq) ProtoMessage() {}
-
-func (x *DAppDeleteReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DAppDeleteReq.ProtoReflect.Descriptor instead.
-func (*DAppDeleteReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *DAppDeleteReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
 type MerchantManageListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -697,7 +345,7 @@ type MerchantManageListReq struct {
 
 func (x *MerchantManageListReq) Reset() {
 	*x = MerchantManageListReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[11]
+	mi := &file_hi_did_admin_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -709,7 +357,7 @@ func (x *MerchantManageListReq) String() string {
 func (*MerchantManageListReq) ProtoMessage() {}
 
 func (x *MerchantManageListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[11]
+	mi := &file_hi_did_admin_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -722,7 +370,7 @@ func (x *MerchantManageListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantManageListReq.ProtoReflect.Descriptor instead.
 func (*MerchantManageListReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{11}
+	return file_hi_did_admin_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *MerchantManageListReq) GetName() string {
@@ -749,7 +397,7 @@ type MerchantManageListResp struct {
 
 func (x *MerchantManageListResp) Reset() {
 	*x = MerchantManageListResp{}
-	mi := &file_hi_did_admin_proto_msgTypes[12]
+	mi := &file_hi_did_admin_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -761,7 +409,7 @@ func (x *MerchantManageListResp) String() string {
 func (*MerchantManageListResp) ProtoMessage() {}
 
 func (x *MerchantManageListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[12]
+	mi := &file_hi_did_admin_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -774,7 +422,7 @@ func (x *MerchantManageListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantManageListResp.ProtoReflect.Descriptor instead.
 func (*MerchantManageListResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{12}
+	return file_hi_did_admin_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *MerchantManageListResp) GetTotal() int32 {
@@ -801,7 +449,7 @@ type MerchantManageEditReq struct {
 
 func (x *MerchantManageEditReq) Reset() {
 	*x = MerchantManageEditReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[13]
+	mi := &file_hi_did_admin_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -813,7 +461,7 @@ func (x *MerchantManageEditReq) String() string {
 func (*MerchantManageEditReq) ProtoMessage() {}
 
 func (x *MerchantManageEditReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[13]
+	mi := &file_hi_did_admin_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -826,7 +474,7 @@ func (x *MerchantManageEditReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantManageEditReq.ProtoReflect.Descriptor instead.
 func (*MerchantManageEditReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{13}
+	return file_hi_did_admin_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *MerchantManageEditReq) GetDid() string {
@@ -862,7 +510,7 @@ type MerchantSetPermissionReq struct {
 
 func (x *MerchantSetPermissionReq) Reset() {
 	*x = MerchantSetPermissionReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[14]
+	mi := &file_hi_did_admin_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -874,7 +522,7 @@ func (x *MerchantSetPermissionReq) String() string {
 func (*MerchantSetPermissionReq) ProtoMessage() {}
 
 func (x *MerchantSetPermissionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[14]
+	mi := &file_hi_did_admin_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -887,7 +535,7 @@ func (x *MerchantSetPermissionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantSetPermissionReq.ProtoReflect.Descriptor instead.
 func (*MerchantSetPermissionReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{14}
+	return file_hi_did_admin_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *MerchantSetPermissionReq) GetDid() string {
@@ -926,7 +574,7 @@ type BroadcastAppUpdateReq struct {
 
 func (x *BroadcastAppUpdateReq) Reset() {
 	*x = BroadcastAppUpdateReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[15]
+	mi := &file_hi_did_admin_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -938,7 +586,7 @@ func (x *BroadcastAppUpdateReq) String() string {
 func (*BroadcastAppUpdateReq) ProtoMessage() {}
 
 func (x *BroadcastAppUpdateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[15]
+	mi := &file_hi_did_admin_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -951,7 +599,7 @@ func (x *BroadcastAppUpdateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BroadcastAppUpdateReq.ProtoReflect.Descriptor instead.
 func (*BroadcastAppUpdateReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{15}
+	return file_hi_did_admin_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *BroadcastAppUpdateReq) GetApp() string {
@@ -985,7 +633,7 @@ type BroadcastPluginUpdateReq struct {
 
 func (x *BroadcastPluginUpdateReq) Reset() {
 	*x = BroadcastPluginUpdateReq{}
-	mi := &file_hi_did_admin_proto_msgTypes[16]
+	mi := &file_hi_did_admin_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -997,7 +645,7 @@ func (x *BroadcastPluginUpdateReq) String() string {
 func (*BroadcastPluginUpdateReq) ProtoMessage() {}
 
 func (x *BroadcastPluginUpdateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[16]
+	mi := &file_hi_did_admin_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1010,7 +658,7 @@ func (x *BroadcastPluginUpdateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BroadcastPluginUpdateReq.ProtoReflect.Descriptor instead.
 func (*BroadcastPluginUpdateReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{16}
+	return file_hi_did_admin_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *BroadcastPluginUpdateReq) GetPluginUuid() string {
@@ -1032,7 +680,7 @@ type InviteCodeListResp_Unit struct {
 
 func (x *InviteCodeListResp_Unit) Reset() {
 	*x = InviteCodeListResp_Unit{}
-	mi := &file_hi_did_admin_proto_msgTypes[17]
+	mi := &file_hi_did_admin_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1044,7 +692,7 @@ func (x *InviteCodeListResp_Unit) String() string {
 func (*InviteCodeListResp_Unit) ProtoMessage() {}
 
 func (x *InviteCodeListResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[17]
+	mi := &file_hi_did_admin_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1088,58 +736,6 @@ func (x *InviteCodeListResp_Unit) GetCreatedAt() int64 {
 	return 0
 }
 
-type DAppUpdateOrderReq_Unit struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Order         int32                  `protobuf:"varint,2,opt,name=order,proto3" json:"order,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DAppUpdateOrderReq_Unit) Reset() {
-	*x = DAppUpdateOrderReq_Unit{}
-	mi := &file_hi_did_admin_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DAppUpdateOrderReq_Unit) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DAppUpdateOrderReq_Unit) ProtoMessage() {}
-
-func (x *DAppUpdateOrderReq_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DAppUpdateOrderReq_Unit.ProtoReflect.Descriptor instead.
-func (*DAppUpdateOrderReq_Unit) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{9, 0}
-}
-
-func (x *DAppUpdateOrderReq_Unit) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
-func (x *DAppUpdateOrderReq_Unit) GetOrder() int32 {
-	if x != nil {
-		return x.Order
-	}
-	return 0
-}
-
 type MerchantManageListResp_Unit struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	Base    *MerchantInfo          `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
@@ -1152,7 +748,7 @@ type MerchantManageListResp_Unit struct {
 
 func (x *MerchantManageListResp_Unit) Reset() {
 	*x = MerchantManageListResp_Unit{}
-	mi := &file_hi_did_admin_proto_msgTypes[19]
+	mi := &file_hi_did_admin_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1164,7 +760,7 @@ func (x *MerchantManageListResp_Unit) String() string {
 func (*MerchantManageListResp_Unit) ProtoMessage() {}
 
 func (x *MerchantManageListResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_admin_proto_msgTypes[19]
+	mi := &file_hi_did_admin_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1177,7 +773,7 @@ func (x *MerchantManageListResp_Unit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MerchantManageListResp_Unit.ProtoReflect.Descriptor instead.
 func (*MerchantManageListResp_Unit) Descriptor() ([]byte, []int) {
-	return file_hi_did_admin_proto_rawDescGZIP(), []int{12, 0}
+	return file_hi_did_admin_proto_rawDescGZIP(), []int{6, 0}
 }
 
 func (x *MerchantManageListResp_Unit) GetBase() *MerchantInfo {
@@ -1226,33 +822,7 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\x13InviteCodeVerifyReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\x12\x10\n" +
-	"\x03did\x18\x03 \x01(\tR\x03did\"\x9a\x02\n" +
-	"\bDAppInfo\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04uuid\x12\x1a\n" +
-	"\x05class\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x05class\x12\x18\n" +
-	"\x04logo\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x04logo\x12\x1a\n" +
-	"\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x05title\x12&\n" +
-	"\vdescription\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\vdescription\x12\x16\n" +
-	"\x03url\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12\x16\n" +
-	"\x03nav\x18\a \x01(\bB\x04\x90\xb5\x18\x01R\x03nav\x12 \n" +
-	"\bexternal\x18\b \x01(\bB\x04\x90\xb5\x18\x01R\bexternal\x12\"\n" +
-	"\tpromotion\x18\t \x01(\bB\x04\x90\xb5\x18\x01R\tpromotion:\x04\x98\xb5\x18\x01\"\xad\x01\n" +
-	"\x13DAppListByClassResp\x12(\n" +
-	"\x03top\x18\x01 \x03(\v2\x10.hi.did.DAppInfoB\x04\x90\xb5\x18\x01R\x03top\x120\n" +
-	"\apopular\x18\x02 \x03(\v2\x10.hi.did.DAppInfoB\x04\x90\xb5\x18\x01R\apopular\x124\n" +
-	"\trecommend\x18\x03 \x03(\v2\x10.hi.did.DAppInfoB\x04\x90\xb5\x18\x01R\trecommend:\x04\x98\xb5\x18\x01\".\n" +
-	"\x0eDAppGetRWAResp\x12\x16\n" +
-	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url:\x04\x98\xb5\x18\x01\":\n" +
-	"\x10DAppUpdateTopReq\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x14\n" +
-	"\x05cover\x18\x02 \x01(\tR\x05cover\"{\n" +
-	"\x12DAppUpdateOrderReq\x123\n" +
-	"\x04list\x18\x01 \x03(\v2\x1f.hi.did.DAppUpdateOrderReq.UnitR\x04list\x1a0\n" +
-	"\x04Unit\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05order\x18\x02 \x01(\x05R\x05order\"#\n" +
-	"\rDAppDeleteReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"[\n" +
+	"\x03did\x18\x03 \x01(\tR\x03did\"[\n" +
 	"\x15MerchantManageListReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12.\n" +
 	"\n" +
@@ -1287,17 +857,7 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x05\x8a\xb5\x18\x01\x04\x12D\n" +
 	"\x06Delete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x042G\n" +
 	"\bRegister\x12;\n" +
-	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x012\xcd\x01\n" +
-	"\x04DApp\x12I\n" +
-	"\vListByClass\x12\x16.google.protobuf.Empty\x1a\x1b.hi.did.DAppListByClassResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
-	"\x06GetRWA\x12\x16.google.protobuf.Empty\x1a\x16.hi.did.DAppGetRWAResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
-	"\x06GetTop\x12\x16.google.protobuf.Empty\x1a\x10.hi.did.DAppInfo\"\x05\x8a\xb5\x18\x01\x022\xcf\x02\n" +
-	"\tDAppAdmin\x129\n" +
-	"\x06Create\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x127\n" +
-	"\x04Edit\x12\x10.hi.did.DAppInfo\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12>\n" +
-	"\x06Delete\x12\x15.hi.did.DAppDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12H\n" +
-	"\vUpdateOrder\x12\x1a.hi.did.DAppUpdateOrderReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12D\n" +
-	"\tUpdateTop\x12\x18.hi.did.DAppUpdateTopReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x042\xa8\x02\n" +
+	"\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x012\xa8\x02\n" +
 	"\x0eMerchantManage\x12L\n" +
 	"\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x05\x8a\xb5\x18\x01\x04\x120\n" +
 	"\x06Delete\x12\a.hi.DID\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12D\n" +
@@ -1324,7 +884,7 @@ func file_hi_did_admin_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_did_admin_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_did_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_hi_did_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_hi_did_admin_proto_goTypes = []any{
 	(MerchantPermission)(0),             // 0: hi.did.MerchantPermission
 	(*InviteCodeCreateResp)(nil),        // 1: hi.did.InviteCodeCreateResp
@@ -1332,81 +892,54 @@ var file_hi_did_admin_proto_goTypes = []any{
 	(*InviteCodeListResp)(nil),          // 3: hi.did.InviteCodeListResp
 	(*InviteCodeDeleteReq)(nil),         // 4: hi.did.InviteCodeDeleteReq
 	(*InviteCodeVerifyReq)(nil),         // 5: hi.did.InviteCodeVerifyReq
-	(*DAppInfo)(nil),                    // 6: hi.did.DAppInfo
-	(*DAppListByClassResp)(nil),         // 7: hi.did.DAppListByClassResp
-	(*DAppGetRWAResp)(nil),              // 8: hi.did.DAppGetRWAResp
-	(*DAppUpdateTopReq)(nil),            // 9: hi.did.DAppUpdateTopReq
-	(*DAppUpdateOrderReq)(nil),          // 10: hi.did.DAppUpdateOrderReq
-	(*DAppDeleteReq)(nil),               // 11: hi.did.DAppDeleteReq
-	(*MerchantManageListReq)(nil),       // 12: hi.did.MerchantManageListReq
-	(*MerchantManageListResp)(nil),      // 13: hi.did.MerchantManageListResp
-	(*MerchantManageEditReq)(nil),       // 14: hi.did.MerchantManageEditReq
-	(*MerchantSetPermissionReq)(nil),    // 15: hi.did.MerchantSetPermissionReq
-	(*BroadcastAppUpdateReq)(nil),       // 16: hi.did.BroadcastAppUpdateReq
-	(*BroadcastPluginUpdateReq)(nil),    // 17: hi.did.BroadcastPluginUpdateReq
-	(*InviteCodeListResp_Unit)(nil),     // 18: hi.did.InviteCodeListResp.Unit
-	(*DAppUpdateOrderReq_Unit)(nil),     // 19: hi.did.DAppUpdateOrderReq.Unit
-	(*MerchantManageListResp_Unit)(nil), // 20: hi.did.MerchantManageListResp.Unit
-	(*hi.Pagination)(nil),               // 21: hi.Pagination
-	(*MerchantInfo)(nil),                // 22: hi.did.MerchantInfo
-	(*emptypb.Empty)(nil),               // 23: google.protobuf.Empty
-	(*hi.DID)(nil),                      // 24: hi.DID
-	(*hi.AuthToken)(nil),                // 25: hi.AuthToken
+	(*MerchantManageListReq)(nil),       // 6: hi.did.MerchantManageListReq
+	(*MerchantManageListResp)(nil),      // 7: hi.did.MerchantManageListResp
+	(*MerchantManageEditReq)(nil),       // 8: hi.did.MerchantManageEditReq
+	(*MerchantSetPermissionReq)(nil),    // 9: hi.did.MerchantSetPermissionReq
+	(*BroadcastAppUpdateReq)(nil),       // 10: hi.did.BroadcastAppUpdateReq
+	(*BroadcastPluginUpdateReq)(nil),    // 11: hi.did.BroadcastPluginUpdateReq
+	(*InviteCodeListResp_Unit)(nil),     // 12: hi.did.InviteCodeListResp.Unit
+	(*MerchantManageListResp_Unit)(nil), // 13: hi.did.MerchantManageListResp.Unit
+	(*hi.Pagination)(nil),               // 14: hi.Pagination
+	(*MerchantInfo)(nil),                // 15: hi.did.MerchantInfo
+	(*emptypb.Empty)(nil),               // 16: google.protobuf.Empty
+	(*hi.DID)(nil),                      // 17: hi.DID
+	(*hi.AuthToken)(nil),                // 18: hi.AuthToken
 }
 var file_hi_did_admin_proto_depIdxs = []int32{
-	18, // 0: hi.did.InviteCodeListResp.infos:type_name -> hi.did.InviteCodeListResp.Unit
-	6,  // 1: hi.did.DAppListByClassResp.top:type_name -> hi.did.DAppInfo
-	6,  // 2: hi.did.DAppListByClassResp.popular:type_name -> hi.did.DAppInfo
-	6,  // 3: hi.did.DAppListByClassResp.recommend:type_name -> hi.did.DAppInfo
-	19, // 4: hi.did.DAppUpdateOrderReq.list:type_name -> hi.did.DAppUpdateOrderReq.Unit
-	21, // 5: hi.did.MerchantManageListReq.pagination:type_name -> hi.Pagination
-	20, // 6: hi.did.MerchantManageListResp.list:type_name -> hi.did.MerchantManageListResp.Unit
-	0,  // 7: hi.did.MerchantSetPermissionReq.perm:type_name -> hi.did.MerchantPermission
-	22, // 8: hi.did.MerchantManageListResp.Unit.base:type_name -> hi.did.MerchantInfo
-	0,  // 9: hi.did.MerchantManageListResp.Unit.permissions:type_name -> hi.did.MerchantPermission
-	23, // 10: hi.did.InviteCode.Create:input_type -> google.protobuf.Empty
-	2,  // 11: hi.did.InviteCode.Edit:input_type -> hi.did.InviteCodeEditReq
-	21, // 12: hi.did.InviteCode.List:input_type -> hi.Pagination
-	4,  // 13: hi.did.InviteCode.Delete:input_type -> hi.did.InviteCodeDeleteReq
-	5,  // 14: hi.did.Register.Verify:input_type -> hi.did.InviteCodeVerifyReq
-	23, // 15: hi.did.DApp.ListByClass:input_type -> google.protobuf.Empty
-	23, // 16: hi.did.DApp.GetRWA:input_type -> google.protobuf.Empty
-	23, // 17: hi.did.DApp.GetTop:input_type -> google.protobuf.Empty
-	6,  // 18: hi.did.DAppAdmin.Create:input_type -> hi.did.DAppInfo
-	6,  // 19: hi.did.DAppAdmin.Edit:input_type -> hi.did.DAppInfo
-	11, // 20: hi.did.DAppAdmin.Delete:input_type -> hi.did.DAppDeleteReq
-	10, // 21: hi.did.DAppAdmin.UpdateOrder:input_type -> hi.did.DAppUpdateOrderReq
-	9,  // 22: hi.did.DAppAdmin.UpdateTop:input_type -> hi.did.DAppUpdateTopReq
-	12, // 23: hi.did.MerchantManage.List:input_type -> hi.did.MerchantManageListReq
-	24, // 24: hi.did.MerchantManage.Delete:input_type -> hi.DID
-	14, // 25: hi.did.MerchantManage.Edit:input_type -> hi.did.MerchantManageEditReq
-	15, // 26: hi.did.MerchantManage.SetPermission:input_type -> hi.did.MerchantSetPermissionReq
-	17, // 27: hi.did.BroadcastInternal.PluginUpdate:input_type -> hi.did.BroadcastPluginUpdateReq
-	16, // 28: hi.did.Broadcast.AppUpdate:input_type -> hi.did.BroadcastAppUpdateReq
-	1,  // 29: hi.did.InviteCode.Create:output_type -> hi.did.InviteCodeCreateResp
-	23, // 30: hi.did.InviteCode.Edit:output_type -> google.protobuf.Empty
-	3,  // 31: hi.did.InviteCode.List:output_type -> hi.did.InviteCodeListResp
-	23, // 32: hi.did.InviteCode.Delete:output_type -> google.protobuf.Empty
-	25, // 33: hi.did.Register.Verify:output_type -> hi.AuthToken
-	7,  // 34: hi.did.DApp.ListByClass:output_type -> hi.did.DAppListByClassResp
-	8,  // 35: hi.did.DApp.GetRWA:output_type -> hi.did.DAppGetRWAResp
-	6,  // 36: hi.did.DApp.GetTop:output_type -> hi.did.DAppInfo
-	23, // 37: hi.did.DAppAdmin.Create:output_type -> google.protobuf.Empty
-	23, // 38: hi.did.DAppAdmin.Edit:output_type -> google.protobuf.Empty
-	23, // 39: hi.did.DAppAdmin.Delete:output_type -> google.protobuf.Empty
-	23, // 40: hi.did.DAppAdmin.UpdateOrder:output_type -> google.protobuf.Empty
-	23, // 41: hi.did.DAppAdmin.UpdateTop:output_type -> google.protobuf.Empty
-	13, // 42: hi.did.MerchantManage.List:output_type -> hi.did.MerchantManageListResp
-	23, // 43: hi.did.MerchantManage.Delete:output_type -> google.protobuf.Empty
-	23, // 44: hi.did.MerchantManage.Edit:output_type -> google.protobuf.Empty
-	23, // 45: hi.did.MerchantManage.SetPermission:output_type -> google.protobuf.Empty
-	23, // 46: hi.did.BroadcastInternal.PluginUpdate:output_type -> google.protobuf.Empty
-	23, // 47: hi.did.Broadcast.AppUpdate:output_type -> google.protobuf.Empty
-	29, // [29:48] is the sub-list for method output_type
-	10, // [10:29] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	12, // 0: hi.did.InviteCodeListResp.infos:type_name -> hi.did.InviteCodeListResp.Unit
+	14, // 1: hi.did.MerchantManageListReq.pagination:type_name -> hi.Pagination
+	13, // 2: hi.did.MerchantManageListResp.list:type_name -> hi.did.MerchantManageListResp.Unit
+	0,  // 3: hi.did.MerchantSetPermissionReq.perm:type_name -> hi.did.MerchantPermission
+	15, // 4: hi.did.MerchantManageListResp.Unit.base:type_name -> hi.did.MerchantInfo
+	0,  // 5: hi.did.MerchantManageListResp.Unit.permissions:type_name -> hi.did.MerchantPermission
+	16, // 6: hi.did.InviteCode.Create:input_type -> google.protobuf.Empty
+	2,  // 7: hi.did.InviteCode.Edit:input_type -> hi.did.InviteCodeEditReq
+	14, // 8: hi.did.InviteCode.List:input_type -> hi.Pagination
+	4,  // 9: hi.did.InviteCode.Delete:input_type -> hi.did.InviteCodeDeleteReq
+	5,  // 10: hi.did.Register.Verify:input_type -> hi.did.InviteCodeVerifyReq
+	6,  // 11: hi.did.MerchantManage.List:input_type -> hi.did.MerchantManageListReq
+	17, // 12: hi.did.MerchantManage.Delete:input_type -> hi.DID
+	8,  // 13: hi.did.MerchantManage.Edit:input_type -> hi.did.MerchantManageEditReq
+	9,  // 14: hi.did.MerchantManage.SetPermission:input_type -> hi.did.MerchantSetPermissionReq
+	11, // 15: hi.did.BroadcastInternal.PluginUpdate:input_type -> hi.did.BroadcastPluginUpdateReq
+	10, // 16: hi.did.Broadcast.AppUpdate:input_type -> hi.did.BroadcastAppUpdateReq
+	1,  // 17: hi.did.InviteCode.Create:output_type -> hi.did.InviteCodeCreateResp
+	16, // 18: hi.did.InviteCode.Edit:output_type -> google.protobuf.Empty
+	3,  // 19: hi.did.InviteCode.List:output_type -> hi.did.InviteCodeListResp
+	16, // 20: hi.did.InviteCode.Delete:output_type -> google.protobuf.Empty
+	18, // 21: hi.did.Register.Verify:output_type -> hi.AuthToken
+	7,  // 22: hi.did.MerchantManage.List:output_type -> hi.did.MerchantManageListResp
+	16, // 23: hi.did.MerchantManage.Delete:output_type -> google.protobuf.Empty
+	16, // 24: hi.did.MerchantManage.Edit:output_type -> google.protobuf.Empty
+	16, // 25: hi.did.MerchantManage.SetPermission:output_type -> google.protobuf.Empty
+	16, // 26: hi.did.BroadcastInternal.PluginUpdate:output_type -> google.protobuf.Empty
+	16, // 27: hi.did.Broadcast.AppUpdate:output_type -> google.protobuf.Empty
+	17, // [17:28] is the sub-list for method output_type
+	6,  // [6:17] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_admin_proto_init() }
@@ -1421,9 +954,9 @@ func file_hi_did_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_admin_proto_rawDesc), len(file_hi_did_admin_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   20,
+			NumMessages:   13,
 			NumExtensions: 0,
-			NumServices:   7,
+			NumServices:   5,
 		},
 		GoTypes:           file_hi_did_admin_proto_goTypes,
 		DependencyIndexes: file_hi_did_admin_proto_depIdxs,

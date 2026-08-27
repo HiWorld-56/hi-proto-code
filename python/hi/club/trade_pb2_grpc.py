@@ -253,7 +253,7 @@ class Trade(object):
 
 class TradeManageStub(object):
     """交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
-    照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+    照 did 的 Merchant/MerchantManage、Gateway/GatewayAdmin 范式拆出来;拆出后改回 `List`。
 
     ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
     二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",
@@ -275,7 +275,7 @@ class TradeManageStub(object):
 
 class TradeManageServicer(object):
     """交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
-    照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+    照 did 的 Merchant/MerchantManage、Gateway/GatewayAdmin 范式拆出来;拆出后改回 `List`。
 
     ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
     二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",
@@ -306,7 +306,7 @@ def add_TradeManageServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class TradeManage(object):
     """交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
-    照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+    照 did 的 Merchant/MerchantManage、Gateway/GatewayAdmin 范式拆出来;拆出后改回 `List`。
 
     ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
     二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",

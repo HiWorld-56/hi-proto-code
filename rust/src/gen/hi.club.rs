@@ -326,7 +326,7 @@ pub mod trade_manage_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
-    /// 照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+    /// 照 did 的 Merchant/MerchantManage、Gateway/GatewayAdmin 范式拆出来;拆出后改回 `List`。
     ///
     /// ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
     /// 二者鉴权主体不同,而档位是按方法挂的 —— 合并会导致"did 留空即拿到全部人的交易",
@@ -2592,7 +2592,7 @@ pub mod agent_manage_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     /// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-    /// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+    /// 范式见 Merchant/MerchantManage、Gateway/GatewayAdmin。
     ///
     /// ⚠️ **没有"标记"功能** —— 曾在 club 加过 Mark/ListMarks + hi_chat_agent_mark 表,
     /// 后来 hiai 侧的同类功能也整体删除了(实际没什么用,且标记本就不该是机器人的属性)。

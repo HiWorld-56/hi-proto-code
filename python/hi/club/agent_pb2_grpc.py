@@ -633,7 +633,7 @@ class AgentDirectory(object):
 
 class AgentManageStub(object):
     """机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-    范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+    范式见 Merchant/MerchantManage、Gateway/GatewayAdmin。
 
     ⚠️ **没有"标记"功能** —— 曾在 club 加过 Mark/ListMarks + hi_chat_agent_mark 表,
     后来 hiai 侧的同类功能也整体删除了(实际没什么用,且标记本就不该是机器人的属性)。
@@ -655,7 +655,7 @@ class AgentManageStub(object):
 
 class AgentManageServicer(object):
     """机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-    范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+    范式见 Merchant/MerchantManage、Gateway/GatewayAdmin。
 
     ⚠️ **没有"标记"功能** —— 曾在 club 加过 Mark/ListMarks + hi_chat_agent_mark 表,
     后来 hiai 侧的同类功能也整体删除了(实际没什么用,且标记本就不该是机器人的属性)。
@@ -686,7 +686,7 @@ def add_AgentManageServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class AgentManage(object):
     """机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-    范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+    范式见 Merchant/MerchantManage、Gateway/GatewayAdmin。
 
     ⚠️ **没有"标记"功能** —— 曾在 club 加过 Mark/ListMarks + hi_chat_agent_mark 表,
     后来 hiai 侧的同类功能也整体删除了(实际没什么用,且标记本就不该是机器人的属性)。

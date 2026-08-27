@@ -9,7 +9,7 @@ from hi.did import release_pb2 as hi_dot_did_dot_release__pb2
 
 class ReleaseManageStub(object):
     """发布管理(**超管面**)。与公开面 `Release` 拆开,不是为了迎合 lint ——
-    同一个 service 里混档意味着主体归类错了(照 DApp/DAppAdmin、Trade/TradeManage 范式):
+    同一个 service 里混档意味着主体归类错了(照 Merchant/MerchantManage、Trade/TradeManage 范式):
     上传/发布是"谁能发版"的问题,查询/下载是"谁能拿到"的问题,两者的主体本就不同。
 
     ⚠️ 上传与发布**分两步**是刻意的:一步做完的话,包传到一半失败就会留下
@@ -37,7 +37,7 @@ class ReleaseManageStub(object):
 
 class ReleaseManageServicer(object):
     """发布管理(**超管面**)。与公开面 `Release` 拆开,不是为了迎合 lint ——
-    同一个 service 里混档意味着主体归类错了(照 DApp/DAppAdmin、Trade/TradeManage 范式):
+    同一个 service 里混档意味着主体归类错了(照 Merchant/MerchantManage、Trade/TradeManage 范式):
     上传/发布是"谁能发版"的问题,查询/下载是"谁能拿到"的问题,两者的主体本就不同。
 
     ⚠️ 上传与发布**分两步**是刻意的:一步做完的话,包传到一半失败就会留下
@@ -83,7 +83,7 @@ def add_ReleaseManageServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class ReleaseManage(object):
     """发布管理(**超管面**)。与公开面 `Release` 拆开,不是为了迎合 lint ——
-    同一个 service 里混档意味着主体归类错了(照 DApp/DAppAdmin、Trade/TradeManage 范式):
+    同一个 service 里混档意味着主体归类错了(照 Merchant/MerchantManage、Trade/TradeManage 范式):
     上传/发布是"谁能发版"的问题,查询/下载是"谁能拿到"的问题,两者的主体本就不同。
 
     ⚠️ 上传与发布**分两步**是刻意的:一步做完的话,包传到一半失败就会留下

@@ -85,7 +85,7 @@ abstract class GatewayServiceBase extends $grpc.Service {
 /// 换节点要重新 OTA,key 还会随镜像发到每台设备上。
 ///
 /// ⚠️ 档位不同就必须拆 service(同 service 档位必须一致),与
-///    Gateway / GatewayAdmin、DApp / DAppAdmin 同一个范式。
+///    Gateway / GatewayAdmin、Merchant / MerchantManage 同一个范式。
 ///
 /// 载荷(SignedData.Data)不带任何字段(`{}` 即可)—— 这个方法**不依赖"我是谁"**,
 /// 签名只用来证明"是一台持私钥的设备",挡住匿名抓取节点凭证。

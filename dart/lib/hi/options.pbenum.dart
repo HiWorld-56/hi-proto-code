@@ -36,7 +36,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 ///   需要"用户或商户都能调"时,写两行 option,而不是发明 AUTH_USER_OR_MERCHANT。
 ///
 /// CI 校验(codegen/check_auth.py):每个 rpc 必须显式标注;同一 service 内**档位集合必须一致**
-/// (不一致 = 主体归类错了,该拆 service —— 参见 DApp/DAppAdmin、Gateway/GatewayAdmin 范式)。
+/// (不一致 = 主体归类错了,该拆 service —— 参见 Merchant/MerchantManage、Gateway/GatewayAdmin 范式)。
 class Auth extends $pb.ProtobufEnum {
   static const Auth AUTH_UNSPECIFIED =
       Auth._(0, _omitEnumNames ? '' : 'AUTH_UNSPECIFIED');

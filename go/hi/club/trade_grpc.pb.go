@@ -282,7 +282,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
-// 照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+// 照 did 的 Merchant/MerchantManage、Gateway/GatewayAdmin 范式拆出来;拆出后改回 `List`。
 //
 // ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
 //
@@ -315,7 +315,7 @@ func (c *tradeManageClient) List(ctx context.Context, in *TradeManageListReq, op
 // for forward compatibility.
 //
 // 交易管理(超管)。原 `Trade.ListAll` —— 超管方法蹲在用户面 service 里(混档),
-// 照 did 的 DApp/DAppAdmin、Merchant/MerchantManage 范式拆出来;拆出后改回 `List`。
+// 照 did 的 Merchant/MerchantManage、Gateway/GatewayAdmin 范式拆出来;拆出后改回 `List`。
 //
 // ⚠️ **绝不可与 Trade.List 合并**(前人已在此写下警告,照抄保留):
 //

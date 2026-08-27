@@ -660,7 +660,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+// 范式见 Merchant/MerchantManage、Gateway/GatewayAdmin。
 //
 // ⚠️ **没有"标记"功能** —— 曾在 club 加过 Mark/ListMarks + hi_chat_agent_mark 表,
 //
@@ -693,7 +693,7 @@ func (c *agentManageClient) List(ctx context.Context, in *ListAgentsByUsersReq, 
 // for forward compatibility.
 //
 // 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——
-// 范式见 DApp/DAppAdmin、Merchant/MerchantManage。
+// 范式见 Merchant/MerchantManage、Gateway/GatewayAdmin。
 //
 // ⚠️ **没有"标记"功能** —— 曾在 club 加过 Mark/ListMarks + hi_chat_agent_mark 表,
 //
