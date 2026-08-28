@@ -2,18 +2,18 @@
 /// apikey 是商户机密(value 可鉴权),只发给持有它的商户本人。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ApiKeyInfo {
-    #[prost(string, tag = "1")]
-    pub value: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
-    #[prost(int32, tag = "3")]
-    pub rate_limit: i32,
-    #[prost(bool, tag = "4")]
-    pub is_active: bool,
-    #[prost(string, tag = "5")]
-    pub note: ::prost::alloc::string::String,
-    #[prost(int64, tag = "6")]
-    pub created_at: i64,
+    #[prost(int32, optional, tag = "3")]
+    pub rate_limit: ::core::option::Option<i32>,
+    #[prost(bool, optional, tag = "4")]
+    pub is_active: ::core::option::Option<bool>,
+    #[prost(string, optional, tag = "5")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "6")]
+    pub created_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateApiKeyResp {
@@ -22,10 +22,10 @@ pub struct CreateApiKeyResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct EditApiKeyReq {
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct EditApiKeyResp {
@@ -34,15 +34,15 @@ pub struct EditApiKeyResp {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiKeysResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<ApiKeyInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteApiKeyReq {
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod api_key_client {
@@ -227,33 +227,33 @@ pub mod api_key_client {
 /// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Content {
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub content: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub content: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct NewSessionResp {
     /// 新会话 id;原 GenerateCidResp
-    #[prost(string, tag = "1")]
-    pub cid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ClearHistoryReq {
-    #[prost(string, tag = "1")]
-    pub cid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetHistoryReq {
     /// cid 已唯一定位会话,不再带 agent
-    #[prost(string, tag = "1")]
-    pub cid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Qa {
     /// assistant
-    #[prost(string, tag = "1")]
-    pub a: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub a: ::core::option::Option<::prost::alloc::string::String>,
     /// User
     #[prost(message, repeated, tag = "2")]
     pub q: ::prost::alloc::vec::Vec<Content>,
@@ -278,10 +278,10 @@ pub struct GetHistoryResp {
 /// 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub cid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
     /// **客户端自己能执行的工具**;空 = 全交服务端跑完
@@ -293,7 +293,7 @@ pub struct ChatReq {
     pub custom: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "7")]
     pub state: ::core::option::Option<::prost::alloc::string::String>,
-    /// 语音出的音色等;纯文本场景留空
+    /// 语音出的音色等;纯文本场景不传
     #[prost(string, optional, tag = "8")]
     pub style: ::core::option::Option<::prost::alloc::string::String>,
     /// ── 过程回显开关:要不要把中间过程一并流给调用方(**只管输出,不管行为**)──────────
@@ -313,11 +313,11 @@ pub struct ChatReq {
     /// 从此再没发出去过,**不报错、类型也对,只是值永远是零值**。搬家时别再漏第二次。
     ///
     /// 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-    #[prost(bool, tag = "9")]
-    pub echo_tool_calls: bool,
+    #[prost(bool, optional, tag = "9")]
+    pub echo_tool_calls: ::core::option::Option<bool>,
     /// 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
-    #[prost(bool, tag = "10")]
-    pub echo_memory: bool,
+    #[prost(bool, optional, tag = "10")]
+    pub echo_memory: ::core::option::Option<bool>,
     /// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
     ///
     /// * 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
@@ -331,44 +331,46 @@ pub struct ChatReq {
     /// 不许有 `to`/`payee` —— 身份与收款方一律由宿主注入。)
     ///
     /// ⚠️ ai 只**透传**,不解释也不推导:它不认识 club,算不出谁是主人。
-    #[prost(bool, tag = "11")]
-    pub echo_context: bool,
+    #[prost(bool, optional, tag = "11")]
+    pub echo_context: ::core::option::Option<bool>,
     /// 这句话是谁说的。**不是"谁在调"** —— 调用方几乎永远是机器人自己(`agent`),
     /// 提问者在它收到的那条 mqtt 消息的 `from` 里,由 club 带过来。
     /// **证明不了就空**(机器人语音路 = 现场人声,无法证明身份)。
     ///
     /// 🔴 它是**消息事实,不是权限凭据**。判权限用下面的 `master` 比对,别单独拿它当依据。
-    #[prost(string, tag = "12")]
-    pub asker: ::prost::alloc::string::String,
-    /// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时为空。
+    #[prost(string, optional, tag = "12")]
+    pub asker: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时**不传**。
     ///
     /// 🔴 **只能服务端算,不收客户端的** —— 所以 hi.club.ChatReq 里**故意没有**这个字段。
     /// ⚠️ 每轮现取、不做长缓存:换主人(解绑/重绑)要立刻生效 —— 主人是活体,不是单据快照。
     ///
-    /// 插件判"是不是主人"的唯一正确写法:`master` 非空且 `asker == master`;
+    /// 插件判"是不是主人"的唯一正确写法:`master` **有值**且 `asker == master`;
+    /// (以前两个"没有"都是空串,`asker == master` 在皆空时会成立 —— 现在两者都是 null,
+    /// null != null 不成立,但**仍然必须先判 master 有值**,别只写相等。)
     /// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
-    #[prost(string, tag = "13")]
-    pub master: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "13")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResult {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
 }
 /// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。续跑的模态由原始调用的 id 决定。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResultsReq {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<ToolCallResult>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolSupply {
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub function: ::core::option::Option<tool_supply::Function>,
 }
@@ -376,20 +378,20 @@ pub struct ToolSupply {
 pub mod tool_supply {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Function {
-        #[prost(string, tag = "1")]
-        pub name: ::prost::alloc::string::String,
-        #[prost(string, tag = "2")]
-        pub description: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "1")]
+        pub name: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "2")]
+        pub description: ::core::option::Option<::prost::alloc::string::String>,
         #[prost(message, optional, tag = "3")]
         pub parameters: ::core::option::Option<::pbjson_types::Struct>,
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ToolCall {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub function: ::core::option::Option<tool_call::Function>,
 }
@@ -397,10 +399,10 @@ pub struct ToolCall {
 pub mod tool_call {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Function {
-        #[prost(string, tag = "1")]
-        pub name: ::prost::alloc::string::String,
-        #[prost(string, tag = "2")]
-        pub arguments: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "1")]
+        pub name: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "2")]
+        pub arguments: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 /// `final` = **这轮还需不需要你做事**,不是"模型有没有调工具"。
@@ -415,10 +417,10 @@ pub mod tool_call {
 /// 否则整轮对话就停在半路,表现为"机器人不理我了"。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatResp {
-    #[prost(bool, tag = "1")]
-    pub r#final: bool,
-    #[prost(string, tag = "2")]
-    pub result: ::prost::alloc::string::String,
+    #[prost(bool, optional, tag = "1")]
+    pub r#final: ::core::option::Option<bool>,
+    #[prost(string, optional, tag = "2")]
+    pub result: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
     pub tools: ::prost::alloc::vec::Vec<ToolCall>,
 }
@@ -454,17 +456,17 @@ pub struct ChatResp {
 /// 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConverseStreamResp {
-    #[prost(int32, tag = "1")]
-    pub code: i32,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub message: ::prost::alloc::string::String,
+    #[prost(int32, optional, tag = "1")]
+    pub code: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
     /// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
     ///
     /// 续跑 id(Resume 时带回)
-    #[prost(string, tag = "4")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     /// 待客户端执行的工具
     #[prost(message, repeated, tag = "5")]
     pub tools: ::prost::alloc::vec::Vec<ToolCall>,
@@ -733,34 +735,34 @@ pub mod chat_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginShell {
     /// 插件 id,后台分配(单一 id)
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 插件名。**市场标题直接用它**,不另填
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// 跑在哪儿。首版由包结构自动判定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
-    #[prost(enumeration = "PluginRuntime", tag = "3")]
-    pub runtime: i32,
+    #[prost(enumeration = "PluginRuntime", optional, tag = "3")]
+    pub runtime: ::core::option::Option<i32>,
 }
 /// b:按 (uuid,version) 冻结
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginVersion {
     /// 所属壳
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 版本号(前端按现有版本预填,后端校验须>现有最大)
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// logo / summary 是**展示物**:市场页、插件详情页给买家看的就是这两个。
     /// 标 PUBLIC 不是放松,是纠正 —— 它们本来就没有"只给自己看"的语义,
     /// 而挂牌页要用它们(见 hi.club.MarketListingBrief:那边是门面,值从这儿来)。
-    #[prost(string, tag = "3")]
-    pub logo: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub summary: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
     /// 脚本包 zip:**至少含 main.py / requirements.txt / description.json**
-    #[prost(string, tag = "5")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
     /// function-call spec,**OpenAI tools 数组格式**(与 hi.ai.ToolSupply、与 brain 的
     /// functions.json 完全一致 —— 三者的 tools 最终会合进同一个数组喂给模型):
     ///
@@ -783,42 +785,42 @@ pub struct PluginVersion {
     ///
     /// PUBLIC:买家在挂牌页看的 `MarketListingDetail.capabilities` 就是这一份 ——
     /// 那边早就是公开的了,源头这边却标着 SELF,两边对不上。以这边为准改成 PUBLIC。
-    #[prost(string, tag = "6")]
-    pub description: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 一次构建的结果。**发版接口不返回它** —— 发版是立即返回的,构建在后台跑,
 /// 结果经 Get/ListVersions 回显给发版的人看(编译中 / 失败+日志 / 成功)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginBuild {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 这一行是哪个架构的构建。**一版有多行**(aarch64 / x86_64 各一),
     /// 状态、产物、错误、日志都各记各的 —— 合并显示会互相掩盖("有一个成了"看着像全成了)。
-    #[prost(string, tag = "11")]
-    pub arch: ::prost::alloc::string::String,
-    #[prost(enumeration = "PluginBuildStatus", tag = "3")]
-    pub status: i32,
+    #[prost(string, optional, tag = "11")]
+    pub arch: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "PluginBuildStatus", optional, tag = "3")]
+    pub status: ::core::option::Option<i32>,
     /// 编好的 .so(私有桶;下发时现签 presigned)
-    #[prost(string, tag = "4")]
-    pub artifact_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub artifact_url: ::core::option::Option<::prost::alloc::string::String>,
     /// 产物摘要,机器人下完照此核对
-    #[prost(string, tag = "5")]
-    pub sha256: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
     /// 从 .so 里真读出来的(见 hi.ai.plugin.BuildResp)
-    #[prost(uint32, tag = "6")]
-    pub abi_version: u32,
+    #[prost(uint32, optional, tag = "6")]
+    pub abi_version: ::core::option::Option<u32>,
     /// 失败原因(一句话)
-    #[prost(string, tag = "7")]
-    pub error: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "7")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
     /// 编译日志尾部
-    #[prost(string, tag = "8")]
-    pub log: ::prost::alloc::string::String,
-    #[prost(int64, tag = "9")]
-    pub started_at: i64,
-    #[prost(int64, tag = "10")]
-    pub finished_at: i64,
+    #[prost(string, optional, tag = "8")]
+    pub log: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "9")]
+    pub started_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "10")]
+    pub finished_at: ::core::option::Option<i64>,
 }
 /// 某 agent 视角的一个插件:壳 + 激活版本内容 + 壳级使用(enabled/source/data)+ 激活版本的版本级 data + 引用计数。
 /// **每机器人各不相同的 = c(enabled/source/data,含 api_key)+ d(激活版 + 版本级 data)**,这正是拆表的意义。
@@ -830,14 +832,14 @@ pub struct PluginView {
     #[prost(message, optional, tag = "2")]
     pub active: ::core::option::Option<PluginVersion>,
     /// c.enabled:插件是否开启
-    #[prost(bool, tag = "3")]
-    pub enabled: bool,
+    #[prost(bool, optional, tag = "3")]
+    pub enabled: ::core::option::Option<bool>,
     /// c.source
-    #[prost(enumeration = "PluginSource", tag = "4")]
-    pub source: i32,
+    #[prost(enumeration = "PluginSource", optional, tag = "4")]
+    pub source: ::core::option::Option<i32>,
     /// 被多少机器人引用(实时 COUNT)
-    #[prost(int32, tag = "5")]
-    pub ref_count: i32,
+    #[prost(int32, optional, tag = "5")]
+    pub ref_count: ::core::option::Option<i32>,
     /// c.data:插件级扩展数据(含 api_key)
     #[prost(message, optional, tag = "6")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
@@ -862,16 +864,16 @@ pub struct PluginView {
     ///
     /// 关掉 = 停在当前激活版,作者发新版也不动;打开 = 新版**构建成功后**自动切过去
     /// (NATIVE 要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
-    #[prost(bool, tag = "9")]
-    pub follow_latest: bool,
+    #[prost(bool, optional, tag = "9")]
+    pub follow_latest: ::core::option::Option<bool>,
 }
 /// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PluginVersionView {
     #[prost(message, optional, tag = "1")]
     pub version: ::core::option::Option<PluginVersion>,
-    #[prost(bool, tag = "2")]
-    pub active: bool,
+    #[prost(bool, optional, tag = "2")]
+    pub active: ::core::option::Option<bool>,
     /// d.data
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
@@ -886,14 +888,14 @@ pub struct PluginVersionView {
 /// 插件加载完成通知(公开摘要,不带私产)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginLoaded {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
-    #[prost(bool, tag = "4")]
-    pub enabled: bool,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "4")]
+    pub enabled: ::core::option::Option<bool>,
 }
 /// 建空壳:插 a{uuid,name,runtime=UNDETERMINED} + owner 的 c{source=original, enabled=false}。
 /// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
@@ -903,25 +905,25 @@ pub struct PluginLoaded {
 /// 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateShellReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// c.data(插件级)
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateShellResp {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 给壳加版本:插 b。若该 agent 对此壳还没激活版(首版)→ 顺带插 d(active=true) 自动激活。
 /// data=该 agent 对这一版的版本级扩展数据(hiclub 放 club 数据)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateVersionReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// version.uuid=壳;version.version + 本体内容。
     /// **description 不用填**:后端从 version.url 那个包里的 description.json 预读入库;
     /// 包里没有它会直接报错(过渡期:字段里直接给合法 spec 内容仍收,但会告警)。
@@ -934,17 +936,17 @@ pub struct CreateVersionReq {
 /// 改扩展数据:壳级(c.data)和/或某版本级(d.data)。**壳/版本本体冻结,不动。**
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditPluginReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 传了才改 c.data(插件级)
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
     /// 配合 version_data 指定改哪个版本的 d.data
     #[prost(string, optional, tag = "4")]
     pub version: ::core::option::Option<::prost::alloc::string::String>,
-    /// 传了(且 version 非空)才改 d.data
+    /// 传了(且 version 也传了)才改 d.data
     #[prost(message, optional, tag = "5")]
     pub version_data: ::core::option::Option<::pbjson_types::Struct>,
 }
@@ -962,12 +964,12 @@ pub struct SetEnabledReq {
 /// 关掉就停在当前激活版,由主人自己在版本管理里选。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetFollowLatestReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(bool, tag = "3")]
-    pub on: bool,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "3")]
+    pub on: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveReq {
@@ -992,16 +994,16 @@ pub struct SetActiveReq {
 /// 所以引用方不必发过版也切得动。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveAllReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveAllResp {
     /// 切过去的使用方个数(日志/回显用)
-    #[prost(int32, tag = "1")]
-    pub switched: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub switched: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptReq {
@@ -1014,10 +1016,10 @@ pub struct DownloadScriptReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptResp {
-    #[prost(bytes = "vec", tag = "1")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", optional, tag = "1")]
+    pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListPluginsReq {
@@ -1037,15 +1039,15 @@ pub struct ListVersionsReq {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPluginsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<PluginView>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListVersionsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<PluginVersionView>,
 }
@@ -1064,35 +1066,35 @@ pub struct GetPluginResp {
 /// 删单个版本(b 该行 + 全部 agent 的 d 该版本行 + 脚本文件)。**仅创建者(c.source=original)可删** —— 版本是共享本体。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteVersionReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 批量删版本:删该插件在 **\[min_version, max_version\] 范围内**(按三级版本号数值比较,含端点)的全部版本。
-/// min_version 空=不设下界,max_version 空=不设上界(两者都空=全部版本)。**仅创建者可删**。
+/// min_version 不传=不设下界,max_version 不传=不设上界(两者都不传=全部版本)。**仅创建者可删**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteVersionsReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 空=不设下界
-    #[prost(string, tag = "3")]
-    pub min_version: ::prost::alloc::string::String,
-    /// 空=不设上界
-    #[prost(string, tag = "4")]
-    pub max_version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传=不设下界
+    #[prost(string, optional, tag = "3")]
+    pub min_version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传=不设上界
+    #[prost(string, optional, tag = "4")]
+    pub max_version: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 批量删**指定的**若干版本(前端勾选的一批,**版本号可不连续**)。**仅创建者可删**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteVersionListReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 要删的版本号列表(可不连续)
     #[prost(string, repeated, tag = "3")]
     pub versions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -1102,16 +1104,16 @@ pub struct DeleteVersionListReq {
 /// 这样引用方删不掉别人的插件。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteShellReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 批量:一次从某机器人移除多个插件,每个 uuid 语义同 DeleteShell(按归属删壳或解绑)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteShellsReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub uuids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -1138,14 +1140,14 @@ pub struct DeletePluginByAgentsReq {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateReferenceReq {
     /// 受让方机器人
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳 uuid(别人的)
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    /// 空 = 取出让方当前激活版
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传 = 取出让方当前激活版
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// c.data(club 注入受让方自己的 api_key)
     #[prost(message, optional, tag = "4")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
@@ -1163,10 +1165,10 @@ pub struct CreateReferenceReq {
 /// (与"引用跟版"同一口径),而 active 是每个使用方各自的(d 表),所以必须给主体。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginRef {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PublicBriefsReq {
@@ -1176,22 +1178,22 @@ pub struct PublicBriefsReq {
 /// 一个插件对外能看到的全部展示信息。**没有 url / api_key / 扩展数据**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginPublicBrief {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳名
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// 该 agent 当前激活版(没有则空)
-    #[prost(string, tag = "4")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 激活版的
-    #[prost(string, tag = "5")]
-    pub logo: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
     /// 激活版的
-    #[prost(string, tag = "6")]
-    pub summary: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PublicBriefsResp {
@@ -1211,13 +1213,13 @@ pub struct PublicBriefsResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct NativePlugin {
     /// 壳 uuid。**落地文件名就是它**(`plugins/<uuid>.so`)
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳名,只用于机器人日志
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳前缀。机器人**上报 tools 时要拼在方法名前**(`<fn_prefix>_<原名>`),
     /// 分发时切第一个 `_` 切掉。
     ///
@@ -1226,33 +1228,34 @@ pub struct NativePlugin {
     /// 而 py 插件那侧的改名是在发版预读时做掉的,`.so` 没有对应的时机。
     /// 不给机器人前缀的话,两个厂商各卖一个提供 `search` 的插件,买家两个都买 →
     /// 机器人本地撞名 → 整个插件拒绝加载,而失败原因只在机器人的本地日志里。
-    #[prost(string, tag = "4")]
-    pub fn_prefix: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub fn_prefix: ::core::option::Option<::prost::alloc::string::String>,
     /// `.so` 的下载地址。私有桶,**每次拉清单现签**(限期),不存库。
-    #[prost(string, tag = "5")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
     /// 下完必须核对;对不上就是没下全或被改过
-    #[prost(string, tag = "6")]
-    pub sha256: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
     /// 机器人可据此先筛掉对不上的,省一次下载
-    #[prost(uint32, tag = "7")]
-    pub abi_version: u32,
+    #[prost(uint32, optional, tag = "7")]
+    pub abi_version: ::core::option::Option<u32>,
     /// 这份产物是给哪个架构的(`aarch64` / `x86_64`)。
     ///
     /// ⚠️ **abi_version 挡不住架构不对**:两台机器的 abi 一样,指令集却不同 ——
     /// 装上去要到 dlopen 才炸,而那个错看着像"插件本身有问题"。
     /// 机器人拿到清单先比这个,不符就跳过并说清楚。
-    #[prost(string, tag = "8")]
-    pub arch: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub arch: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListNativeReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    /// 机器人自己的架构。**空 = aarch64** —— 现网机器人全是 arm64,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    /// 机器人自己的架构。**不传 = aarch64** —— 现网机器人全是 arm64,
     /// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
-    #[prost(string, tag = "2")]
-    pub arch: ::prost::alloc::string::String,
+    /// ⛔ 空串不是合法值:要么不传,要么给真架构名。
+    #[prost(string, optional, tag = "2")]
+    pub arch: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNativeResp {
@@ -1263,12 +1266,12 @@ pub struct ListNativeResp {
 /// 版本本体是冻结的,重编的是**产物**,不是版本。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RetryBuildReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 插件跑在哪儿 —— **壳的属性**(同一个包不会一半 py 一半 rust),发版后不该再改。
 ///
@@ -1920,105 +1923,105 @@ pub struct StartReq {
     #[prost(string, repeated, tag = "1")]
     pub uuids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// 智能体did
-    #[prost(string, tag = "2")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct StatusReq {
     /// 智能体did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct StatusResp {
     /// 训练状态,success-训练成功,failed-训练失败
-    #[prost(string, tag = "1")]
-    pub status: ::prost::alloc::string::String,
-    #[prost(int32, tag = "2")]
-    pub mem_count: i32,
-    #[prost(int32, tag = "3")]
-    pub slice_count: i32,
+    #[prost(string, optional, tag = "1")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int32, optional, tag = "2")]
+    pub mem_count: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "3")]
+    pub slice_count: ::core::option::Option<i32>,
     /// 训练状态描述
-    #[prost(string, tag = "4")]
-    pub message: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ClearReq {
     /// 智能体did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadFileReq {
     /// 智能体did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 文件名
-    #[prost(string, tag = "2")]
-    pub filename: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub filename: ::core::option::Option<::prost::alloc::string::String>,
     /// 文件内容
-    #[prost(bytes = "vec", tag = "3")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TrainingFile {
     /// 训练文件稳定标识(uuid;不暴露数据表自增 id)
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// content（文件内容） / path / url
-    #[prost(string, tag = "2")]
-    pub content: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub content: ::core::option::Option<::prost::alloc::string::String>,
     /// 智能体did
-    #[prost(string, tag = "3")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 文件名
-    #[prost(string, tag = "4")]
-    pub title: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
     /// 文件大小
-    #[prost(int32, tag = "5")]
-    pub size: i32,
+    #[prost(int32, optional, tag = "5")]
+    pub size: ::core::option::Option<i32>,
     /// 文件类型
-    #[prost(string, tag = "6")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     /// 是否已经训练
-    #[prost(bool, tag = "7")]
-    pub is_use: bool,
+    #[prost(bool, optional, tag = "7")]
+    pub is_use: ::core::option::Option<bool>,
     /// 文件摘要
-    #[prost(string, tag = "8")]
-    pub digest: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub digest: ::core::option::Option<::prost::alloc::string::String>,
     /// 训练时间
-    #[prost(int64, tag = "9")]
-    pub training_time: i64,
+    #[prost(int64, optional, tag = "9")]
+    pub training_time: ::core::option::Option<i64>,
     /// 创建时间
-    #[prost(int64, tag = "10")]
-    pub created_at: i64,
+    #[prost(int64, optional, tag = "10")]
+    pub created_at: ::core::option::Option<i64>,
     /// 更新时间
-    #[prost(int64, tag = "11")]
-    pub updated_at: i64,
+    #[prost(int64, optional, tag = "11")]
+    pub updated_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListFilesReq {
     /// 智能体did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// true-返回已训练的文件, false-返回所有文件
-    #[prost(bool, tag = "2")]
-    pub r#use: bool,
+    #[prost(bool, optional, tag = "2")]
+    pub r#use: ::core::option::Option<bool>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListFilesResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<TrainingFile>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteFilesReq {
     /// 智能体did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 训练文件 uuid 列表
     #[prost(string, repeated, tag = "2")]
     pub uuids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -2034,28 +2037,28 @@ pub struct DeleteFilesByAgentsReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadFileReq {
     /// agent did(校验归属)
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 训练文件 uuid
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadFileResp {
-    #[prost(bytes = "vec", tag = "1")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", optional, tag = "1")]
+    pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
     /// 建议的文件名
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetFileReq {
     /// 训练文件 uuid
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 agent)
-    #[prost(string, tag = "2")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetFileResp {
@@ -2064,28 +2067,28 @@ pub struct GetFileResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateContentReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 训练文件 uuid
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub content: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub content: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateContentReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub content: ::prost::alloc::string::String,
-    /// 文件名。**可空** —— 空了后端按内容前 10 字派生一个。
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub content: ::core::option::Option<::prost::alloc::string::String>,
+    /// 文件名。**可不传** —— 不传时后端按内容前 10 字派生一个。
     ///
     /// 为什么要收:文本训练在前端是让用户自己起名的(上传文件那条路天然带文件名),
     /// 而派生出来的"前10字…"在列表里全是一个样,用户根本认不出自己传的是哪份。
     /// 之前这一栏前端一直在传,后端没有这个字段 —— 请求照发、**字段静默丢掉**,
     /// 谁都没发现(这正是 codegen/check_web_routes.py 存在的理由)。
-    #[prost(string, tag = "3")]
-    pub title: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateContentResp {
@@ -2095,12 +2098,12 @@ pub struct CreateContentResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct EditDigestReq {
     /// 训练文件 uuid
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub digest: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub digest: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod training_client {
@@ -2404,34 +2407,34 @@ pub mod training_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SynthesizeReq {
-    #[prost(string, tag = "1")]
-    pub text: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub model: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub style: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub text: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub style: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SynthesizeResp {
     /// 合成音频 url
-    #[prost(string, tag = "1")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TranscribeReq {
     /// 音频 url(从 HiSource 下载)
-    #[prost(string, tag = "1")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
     /// whisper-1 / whisper-hiai
-    #[prost(string, tag = "2")]
-    pub model: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub lang: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub lang: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TranscribeResp {
-    #[prost(string, tag = "1")]
-    pub text: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub text: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod speech_client {
@@ -2572,26 +2575,26 @@ pub mod speech_client {
 /// ///////////////////////////// 智能体 ///////////////////////////////
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Prompt {
-    #[prost(string, tag = "1")]
-    pub system: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub system: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 一个 agent 选用的一组模型。原名 Model —— 与模型目录 service Model 同包重名,
 /// 且它本就不是"一个模型"而是一套选择,故改名 ModelSet。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ModelSet {
-    #[prost(string, tag = "1")]
-    pub llm: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub stt: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub tts: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub embedding: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub llm: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub stt: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub tts: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub embedding: ::core::option::Option<::prost::alloc::string::String>,
     /// 记忆模型:与其它模型配置同处,经 Agent.Edit 设置(原 Training.SetMemModel/GetMemModel 已删,别再开第二条写路径)
-    #[prost(string, tag = "5")]
-    pub mem_model: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub mem_model: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 智能体配置。
 ///
@@ -2617,14 +2620,14 @@ pub struct AgentConfig {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TokenUsage {
     /// 模型生成输出时消耗的token数。
-    #[prost(int32, tag = "1")]
-    pub output: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub output: ::core::option::Option<i32>,
     /// 模型输入时消耗的token数
-    #[prost(int32, tag = "2")]
-    pub input: i32,
+    #[prost(int32, optional, tag = "2")]
+    pub input: ::core::option::Option<i32>,
     /// 训练消耗的token数
-    #[prost(int32, tag = "3")]
-    pub mem: i32,
+    #[prost(int32, optional, tag = "3")]
+    pub mem: ::core::option::Option<i32>,
 }
 /// 机器人本身的信息。
 ///
@@ -2640,14 +2643,14 @@ pub struct AgentInfo {
     #[prost(message, optional, tag = "2")]
     pub config: ::core::option::Option<AgentConfig>,
     /// 归属 did
-    #[prost(string, tag = "3")]
-    pub creator: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub creator: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "5")]
     pub token: ::core::option::Option<TokenUsage>,
-    #[prost(int64, tag = "6")]
-    pub created_at: i64,
+    #[prost(int64, optional, tag = "6")]
+    pub created_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DefaultConfigResp {
@@ -2658,10 +2661,10 @@ pub struct DefaultConfigResp {
 /// 造**软件** assistant:did 由后台生成,type 固定 assistant。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateAssistantReq {
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub avatar: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 为**硬件** robot 建 agent 记录。
 ///
@@ -2673,10 +2676,10 @@ pub struct RegisterRobotReq {
     /// 硬件机器人已注册的 did
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub avatar: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAgentResp {
@@ -2693,23 +2696,23 @@ pub struct CreateAgentResp {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EditAgentReq {
     /// 机器人 did(定位)
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    pub avatar: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub config: ::core::option::Option<AgentConfig>,
-    #[prost(string, tag = "3")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 商户档的列表:**不带 marked**。标记是超管的概念(见 AgentBrief),
 /// 商户看自己的机器人不需要、也拿不到别人的标记。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAgentsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     /// 与 hi.club.ListAgentsResp 对齐(原 infos)
     #[prost(message, repeated, tag = "2")]
     pub agents: ::prost::alloc::vec::Vec<AgentInfo>,
@@ -2735,13 +2738,13 @@ pub struct ListAgentsReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteAgentReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetAgentReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAgentResp {
@@ -2750,14 +2753,14 @@ pub struct GetAgentResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentUsageReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 机器人用量。原 FindAgentCountResp —— 它不是"count",而是消息数 + token 三件套。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentUsageResp {
-    #[prost(int32, tag = "1")]
-    pub message_count: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub message_count: ::core::option::Option<i32>,
     #[prost(message, optional, tag = "2")]
     pub token: ::core::option::Option<TokenUsage>,
 }
@@ -3378,8 +3381,8 @@ pub struct PermissionInfo {
     #[prost(enumeration = "PermissionType", repeated, packed = "false", tag = "2")]
     pub permissions: ::prost::alloc::vec::Vec<i32>,
     /// 备注(为什么被撤,给人看的)
-    #[prost(string, tag = "3")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListAgentPermissionsReq {
@@ -3397,32 +3400,32 @@ pub struct PermissionAddReq {
     /// 机器人 did
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
+    #[prost(enumeration = "PermissionType", optional, tag = "2")]
+    pub r#type: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PermissionDeleteReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
+    #[prost(enumeration = "PermissionType", optional, tag = "2")]
+    pub r#type: ::core::option::Option<i32>,
 }
 /// 按档位分页列持有者(club 超管页穿透过来用)。**只出调用者名下的机器人**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PermissionListReq {
-    /// 可选:按 did 过滤
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    /// 可选:按 did 过滤;**不传=不筛**(以前用空串表示,已禁止)
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
     /// **必填**,须是四档之一;列全部传 NORMAL(所有机器人都持有它),不是 UNSPECIFIED
-    #[prost(enumeration = "PermissionType", tag = "2")]
-    pub r#type: i32,
+    #[prost(enumeration = "PermissionType", optional, tag = "2")]
+    pub r#type: ::core::option::Option<i32>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PermissionListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<PermissionInfo>,
 }
@@ -3431,8 +3434,8 @@ pub struct PermissionEditReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     /// 备注
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ── 机器人权限(hi.ai 是**唯一权威**)────────────────────────────────────────
 ///
@@ -4172,9 +4175,9 @@ pub mod source_client {
 /// ── 商户目录 ─────────────────────────────────────────────────────────────
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantListReq {
-    /// 可选:按 did 过滤
-    #[prost(string, tag = "1")]
-    pub did: ::prost::alloc::string::String,
+    /// 可选:按 did 过滤;**不传=不筛**(以前用空串表示,已禁止)
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -4184,8 +4187,8 @@ pub struct MerchantListReq {
 /// 私有字段不该靠"反正只有超管调"来兜,受众得写在结构上。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<merchant_list_resp::Unit>,
 }
@@ -4196,11 +4199,11 @@ pub mod merchant_list_resp {
         /// hi.Entity 恒 PUBLIC
         #[prost(message, optional, tag = "1")]
         pub base: ::core::option::Option<super::super::Entity>,
-        #[prost(int64, tag = "2")]
-        pub created_at: i64,
+        #[prost(int64, optional, tag = "2")]
+        pub created_at: ::core::option::Option<i64>,
         /// 超管写的内部备注,商户本人看不到也改不了
-        #[prost(string, tag = "3")]
-        pub remark: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "3")]
+        pub remark: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 /// 改某商户的备注(超管)。整段覆盖,传空串即清空。
@@ -4209,8 +4212,8 @@ pub struct MerchantEditReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     /// 列宽 255,超了当场拒,别到 DB 才截断
-    #[prost(string, tag = "2")]
-    pub remark: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub remark: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod merchant_client {
@@ -4353,17 +4356,17 @@ pub mod merchant_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SettingInfo {
     /// 代理地址(原 proxy_url)
-    #[prost(string, tag = "1")]
-    pub proxy_endpoint: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub proxy_endpoint: ::core::option::Option<::prost::alloc::string::String>,
     /// 代理是否生效(原 enable)
-    #[prost(bool, tag = "2")]
-    pub proxy_enable: bool,
+    #[prost(bool, optional, tag = "2")]
+    pub proxy_enable: ::core::option::Option<bool>,
     /// 自定义 OpenAI 端点(原 endpoint)
-    #[prost(string, tag = "3")]
-    pub openai_endpoint: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub openai_endpoint: ::core::option::Option<::prost::alloc::string::String>,
     /// 端点开关;关 = 用 OpenAI 官方端点
-    #[prost(bool, tag = "4")]
-    pub openai_endpoint_enable: bool,
+    #[prost(bool, optional, tag = "4")]
+    pub openai_endpoint_enable: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SettingEditReq {
@@ -5061,24 +5064,24 @@ pub mod register_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentDelayUnit {
     /// 与 AgentUsageResp(同 owner 运营指标)一致取 SELF —— 无 participant 对端会看别人机器人的延迟
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub r#type: ::prost::alloc::string::String,
-    #[prost(int32, tag = "4")]
-    pub llm: i32,
-    #[prost(int32, tag = "5")]
-    pub llm2: i32,
-    #[prost(int32, tag = "6")]
-    pub stt: i32,
-    #[prost(int32, tag = "7")]
-    pub tts: i32,
-    #[prost(int32, tag = "8")]
-    pub function_call: i32,
-    #[prost(int64, tag = "9")]
-    pub test_time: i64,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int32, optional, tag = "4")]
+    pub llm: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "5")]
+    pub llm2: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "6")]
+    pub stt: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "7")]
+    pub tts: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "8")]
+    pub function_call: ::core::option::Option<i32>,
+    #[prost(int64, optional, tag = "9")]
+    pub test_time: ::core::option::Option<i64>,
 }
 /// 概览:**每台机器人各一条**(各自最新)。要看某一台的历次记录用 ListHistory。
 ///
@@ -5087,27 +5090,27 @@ pub struct AgentDelayUnit {
 /// proto 上完全看不出来。已拆成 ListHistory,**别再把 agent 加回这里**。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListAgentDelaysReq {
-    /// 可选:按类型过滤(**空 = 全部类型**)
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
+    /// 可选:按类型过滤(**不传 = 全部类型**)
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 /// 明细:**某一台机器人的历次**测时记录,按时间倒序分页。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListAgentDelayHistoryReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    /// 可选:按类型过滤(**空 = 全部类型**)
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    /// 可选:按类型过滤(**不传 = 全部类型**)
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAgentDelaysResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub units: ::prost::alloc::vec::Vec<AgentDelayUnit>,
 }

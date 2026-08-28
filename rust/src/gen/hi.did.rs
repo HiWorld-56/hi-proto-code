@@ -4,20 +4,20 @@
 /// 光写 `USDT` 说不清往哪条链上转。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Coin {
-    #[prost(string, tag = "1")]
-    pub icon: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub icon: ::core::option::Option<::prost::alloc::string::String>,
     /// 标识 + 显示名,如 USDT-TRC20 / WHDS-APTOS
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// public-公共币种, custom-自定义币种
-    #[prost(string, tag = "3")]
-    pub category: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub category: ::core::option::Option<::prost::alloc::string::String>,
     /// btc/eth/trx/sol/aptos,对齐 hidid-core 的 Chain::id()
-    #[prost(string, tag = "4")]
-    pub chain: ::prost::alloc::string::String,
-    /// 合约(FA / token)地址。**空 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
-    #[prost(string, tag = "5")]
-    pub contract: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub chain: ::core::option::Option<::prost::alloc::string::String>,
+    /// 合约(FA / token)地址。**不传 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
+    #[prost(string, optional, tag = "5")]
+    pub contract: ::core::option::Option<::prost::alloc::string::String>,
     /// 最小单位的小数位。金额换算全程走整数,**不碰 f64** —— 钱经不起浮点误差。
     ///
     /// ⚠️ **必须与链上一致,配错就是金额差几个数量级**,而且不会报错:
@@ -27,8 +27,8 @@ pub struct Coin {
     /// POST <fullnode>/v1/view
     /// {"function":"0x1::fungible_asset::decimals",
     /// "type_arguments":\["0x1::fungible_asset::Metadata"\],"arguments":\["\<合约地址>"\]}
-    #[prost(uint32, tag = "6")]
-    pub decimals: u32,
+    #[prost(uint32, optional, tag = "6")]
+    pub decimals: ::core::option::Option<u32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCoinsResp {
@@ -44,8 +44,8 @@ pub struct ListSuperAdminUsersResp {
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UserTotalResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
 }
 /// Generated client implementations.
 pub mod base_client {
@@ -330,39 +330,39 @@ pub mod super_admin_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Transaction {
-    #[prost(string, tag = "1")]
-    pub hash: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub amount: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub coin: ::core::option::Option<Coin>,
     #[prost(message, optional, tag = "4")]
     pub from: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "5")]
     pub to: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "6")]
-    pub remark: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub remark: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct HistoryReq {
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub address: ::prost::alloc::string::String,
-    /// 分页游标，第一页为空
-    #[prost(string, tag = "3")]
-    pub cursor: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub address: ::core::option::Option<::prost::alloc::string::String>,
+    /// 分页游标，第一页不传
+    #[prost(string, optional, tag = "3")]
+    pub cursor: ::core::option::Option<::prost::alloc::string::String>,
     /// 最大返回数
-    #[prost(int32, tag = "4")]
-    pub limit: i32,
+    #[prost(int32, optional, tag = "4")]
+    pub limit: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HistoryResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<history_resp::Unit>,
     /// 下一页游标
-    #[prost(string, tag = "2")]
-    pub next_cursor: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub next_cursor: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Nested message and enum types in `HistoryResp`.
 pub mod history_resp {
@@ -371,30 +371,30 @@ pub mod history_resp {
         #[prost(message, optional, tag = "1")]
         pub trans: ::core::option::Option<super::Transaction>,
         /// in（转入）/ out（转出）/ self（自转）
-        #[prost(string, tag = "2")]
-        pub direction: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "2")]
+        pub direction: ::core::option::Option<::prost::alloc::string::String>,
         /// pending / confirming / success / failed / notfound
-        #[prost(string, tag = "3")]
-        pub status: ::prost::alloc::string::String,
-        #[prost(int64, tag = "4")]
-        pub timestamp: i64,
+        #[prost(string, optional, tag = "3")]
+        pub status: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(int64, optional, tag = "4")]
+        pub timestamp: ::core::option::Option<i64>,
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TxStatusReq {
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub hash: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TxStatusResp {
     /// pending / confirming / success / failed / notfound
-    #[prost(string, tag = "1")]
-    pub state: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
     /// 进度，0-100
-    #[prost(uint32, tag = "2")]
-    pub progress: u32,
+    #[prost(uint32, optional, tag = "2")]
+    pub progress: ::core::option::Option<u32>,
 }
 /// 取一笔链上交易的明细。**只报事实,不做判断。**
 ///
@@ -413,50 +413,50 @@ pub struct TxStatusResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TxDetailReq {
     /// 用来定位链/合约/精度
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub hash: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TxDetailResp {
     /// pending / confirming / success / failed / notfound
-    #[prost(string, tag = "1")]
-    pub state: ::prost::alloc::string::String,
-    #[prost(int64, tag = "2")]
-    pub confirmed_blocks: i64,
+    #[prost(string, optional, tag = "1")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub confirmed_blocks: ::core::option::Option<i64>,
     /// 交易时间(ms)。业务侧据此做时限校验
-    #[prost(int64, tag = "3")]
-    pub timestamp: i64,
+    #[prost(int64, optional, tag = "3")]
+    pub timestamp: ::core::option::Option<i64>,
     /// 链上地址(不是 DID)
-    #[prost(string, tag = "4")]
-    pub from: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub from: ::core::option::Option<::prost::alloc::string::String>,
     /// 链上地址(不是 DID)
-    #[prost(string, tag = "5")]
-    pub to: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub to: ::core::option::Option<::prost::alloc::string::String>,
     /// **人类可读**,已按币种精度换算
-    #[prost(string, tag = "6")]
-    pub amount: ::prost::alloc::string::String,
-    /// 合约地址;空=原生币
-    #[prost(string, tag = "7")]
-    pub contract: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    /// 合约地址;不传=原生币
+    #[prost(string, optional, tag = "7")]
+    pub contract: ::core::option::Option<::prost::alloc::string::String>,
     /// 该 hash 在缓存窗口内被**成功且合法地核验**过几次。业务侧据此防伪。
     /// ⚠️ 别拿它当硬闸:响应丢了导致的重试、崩在中途导致的重试,都会让它变大 ——
     /// 早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
-    #[prost(uint32, tag = "8")]
-    pub query_count: u32,
+    #[prost(uint32, optional, tag = "8")]
+    pub query_count: ::core::option::Option<u32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VerifyTransactionReq {
     /// 预期币种（did 据此定位链/合约/精度）
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// 链上交易 hash
-    #[prost(string, tag = "2")]
-    pub hash: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
     /// 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
-    #[prost(string, tag = "3")]
-    pub amount: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
     /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
     ///
     /// ⚠️ **必填,不要改成 optional。** 曾经为了插件市场("按订单认款,不关心谁付的")
@@ -469,32 +469,32 @@ pub struct VerifyTransactionReq {
     /// 不关心付款方的业务应当去查**交易明细**,自己按业务规则比对,
     /// 而不是让公用的验证器变松。
     /// ```
-    #[prost(string, tag = "4")]
-    pub from: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub from: ::core::option::Option<::prost::alloc::string::String>,
     /// 预期收款方 **DID**（同上）
-    #[prost(string, tag = "5")]
-    pub to: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub to: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VerifyTransactionResp {
     /// pending / confirming / success / failed / notfound
-    #[prost(string, tag = "1")]
-    pub state: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
     /// 业务校验是否通过（仅 state=success 有意义）
-    #[prost(bool, tag = "2")]
-    pub passed: bool,
+    #[prost(bool, optional, tag = "2")]
+    pub passed: ::core::option::Option<bool>,
     /// 未过原因：AMOUNT_ERR / FROM_ERR / TO_ERR / CONTRACTADDRESS_ERR
-    #[prost(string, tag = "3")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
     /// 链上确认数
-    #[prost(int64, tag = "4")]
-    pub confirmed_blocks: i64,
+    #[prost(int64, optional, tag = "4")]
+    pub confirmed_blocks: ::core::option::Option<i64>,
     /// 交易时间（ms）；调用方据此自行做时限校验（业务层解耦）
-    #[prost(int64, tag = "5")]
-    pub timestamp: i64,
+    #[prost(int64, optional, tag = "5")]
+    pub timestamp: ::core::option::Option<i64>,
     /// 该 hash 在缓存窗口内被查询次数（业务侧据此防伪）
-    #[prost(uint32, tag = "6")]
-    pub query_count: u32,
+    #[prost(uint32, optional, tag = "6")]
+    pub query_count: ::core::option::Option<u32>,
 }
 /// Generated client implementations.
 pub mod transfer_client {
@@ -696,14 +696,14 @@ pub struct RefreshTokenReq {
     pub node: ::core::option::Option<super::ClientInfo>,
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub refresh_token: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub refresh_token: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// hidid web/app/pc登录
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LoginReq {
-    #[prost(string, tag = "1")]
-    pub req_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub req_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "3")]
@@ -729,8 +729,8 @@ pub struct GenerateReqIdReq {
 pub struct ReqStatusResp {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "2")]
-    pub status: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub token: ::core::option::Option<super::AuthToken>,
     #[prost(message, optional, tag = "4")]
@@ -983,22 +983,22 @@ pub mod auth_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPriceReq {
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetPriceResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<get_price_resp::Unit>,
-    #[prost(string, tag = "2")]
-    pub exchange: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub exchange: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Nested message and enum types in `GetPriceResp`.
 pub mod get_price_resp {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Unit {
-        #[prost(string, tag = "1")]
-        pub price: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "1")]
+        pub price: ::core::option::Option<::prost::alloc::string::String>,
         #[prost(message, optional, tag = "2")]
         pub coin: ::core::option::Option<super::Coin>,
     }
@@ -1127,22 +1127,22 @@ pub struct MerchantInfo {
     pub master: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "2")]
     pub server: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub logo: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
     /// 公共币种
     #[prost(message, repeated, tag = "5")]
     pub public_coins: ::prost::alloc::vec::Vec<Coin>,
     /// 自定义币种
     #[prost(message, repeated, tag = "6")]
     pub custom_tokens: ::prost::alloc::vec::Vec<Coin>,
-    #[prost(string, tag = "7")]
-    pub endpoint: ::prost::alloc::string::String,
-    #[prost(string, tag = "8")]
-    pub scheme: ::prost::alloc::string::String,
-    #[prost(int64, tag = "9")]
-    pub created_at: i64,
+    #[prost(string, optional, tag = "7")]
+    pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "8")]
+    pub scheme: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "9")]
+    pub created_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantGetResp {
@@ -1161,21 +1161,21 @@ pub struct MerchantGetResp {
 /// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantSetReq {
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub logo: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "3")]
     pub coins: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, tag = "4")]
-    pub endpoint: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    pub scheme: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub scheme: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<MerchantInfo>,
 }
@@ -1209,11 +1209,11 @@ pub struct UserExtensionInfo {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetUserCardReq {
     /// 目标用户 did,**必须在调用者名下**
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
     /// .json 文件正文;服务端校验是合法 json 才入库
-    #[prost(bytes = "vec", tag = "2")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", optional, tag = "2")]
+    pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UserExtensionUnit {
@@ -1230,22 +1230,22 @@ pub struct UserExtensionUnit {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GrantReq {
     /// 被授权方商户 did
-    #[prost(string, tag = "1")]
-    pub grantee: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grantee: ::core::option::Option<::prost::alloc::string::String>,
     /// 备注,给人看的
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GrantUnit {
     /// 被授权方
     #[prost(message, optional, tag = "1")]
     pub grantee: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
     /// ms
-    #[prost(int64, tag = "3")]
-    pub created_at: i64,
+    #[prost(int64, optional, tag = "3")]
+    pub created_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGrantsResp {
@@ -1254,7 +1254,7 @@ pub struct ListGrantsResp {
     pub grants: ::prost::alloc::vec::Vec<GrantUnit>,
 }
 /// ── 商户管理用户(扩展数据)的入参 ───────────────────────────────────
-/// merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权,requireGrant)。
+/// merchant 不传=自己(取 ExtendToken);传了=指定商户(须先获该商户授权,requireGrant)。
 /// ── 读自己名下的用户(Merchant,免 grant)──
 /// **没有 merchant 字段** —— 商户身份恒取自 ExtendToken。
 ///
@@ -1266,14 +1266,14 @@ pub struct ListGrantsResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetUserReq {
     /// 用户 did
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListUsersReq {
     /// 可选:按用户 did 过滤
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -1282,25 +1282,25 @@ pub struct ListUsersReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GrantedGetUserReq {
     /// 目标商户(须先授权给我)
-    #[prost(string, tag = "1")]
-    pub merchant: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GrantedListUsersReq {
-    #[prost(string, tag = "1")]
-    pub merchant: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
     /// 可选:按用户 did 过滤
-    #[prost(string, tag = "2")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GrantedListGreetersReq {
-    #[prost(string, tag = "1")]
-    pub merchant: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -1319,8 +1319,8 @@ pub struct ListGreetersReq {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListUsersResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub units: ::prost::alloc::vec::Vec<UserExtensionUnit>,
 }
@@ -1332,14 +1332,14 @@ pub struct ListUsersResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetUserUnit {
     /// 用户 did
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
-    /// 昵称(空=不改)
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    /// 头像 url(空=不改)
-    #[prost(string, tag = "3")]
-    pub avatar: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
+    /// 昵称;不传=不改,传空串=清空
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 头像 url;不传=不改,传空串=清空
+    #[prost(string, optional, tag = "3")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
     /// 该商户维护的扩展信息
     #[prost(message, optional, tag = "4")]
     pub info: ::core::option::Option<UserExtensionInfo>,
@@ -1382,17 +1382,17 @@ pub struct ListMerchantsReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetUserMqttReq {
     /// 用户 did
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// mqtt 凭证。**无 client_id** —— client_id 各服务自管(did/club 同时登 mqtt 时不互踢);
 /// username/password 设计上穿透(为将来动态密码留口)。商户可见 OK(邀请码注册可追责)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetUserMqttResp {
-    #[prost(string, tag = "1")]
-    pub username: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub password: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub username: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub password: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ── 商户公开信息 ─────────────────────────────────────────────────────
 /// 只放**能给前端看的**商户字段。目前只有 scheme。
@@ -1403,8 +1403,8 @@ pub struct GetUserMqttResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantPubSchemeResp {
     /// 商户业务 app 的回调 scheme;只有 scheme,别的一概不给
-    #[prost(string, tag = "1")]
-    pub scheme: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub scheme: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantPubServerResp {
@@ -1416,33 +1416,33 @@ pub struct MerchantPubServerResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantExDbResp {
     /// ExtendToken
-    #[prost(string, tag = "1")]
-    pub token: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub token: ::core::option::Option<::prost::alloc::string::String>,
     /// 扩展数据表名
-    #[prost(string, tag = "2")]
-    pub table: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub table: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 改商户的结算实体(收款/付款 server)。
-/// server 空 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
+/// server 不传 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetServerReq {
-    /// 结算实体 did;留空=恢复默认(master)
-    #[prost(string, tag = "1")]
-    pub server: ::prost::alloc::string::String,
+    /// 结算实体 did;不传=恢复默认(master)
+    #[prost(string, optional, tag = "1")]
+    pub server: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantNotifyReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub nonce: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub nonce: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OrderEventResp {
-    #[prost(string, tag = "1")]
-    pub event: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub payload: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub event: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub payload: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod merchant_client {
@@ -2590,8 +2590,8 @@ pub struct UpdateAddressesReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetWalletReq {
     /// did 从 token 取(自服务,不接受任意 did 入参)
-    #[prost(string, tag = "1")]
-    pub chain: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub chain: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetWalletResp {
@@ -2602,10 +2602,10 @@ pub struct GetWalletResp {
 pub mod get_wallet_resp {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Unit {
-        #[prost(string, tag = "1")]
-        pub chain: ::prost::alloc::string::String,
-        #[prost(string, tag = "2")]
-        pub address: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "1")]
+        pub chain: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "2")]
+        pub address: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2619,8 +2619,8 @@ pub mod list_addresses_req {
     pub struct Unit {
         #[prost(string, tag = "1")]
         pub did: ::prost::alloc::string::String,
-        #[prost(string, tag = "2")]
-        pub chain: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "2")]
+        pub chain: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2634,10 +2634,10 @@ pub mod list_addresses_resp {
     pub struct Unit {
         #[prost(string, tag = "1")]
         pub did: ::prost::alloc::string::String,
-        #[prost(string, tag = "2")]
-        pub chain: ::prost::alloc::string::String,
-        #[prost(string, tag = "3")]
-        pub address: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "2")]
+        pub chain: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "3")]
+        pub address: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 /// 计价币种:**只支持 cny / usd**,传其他值直接报错。
@@ -2649,25 +2649,25 @@ pub mod list_addresses_resp {
 /// 不做成 enum 是有意的:币种要扩展时 enum 的增删比字符串麻烦得多。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TotalAssetsReq {
-    #[prost(string, tag = "1")]
-    pub currency: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub currency: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TotalAssetsResp {
-    #[prost(string, tag = "1")]
-    pub n: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub n: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListUsersAssetsReq {
-    #[prost(string, tag = "1")]
-    pub currency: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub currency: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListUsersAssetsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<list_users_assets_resp::Unit>,
 }
@@ -2677,18 +2677,18 @@ pub mod list_users_assets_resp {
     pub struct Unit {
         #[prost(string, tag = "1")]
         pub did: ::prost::alloc::string::String,
-        #[prost(string, tag = "2")]
-        pub avatar: ::prost::alloc::string::String,
-        #[prost(string, tag = "3")]
-        pub n: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "2")]
+        pub avatar: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "3")]
+        pub n: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetUserAssetsReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 美元金额 = amount*price
 /// 人民币金额 = amount*price\*exchange
@@ -2697,8 +2697,8 @@ pub struct GetUserAssetsResp {
     #[prost(message, repeated, tag = "1")]
     pub unit: ::prost::alloc::vec::Vec<get_user_assets_resp::Unit>,
     /// 汇率：USD->CNY
-    #[prost(string, tag = "2")]
-    pub exchange: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub exchange: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Nested message and enum types in `GetUserAssetsResp`.
 pub mod get_user_assets_resp {
@@ -2706,14 +2706,14 @@ pub mod get_user_assets_resp {
     pub struct Unit {
         #[prost(message, optional, tag = "1")]
         pub coin: ::core::option::Option<super::Coin>,
-        #[prost(string, tag = "2")]
-        pub address: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "2")]
+        pub address: ::core::option::Option<::prost::alloc::string::String>,
         /// 金额
-        #[prost(string, tag = "3")]
-        pub amount: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "3")]
+        pub amount: ::core::option::Option<::prost::alloc::string::String>,
         /// 币价，单位USDT
-        #[prost(string, tag = "4")]
-        pub price: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "4")]
+        pub price: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 /// 刷新自己的资产快照。did 从 token 取(不接受任意 did 入参 —— 原 did 入参可覆写他人资产,越权)。
@@ -2728,10 +2728,10 @@ pub mod update_assets_req {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Asset {
         /// 币种标识:btc/eth/usdt_erc20/trx/usdt_trc20/sol/apt/...
-        #[prost(string, tag = "1")]
-        pub coin: ::prost::alloc::string::String,
-        #[prost(string, tag = "2")]
-        pub amount: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "1")]
+        pub coin: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "2")]
+        pub amount: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 /// Generated client implementations.
@@ -3075,22 +3075,22 @@ pub mod assets_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InviteCodeCreateResp {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
-    #[prost(bool, tag = "2")]
-    pub is_active: bool,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "2")]
+    pub is_active: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InviteCodeEditReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub note: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InviteCodeListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<invite_code_list_resp::Unit>,
 }
@@ -3098,41 +3098,41 @@ pub struct InviteCodeListResp {
 pub mod invite_code_list_resp {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Unit {
-        #[prost(string, tag = "1")]
-        pub code: ::prost::alloc::string::String,
-        #[prost(bool, tag = "2")]
-        pub is_active: bool,
-        #[prost(string, tag = "3")]
-        pub note: ::prost::alloc::string::String,
-        #[prost(int64, tag = "4")]
-        pub created_at: i64,
+        #[prost(string, optional, tag = "1")]
+        pub code: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(bool, optional, tag = "2")]
+        pub is_active: ::core::option::Option<bool>,
+        #[prost(string, optional, tag = "3")]
+        pub note: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(int64, optional, tag = "4")]
+        pub created_at: ::core::option::Option<i64>,
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InviteCodeDeleteReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InviteCodeVerifyReq {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, tag = "3")]
     pub did: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantManageListReq {
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantManageListResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<merchant_manage_list_resp::Unit>,
 }
@@ -3142,8 +3142,8 @@ pub mod merchant_manage_list_resp {
     pub struct Unit {
         #[prost(message, optional, tag = "1")]
         pub base: ::core::option::Option<super::MerchantInfo>,
-        #[prost(string, tag = "2")]
-        pub comment: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "2")]
+        pub comment: ::core::option::Option<::prost::alloc::string::String>,
         /// 该商户持有的权限位(仅超管可见)。空=普通商户,什么附加能力都没有。
         #[prost(
             enumeration = "super::MerchantPermission",
@@ -3158,8 +3158,8 @@ pub mod merchant_manage_list_resp {
 pub struct MerchantManageEditReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub comment: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub comment: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 超管给商户提权/降权。
 ///
@@ -3174,11 +3174,11 @@ pub struct MerchantSetPermissionReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     /// 要改的权限位
-    #[prost(enumeration = "MerchantPermission", tag = "2")]
-    pub perm: i32,
+    #[prost(enumeration = "MerchantPermission", optional, tag = "2")]
+    pub perm: ::core::option::Option<i32>,
     /// true=授予,false=撤销
-    #[prost(bool, tag = "3")]
-    pub granted: bool,
+    #[prost(bool, optional, tag = "3")]
+    pub granted: ::core::option::Option<bool>,
 }
 /// ═══════════════════════════════════════════════════════════════════════════
 /// 系统广播(超管面)—— 向固定主题 hi/v1/broadcast 发全体通知(所有 app/机器人订阅)。
@@ -3188,9 +3188,9 @@ pub struct MerchantSetPermissionReq {
 /// ═══════════════════════════════════════════════════════════════════════════
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BroadcastAppUpdateReq {
-    /// 目标 app:hidid/hiclub/hinj;空=all。进 Notice.ex_type,客户端按此过滤。
-    #[prost(string, tag = "1")]
-    pub app: ::prost::alloc::string::String,
+    /// 目标 app:hidid/hiclub/hinj;不传=all。进 Notice.ex_type,客户端按此过滤。
+    #[prost(string, optional, tag = "1")]
+    pub app: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 公共插件出了新版 —— 广播给全体机器人,而不是后台挨个去发。
 ///
@@ -3207,9 +3207,9 @@ pub struct BroadcastAppUpdateReq {
 /// 这也是这里只放 uuid 的另一半理由:uuid 就是过滤器本身。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BroadcastPluginUpdateReq {
-    /// 哪个插件的壳;空=让大家把自己的插件全都核对一遍
-    #[prost(string, tag = "1")]
-    pub plugin_uuid: ::prost::alloc::string::String,
+    /// 哪个插件的壳;不传=让大家把自己的插件全都核对一遍
+    #[prost(string, optional, tag = "1")]
+    pub plugin_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 商户权限位。**仅超管可读写**(提权/降权),商户自己看不到也改不了。
 ///
@@ -4189,11 +4189,11 @@ pub mod source_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct EditProfileReq {
     /// 昵称
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// 头像 url
-    #[prost(string, tag = "2")]
-    pub avatar: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod user_client {
@@ -4336,16 +4336,16 @@ pub mod user_client {
 pub struct Order {
     /// 订单号。**由三方定义,hidid 不解释它** —— GenerateReq 出的 req_id 是一种,
     /// 三方自己的业务单号(如插件市场的 `MKT-xxx`)也是一种,原样转给商户即可。
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     /// **商户DID**,不是付款人 —— 付款人是 SignedData 的签名者。
     /// hidid 按它查出商户注册的 endpoint,回调 `PayCallback.Pay`。
     /// 这正是"付款方不必认识三方接口"的支点:银行 app 不该知道美团的 API 长什么样。
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
     /// 链上交易 hash
-    #[prost(string, tag = "3")]
-    pub hash: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ── 明码标价的付款请求(reqid 带要素)───────────────────────────────────────
 ///
@@ -4365,26 +4365,26 @@ pub struct Order {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PayRequestSpec {
     /// 钱打到**这个 did 的地址**上 —— 结算实体(三方已解析好,hidid 不再转换)。
-    #[prost(string, tag = "1")]
-    pub payee_account: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub payee_account: ::core::option::Option<::prost::alloc::string::String>,
     /// 显示用:**谁在收款**。跳蚤市场下付款方是把钱给一个陌生主体,看不清收款人不该让他确认。
-    #[prost(string, tag = "2")]
-    pub payee_owner: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub payee_owner: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// 人类可读,如 "9.9"
-    #[prost(string, tag = "4")]
-    pub amount: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
     /// 三方业务单号。**付款方回执时原样填进 `Order.id`**,hidid 不解释它。
-    #[prost(string, tag = "5")]
-    pub order_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
     /// 把付款结果报给哪个商户(回执路由)。登记时由 hidid 按调用者身份填,**不收入参** ——
     /// 收了就等于让人把别人的付款结果引到自己这儿。
-    #[prost(string, tag = "6")]
-    pub merchant: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
     /// 秒;过期后 GetRequest 查不到
-    #[prost(int64, tag = "7")]
-    pub expire_at: i64,
+    #[prost(int64, optional, tag = "7")]
+    pub expire_at: ::core::option::Option<i64>,
 }
 /// PayRequestPayer —— **主体=付款方**(扫码的那个人):按号取要素。
 ///
@@ -4397,8 +4397,8 @@ pub struct PayRequestSpec {
 /// 载荷(SignedData.Data,JSON):`{"req_id":"M…"}`。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PayRequestQuery {
-    #[prost(string, tag = "1")]
-    pub req_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub req_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod pay_client {
@@ -4816,16 +4816,16 @@ pub mod packet {
 /// app-update:  app 有新版本(全体广播,走 `hi/v1/broadcast`,不是本主题)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Notice {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub from: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "4")]
     pub extra: ::core::option::Option<::pbjson_types::Any>,
-    #[prost(string, tag = "5")]
-    pub ex_type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub ex_type: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod notify_client {
@@ -4970,79 +4970,79 @@ pub mod notify_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReleaseFile {
     /// 相对安装根目录,如 bin/hinj_brain
-    #[prost(string, tag = "1")]
-    pub path: ::prost::alloc::string::String,
-    /// 该文件自身的版本,如 brain 的 0.6.0;没有就留空
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub path: ::core::option::Option<::prost::alloc::string::String>,
+    /// 该文件自身的版本,如 brain 的 0.6.0;没有就不传
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 客户端据此判断"本地这份要不要换"
-    #[prost(string, tag = "3")]
-    pub sha256: ::prost::alloc::string::String,
-    #[prost(int64, tag = "4")]
-    pub size: i64,
-    /// 八进制权限,如 "0755";空=沿用默认
-    #[prost(string, tag = "5")]
-    pub mode: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "4")]
+    pub size: ::core::option::Option<i64>,
+    /// 八进制权限,如 "0755";不传=沿用默认
+    #[prost(string, optional, tag = "5")]
+    pub mode: ::core::option::Option<::prost::alloc::string::String>,
     /// overwrite(默认) 覆盖 / keep 已存在就不动(用户配置,不可随机更改) /
     /// delete 本版要删掉的旧文件(否则升级只增不减,废文件越堆越多)
-    #[prost(string, tag = "6")]
-    pub policy: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub policy: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 整包信息。存 **path 不存 url** —— url 里带 host,换机器/换环境就全废;
 /// 且下载 url 是 `Latest` 每次现算的预签名(有期限),不该固化进 manifest。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReleaseBundle {
     /// **product 桶内**的对象键(不含桶名),如 hinj/linux-aarch64/0.0.9/hinj_bundle_0.0.9.tar.gz
-    #[prost(string, tag = "1")]
-    pub path: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub sha256: ::prost::alloc::string::String,
-    #[prost(int64, tag = "3")]
-    pub size: i64,
+    #[prost(string, optional, tag = "1")]
+    pub path: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "3")]
+    pub size: ::core::option::Option<i64>,
 }
 /// 发布清单 = latest.json 的内容。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReleaseManifest {
     /// hidid / hiclub / hinj
-    #[prost(string, tag = "1")]
-    pub product: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub product: ::core::option::Option<::prost::alloc::string::String>,
     /// android / ios / linux-aarch64 …
-    #[prost(string, tag = "2")]
-    pub platform: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub platform: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 低于它必须强制升级
-    #[prost(string, tag = "4")]
-    pub min_supported_version: ::prost::alloc::string::String,
-    #[prost(int64, tag = "5")]
-    pub release_time: i64,
+    #[prost(string, optional, tag = "4")]
+    pub min_supported_version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "5")]
+    pub release_time: ::core::option::Option<i64>,
     #[prost(string, repeated, tag = "6")]
     pub changes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "7")]
     pub bundle: ::core::option::Option<ReleaseBundle>,
     /// full  = 整包覆盖(安卓:下 apk 直接装);
     /// files = 按 files 逐个比 sha256,只拉不同的(机器人:有些配置不能动)
-    #[prost(string, tag = "8")]
-    pub update_mode: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub update_mode: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "9")]
     pub files: ::prost::alloc::vec::Vec<ReleaseFile>,
     /// **只在 Latest 的响应里现算**(预签名,有期限),不写进 latest.json。
-    #[prost(string, tag = "10")]
-    pub download_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "10")]
+    pub download_url: ::core::option::Option<::prost::alloc::string::String>,
     /// 该 url 的失效时刻(unix 秒)
-    #[prost(int64, tag = "11")]
-    pub download_url_expire: i64,
+    #[prost(int64, optional, tag = "11")]
+    pub download_url_expire: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadPackageResp {
     /// 落好的对象键,填进 Publish 的 manifest.bundle.path
-    #[prost(string, tag = "1")]
-    pub path: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub path: ::core::option::Option<::prost::alloc::string::String>,
     /// 服务端边写边算,供发布方核对
-    #[prost(string, tag = "2")]
-    pub sha256: ::prost::alloc::string::String,
-    #[prost(int64, tag = "3")]
-    pub size: i64,
+    #[prost(string, optional, tag = "2")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "3")]
+    pub size: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PublishReq {
@@ -5052,32 +5052,32 @@ pub struct PublishReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LatestReq {
     /// hidid / hiclub / hinj
-    #[prost(string, tag = "1")]
-    pub product: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub product: ::core::option::Option<::prost::alloc::string::String>,
     /// android / ios / linux-aarch64 …
-    #[prost(string, tag = "2")]
-    pub platform: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub platform: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadReq {
-    #[prost(string, tag = "1")]
-    pub product: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub platform: ::prost::alloc::string::String,
-    /// 留空=最新版
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub product: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub platform: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传=最新版
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 断点续传:从第几字节开始。机器人网络不稳,这个有用
-    #[prost(int64, tag = "4")]
-    pub offset: i64,
+    #[prost(int64, optional, tag = "4")]
+    pub offset: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadChunk {
-    #[prost(bytes = "vec", tag = "1")]
-    pub chunk: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", optional, tag = "1")]
+    pub chunk: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
     /// 整包大小,首块带上,便于显示进度
-    #[prost(int64, tag = "2")]
-    pub total: i64,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
 }
 /// Generated client implementations.
 pub mod release_manage_client {
@@ -5379,12 +5379,12 @@ pub struct GatewayConfigUnit {
     /// ⚠️ **这不是链标识**,别跟 `chain` 字段那套(btc/eth/trx/sol/aptos,见 wallet.proto)混。
     /// 它是"配哪个节点/服务商"的名字 —— 所以才会有 tatum(数据 API)、
     /// 以及 tron 拆成 grpc/http 两条。两套词汇长得像、含义不同,混用会静默查空。
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub url: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub api_key: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GatewayConfigListResp {

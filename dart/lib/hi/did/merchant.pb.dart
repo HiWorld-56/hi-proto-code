@@ -850,7 +850,7 @@ class ListGrantsResp extends $pb.GeneratedMessage {
 }
 
 /// ── 商户管理用户(扩展数据)的入参 ───────────────────────────────────
-/// merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权,requireGrant)。
+/// merchant 不传=自己(取 ExtendToken);传了=指定商户(须先获该商户授权,requireGrant)。
 /// ── 读自己名下的用户(Merchant,免 grant)──
 /// **没有 merchant 字段** —— 商户身份恒取自 ExtendToken。
 ///
@@ -1999,7 +1999,7 @@ class MerchantExDBResp extends $pb.GeneratedMessage {
 }
 
 /// 改商户的结算实体(收款/付款 server)。
-/// server 空 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
+/// server 不传 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
 class SetServerReq extends $pb.GeneratedMessage {
   factory SetServerReq({
     $core.String? server,

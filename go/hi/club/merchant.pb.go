@@ -27,13 +27,13 @@ const (
 
 // 列某商户名下的 greeter(扩展表 level >= 8)。
 //
-// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"空=自己",因为调用者本身
+// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"不传=自己",因为调用者本身
 //
 //	就是商户(ExtendToken 解出);club 的调用者是普通用户、不是商户,"自己"无从谈起。
 //	故这里不照搬 hi.did.ListGreetersReq —— 同名字段两种语义,是最容易出事的复用。
 type ListGreetersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Merchant      string                 `protobuf:"bytes,1,opt,name=merchant,proto3" json:"merchant,omitempty"` // 目标商户 did
+	Merchant      *string                `protobuf:"bytes,1,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"` // 目标商户 did
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -70,8 +70,8 @@ func (*ListGreetersReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListGreetersReq) GetMerchant() string {
-	if x != nil {
-		return x.Merchant
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
 	}
 	return ""
 }
@@ -87,12 +87,13 @@ var File_hi_club_merchant_proto protoreflect.FileDescriptor
 
 const file_hi_club_merchant_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/club/merchant.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"k\n" +
-	"\x0fListGreetersReq\x12(\n" +
-	"\bmerchant\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\bmerchant\x12.\n" +
+	"\x16hi/club/merchant.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"\x80\x01\n" +
+	"\x0fListGreetersReq\x120\n" +
+	"\bmerchant\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\bmerchant\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination2\x93\x01\n" +
+	"paginationB\v\n" +
+	"\t_merchant2\x93\x01\n" +
 	"\bMerchant\x12?\n" +
 	"\x04List\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
 	"\fListGreeters\x12\x18.hi.club.ListGreetersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x022I\n" +
@@ -140,6 +141,7 @@ func file_hi_club_merchant_proto_init() {
 	if File_hi_club_merchant_proto != nil {
 		return
 	}
+	file_hi_club_merchant_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -28,7 +28,7 @@ from hi import options_pb2 as hi_dot_options__pb2
 from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/club/ledger.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\x1a\x1b\x62uf/validate/validate.proto\"\xe7\x03\n\x0b\x46undsRecord\x12$\n\x04uuid\x18\x01 \x01(\tB\x10\xbaH\tr\x07\x32\x05^\\S+$\x90\xb5\x18\x03R\x04uuid\x12,\n\x04kind\x18\x02 \x01(\x0e\x32\x12.hi.club.FundsKindB\x04\x90\xb5\x18\x03R\x04kind\x12\x1a\n\x05payer\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x05payer\x12\x1a\n\x05payee\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12#\n\nto_address\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\ttoAddress\x12\x1a\n\x05\x63hain\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x05\x63hain\x12\x18\n\x04\x63oin\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03R\x04\x63oin\x12\x1c\n\x06\x61mount\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03R\x06\x61mount\x12\x16\n\x03\x66\x65\x65\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x03\x66\x65\x65\x12\x1f\n\x08\x66\x65\x65_coin\x18\n \x01(\tB\x04\x90\xb5\x18\x03R\x07\x66\x65\x65\x43oin\x12\x1d\n\x07tx_hash\x18\x0b \x01(\tB\x04\x90\xb5\x18\x03R\x06txHash\x12\x32\n\x06status\x18\x0c \x01(\x0e\x32\x14.hi.club.FundsStatusB\x04\x90\xb5\x18\x03R\x06status\x12\x1c\n\x06reason\x18\r \x01(\tB\x04\x90\xb5\x18\x03R\x06reason\x12#\n\ncreated_at\x18\x0e \x01(\x03\x42\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"P\n\x0cListFundsReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"E\n\rListFundsResp\x12.\n\x04list\x18\x01 \x03(\x0b\x32\x14.hi.club.FundsRecordB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03*T\n\tFundsKind\x12\x1a\n\x16\x46UNDS_KIND_UNSPECIFIED\x10\x00\x12\x17\n\x13\x46UNDS_KIND_WITHDRAW\x10\x01\x12\x12\n\x0e\x46UNDS_KIND_PAY\x10\x02*[\n\x0b\x46undsStatus\x12\x1c\n\x18\x46UNDS_STATUS_UNSPECIFIED\x10\x00\x12\x15\n\x11\x46UNDS_STATUS_SENT\x10\x01\x12\x17\n\x13\x46UNDS_STATUS_FAILED\x10\x02\x32\x85\x01\n\x06Ledger\x12=\n\x06Record\x12\x14.hi.club.FundsRecord\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n\x04List\x12\x15.hi.club.ListFundsReq\x1a\x16.hi.club.ListFundsResp\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/club/ledger.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\x1a\x1b\x62uf/validate/validate.proto\"\xc9\x05\n\x0b\x46undsRecord\x12,\n\x04uuid\x18\x01 \x01(\tB\x13\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12\x31\n\x04kind\x18\x02 \x01(\x0e\x32\x12.hi.club.FundsKindB\x04\x90\xb5\x18\x03H\x01R\x04kind\x88\x01\x01\x12\x1f\n\x05payer\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x05payer\x88\x01\x01\x12\x1f\n\x05payee\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05payee\x88\x01\x01\x12(\n\nto_address\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\ttoAddress\x88\x01\x01\x12\x1f\n\x05\x63hain\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x05\x63hain\x88\x01\x01\x12\x1d\n\x04\x63oin\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x04\x63oin\x88\x01\x01\x12!\n\x06\x61mount\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03H\x07R\x06\x61mount\x88\x01\x01\x12\x1b\n\x03\x66\x65\x65\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\x08R\x03\x66\x65\x65\x88\x01\x01\x12$\n\x08\x66\x65\x65_coin\x18\n \x01(\tB\x04\x90\xb5\x18\x03H\tR\x07\x66\x65\x65\x43oin\x88\x01\x01\x12\"\n\x07tx_hash\x18\x0b \x01(\tB\x04\x90\xb5\x18\x03H\nR\x06txHash\x88\x01\x01\x12\x37\n\x06status\x18\x0c \x01(\x0e\x32\x14.hi.club.FundsStatusB\x04\x90\xb5\x18\x03H\x0bR\x06status\x88\x01\x01\x12!\n\x06reason\x18\r \x01(\tB\x04\x90\xb5\x18\x03H\x0cR\x06reason\x88\x01\x01\x12(\n\ncreated_at\x18\x0e \x01(\x03\x42\x04\x90\xb5\x18\x03H\rR\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_uuidB\x07\n\x05_kindB\x08\n\x06_payerB\x08\n\x06_payeeB\r\n\x0b_to_addressB\x08\n\x06_chainB\x07\n\x05_coinB\t\n\x07_amountB\x06\n\x04_feeB\x0b\n\t_fee_coinB\n\n\x08_tx_hashB\t\n\x07_statusB\t\n\x07_reasonB\r\n\x0b_created_at\"P\n\x0cListFundsReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"E\n\rListFundsResp\x12.\n\x04list\x18\x01 \x03(\x0b\x32\x14.hi.club.FundsRecordB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03*T\n\tFundsKind\x12\x1a\n\x16\x46UNDS_KIND_UNSPECIFIED\x10\x00\x12\x17\n\x13\x46UNDS_KIND_WITHDRAW\x10\x01\x12\x12\n\x0e\x46UNDS_KIND_PAY\x10\x02*[\n\x0b\x46undsStatus\x12\x1c\n\x18\x46UNDS_STATUS_UNSPECIFIED\x10\x00\x12\x15\n\x11\x46UNDS_STATUS_SENT\x10\x01\x12\x17\n\x13\x46UNDS_STATUS_FAILED\x10\x02\x32\x85\x01\n\x06Ledger\x12=\n\x06Record\x12\x14.hi.club.FundsRecord\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n\x04List\x12\x15.hi.club.ListFundsReq\x1a\x16.hi.club.ListFundsResp\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,7 +37,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z)github.com/HiWorld-56/hi-proto/go/hi/club'
   _globals['_FUNDSRECORD'].fields_by_name['uuid']._loaded_options = None
-  _globals['_FUNDSRECORD'].fields_by_name['uuid']._serialized_options = b'\272H\tr\0072\005^\\S+$\220\265\030\003'
+  _globals['_FUNDSRECORD'].fields_by_name['uuid']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001\220\265\030\003'
   _globals['_FUNDSRECORD'].fields_by_name['kind']._loaded_options = None
   _globals['_FUNDSRECORD'].fields_by_name['kind']._serialized_options = b'\220\265\030\003'
   _globals['_FUNDSRECORD'].fields_by_name['payer']._loaded_options = None
@@ -74,16 +74,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_LEDGER'].methods_by_name['Record']._serialized_options = b'\212\265\030\001\002'
   _globals['_LEDGER'].methods_by_name['List']._loaded_options = None
   _globals['_LEDGER'].methods_by_name['List']._serialized_options = b'\212\265\030\001\002'
-  _globals['_FUNDSKIND']._serialized_start=769
-  _globals['_FUNDSKIND']._serialized_end=853
-  _globals['_FUNDSSTATUS']._serialized_start=855
-  _globals['_FUNDSSTATUS']._serialized_end=946
+  _globals['_FUNDSKIND']._serialized_start=995
+  _globals['_FUNDSKIND']._serialized_end=1079
+  _globals['_FUNDSSTATUS']._serialized_start=1081
+  _globals['_FUNDSSTATUS']._serialized_end=1172
   _globals['_FUNDSRECORD']._serialized_start=127
-  _globals['_FUNDSRECORD']._serialized_end=614
-  _globals['_LISTFUNDSREQ']._serialized_start=616
-  _globals['_LISTFUNDSREQ']._serialized_end=696
-  _globals['_LISTFUNDSRESP']._serialized_start=698
-  _globals['_LISTFUNDSRESP']._serialized_end=767
-  _globals['_LEDGER']._serialized_start=949
-  _globals['_LEDGER']._serialized_end=1082
+  _globals['_FUNDSRECORD']._serialized_end=840
+  _globals['_LISTFUNDSREQ']._serialized_start=842
+  _globals['_LISTFUNDSREQ']._serialized_end=922
+  _globals['_LISTFUNDSRESP']._serialized_start=924
+  _globals['_LISTFUNDSRESP']._serialized_end=993
+  _globals['_LEDGER']._serialized_start=1175
+  _globals['_LEDGER']._serialized_end=1308
 # @@protoc_insertion_point(module_scope)

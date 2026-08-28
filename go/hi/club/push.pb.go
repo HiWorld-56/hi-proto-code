@@ -26,7 +26,7 @@ const (
 type PushRegisterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Node          *hi.ClientInfo         `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
-	Token         string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"` // 设备Token
+	Token         *string                `protobuf:"bytes,2,opt,name=token,proto3,oneof" json:"token,omitempty"` // 设备Token
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -69,15 +69,15 @@ func (x *PushRegisterReq) GetNode() *hi.ClientInfo {
 }
 
 func (x *PushRegisterReq) GetToken() string {
-	if x != nil {
-		return x.Token
+	if x != nil && x.Token != nil {
+		return *x.Token
 	}
 	return ""
 }
 
 type PushUnregisterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"` // 设备Token
+	Token         *string                `protobuf:"bytes,1,opt,name=token,proto3,oneof" json:"token,omitempty"` // 设备Token
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -113,8 +113,8 @@ func (*PushUnregisterReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *PushUnregisterReq) GetToken() string {
-	if x != nil {
-		return x.Token
+	if x != nil && x.Token != nil {
+		return *x.Token
 	}
 	return ""
 }
@@ -123,12 +123,14 @@ var File_hi_club_push_proto protoreflect.FileDescriptor
 
 const file_hi_club_push_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/push.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"K\n" +
+	"\x12hi/club/push.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"Z\n" +
 	"\x0fPushRegisterReq\x12\"\n" +
-	"\x04node\x18\x01 \x01(\v2\x0e.hi.ClientInfoR\x04node\x12\x14\n" +
-	"\x05token\x18\x02 \x01(\tR\x05token\")\n" +
-	"\x11PushUnregisterReq\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token2\x9b\x01\n" +
+	"\x04node\x18\x01 \x01(\v2\x0e.hi.ClientInfoR\x04node\x12\x19\n" +
+	"\x05token\x18\x02 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
+	"\x06_token\"8\n" +
+	"\x11PushUnregisterReq\x12\x19\n" +
+	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
+	"\x06_token2\x9b\x01\n" +
 	"\vPushManager\x12C\n" +
 	"\bRegister\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
 	"\n" +
@@ -172,6 +174,8 @@ func file_hi_club_push_proto_init() {
 	if File_hi_club_push_proto != nil {
 		return
 	}
+	file_hi_club_push_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_push_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

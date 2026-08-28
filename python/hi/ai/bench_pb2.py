@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ai/bench.proto\x12\x05hi.ai\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x96\x02\n\x0e\x41gentDelayUnit\x12\x1a\n\x05\x61gent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05\x61gent\x12\x18\n\x04uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x18\n\x04type\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x16\n\x03llm\x18\x04 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x03llm\x12\x18\n\x04llm2\x18\x05 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x04llm2\x12\x16\n\x03stt\x18\x06 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x03stt\x12\x16\n\x03tts\x18\x07 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x03tts\x12)\n\rfunction_call\x18\x08 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x0c\x66unctionCall\x12!\n\ttest_time\x18\t \x01(\x03\x42\x04\x90\xb5\x18\x03R\x08testTime:\x04\x98\xb5\x18\x03\"X\n\x12ListAgentDelaysReq\x12\x12\n\x04type\x18\x01 \x01(\tR\x04type\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"\x82\x01\n\x18ListAgentDelayHistoryReq\x12\"\n\x05\x61gent\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x05\x61gent\x12\x12\n\x04type\x18\x02 \x01(\tR\x04type\x12.\n\npagination\x18\x03 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"j\n\x13ListAgentDelaysResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x05total\x12\x31\n\x05units\x18\x02 \x03(\x0b\x32\x15.hi.ai.AgentDelayUnitB\x04\x90\xb5\x18\x03R\x05units:\x04\x98\xb5\x18\x03\x32\xa5\x01\n\nAgentBench\x12\x44\n\x04List\x12\x19.hi.ai.ListAgentDelaysReq\x1a\x1a.hi.ai.ListAgentDelaysResp\"\x05\x8a\xb5\x18\x01\x03\x12Q\n\x0bListHistory\x12\x1f.hi.ai.ListAgentDelayHistoryReq\x1a\x1a.hi.ai.ListAgentDelaysResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ai/bench.proto\x12\x05hi.ai\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa0\x03\n\x0e\x41gentDelayUnit\x12\x1f\n\x05\x61gent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05\x61gent\x88\x01\x01\x12\x1d\n\x04uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04uuid\x88\x01\x01\x12\x1d\n\x04type\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04type\x88\x01\x01\x12\x1b\n\x03llm\x18\x04 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x03R\x03llm\x88\x01\x01\x12\x1d\n\x04llm2\x18\x05 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x04R\x04llm2\x88\x01\x01\x12\x1b\n\x03stt\x18\x06 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x05R\x03stt\x88\x01\x01\x12\x1b\n\x03tts\x18\x07 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x06R\x03tts\x88\x01\x01\x12.\n\rfunction_call\x18\x08 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x07R\x0c\x66unctionCall\x88\x01\x01\x12&\n\ttest_time\x18\t \x01(\x03\x42\x04\x90\xb5\x18\x03H\x08R\x08testTime\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_agentB\x07\n\x05_uuidB\x07\n\x05_typeB\x06\n\x04_llmB\x07\n\x05_llm2B\x06\n\x04_sttB\x06\n\x04_ttsB\x10\n\x0e_function_callB\x0c\n\n_test_time\"f\n\x12ListAgentDelaysReq\x12\x17\n\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x07\n\x05_type\"\xa2\x01\n\x18ListAgentDelayHistoryReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x12\x17\n\x04type\x18\x02 \x01(\tH\x01R\x04type\x88\x01\x01\x12.\n\npagination\x18\x03 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x08\n\x06_agentB\x07\n\x05_type\"y\n\x13ListAgentDelaysResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12\x31\n\x05units\x18\x02 \x03(\x0b\x32\x15.hi.ai.AgentDelayUnitB\x04\x90\xb5\x18\x03R\x05units:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total2\xa5\x01\n\nAgentBench\x12\x44\n\x04List\x12\x19.hi.ai.ListAgentDelaysReq\x1a\x1a.hi.ai.ListAgentDelaysResp\"\x05\x8a\xb5\x18\x01\x03\x12Q\n\x0bListHistory\x12\x1f.hi.ai.ListAgentDelayHistoryReq\x1a\x1a.hi.ai.ListAgentDelaysResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -56,7 +56,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AGENTDELAYUNIT']._loaded_options = None
   _globals['_AGENTDELAYUNIT']._serialized_options = b'\230\265\030\003'
   _globals['_LISTAGENTDELAYHISTORYREQ'].fields_by_name['agent']._loaded_options = None
-  _globals['_LISTAGENTDELAYHISTORYREQ'].fields_by_name['agent']._serialized_options = b'\272H\tr\0072\005^\\S+$'
+  _globals['_LISTAGENTDELAYHISTORYREQ'].fields_by_name['agent']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
   _globals['_LISTAGENTDELAYSRESP'].fields_by_name['total']._loaded_options = None
   _globals['_LISTAGENTDELAYSRESP'].fields_by_name['total']._serialized_options = b'\220\265\030\003'
   _globals['_LISTAGENTDELAYSRESP'].fields_by_name['units']._loaded_options = None
@@ -68,13 +68,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AGENTBENCH'].methods_by_name['ListHistory']._loaded_options = None
   _globals['_AGENTBENCH'].methods_by_name['ListHistory']._serialized_options = b'\212\265\030\001\003'
   _globals['_AGENTDELAYUNIT']._serialized_start=93
-  _globals['_AGENTDELAYUNIT']._serialized_end=371
-  _globals['_LISTAGENTDELAYSREQ']._serialized_start=373
-  _globals['_LISTAGENTDELAYSREQ']._serialized_end=461
-  _globals['_LISTAGENTDELAYHISTORYREQ']._serialized_start=464
-  _globals['_LISTAGENTDELAYHISTORYREQ']._serialized_end=594
-  _globals['_LISTAGENTDELAYSRESP']._serialized_start=596
-  _globals['_LISTAGENTDELAYSRESP']._serialized_end=702
-  _globals['_AGENTBENCH']._serialized_start=705
-  _globals['_AGENTBENCH']._serialized_end=870
+  _globals['_AGENTDELAYUNIT']._serialized_end=509
+  _globals['_LISTAGENTDELAYSREQ']._serialized_start=511
+  _globals['_LISTAGENTDELAYSREQ']._serialized_end=613
+  _globals['_LISTAGENTDELAYHISTORYREQ']._serialized_start=616
+  _globals['_LISTAGENTDELAYHISTORYREQ']._serialized_end=778
+  _globals['_LISTAGENTDELAYSRESP']._serialized_start=780
+  _globals['_LISTAGENTDELAYSRESP']._serialized_end=901
+  _globals['_AGENTBENCH']._serialized_start=904
+  _globals['_AGENTBENCH']._serialized_end=1069
 # @@protoc_insertion_point(module_scope)

@@ -6,12 +6,12 @@ impl serde::Serialize for DeleteReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.url.is_empty() {
+        if self.url.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.DeleteReq", len)?;
-        if !self.url.is_empty() {
-            struct_ser.serialize_field("url", &self.url)?;
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
         }
         struct_ser.end()
     }
@@ -77,12 +77,12 @@ impl<'de> serde::Deserialize<'de> for DeleteReq {
                             if url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("url"));
                             }
-                            url__ = Some(map_.next_value()?);
+                            url__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(DeleteReq {
-                    url: url__.unwrap_or_default(),
+                    url: url__,
                 })
             }
         }
@@ -97,12 +97,12 @@ impl serde::Serialize for DownloadReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.url.is_empty() {
+        if self.url.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.DownloadReq", len)?;
-        if !self.url.is_empty() {
-            struct_ser.serialize_field("url", &self.url)?;
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
         }
         struct_ser.end()
     }
@@ -168,12 +168,12 @@ impl<'de> serde::Deserialize<'de> for DownloadReq {
                             if url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("url"));
                             }
-                            url__ = Some(map_.next_value()?);
+                            url__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(DownloadReq {
-                    url: url__.unwrap_or_default(),
+                    url: url__,
                 })
             }
         }
@@ -188,14 +188,14 @@ impl serde::Serialize for DownloadResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.content.is_empty() {
+        if self.content.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.DownloadResp", len)?;
-        if !self.content.is_empty() {
+        if let Some(v) = self.content.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -262,13 +262,13 @@ impl<'de> serde::Deserialize<'de> for DownloadResp {
                                 return Err(serde::de::Error::duplicate_field("content"));
                             }
                             content__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(DownloadResp {
-                    content: content__.unwrap_or_default(),
+                    content: content__,
                 })
             }
         }
@@ -283,28 +283,28 @@ impl serde::Serialize for DownloadStreamReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.url.is_empty() {
+        if self.url.is_some() {
             len += 1;
         }
-        if self.offset != 0 {
+        if self.offset.is_some() {
             len += 1;
         }
-        if self.limit != 0 {
+        if self.limit.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.DownloadStreamReq", len)?;
-        if !self.url.is_empty() {
-            struct_ser.serialize_field("url", &self.url)?;
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
         }
-        if self.offset != 0 {
+        if let Some(v) = self.offset.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("offset", ToString::to_string(&self.offset).as_str())?;
+            struct_ser.serialize_field("offset", ToString::to_string(&v).as_str())?;
         }
-        if self.limit != 0 {
+        if let Some(v) = self.limit.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("limit", ToString::to_string(&self.limit).as_str())?;
+            struct_ser.serialize_field("limit", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -378,14 +378,14 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamReq {
                             if url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("url"));
                             }
-                            url__ = Some(map_.next_value()?);
+                            url__ = map_.next_value()?;
                         }
                         GeneratedField::Offset => {
                             if offset__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("offset"));
                             }
                             offset__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Limit => {
@@ -393,15 +393,15 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamReq {
                                 return Err(serde::de::Error::duplicate_field("limit"));
                             }
                             limit__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(DownloadStreamReq {
-                    url: url__.unwrap_or_default(),
-                    offset: offset__.unwrap_or_default(),
-                    limit: limit__.unwrap_or_default(),
+                    url: url__,
+                    offset: offset__,
+                    limit: limit__,
                 })
             }
         }
@@ -416,38 +416,38 @@ impl serde::Serialize for DownloadStreamResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.chunk.is_empty() {
+        if self.chunk.is_some() {
             len += 1;
         }
-        if self.sent != 0 {
+        if self.sent.is_some() {
             len += 1;
         }
-        if self.total != 0 {
+        if self.total.is_some() {
             len += 1;
         }
-        if self.offset != 0 {
+        if self.offset.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.DownloadStreamResp", len)?;
-        if !self.chunk.is_empty() {
+        if let Some(v) = self.chunk.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("chunk", pbjson::private::base64::encode(&self.chunk).as_str())?;
+            struct_ser.serialize_field("chunk", pbjson::private::base64::encode(&v).as_str())?;
         }
-        if self.sent != 0 {
+        if let Some(v) = self.sent.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("sent", ToString::to_string(&self.sent).as_str())?;
+            struct_ser.serialize_field("sent", ToString::to_string(&v).as_str())?;
         }
-        if self.total != 0 {
+        if let Some(v) = self.total.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("total", ToString::to_string(&self.total).as_str())?;
+            struct_ser.serialize_field("total", ToString::to_string(&v).as_str())?;
         }
-        if self.offset != 0 {
+        if let Some(v) = self.offset.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("offset", ToString::to_string(&self.offset).as_str())?;
+            struct_ser.serialize_field("offset", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -526,7 +526,7 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamResp {
                                 return Err(serde::de::Error::duplicate_field("chunk"));
                             }
                             chunk__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Sent => {
@@ -534,7 +534,7 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamResp {
                                 return Err(serde::de::Error::duplicate_field("sent"));
                             }
                             sent__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Total => {
@@ -542,7 +542,7 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamResp {
                                 return Err(serde::de::Error::duplicate_field("total"));
                             }
                             total__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Offset => {
@@ -550,16 +550,16 @@ impl<'de> serde::Deserialize<'de> for DownloadStreamResp {
                                 return Err(serde::de::Error::duplicate_field("offset"));
                             }
                             offset__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(DownloadStreamResp {
-                    chunk: chunk__.unwrap_or_default(),
-                    sent: sent__.unwrap_or_default(),
-                    total: total__.unwrap_or_default(),
-                    offset: offset__.unwrap_or_default(),
+                    chunk: chunk__,
+                    sent: sent__,
+                    total: total__,
+                    offset: offset__,
                 })
             }
         }
@@ -574,18 +574,18 @@ impl serde::Serialize for GetObjectReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.bucket.is_empty() {
+        if self.bucket.is_some() {
             len += 1;
         }
-        if !self.object.is_empty() {
+        if self.object.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.GetObjectReq", len)?;
-        if !self.bucket.is_empty() {
-            struct_ser.serialize_field("bucket", &self.bucket)?;
+        if let Some(v) = self.bucket.as_ref() {
+            struct_ser.serialize_field("bucket", v)?;
         }
-        if !self.object.is_empty() {
-            struct_ser.serialize_field("object", &self.object)?;
+        if let Some(v) = self.object.as_ref() {
+            struct_ser.serialize_field("object", v)?;
         }
         struct_ser.end()
     }
@@ -655,19 +655,19 @@ impl<'de> serde::Deserialize<'de> for GetObjectReq {
                             if bucket__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("bucket"));
                             }
-                            bucket__ = Some(map_.next_value()?);
+                            bucket__ = map_.next_value()?;
                         }
                         GeneratedField::Object => {
                             if object__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("object"));
                             }
-                            object__ = Some(map_.next_value()?);
+                            object__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(GetObjectReq {
-                    bucket: bucket__.unwrap_or_default(),
-                    object: object__.unwrap_or_default(),
+                    bucket: bucket__,
+                    object: object__,
                 })
             }
         }
@@ -682,14 +682,14 @@ impl serde::Serialize for GetObjectResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.content.is_empty() {
+        if self.content.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.GetObjectResp", len)?;
-        if !self.content.is_empty() {
+        if let Some(v) = self.content.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -756,13 +756,13 @@ impl<'de> serde::Deserialize<'de> for GetObjectResp {
                                 return Err(serde::de::Error::duplicate_field("content"));
                             }
                             content__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(GetObjectResp {
-                    content: content__.unwrap_or_default(),
+                    content: content__,
                 })
             }
         }
@@ -777,34 +777,34 @@ impl serde::Serialize for GetObjectStreamReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.bucket.is_empty() {
+        if self.bucket.is_some() {
             len += 1;
         }
-        if !self.object.is_empty() {
+        if self.object.is_some() {
             len += 1;
         }
-        if self.offset != 0 {
+        if self.offset.is_some() {
             len += 1;
         }
-        if self.limit != 0 {
+        if self.limit.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.GetObjectStreamReq", len)?;
-        if !self.bucket.is_empty() {
-            struct_ser.serialize_field("bucket", &self.bucket)?;
+        if let Some(v) = self.bucket.as_ref() {
+            struct_ser.serialize_field("bucket", v)?;
         }
-        if !self.object.is_empty() {
-            struct_ser.serialize_field("object", &self.object)?;
+        if let Some(v) = self.object.as_ref() {
+            struct_ser.serialize_field("object", v)?;
         }
-        if self.offset != 0 {
+        if let Some(v) = self.offset.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("offset", ToString::to_string(&self.offset).as_str())?;
+            struct_ser.serialize_field("offset", ToString::to_string(&v).as_str())?;
         }
-        if self.limit != 0 {
+        if let Some(v) = self.limit.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("limit", ToString::to_string(&self.limit).as_str())?;
+            struct_ser.serialize_field("limit", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -882,20 +882,20 @@ impl<'de> serde::Deserialize<'de> for GetObjectStreamReq {
                             if bucket__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("bucket"));
                             }
-                            bucket__ = Some(map_.next_value()?);
+                            bucket__ = map_.next_value()?;
                         }
                         GeneratedField::Object => {
                             if object__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("object"));
                             }
-                            object__ = Some(map_.next_value()?);
+                            object__ = map_.next_value()?;
                         }
                         GeneratedField::Offset => {
                             if offset__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("offset"));
                             }
                             offset__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Limit => {
@@ -903,16 +903,16 @@ impl<'de> serde::Deserialize<'de> for GetObjectStreamReq {
                                 return Err(serde::de::Error::duplicate_field("limit"));
                             }
                             limit__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(GetObjectStreamReq {
-                    bucket: bucket__.unwrap_or_default(),
-                    object: object__.unwrap_or_default(),
-                    offset: offset__.unwrap_or_default(),
-                    limit: limit__.unwrap_or_default(),
+                    bucket: bucket__,
+                    object: object__,
+                    offset: offset__,
+                    limit: limit__,
                 })
             }
         }
@@ -927,22 +927,22 @@ impl serde::Serialize for GetObjectStreamResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.content.is_empty() {
+        if self.content.is_some() {
             len += 1;
         }
-        if self.total != 0 {
+        if self.total.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.GetObjectStreamResp", len)?;
-        if !self.content.is_empty() {
+        if let Some(v) = self.content.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&v).as_str())?;
         }
-        if self.total != 0 {
+        if let Some(v) = self.total.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("total", ToString::to_string(&self.total).as_str())?;
+            struct_ser.serialize_field("total", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -1013,7 +1013,7 @@ impl<'de> serde::Deserialize<'de> for GetObjectStreamResp {
                                 return Err(serde::de::Error::duplicate_field("content"));
                             }
                             content__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Total => {
@@ -1021,14 +1021,14 @@ impl<'de> serde::Deserialize<'de> for GetObjectStreamResp {
                                 return Err(serde::de::Error::duplicate_field("total"));
                             }
                             total__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(GetObjectStreamResp {
-                    content: content__.unwrap_or_default(),
-                    total: total__.unwrap_or_default(),
+                    content: content__,
+                    total: total__,
                 })
             }
         }
@@ -1117,18 +1117,18 @@ impl serde::Serialize for ObjectInfoReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.bucket.is_empty() {
+        if self.bucket.is_some() {
             len += 1;
         }
-        if !self.object.is_empty() {
+        if self.object.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.ObjectInfoReq", len)?;
-        if !self.bucket.is_empty() {
-            struct_ser.serialize_field("bucket", &self.bucket)?;
+        if let Some(v) = self.bucket.as_ref() {
+            struct_ser.serialize_field("bucket", v)?;
         }
-        if !self.object.is_empty() {
-            struct_ser.serialize_field("object", &self.object)?;
+        if let Some(v) = self.object.as_ref() {
+            struct_ser.serialize_field("object", v)?;
         }
         struct_ser.end()
     }
@@ -1198,19 +1198,19 @@ impl<'de> serde::Deserialize<'de> for ObjectInfoReq {
                             if bucket__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("bucket"));
                             }
-                            bucket__ = Some(map_.next_value()?);
+                            bucket__ = map_.next_value()?;
                         }
                         GeneratedField::Object => {
                             if object__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("object"));
                             }
-                            object__ = Some(map_.next_value()?);
+                            object__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(ObjectInfoReq {
-                    bucket: bucket__.unwrap_or_default(),
-                    object: object__.unwrap_or_default(),
+                    bucket: bucket__,
+                    object: object__,
                 })
             }
         }
@@ -1225,20 +1225,20 @@ impl serde::Serialize for ObjectInfoResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.size != 0 {
+        if self.size.is_some() {
             len += 1;
         }
-        if !self.sha256.is_empty() {
+        if self.sha256.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.ObjectInfoResp", len)?;
-        if self.size != 0 {
+        if let Some(v) = self.size.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("size", ToString::to_string(&self.size).as_str())?;
+            struct_ser.serialize_field("size", ToString::to_string(&v).as_str())?;
         }
-        if !self.sha256.is_empty() {
-            struct_ser.serialize_field("sha256", &self.sha256)?;
+        if let Some(v) = self.sha256.as_ref() {
+            struct_ser.serialize_field("sha256", v)?;
         }
         struct_ser.end()
     }
@@ -1309,20 +1309,20 @@ impl<'de> serde::Deserialize<'de> for ObjectInfoResp {
                                 return Err(serde::de::Error::duplicate_field("size"));
                             }
                             size__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Sha256 => {
                             if sha256__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("sha256"));
                             }
-                            sha256__ = Some(map_.next_value()?);
+                            sha256__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(ObjectInfoResp {
-                    size: size__.unwrap_or_default(),
-                    sha256: sha256__.unwrap_or_default(),
+                    size: size__,
+                    sha256: sha256__,
                 })
             }
         }
@@ -1337,32 +1337,32 @@ impl serde::Serialize for PresignedUrlReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.bucket.is_empty() {
+        if self.bucket.is_some() {
             len += 1;
         }
-        if !self.object.is_empty() {
+        if self.object.is_some() {
             len += 1;
         }
-        if self.expire_seconds != 0 {
+        if self.expire_seconds.is_some() {
             len += 1;
         }
-        if !self.filename.is_empty() {
+        if self.filename.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.PresignedUrlReq", len)?;
-        if !self.bucket.is_empty() {
-            struct_ser.serialize_field("bucket", &self.bucket)?;
+        if let Some(v) = self.bucket.as_ref() {
+            struct_ser.serialize_field("bucket", v)?;
         }
-        if !self.object.is_empty() {
-            struct_ser.serialize_field("object", &self.object)?;
+        if let Some(v) = self.object.as_ref() {
+            struct_ser.serialize_field("object", v)?;
         }
-        if self.expire_seconds != 0 {
+        if let Some(v) = self.expire_seconds.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("expireSeconds", ToString::to_string(&self.expire_seconds).as_str())?;
+            struct_ser.serialize_field("expireSeconds", ToString::to_string(&v).as_str())?;
         }
-        if !self.filename.is_empty() {
-            struct_ser.serialize_field("filename", &self.filename)?;
+        if let Some(v) = self.filename.as_ref() {
+            struct_ser.serialize_field("filename", v)?;
         }
         struct_ser.end()
     }
@@ -1441,35 +1441,35 @@ impl<'de> serde::Deserialize<'de> for PresignedUrlReq {
                             if bucket__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("bucket"));
                             }
-                            bucket__ = Some(map_.next_value()?);
+                            bucket__ = map_.next_value()?;
                         }
                         GeneratedField::Object => {
                             if object__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("object"));
                             }
-                            object__ = Some(map_.next_value()?);
+                            object__ = map_.next_value()?;
                         }
                         GeneratedField::ExpireSeconds => {
                             if expire_seconds__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("expireSeconds"));
                             }
                             expire_seconds__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Filename => {
                             if filename__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("filename"));
                             }
-                            filename__ = Some(map_.next_value()?);
+                            filename__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(PresignedUrlReq {
-                    bucket: bucket__.unwrap_or_default(),
-                    object: object__.unwrap_or_default(),
-                    expire_seconds: expire_seconds__.unwrap_or_default(),
-                    filename: filename__.unwrap_or_default(),
+                    bucket: bucket__,
+                    object: object__,
+                    expire_seconds: expire_seconds__,
+                    filename: filename__,
                 })
             }
         }
@@ -1484,20 +1484,20 @@ impl serde::Serialize for PresignedUrlResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.url.is_empty() {
+        if self.url.is_some() {
             len += 1;
         }
-        if self.expire_at != 0 {
+        if self.expire_at.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.PresignedUrlResp", len)?;
-        if !self.url.is_empty() {
-            struct_ser.serialize_field("url", &self.url)?;
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
         }
-        if self.expire_at != 0 {
+        if let Some(v) = self.expire_at.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("expireAt", ToString::to_string(&self.expire_at).as_str())?;
+            struct_ser.serialize_field("expireAt", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -1568,21 +1568,21 @@ impl<'de> serde::Deserialize<'de> for PresignedUrlResp {
                             if url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("url"));
                             }
-                            url__ = Some(map_.next_value()?);
+                            url__ = map_.next_value()?;
                         }
                         GeneratedField::ExpireAt => {
                             if expire_at__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("expireAt"));
                             }
                             expire_at__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(PresignedUrlResp {
-                    url: url__.unwrap_or_default(),
-                    expire_at: expire_at__.unwrap_or_default(),
+                    url: url__,
+                    expire_at: expire_at__,
                 })
             }
         }
@@ -1597,38 +1597,38 @@ impl serde::Serialize for PutMeta {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.bucket.is_empty() {
+        if self.bucket.is_some() {
             len += 1;
         }
-        if !self.dir.is_empty() {
+        if self.dir.is_some() {
             len += 1;
         }
-        if !self.name.is_empty() {
+        if self.name.is_some() {
             len += 1;
         }
-        if self.size != 0 {
+        if self.size.is_some() {
             len += 1;
         }
-        if self.thumbnail {
+        if self.thumbnail.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.PutMeta", len)?;
-        if !self.bucket.is_empty() {
-            struct_ser.serialize_field("bucket", &self.bucket)?;
+        if let Some(v) = self.bucket.as_ref() {
+            struct_ser.serialize_field("bucket", v)?;
         }
-        if !self.dir.is_empty() {
-            struct_ser.serialize_field("dir", &self.dir)?;
+        if let Some(v) = self.dir.as_ref() {
+            struct_ser.serialize_field("dir", v)?;
         }
-        if !self.name.is_empty() {
-            struct_ser.serialize_field("name", &self.name)?;
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
         }
-        if self.size != 0 {
+        if let Some(v) = self.size.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("size", ToString::to_string(&self.size).as_str())?;
+            struct_ser.serialize_field("size", ToString::to_string(&v).as_str())?;
         }
-        if self.thumbnail {
-            struct_ser.serialize_field("thumbnail", &self.thumbnail)?;
+        if let Some(v) = self.thumbnail.as_ref() {
+            struct_ser.serialize_field("thumbnail", v)?;
         }
         struct_ser.end()
     }
@@ -1710,42 +1710,42 @@ impl<'de> serde::Deserialize<'de> for PutMeta {
                             if bucket__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("bucket"));
                             }
-                            bucket__ = Some(map_.next_value()?);
+                            bucket__ = map_.next_value()?;
                         }
                         GeneratedField::Dir => {
                             if dir__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("dir"));
                             }
-                            dir__ = Some(map_.next_value()?);
+                            dir__ = map_.next_value()?;
                         }
                         GeneratedField::Name => {
                             if name__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("name"));
                             }
-                            name__ = Some(map_.next_value()?);
+                            name__ = map_.next_value()?;
                         }
                         GeneratedField::Size => {
                             if size__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("size"));
                             }
                             size__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Thumbnail => {
                             if thumbnail__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("thumbnail"));
                             }
-                            thumbnail__ = Some(map_.next_value()?);
+                            thumbnail__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(PutMeta {
-                    bucket: bucket__.unwrap_or_default(),
-                    dir: dir__.unwrap_or_default(),
-                    name: name__.unwrap_or_default(),
-                    size: size__.unwrap_or_default(),
-                    thumbnail: thumbnail__.unwrap_or_default(),
+                    bucket: bucket__,
+                    dir: dir__,
+                    name: name__,
+                    size: size__,
+                    thumbnail: thumbnail__,
                 })
             }
         }
@@ -1760,26 +1760,26 @@ impl serde::Serialize for PutObjectReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.bucket.is_empty() {
+        if self.bucket.is_some() {
             len += 1;
         }
-        if !self.object.is_empty() {
+        if self.object.is_some() {
             len += 1;
         }
-        if !self.content.is_empty() {
+        if self.content.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.PutObjectReq", len)?;
-        if !self.bucket.is_empty() {
-            struct_ser.serialize_field("bucket", &self.bucket)?;
+        if let Some(v) = self.bucket.as_ref() {
+            struct_ser.serialize_field("bucket", v)?;
         }
-        if !self.object.is_empty() {
-            struct_ser.serialize_field("object", &self.object)?;
+        if let Some(v) = self.object.as_ref() {
+            struct_ser.serialize_field("object", v)?;
         }
-        if !self.content.is_empty() {
+        if let Some(v) = self.content.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -1853,28 +1853,28 @@ impl<'de> serde::Deserialize<'de> for PutObjectReq {
                             if bucket__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("bucket"));
                             }
-                            bucket__ = Some(map_.next_value()?);
+                            bucket__ = map_.next_value()?;
                         }
                         GeneratedField::Object => {
                             if object__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("object"));
                             }
-                            object__ = Some(map_.next_value()?);
+                            object__ = map_.next_value()?;
                         }
                         GeneratedField::Content => {
                             if content__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("content"));
                             }
                             content__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(PutObjectReq {
-                    bucket: bucket__.unwrap_or_default(),
-                    object: object__.unwrap_or_default(),
-                    content: content__.unwrap_or_default(),
+                    bucket: bucket__,
+                    object: object__,
+                    content: content__,
                 })
             }
         }
@@ -1889,45 +1889,45 @@ impl serde::Serialize for PutReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.bucket.is_empty() {
+        if self.bucket.is_some() {
             len += 1;
         }
-        if !self.dir.is_empty() {
+        if self.dir.is_some() {
             len += 1;
         }
-        if !self.name.is_empty() {
+        if self.name.is_some() {
             len += 1;
         }
-        if !self.content.is_empty() {
+        if self.content.is_some() {
             len += 1;
         }
-        if self.thumbnail {
+        if self.thumbnail.is_some() {
             len += 1;
         }
-        if self.name_mode != 0 {
+        if self.name_mode.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.source.PutReq", len)?;
-        if !self.bucket.is_empty() {
-            struct_ser.serialize_field("bucket", &self.bucket)?;
+        if let Some(v) = self.bucket.as_ref() {
+            struct_ser.serialize_field("bucket", v)?;
         }
-        if !self.dir.is_empty() {
-            struct_ser.serialize_field("dir", &self.dir)?;
+        if let Some(v) = self.dir.as_ref() {
+            struct_ser.serialize_field("dir", v)?;
         }
-        if !self.name.is_empty() {
-            struct_ser.serialize_field("name", &self.name)?;
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
         }
-        if !self.content.is_empty() {
+        if let Some(v) = self.content.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("content", pbjson::private::base64::encode(&self.content).as_str())?;
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&v).as_str())?;
         }
-        if self.thumbnail {
-            struct_ser.serialize_field("thumbnail", &self.thumbnail)?;
+        if let Some(v) = self.thumbnail.as_ref() {
+            struct_ser.serialize_field("thumbnail", v)?;
         }
-        if self.name_mode != 0 {
-            let v = NameMode::try_from(self.name_mode)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.name_mode)))?;
+        if let Some(v) = self.name_mode.as_ref() {
+            let v = NameMode::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("nameMode", &v)?;
         }
         struct_ser.end()
@@ -2015,49 +2015,49 @@ impl<'de> serde::Deserialize<'de> for PutReq {
                             if bucket__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("bucket"));
                             }
-                            bucket__ = Some(map_.next_value()?);
+                            bucket__ = map_.next_value()?;
                         }
                         GeneratedField::Dir => {
                             if dir__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("dir"));
                             }
-                            dir__ = Some(map_.next_value()?);
+                            dir__ = map_.next_value()?;
                         }
                         GeneratedField::Name => {
                             if name__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("name"));
                             }
-                            name__ = Some(map_.next_value()?);
+                            name__ = map_.next_value()?;
                         }
                         GeneratedField::Content => {
                             if content__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("content"));
                             }
                             content__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Thumbnail => {
                             if thumbnail__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("thumbnail"));
                             }
-                            thumbnail__ = Some(map_.next_value()?);
+                            thumbnail__ = map_.next_value()?;
                         }
                         GeneratedField::NameMode => {
                             if name_mode__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("nameMode"));
                             }
-                            name_mode__ = Some(map_.next_value::<NameMode>()? as i32);
+                            name_mode__ = map_.next_value::<::std::option::Option<NameMode>>()?.map(|x| x as i32);
                         }
                     }
                 }
                 Ok(PutReq {
-                    bucket: bucket__.unwrap_or_default(),
-                    dir: dir__.unwrap_or_default(),
-                    name: name__.unwrap_or_default(),
-                    content: content__.unwrap_or_default(),
-                    thumbnail: thumbnail__.unwrap_or_default(),
-                    name_mode: name_mode__.unwrap_or_default(),
+                    bucket: bucket__,
+                    dir: dir__,
+                    name: name__,
+                    content: content__,
+                    thumbnail: thumbnail__,
+                    name_mode: name_mode__,
                 })
             }
         }

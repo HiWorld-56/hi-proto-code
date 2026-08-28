@@ -24,9 +24,9 @@ const (
 
 type SynthesizeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Text          string                 `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
-	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
-	Style         string                 `protobuf:"bytes,3,opt,name=style,proto3" json:"style,omitempty"`
+	Text          *string                `protobuf:"bytes,1,opt,name=text,proto3,oneof" json:"text,omitempty"`
+	Model         *string                `protobuf:"bytes,2,opt,name=model,proto3,oneof" json:"model,omitempty"`
+	Style         *string                `protobuf:"bytes,3,opt,name=style,proto3,oneof" json:"style,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -62,29 +62,29 @@ func (*SynthesizeReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SynthesizeReq) GetText() string {
-	if x != nil {
-		return x.Text
+	if x != nil && x.Text != nil {
+		return *x.Text
 	}
 	return ""
 }
 
 func (x *SynthesizeReq) GetModel() string {
-	if x != nil {
-		return x.Model
+	if x != nil && x.Model != nil {
+		return *x.Model
 	}
 	return ""
 }
 
 func (x *SynthesizeReq) GetStyle() string {
-	if x != nil {
-		return x.Style
+	if x != nil && x.Style != nil {
+		return *x.Style
 	}
 	return ""
 }
 
 type SynthesizeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"` // 合成音频 url
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"` // 合成音频 url
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -120,17 +120,17 @@ func (*SynthesizeResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *SynthesizeResp) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
 
 type TranscribeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`     // 音频 url(从 HiSource 下载)
-	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"` // whisper-1 / whisper-hiai
-	Lang          string                 `protobuf:"bytes,3,opt,name=lang,proto3" json:"lang,omitempty"`
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"`     // 音频 url(从 HiSource 下载)
+	Model         *string                `protobuf:"bytes,2,opt,name=model,proto3,oneof" json:"model,omitempty"` // whisper-1 / whisper-hiai
+	Lang          *string                `protobuf:"bytes,3,opt,name=lang,proto3,oneof" json:"lang,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -166,29 +166,29 @@ func (*TranscribeReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *TranscribeReq) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
 
 func (x *TranscribeReq) GetModel() string {
-	if x != nil {
-		return x.Model
+	if x != nil && x.Model != nil {
+		return *x.Model
 	}
 	return ""
 }
 
 func (x *TranscribeReq) GetLang() string {
-	if x != nil {
-		return x.Lang
+	if x != nil && x.Lang != nil {
+		return *x.Lang
 	}
 	return ""
 }
 
 type TranscribeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Text          string                 `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
+	Text          *string                `protobuf:"bytes,1,opt,name=text,proto3,oneof" json:"text,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -224,8 +224,8 @@ func (*TranscribeResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *TranscribeResp) GetText() string {
-	if x != nil {
-		return x.Text
+	if x != nil && x.Text != nil {
+		return *x.Text
 	}
 	return ""
 }
@@ -234,19 +234,27 @@ var File_hi_ai_speech_proto protoreflect.FileDescriptor
 
 const file_hi_ai_speech_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\"O\n" +
-	"\rSynthesizeReq\x12\x12\n" +
-	"\x04text\x18\x01 \x01(\tR\x04text\x12\x14\n" +
-	"\x05model\x18\x02 \x01(\tR\x05model\x12\x14\n" +
-	"\x05style\x18\x03 \x01(\tR\x05style\".\n" +
-	"\x0eSynthesizeResp\x12\x16\n" +
-	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03url:\x04\x98\xb5\x18\x03\"K\n" +
-	"\rTranscribeReq\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x14\n" +
-	"\x05model\x18\x02 \x01(\tR\x05model\x12\x12\n" +
-	"\x04lang\x18\x03 \x01(\tR\x04lang\"0\n" +
-	"\x0eTranscribeResp\x12\x18\n" +
-	"\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04text:\x04\x98\xb5\x18\x032\x8c\x01\n" +
+	"\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\"{\n" +
+	"\rSynthesizeReq\x12\x17\n" +
+	"\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x19\n" +
+	"\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x19\n" +
+	"\x05style\x18\x03 \x01(\tH\x02R\x05style\x88\x01\x01B\a\n" +
+	"\x05_textB\b\n" +
+	"\x06_modelB\b\n" +
+	"\x06_style\";\n" +
+	"\x0eSynthesizeResp\x12\x1b\n" +
+	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03url\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
+	"\x04_url\"u\n" +
+	"\rTranscribeReq\x12\x15\n" +
+	"\x03url\x18\x01 \x01(\tH\x00R\x03url\x88\x01\x01\x12\x19\n" +
+	"\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x17\n" +
+	"\x04lang\x18\x03 \x01(\tH\x02R\x04lang\x88\x01\x01B\x06\n" +
+	"\x04_urlB\b\n" +
+	"\x06_modelB\a\n" +
+	"\x05_lang\">\n" +
+	"\x0eTranscribeResp\x12\x1d\n" +
+	"\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04text\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_text2\x8c\x01\n" +
 	"\x06Speech\x12@\n" +
 	"\n" +
 	"Transcribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
@@ -290,6 +298,10 @@ func file_hi_ai_speech_proto_init() {
 	if File_hi_ai_speech_proto != nil {
 		return
 	}
+	file_hi_ai_speech_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ai_speech_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ai_speech_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_ai_speech_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

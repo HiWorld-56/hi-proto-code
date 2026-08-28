@@ -110,9 +110,9 @@ func (x *PluginAnnex) GetData() *structpb.Struct {
 
 type RunReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"` // = 激活版 b.url
-	CodeParams     string                 `protobuf:"bytes,2,opt,name=code_params,json=codeParams,proto3" json:"code_params,omitempty"`               // function-call 的 arguments(JSON 对象),按 ** 展开成关键字实参
-	Uuid           string                 `protobuf:"bytes,3,opt,name=uuid,proto3" json:"uuid,omitempty"`                                             // 壳 uuid
+	CodeArchiveUrl *string                `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3,oneof" json:"code_archive_url,omitempty"` // = 激活版 b.url
+	CodeParams     *string                `protobuf:"bytes,2,opt,name=code_params,json=codeParams,proto3,oneof" json:"code_params,omitempty"`               // function-call 的 arguments(JSON 对象),按 ** 展开成关键字实参
+	Uuid           *string                `protobuf:"bytes,3,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                                             // 壳 uuid
 	Envs           []string               `protobuf:"bytes,4,rep,name=envs,proto3" json:"envs,omitempty"`
 	Annex          *PluginAnnex           `protobuf:"bytes,5,opt,name=annex,proto3" json:"annex,omitempty"` // → 字典全局变量 plugin_annex
 	// 要调包里的哪个方法。**必传**,且是 main.py 里的**原始函数名**(不带壳前缀)。
@@ -124,7 +124,7 @@ type RunReq struct {
 	// ⚠️ **不要把带前缀的名字传进来。** 喂给模型的工具名是 `<壳前缀>_<原名>`
 	// (前缀保证不同插件包的同名方法不撞,见 hi/ai/plugin.proto 的 PluginVersion.description),
 	// 但那是 hiai↔模型之间的事 —— 前缀在 hiai 侧切掉,包里和这里只认原始名。
-	Function string `protobuf:"bytes,6,opt,name=function,proto3" json:"function,omitempty"`
+	Function *string `protobuf:"bytes,6,opt,name=function,proto3,oneof" json:"function,omitempty"`
 	// ── 本轮的两个身份 → 注入成脚本里的 plugin_builtin.asker / .master ───────────
 	//
 	// 与 `annex` 同为**注入面**(模型看不见、用户改不了),但**来源完全不同**:
@@ -132,8 +132,8 @@ type RunReq struct {
 	// 这两个是**本轮对话现取的**。所以合并进 plugin_builtin 时
 	// **内置键最后写、无条件覆盖** —— 否则用户在版本扩展数据里填一个同名键就能冒名,
 	// 而且静默。
-	Asker         string `protobuf:"bytes,7,opt,name=asker,proto3" json:"asker,omitempty"`   // 这句话是谁说的;**空 = 匿名**(如现场语音)。消息事实,不是权限凭据
-	Master        string `protobuf:"bytes,8,opt,name=master,proto3" json:"master,omitempty"` // 这台机器人的主人,**服务端现取的权威值**;判权限与动钱都用它
+	Asker         *string `protobuf:"bytes,7,opt,name=asker,proto3,oneof" json:"asker,omitempty"`   // 这句话是谁说的;**不传 = 匿名**(如现场语音)。消息事实,不是权限凭据
+	Master        *string `protobuf:"bytes,8,opt,name=master,proto3,oneof" json:"master,omitempty"` // 这台机器人的主人,**服务端现取的权威值**;判权限与动钱都用它
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -169,22 +169,22 @@ func (*RunReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *RunReq) GetCodeArchiveUrl() string {
-	if x != nil {
-		return x.CodeArchiveUrl
+	if x != nil && x.CodeArchiveUrl != nil {
+		return *x.CodeArchiveUrl
 	}
 	return ""
 }
 
 func (x *RunReq) GetCodeParams() string {
-	if x != nil {
-		return x.CodeParams
+	if x != nil && x.CodeParams != nil {
+		return *x.CodeParams
 	}
 	return ""
 }
 
 func (x *RunReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
@@ -204,22 +204,22 @@ func (x *RunReq) GetAnnex() *PluginAnnex {
 }
 
 func (x *RunReq) GetFunction() string {
-	if x != nil {
-		return x.Function
+	if x != nil && x.Function != nil {
+		return *x.Function
 	}
 	return ""
 }
 
 func (x *RunReq) GetAsker() string {
-	if x != nil {
-		return x.Asker
+	if x != nil && x.Asker != nil {
+		return *x.Asker
 	}
 	return ""
 }
 
 func (x *RunReq) GetMaster() string {
-	if x != nil {
-		return x.Master
+	if x != nil && x.Master != nil {
+		return *x.Master
 	}
 	return ""
 }
@@ -341,15 +341,16 @@ func (x *CleanupReq) GetCodeArchiveUrl() string {
 // 而他真正需要的是那段 `error[E0432]`。
 type BuildReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"` // rust 源码包 zip(= 这一版的 b.url)
-	Uuid           string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`                                             // 壳 uuid(产物命名与日志用)
-	Version        string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`                                       // 版本号
+	CodeArchiveUrl *string                `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3,oneof" json:"code_archive_url,omitempty"` // rust 源码包 zip(= 这一版的 b.url)
+	Uuid           *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                                             // 壳 uuid(产物命名与日志用)
+	Version        *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`                                       // 版本号
 	// 目标架构:`aarch64` / `x86_64`(与 rust 的 `std::env::consts::ARCH` 同名,
 	// 机器人上报的就是那个常量 —— 两边用同一套词,省掉一层映射)。
 	//
-	// ⚠️ **空 = aarch64**。老调用方(还没跟上的 hi-ai)发不带这个字段的请求,
+	// ⚠️ **不传 = aarch64**。老调用方(还没跟上的 hi-ai)发不带这个字段的请求,
 	// 编出来的仍是硬件机器人那一份 —— 而不是编出个谁也装不上的东西。
-	Arch          string `protobuf:"bytes,4,opt,name=arch,proto3" json:"arch,omitempty"`
+	// ⛔ 空串不是合法值:要么不传,要么给真架构名。
+	Arch          *string `protobuf:"bytes,4,opt,name=arch,proto3,oneof" json:"arch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -385,29 +386,29 @@ func (*BuildReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *BuildReq) GetCodeArchiveUrl() string {
-	if x != nil {
-		return x.CodeArchiveUrl
+	if x != nil && x.CodeArchiveUrl != nil {
+		return *x.CodeArchiveUrl
 	}
 	return ""
 }
 
 func (x *BuildReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *BuildReq) GetVersion() string {
-	if x != nil {
-		return x.Version
+	if x != nil && x.Version != nil {
+		return *x.Version
 	}
 	return ""
 }
 
 func (x *BuildReq) GetArch() string {
-	if x != nil {
-		return x.Arch
+	if x != nil && x.Arch != nil {
+		return *x.Arch
 	}
 	return ""
 }
@@ -415,19 +416,19 @@ func (x *BuildReq) GetArch() string {
 type BuildResp struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 编出来了没有。**false 时 rpc 本身仍是成功的**,理由见上。
-	Ok          bool   `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
-	ArtifactUrl string `protobuf:"bytes,2,opt,name=artifact_url,json=artifactUrl,proto3" json:"artifact_url,omitempty"` // 编好的 .so(hiai 私有桶)
-	Sha256      string `protobuf:"bytes,3,opt,name=sha256,proto3" json:"sha256,omitempty"`                              // 产物摘要,机器人下完照此核对
+	Ok          *bool   `protobuf:"varint,1,opt,name=ok,proto3,oneof" json:"ok,omitempty"`
+	ArtifactUrl *string `protobuf:"bytes,2,opt,name=artifact_url,json=artifactUrl,proto3,oneof" json:"artifact_url,omitempty"` // 编好的 .so(hiai 私有桶)
+	Sha256      *string `protobuf:"bytes,3,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`                              // 产物摘要,机器人下完照此核对
 	// 从**编出来的那个 `.so` 里真读出来的** ABI 版本(qemu 跑 aarch64 verifier 得到),
 	// 不是从源码或 Cargo.toml 猜的。x86 上 dlopen 不了 aarch64 的 .so,
 	// 只查 ELF machine + 导出符号是查不出这个值的。
-	AbiVersion uint32 `protobuf:"varint,4,opt,name=abi_version,json=abiVersion,proto3" json:"abi_version,omitempty"`
+	AbiVersion *uint32 `protobuf:"varint,4,opt,name=abi_version,json=abiVersion,proto3,oneof" json:"abi_version,omitempty"`
 	// 同样是从 .so 里真读出来的 manifest(OpenAI tools 数组,**原始名、不带壳前缀**)。
 	// hi-ai 拿它跟包里的 description.json 比对 —— 两者不一致说明作者改了 json 却没改代码
 	// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
-	Manifest      string `protobuf:"bytes,5,opt,name=manifest,proto3" json:"manifest,omitempty"`
-	Error         string `protobuf:"bytes,6,opt,name=error,proto3" json:"error,omitempty"` // 失败原因(给发版的人看的一句话)
-	Log           string `protobuf:"bytes,7,opt,name=log,proto3" json:"log,omitempty"`     // 编译日志尾部(失败时才有意义)
+	Manifest      *string `protobuf:"bytes,5,opt,name=manifest,proto3,oneof" json:"manifest,omitempty"`
+	Error         *string `protobuf:"bytes,6,opt,name=error,proto3,oneof" json:"error,omitempty"` // 失败原因(给发版的人看的一句话)
+	Log           *string `protobuf:"bytes,7,opt,name=log,proto3,oneof" json:"log,omitempty"`     // 编译日志尾部(失败时才有意义)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -463,50 +464,50 @@ func (*BuildResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *BuildResp) GetOk() bool {
-	if x != nil {
-		return x.Ok
+	if x != nil && x.Ok != nil {
+		return *x.Ok
 	}
 	return false
 }
 
 func (x *BuildResp) GetArtifactUrl() string {
-	if x != nil {
-		return x.ArtifactUrl
+	if x != nil && x.ArtifactUrl != nil {
+		return *x.ArtifactUrl
 	}
 	return ""
 }
 
 func (x *BuildResp) GetSha256() string {
-	if x != nil {
-		return x.Sha256
+	if x != nil && x.Sha256 != nil {
+		return *x.Sha256
 	}
 	return ""
 }
 
 func (x *BuildResp) GetAbiVersion() uint32 {
-	if x != nil {
-		return x.AbiVersion
+	if x != nil && x.AbiVersion != nil {
+		return *x.AbiVersion
 	}
 	return 0
 }
 
 func (x *BuildResp) GetManifest() string {
-	if x != nil {
-		return x.Manifest
+	if x != nil && x.Manifest != nil {
+		return *x.Manifest
 	}
 	return ""
 }
 
 func (x *BuildResp) GetError() string {
-	if x != nil {
-		return x.Error
+	if x != nil && x.Error != nil {
+		return *x.Error
 	}
 	return ""
 }
 
 func (x *BuildResp) GetLog() string {
-	if x != nil {
-		return x.Log
+	if x != nil && x.Log != nil {
+		return *x.Log
 	}
 	return ""
 }
@@ -517,36 +518,54 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\n" +
 	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\":\n" +
 	"\vPluginAnnex\x12+\n" +
-	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xf6\x01\n" +
-	"\x06RunReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x1f\n" +
-	"\vcode_params\x18\x02 \x01(\tR\n" +
-	"codeParams\x12\x12\n" +
-	"\x04uuid\x18\x03 \x01(\tR\x04uuid\x12\x12\n" +
+	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xe4\x02\n" +
+	"\x06RunReq\x12-\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01\x12$\n" +
+	"\vcode_params\x18\x02 \x01(\tH\x01R\n" +
+	"codeParams\x88\x01\x01\x12\x17\n" +
+	"\x04uuid\x18\x03 \x01(\tH\x02R\x04uuid\x88\x01\x01\x12\x12\n" +
 	"\x04envs\x18\x04 \x03(\tR\x04envs\x12/\n" +
-	"\x05annex\x18\x05 \x01(\v2\x19.hi.ai.plugin.PluginAnnexR\x05annex\x12\x1a\n" +
-	"\bfunction\x18\x06 \x01(\tR\bfunction\x12\x14\n" +
-	"\x05asker\x18\a \x01(\tR\x05asker\x12\x16\n" +
-	"\x06master\x18\b \x01(\tR\x06master\";\n" +
+	"\x05annex\x18\x05 \x01(\v2\x19.hi.ai.plugin.PluginAnnexR\x05annex\x12\x1f\n" +
+	"\bfunction\x18\x06 \x01(\tH\x03R\bfunction\x88\x01\x01\x12\x19\n" +
+	"\x05asker\x18\a \x01(\tH\x04R\x05asker\x88\x01\x01\x12\x1b\n" +
+	"\x06master\x18\b \x01(\tH\x05R\x06master\x88\x01\x01B\x13\n" +
+	"\x11_code_archive_urlB\x0e\n" +
+	"\f_code_paramsB\a\n" +
+	"\x05_uuidB\v\n" +
+	"\t_functionB\b\n" +
+	"\x06_askerB\t\n" +
+	"\a_master\";\n" +
 	"\aRunResp\x12*\n" +
 	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
 	"\n" +
 	"CleanupReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\"v\n" +
-	"\bBuildReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\tR\aversion\x12\x12\n" +
-	"\x04arch\x18\x04 \x01(\tR\x04arch\"\xeb\x01\n" +
-	"\tBuildResp\x12\x14\n" +
-	"\x02ok\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03R\x02ok\x12'\n" +
-	"\fartifact_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vartifactUrl\x12\x1c\n" +
-	"\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06sha256\x12%\n" +
-	"\vabi_version\x18\x04 \x01(\rB\x04\x90\xb5\x18\x03R\n" +
-	"abiVersion\x12 \n" +
-	"\bmanifest\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\bmanifest\x12\x1a\n" +
-	"\x05error\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x05error\x12\x16\n" +
-	"\x03log\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x03log:\x04\x98\xb5\x18\x032\x87\x01\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\"\xbd\x01\n" +
+	"\bBuildReq\x12-\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01\x12\x17\n" +
+	"\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01\x12\x17\n" +
+	"\x04arch\x18\x04 \x01(\tH\x03R\x04arch\x88\x01\x01B\x13\n" +
+	"\x11_code_archive_urlB\a\n" +
+	"\x05_uuidB\n" +
+	"\n" +
+	"\b_versionB\a\n" +
+	"\x05_arch\"\xe0\x02\n" +
+	"\tBuildResp\x12\x19\n" +
+	"\x02ok\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x02ok\x88\x01\x01\x12,\n" +
+	"\fartifact_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\vartifactUrl\x88\x01\x01\x12!\n" +
+	"\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06sha256\x88\x01\x01\x12*\n" +
+	"\vabi_version\x18\x04 \x01(\rB\x04\x90\xb5\x18\x03H\x03R\n" +
+	"abiVersion\x88\x01\x01\x12%\n" +
+	"\bmanifest\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\bmanifest\x88\x01\x01\x12\x1f\n" +
+	"\x05error\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x05error\x88\x01\x01\x12\x1b\n" +
+	"\x03log\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x03log\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_okB\x0f\n" +
+	"\r_artifact_urlB\t\n" +
+	"\a_sha256B\x0e\n" +
+	"\f_abi_versionB\v\n" +
+	"\t_manifestB\b\n" +
+	"\x06_errorB\x06\n" +
+	"\x04_log2\x87\x01\n" +
 	"\x06Runner\x129\n" +
 	"\x03Run\x12\x14.hi.ai.plugin.RunReq\x1a\x15.hi.ai.plugin.RunResp\"\x05\x8a\xb5\x18\x01\x06\x12B\n" +
 	"\aCleanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x062J\n" +
@@ -600,6 +619,9 @@ func file_hi_ai_plugin_base_proto_init() {
 	if File_hi_ai_plugin_base_proto != nil {
 		return
 	}
+	file_hi_ai_plugin_base_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

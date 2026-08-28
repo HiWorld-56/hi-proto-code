@@ -26,7 +26,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xd4\x01\n\x0bSettingInfo\x12+\n\x0eproxy_endpoint\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\rproxyEndpoint\x12\'\n\x0cproxy_enable\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03R\x0bproxyEnable\x12-\n\x0fopenai_endpoint\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x0eopenaiEndpoint\x12:\n\x16openai_endpoint_enable\x18\x04 \x01(\x08\x42\x04\x90\xb5\x18\x03R\x14openaiEndpointEnable:\x04\x98\xb5\x18\x03\"8\n\x0eSettingEditReq\x12&\n\x04info\x18\x01 \x01(\x0b\x32\x12.hi.ai.SettingInfoR\x04info\"D\n\x0eSettingGetResp\x12,\n\x04info\x18\x01 \x01(\x0b\x32\x12.hi.ai.SettingInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\x32\xcd\x01\n\x07Setting\x12;\n\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetResp\"\x05\x8a\xb5\x18\x01\x04\x12<\n\x04\x45\x64it\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12G\n\x0eResetToDefault\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xbb\x02\n\x0bSettingInfo\x12\x30\n\x0eproxy_endpoint\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\rproxyEndpoint\x88\x01\x01\x12,\n\x0cproxy_enable\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x01R\x0bproxyEnable\x88\x01\x01\x12\x32\n\x0fopenai_endpoint\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x0eopenaiEndpoint\x88\x01\x01\x12?\n\x16openai_endpoint_enable\x18\x04 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x03R\x14openaiEndpointEnable\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x11\n\x0f_proxy_endpointB\x0f\n\r_proxy_enableB\x12\n\x10_openai_endpointB\x19\n\x17_openai_endpoint_enable\"8\n\x0eSettingEditReq\x12&\n\x04info\x18\x01 \x01(\x0b\x32\x12.hi.ai.SettingInfoR\x04info\"D\n\x0eSettingGetResp\x12,\n\x04info\x18\x01 \x01(\x0b\x32\x12.hi.ai.SettingInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\x32\xcd\x01\n\x07Setting\x12;\n\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.SettingGetResp\"\x05\x8a\xb5\x18\x01\x04\x12<\n\x04\x45\x64it\x12\x15.hi.ai.SettingEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12G\n\x0eResetToDefault\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -55,11 +55,11 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SETTING'].methods_by_name['ResetToDefault']._loaded_options = None
   _globals['_SETTING'].methods_by_name['ResetToDefault']._serialized_options = b'\212\265\030\001\004'
   _globals['_SETTINGINFO']._serialized_start=78
-  _globals['_SETTINGINFO']._serialized_end=290
-  _globals['_SETTINGEDITREQ']._serialized_start=292
-  _globals['_SETTINGEDITREQ']._serialized_end=348
-  _globals['_SETTINGGETRESP']._serialized_start=350
-  _globals['_SETTINGGETRESP']._serialized_end=418
-  _globals['_SETTING']._serialized_start=421
-  _globals['_SETTING']._serialized_end=626
+  _globals['_SETTINGINFO']._serialized_end=393
+  _globals['_SETTINGEDITREQ']._serialized_start=395
+  _globals['_SETTINGEDITREQ']._serialized_end=451
+  _globals['_SETTINGGETRESP']._serialized_start=453
+  _globals['_SETTINGGETRESP']._serialized_end=521
+  _globals['_SETTING']._serialized_start=524
+  _globals['_SETTING']._serialized_end=729
 # @@protoc_insertion_point(module_scope)

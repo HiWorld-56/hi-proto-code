@@ -2274,7 +2274,7 @@ class MarketPayment extends $pb.GeneratedMessage {
   ///
   /// 扫码方按它去 hidid 取要素(收款账号/币种/金额/业务单号),**改不了** ——
   /// 所以码里不需要金额和地址,被替换也只会"查不到这个号"。
-  /// 空 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
+  /// 不传 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
   @$pb.TagNumber(13)
   $core.String get payReqId => $_getSZ(12);
   @$pb.TagNumber(13)
@@ -2338,7 +2338,7 @@ class ListTransactionsReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListTransactionsReq>(create);
   static ListTransactionsReq? _defaultInstance;
 
-  /// 看谁的。**空 = 我 + 我当前名下的全部机器人**(默认就该是全景:收款人是摊主,
+  /// 看谁的。**不传 = 我 + 我当前名下的全部机器人**(默认就该是全景:收款人是摊主,
   /// 只看用户自己的 did 会把卖出收入整片漏掉,而且不报错);填了则**必须是我的仆从机器人**,
   /// 只看那一台。
   ///
@@ -3054,7 +3054,7 @@ class MarketPayInfo extends $pb.GeneratedMessage {
 ///
 ///   status=INSTALLED → 免费/已批,直接就能用了
 ///   status=PENDING + pay 非空       → 去付款(唤起 hidid app)
-///   status=PENDING + action_url 非空 → 去外部流程办理(EXTERNAL)
+///   status=PENDING + action_url 有值 → 去外部流程办理(EXTERNAL)
 ///   status=PENDING 且两者都空        → 等出让方 master 审批(APPROVAL)
 class ApplyResp extends $pb.GeneratedMessage {
   factory ApplyResp({

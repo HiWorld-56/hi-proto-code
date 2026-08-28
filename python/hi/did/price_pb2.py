@@ -26,7 +26,7 @@ from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/did/price.proto\x12\x06hi.did\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"!\n\x0bGetPriceReq\x12\x12\n\x04\x63oin\x18\x01 \x01(\tR\x04\x63oin\"\xbd\x01\n\x0cGetPriceResp\x12\x33\n\x04list\x18\x01 \x03(\x0b\x32\x19.hi.did.GetPriceResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x12 \n\x08\x65xchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x08\x65xchange\x1aP\n\x04Unit\x12\x1a\n\x05price\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05price\x12&\n\x04\x63oin\x18\x02 \x01(\x0b\x32\x0c.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04\x63oin:\x04\x98\xb5\x18\x01:\x04\x98\xb5\x18\x01\x32@\n\x05Price\x12\x37\n\x03Get\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x05\x8a\xb5\x18\x01\x01\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/did/price.proto\x12\x06hi.did\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"/\n\x0bGetPriceReq\x12\x17\n\x04\x63oin\x18\x01 \x01(\tH\x00R\x04\x63oin\x88\x01\x01\x42\x07\n\x05_coin\"\xde\x01\n\x0cGetPriceResp\x12\x33\n\x04list\x18\x01 \x03(\x0b\x32\x19.hi.did.GetPriceResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x12%\n\x08\x65xchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x08\x65xchange\x88\x01\x01\x1a_\n\x04Unit\x12\x1f\n\x05price\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05price\x88\x01\x01\x12&\n\x04\x63oin\x18\x02 \x01(\x0b\x32\x0c.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04\x63oin:\x04\x98\xb5\x18\x01\x42\x08\n\x06_price:\x04\x98\xb5\x18\x01\x42\x0b\n\t_exchange2@\n\x05Price\x12\x37\n\x03Get\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x05\x8a\xb5\x18\x01\x01\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -49,11 +49,11 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PRICE'].methods_by_name['Get']._loaded_options = None
   _globals['_PRICE'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\001'
   _globals['_GETPRICEREQ']._serialized_start=67
-  _globals['_GETPRICEREQ']._serialized_end=100
-  _globals['_GETPRICERESP']._serialized_start=103
-  _globals['_GETPRICERESP']._serialized_end=292
-  _globals['_GETPRICERESP_UNIT']._serialized_start=206
-  _globals['_GETPRICERESP_UNIT']._serialized_end=286
-  _globals['_PRICE']._serialized_start=294
-  _globals['_PRICE']._serialized_end=358
+  _globals['_GETPRICEREQ']._serialized_end=114
+  _globals['_GETPRICERESP']._serialized_start=117
+  _globals['_GETPRICERESP']._serialized_end=339
+  _globals['_GETPRICERESP_UNIT']._serialized_start=225
+  _globals['_GETPRICERESP_UNIT']._serialized_end=320
+  _globals['_PRICE']._serialized_start=341
+  _globals['_PRICE']._serialized_end=405
 # @@protoc_insertion_point(module_scope)

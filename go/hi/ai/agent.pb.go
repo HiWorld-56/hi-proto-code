@@ -27,8 +27,8 @@ const (
 // ///////////////////////////// 智能体 ///////////////////////////////
 type Prompt struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	System        string                 `protobuf:"bytes,1,opt,name=system,proto3" json:"system,omitempty"`
-	User          string                 `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	System        *string                `protobuf:"bytes,1,opt,name=system,proto3,oneof" json:"system,omitempty"`
+	User          *string                `protobuf:"bytes,2,opt,name=user,proto3,oneof" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -64,15 +64,15 @@ func (*Prompt) Descriptor() ([]byte, []int) {
 }
 
 func (x *Prompt) GetSystem() string {
-	if x != nil {
-		return x.System
+	if x != nil && x.System != nil {
+		return *x.System
 	}
 	return ""
 }
 
 func (x *Prompt) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
@@ -81,11 +81,11 @@ func (x *Prompt) GetUser() string {
 // 且它本就不是"一个模型"而是一套选择,故改名 ModelSet。
 type ModelSet struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Llm           string                 `protobuf:"bytes,1,opt,name=llm,proto3" json:"llm,omitempty"`
-	Stt           string                 `protobuf:"bytes,2,opt,name=stt,proto3" json:"stt,omitempty"`
-	Tts           string                 `protobuf:"bytes,3,opt,name=tts,proto3" json:"tts,omitempty"`
-	Embedding     string                 `protobuf:"bytes,4,opt,name=embedding,proto3" json:"embedding,omitempty"`
-	MemModel      string                 `protobuf:"bytes,5,opt,name=mem_model,json=memModel,proto3" json:"mem_model,omitempty"` // 记忆模型:与其它模型配置同处,经 Agent.Edit 设置(原 Training.SetMemModel/GetMemModel 已删,别再开第二条写路径)
+	Llm           *string                `protobuf:"bytes,1,opt,name=llm,proto3,oneof" json:"llm,omitempty"`
+	Stt           *string                `protobuf:"bytes,2,opt,name=stt,proto3,oneof" json:"stt,omitempty"`
+	Tts           *string                `protobuf:"bytes,3,opt,name=tts,proto3,oneof" json:"tts,omitempty"`
+	Embedding     *string                `protobuf:"bytes,4,opt,name=embedding,proto3,oneof" json:"embedding,omitempty"`
+	MemModel      *string                `protobuf:"bytes,5,opt,name=mem_model,json=memModel,proto3,oneof" json:"mem_model,omitempty"` // 记忆模型:与其它模型配置同处,经 Agent.Edit 设置(原 Training.SetMemModel/GetMemModel 已删,别再开第二条写路径)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -121,36 +121,36 @@ func (*ModelSet) Descriptor() ([]byte, []int) {
 }
 
 func (x *ModelSet) GetLlm() string {
-	if x != nil {
-		return x.Llm
+	if x != nil && x.Llm != nil {
+		return *x.Llm
 	}
 	return ""
 }
 
 func (x *ModelSet) GetStt() string {
-	if x != nil {
-		return x.Stt
+	if x != nil && x.Stt != nil {
+		return *x.Stt
 	}
 	return ""
 }
 
 func (x *ModelSet) GetTts() string {
-	if x != nil {
-		return x.Tts
+	if x != nil && x.Tts != nil {
+		return *x.Tts
 	}
 	return ""
 }
 
 func (x *ModelSet) GetEmbedding() string {
-	if x != nil {
-		return x.Embedding
+	if x != nil && x.Embedding != nil {
+		return *x.Embedding
 	}
 	return ""
 }
 
 func (x *ModelSet) GetMemModel() string {
-	if x != nil {
-		return x.MemModel
+	if x != nil && x.MemModel != nil {
+		return *x.MemModel
 	}
 	return ""
 }
@@ -239,9 +239,9 @@ func (x *AgentConfig) GetUseMem() bool {
 // 用量/计费数据,只发给资源主人本人。
 type TokenUsage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Output        int32                  `protobuf:"varint,1,opt,name=output,proto3" json:"output,omitempty"` // 模型生成输出时消耗的token数。
-	Input         int32                  `protobuf:"varint,2,opt,name=input,proto3" json:"input,omitempty"`   // 模型输入时消耗的token数
-	Mem           int32                  `protobuf:"varint,3,opt,name=mem,proto3" json:"mem,omitempty"`       // 训练消耗的token数
+	Output        *int32                 `protobuf:"varint,1,opt,name=output,proto3,oneof" json:"output,omitempty"` // 模型生成输出时消耗的token数。
+	Input         *int32                 `protobuf:"varint,2,opt,name=input,proto3,oneof" json:"input,omitempty"`   // 模型输入时消耗的token数
+	Mem           *int32                 `protobuf:"varint,3,opt,name=mem,proto3,oneof" json:"mem,omitempty"`       // 训练消耗的token数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -277,22 +277,22 @@ func (*TokenUsage) Descriptor() ([]byte, []int) {
 }
 
 func (x *TokenUsage) GetOutput() int32 {
-	if x != nil {
-		return x.Output
+	if x != nil && x.Output != nil {
+		return *x.Output
 	}
 	return 0
 }
 
 func (x *TokenUsage) GetInput() int32 {
-	if x != nil {
-		return x.Input
+	if x != nil && x.Input != nil {
+		return *x.Input
 	}
 	return 0
 }
 
 func (x *TokenUsage) GetMem() int32 {
-	if x != nil {
-		return x.Mem
+	if x != nil && x.Mem != nil {
+		return *x.Mem
 	}
 	return 0
 }
@@ -308,10 +308,10 @@ type AgentInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"` // hi.Entity 恒 PUBLIC
 	Config        *AgentConfig           `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
-	Creator       string                 `protobuf:"bytes,3,opt,name=creator,proto3" json:"creator,omitempty"` // 归属 did
-	Note          string                 `protobuf:"bytes,4,opt,name=note,proto3" json:"note,omitempty"`
+	Creator       *string                `protobuf:"bytes,3,opt,name=creator,proto3,oneof" json:"creator,omitempty"` // 归属 did
+	Note          *string                `protobuf:"bytes,4,opt,name=note,proto3,oneof" json:"note,omitempty"`
 	Token         *TokenUsage            `protobuf:"bytes,5,opt,name=token,proto3" json:"token,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,15 +361,15 @@ func (x *AgentInfo) GetConfig() *AgentConfig {
 }
 
 func (x *AgentInfo) GetCreator() string {
-	if x != nil {
-		return x.Creator
+	if x != nil && x.Creator != nil {
+		return *x.Creator
 	}
 	return ""
 }
 
 func (x *AgentInfo) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
@@ -382,8 +382,8 @@ func (x *AgentInfo) GetToken() *TokenUsage {
 }
 
 func (x *AgentInfo) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
@@ -435,8 +435,8 @@ func (x *DefaultConfigResp) GetConfig() *AgentConfig {
 // 造**软件** assistant:did 由后台生成,type 固定 assistant。
 type CreateAssistantReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Avatar        *string                `protobuf:"bytes,2,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -472,15 +472,15 @@ func (*CreateAssistantReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateAssistantReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *CreateAssistantReq) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
@@ -493,8 +493,8 @@ func (x *CreateAssistantReq) GetAvatar() string {
 type RegisterRobotReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 硬件机器人已注册的 did
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Avatar        *string                `protobuf:"bytes,3,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -537,15 +537,15 @@ func (x *RegisterRobotReq) GetDid() string {
 }
 
 func (x *RegisterRobotReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *RegisterRobotReq) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
@@ -613,11 +613,11 @@ func (x *CreateAgentResp) GetCreator() *hi.Entity {
 // 改机器人。agent 是**定位**参数(改哪个),归属由后端校验;name/avatar 才是可改的内容。
 type EditAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did(定位)
-	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Avatar        string                 `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did(定位)
+	Name          *string                `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Avatar        *string                `protobuf:"bytes,5,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`
 	Config        *AgentConfig           `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
-	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
+	Note          *string                `protobuf:"bytes,3,opt,name=note,proto3,oneof" json:"note,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -653,22 +653,22 @@ func (*EditAgentReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *EditAgentReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *EditAgentReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *EditAgentReq) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
@@ -681,8 +681,8 @@ func (x *EditAgentReq) GetConfig() *AgentConfig {
 }
 
 func (x *EditAgentReq) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
@@ -691,7 +691,7 @@ func (x *EditAgentReq) GetNote() string {
 // 商户看自己的机器人不需要、也拿不到别人的标记。
 type ListAgentsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Agents        []*AgentInfo           `protobuf:"bytes,2,rep,name=agents,proto3" json:"agents,omitempty"` // 与 hi.club.ListAgentsResp 对齐(原 infos)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -728,8 +728,8 @@ func (*ListAgentsResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListAgentsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -808,7 +808,7 @@ func (x *ListAgentsReq) GetPagination() *hi.Pagination {
 
 type DeleteAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -844,15 +844,15 @@ func (*DeleteAgentReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteAgentReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 type GetAgentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -888,8 +888,8 @@ func (*GetAgentReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetAgentReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -940,7 +940,7 @@ func (x *GetAgentResp) GetInfo() *AgentInfo {
 
 type AgentUsageReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -976,8 +976,8 @@ func (*AgentUsageReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *AgentUsageReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -985,7 +985,7 @@ func (x *AgentUsageReq) GetAgent() string {
 // 机器人用量。原 FindAgentCountResp —— 它不是"count",而是消息数 + token 三件套。
 type AgentUsageResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MessageCount  int32                  `protobuf:"varint,1,opt,name=message_count,json=messageCount,proto3" json:"message_count,omitempty"`
+	MessageCount  *int32                 `protobuf:"varint,1,opt,name=message_count,json=messageCount,proto3,oneof" json:"message_count,omitempty"`
 	Token         *TokenUsage            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1022,8 +1022,8 @@ func (*AgentUsageResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *AgentUsageResp) GetMessageCount() int32 {
-	if x != nil {
-		return x.MessageCount
+	if x != nil && x.MessageCount != nil {
+		return *x.MessageCount
 	}
 	return 0
 }
@@ -1137,16 +1137,25 @@ var File_hi_ai_agent_proto protoreflect.FileDescriptor
 
 const file_hi_ai_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"F\n" +
-	"\x06Prompt\x12\x1c\n" +
-	"\x06system\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x06system\x12\x18\n" +
-	"\x04user\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04user:\x04\x98\xb5\x18\x03\"\x9f\x01\n" +
-	"\bModelSet\x12\x16\n" +
-	"\x03llm\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03llm\x12\x16\n" +
-	"\x03stt\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x03stt\x12\x16\n" +
-	"\x03tts\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x03tts\x12\"\n" +
-	"\tembedding\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\tembedding\x12!\n" +
-	"\tmem_model\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\bmemModel:\x04\x98\xb5\x18\x03\"\xfb\x01\n" +
+	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"d\n" +
+	"\x06Prompt\x12!\n" +
+	"\x06system\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06system\x88\x01\x01\x12\x1d\n" +
+	"\x04user\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04user\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_systemB\a\n" +
+	"\x05_user\"\xec\x01\n" +
+	"\bModelSet\x12\x1b\n" +
+	"\x03llm\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03llm\x88\x01\x01\x12\x1b\n" +
+	"\x03stt\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x03stt\x88\x01\x01\x12\x1b\n" +
+	"\x03tts\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x03tts\x88\x01\x01\x12'\n" +
+	"\tembedding\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\tembedding\x88\x01\x01\x12&\n" +
+	"\tmem_model\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\bmemModel\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
+	"\x04_llmB\x06\n" +
+	"\x04_sttB\x06\n" +
+	"\x04_ttsB\f\n" +
+	"\n" +
+	"_embeddingB\f\n" +
+	"\n" +
+	"_mem_model\"\xfb\x01\n" +
 	"\vAgentConfig\x12+\n" +
 	"\x06prompt\x18\x01 \x01(\v2\r.hi.ai.PromptB\x04\x90\xb5\x18\x03R\x06prompt\x12#\n" +
 	"\afreedom\x18\x02 \x01(\x02B\x04\x90\xb5\x18\x03H\x00R\afreedom\x88\x01\x01\x12+\n" +
@@ -1157,61 +1166,81 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\b_freedomB\t\n" +
 	"\a_qa_numB\n" +
 	"\n" +
-	"\b_use_mem\"d\n" +
+	"\b_use_mem\"\x90\x01\n" +
 	"\n" +
-	"TokenUsage\x12\x1c\n" +
-	"\x06output\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x06output\x12\x1a\n" +
-	"\x05input\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\x05input\x12\x16\n" +
-	"\x03mem\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03R\x03mem:\x04\x98\xb5\x18\x03\"\xf7\x01\n" +
+	"TokenUsage\x12!\n" +
+	"\x06output\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x06output\x88\x01\x01\x12\x1f\n" +
+	"\x05input\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03H\x01R\x05input\x88\x01\x01\x12\x1b\n" +
+	"\x03mem\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03H\x02R\x03mem\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_outputB\b\n" +
+	"\x06_inputB\x06\n" +
+	"\x04_mem\"\xaa\x02\n" +
 	"\tAgentInfo\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x120\n" +
-	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config\x12\x1e\n" +
-	"\acreator\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\acreator\x12\x18\n" +
-	"\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12-\n" +
-	"\x05token\x18\x05 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token\x12#\n" +
+	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config\x12#\n" +
+	"\acreator\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\acreator\x88\x01\x01\x12\x1d\n" +
+	"\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04note\x88\x01\x01\x12-\n" +
+	"\x05token\x18\x05 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token\x12(\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"K\n" +
+	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x02R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
+	"\n" +
+	"\b_creatorB\a\n" +
+	"\x05_noteB\r\n" +
+	"\v_created_at\"K\n" +
 	"\x11DefaultConfigResp\x120\n" +
-	"\x06config\x18\x01 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config:\x04\x98\xb5\x18\x03\"@\n" +
-	"\x12CreateAssistantReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x02 \x01(\tR\x06avatar\"^\n" +
+	"\x06config\x18\x01 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config:\x04\x98\xb5\x18\x03\"^\n" +
+	"\x12CreateAssistantReq\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06avatar\x18\x02 \x01(\tH\x01R\x06avatar\x88\x01\x01B\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatar\"|\n" +
 	"\x10RegisterRobotReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x03 \x01(\tR\x06avatar\"\x9b\x01\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06avatar\x18\x03 \x01(\tH\x01R\x06avatar\x88\x01\x01B\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatar\"\x9b\x01\n" +
 	"\x0fCreateAgentResp\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x120\n" +
 	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config\x12*\n" +
 	"\acreator\x18\x03 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\acreator:\x04\x98\xb5\x18\x03\"\x90\x01\n" +
-	"\fEditAgentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x05 \x01(\tR\x06avatar\x12*\n" +
-	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\x12\x12\n" +
-	"\x04note\x18\x03 \x01(\tR\x04note\"b\n" +
-	"\x0eListAgentsResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
-	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x03\"W\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\acreator:\x04\x98\xb5\x18\x03\"\xcb\x01\n" +
+	"\fEditAgentReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06avatar\x18\x05 \x01(\tH\x02R\x06avatar\x88\x01\x01\x12*\n" +
+	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\x12\x17\n" +
+	"\x04note\x18\x03 \x01(\tH\x03R\x04note\x88\x01\x01B\b\n" +
+	"\x06_agentB\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatarB\a\n" +
+	"\x05_note\"q\n" +
+	"\x0eListAgentsResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12.\n" +
+	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"W\n" +
 	"\rListAgentsReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"&\n" +
-	"\x0eDeleteAgentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"#\n" +
-	"\vGetAgentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"@\n" +
+	"pagination\"5\n" +
+	"\x0eDeleteAgentReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"2\n" +
+	"\vGetAgentReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"@\n" +
 	"\fGetAgentResp\x12*\n" +
-	"\x04info\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"%\n" +
-	"\rAgentUsageReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"p\n" +
-	"\x0eAgentUsageResp\x12)\n" +
-	"\rmessage_count\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\fmessageCount\x12-\n" +
-	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token:\x04\x98\xb5\x18\x03\"+\n" +
+	"\x04info\x18\x01 \x01(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"4\n" +
+	"\rAgentUsageReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"\x87\x01\n" +
+	"\x0eAgentUsageResp\x12.\n" +
+	"\rmessage_count\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\fmessageCount\x88\x01\x01\x12-\n" +
+	"\x05token\x18\x02 \x01(\v2\x11.hi.ai.TokenUsageB\x04\x90\xb5\x18\x03R\x05token:\x04\x98\xb5\x18\x03B\x10\n" +
+	"\x0e_message_count\"+\n" +
 	"\x11ResetToDefaultReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\"`\n" +
 	"\x12AgentManageListReq\x12\x1a\n" +
@@ -1320,7 +1349,19 @@ func file_hi_ai_agent_proto_init() {
 	if File_hi_ai_agent_proto != nil {
 		return
 	}
+	file_hi_ai_agent_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_ai_agent_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_ai_agent_proto_msgTypes[16].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

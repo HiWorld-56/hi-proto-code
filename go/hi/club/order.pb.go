@@ -29,7 +29,7 @@ const (
 type PullOrdersData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Nonce         string                 `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	Nonce         *string                `protobuf:"bytes,2,opt,name=nonce,proto3,oneof" json:"nonce,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,8 +72,8 @@ func (x *PullOrdersData) GetDid() string {
 }
 
 func (x *PullOrdersData) GetNonce() string {
-	if x != nil {
-		return x.Nonce
+	if x != nil && x.Nonce != nil {
+		return *x.Nonce
 	}
 	return ""
 }
@@ -94,14 +94,14 @@ func (x *PullOrdersData) GetNonce() string {
 //	所以"我这边解得开"不能作为客户端不用升级的理由。)
 type PcOrder struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId       *string                `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`
 	ToDid         string                 `protobuf:"bytes,2,opt,name=to_did,json=toDid,proto3" json:"to_did,omitempty"`
-	Amount        string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
-	Type          string                 `protobuf:"bytes,4,opt,name=type,proto3" json:"type,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64                  `protobuf:"varint,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Amount        *string                `protobuf:"bytes,3,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
+	Type          *string                `protobuf:"bytes,4,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	UpdatedAt     *int64                 `protobuf:"varint,6,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
 	Did           string                 `protobuf:"bytes,7,opt,name=did,proto3" json:"did,omitempty"`
-	Status        string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`
+	Status        *string                `protobuf:"bytes,8,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -137,8 +137,8 @@ func (*PcOrder) Descriptor() ([]byte, []int) {
 }
 
 func (x *PcOrder) GetOrderId() string {
-	if x != nil {
-		return x.OrderId
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
 	}
 	return ""
 }
@@ -151,29 +151,29 @@ func (x *PcOrder) GetToDid() string {
 }
 
 func (x *PcOrder) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *PcOrder) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
 
 func (x *PcOrder) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
 
 func (x *PcOrder) GetUpdatedAt() int64 {
-	if x != nil {
-		return x.UpdatedAt
+	if x != nil && x.UpdatedAt != nil {
+		return *x.UpdatedAt
 	}
 	return 0
 }
@@ -186,8 +186,8 @@ func (x *PcOrder) GetDid() string {
 }
 
 func (x *PcOrder) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
@@ -238,10 +238,10 @@ func (x *PullOrdersResp) GetOrders() []*PcOrder {
 
 type OrderResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	TxHash        string                 `protobuf:"bytes,3,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	OrderId       *string                `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`
+	Status        *string                `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	TxHash        *string                `protobuf:"bytes,3,opt,name=tx_hash,json=txHash,proto3,oneof" json:"tx_hash,omitempty"`
+	Timestamp     *int64                 `protobuf:"varint,4,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -277,29 +277,29 @@ func (*OrderResult) Descriptor() ([]byte, []int) {
 }
 
 func (x *OrderResult) GetOrderId() string {
-	if x != nil {
-		return x.OrderId
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
 	}
 	return ""
 }
 
 func (x *OrderResult) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
 
 func (x *OrderResult) GetTxHash() string {
-	if x != nil {
-		return x.TxHash
+	if x != nil && x.TxHash != nil {
+		return *x.TxHash
 	}
 	return ""
 }
 
 func (x *OrderResult) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
@@ -361,28 +361,41 @@ var File_hi_club_order_proto protoreflect.FileDescriptor
 
 const file_hi_club_order_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"8\n" +
+	"\x13hi/club/order.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"G\n" +
 	"\x0ePullOrdersData\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
-	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"\x85\x02\n" +
-	"\aPcOrder\x12\x1f\n" +
-	"\border_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12\x1b\n" +
-	"\x06to_did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05toDid\x12\x1c\n" +
-	"\x06amount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
-	"\x04type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12#\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x19\n" +
+	"\x05nonce\x18\x02 \x01(\tH\x00R\x05nonce\x88\x01\x01B\b\n" +
+	"\x06_nonce\"\xed\x02\n" +
+	"\aPcOrder\x12$\n" +
+	"\border_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aorderId\x88\x01\x01\x12\x1b\n" +
+	"\x06to_did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05toDid\x12!\n" +
+	"\x06amount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06amount\x88\x01\x01\x12\x1d\n" +
+	"\x04type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04type\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12#\n" +
+	"created_at\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tupdatedAt\x12\x16\n" +
-	"\x03did\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12\x1c\n" +
-	"\x06status\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03\"F\n" +
+	"updated_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x04R\tupdatedAt\x88\x01\x01\x12\x16\n" +
+	"\x03did\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12!\n" +
+	"\x06status\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x06status\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\t_order_idB\t\n" +
+	"\a_amountB\a\n" +
+	"\x05_typeB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_updated_atB\t\n" +
+	"\a_status\"F\n" +
 	"\x0ePullOrdersResp\x12.\n" +
-	"\x06orders\x18\x01 \x03(\v2\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"w\n" +
-	"\vOrderResult\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\tR\aorderId\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\x12\x17\n" +
-	"\atx_hash\x18\x03 \x01(\tR\x06txHash\x12\x1c\n" +
-	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"S\n" +
+	"\x06orders\x18\x01 \x03(\v2\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"\xbd\x01\n" +
+	"\vOrderResult\x12\x1e\n" +
+	"\border_id\x18\x01 \x01(\tH\x00R\aorderId\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x02 \x01(\tH\x01R\x06status\x88\x01\x01\x12\x1c\n" +
+	"\atx_hash\x18\x03 \x01(\tH\x02R\x06txHash\x88\x01\x01\x12!\n" +
+	"\ttimestamp\x18\x04 \x01(\x03H\x03R\ttimestamp\x88\x01\x01B\v\n" +
+	"\t_order_idB\t\n" +
+	"\a_statusB\n" +
+	"\n" +
+	"\b_tx_hashB\f\n" +
+	"\n" +
+	"_timestamp\"S\n" +
 	"\x11ReportResultsData\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12,\n" +
 	"\x06orders\x18\x02 \x03(\v2\x14.hi.club.OrderResultR\x06orders2x\n" +
@@ -433,6 +446,9 @@ func file_hi_club_order_proto_init() {
 	if File_hi_club_order_proto != nil {
 		return
 	}
+	file_hi_club_order_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_order_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_order_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

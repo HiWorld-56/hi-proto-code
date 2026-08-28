@@ -6,30 +6,30 @@ impl serde::Serialize for BuildReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.code_archive_url.is_empty() {
+        if self.code_archive_url.is_some() {
             len += 1;
         }
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
-        if !self.version.is_empty() {
+        if self.version.is_some() {
             len += 1;
         }
-        if !self.arch.is_empty() {
+        if self.arch.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.BuildReq", len)?;
-        if !self.code_archive_url.is_empty() {
-            struct_ser.serialize_field("codeArchiveUrl", &self.code_archive_url)?;
+        if let Some(v) = self.code_archive_url.as_ref() {
+            struct_ser.serialize_field("codeArchiveUrl", v)?;
         }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
-        if !self.version.is_empty() {
-            struct_ser.serialize_field("version", &self.version)?;
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
         }
-        if !self.arch.is_empty() {
-            struct_ser.serialize_field("arch", &self.arch)?;
+        if let Some(v) = self.arch.as_ref() {
+            struct_ser.serialize_field("arch", v)?;
         }
         struct_ser.end()
     }
@@ -108,33 +108,33 @@ impl<'de> serde::Deserialize<'de> for BuildReq {
                             if code_archive_url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("codeArchiveUrl"));
                             }
-                            code_archive_url__ = Some(map_.next_value()?);
+                            code_archive_url__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Version => {
                             if version__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("version"));
                             }
-                            version__ = Some(map_.next_value()?);
+                            version__ = map_.next_value()?;
                         }
                         GeneratedField::Arch => {
                             if arch__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("arch"));
                             }
-                            arch__ = Some(map_.next_value()?);
+                            arch__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(BuildReq {
-                    code_archive_url: code_archive_url__.unwrap_or_default(),
-                    uuid: uuid__.unwrap_or_default(),
-                    version: version__.unwrap_or_default(),
-                    arch: arch__.unwrap_or_default(),
+                    code_archive_url: code_archive_url__,
+                    uuid: uuid__,
+                    version: version__,
+                    arch: arch__,
                 })
             }
         }
@@ -149,48 +149,48 @@ impl serde::Serialize for BuildResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.ok {
+        if self.ok.is_some() {
             len += 1;
         }
-        if !self.artifact_url.is_empty() {
+        if self.artifact_url.is_some() {
             len += 1;
         }
-        if !self.sha256.is_empty() {
+        if self.sha256.is_some() {
             len += 1;
         }
-        if self.abi_version != 0 {
+        if self.abi_version.is_some() {
             len += 1;
         }
-        if !self.manifest.is_empty() {
+        if self.manifest.is_some() {
             len += 1;
         }
-        if !self.error.is_empty() {
+        if self.error.is_some() {
             len += 1;
         }
-        if !self.log.is_empty() {
+        if self.log.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.BuildResp", len)?;
-        if self.ok {
-            struct_ser.serialize_field("ok", &self.ok)?;
+        if let Some(v) = self.ok.as_ref() {
+            struct_ser.serialize_field("ok", v)?;
         }
-        if !self.artifact_url.is_empty() {
-            struct_ser.serialize_field("artifactUrl", &self.artifact_url)?;
+        if let Some(v) = self.artifact_url.as_ref() {
+            struct_ser.serialize_field("artifactUrl", v)?;
         }
-        if !self.sha256.is_empty() {
-            struct_ser.serialize_field("sha256", &self.sha256)?;
+        if let Some(v) = self.sha256.as_ref() {
+            struct_ser.serialize_field("sha256", v)?;
         }
-        if self.abi_version != 0 {
-            struct_ser.serialize_field("abiVersion", &self.abi_version)?;
+        if let Some(v) = self.abi_version.as_ref() {
+            struct_ser.serialize_field("abiVersion", v)?;
         }
-        if !self.manifest.is_empty() {
-            struct_ser.serialize_field("manifest", &self.manifest)?;
+        if let Some(v) = self.manifest.as_ref() {
+            struct_ser.serialize_field("manifest", v)?;
         }
-        if !self.error.is_empty() {
-            struct_ser.serialize_field("error", &self.error)?;
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
         }
-        if !self.log.is_empty() {
-            struct_ser.serialize_field("log", &self.log)?;
+        if let Some(v) = self.log.as_ref() {
+            struct_ser.serialize_field("log", v)?;
         }
         struct_ser.end()
     }
@@ -282,56 +282,56 @@ impl<'de> serde::Deserialize<'de> for BuildResp {
                             if ok__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("ok"));
                             }
-                            ok__ = Some(map_.next_value()?);
+                            ok__ = map_.next_value()?;
                         }
                         GeneratedField::ArtifactUrl => {
                             if artifact_url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("artifactUrl"));
                             }
-                            artifact_url__ = Some(map_.next_value()?);
+                            artifact_url__ = map_.next_value()?;
                         }
                         GeneratedField::Sha256 => {
                             if sha256__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("sha256"));
                             }
-                            sha256__ = Some(map_.next_value()?);
+                            sha256__ = map_.next_value()?;
                         }
                         GeneratedField::AbiVersion => {
                             if abi_version__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("abiVersion"));
                             }
                             abi_version__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Manifest => {
                             if manifest__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("manifest"));
                             }
-                            manifest__ = Some(map_.next_value()?);
+                            manifest__ = map_.next_value()?;
                         }
                         GeneratedField::Error => {
                             if error__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("error"));
                             }
-                            error__ = Some(map_.next_value()?);
+                            error__ = map_.next_value()?;
                         }
                         GeneratedField::Log => {
                             if log__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("log"));
                             }
-                            log__ = Some(map_.next_value()?);
+                            log__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(BuildResp {
-                    ok: ok__.unwrap_or_default(),
-                    artifact_url: artifact_url__.unwrap_or_default(),
-                    sha256: sha256__.unwrap_or_default(),
-                    abi_version: abi_version__.unwrap_or_default(),
-                    manifest: manifest__.unwrap_or_default(),
-                    error: error__.unwrap_or_default(),
-                    log: log__.unwrap_or_default(),
+                    ok: ok__,
+                    artifact_url: artifact_url__,
+                    sha256: sha256__,
+                    abi_version: abi_version__,
+                    manifest: manifest__,
+                    error: error__,
+                    log: log__,
                 })
             }
         }
@@ -529,13 +529,13 @@ impl serde::Serialize for RunReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.code_archive_url.is_empty() {
+        if self.code_archive_url.is_some() {
             len += 1;
         }
-        if !self.code_params.is_empty() {
+        if self.code_params.is_some() {
             len += 1;
         }
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
         if !self.envs.is_empty() {
@@ -544,24 +544,24 @@ impl serde::Serialize for RunReq {
         if self.annex.is_some() {
             len += 1;
         }
-        if !self.function.is_empty() {
+        if self.function.is_some() {
             len += 1;
         }
-        if !self.asker.is_empty() {
+        if self.asker.is_some() {
             len += 1;
         }
-        if !self.master.is_empty() {
+        if self.master.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.RunReq", len)?;
-        if !self.code_archive_url.is_empty() {
-            struct_ser.serialize_field("codeArchiveUrl", &self.code_archive_url)?;
+        if let Some(v) = self.code_archive_url.as_ref() {
+            struct_ser.serialize_field("codeArchiveUrl", v)?;
         }
-        if !self.code_params.is_empty() {
-            struct_ser.serialize_field("codeParams", &self.code_params)?;
+        if let Some(v) = self.code_params.as_ref() {
+            struct_ser.serialize_field("codeParams", v)?;
         }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
         if !self.envs.is_empty() {
             struct_ser.serialize_field("envs", &self.envs)?;
@@ -569,14 +569,14 @@ impl serde::Serialize for RunReq {
         if let Some(v) = self.annex.as_ref() {
             struct_ser.serialize_field("annex", v)?;
         }
-        if !self.function.is_empty() {
-            struct_ser.serialize_field("function", &self.function)?;
+        if let Some(v) = self.function.as_ref() {
+            struct_ser.serialize_field("function", v)?;
         }
-        if !self.asker.is_empty() {
-            struct_ser.serialize_field("asker", &self.asker)?;
+        if let Some(v) = self.asker.as_ref() {
+            struct_ser.serialize_field("asker", v)?;
         }
-        if !self.master.is_empty() {
-            struct_ser.serialize_field("master", &self.master)?;
+        if let Some(v) = self.master.as_ref() {
+            struct_ser.serialize_field("master", v)?;
         }
         struct_ser.end()
     }
@@ -672,19 +672,19 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             if code_archive_url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("codeArchiveUrl"));
                             }
-                            code_archive_url__ = Some(map_.next_value()?);
+                            code_archive_url__ = map_.next_value()?;
                         }
                         GeneratedField::CodeParams => {
                             if code_params__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("codeParams"));
                             }
-                            code_params__ = Some(map_.next_value()?);
+                            code_params__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Envs => {
                             if envs__.is_some() {
@@ -702,31 +702,31 @@ impl<'de> serde::Deserialize<'de> for RunReq {
                             if function__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("function"));
                             }
-                            function__ = Some(map_.next_value()?);
+                            function__ = map_.next_value()?;
                         }
                         GeneratedField::Asker => {
                             if asker__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("asker"));
                             }
-                            asker__ = Some(map_.next_value()?);
+                            asker__ = map_.next_value()?;
                         }
                         GeneratedField::Master => {
                             if master__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("master"));
                             }
-                            master__ = Some(map_.next_value()?);
+                            master__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(RunReq {
-                    code_archive_url: code_archive_url__.unwrap_or_default(),
-                    code_params: code_params__.unwrap_or_default(),
-                    uuid: uuid__.unwrap_or_default(),
+                    code_archive_url: code_archive_url__,
+                    code_params: code_params__,
+                    uuid: uuid__,
                     envs: envs__.unwrap_or_default(),
                     annex: annex__,
-                    function: function__.unwrap_or_default(),
-                    asker: asker__.unwrap_or_default(),
-                    master: master__.unwrap_or_default(),
+                    function: function__,
+                    asker: asker__,
+                    master: master__,
                 })
             }
         }

@@ -19,54 +19,92 @@ import 'dart:typed_data' as $typed_data;
 const SynthesizeReq$json = {
   '1': 'SynthesizeReq',
   '2': [
-    {'1': 'text', '3': 1, '4': 1, '5': 9, '10': 'text'},
-    {'1': 'model', '3': 2, '4': 1, '5': 9, '10': 'model'},
-    {'1': 'style', '3': 3, '4': 1, '5': 9, '10': 'style'},
+    {'1': 'text', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'text', '17': true},
+    {'1': 'model', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'model', '17': true},
+    {'1': 'style', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'style', '17': true},
+  ],
+  '8': [
+    {'1': '_text'},
+    {'1': '_model'},
+    {'1': '_style'},
   ],
 };
 
 /// Descriptor for `SynthesizeReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List synthesizeReqDescriptor = $convert.base64Decode(
-    'Cg1TeW50aGVzaXplUmVxEhIKBHRleHQYASABKAlSBHRleHQSFAoFbW9kZWwYAiABKAlSBW1vZG'
-    'VsEhQKBXN0eWxlGAMgASgJUgVzdHlsZQ==');
+    'Cg1TeW50aGVzaXplUmVxEhcKBHRleHQYASABKAlIAFIEdGV4dIgBARIZCgVtb2RlbBgCIAEoCU'
+    'gBUgVtb2RlbIgBARIZCgVzdHlsZRgDIAEoCUgCUgVzdHlsZYgBAUIHCgVfdGV4dEIICgZfbW9k'
+    'ZWxCCAoGX3N0eWxl');
 
 @$core.Deprecated('Use synthesizeRespDescriptor instead')
 const SynthesizeResp$json = {
   '1': 'SynthesizeResp',
   '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+    {
+      '1': 'url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'url',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_url'},
+  ],
 };
 
 /// Descriptor for `SynthesizeResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List synthesizeRespDescriptor = $convert.base64Decode(
-    'Cg5TeW50aGVzaXplUmVzcBIWCgN1cmwYASABKAlCBJC1GANSA3VybDoEmLUYAw==');
+    'Cg5TeW50aGVzaXplUmVzcBIbCgN1cmwYASABKAlCBJC1GANIAFIDdXJsiAEBOgSYtRgDQgYKBF'
+    '91cmw=');
 
 @$core.Deprecated('Use transcribeReqDescriptor instead')
 const TranscribeReq$json = {
   '1': 'TranscribeReq',
   '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '10': 'url'},
-    {'1': 'model', '3': 2, '4': 1, '5': 9, '10': 'model'},
-    {'1': 'lang', '3': 3, '4': 1, '5': 9, '10': 'lang'},
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'url', '17': true},
+    {'1': 'model', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'model', '17': true},
+    {'1': 'lang', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'lang', '17': true},
+  ],
+  '8': [
+    {'1': '_url'},
+    {'1': '_model'},
+    {'1': '_lang'},
   ],
 };
 
 /// Descriptor for `TranscribeReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List transcribeReqDescriptor = $convert.base64Decode(
-    'Cg1UcmFuc2NyaWJlUmVxEhAKA3VybBgBIAEoCVIDdXJsEhQKBW1vZGVsGAIgASgJUgVtb2RlbB'
-    'ISCgRsYW5nGAMgASgJUgRsYW5n');
+    'Cg1UcmFuc2NyaWJlUmVxEhUKA3VybBgBIAEoCUgAUgN1cmyIAQESGQoFbW9kZWwYAiABKAlIAV'
+    'IFbW9kZWyIAQESFwoEbGFuZxgDIAEoCUgCUgRsYW5niAEBQgYKBF91cmxCCAoGX21vZGVsQgcK'
+    'BV9sYW5n');
 
 @$core.Deprecated('Use transcribeRespDescriptor instead')
 const TranscribeResp$json = {
   '1': 'TranscribeResp',
   '2': [
-    {'1': 'text', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'text'},
+    {
+      '1': 'text',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'text',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_text'},
+  ],
 };
 
 /// Descriptor for `TranscribeResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List transcribeRespDescriptor = $convert.base64Decode(
-    'Cg5UcmFuc2NyaWJlUmVzcBIYCgR0ZXh0GAEgASgJQgSQtRgDUgR0ZXh0OgSYtRgD');
+    'Cg5UcmFuc2NyaWJlUmVzcBIdCgR0ZXh0GAEgASgJQgSQtRgDSABSBHRleHSIAQE6BJi1GANCBw'
+    'oFX3RleHQ=');

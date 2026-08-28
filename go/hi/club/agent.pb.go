@@ -45,7 +45,7 @@ const (
 //	字段存在 → 就得写校验 → 写了就显得有防护,而防护点其实全在别处。
 type MasterBindReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -81,15 +81,15 @@ func (*MasterBindReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MasterBindReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 type BindStatusReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -125,8 +125,8 @@ func (*BindStatusReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *BindStatusReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -184,8 +184,8 @@ func (x *BindStatusResp) GetMaster() *hi.Entity {
 // 它与 BindMaster/UnbindMaster 是同一件事(换绑主人),故同处 Agent。
 type TransferReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 要转让的机器人 did
-	To            string                 `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`       // 新 master 的用户 did
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 要转让的机器人 did
+	To            *string                `protobuf:"bytes,2,opt,name=to,proto3,oneof" json:"to,omitempty"`       // 新 master 的用户 did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -221,15 +221,15 @@ func (*TransferReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *TransferReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *TransferReq) GetTo() string {
-	if x != nil {
-		return x.To
+	if x != nil && x.To != nil {
+		return *x.To
 	}
 	return ""
 }
@@ -237,7 +237,7 @@ func (x *TransferReq) GetTo() string {
 // 在线 agent 列表(club 本地 presence,非转发 ai)。合并原 ListOnlineAgent(按用户)+ ListAllOnlineAgent(全量)。
 type ListOnlineReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OwnerDid      string                 `protobuf:"bytes,1,opt,name=owner_did,json=ownerDid,proto3" json:"owner_did,omitempty"` // 可选:只看该用户的在线 agent;空=全部在线
+	OwnerDid      *string                `protobuf:"bytes,1,opt,name=owner_did,json=ownerDid,proto3,oneof" json:"owner_did,omitempty"` // 可选:只看该用户的在线 agent;**不传=全部在线**(以前用空串表示,已禁止)
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -274,8 +274,8 @@ func (*ListOnlineReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListOnlineReq) GetOwnerDid() string {
-	if x != nil {
-		return x.OwnerDid
+	if x != nil && x.OwnerDid != nil {
+		return *x.OwnerDid
 	}
 	return ""
 }
@@ -293,7 +293,7 @@ type ListOnlineResp struct {
 	//
 	//	后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
 	//	此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
-	Total         int32        `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32       `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Infos         []*hi.Entity `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -330,8 +330,8 @@ func (*ListOnlineResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListOnlineResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -406,7 +406,7 @@ func (x *ListAgentsByUsersReq) GetPagination() *hi.Pagination {
 // 由 club 把 master 填进 AgentInfo.creator —— 关系不穿,各服务填各自视角的值。
 type ListAgentsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Agents        []*ai.AgentInfo        `protobuf:"bytes,2,rep,name=agents,proto3" json:"agents,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -443,8 +443,8 @@ func (*ListAgentsResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListAgentsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -460,34 +460,42 @@ var File_hi_club_agent_proto protoreflect.FileDescriptor
 
 const file_hi_club_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/agent.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"3\n" +
-	"\rMasterBindReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\"%\n" +
-	"\rBindStatusReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"@\n" +
+	"\x13hi/club/agent.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"E\n" +
+	"\rMasterBindReq\x12*\n" +
+	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"4\n" +
+	"\rBindStatusReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"@\n" +
 	"\x0eBindStatusResp\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x01\"3\n" +
-	"\vTransferReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x0e\n" +
-	"\x02to\x18\x02 \x01(\tR\x02to\"\\\n" +
-	"\rListOnlineReq\x12\x1b\n" +
-	"\towner_did\x18\x01 \x01(\tR\bownerDid\x12.\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x01\"N\n" +
+	"\vTransferReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x13\n" +
+	"\x02to\x18\x02 \x01(\tH\x01R\x02to\x88\x01\x01B\b\n" +
+	"\x06_agentB\x05\n" +
+	"\x03_to\"o\n" +
+	"\rListOnlineReq\x12 \n" +
+	"\towner_did\x18\x01 \x01(\tH\x00R\bownerDid\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"Z\n" +
-	"\x0eListOnlineResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x12&\n" +
+	"paginationB\f\n" +
+	"\n" +
+	"_owner_did\"i\n" +
+	"\x0eListOnlineResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12&\n" +
 	"\x05infos\x18\x02 \x03(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\"\\\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total\"\\\n" +
 	"\x14ListAgentsByUsersReq\x12\x14\n" +
 	"\x05users\x18\x01 \x03(\tR\x05users\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"b\n" +
-	"\x0eListAgentsResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
-	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x032\xd9\x05\n" +
+	"pagination\"q\n" +
+	"\x0eListAgentsResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12.\n" +
+	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total2\xd9\x05\n" +
 	"\x05Agent\x12<\n" +
 	"\x04List\x12\x14.hi.ai.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
 	"\x0fCreateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12.\n" +
@@ -592,6 +600,12 @@ func file_hi_club_agent_proto_init() {
 	if File_hi_club_agent_proto != nil {
 		return
 	}
+	file_hi_club_agent_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

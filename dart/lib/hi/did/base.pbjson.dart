@@ -19,22 +19,86 @@ import 'dart:typed_data' as $typed_data;
 const Coin$json = {
   '1': 'Coin',
   '2': [
-    {'1': 'icon', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'icon'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'category', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'category'},
-    {'1': 'chain', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'chain'},
-    {'1': 'contract', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'contract'},
-    {'1': 'decimals', '3': 6, '4': 1, '5': 13, '8': {}, '10': 'decimals'},
+    {
+      '1': 'icon',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'icon',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'category',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'category',
+      '17': true
+    },
+    {
+      '1': 'chain',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'chain',
+      '17': true
+    },
+    {
+      '1': 'contract',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'contract',
+      '17': true
+    },
+    {
+      '1': 'decimals',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 5,
+      '10': 'decimals',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_icon'},
+    {'1': '_name'},
+    {'1': '_category'},
+    {'1': '_chain'},
+    {'1': '_contract'},
+    {'1': '_decimals'},
+  ],
 };
 
 /// Descriptor for `Coin`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List coinDescriptor = $convert.base64Decode(
-    'CgRDb2luEhgKBGljb24YASABKAlCBJC1GAFSBGljb24SGAoEbmFtZRgCIAEoCUIEkLUYAVIEbm'
-    'FtZRIgCghjYXRlZ29yeRgDIAEoCUIEkLUYAVIIY2F0ZWdvcnkSGgoFY2hhaW4YBCABKAlCBJC1'
-    'GAFSBWNoYWluEiAKCGNvbnRyYWN0GAUgASgJQgSQtRgBUghjb250cmFjdBIgCghkZWNpbWFscx'
-    'gGIAEoDUIEkLUYAVIIZGVjaW1hbHM6BJi1GAE=');
+    'CgRDb2luEh0KBGljb24YASABKAlCBJC1GAFIAFIEaWNvbogBARIdCgRuYW1lGAIgASgJQgSQtR'
+    'gBSAFSBG5hbWWIAQESJQoIY2F0ZWdvcnkYAyABKAlCBJC1GAFIAlIIY2F0ZWdvcnmIAQESHwoF'
+    'Y2hhaW4YBCABKAlCBJC1GAFIA1IFY2hhaW6IAQESJQoIY29udHJhY3QYBSABKAlCBJC1GAFIBF'
+    'IIY29udHJhY3SIAQESJQoIZGVjaW1hbHMYBiABKA1CBJC1GAFIBVIIZGVjaW1hbHOIAQE6BJi1'
+    'GAFCBwoFX2ljb25CBwoFX25hbWVCCwoJX2NhdGVnb3J5QggKBl9jaGFpbkILCglfY29udHJhY3'
+    'RCCwoJX2RlY2ltYWxz');
 
 @$core.Deprecated('Use listCoinsRespDescriptor instead')
 const ListCoinsResp$json = {
@@ -77,11 +141,24 @@ final $typed_data.Uint8List listSuperAdminUsersRespDescriptor =
 const UserTotalResp$json = {
   '1': 'UserTotalResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'total',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
 };
 
 /// Descriptor for `UserTotalResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userTotalRespDescriptor = $convert.base64Decode(
-    'Cg1Vc2VyVG90YWxSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgBUgV0b3RhbDoEmLUYAQ==');
+    'Cg1Vc2VyVG90YWxSZXNwEh8KBXRvdGFsGAEgASgFQgSQtRgBSABSBXRvdGFsiAEBOgSYtRgBQg'
+    'gKBl90b3RhbA==');

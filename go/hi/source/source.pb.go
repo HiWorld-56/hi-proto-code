@@ -81,7 +81,7 @@ func (NameMode) EnumDescriptor() ([]byte, []int) {
 
 type DownloadReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -117,15 +117,15 @@ func (*DownloadReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DownloadReq) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
 
 type DownloadResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -169,10 +169,10 @@ func (x *DownloadResp) GetContent() []byte {
 
 type DownloadStreamResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chunk         []byte                 `protobuf:"bytes,1,opt,name=chunk,proto3" json:"chunk,omitempty"`    // 文件内容分片
-	Sent          int64                  `protobuf:"varint,2,opt,name=sent,proto3" json:"sent,omitempty"`     // 已发送字节数（累计）, 单位：字节
-	Total         int64                  `protobuf:"varint,3,opt,name=total,proto3" json:"total,omitempty"`   // 文件总大小, 单位：字节
-	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"` // 当前块在文件中的起始字节位置
+	Chunk         []byte                 `protobuf:"bytes,1,opt,name=chunk,proto3,oneof" json:"chunk,omitempty"`    // 文件内容分片
+	Sent          *int64                 `protobuf:"varint,2,opt,name=sent,proto3,oneof" json:"sent,omitempty"`     // 已发送字节数（累计）, 单位：字节
+	Total         *int64                 `protobuf:"varint,3,opt,name=total,proto3,oneof" json:"total,omitempty"`   // 文件总大小, 单位：字节
+	Offset        *int64                 `protobuf:"varint,4,opt,name=offset,proto3,oneof" json:"offset,omitempty"` // 当前块在文件中的起始字节位置
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -215,31 +215,31 @@ func (x *DownloadStreamResp) GetChunk() []byte {
 }
 
 func (x *DownloadStreamResp) GetSent() int64 {
-	if x != nil {
-		return x.Sent
+	if x != nil && x.Sent != nil {
+		return *x.Sent
 	}
 	return 0
 }
 
 func (x *DownloadStreamResp) GetTotal() int64 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
 
 func (x *DownloadStreamResp) GetOffset() int64 {
-	if x != nil {
-		return x.Offset
+	if x != nil && x.Offset != nil {
+		return *x.Offset
 	}
 	return 0
 }
 
 type DownloadStreamReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`        // 文件URL
-	Offset        int64                  `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"` // 起始偏移量（字节），0表示从头开始，支持断点续传
-	Limit         int64                  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`   // 限制下载大小（字节），0表示下载全部
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"`        // 文件URL
+	Offset        *int64                 `protobuf:"varint,2,opt,name=offset,proto3,oneof" json:"offset,omitempty"` // 起始偏移量（字节），0表示从头开始，支持断点续传
+	Limit         *int64                 `protobuf:"varint,3,opt,name=limit,proto3,oneof" json:"limit,omitempty"`   // 限制下载大小（字节），0表示下载全部
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -275,22 +275,22 @@ func (*DownloadStreamReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DownloadStreamReq) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
 
 func (x *DownloadStreamReq) GetOffset() int64 {
-	if x != nil {
-		return x.Offset
+	if x != nil && x.Offset != nil {
+		return *x.Offset
 	}
 	return 0
 }
 
 func (x *DownloadStreamReq) GetLimit() int64 {
-	if x != nil {
-		return x.Limit
+	if x != nil && x.Limit != nil {
+		return *x.Limit
 	}
 	return 0
 }
@@ -313,12 +313,12 @@ func (x *DownloadStreamReq) GetLimit() int64 {
 //	鉴权由各业务模块在转发前完成(它们本就持有用户身份)。
 type PutReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"` // 目标 bucket
-	Dir           string                 `protobuf:"bytes,2,opt,name=dir,proto3" json:"dir,omitempty"`       // bucket 内逻辑目录,如 "avatar" / "plugin/<uuid>";空=根
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`     // 原始文件名(允许空格等,仅用于取扩展名;NAME_RANDOM 只保留扩展名,不带原名)
-	Content       []byte                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
-	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"`                                       // 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
-	NameMode      NameMode               `protobuf:"varint,6,opt,name=name_mode,json=nameMode,proto3,enum=hi.source.NameMode" json:"name_mode,omitempty"` // 对象命名方式,默认随机
+	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"` // 目标 bucket
+	Dir           *string                `protobuf:"bytes,2,opt,name=dir,proto3,oneof" json:"dir,omitempty"`       // bucket 内逻辑目录,如 "avatar" / "plugin/<uuid>";不传=根
+	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`     // 原始文件名(允许空格等,仅用于取扩展名;NAME_RANDOM 只保留扩展名,不带原名)
+	Content       []byte                 `protobuf:"bytes,4,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	Thumbnail     *bool                  `protobuf:"varint,5,opt,name=thumbnail,proto3,oneof" json:"thumbnail,omitempty"`                                       // 是否同时生成缩略图(仅图片有效;原先靠 type==image 隐式触发,现改显式)
+	NameMode      *NameMode              `protobuf:"varint,6,opt,name=name_mode,json=nameMode,proto3,enum=hi.source.NameMode,oneof" json:"name_mode,omitempty"` // 对象命名方式,默认随机
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -354,22 +354,22 @@ func (*PutReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *PutReq) GetBucket() string {
-	if x != nil {
-		return x.Bucket
+	if x != nil && x.Bucket != nil {
+		return *x.Bucket
 	}
 	return ""
 }
 
 func (x *PutReq) GetDir() string {
-	if x != nil {
-		return x.Dir
+	if x != nil && x.Dir != nil {
+		return *x.Dir
 	}
 	return ""
 }
 
 func (x *PutReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -382,15 +382,15 @@ func (x *PutReq) GetContent() []byte {
 }
 
 func (x *PutReq) GetThumbnail() bool {
-	if x != nil {
-		return x.Thumbnail
+	if x != nil && x.Thumbnail != nil {
+		return *x.Thumbnail
 	}
 	return false
 }
 
 func (x *PutReq) GetNameMode() NameMode {
-	if x != nil {
-		return x.NameMode
+	if x != nil && x.NameMode != nil {
+		return *x.NameMode
 	}
 	return NameMode_NAME_RANDOM
 }
@@ -479,11 +479,11 @@ func (*PutStreamReq_Chunk) isPutStreamReq_Data() {}
 
 type PutMeta struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	Dir           string                 `protobuf:"bytes,2,opt,name=dir,proto3" json:"dir,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"` // 允许空格等,仅用于取扩展名
-	Size          int64                  `protobuf:"varint,4,opt,name=size,proto3" json:"size,omitempty"`
-	Thumbnail     bool                   `protobuf:"varint,5,opt,name=thumbnail,proto3" json:"thumbnail,omitempty"`
+	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
+	Dir           *string                `protobuf:"bytes,2,opt,name=dir,proto3,oneof" json:"dir,omitempty"`
+	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"` // 允许空格等,仅用于取扩展名
+	Size          *int64                 `protobuf:"varint,4,opt,name=size,proto3,oneof" json:"size,omitempty"`
+	Thumbnail     *bool                  `protobuf:"varint,5,opt,name=thumbnail,proto3,oneof" json:"thumbnail,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -519,36 +519,36 @@ func (*PutMeta) Descriptor() ([]byte, []int) {
 }
 
 func (x *PutMeta) GetBucket() string {
-	if x != nil {
-		return x.Bucket
+	if x != nil && x.Bucket != nil {
+		return *x.Bucket
 	}
 	return ""
 }
 
 func (x *PutMeta) GetDir() string {
-	if x != nil {
-		return x.Dir
+	if x != nil && x.Dir != nil {
+		return *x.Dir
 	}
 	return ""
 }
 
 func (x *PutMeta) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *PutMeta) GetSize() int64 {
-	if x != nil {
-		return x.Size
+	if x != nil && x.Size != nil {
+		return *x.Size
 	}
 	return 0
 }
 
 func (x *PutMeta) GetThumbnail() bool {
-	if x != nil {
-		return x.Thumbnail
+	if x != nil && x.Thumbnail != nil {
+		return *x.Thumbnail
 	}
 	return false
 }
@@ -562,7 +562,7 @@ func (x *PutMeta) GetThumbnail() bool {
 //	对象早没了不该让整个删除操作失败。
 type DeleteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"` // 完整 url,bucket/对象名从中解析
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"` // 完整 url,bucket/对象名从中解析
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -598,8 +598,8 @@ func (*DeleteReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteReq) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
@@ -611,12 +611,12 @@ func (x *DeleteReq) GetUrl() string {
 // **凭据只留在本服务**,调用方(主服务)只拿回一串 url。
 type PresignedUrlReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`                                     // 桶内对象键(不含桶名)
-	ExpireSeconds int64                  `protobuf:"varint,3,opt,name=expire_seconds,json=expireSeconds,proto3" json:"expire_seconds,omitempty"` // 有效期;<=0 用服务端默认
+	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
+	Object        *string                `protobuf:"bytes,2,opt,name=object,proto3,oneof" json:"object,omitempty"`                                     // 桶内对象键(不含桶名)
+	ExpireSeconds *int64                 `protobuf:"varint,3,opt,name=expire_seconds,json=expireSeconds,proto3,oneof" json:"expire_seconds,omitempty"` // 有效期;<=0 用服务端默认
 	// 可选:覆盖下载时的文件名(response-content-disposition)。
 	// 发布包用得上 —— url 固定为 /dl/hidid.apk,却要让用户存下 hidid-0.0.9.apk。
-	Filename      string `protobuf:"bytes,4,opt,name=filename,proto3" json:"filename,omitempty"`
+	Filename      *string `protobuf:"bytes,4,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -652,37 +652,37 @@ func (*PresignedUrlReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *PresignedUrlReq) GetBucket() string {
-	if x != nil {
-		return x.Bucket
+	if x != nil && x.Bucket != nil {
+		return *x.Bucket
 	}
 	return ""
 }
 
 func (x *PresignedUrlReq) GetObject() string {
-	if x != nil {
-		return x.Object
+	if x != nil && x.Object != nil {
+		return *x.Object
 	}
 	return ""
 }
 
 func (x *PresignedUrlReq) GetExpireSeconds() int64 {
-	if x != nil {
-		return x.ExpireSeconds
+	if x != nil && x.ExpireSeconds != nil {
+		return *x.ExpireSeconds
 	}
 	return 0
 }
 
 func (x *PresignedUrlReq) GetFilename() string {
-	if x != nil {
-		return x.Filename
+	if x != nil && x.Filename != nil {
+		return *x.Filename
 	}
 	return ""
 }
 
 type PresignedUrlResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`                            // 带签名参数的完整 url,谁拿到都能下,到期即失效
-	ExpireAt      int64                  `protobuf:"varint,2,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"` // 失效时刻(unix 秒),调用方据此决定要不要重新要一个
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"`                            // 带签名参数的完整 url,谁拿到都能下,到期即失效
+	ExpireAt      *int64                 `protobuf:"varint,2,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"` // 失效时刻(unix 秒),调用方据此决定要不要重新要一个
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -718,15 +718,15 @@ func (*PresignedUrlResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *PresignedUrlResp) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
 
 func (x *PresignedUrlResp) GetExpireAt() int64 {
-	if x != nil {
-		return x.ExpireAt
+	if x != nil && x.ExpireAt != nil {
+		return *x.ExpireAt
 	}
 	return 0
 }
@@ -738,8 +738,8 @@ func (x *PresignedUrlResp) GetExpireAt() int64 {
 // 等于让调用方复制一份 url 拼装规则,base 一改两边就散。
 type GetObjectReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`
+	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
+	Object        *string                `protobuf:"bytes,2,opt,name=object,proto3,oneof" json:"object,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -775,22 +775,22 @@ func (*GetObjectReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetObjectReq) GetBucket() string {
-	if x != nil {
-		return x.Bucket
+	if x != nil && x.Bucket != nil {
+		return *x.Bucket
 	}
 	return ""
 }
 
 func (x *GetObjectReq) GetObject() string {
-	if x != nil {
-		return x.Object
+	if x != nil && x.Object != nil {
+		return *x.Object
 	}
 	return ""
 }
 
 type GetObjectResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -834,9 +834,9 @@ func (x *GetObjectResp) GetContent() []byte {
 
 type PutObjectReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"` // **精确对象键**,不改名
-	Content       []byte                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
+	Object        *string                `protobuf:"bytes,2,opt,name=object,proto3,oneof" json:"object,omitempty"` // **精确对象键**,不改名
+	Content       []byte                 `protobuf:"bytes,3,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -872,15 +872,15 @@ func (*PutObjectReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *PutObjectReq) GetBucket() string {
-	if x != nil {
-		return x.Bucket
+	if x != nil && x.Bucket != nil {
+		return *x.Bucket
 	}
 	return ""
 }
 
 func (x *PutObjectReq) GetObject() string {
-	if x != nil {
-		return x.Object
+	if x != nil && x.Object != nil {
+		return *x.Object
 	}
 	return ""
 }
@@ -896,10 +896,10 @@ func (x *PutObjectReq) GetContent() []byte {
 // 让它自己拼 minio url 就得把 base 配一份过去,base 一改两边就散。
 type GetObjectStreamReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`
-	Offset        int64                  `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"` // 断点续传起点;0=从头
-	Limit         int64                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`   // 0=到结尾
+	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
+	Object        *string                `protobuf:"bytes,2,opt,name=object,proto3,oneof" json:"object,omitempty"`
+	Offset        *int64                 `protobuf:"varint,3,opt,name=offset,proto3,oneof" json:"offset,omitempty"` // 断点续传起点;0=从头
+	Limit         *int64                 `protobuf:"varint,4,opt,name=limit,proto3,oneof" json:"limit,omitempty"`   // 0=到结尾
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -935,37 +935,37 @@ func (*GetObjectStreamReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetObjectStreamReq) GetBucket() string {
-	if x != nil {
-		return x.Bucket
+	if x != nil && x.Bucket != nil {
+		return *x.Bucket
 	}
 	return ""
 }
 
 func (x *GetObjectStreamReq) GetObject() string {
-	if x != nil {
-		return x.Object
+	if x != nil && x.Object != nil {
+		return *x.Object
 	}
 	return ""
 }
 
 func (x *GetObjectStreamReq) GetOffset() int64 {
-	if x != nil {
-		return x.Offset
+	if x != nil && x.Offset != nil {
+		return *x.Offset
 	}
 	return 0
 }
 
 func (x *GetObjectStreamReq) GetLimit() int64 {
-	if x != nil {
-		return x.Limit
+	if x != nil && x.Limit != nil {
+		return *x.Limit
 	}
 	return 0
 }
 
 type GetObjectStreamResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"` // 整个对象的大小,首块带上,便于显示进度
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"` // 整个对象的大小,首块带上,便于显示进度
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1008,8 +1008,8 @@ func (x *GetObjectStreamResp) GetContent() []byte {
 }
 
 func (x *GetObjectStreamResp) GetTotal() int64 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -1018,8 +1018,8 @@ func (x *GetObjectStreamResp) GetTotal() int64 {
 // "manifest 里写的 sha256 与真正传上去的包是否一致"。
 type ObjectInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`
+	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
+	Object        *string                `protobuf:"bytes,2,opt,name=object,proto3,oneof" json:"object,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1055,23 +1055,23 @@ func (*ObjectInfoReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ObjectInfoReq) GetBucket() string {
-	if x != nil {
-		return x.Bucket
+	if x != nil && x.Bucket != nil {
+		return *x.Bucket
 	}
 	return ""
 }
 
 func (x *ObjectInfoReq) GetObject() string {
-	if x != nil {
-		return x.Object
+	if x != nil && x.Object != nil {
+		return *x.Object
 	}
 	return ""
 }
 
 type ObjectInfoResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Size          int64                  `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`
-	Sha256        string                 `protobuf:"bytes,2,opt,name=sha256,proto3" json:"sha256,omitempty"`
+	Size          *int64                 `protobuf:"varint,1,opt,name=size,proto3,oneof" json:"size,omitempty"`
+	Sha256        *string                `protobuf:"bytes,2,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1107,15 +1107,15 @@ func (*ObjectInfoResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ObjectInfoResp) GetSize() int64 {
-	if x != nil {
-		return x.Size
+	if x != nil && x.Size != nil {
+		return *x.Size
 	}
 	return 0
 }
 
 func (x *ObjectInfoResp) GetSha256() string {
-	if x != nil {
-		return x.Sha256
+	if x != nil && x.Sha256 != nil {
+		return *x.Sha256
 	}
 	return ""
 }
@@ -1124,70 +1124,130 @@ var File_hi_source_source_proto protoreflect.FileDescriptor
 
 const file_hi_source_source_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/source/source.proto\x12\thi.source\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"-\n" +
-	"\vDownloadReq\x12\x1e\n" +
-	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\"4\n" +
-	"\fDownloadResp\x12\x1e\n" +
-	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01R\acontent:\x04\x98\xb5\x18\x01\"\x8a\x01\n" +
-	"\x12DownloadStreamResp\x12\x1a\n" +
-	"\x05chunk\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01R\x05chunk\x12\x18\n" +
-	"\x04sent\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\x04sent\x12\x1a\n" +
-	"\x05total\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01R\x05total\x12\x1c\n" +
-	"\x06offset\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\x06offset:\x04\x98\xb5\x18\x01\"s\n" +
-	"\x11DownloadStreamReq\x12\x1e\n" +
-	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\x12\x1f\n" +
-	"\x06offset\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x06offset\x12\x1d\n" +
-	"\x05limit\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"\xd0\x01\n" +
-	"\x06PutReq\x12$\n" +
-	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12\x10\n" +
-	"\x03dir\x18\x02 \x01(\tR\x03dir\x12\x1b\n" +
-	"\x04name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12!\n" +
-	"\acontent\x18\x04 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\x12\x1c\n" +
-	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\x120\n" +
-	"\tname_mode\x18\x06 \x01(\x0e2\x13.hi.source.NameModeR\bnameMode\"X\n" +
+	"\x16hi/source/source.proto\x12\thi.source\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"=\n" +
+	"\vDownloadReq\x12&\n" +
+	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x03url\x88\x01\x01B\x06\n" +
+	"\x04_url\"E\n" +
+	"\fDownloadResp\x12#\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01H\x00R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x01B\n" +
+	"\n" +
+	"\b_content\"\xc6\x01\n" +
+	"\x12DownloadStreamResp\x12\x1f\n" +
+	"\x05chunk\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01H\x00R\x05chunk\x88\x01\x01\x12\x1d\n" +
+	"\x04sent\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x01R\x04sent\x88\x01\x01\x12\x1f\n" +
+	"\x05total\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01H\x02R\x05total\x88\x01\x01\x12!\n" +
+	"\x06offset\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01H\x03R\x06offset\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_chunkB\a\n" +
+	"\x05_sentB\b\n" +
+	"\x06_totalB\t\n" +
+	"\a_offset\"\xa8\x01\n" +
+	"\x11DownloadStreamReq\x12&\n" +
+	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x03url\x88\x01\x01\x12'\n" +
+	"\x06offset\x18\x02 \x01(\x03B\n" +
+	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x01R\x06offset\x88\x01\x01\x12%\n" +
+	"\x05limit\x18\x03 \x01(\x03B\n" +
+	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x02R\x05limit\x88\x01\x01B\x06\n" +
+	"\x04_urlB\t\n" +
+	"\a_offsetB\b\n" +
+	"\x06_limit\"\xbb\x02\n" +
+	"\x06PutReq\x12,\n" +
+	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12\x15\n" +
+	"\x03dir\x18\x02 \x01(\tH\x01R\x03dir\x88\x01\x01\x12#\n" +
+	"\x04name\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x04name\x88\x01\x01\x12)\n" +
+	"\acontent\x18\x04 \x01(\fB\n" +
+	"\xbaH\a\xc8\x01\x01z\x02\x10\x01H\x03R\acontent\x88\x01\x01\x12!\n" +
+	"\tthumbnail\x18\x05 \x01(\bH\x04R\tthumbnail\x88\x01\x01\x125\n" +
+	"\tname_mode\x18\x06 \x01(\x0e2\x13.hi.source.NameModeH\x05R\bnameMode\x88\x01\x01B\t\n" +
+	"\a_bucketB\x06\n" +
+	"\x04_dirB\a\n" +
+	"\x05_nameB\n" +
+	"\n" +
+	"\b_contentB\f\n" +
+	"\n" +
+	"_thumbnailB\f\n" +
+	"\n" +
+	"_name_mode\"X\n" +
 	"\fPutStreamReq\x12(\n" +
 	"\x04meta\x18\x01 \x01(\v2\x12.hi.source.PutMetaH\x00R\x04meta\x12\x16\n" +
 	"\x05chunk\x18\x02 \x01(\fH\x00R\x05chunkB\x06\n" +
-	"\x04data\"\x99\x01\n" +
-	"\aPutMeta\x12$\n" +
-	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12\x10\n" +
-	"\x03dir\x18\x02 \x01(\tR\x03dir\x12\x1b\n" +
-	"\x04name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12\x1b\n" +
-	"\x04size\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\x12\x1c\n" +
-	"\tthumbnail\x18\x05 \x01(\bR\tthumbnail\"+\n" +
-	"\tDeleteReq\x12\x1e\n" +
-	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\"\xa0\x01\n" +
-	"\x0fPresignedUrlReq\x12$\n" +
-	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
-	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\x12%\n" +
-	"\x0eexpire_seconds\x18\x03 \x01(\x03R\rexpireSeconds\x12\x1a\n" +
-	"\bfilename\x18\x04 \x01(\tR\bfilename\"S\n" +
-	"\x10PresignedUrlResp\x12\x16\n" +
-	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12!\n" +
-	"\texpire_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\bexpireAt:\x04\x98\xb5\x18\x01\"Z\n" +
-	"\fGetObjectReq\x12$\n" +
-	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
-	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\"5\n" +
-	"\rGetObjectResp\x12\x1e\n" +
-	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x02R\acontent:\x04\x98\xb5\x18\x02\"t\n" +
-	"\fPutObjectReq\x12$\n" +
-	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
-	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\fR\acontent\"\xa0\x01\n" +
-	"\x12GetObjectStreamReq\x12$\n" +
-	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
-	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\x12\x1f\n" +
-	"\x06offset\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x06offset\x12\x1d\n" +
-	"\x05limit\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02(\x00R\x05limit\"W\n" +
-	"\x13GetObjectStreamResp\x12\x1e\n" +
-	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x02R\acontent\x12\x1a\n" +
-	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02R\x05total:\x04\x98\xb5\x18\x02\"[\n" +
-	"\rObjectInfoReq\x12$\n" +
-	"\x06bucket\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06bucket\x12$\n" +
-	"\x06object\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x06object\"N\n" +
-	"\x0eObjectInfoResp\x12\x18\n" +
-	"\x04size\x18\x01 \x01(\x03B\x04\x90\xb5\x18\x02R\x04size\x12\x1c\n" +
-	"\x06sha256\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x06sha256:\x04\x98\xb5\x18\x02*>\n" +
+	"\x04data\"\xee\x01\n" +
+	"\aPutMeta\x12,\n" +
+	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12\x15\n" +
+	"\x03dir\x18\x02 \x01(\tH\x01R\x03dir\x88\x01\x01\x12#\n" +
+	"\x04name\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x04name\x88\x01\x01\x12#\n" +
+	"\x04size\x18\x04 \x01(\x03B\n" +
+	"\xbaH\a\xc8\x01\x01\"\x02 \x00H\x03R\x04size\x88\x01\x01\x12!\n" +
+	"\tthumbnail\x18\x05 \x01(\bH\x04R\tthumbnail\x88\x01\x01B\t\n" +
+	"\a_bucketB\x06\n" +
+	"\x04_dirB\a\n" +
+	"\x05_nameB\a\n" +
+	"\x05_sizeB\f\n" +
+	"\n" +
+	"_thumbnail\";\n" +
+	"\tDeleteReq\x12&\n" +
+	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x03url\x88\x01\x01B\x06\n" +
+	"\x04_url\"\xf0\x01\n" +
+	"\x0fPresignedUrlReq\x12,\n" +
+	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12,\n" +
+	"\x06object\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x06object\x88\x01\x01\x12*\n" +
+	"\x0eexpire_seconds\x18\x03 \x01(\x03H\x02R\rexpireSeconds\x88\x01\x01\x12\x1f\n" +
+	"\bfilename\x18\x04 \x01(\tH\x03R\bfilename\x88\x01\x01B\t\n" +
+	"\a_bucketB\t\n" +
+	"\a_objectB\x11\n" +
+	"\x0f_expire_secondsB\v\n" +
+	"\t_filename\"s\n" +
+	"\x10PresignedUrlResp\x12\x1b\n" +
+	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01\x12&\n" +
+	"\texpire_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x01R\bexpireAt\x88\x01\x01:\x04\x98\xb5\x18\x01B\x06\n" +
+	"\x04_urlB\f\n" +
+	"\n" +
+	"_expire_at\"\x80\x01\n" +
+	"\fGetObjectReq\x12,\n" +
+	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12,\n" +
+	"\x06object\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x06object\x88\x01\x01B\t\n" +
+	"\a_bucketB\t\n" +
+	"\a_object\"F\n" +
+	"\rGetObjectResp\x12#\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x02H\x00R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\n" +
+	"\b_content\"\xab\x01\n" +
+	"\fPutObjectReq\x12,\n" +
+	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12,\n" +
+	"\x06object\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x06object\x88\x01\x01\x12\x1d\n" +
+	"\acontent\x18\x03 \x01(\fH\x02R\acontent\x88\x01\x01B\t\n" +
+	"\a_bucketB\t\n" +
+	"\a_objectB\n" +
+	"\n" +
+	"\b_content\"\xeb\x01\n" +
+	"\x12GetObjectStreamReq\x12,\n" +
+	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12,\n" +
+	"\x06object\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x06object\x88\x01\x01\x12'\n" +
+	"\x06offset\x18\x03 \x01(\x03B\n" +
+	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x02R\x06offset\x88\x01\x01\x12%\n" +
+	"\x05limit\x18\x04 \x01(\x03B\n" +
+	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x03R\x05limit\x88\x01\x01B\t\n" +
+	"\a_bucketB\t\n" +
+	"\a_objectB\t\n" +
+	"\a_offsetB\b\n" +
+	"\x06_limit\"w\n" +
+	"\x13GetObjectStreamResp\x12#\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x02H\x00R\acontent\x88\x01\x01\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\n" +
+	"\b_contentB\b\n" +
+	"\x06_total\"\x81\x01\n" +
+	"\rObjectInfoReq\x12,\n" +
+	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12,\n" +
+	"\x06object\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x06object\x88\x01\x01B\t\n" +
+	"\a_bucketB\t\n" +
+	"\a_object\"l\n" +
+	"\x0eObjectInfoResp\x12\x1d\n" +
+	"\x04size\x18\x01 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x04size\x88\x01\x01\x12!\n" +
+	"\x06sha256\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x06sha256\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_sizeB\t\n" +
+	"\a_sha256*>\n" +
 	"\bNameMode\x12\x0f\n" +
 	"\vNAME_RANDOM\x10\x00\x12\x12\n" +
 	"\x0eNAME_TIMESTAMP\x10\x01\x12\r\n" +
@@ -1283,10 +1343,26 @@ func file_hi_source_source_proto_init() {
 	if File_hi_source_source_proto != nil {
 		return
 	}
+	file_hi_source_source_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_source_source_proto_msgTypes[5].OneofWrappers = []any{
 		(*PutStreamReq_Meta)(nil),
 		(*PutStreamReq_Chunk)(nil),
 	}
+	file_hi_source_source_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_source_source_proto_msgTypes[16].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

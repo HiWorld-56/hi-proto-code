@@ -27,15 +27,15 @@ const (
 type AgentDelayUnit struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 与 AgentUsageResp(同 owner 运营指标)一致取 SELF —— 无 participant 对端会看别人机器人的延迟
-	Agent         string `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Uuid          string `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type          string `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	Llm           int32  `protobuf:"varint,4,opt,name=llm,proto3" json:"llm,omitempty"`
-	Llm2          int32  `protobuf:"varint,5,opt,name=llm2,proto3" json:"llm2,omitempty"`
-	Stt           int32  `protobuf:"varint,6,opt,name=stt,proto3" json:"stt,omitempty"`
-	Tts           int32  `protobuf:"varint,7,opt,name=tts,proto3" json:"tts,omitempty"`
-	FunctionCall  int32  `protobuf:"varint,8,opt,name=function_call,json=functionCall,proto3" json:"function_call,omitempty"`
-	TestTime      int64  `protobuf:"varint,9,opt,name=test_time,json=testTime,proto3" json:"test_time,omitempty"`
+	Agent         *string `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Uuid          *string `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Type          *string `protobuf:"bytes,3,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	Llm           *int32  `protobuf:"varint,4,opt,name=llm,proto3,oneof" json:"llm,omitempty"`
+	Llm2          *int32  `protobuf:"varint,5,opt,name=llm2,proto3,oneof" json:"llm2,omitempty"`
+	Stt           *int32  `protobuf:"varint,6,opt,name=stt,proto3,oneof" json:"stt,omitempty"`
+	Tts           *int32  `protobuf:"varint,7,opt,name=tts,proto3,oneof" json:"tts,omitempty"`
+	FunctionCall  *int32  `protobuf:"varint,8,opt,name=function_call,json=functionCall,proto3,oneof" json:"function_call,omitempty"`
+	TestTime      *int64  `protobuf:"varint,9,opt,name=test_time,json=testTime,proto3,oneof" json:"test_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -71,64 +71,64 @@ func (*AgentDelayUnit) Descriptor() ([]byte, []int) {
 }
 
 func (x *AgentDelayUnit) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *AgentDelayUnit) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *AgentDelayUnit) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
 
 func (x *AgentDelayUnit) GetLlm() int32 {
-	if x != nil {
-		return x.Llm
+	if x != nil && x.Llm != nil {
+		return *x.Llm
 	}
 	return 0
 }
 
 func (x *AgentDelayUnit) GetLlm2() int32 {
-	if x != nil {
-		return x.Llm2
+	if x != nil && x.Llm2 != nil {
+		return *x.Llm2
 	}
 	return 0
 }
 
 func (x *AgentDelayUnit) GetStt() int32 {
-	if x != nil {
-		return x.Stt
+	if x != nil && x.Stt != nil {
+		return *x.Stt
 	}
 	return 0
 }
 
 func (x *AgentDelayUnit) GetTts() int32 {
-	if x != nil {
-		return x.Tts
+	if x != nil && x.Tts != nil {
+		return *x.Tts
 	}
 	return 0
 }
 
 func (x *AgentDelayUnit) GetFunctionCall() int32 {
-	if x != nil {
-		return x.FunctionCall
+	if x != nil && x.FunctionCall != nil {
+		return *x.FunctionCall
 	}
 	return 0
 }
 
 func (x *AgentDelayUnit) GetTestTime() int64 {
-	if x != nil {
-		return x.TestTime
+	if x != nil && x.TestTime != nil {
+		return *x.TestTime
 	}
 	return 0
 }
@@ -140,7 +140,7 @@ func (x *AgentDelayUnit) GetTestTime() int64 {
 // proto 上完全看不出来。已拆成 ListHistory,**别再把 agent 加回这里**。
 type ListAgentDelaysReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // 可选:按类型过滤(**空 = 全部类型**)
+	Type          *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"` // 可选:按类型过滤(**不传 = 全部类型**)
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -177,8 +177,8 @@ func (*ListAgentDelaysReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListAgentDelaysReq) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -193,8 +193,8 @@ func (x *ListAgentDelaysReq) GetPagination() *hi.Pagination {
 // 明细:**某一台机器人的历次**测时记录,按时间倒序分页。
 type ListAgentDelayHistoryReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // 可选:按类型过滤(**空 = 全部类型**)
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"` // 可选:按类型过滤(**不传 = 全部类型**)
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -231,15 +231,15 @@ func (*ListAgentDelayHistoryReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListAgentDelayHistoryReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *ListAgentDelayHistoryReq) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -253,7 +253,7 @@ func (x *ListAgentDelayHistoryReq) GetPagination() *hi.Pagination {
 
 type ListAgentDelaysResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Units         []*AgentDelayUnit      `protobuf:"bytes,2,rep,name=units,proto3" json:"units,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -290,8 +290,8 @@ func (*ListAgentDelaysResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListAgentDelaysResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -307,31 +307,45 @@ var File_hi_ai_bench_proto protoreflect.FileDescriptor
 
 const file_hi_ai_bench_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/bench.proto\x12\x05hi.ai\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x96\x02\n" +
-	"\x0eAgentDelayUnit\x12\x1a\n" +
-	"\x05agent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05agent\x12\x18\n" +
-	"\x04uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x18\n" +
-	"\x04type\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x16\n" +
-	"\x03llm\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x03R\x03llm\x12\x18\n" +
-	"\x04llm2\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03R\x04llm2\x12\x16\n" +
-	"\x03stt\x18\x06 \x01(\x05B\x04\x90\xb5\x18\x03R\x03stt\x12\x16\n" +
-	"\x03tts\x18\a \x01(\x05B\x04\x90\xb5\x18\x03R\x03tts\x12)\n" +
-	"\rfunction_call\x18\b \x01(\x05B\x04\x90\xb5\x18\x03R\ffunctionCall\x12!\n" +
-	"\ttest_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03R\btestTime:\x04\x98\xb5\x18\x03\"X\n" +
-	"\x12ListAgentDelaysReq\x12\x12\n" +
-	"\x04type\x18\x01 \x01(\tR\x04type\x12.\n" +
+	"\x11hi/ai/bench.proto\x12\x05hi.ai\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa0\x03\n" +
+	"\x0eAgentDelayUnit\x12\x1f\n" +
+	"\x05agent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05agent\x88\x01\x01\x12\x1d\n" +
+	"\x04uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
+	"\x04type\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04type\x88\x01\x01\x12\x1b\n" +
+	"\x03llm\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x03H\x03R\x03llm\x88\x01\x01\x12\x1d\n" +
+	"\x04llm2\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03H\x04R\x04llm2\x88\x01\x01\x12\x1b\n" +
+	"\x03stt\x18\x06 \x01(\x05B\x04\x90\xb5\x18\x03H\x05R\x03stt\x88\x01\x01\x12\x1b\n" +
+	"\x03tts\x18\a \x01(\x05B\x04\x90\xb5\x18\x03H\x06R\x03tts\x88\x01\x01\x12.\n" +
+	"\rfunction_call\x18\b \x01(\x05B\x04\x90\xb5\x18\x03H\aR\ffunctionCall\x88\x01\x01\x12&\n" +
+	"\ttest_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03H\bR\btestTime\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_agentB\a\n" +
+	"\x05_uuidB\a\n" +
+	"\x05_typeB\x06\n" +
+	"\x04_llmB\a\n" +
+	"\x05_llm2B\x06\n" +
+	"\x04_sttB\x06\n" +
+	"\x04_ttsB\x10\n" +
+	"\x0e_function_callB\f\n" +
+	"\n" +
+	"_test_time\"f\n" +
+	"\x12ListAgentDelaysReq\x12\x17\n" +
+	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\x82\x01\n" +
-	"\x18ListAgentDelayHistoryReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\x12.\n" +
+	"paginationB\a\n" +
+	"\x05_type\"\xa2\x01\n" +
+	"\x18ListAgentDelayHistoryReq\x12*\n" +
+	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12\x17\n" +
+	"\x04type\x18\x02 \x01(\tH\x01R\x04type\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"j\n" +
-	"\x13ListAgentDelaysResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x121\n" +
-	"\x05units\x18\x02 \x03(\v2\x15.hi.ai.AgentDelayUnitB\x04\x90\xb5\x18\x03R\x05units:\x04\x98\xb5\x18\x032\xa5\x01\n" +
+	"paginationB\b\n" +
+	"\x06_agentB\a\n" +
+	"\x05_type\"y\n" +
+	"\x13ListAgentDelaysResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x121\n" +
+	"\x05units\x18\x02 \x03(\v2\x15.hi.ai.AgentDelayUnitB\x04\x90\xb5\x18\x03R\x05units:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total2\xa5\x01\n" +
 	"\n" +
 	"AgentBench\x12D\n" +
 	"\x04List\x12\x19.hi.ai.ListAgentDelaysReq\x1a\x1a.hi.ai.ListAgentDelaysResp\"\x05\x8a\xb5\x18\x01\x03\x12Q\n" +
@@ -379,6 +393,10 @@ func file_hi_ai_bench_proto_init() {
 	if File_hi_ai_bench_proto != nil {
 		return
 	}
+	file_hi_ai_bench_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ai_bench_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ai_bench_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_ai_bench_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

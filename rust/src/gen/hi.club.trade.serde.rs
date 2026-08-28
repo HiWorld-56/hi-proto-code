@@ -9,7 +9,7 @@ impl serde::Serialize for ListTradesReq {
         if !self.did.is_empty() {
             len += 1;
         }
-        if !self.id.is_empty() {
+        if self.id.is_some() {
             len += 1;
         }
         if self.pagination.is_some() {
@@ -19,8 +19,8 @@ impl serde::Serialize for ListTradesReq {
         if !self.did.is_empty() {
             struct_ser.serialize_field("did", &self.did)?;
         }
-        if !self.id.is_empty() {
-            struct_ser.serialize_field("id", &self.id)?;
+        if let Some(v) = self.id.as_ref() {
+            struct_ser.serialize_field("id", v)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -103,7 +103,7 @@ impl<'de> serde::Deserialize<'de> for ListTradesReq {
                             if id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("id"));
                             }
-                            id__ = Some(map_.next_value()?);
+                            id__ = map_.next_value()?;
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -115,7 +115,7 @@ impl<'de> serde::Deserialize<'de> for ListTradesReq {
                 }
                 Ok(ListTradesReq {
                     did: did__.unwrap_or_default(),
-                    id: id__.unwrap_or_default(),
+                    id: id__,
                     pagination: pagination__,
                 })
             }

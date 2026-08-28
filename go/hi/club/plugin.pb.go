@@ -33,13 +33,13 @@ const (
 // ListNativeReq —— 见下面 ListNative:**没有 agent 字段**,主体只能从凭证里取。
 // 只带机器人自己的架构:同一版插件两个架构各有一份产物,给错了要到 dlopen 才炸。
 //
-// ⚠️ **空 = aarch64**。老 brain 发的是 `Empty`,在 protobuf 里与"字段缺省"等价,
+// ⚠️ **不传 = aarch64**。老 brain 发的是 `Empty`(根本不带这个字段),optional 之后就是
 //
-//	解出来就是空串 —— 于是它照旧拿到 arm64 那份,零改动继续跑。
-//	这条兼容是有意的,别改成"空就报错"。
+//	"没有值" —— 于是它照旧拿到 arm64 那份,零改动继续跑。这条兼容是有意的。
+//	⛔ **空串不再是合法值**(2026-08-28 起禁止用空串表示"没有"):要么不传,要么给真架构名。
 type ListNativeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Arch          string                 `protobuf:"bytes,1,opt,name=arch,proto3" json:"arch,omitempty"`
+	Arch          *string                `protobuf:"bytes,1,opt,name=arch,proto3,oneof" json:"arch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,8 +75,8 @@ func (*ListNativeReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListNativeReq) GetArch() string {
-	if x != nil {
-		return x.Arch
+	if x != nil && x.Arch != nil {
+		return *x.Arch
 	}
 	return ""
 }
@@ -88,8 +88,8 @@ func (x *ListNativeReq) GetArch() string {
 // 前端**不允许手填 api_key**(防伪),一律由此/建插件时后端自动注入。
 type ReloadApiKeyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 插件 uuid
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did
+	Uuid          *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`   // 插件 uuid
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -125,22 +125,22 @@ func (*ReloadApiKeyReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ReloadApiKeyReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *ReloadApiKeyReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 type ReloadApiKeyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"` // 重新写入的 api_key(便于前端就地刷新列表)
+	ApiKey        *string                `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"` // 重新写入的 api_key(便于前端就地刷新列表)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -176,8 +176,8 @@ func (*ReloadApiKeyResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ReloadApiKeyResp) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
+	if x != nil && x.ApiKey != nil {
+		return *x.ApiKey
 	}
 	return ""
 }
@@ -186,14 +186,19 @@ var File_hi_club_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_club_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"#\n" +
-	"\rListNativeReq\x12\x12\n" +
-	"\x04arch\x18\x01 \x01(\tR\x04arch\";\n" +
-	"\x0fReloadApiKeyReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\"7\n" +
-	"\x10ReloadApiKeyResp\x12\x1d\n" +
-	"\aapi_key\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x06apiKey:\x04\x98\xb5\x18\x032\xdc\b\n" +
+	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"1\n" +
+	"\rListNativeReq\x12\x17\n" +
+	"\x04arch\x18\x01 \x01(\tH\x00R\x04arch\x88\x01\x01B\a\n" +
+	"\x05_arch\"X\n" +
+	"\x0fReloadApiKeyReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x17\n" +
+	"\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01B\b\n" +
+	"\x06_agentB\a\n" +
+	"\x05_uuid\"H\n" +
+	"\x10ReloadApiKeyResp\x12\"\n" +
+	"\aapi_key\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06apiKey\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
+	"\n" +
+	"\b_api_key2\xdc\b\n" +
 	"\x06Plugin\x12C\n" +
 	"\vCreateShell\x12\x15.hi.ai.CreateShellReq\x1a\x16.hi.ai.CreateShellResp\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
 	"\rCreateVersion\x12\x17.hi.ai.CreateVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12;\n" +
@@ -304,6 +309,9 @@ func file_hi_club_plugin_proto_init() {
 	if File_hi_club_plugin_proto != nil {
 		return
 	}
+	file_hi_club_plugin_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_plugin_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_plugin_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

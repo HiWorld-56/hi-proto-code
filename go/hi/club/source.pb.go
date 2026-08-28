@@ -28,7 +28,7 @@ const (
 
 type DownloadResourceReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -64,15 +64,15 @@ func (*DownloadResourceReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DownloadResourceReq) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
 
 type DownloadResourceResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -118,11 +118,14 @@ var File_hi_club_source_proto protoreflect.FileDescriptor
 
 const file_hi_club_source_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/source.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x14hi/ai/training.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x16hi/source/source.proto\x1a\x10hi/options.proto\"5\n" +
-	"\x13DownloadResourceReq\x12\x1e\n" +
-	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03url\"<\n" +
-	"\x14DownloadResourceResp\x12\x1e\n" +
-	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01R\acontent:\x04\x98\xb5\x18\x012\x97\b\n" +
+	"\x14hi/club/source.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x14hi/ai/training.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x16hi/source/source.proto\x1a\x10hi/options.proto\"E\n" +
+	"\x13DownloadResourceReq\x12&\n" +
+	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x03url\x88\x01\x01B\x06\n" +
+	"\x04_url\"M\n" +
+	"\x14DownloadResourceResp\x12#\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01H\x00R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x01B\n" +
+	"\n" +
+	"\b_content2\x97\b\n" +
 	"\x06Source\x124\n" +
 	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x11UploadGroupAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
@@ -218,6 +221,8 @@ func file_hi_club_source_proto_init() {
 	if File_hi_club_source_proto != nil {
 		return
 	}
+	file_hi_club_source_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_source_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

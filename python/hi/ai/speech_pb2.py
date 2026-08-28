@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\"O\n\rSynthesizeReq\x12\x12\n\x04text\x18\x01 \x01(\tR\x04text\x12\x14\n\x05model\x18\x02 \x01(\tR\x05model\x12\x14\n\x05style\x18\x03 \x01(\tR\x05style\".\n\x0eSynthesizeResp\x12\x16\n\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03url:\x04\x98\xb5\x18\x03\"K\n\rTranscribeReq\x12\x10\n\x03url\x18\x01 \x01(\tR\x03url\x12\x14\n\x05model\x18\x02 \x01(\tR\x05model\x12\x12\n\x04lang\x18\x03 \x01(\tR\x04lang\"0\n\x0eTranscribeResp\x12\x18\n\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04text:\x04\x98\xb5\x18\x03\x32\x8c\x01\n\x06Speech\x12@\n\nTranscribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n\nSynthesize\x12\x14.hi.ai.SynthesizeReq\x1a\x15.hi.ai.SynthesizeResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\"{\n\rSynthesizeReq\x12\x17\n\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x19\n\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x19\n\x05style\x18\x03 \x01(\tH\x02R\x05style\x88\x01\x01\x42\x07\n\x05_textB\x08\n\x06_modelB\x08\n\x06_style\";\n\x0eSynthesizeResp\x12\x1b\n\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03url\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x06\n\x04_url\"u\n\rTranscribeReq\x12\x15\n\x03url\x18\x01 \x01(\tH\x00R\x03url\x88\x01\x01\x12\x19\n\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x17\n\x04lang\x18\x03 \x01(\tH\x02R\x04lang\x88\x01\x01\x42\x06\n\x04_urlB\x08\n\x06_modelB\x07\n\x05_lang\">\n\x0eTranscribeResp\x12\x1d\n\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04text\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_text2\x8c\x01\n\x06Speech\x12@\n\nTranscribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n\nSynthesize\x12\x14.hi.ai.SynthesizeReq\x1a\x15.hi.ai.SynthesizeResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -46,13 +46,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SPEECH'].methods_by_name['Synthesize']._loaded_options = None
   _globals['_SPEECH'].methods_by_name['Synthesize']._serialized_options = b'\212\265\030\001\003'
   _globals['_SYNTHESIZEREQ']._serialized_start=47
-  _globals['_SYNTHESIZEREQ']._serialized_end=126
-  _globals['_SYNTHESIZERESP']._serialized_start=128
-  _globals['_SYNTHESIZERESP']._serialized_end=174
-  _globals['_TRANSCRIBEREQ']._serialized_start=176
-  _globals['_TRANSCRIBEREQ']._serialized_end=251
-  _globals['_TRANSCRIBERESP']._serialized_start=253
-  _globals['_TRANSCRIBERESP']._serialized_end=301
-  _globals['_SPEECH']._serialized_start=304
-  _globals['_SPEECH']._serialized_end=444
+  _globals['_SYNTHESIZEREQ']._serialized_end=170
+  _globals['_SYNTHESIZERESP']._serialized_start=172
+  _globals['_SYNTHESIZERESP']._serialized_end=231
+  _globals['_TRANSCRIBEREQ']._serialized_start=233
+  _globals['_TRANSCRIBEREQ']._serialized_end=350
+  _globals['_TRANSCRIBERESP']._serialized_start=352
+  _globals['_TRANSCRIBERESP']._serialized_end=414
+  _globals['_SPEECH']._serialized_start=417
+  _globals['_SPEECH']._serialized_end=557
 # @@protoc_insertion_point(module_scope)

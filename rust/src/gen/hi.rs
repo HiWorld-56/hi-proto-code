@@ -156,15 +156,15 @@ impl Visibility {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SignedData {
-    #[prost(bytes = "vec", tag = "1")]
-    pub data: ::prost::alloc::vec::Vec<u8>,
-    #[prost(string, tag = "2")]
-    pub signature: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", optional, tag = "1")]
+    pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    #[prost(string, optional, tag = "2")]
+    pub signature: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Did {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Entity 是"可寻址节点"的公开门面(did/code + 名字 + 头像 + 类型)。
 /// type: 实体类型(字符串,便于扩展 —— 新增类型只需在此登记一行)
@@ -178,84 +178,84 @@ pub struct Did {
 /// single     单聊
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Entity {
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, tag = "2")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub avatar: ::prost::alloc::string::String,
-    #[prost(int64, tag = "5")]
-    pub update: i64,
+    #[prost(string, optional, tag = "3")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "5")]
+    pub update: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MqttCredentials {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub username: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub password: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub username: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub password: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AuthToken {
-    #[prost(string, tag = "1")]
-    pub token: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub refresh_token: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub token: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub refresh_token: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ⚠️ 被后端 Go 引用(pc_order/notify_pull_order 的签名载荷),proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Nonce {
-    #[prost(string, tag = "1")]
-    pub nonce: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub nonce: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RequestId {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ⚠️ 被后端 Go 引用(chat),proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct State {
-    #[prost(bool, tag = "1")]
-    pub state: bool,
+    #[prost(bool, optional, tag = "1")]
+    pub state: ::core::option::Option<bool>,
 }
 /// ⚠️ 被后端 Go 引用,proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Number {
-    #[prost(int64, tag = "1")]
-    pub n: i64,
+    #[prost(int64, optional, tag = "1")]
+    pub n: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ClientInfo {
     /// HiDID、HiAI、HiClub、HiMedia、Third
-    #[prost(string, tag = "1")]
-    pub app: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub app: ::core::option::Option<::prost::alloc::string::String>,
     /// web、app、pc、embeded
-    #[prost(string, tag = "2")]
-    pub dev: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub dev: ::core::option::Option<::prost::alloc::string::String>,
     /// Null / Mac or Static UUID (Preventing being kicked off)
-    #[prost(string, tag = "3")]
-    pub mac: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub mac: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Pagination {
-    #[prost(int32, tag = "1")]
-    pub page: i32,
-    #[prost(int32, tag = "2")]
-    pub limit: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub page: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "2")]
+    pub limit: ::core::option::Option<i32>,
 }
 /// 服务自身版本/环境(所有 Base 服务共用;各服务实现返回自己的 bin 版本与探测到的环境)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ServerVersionResp {
     /// bin 版本(git tag 注入)
-    #[prost(string, tag = "1")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 运行环境:dev/prod(echo 探测得出)
-    #[prost(string, tag = "2")]
-    pub env: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub env: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ── 上传(各模块转发 hi-source 用)──────────────────────────────────────
 /// 上传链路:客户端 → **业务模块**(在此鉴权)→ 内部转发 hi-source → 落对应 bucket。
@@ -265,10 +265,10 @@ pub struct ServerVersionResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadReq {
     /// 原始文件名(允许空格等,仅用于取扩展名;存储侧随机改名)
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(bytes = "vec", tag = "2")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bytes = "vec", optional, tag = "2")]
+    pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
 /// 分片上传:首包 meta,后续 chunk(大媒体/脚本包用)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -289,15 +289,15 @@ pub mod upload_stream_req {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadMeta {
     /// 允许空格等,仅用于取扩展名
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    #[prost(int64, tag = "2")]
-    pub size: i64,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub size: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadResp {
-    #[prost(string, tag = "1")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -305,6 +305,6 @@ pub struct UploadResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteResourceReq {
     /// 上传时拿到的完整 url
-    #[prost(string, tag = "1")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
 }

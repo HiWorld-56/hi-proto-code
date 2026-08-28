@@ -388,11 +388,11 @@ type MasterEvent struct {
 	// 触发源:
 	//
 	//	bind    绑定了主人(master = 新主人)
-	//	unbind  解绑(master 为空)
+	//	unbind  解绑(master 不传)
 	//	update  **主人还是那个人,但他改了资料**(master = 主人当前完整的 Entity)
 	//
 	// ⚠️ update 这档别按 did 判重 —— did 没变正是它的常态,变的是 name/avatar。
-	Trigger       string `protobuf:"bytes,2,opt,name=trigger,proto3" json:"trigger,omitempty"`
+	Trigger       *string `protobuf:"bytes,2,opt,name=trigger,proto3,oneof" json:"trigger,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -435,8 +435,8 @@ func (x *MasterEvent) GetMaster() *hi.Entity {
 }
 
 func (x *MasterEvent) GetTrigger() string {
-	if x != nil {
-		return x.Trigger
+	if x != nil && x.Trigger != nil {
+		return *x.Trigger
 	}
 	return ""
 }
@@ -447,8 +447,8 @@ func (x *MasterEvent) GetTrigger() string {
 // value 为 AI 输出的纯文本，不封装为 Message 结构。
 type TextReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Value         string                 `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Value         *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -484,15 +484,15 @@ func (*TextReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *TextReply) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *TextReply) GetValue() string {
-	if x != nil {
-		return x.Value
+	if x != nil && x.Value != nil {
+		return *x.Value
 	}
 	return ""
 }
@@ -501,8 +501,8 @@ func (x *TextReply) GetValue() string {
 // uuid 与对应的 TextReply.uuid 一致，audio 为完整音频文件的原始字节。
 type AudioPlay struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Audio         []byte                 `protobuf:"bytes,2,opt,name=audio,proto3" json:"audio,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Audio         []byte                 `protobuf:"bytes,2,opt,name=audio,proto3,oneof" json:"audio,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -538,8 +538,8 @@ func (*AudioPlay) Descriptor() ([]byte, []int) {
 }
 
 func (x *AudioPlay) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
@@ -557,7 +557,7 @@ type BinanceSettings struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
 	Credentials *BinanceCredentials    `protobuf:"bytes,1,opt,name=credentials,proto3" json:"credentials,omitempty"`
 	// 初始本金。**十进制字符串**，与本仓所有金额字段同口径（免浮点误差）。
-	InitialCapital string `protobuf:"bytes,2,opt,name=initial_capital,json=initialCapital,proto3" json:"initial_capital,omitempty"`
+	InitialCapital *string `protobuf:"bytes,2,opt,name=initial_capital,json=initialCapital,proto3,oneof" json:"initial_capital,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -600,8 +600,8 @@ func (x *BinanceSettings) GetCredentials() *BinanceCredentials {
 }
 
 func (x *BinanceSettings) GetInitialCapital() string {
-	if x != nil {
-		return x.InitialCapital
+	if x != nil && x.InitialCapital != nil {
+		return *x.InitialCapital
 	}
 	return ""
 }
@@ -610,8 +610,8 @@ func (x *BinanceSettings) GetInitialCapital() string {
 // ⚠️ `api_secret` 是敏感字段，**只允许走 brain ↔ face 这条本地 ZMQ**，不出机器。
 type BinanceCredentials struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
-	ApiSecret     string                 `protobuf:"bytes,2,opt,name=api_secret,json=apiSecret,proto3" json:"api_secret,omitempty"`
+	ApiKey        *string                `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
+	ApiSecret     *string                `protobuf:"bytes,2,opt,name=api_secret,json=apiSecret,proto3,oneof" json:"api_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -647,15 +647,15 @@ func (*BinanceCredentials) Descriptor() ([]byte, []int) {
 }
 
 func (x *BinanceCredentials) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
+	if x != nil && x.ApiKey != nil {
+		return *x.ApiKey
 	}
 	return ""
 }
 
 func (x *BinanceCredentials) GetApiSecret() string {
-	if x != nil {
-		return x.ApiSecret
+	if x != nil && x.ApiSecret != nil {
+		return *x.ApiSecret
 	}
 	return ""
 }
@@ -1062,9 +1062,9 @@ func (*BrainToFace_EventBinanceSettings) isBrainToFace_Cmd() {}
 // wifi: 服务器 TCP 443 可达
 type StatusEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ntp           bool                   `protobuf:"varint,1,opt,name=ntp,proto3" json:"ntp,omitempty"`
-	Wifi          bool                   `protobuf:"varint,2,opt,name=wifi,proto3" json:"wifi,omitempty"`
-	Usb           bool                   `protobuf:"varint,3,opt,name=usb,proto3" json:"usb,omitempty"`
+	Ntp           *bool                  `protobuf:"varint,1,opt,name=ntp,proto3,oneof" json:"ntp,omitempty"`
+	Wifi          *bool                  `protobuf:"varint,2,opt,name=wifi,proto3,oneof" json:"wifi,omitempty"`
+	Usb           *bool                  `protobuf:"varint,3,opt,name=usb,proto3,oneof" json:"usb,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1100,22 +1100,22 @@ func (*StatusEvent) Descriptor() ([]byte, []int) {
 }
 
 func (x *StatusEvent) GetNtp() bool {
-	if x != nil {
-		return x.Ntp
+	if x != nil && x.Ntp != nil {
+		return *x.Ntp
 	}
 	return false
 }
 
 func (x *StatusEvent) GetWifi() bool {
-	if x != nil {
-		return x.Wifi
+	if x != nil && x.Wifi != nil {
+		return *x.Wifi
 	}
 	return false
 }
 
 func (x *StatusEvent) GetUsb() bool {
-	if x != nil {
-		return x.Usb
+	if x != nil && x.Usb != nil {
+		return *x.Usb
 	}
 	return false
 }
@@ -1126,7 +1126,7 @@ func (x *StatusEvent) GetUsb() bool {
 // `target_version`：目标版本号，也就是准备更新到的版本。
 // `progress`： 更新进度，通常是 `0-100` 的百分比。
 // `message` ： 给用户或前端展示的状态说明，例如“正在下载更新包”。
-// `error` ：错误信息。更新失败时记录失败原因；正常情况下通常为空。
+// `error` ：错误信息。更新失败时记录失败原因；正常情况下不传。
 // `changes` ：版本变更列表，通常是 changelog，例如修复了哪些问题、增加了哪些功能。
 // `trigger`：更新触发来源，例如 `manual` 手动触发、`auto` 自动检查、`startup` 启动时触发等。
 // `updated_at` ：状态最后更新时间，通常是 Unix 时间戳。具体是秒还是毫秒要看实现约定。
@@ -1134,17 +1134,17 @@ func (x *StatusEvent) GetUsb() bool {
 // `total_bytes`：需要下载的总字节数。可用于计算下载百分比。
 type UpdateInfo struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	State           string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`
-	CurrentVersion  string                 `protobuf:"bytes,2,opt,name=current_version,json=currentVersion,proto3" json:"current_version,omitempty"`
-	TargetVersion   string                 `protobuf:"bytes,3,opt,name=target_version,json=targetVersion,proto3" json:"target_version,omitempty"`
-	Progress        uint32                 `protobuf:"varint,4,opt,name=progress,proto3" json:"progress,omitempty"`
-	Message         string                 `protobuf:"bytes,5,opt,name=message,proto3" json:"message,omitempty"`
-	Error           string                 `protobuf:"bytes,6,opt,name=error,proto3" json:"error,omitempty"`
+	State           *string                `protobuf:"bytes,1,opt,name=state,proto3,oneof" json:"state,omitempty"`
+	CurrentVersion  *string                `protobuf:"bytes,2,opt,name=current_version,json=currentVersion,proto3,oneof" json:"current_version,omitempty"`
+	TargetVersion   *string                `protobuf:"bytes,3,opt,name=target_version,json=targetVersion,proto3,oneof" json:"target_version,omitempty"`
+	Progress        *uint32                `protobuf:"varint,4,opt,name=progress,proto3,oneof" json:"progress,omitempty"`
+	Message         *string                `protobuf:"bytes,5,opt,name=message,proto3,oneof" json:"message,omitempty"`
+	Error           *string                `protobuf:"bytes,6,opt,name=error,proto3,oneof" json:"error,omitempty"`
 	Changes         []string               `protobuf:"bytes,7,rep,name=changes,proto3" json:"changes,omitempty"`
-	Trigger         string                 `protobuf:"bytes,8,opt,name=trigger,proto3" json:"trigger,omitempty"`
-	UpdatedAt       uint64                 `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	DownloadedBytes uint64                 `protobuf:"varint,10,opt,name=downloaded_bytes,json=downloadedBytes,proto3" json:"downloaded_bytes,omitempty"`
-	TotalBytes      uint64                 `protobuf:"varint,11,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"`
+	Trigger         *string                `protobuf:"bytes,8,opt,name=trigger,proto3,oneof" json:"trigger,omitempty"`
+	UpdatedAt       *uint64                `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
+	DownloadedBytes *uint64                `protobuf:"varint,10,opt,name=downloaded_bytes,json=downloadedBytes,proto3,oneof" json:"downloaded_bytes,omitempty"`
+	TotalBytes      *uint64                `protobuf:"varint,11,opt,name=total_bytes,json=totalBytes,proto3,oneof" json:"total_bytes,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1180,43 +1180,43 @@ func (*UpdateInfo) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateInfo) GetState() string {
-	if x != nil {
-		return x.State
+	if x != nil && x.State != nil {
+		return *x.State
 	}
 	return ""
 }
 
 func (x *UpdateInfo) GetCurrentVersion() string {
-	if x != nil {
-		return x.CurrentVersion
+	if x != nil && x.CurrentVersion != nil {
+		return *x.CurrentVersion
 	}
 	return ""
 }
 
 func (x *UpdateInfo) GetTargetVersion() string {
-	if x != nil {
-		return x.TargetVersion
+	if x != nil && x.TargetVersion != nil {
+		return *x.TargetVersion
 	}
 	return ""
 }
 
 func (x *UpdateInfo) GetProgress() uint32 {
-	if x != nil {
-		return x.Progress
+	if x != nil && x.Progress != nil {
+		return *x.Progress
 	}
 	return 0
 }
 
 func (x *UpdateInfo) GetMessage() string {
-	if x != nil {
-		return x.Message
+	if x != nil && x.Message != nil {
+		return *x.Message
 	}
 	return ""
 }
 
 func (x *UpdateInfo) GetError() string {
-	if x != nil {
-		return x.Error
+	if x != nil && x.Error != nil {
+		return *x.Error
 	}
 	return ""
 }
@@ -1229,29 +1229,29 @@ func (x *UpdateInfo) GetChanges() []string {
 }
 
 func (x *UpdateInfo) GetTrigger() string {
-	if x != nil {
-		return x.Trigger
+	if x != nil && x.Trigger != nil {
+		return *x.Trigger
 	}
 	return ""
 }
 
 func (x *UpdateInfo) GetUpdatedAt() uint64 {
-	if x != nil {
-		return x.UpdatedAt
+	if x != nil && x.UpdatedAt != nil {
+		return *x.UpdatedAt
 	}
 	return 0
 }
 
 func (x *UpdateInfo) GetDownloadedBytes() uint64 {
-	if x != nil {
-		return x.DownloadedBytes
+	if x != nil && x.DownloadedBytes != nil {
+		return *x.DownloadedBytes
 	}
 	return 0
 }
 
 func (x *UpdateInfo) GetTotalBytes() uint64 {
-	if x != nil {
-		return x.TotalBytes
+	if x != nil && x.TotalBytes != nil {
+		return *x.TotalBytes
 	}
 	return 0
 }
@@ -1366,15 +1366,15 @@ func (*FaceToBrain_GetBinanceSettings) isFaceToBrain_Cmd() {}
 // **face 那边不该为"插件"和"固件"学两套进度模型。**
 type PluginProgress struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Uuid  string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Title string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"` // 给用户看的名字;取不到就退回 uuid
-	State PluginProgress_State   `protobuf:"varint,3,opt,name=state,proto3,enum=hi.ninja.PluginProgress_State" json:"state,omitempty"`
+	Uuid  *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Title *string                `protobuf:"bytes,2,opt,name=title,proto3,oneof" json:"title,omitempty"` // 给用户看的名字;取不到就退回 uuid
+	State *PluginProgress_State  `protobuf:"varint,3,opt,name=state,proto3,enum=hi.ninja.PluginProgress_State,oneof" json:"state,omitempty"`
 	// 0-100。**总长度未知时恒为 0** —— 服务端不给 Content-Length 是有可能的,
 	// 那时候宁可不显示百分比,也别编一个会往回跳的数字。
-	Progress        uint32 `protobuf:"varint,4,opt,name=progress,proto3" json:"progress,omitempty"`
-	DownloadedBytes uint64 `protobuf:"varint,5,opt,name=downloaded_bytes,json=downloadedBytes,proto3" json:"downloaded_bytes,omitempty"`
-	TotalBytes      uint64 `protobuf:"varint,6,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"` // 0 = 未知
-	Message         string `protobuf:"bytes,7,opt,name=message,proto3" json:"message,omitempty"`                          // 失败原因(state=FAILED 时)
+	Progress        *uint32 `protobuf:"varint,4,opt,name=progress,proto3,oneof" json:"progress,omitempty"`
+	DownloadedBytes *uint64 `protobuf:"varint,5,opt,name=downloaded_bytes,json=downloadedBytes,proto3,oneof" json:"downloaded_bytes,omitempty"`
+	TotalBytes      *uint64 `protobuf:"varint,6,opt,name=total_bytes,json=totalBytes,proto3,oneof" json:"total_bytes,omitempty"` // 0 = 未知
+	Message         *string `protobuf:"bytes,7,opt,name=message,proto3,oneof" json:"message,omitempty"`                          // 失败原因(state=FAILED 时)
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1410,50 +1410,50 @@ func (*PluginProgress) Descriptor() ([]byte, []int) {
 }
 
 func (x *PluginProgress) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *PluginProgress) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
 
 func (x *PluginProgress) GetState() PluginProgress_State {
-	if x != nil {
-		return x.State
+	if x != nil && x.State != nil {
+		return *x.State
 	}
 	return PluginProgress_STATE_UNKNOWN
 }
 
 func (x *PluginProgress) GetProgress() uint32 {
-	if x != nil {
-		return x.Progress
+	if x != nil && x.Progress != nil {
+		return *x.Progress
 	}
 	return 0
 }
 
 func (x *PluginProgress) GetDownloadedBytes() uint64 {
-	if x != nil {
-		return x.DownloadedBytes
+	if x != nil && x.DownloadedBytes != nil {
+		return *x.DownloadedBytes
 	}
 	return 0
 }
 
 func (x *PluginProgress) GetTotalBytes() uint64 {
-	if x != nil {
-		return x.TotalBytes
+	if x != nil && x.TotalBytes != nil {
+		return *x.TotalBytes
 	}
 	return 0
 }
 
 func (x *PluginProgress) GetMessage() string {
-	if x != nil {
-		return x.Message
+	if x != nil && x.Message != nil {
+		return *x.Message
 	}
 	return ""
 }
@@ -1461,7 +1461,7 @@ func (x *PluginProgress) GetMessage() string {
 // 更新动作
 type UpdateAction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Action        UpdateAction_Action    `protobuf:"varint,1,opt,name=action,proto3,enum=hi.ninja.UpdateAction_Action" json:"action,omitempty"`
+	Action        *UpdateAction_Action   `protobuf:"varint,1,opt,name=action,proto3,enum=hi.ninja.UpdateAction_Action,oneof" json:"action,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1497,8 +1497,8 @@ func (*UpdateAction) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateAction) GetAction() UpdateAction_Action {
-	if x != nil {
-		return x.Action
+	if x != nil && x.Action != nil {
+		return *x.Action
 	}
 	return UpdateAction_ACTION_UNKNOWN
 }
@@ -1518,24 +1518,34 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\x04list\x18\x01 \x03(\v2\n" +
 	".hi.EntityR\x04list\"7\n" +
 	"\rGroupInfoList\x12&\n" +
-	"\x04list\x18\x01 \x03(\v2\x12.hi.club.GroupInfoR\x04list\"K\n" +
+	"\x04list\x18\x01 \x03(\v2\x12.hi.club.GroupInfoR\x04list\"\\\n" +
 	"\vMasterEvent\x12\"\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x06master\x12\x18\n" +
-	"\atrigger\x18\x02 \x01(\tR\atrigger\"5\n" +
-	"\tTextReply\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value\"5\n" +
-	"\tAudioPlay\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05audio\x18\x02 \x01(\fR\x05audio\"z\n" +
-	"\x0fBinanceSettings\x12>\n" +
-	"\vcredentials\x18\x01 \x01(\v2\x1c.hi.ninja.BinanceCredentialsR\vcredentials\x12'\n" +
-	"\x0finitial_capital\x18\x02 \x01(\tR\x0einitialCapital\"L\n" +
-	"\x12BinanceCredentials\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x1d\n" +
+	".hi.EntityR\x06master\x12\x1d\n" +
+	"\atrigger\x18\x02 \x01(\tH\x00R\atrigger\x88\x01\x01B\n" +
 	"\n" +
-	"api_secret\x18\x02 \x01(\tR\tapiSecret\"\x93\n" +
+	"\b_trigger\"R\n" +
+	"\tTextReply\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
+	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01B\a\n" +
+	"\x05_uuidB\b\n" +
+	"\x06_value\"R\n" +
+	"\tAudioPlay\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
+	"\x05audio\x18\x02 \x01(\fH\x01R\x05audio\x88\x01\x01B\a\n" +
+	"\x05_uuidB\b\n" +
+	"\x06_audio\"\x93\x01\n" +
+	"\x0fBinanceSettings\x12>\n" +
+	"\vcredentials\x18\x01 \x01(\v2\x1c.hi.ninja.BinanceCredentialsR\vcredentials\x12,\n" +
+	"\x0finitial_capital\x18\x02 \x01(\tH\x00R\x0einitialCapital\x88\x01\x01B\x12\n" +
+	"\x10_initial_capital\"q\n" +
+	"\x12BinanceCredentials\x12\x1c\n" +
+	"\aapi_key\x18\x01 \x01(\tH\x00R\x06apiKey\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"api_secret\x18\x02 \x01(\tH\x01R\tapiSecret\x88\x01\x01B\n" +
+	"\n" +
+	"\b_api_keyB\r\n" +
+	"\v_api_secret\"\x93\n" +
 	"\n" +
 	"\vBrainToFace\x124\n" +
 	"\n" +
@@ -1568,56 +1578,80 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\fevent_status\x18\x12 \x01(\v2\x15.hi.ninja.StatusEventH\x00R\veventStatus\x129\n" +
 	"\fevent_update\x18\x13 \x01(\v2\x14.hi.ninja.UpdateInfoH\x00R\veventUpdate\x12Q\n" +
 	"\x16event_binance_settings\x18\x15 \x01(\v2\x19.hi.ninja.BinanceSettingsH\x00R\x14eventBinanceSettingsB\x05\n" +
-	"\x03cmd\"E\n" +
-	"\vStatusEvent\x12\x10\n" +
-	"\x03ntp\x18\x01 \x01(\bR\x03ntp\x12\x12\n" +
-	"\x04wifi\x18\x02 \x01(\bR\x04wifi\x12\x10\n" +
-	"\x03usb\x18\x03 \x01(\bR\x03usb\"\xdd\x02\n" +
+	"\x03cmd\"m\n" +
+	"\vStatusEvent\x12\x15\n" +
+	"\x03ntp\x18\x01 \x01(\bH\x00R\x03ntp\x88\x01\x01\x12\x17\n" +
+	"\x04wifi\x18\x02 \x01(\bH\x01R\x04wifi\x88\x01\x01\x12\x15\n" +
+	"\x03usb\x18\x03 \x01(\bH\x02R\x03usb\x88\x01\x01B\x06\n" +
+	"\x04_ntpB\a\n" +
+	"\x05_wifiB\x06\n" +
+	"\x04_usb\"\xa3\x04\n" +
 	"\n" +
-	"UpdateInfo\x12\x14\n" +
-	"\x05state\x18\x01 \x01(\tR\x05state\x12'\n" +
-	"\x0fcurrent_version\x18\x02 \x01(\tR\x0ecurrentVersion\x12%\n" +
-	"\x0etarget_version\x18\x03 \x01(\tR\rtargetVersion\x12\x1a\n" +
-	"\bprogress\x18\x04 \x01(\rR\bprogress\x12\x18\n" +
-	"\amessage\x18\x05 \x01(\tR\amessage\x12\x14\n" +
-	"\x05error\x18\x06 \x01(\tR\x05error\x12\x18\n" +
-	"\achanges\x18\a \x03(\tR\achanges\x12\x18\n" +
-	"\atrigger\x18\b \x01(\tR\atrigger\x12\x1d\n" +
+	"UpdateInfo\x12\x19\n" +
+	"\x05state\x18\x01 \x01(\tH\x00R\x05state\x88\x01\x01\x12,\n" +
+	"\x0fcurrent_version\x18\x02 \x01(\tH\x01R\x0ecurrentVersion\x88\x01\x01\x12*\n" +
+	"\x0etarget_version\x18\x03 \x01(\tH\x02R\rtargetVersion\x88\x01\x01\x12\x1f\n" +
+	"\bprogress\x18\x04 \x01(\rH\x03R\bprogress\x88\x01\x01\x12\x1d\n" +
+	"\amessage\x18\x05 \x01(\tH\x04R\amessage\x88\x01\x01\x12\x19\n" +
+	"\x05error\x18\x06 \x01(\tH\x05R\x05error\x88\x01\x01\x12\x18\n" +
+	"\achanges\x18\a \x03(\tR\achanges\x12\x1d\n" +
+	"\atrigger\x18\b \x01(\tH\x06R\atrigger\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\x04R\tupdatedAt\x12)\n" +
+	"updated_at\x18\t \x01(\x04H\aR\tupdatedAt\x88\x01\x01\x12.\n" +
 	"\x10downloaded_bytes\x18\n" +
-	" \x01(\x04R\x0fdownloadedBytes\x12\x1f\n" +
-	"\vtotal_bytes\x18\v \x01(\x04R\n" +
-	"totalBytes\"\xd9\x01\n" +
+	" \x01(\x04H\bR\x0fdownloadedBytes\x88\x01\x01\x12$\n" +
+	"\vtotal_bytes\x18\v \x01(\x04H\tR\n" +
+	"totalBytes\x88\x01\x01B\b\n" +
+	"\x06_stateB\x12\n" +
+	"\x10_current_versionB\x11\n" +
+	"\x0f_target_versionB\v\n" +
+	"\t_progressB\n" +
+	"\n" +
+	"\b_messageB\b\n" +
+	"\x06_errorB\n" +
+	"\n" +
+	"\b_triggerB\r\n" +
+	"\v_updated_atB\x13\n" +
+	"\x11_downloaded_bytesB\x0e\n" +
+	"\f_total_bytes\"\xd9\x01\n" +
 	"\vFaceToBrain\x128\n" +
 	"\vvoice_state\x18\x01 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"voiceState\x12=\n" +
 	"\rupdate_action\x18\x02 \x01(\v2\x16.hi.ninja.UpdateActionH\x00R\fupdateAction\x12J\n" +
 	"\x14get_binance_settings\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettingsB\x05\n" +
-	"\x03cmd\"\xdd\x02\n" +
-	"\x0ePluginProgress\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x124\n" +
-	"\x05state\x18\x03 \x01(\x0e2\x1e.hi.ninja.PluginProgress.StateR\x05state\x12\x1a\n" +
-	"\bprogress\x18\x04 \x01(\rR\bprogress\x12)\n" +
-	"\x10downloaded_bytes\x18\x05 \x01(\x04R\x0fdownloadedBytes\x12\x1f\n" +
-	"\vtotal_bytes\x18\x06 \x01(\x04R\n" +
-	"totalBytes\x12\x18\n" +
-	"\amessage\x18\a \x01(\tR\amessage\"i\n" +
+	"\x03cmd\"\xdb\x03\n" +
+	"\x0ePluginProgress\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
+	"\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x129\n" +
+	"\x05state\x18\x03 \x01(\x0e2\x1e.hi.ninja.PluginProgress.StateH\x02R\x05state\x88\x01\x01\x12\x1f\n" +
+	"\bprogress\x18\x04 \x01(\rH\x03R\bprogress\x88\x01\x01\x12.\n" +
+	"\x10downloaded_bytes\x18\x05 \x01(\x04H\x04R\x0fdownloadedBytes\x88\x01\x01\x12$\n" +
+	"\vtotal_bytes\x18\x06 \x01(\x04H\x05R\n" +
+	"totalBytes\x88\x01\x01\x12\x1d\n" +
+	"\amessage\x18\a \x01(\tH\x06R\amessage\x88\x01\x01\"i\n" +
 	"\x05State\x12\x11\n" +
 	"\rSTATE_UNKNOWN\x10\x00\x12\x15\n" +
 	"\x11STATE_DOWNLOADING\x10\x01\x12\x14\n" +
 	"\x10STATE_INSTALLING\x10\x02\x12\x0e\n" +
 	"\n" +
 	"STATE_DONE\x10\x03\x12\x10\n" +
-	"\fSTATE_FAILED\x10\x04\"\x9b\x01\n" +
-	"\fUpdateAction\x125\n" +
-	"\x06action\x18\x01 \x01(\x0e2\x1d.hi.ninja.UpdateAction.ActionR\x06action\"T\n" +
+	"\fSTATE_FAILED\x10\x04B\a\n" +
+	"\x05_uuidB\b\n" +
+	"\x06_titleB\b\n" +
+	"\x06_stateB\v\n" +
+	"\t_progressB\x13\n" +
+	"\x11_downloaded_bytesB\x0e\n" +
+	"\f_total_bytesB\n" +
+	"\n" +
+	"\b_message\"\xab\x01\n" +
+	"\fUpdateAction\x12:\n" +
+	"\x06action\x18\x01 \x01(\x0e2\x1d.hi.ninja.UpdateAction.ActionH\x00R\x06action\x88\x01\x01\"T\n" +
 	"\x06Action\x12\x12\n" +
 	"\x0eACTION_UNKNOWN\x10\x00\x12\x10\n" +
 	"\fACTION_CHECK\x10\x01\x12\x10\n" +
 	"\fACTION_APPLY\x10\x02\x12\x12\n" +
-	"\x0eACTION_DISMISS\x10\x03*@\n" +
+	"\x0eACTION_DISMISS\x10\x03B\t\n" +
+	"\a_action*@\n" +
 	"\vStateToggle\x12\x11\n" +
 	"\rSTATE_UNKNOWN\x10\x00\x12\x0f\n" +
 	"\vSTATE_START\x10\x01\x12\r\n" +
@@ -1714,6 +1748,11 @@ func file_hi_ninja_ipc_proto_init() {
 	if File_hi_ninja_ipc_proto != nil {
 		return
 	}
+	file_hi_ninja_ipc_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ninja_ipc_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_ninja_ipc_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_ninja_ipc_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ninja_ipc_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_ninja_ipc_proto_msgTypes[8].OneofWrappers = []any{
 		(*BrainToFace_InitRobot)(nil),
 		(*BrainToFace_ShowListen)(nil),
@@ -1737,11 +1776,15 @@ func file_hi_ninja_ipc_proto_init() {
 		(*BrainToFace_EventUpdate)(nil),
 		(*BrainToFace_EventBinanceSettings)(nil),
 	}
+	file_hi_ninja_ipc_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_ninja_ipc_proto_msgTypes[10].OneofWrappers = []any{}
 	file_hi_ninja_ipc_proto_msgTypes[11].OneofWrappers = []any{
 		(*FaceToBrain_VoiceState)(nil),
 		(*FaceToBrain_UpdateAction)(nil),
 		(*FaceToBrain_GetBinanceSettings)(nil),
 	}
+	file_hi_ninja_ipc_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ninja_ipc_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

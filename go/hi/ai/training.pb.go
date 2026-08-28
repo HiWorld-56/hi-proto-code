@@ -26,8 +26,8 @@ const (
 
 type StartReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuids         []string               `protobuf:"bytes,1,rep,name=uuids,proto3" json:"uuids,omitempty"` // 训练文件 uuid 列表(禁用数据表自增 id 跨端流转)
-	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did
+	Uuids         []string               `protobuf:"bytes,1,rep,name=uuids,proto3" json:"uuids,omitempty"`       // 训练文件 uuid 列表(禁用数据表自增 id 跨端流转)
+	Agent         *string                `protobuf:"bytes,2,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 智能体did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,15 +70,15 @@ func (x *StartReq) GetUuids() []string {
 }
 
 func (x *StartReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 type StatusReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 智能体did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -114,18 +114,18 @@ func (*StatusReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *StatusReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 type StatusResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"` // 训练状态,success-训练成功,failed-训练失败
-	MemCount      int32                  `protobuf:"varint,2,opt,name=mem_count,json=memCount,proto3" json:"mem_count,omitempty"`
-	SliceCount    int32                  `protobuf:"varint,3,opt,name=slice_count,json=sliceCount,proto3" json:"slice_count,omitempty"`
-	Message       string                 `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"` // 训练状态描述
+	Status        *string                `protobuf:"bytes,1,opt,name=status,proto3,oneof" json:"status,omitempty"` // 训练状态,success-训练成功,failed-训练失败
+	MemCount      *int32                 `protobuf:"varint,2,opt,name=mem_count,json=memCount,proto3,oneof" json:"mem_count,omitempty"`
+	SliceCount    *int32                 `protobuf:"varint,3,opt,name=slice_count,json=sliceCount,proto3,oneof" json:"slice_count,omitempty"`
+	Message       *string                `protobuf:"bytes,4,opt,name=message,proto3,oneof" json:"message,omitempty"` // 训练状态描述
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -161,36 +161,36 @@ func (*StatusResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *StatusResp) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
 
 func (x *StatusResp) GetMemCount() int32 {
-	if x != nil {
-		return x.MemCount
+	if x != nil && x.MemCount != nil {
+		return *x.MemCount
 	}
 	return 0
 }
 
 func (x *StatusResp) GetSliceCount() int32 {
-	if x != nil {
-		return x.SliceCount
+	if x != nil && x.SliceCount != nil {
+		return *x.SliceCount
 	}
 	return 0
 }
 
 func (x *StatusResp) GetMessage() string {
-	if x != nil {
-		return x.Message
+	if x != nil && x.Message != nil {
+		return *x.Message
 	}
 	return ""
 }
 
 type ClearReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 智能体did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -226,17 +226,17 @@ func (*ClearReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ClearReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 type UploadFileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`       // 智能体did
-	Filename      string                 `protobuf:"bytes,2,opt,name=filename,proto3" json:"filename,omitempty"` // 文件名
-	Content       []byte                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`   // 文件内容
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`       // 智能体did
+	Filename      *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"` // 文件名
+	Content       []byte                 `protobuf:"bytes,3,opt,name=content,proto3,oneof" json:"content,omitempty"`   // 文件内容
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -272,15 +272,15 @@ func (*UploadFileReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *UploadFileReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *UploadFileReq) GetFilename() string {
-	if x != nil {
-		return x.Filename
+	if x != nil && x.Filename != nil {
+		return *x.Filename
 	}
 	return ""
 }
@@ -294,17 +294,17 @@ func (x *UploadFileReq) GetContent() []byte {
 
 type TrainingFile struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`                                      // 训练文件稳定标识(uuid;不暴露数据表自增 id)
-	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                                // content（文件内容） / path / url
-	Agent         string                 `protobuf:"bytes,3,opt,name=agent,proto3" json:"agent,omitempty"`                                    // 智能体did
-	Title         string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`                                    // 文件名
-	Size          int32                  `protobuf:"varint,5,opt,name=size,proto3" json:"size,omitempty"`                                     // 文件大小
-	Type          string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`                                      // 文件类型
-	IsUse         bool                   `protobuf:"varint,7,opt,name=is_use,json=isUse,proto3" json:"is_use,omitempty"`                      // 是否已经训练
-	Digest        string                 `protobuf:"bytes,8,opt,name=digest,proto3" json:"digest,omitempty"`                                  // 文件摘要
-	TrainingTime  int64                  `protobuf:"varint,9,opt,name=training_time,json=trainingTime,proto3" json:"training_time,omitempty"` // 训练时间
-	CreatedAt     int64                  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`         // 创建时间
-	UpdatedAt     int64                  `protobuf:"varint,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`         // 更新时间
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                                      // 训练文件稳定标识(uuid;不暴露数据表自增 id)
+	Content       *string                `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`                                // content（文件内容） / path / url
+	Agent         *string                `protobuf:"bytes,3,opt,name=agent,proto3,oneof" json:"agent,omitempty"`                                    // 智能体did
+	Title         *string                `protobuf:"bytes,4,opt,name=title,proto3,oneof" json:"title,omitempty"`                                    // 文件名
+	Size          *int32                 `protobuf:"varint,5,opt,name=size,proto3,oneof" json:"size,omitempty"`                                     // 文件大小
+	Type          *string                `protobuf:"bytes,6,opt,name=type,proto3,oneof" json:"type,omitempty"`                                      // 文件类型
+	IsUse         *bool                  `protobuf:"varint,7,opt,name=is_use,json=isUse,proto3,oneof" json:"is_use,omitempty"`                      // 是否已经训练
+	Digest        *string                `protobuf:"bytes,8,opt,name=digest,proto3,oneof" json:"digest,omitempty"`                                  // 文件摘要
+	TrainingTime  *int64                 `protobuf:"varint,9,opt,name=training_time,json=trainingTime,proto3,oneof" json:"training_time,omitempty"` // 训练时间
+	CreatedAt     *int64                 `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`         // 创建时间
+	UpdatedAt     *int64                 `protobuf:"varint,11,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`         // 更新时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -340,86 +340,86 @@ func (*TrainingFile) Descriptor() ([]byte, []int) {
 }
 
 func (x *TrainingFile) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *TrainingFile) GetContent() string {
-	if x != nil {
-		return x.Content
+	if x != nil && x.Content != nil {
+		return *x.Content
 	}
 	return ""
 }
 
 func (x *TrainingFile) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *TrainingFile) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
 
 func (x *TrainingFile) GetSize() int32 {
-	if x != nil {
-		return x.Size
+	if x != nil && x.Size != nil {
+		return *x.Size
 	}
 	return 0
 }
 
 func (x *TrainingFile) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
 
 func (x *TrainingFile) GetIsUse() bool {
-	if x != nil {
-		return x.IsUse
+	if x != nil && x.IsUse != nil {
+		return *x.IsUse
 	}
 	return false
 }
 
 func (x *TrainingFile) GetDigest() string {
-	if x != nil {
-		return x.Digest
+	if x != nil && x.Digest != nil {
+		return *x.Digest
 	}
 	return ""
 }
 
 func (x *TrainingFile) GetTrainingTime() int64 {
-	if x != nil {
-		return x.TrainingTime
+	if x != nil && x.TrainingTime != nil {
+		return *x.TrainingTime
 	}
 	return 0
 }
 
 func (x *TrainingFile) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
 
 func (x *TrainingFile) GetUpdatedAt() int64 {
-	if x != nil {
-		return x.UpdatedAt
+	if x != nil && x.UpdatedAt != nil {
+		return *x.UpdatedAt
 	}
 	return 0
 }
 
 type ListFilesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did
-	Use           bool                   `protobuf:"varint,2,opt,name=use,proto3" json:"use,omitempty"`    // true-返回已训练的文件, false-返回所有文件
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 智能体did
+	Use           *bool                  `protobuf:"varint,2,opt,name=use,proto3,oneof" json:"use,omitempty"`    // true-返回已训练的文件, false-返回所有文件
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -456,15 +456,15 @@ func (*ListFilesReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListFilesReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *ListFilesReq) GetUse() bool {
-	if x != nil {
-		return x.Use
+	if x != nil && x.Use != nil {
+		return *x.Use
 	}
 	return false
 }
@@ -478,7 +478,7 @@ func (x *ListFilesReq) GetPagination() *hi.Pagination {
 
 type ListFilesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*TrainingFile        `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -515,8 +515,8 @@ func (*ListFilesResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListFilesResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -530,8 +530,8 @@ func (x *ListFilesResp) GetList() []*TrainingFile {
 
 type DeleteFilesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did
-	Uuids         []string               `protobuf:"bytes,2,rep,name=uuids,proto3" json:"uuids,omitempty"` // 训练文件 uuid 列表
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 智能体did
+	Uuids         []string               `protobuf:"bytes,2,rep,name=uuids,proto3" json:"uuids,omitempty"`       // 训练文件 uuid 列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -567,8 +567,8 @@ func (*DeleteFilesReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteFilesReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -628,8 +628,8 @@ func (x *DeleteFilesByAgentsReq) GetAgents() []string {
 // 必须经这里带归属校验取字节 —— 与插件脚本的 DownloadScript 同一套路。
 type DownloadFileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // agent did(校验归属)
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 训练文件 uuid
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // agent did(校验归属)
+	Uuid          *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`   // 训练文件 uuid
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -665,23 +665,23 @@ func (*DownloadFileReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DownloadFileReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *DownloadFileReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 type DownloadFileResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"` // 建议的文件名
+	Content       []byte                 `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"` // 建议的文件名
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -724,16 +724,16 @@ func (x *DownloadFileResp) GetContent() []byte {
 }
 
 func (x *DownloadFileResp) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 type GetFileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 训练文件 uuid
-	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 agent)
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`   // 训练文件 uuid
+	Agent         *string                `protobuf:"bytes,2,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 智能体did(供 club/ai 两级归属校验;club 按 agent 查本方用户是否拥有该 agent)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -769,15 +769,15 @@ func (*GetFileReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetFileReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *GetFileReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -828,9 +828,9 @@ func (x *GetFileResp) GetFile() *TrainingFile {
 
 type UpdateContentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"` // 训练文件 uuid
-	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Uuid          *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"` // 训练文件 uuid
+	Content       *string                `protobuf:"bytes,3,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -866,37 +866,37 @@ func (*UpdateContentReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateContentReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *UpdateContentReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *UpdateContentReq) GetContent() string {
-	if x != nil {
-		return x.Content
+	if x != nil && x.Content != nil {
+		return *x.Content
 	}
 	return ""
 }
 
 type CreateContentReq struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
-	Agent   string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Content string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
-	// 文件名。**可空** —— 空了后端按内容前 10 字派生一个。
+	Agent   *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Content *string                `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	// 文件名。**可不传** —— 不传时后端按内容前 10 字派生一个。
 	//
 	// 为什么要收:文本训练在前端是让用户自己起名的(上传文件那条路天然带文件名),
 	// 而派生出来的"前10字…"在列表里全是一个样,用户根本认不出自己传的是哪份。
 	// 之前这一栏前端一直在传,后端没有这个字段 —— 请求照发、**字段静默丢掉**,
 	// 谁都没发现(这正是 codegen/check_web_routes.py 存在的理由)。
-	Title         string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Title         *string `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -932,22 +932,22 @@ func (*CreateContentReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateContentReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *CreateContentReq) GetContent() string {
-	if x != nil {
-		return x.Content
+	if x != nil && x.Content != nil {
+		return *x.Content
 	}
 	return ""
 }
 
 func (x *CreateContentReq) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
@@ -998,9 +998,9 @@ func (x *CreateContentResp) GetFile() *TrainingFile {
 
 type EditDigestReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // 训练文件 uuid
-	Agent         string                 `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"`
-	Digest        string                 `protobuf:"bytes,3,opt,name=digest,proto3" json:"digest,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"` // 训练文件 uuid
+	Agent         *string                `protobuf:"bytes,2,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Digest        *string                `protobuf:"bytes,3,opt,name=digest,proto3,oneof" json:"digest,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1036,22 +1036,22 @@ func (*EditDigestReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *EditDigestReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *EditDigestReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *EditDigestReq) GetDigest() string {
-	if x != nil {
-		return x.Digest
+	if x != nil && x.Digest != nil {
+		return *x.Digest
 	}
 	return ""
 }
@@ -1060,80 +1060,128 @@ var File_hi_ai_training_proto protoreflect.FileDescriptor
 
 const file_hi_ai_training_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"6\n" +
+	"\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"E\n" +
 	"\bStartReq\x12\x14\n" +
-	"\x05uuids\x18\x01 \x03(\tR\x05uuids\x12\x14\n" +
-	"\x05agent\x18\x02 \x01(\tR\x05agent\"!\n" +
-	"\tStatusReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"\x9a\x01\n" +
+	"\x05uuids\x18\x01 \x03(\tR\x05uuids\x12\x19\n" +
+	"\x05agent\x18\x02 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"0\n" +
+	"\tStatusReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"\xe3\x01\n" +
 	"\n" +
-	"StatusResp\x12\x1c\n" +
-	"\x06status\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12!\n" +
-	"\tmem_count\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\bmemCount\x12%\n" +
-	"\vslice_count\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03R\n" +
-	"sliceCount\x12\x1e\n" +
-	"\amessage\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\amessage:\x04\x98\xb5\x18\x03\" \n" +
-	"\bClearReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"[\n" +
-	"\rUploadFileReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x1a\n" +
-	"\bfilename\x18\x02 \x01(\tR\bfilename\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\fR\acontent\"\xea\x02\n" +
-	"\fTrainingFile\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x1e\n" +
-	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\acontent\x12\x1a\n" +
-	"\x05agent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x05agent\x12\x1a\n" +
-	"\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x05title\x12\x18\n" +
-	"\x04size\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03R\x04size\x12\x18\n" +
-	"\x04type\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1b\n" +
-	"\x06is_use\x18\a \x01(\bB\x04\x90\xb5\x18\x03R\x05isUse\x12\x1c\n" +
-	"\x06digest\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x06digest\x12)\n" +
-	"\rtraining_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03R\ftrainingTime\x12#\n" +
+	"StatusResp\x12!\n" +
+	"\x06status\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06status\x88\x01\x01\x12&\n" +
+	"\tmem_count\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03H\x01R\bmemCount\x88\x01\x01\x12*\n" +
+	"\vslice_count\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x03H\x02R\n" +
+	"sliceCount\x88\x01\x01\x12#\n" +
+	"\amessage\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\amessage\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_statusB\f\n" +
+	"\n" +
+	"_mem_countB\x0e\n" +
+	"\f_slice_countB\n" +
+	"\n" +
+	"\b_message\"/\n" +
+	"\bClearReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"\x8d\x01\n" +
+	"\rUploadFileReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x1f\n" +
+	"\bfilename\x18\x02 \x01(\tH\x01R\bfilename\x88\x01\x01\x12\x1d\n" +
+	"\acontent\x18\x03 \x01(\fH\x02R\acontent\x88\x01\x01B\b\n" +
+	"\x06_agentB\v\n" +
+	"\t_filenameB\n" +
+	"\n" +
+	"\b_content\"\xa2\x04\n" +
+	"\fTrainingFile\x12\x1d\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12#\n" +
+	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\acontent\x88\x01\x01\x12\x1f\n" +
+	"\x05agent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x05agent\x88\x01\x01\x12\x1f\n" +
+	"\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05title\x88\x01\x01\x12\x1d\n" +
+	"\x04size\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03H\x04R\x04size\x88\x01\x01\x12\x1d\n" +
+	"\x04type\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x04type\x88\x01\x01\x12 \n" +
+	"\x06is_use\x18\a \x01(\bB\x04\x90\xb5\x18\x03H\x06R\x05isUse\x88\x01\x01\x12!\n" +
+	"\x06digest\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\x06digest\x88\x01\x01\x12.\n" +
+	"\rtraining_time\x18\t \x01(\x03B\x04\x90\xb5\x18\x03H\bR\ftrainingTime\x88\x01\x01\x12(\n" +
 	"\n" +
 	"created_at\x18\n" +
-	" \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12#\n" +
+	" \x01(\x03B\x04\x90\xb5\x18\x03H\tR\tcreatedAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\x03B\x04\x90\xb5\x18\x03R\tupdatedAt:\x04\x98\xb5\x18\x03\"f\n" +
-	"\fListFilesReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
-	"\x03use\x18\x02 \x01(\bR\x03use\x12.\n" +
+	"updated_at\x18\v \x01(\x03B\x04\x90\xb5\x18\x03H\n" +
+	"R\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_uuidB\n" +
+	"\n" +
+	"\b_contentB\b\n" +
+	"\x06_agentB\b\n" +
+	"\x06_titleB\a\n" +
+	"\x05_sizeB\a\n" +
+	"\x05_typeB\t\n" +
+	"\a_is_useB\t\n" +
+	"\a_digestB\x10\n" +
+	"\x0e_training_timeB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_updated_at\"\x82\x01\n" +
+	"\fListFilesReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x15\n" +
+	"\x03use\x18\x02 \x01(\bH\x01R\x03use\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"`\n" +
-	"\rListFilesResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12-\n" +
-	"\x04list\x18\x02 \x03(\v2\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"<\n" +
-	"\x0eDeleteFilesReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x14\n" +
-	"\x05uuids\x18\x02 \x03(\tR\x05uuids\"0\n" +
+	"paginationB\b\n" +
+	"\x06_agentB\x06\n" +
+	"\x04_use\"o\n" +
+	"\rListFilesResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12-\n" +
+	"\x04list\x18\x02 \x03(\v2\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"K\n" +
+	"\x0eDeleteFilesReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x14\n" +
+	"\x05uuids\x18\x02 \x03(\tR\x05uuidsB\b\n" +
+	"\x06_agent\"0\n" +
 	"\x16DeleteFilesByAgentsReq\x12\x16\n" +
-	"\x06agents\x18\x01 \x03(\tR\x06agents\"W\n" +
-	"\x0fDownloadFileReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12 \n" +
-	"\x04uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\"R\n" +
-	"\x10DownloadFileResp\x12\x1e\n" +
-	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x03R\acontent\x12\x18\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name:\x04\x98\xb5\x18\x03\"6\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\"z\n" +
+	"\x0fDownloadFileReq\x12*\n" +
+	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12(\n" +
+	"\x04uuid\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x04uuid\x88\x01\x01B\b\n" +
+	"\x06_agentB\a\n" +
+	"\x05_uuid\"q\n" +
+	"\x10DownloadFileResp\x12#\n" +
+	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x03H\x00R\acontent\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04name\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
-	"GetFileReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05agent\x18\x02 \x01(\tR\x05agent\"B\n" +
+	"\b_contentB\a\n" +
+	"\x05_name\"S\n" +
+	"\n" +
+	"GetFileReq\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
+	"\x05agent\x18\x02 \x01(\tH\x01R\x05agent\x88\x01\x01B\a\n" +
+	"\x05_uuidB\b\n" +
+	"\x06_agent\"B\n" +
 	"\vGetFileResp\x12-\n" +
-	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04file:\x04\x98\xb5\x18\x03\"V\n" +
-	"\x10UpdateContentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\"X\n" +
-	"\x10CreateContentReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x18\n" +
-	"\acontent\x18\x02 \x01(\tR\acontent\x12\x14\n" +
-	"\x05title\x18\x03 \x01(\tR\x05title\"H\n" +
+	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04file:\x04\x98\xb5\x18\x03\"\x84\x01\n" +
+	"\x10UpdateContentReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x17\n" +
+	"\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
+	"\acontent\x18\x03 \x01(\tH\x02R\acontent\x88\x01\x01B\b\n" +
+	"\x06_agentB\a\n" +
+	"\x05_uuidB\n" +
+	"\n" +
+	"\b_content\"\x87\x01\n" +
+	"\x10CreateContentReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x1d\n" +
+	"\acontent\x18\x02 \x01(\tH\x01R\acontent\x88\x01\x01\x12\x19\n" +
+	"\x05title\x18\x03 \x01(\tH\x02R\x05title\x88\x01\x01B\b\n" +
+	"\x06_agentB\n" +
+	"\n" +
+	"\b_contentB\b\n" +
+	"\x06_title\"H\n" +
 	"\x11CreateContentResp\x12-\n" +
-	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04file:\x04\x98\xb5\x18\x03\"Q\n" +
-	"\rEditDigestReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n" +
-	"\x05agent\x18\x02 \x01(\tR\x05agent\x12\x16\n" +
-	"\x06digest\x18\x03 \x01(\tR\x06digest2\x9b\x05\n" +
+	"\x04file\x18\x01 \x01(\v2\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04file:\x04\x98\xb5\x18\x03\"~\n" +
+	"\rEditDigestReq\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
+	"\x05agent\x18\x02 \x01(\tH\x01R\x05agent\x88\x01\x01\x12\x1b\n" +
+	"\x06digest\x18\x03 \x01(\tH\x02R\x06digest\x88\x01\x01B\a\n" +
+	"\x05_uuidB\b\n" +
+	"\x06_agentB\t\n" +
+	"\a_digest2\x9b\x05\n" +
 	"\bTraining\x127\n" +
 	"\x05Start\x12\x0f.hi.ai.StartReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x124\n" +
 	"\x06Status\x12\x10.hi.ai.StatusReq\x1a\x11.hi.ai.StatusResp\"\x05\x8a\xb5\x18\x01\x03\x127\n" +
@@ -1220,6 +1268,21 @@ func file_hi_ai_training_proto_init() {
 	if File_hi_ai_training_proto != nil {
 		return
 	}
+	file_hi_ai_training_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_ai_training_proto_msgTypes[17].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

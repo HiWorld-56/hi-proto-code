@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/push.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"K\n\x0fPushRegisterReq\x12\"\n\x04node\x18\x01 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\x12\x14\n\x05token\x18\x02 \x01(\tR\x05token\")\n\x11PushUnregisterReq\x12\x14\n\x05token\x18\x01 \x01(\tR\x05token2\x9b\x01\n\x0bPushManager\x12\x43\n\x08Register\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n\nUnregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/push.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"Z\n\x0fPushRegisterReq\x12\"\n\x04node\x18\x01 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\x12\x19\n\x05token\x18\x02 \x01(\tH\x00R\x05token\x88\x01\x01\x42\x08\n\x06_token\"8\n\x11PushUnregisterReq\x12\x19\n\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01\x42\x08\n\x06_token2\x9b\x01\n\x0bPushManager\x12\x43\n\x08Register\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n\nUnregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -40,9 +40,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PUSHMANAGER'].methods_by_name['Unregister']._loaded_options = None
   _globals['_PUSHMANAGER'].methods_by_name['Unregister']._serialized_options = b'\212\265\030\001\002'
   _globals['_PUSHREGISTERREQ']._serialized_start=95
-  _globals['_PUSHREGISTERREQ']._serialized_end=170
-  _globals['_PUSHUNREGISTERREQ']._serialized_start=172
-  _globals['_PUSHUNREGISTERREQ']._serialized_end=213
-  _globals['_PUSHMANAGER']._serialized_start=216
-  _globals['_PUSHMANAGER']._serialized_end=371
+  _globals['_PUSHREGISTERREQ']._serialized_end=185
+  _globals['_PUSHUNREGISTERREQ']._serialized_start=187
+  _globals['_PUSHUNREGISTERREQ']._serialized_end=243
+  _globals['_PUSHMANAGER']._serialized_start=246
+  _globals['_PUSHMANAGER']._serialized_end=401
 # @@protoc_insertion_point(module_scope)

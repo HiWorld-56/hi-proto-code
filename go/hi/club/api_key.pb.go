@@ -27,10 +27,10 @@ const (
 // apikey 是用户机密(value 可鉴权),只发给归属用户本人。
 type ApiKeyInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 归属用户 did(人/软bot/硬bot)
-	Value         string                 `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
-	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"` // 归属用户 did(人/软bot/硬bot)
+	Value         *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
+	Note          *string                `protobuf:"bytes,3,opt,name=note,proto3,oneof" json:"note,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -66,29 +66,29 @@ func (*ApiKeyInfo) Descriptor() ([]byte, []int) {
 }
 
 func (x *ApiKeyInfo) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
 
 func (x *ApiKeyInfo) GetValue() string {
-	if x != nil {
-		return x.Value
+	if x != nil && x.Value != nil {
+		return *x.Value
 	}
 	return ""
 }
 
 func (x *ApiKeyInfo) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
 
 func (x *ApiKeyInfo) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
@@ -104,7 +104,7 @@ func (x *ApiKeyInfo) GetCreatedAt() int64 {
 // (原先废掉 caller==target 的理由是"人不需要 key",顺手把机器人自己也挡了。)
 type CreateApiKeyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did;机器人自己 / 它的 master / 超管都能建
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did;机器人自己 / 它的 master / 超管都能建
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -140,8 +140,8 @@ func (*CreateApiKeyReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateApiKeyReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -236,7 +236,7 @@ func (x *EditApiKeyResp) GetInfo() *ApiKeyInfo {
 
 type ListApiKeysReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 机器人 did;能查的只有它的 master
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did;能查的只有它的 master
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -273,8 +273,8 @@ func (*ListApiKeysReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListApiKeysReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -288,7 +288,7 @@ func (x *ListApiKeysReq) GetPagination() *hi.Pagination {
 
 type ListApiKeysResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Infos         []*ApiKeyInfo          `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -325,8 +325,8 @@ func (*ListApiKeysResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListApiKeysResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -340,7 +340,7 @@ func (x *ListApiKeysResp) GetInfos() []*ApiKeyInfo {
 
 type DeleteApiKeyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKey        string                 `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
+	ApiKey        *string                `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -376,8 +376,8 @@ func (*DeleteApiKeyReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteApiKeyReq) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
+	if x != nil && x.ApiKey != nil {
+		return *x.ApiKey
 	}
 	return ""
 }
@@ -386,30 +386,39 @@ var File_hi_club_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_club_api_key_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/ai/api_key.proto\x1a\x10hi/options.proto\"\x87\x01\n" +
+	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/ai/api_key.proto\x1a\x10hi/options.proto\"\xc6\x01\n" +
 	"\n" +
-	"ApiKeyInfo\x12\x18\n" +
-	"\x04user\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04user\x12\x1a\n" +
-	"\x05value\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05value\x12\x18\n" +
-	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12#\n" +
+	"ApiKeyInfo\x12\x1d\n" +
+	"\x04user\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04user\x88\x01\x01\x12\x1f\n" +
+	"\x05value\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05value\x88\x01\x01\x12\x1d\n" +
+	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04note\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"'\n" +
-	"\x0fCreateApiKeyReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\"G\n" +
+	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_userB\b\n" +
+	"\x06_valueB\a\n" +
+	"\x05_noteB\r\n" +
+	"\v_created_at\"6\n" +
+	"\x0fCreateApiKeyReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"G\n" +
 	"\x10CreateApiKeyResp\x12-\n" +
 	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"E\n" +
 	"\x0eEditApiKeyResp\x12-\n" +
-	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"V\n" +
-	"\x0eListApiKeysReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12.\n" +
+	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"e\n" +
+	"\x0eListApiKeysReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"d\n" +
-	"\x0fListApiKeysResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12/\n" +
-	"\x05infos\x18\x02 \x03(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"*\n" +
-	"\x0fDeleteApiKeyReq\x12\x17\n" +
-	"\aapi_key\x18\x01 \x01(\tR\x06apiKey2\x91\x02\n" +
+	"paginationB\b\n" +
+	"\x06_agent\"s\n" +
+	"\x0fListApiKeysResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12/\n" +
+	"\x05infos\x18\x02 \x03(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\";\n" +
+	"\x0fDeleteApiKeyReq\x12\x1c\n" +
+	"\aapi_key\x18\x01 \x01(\tH\x00R\x06apiKey\x88\x01\x01B\n" +
+	"\n" +
+	"\b_api_key2\x91\x02\n" +
 	"\x06ApiKey\x12D\n" +
 	"\x06Create\x12\x18.hi.club.CreateApiKeyReq\x1a\x19.hi.club.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x17.hi.club.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
@@ -467,6 +476,11 @@ func file_hi_club_api_key_proto_init() {
 	if File_hi_club_api_key_proto != nil {
 		return
 	}
+	file_hi_club_api_key_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_api_key_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_api_key_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_club_api_key_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_api_key_proto_msgTypes[6].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

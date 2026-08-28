@@ -27,7 +27,7 @@ type RefreshTokenReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Node          *hi.ClientInfo         `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
 	Did           string                 `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
-	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	RefreshToken  *string                `protobuf:"bytes,3,opt,name=refresh_token,json=refreshToken,proto3,oneof" json:"refresh_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -77,8 +77,8 @@ func (x *RefreshTokenReq) GetDid() string {
 }
 
 func (x *RefreshTokenReq) GetRefreshToken() string {
-	if x != nil {
-		return x.RefreshToken
+	if x != nil && x.RefreshToken != nil {
+		return *x.RefreshToken
 	}
 	return ""
 }
@@ -86,7 +86,7 @@ func (x *RefreshTokenReq) GetRefreshToken() string {
 // hidid web/app/pc登录
 type LoginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReqId         string                 `protobuf:"bytes,1,opt,name=req_id,json=reqId,proto3" json:"req_id,omitempty"`
+	ReqId         *string                `protobuf:"bytes,1,opt,name=req_id,json=reqId,proto3,oneof" json:"req_id,omitempty"`
 	Did           string                 `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 	Node          *hi.ClientInfo         `protobuf:"bytes,3,opt,name=node,proto3" json:"node,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -124,8 +124,8 @@ func (*LoginReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *LoginReq) GetReqId() string {
-	if x != nil {
-		return x.ReqId
+	if x != nil && x.ReqId != nil {
+		return *x.ReqId
 	}
 	return ""
 }
@@ -259,7 +259,7 @@ func (x *GenerateReqIdReq) GetNode() *hi.ClientInfo {
 type ReqStatusResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	Status        *string                `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	Token         *hi.AuthToken          `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
 	Mqtt          *hi.MqttCredentials    `protobuf:"bytes,4,opt,name=mqtt,proto3" json:"mqtt,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -304,8 +304,8 @@ func (x *ReqStatusResp) GetBase() *hi.Entity {
 }
 
 func (x *ReqStatusResp) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
@@ -374,15 +374,17 @@ var File_hi_did_auth_proto protoreflect.FileDescriptor
 
 const file_hi_did_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/auth.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"l\n" +
+	"\x11hi/did/auth.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x83\x01\n" +
 	"\x0fRefreshTokenReq\x12\"\n" +
 	"\x04node\x18\x01 \x01(\v2\x0e.hi.ClientInfoR\x04node\x12\x10\n" +
-	"\x03did\x18\x02 \x01(\tR\x03did\x12#\n" +
-	"\rrefresh_token\x18\x03 \x01(\tR\frefreshToken\"W\n" +
-	"\bLoginReq\x12\x15\n" +
-	"\x06req_id\x18\x01 \x01(\tR\x05reqId\x12\x10\n" +
+	"\x03did\x18\x02 \x01(\tR\x03did\x12(\n" +
+	"\rrefresh_token\x18\x03 \x01(\tH\x00R\frefreshToken\x88\x01\x01B\x10\n" +
+	"\x0e_refresh_token\"g\n" +
+	"\bLoginReq\x12\x1a\n" +
+	"\x06req_id\x18\x01 \x01(\tH\x00R\x05reqId\x88\x01\x01\x12\x10\n" +
 	"\x03did\x18\x02 \x01(\tR\x03did\x12\"\n" +
-	"\x04node\x18\x03 \x01(\v2\x0e.hi.ClientInfoR\x04node\"\x91\x01\n" +
+	"\x04node\x18\x03 \x01(\v2\x0e.hi.ClientInfoR\x04nodeB\t\n" +
+	"\a_req_id\"\x91\x01\n" +
 	"\tLoginResp\x12$\n" +
 	"\x04user\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x12)\n" +
@@ -390,13 +392,14 @@ const file_hi_did_auth_proto_rawDesc = "" +
 	"\x04mqtt\x18\x03 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\"H\n" +
 	"\x10GenerateReqIdReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\"\n" +
-	"\x04node\x18\x02 \x01(\v2\x0e.hi.ClientInfoR\x04node\"\xb3\x01\n" +
+	"\x04node\x18\x02 \x01(\v2\x0e.hi.ClientInfoR\x04node\"\xc3\x01\n" +
 	"\rReqStatusResp\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12\x1c\n" +
-	"\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12)\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12!\n" +
+	"\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06status\x88\x01\x01\x12)\n" +
 	"\x05token\x18\x03 \x01(\v2\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n" +
-	"\x04mqtt\x18\x04 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\"&\n" +
+	"\x04mqtt\x18\x04 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_status\"&\n" +
 	"\tLogoutReq\x12\x19\n" +
 	"\x03did\x18\x01 \x01(\v2\a.hi.DIDR\x03did2\xeb\x02\n" +
 	"\x04Auth\x12=\n" +
@@ -473,6 +476,9 @@ func file_hi_did_auth_proto_init() {
 	if File_hi_did_auth_proto != nil {
 		return
 	}
+	file_hi_did_auth_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_auth_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_auth_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

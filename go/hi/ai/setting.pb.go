@@ -28,10 +28,10 @@ const (
 // endpoint 其实是 OpenAI 端点。且 OpenAI 端点也该有开关(关掉即用官方端点)。
 type SettingInfo struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
-	ProxyEndpoint        string                 `protobuf:"bytes,1,opt,name=proxy_endpoint,json=proxyEndpoint,proto3" json:"proxy_endpoint,omitempty"`                         // 代理地址(原 proxy_url)
-	ProxyEnable          bool                   `protobuf:"varint,2,opt,name=proxy_enable,json=proxyEnable,proto3" json:"proxy_enable,omitempty"`                              // 代理是否生效(原 enable)
-	OpenaiEndpoint       string                 `protobuf:"bytes,3,opt,name=openai_endpoint,json=openaiEndpoint,proto3" json:"openai_endpoint,omitempty"`                      // 自定义 OpenAI 端点(原 endpoint)
-	OpenaiEndpointEnable bool                   `protobuf:"varint,4,opt,name=openai_endpoint_enable,json=openaiEndpointEnable,proto3" json:"openai_endpoint_enable,omitempty"` // 端点开关;关 = 用 OpenAI 官方端点
+	ProxyEndpoint        *string                `protobuf:"bytes,1,opt,name=proxy_endpoint,json=proxyEndpoint,proto3,oneof" json:"proxy_endpoint,omitempty"`                         // 代理地址(原 proxy_url)
+	ProxyEnable          *bool                  `protobuf:"varint,2,opt,name=proxy_enable,json=proxyEnable,proto3,oneof" json:"proxy_enable,omitempty"`                              // 代理是否生效(原 enable)
+	OpenaiEndpoint       *string                `protobuf:"bytes,3,opt,name=openai_endpoint,json=openaiEndpoint,proto3,oneof" json:"openai_endpoint,omitempty"`                      // 自定义 OpenAI 端点(原 endpoint)
+	OpenaiEndpointEnable *bool                  `protobuf:"varint,4,opt,name=openai_endpoint_enable,json=openaiEndpointEnable,proto3,oneof" json:"openai_endpoint_enable,omitempty"` // 端点开关;关 = 用 OpenAI 官方端点
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -67,29 +67,29 @@ func (*SettingInfo) Descriptor() ([]byte, []int) {
 }
 
 func (x *SettingInfo) GetProxyEndpoint() string {
-	if x != nil {
-		return x.ProxyEndpoint
+	if x != nil && x.ProxyEndpoint != nil {
+		return *x.ProxyEndpoint
 	}
 	return ""
 }
 
 func (x *SettingInfo) GetProxyEnable() bool {
-	if x != nil {
-		return x.ProxyEnable
+	if x != nil && x.ProxyEnable != nil {
+		return *x.ProxyEnable
 	}
 	return false
 }
 
 func (x *SettingInfo) GetOpenaiEndpoint() string {
-	if x != nil {
-		return x.OpenaiEndpoint
+	if x != nil && x.OpenaiEndpoint != nil {
+		return *x.OpenaiEndpoint
 	}
 	return ""
 }
 
 func (x *SettingInfo) GetOpenaiEndpointEnable() bool {
-	if x != nil {
-		return x.OpenaiEndpointEnable
+	if x != nil && x.OpenaiEndpointEnable != nil {
+		return *x.OpenaiEndpointEnable
 	}
 	return false
 }
@@ -186,12 +186,16 @@ var File_hi_ai_setting_proto protoreflect.FileDescriptor
 
 const file_hi_ai_setting_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xd4\x01\n" +
-	"\vSettingInfo\x12+\n" +
-	"\x0eproxy_endpoint\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\rproxyEndpoint\x12'\n" +
-	"\fproxy_enable\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03R\vproxyEnable\x12-\n" +
-	"\x0fopenai_endpoint\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x0eopenaiEndpoint\x12:\n" +
-	"\x16openai_endpoint_enable\x18\x04 \x01(\bB\x04\x90\xb5\x18\x03R\x14openaiEndpointEnable:\x04\x98\xb5\x18\x03\"8\n" +
+	"\x13hi/ai/setting.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xbb\x02\n" +
+	"\vSettingInfo\x120\n" +
+	"\x0eproxy_endpoint\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\rproxyEndpoint\x88\x01\x01\x12,\n" +
+	"\fproxy_enable\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03H\x01R\vproxyEnable\x88\x01\x01\x122\n" +
+	"\x0fopenai_endpoint\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x0eopenaiEndpoint\x88\x01\x01\x12?\n" +
+	"\x16openai_endpoint_enable\x18\x04 \x01(\bB\x04\x90\xb5\x18\x03H\x03R\x14openaiEndpointEnable\x88\x01\x01:\x04\x98\xb5\x18\x03B\x11\n" +
+	"\x0f_proxy_endpointB\x0f\n" +
+	"\r_proxy_enableB\x12\n" +
+	"\x10_openai_endpointB\x19\n" +
+	"\x17_openai_endpoint_enable\"8\n" +
 	"\x0eSettingEditReq\x12&\n" +
 	"\x04info\x18\x01 \x01(\v2\x12.hi.ai.SettingInfoR\x04info\"D\n" +
 	"\x0eSettingGetResp\x12,\n" +
@@ -242,6 +246,7 @@ func file_hi_ai_setting_proto_init() {
 	if File_hi_ai_setting_proto != nil {
 		return
 	}
+	file_hi_ai_setting_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

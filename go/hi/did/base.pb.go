@@ -28,12 +28,12 @@ const (
 // 光写 `USDT` 说不清往哪条链上转。
 type Coin struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
-	Icon     string                 `protobuf:"bytes,1,opt,name=icon,proto3" json:"icon,omitempty"`
-	Name     string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`         // 标识 + 显示名,如 USDT-TRC20 / WHDS-APTOS
-	Category string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"` // public-公共币种, custom-自定义币种
-	Chain    string                 `protobuf:"bytes,4,opt,name=chain,proto3" json:"chain,omitempty"`       // btc/eth/trx/sol/aptos,对齐 hidid-core 的 Chain::id()
-	// 合约(FA / token)地址。**空 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
-	Contract string `protobuf:"bytes,5,opt,name=contract,proto3" json:"contract,omitempty"`
+	Icon     *string                `protobuf:"bytes,1,opt,name=icon,proto3,oneof" json:"icon,omitempty"`
+	Name     *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`         // 标识 + 显示名,如 USDT-TRC20 / WHDS-APTOS
+	Category *string                `protobuf:"bytes,3,opt,name=category,proto3,oneof" json:"category,omitempty"` // public-公共币种, custom-自定义币种
+	Chain    *string                `protobuf:"bytes,4,opt,name=chain,proto3,oneof" json:"chain,omitempty"`       // btc/eth/trx/sol/aptos,对齐 hidid-core 的 Chain::id()
+	// 合约(FA / token)地址。**不传 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
+	Contract *string `protobuf:"bytes,5,opt,name=contract,proto3,oneof" json:"contract,omitempty"`
 	// 最小单位的小数位。金额换算全程走整数,**不碰 f64** —— 钱经不起浮点误差。
 	//
 	// ⚠️ **必须与链上一致,配错就是金额差几个数量级**,而且不会报错:
@@ -44,7 +44,7 @@ type Coin struct {
 	//	  POST <fullnode>/v1/view
 	//	  {"function":"0x1::fungible_asset::decimals",
 	//	   "type_arguments":["0x1::fungible_asset::Metadata"],"arguments":["<合约地址>"]}
-	Decimals      uint32 `protobuf:"varint,6,opt,name=decimals,proto3" json:"decimals,omitempty"`
+	Decimals      *uint32 `protobuf:"varint,6,opt,name=decimals,proto3,oneof" json:"decimals,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -80,43 +80,43 @@ func (*Coin) Descriptor() ([]byte, []int) {
 }
 
 func (x *Coin) GetIcon() string {
-	if x != nil {
-		return x.Icon
+	if x != nil && x.Icon != nil {
+		return *x.Icon
 	}
 	return ""
 }
 
 func (x *Coin) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *Coin) GetCategory() string {
-	if x != nil {
-		return x.Category
+	if x != nil && x.Category != nil {
+		return *x.Category
 	}
 	return ""
 }
 
 func (x *Coin) GetChain() string {
-	if x != nil {
-		return x.Chain
+	if x != nil && x.Chain != nil {
+		return *x.Chain
 	}
 	return ""
 }
 
 func (x *Coin) GetContract() string {
-	if x != nil {
-		return x.Contract
+	if x != nil && x.Contract != nil {
+		return *x.Contract
 	}
 	return ""
 }
 
 func (x *Coin) GetDecimals() uint32 {
-	if x != nil {
-		return x.Decimals
+	if x != nil && x.Decimals != nil {
+		return *x.Decimals
 	}
 	return 0
 }
@@ -213,7 +213,7 @@ func (x *ListSuperAdminUsersResp) GetList() []string {
 
 type UserTotalResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -249,8 +249,8 @@ func (*UserTotalResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *UserTotalResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -259,20 +259,27 @@ var File_hi_did_base_proto protoreflect.FileDescriptor
 
 const file_hi_did_base_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xc2\x01\n" +
-	"\x04Coin\x12\x18\n" +
-	"\x04icon\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04icon\x12\x18\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12 \n" +
-	"\bcategory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\bcategory\x12\x1a\n" +
-	"\x05chain\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x05chain\x12 \n" +
-	"\bcontract\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\bcontract\x12 \n" +
-	"\bdecimals\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01R\bdecimals:\x04\x98\xb5\x18\x01\"=\n" +
+	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa3\x02\n" +
+	"\x04Coin\x12\x1d\n" +
+	"\x04icon\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04icon\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12%\n" +
+	"\bcategory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\bcategory\x88\x01\x01\x12\x1f\n" +
+	"\x05chain\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x05chain\x88\x01\x01\x12%\n" +
+	"\bcontract\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x04R\bcontract\x88\x01\x01\x12%\n" +
+	"\bdecimals\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01H\x05R\bdecimals\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_iconB\a\n" +
+	"\x05_nameB\v\n" +
+	"\t_categoryB\b\n" +
+	"\x06_chainB\v\n" +
+	"\t_contractB\v\n" +
+	"\t_decimals\"=\n" +
 	"\rListCoinsResp\x12&\n" +
 	"\x04list\x18\x01 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"9\n" +
 	"\x17ListSuperAdminUsersResp\x12\x18\n" +
-	"\x04list\x18\x01 \x03(\tB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"1\n" +
-	"\rUserTotalResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total:\x04\x98\xb5\x18\x012\xd3\x01\n" +
+	"\x04list\x18\x01 \x03(\tB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"@\n" +
+	"\rUserTotalResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total2\xd3\x01\n" +
 	"\x04Base\x12A\n" +
 	"\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12E\n" +
 	"\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12A\n" +
@@ -326,6 +333,8 @@ func file_hi_did_base_proto_init() {
 	if File_hi_did_base_proto != nil {
 		return
 	}
+	file_hi_did_base_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_base_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

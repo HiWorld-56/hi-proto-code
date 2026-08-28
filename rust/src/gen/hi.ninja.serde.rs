@@ -6,20 +6,20 @@ impl serde::Serialize for AudioPlay {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
-        if !self.audio.is_empty() {
+        if self.audio.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.AudioPlay", len)?;
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
-        if !self.audio.is_empty() {
+        if let Some(v) = self.audio.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("audio", pbjson::private::base64::encode(&self.audio).as_str())?;
+            struct_ser.serialize_field("audio", pbjson::private::base64::encode(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -89,21 +89,21 @@ impl<'de> serde::Deserialize<'de> for AudioPlay {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Audio => {
                             if audio__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("audio"));
                             }
                             audio__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(AudioPlay {
-                    uuid: uuid__.unwrap_or_default(),
-                    audio: audio__.unwrap_or_default(),
+                    uuid: uuid__,
+                    audio: audio__,
                 })
             }
         }
@@ -118,18 +118,18 @@ impl serde::Serialize for BinanceCredentials {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.api_key.is_empty() {
+        if self.api_key.is_some() {
             len += 1;
         }
-        if !self.api_secret.is_empty() {
+        if self.api_secret.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.BinanceCredentials", len)?;
-        if !self.api_key.is_empty() {
-            struct_ser.serialize_field("apiKey", &self.api_key)?;
+        if let Some(v) = self.api_key.as_ref() {
+            struct_ser.serialize_field("apiKey", v)?;
         }
-        if !self.api_secret.is_empty() {
-            struct_ser.serialize_field("apiSecret", &self.api_secret)?;
+        if let Some(v) = self.api_secret.as_ref() {
+            struct_ser.serialize_field("apiSecret", v)?;
         }
         struct_ser.end()
     }
@@ -201,19 +201,19 @@ impl<'de> serde::Deserialize<'de> for BinanceCredentials {
                             if api_key__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("apiKey"));
                             }
-                            api_key__ = Some(map_.next_value()?);
+                            api_key__ = map_.next_value()?;
                         }
                         GeneratedField::ApiSecret => {
                             if api_secret__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("apiSecret"));
                             }
-                            api_secret__ = Some(map_.next_value()?);
+                            api_secret__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(BinanceCredentials {
-                    api_key: api_key__.unwrap_or_default(),
-                    api_secret: api_secret__.unwrap_or_default(),
+                    api_key: api_key__,
+                    api_secret: api_secret__,
                 })
             }
         }
@@ -231,15 +231,15 @@ impl serde::Serialize for BinanceSettings {
         if self.credentials.is_some() {
             len += 1;
         }
-        if !self.initial_capital.is_empty() {
+        if self.initial_capital.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.BinanceSettings", len)?;
         if let Some(v) = self.credentials.as_ref() {
             struct_ser.serialize_field("credentials", v)?;
         }
-        if !self.initial_capital.is_empty() {
-            struct_ser.serialize_field("initialCapital", &self.initial_capital)?;
+        if let Some(v) = self.initial_capital.as_ref() {
+            struct_ser.serialize_field("initialCapital", v)?;
         }
         struct_ser.end()
     }
@@ -316,13 +316,13 @@ impl<'de> serde::Deserialize<'de> for BinanceSettings {
                             if initial_capital__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("initialCapital"));
                             }
-                            initial_capital__ = Some(map_.next_value()?);
+                            initial_capital__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(BinanceSettings {
                     credentials: credentials__,
-                    initial_capital: initial_capital__.unwrap_or_default(),
+                    initial_capital: initial_capital__,
                 })
             }
         }
@@ -1104,15 +1104,15 @@ impl serde::Serialize for MasterEvent {
         if self.master.is_some() {
             len += 1;
         }
-        if !self.trigger.is_empty() {
+        if self.trigger.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.MasterEvent", len)?;
         if let Some(v) = self.master.as_ref() {
             struct_ser.serialize_field("master", v)?;
         }
-        if !self.trigger.is_empty() {
-            struct_ser.serialize_field("trigger", &self.trigger)?;
+        if let Some(v) = self.trigger.as_ref() {
+            struct_ser.serialize_field("trigger", v)?;
         }
         struct_ser.end()
     }
@@ -1188,13 +1188,13 @@ impl<'de> serde::Deserialize<'de> for MasterEvent {
                             if trigger__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("trigger"));
                             }
-                            trigger__ = Some(map_.next_value()?);
+                            trigger__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(MasterEvent {
                     master: master__,
-                    trigger: trigger__.unwrap_or_default(),
+                    trigger: trigger__,
                 })
             }
         }
@@ -1209,54 +1209,54 @@ impl serde::Serialize for PluginProgress {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
-        if !self.title.is_empty() {
+        if self.title.is_some() {
             len += 1;
         }
-        if self.state != 0 {
+        if self.state.is_some() {
             len += 1;
         }
-        if self.progress != 0 {
+        if self.progress.is_some() {
             len += 1;
         }
-        if self.downloaded_bytes != 0 {
+        if self.downloaded_bytes.is_some() {
             len += 1;
         }
-        if self.total_bytes != 0 {
+        if self.total_bytes.is_some() {
             len += 1;
         }
-        if !self.message.is_empty() {
+        if self.message.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.PluginProgress", len)?;
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
-        if !self.title.is_empty() {
-            struct_ser.serialize_field("title", &self.title)?;
+        if let Some(v) = self.title.as_ref() {
+            struct_ser.serialize_field("title", v)?;
         }
-        if self.state != 0 {
-            let v = plugin_progress::State::try_from(self.state)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.state)))?;
+        if let Some(v) = self.state.as_ref() {
+            let v = plugin_progress::State::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("state", &v)?;
         }
-        if self.progress != 0 {
-            struct_ser.serialize_field("progress", &self.progress)?;
+        if let Some(v) = self.progress.as_ref() {
+            struct_ser.serialize_field("progress", v)?;
         }
-        if self.downloaded_bytes != 0 {
+        if let Some(v) = self.downloaded_bytes.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("downloadedBytes", ToString::to_string(&self.downloaded_bytes).as_str())?;
+            struct_ser.serialize_field("downloadedBytes", ToString::to_string(&v).as_str())?;
         }
-        if self.total_bytes != 0 {
+        if let Some(v) = self.total_bytes.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("totalBytes", ToString::to_string(&self.total_bytes).as_str())?;
+            struct_ser.serialize_field("totalBytes", ToString::to_string(&v).as_str())?;
         }
-        if !self.message.is_empty() {
-            struct_ser.serialize_field("message", &self.message)?;
+        if let Some(v) = self.message.as_ref() {
+            struct_ser.serialize_field("message", v)?;
         }
         struct_ser.end()
     }
@@ -1348,26 +1348,26 @@ impl<'de> serde::Deserialize<'de> for PluginProgress {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Title => {
                             if title__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("title"));
                             }
-                            title__ = Some(map_.next_value()?);
+                            title__ = map_.next_value()?;
                         }
                         GeneratedField::State => {
                             if state__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("state"));
                             }
-                            state__ = Some(map_.next_value::<plugin_progress::State>()? as i32);
+                            state__ = map_.next_value::<::std::option::Option<plugin_progress::State>>()?.map(|x| x as i32);
                         }
                         GeneratedField::Progress => {
                             if progress__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("progress"));
                             }
                             progress__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::DownloadedBytes => {
@@ -1375,7 +1375,7 @@ impl<'de> serde::Deserialize<'de> for PluginProgress {
                                 return Err(serde::de::Error::duplicate_field("downloadedBytes"));
                             }
                             downloaded_bytes__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::TotalBytes => {
@@ -1383,25 +1383,25 @@ impl<'de> serde::Deserialize<'de> for PluginProgress {
                                 return Err(serde::de::Error::duplicate_field("totalBytes"));
                             }
                             total_bytes__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Message => {
                             if message__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("message"));
                             }
-                            message__ = Some(map_.next_value()?);
+                            message__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(PluginProgress {
-                    uuid: uuid__.unwrap_or_default(),
-                    title: title__.unwrap_or_default(),
-                    state: state__.unwrap_or_default(),
-                    progress: progress__.unwrap_or_default(),
-                    downloaded_bytes: downloaded_bytes__.unwrap_or_default(),
-                    total_bytes: total_bytes__.unwrap_or_default(),
-                    message: message__.unwrap_or_default(),
+                    uuid: uuid__,
+                    title: title__,
+                    state: state__,
+                    progress: progress__,
+                    downloaded_bytes: downloaded_bytes__,
+                    total_bytes: total_bytes__,
+                    message: message__,
                 })
             }
         }
@@ -1678,24 +1678,24 @@ impl serde::Serialize for StatusEvent {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.ntp {
+        if self.ntp.is_some() {
             len += 1;
         }
-        if self.wifi {
+        if self.wifi.is_some() {
             len += 1;
         }
-        if self.usb {
+        if self.usb.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.StatusEvent", len)?;
-        if self.ntp {
-            struct_ser.serialize_field("ntp", &self.ntp)?;
+        if let Some(v) = self.ntp.as_ref() {
+            struct_ser.serialize_field("ntp", v)?;
         }
-        if self.wifi {
-            struct_ser.serialize_field("wifi", &self.wifi)?;
+        if let Some(v) = self.wifi.as_ref() {
+            struct_ser.serialize_field("wifi", v)?;
         }
-        if self.usb {
-            struct_ser.serialize_field("usb", &self.usb)?;
+        if let Some(v) = self.usb.as_ref() {
+            struct_ser.serialize_field("usb", v)?;
         }
         struct_ser.end()
     }
@@ -1769,26 +1769,26 @@ impl<'de> serde::Deserialize<'de> for StatusEvent {
                             if ntp__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("ntp"));
                             }
-                            ntp__ = Some(map_.next_value()?);
+                            ntp__ = map_.next_value()?;
                         }
                         GeneratedField::Wifi => {
                             if wifi__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("wifi"));
                             }
-                            wifi__ = Some(map_.next_value()?);
+                            wifi__ = map_.next_value()?;
                         }
                         GeneratedField::Usb => {
                             if usb__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("usb"));
                             }
-                            usb__ = Some(map_.next_value()?);
+                            usb__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(StatusEvent {
-                    ntp: ntp__.unwrap_or_default(),
-                    wifi: wifi__.unwrap_or_default(),
-                    usb: usb__.unwrap_or_default(),
+                    ntp: ntp__,
+                    wifi: wifi__,
+                    usb: usb__,
                 })
             }
         }
@@ -1803,18 +1803,18 @@ impl serde::Serialize for TextReply {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
-        if !self.value.is_empty() {
+        if self.value.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.TextReply", len)?;
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
-        if !self.value.is_empty() {
-            struct_ser.serialize_field("value", &self.value)?;
+        if let Some(v) = self.value.as_ref() {
+            struct_ser.serialize_field("value", v)?;
         }
         struct_ser.end()
     }
@@ -1884,19 +1884,19 @@ impl<'de> serde::Deserialize<'de> for TextReply {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Value => {
                             if value__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("value"));
                             }
-                            value__ = Some(map_.next_value()?);
+                            value__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(TextReply {
-                    uuid: uuid__.unwrap_or_default(),
-                    value: value__.unwrap_or_default(),
+                    uuid: uuid__,
+                    value: value__,
                 })
             }
         }
@@ -1911,13 +1911,13 @@ impl serde::Serialize for UpdateAction {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.action != 0 {
+        if self.action.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateAction", len)?;
-        if self.action != 0 {
-            let v = update_action::Action::try_from(self.action)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.action)))?;
+        if let Some(v) = self.action.as_ref() {
+            let v = update_action::Action::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("action", &v)?;
         }
         struct_ser.end()
@@ -1984,12 +1984,12 @@ impl<'de> serde::Deserialize<'de> for UpdateAction {
                             if action__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("action"));
                             }
-                            action__ = Some(map_.next_value::<update_action::Action>()? as i32);
+                            action__ = map_.next_value::<::std::option::Option<update_action::Action>>()?.map(|x| x as i32);
                         }
                     }
                 }
                 Ok(UpdateAction {
-                    action: action__.unwrap_or_default(),
+                    action: action__,
                 })
             }
         }
@@ -2081,78 +2081,78 @@ impl serde::Serialize for UpdateInfo {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.state.is_empty() {
+        if self.state.is_some() {
             len += 1;
         }
-        if !self.current_version.is_empty() {
+        if self.current_version.is_some() {
             len += 1;
         }
-        if !self.target_version.is_empty() {
+        if self.target_version.is_some() {
             len += 1;
         }
-        if self.progress != 0 {
+        if self.progress.is_some() {
             len += 1;
         }
-        if !self.message.is_empty() {
+        if self.message.is_some() {
             len += 1;
         }
-        if !self.error.is_empty() {
+        if self.error.is_some() {
             len += 1;
         }
         if !self.changes.is_empty() {
             len += 1;
         }
-        if !self.trigger.is_empty() {
+        if self.trigger.is_some() {
             len += 1;
         }
-        if self.updated_at != 0 {
+        if self.updated_at.is_some() {
             len += 1;
         }
-        if self.downloaded_bytes != 0 {
+        if self.downloaded_bytes.is_some() {
             len += 1;
         }
-        if self.total_bytes != 0 {
+        if self.total_bytes.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateInfo", len)?;
-        if !self.state.is_empty() {
-            struct_ser.serialize_field("state", &self.state)?;
+        if let Some(v) = self.state.as_ref() {
+            struct_ser.serialize_field("state", v)?;
         }
-        if !self.current_version.is_empty() {
-            struct_ser.serialize_field("currentVersion", &self.current_version)?;
+        if let Some(v) = self.current_version.as_ref() {
+            struct_ser.serialize_field("currentVersion", v)?;
         }
-        if !self.target_version.is_empty() {
-            struct_ser.serialize_field("targetVersion", &self.target_version)?;
+        if let Some(v) = self.target_version.as_ref() {
+            struct_ser.serialize_field("targetVersion", v)?;
         }
-        if self.progress != 0 {
-            struct_ser.serialize_field("progress", &self.progress)?;
+        if let Some(v) = self.progress.as_ref() {
+            struct_ser.serialize_field("progress", v)?;
         }
-        if !self.message.is_empty() {
-            struct_ser.serialize_field("message", &self.message)?;
+        if let Some(v) = self.message.as_ref() {
+            struct_ser.serialize_field("message", v)?;
         }
-        if !self.error.is_empty() {
-            struct_ser.serialize_field("error", &self.error)?;
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
         }
         if !self.changes.is_empty() {
             struct_ser.serialize_field("changes", &self.changes)?;
         }
-        if !self.trigger.is_empty() {
-            struct_ser.serialize_field("trigger", &self.trigger)?;
+        if let Some(v) = self.trigger.as_ref() {
+            struct_ser.serialize_field("trigger", v)?;
         }
-        if self.updated_at != 0 {
+        if let Some(v) = self.updated_at.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("updatedAt", ToString::to_string(&self.updated_at).as_str())?;
+            struct_ser.serialize_field("updatedAt", ToString::to_string(&v).as_str())?;
         }
-        if self.downloaded_bytes != 0 {
+        if let Some(v) = self.downloaded_bytes.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("downloadedBytes", ToString::to_string(&self.downloaded_bytes).as_str())?;
+            struct_ser.serialize_field("downloadedBytes", ToString::to_string(&v).as_str())?;
         }
-        if self.total_bytes != 0 {
+        if let Some(v) = self.total_bytes.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("totalBytes", ToString::to_string(&self.total_bytes).as_str())?;
+            struct_ser.serialize_field("totalBytes", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -2263,39 +2263,39 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                             if state__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("state"));
                             }
-                            state__ = Some(map_.next_value()?);
+                            state__ = map_.next_value()?;
                         }
                         GeneratedField::CurrentVersion => {
                             if current_version__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("currentVersion"));
                             }
-                            current_version__ = Some(map_.next_value()?);
+                            current_version__ = map_.next_value()?;
                         }
                         GeneratedField::TargetVersion => {
                             if target_version__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("targetVersion"));
                             }
-                            target_version__ = Some(map_.next_value()?);
+                            target_version__ = map_.next_value()?;
                         }
                         GeneratedField::Progress => {
                             if progress__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("progress"));
                             }
                             progress__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::Message => {
                             if message__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("message"));
                             }
-                            message__ = Some(map_.next_value()?);
+                            message__ = map_.next_value()?;
                         }
                         GeneratedField::Error => {
                             if error__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("error"));
                             }
-                            error__ = Some(map_.next_value()?);
+                            error__ = map_.next_value()?;
                         }
                         GeneratedField::Changes => {
                             if changes__.is_some() {
@@ -2307,14 +2307,14 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                             if trigger__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("trigger"));
                             }
-                            trigger__ = Some(map_.next_value()?);
+                            trigger__ = map_.next_value()?;
                         }
                         GeneratedField::UpdatedAt => {
                             if updated_at__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("updatedAt"));
                             }
                             updated_at__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::DownloadedBytes => {
@@ -2322,7 +2322,7 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                                 return Err(serde::de::Error::duplicate_field("downloadedBytes"));
                             }
                             downloaded_bytes__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                         GeneratedField::TotalBytes => {
@@ -2330,23 +2330,23 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                                 return Err(serde::de::Error::duplicate_field("totalBytes"));
                             }
                             total_bytes__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
                     }
                 }
                 Ok(UpdateInfo {
-                    state: state__.unwrap_or_default(),
-                    current_version: current_version__.unwrap_or_default(),
-                    target_version: target_version__.unwrap_or_default(),
-                    progress: progress__.unwrap_or_default(),
-                    message: message__.unwrap_or_default(),
-                    error: error__.unwrap_or_default(),
+                    state: state__,
+                    current_version: current_version__,
+                    target_version: target_version__,
+                    progress: progress__,
+                    message: message__,
+                    error: error__,
                     changes: changes__.unwrap_or_default(),
-                    trigger: trigger__.unwrap_or_default(),
-                    updated_at: updated_at__.unwrap_or_default(),
-                    downloaded_bytes: downloaded_bytes__.unwrap_or_default(),
-                    total_bytes: total_bytes__.unwrap_or_default(),
+                    trigger: trigger__,
+                    updated_at: updated_at__,
+                    downloaded_bytes: downloaded_bytes__,
+                    total_bytes: total_bytes__,
                 })
             }
         }

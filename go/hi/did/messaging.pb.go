@@ -97,11 +97,11 @@ func (*Packet_Notice) isPacket_Kind() {}
 // app-update:  app 有新版本(全体广播,走 `hi/v1/broadcast`,不是本主题)
 type Notice struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	From          *hi.Entity             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"`
 	Extra         *anypb.Any             `protobuf:"bytes,4,opt,name=extra,proto3" json:"extra,omitempty"`
-	ExType        string                 `protobuf:"bytes,5,opt,name=ex_type,json=exType,proto3" json:"ex_type,omitempty"`
+	ExType        *string                `protobuf:"bytes,5,opt,name=ex_type,json=exType,proto3,oneof" json:"ex_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -137,15 +137,15 @@ func (*Notice) Descriptor() ([]byte, []int) {
 }
 
 func (x *Notice) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *Notice) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -165,8 +165,8 @@ func (x *Notice) GetExtra() *anypb.Any {
 }
 
 func (x *Notice) GetExType() string {
-	if x != nil {
-		return x.ExType
+	if x != nil && x.ExType != nil {
+		return *x.ExType
 	}
 	return ""
 }
@@ -178,14 +178,18 @@ const file_hi_did_messaging_proto_rawDesc = "" +
 	"\x16hi/did/messaging.proto\x12\x06hi.did\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\":\n" +
 	"\x06Packet\x12(\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0e.hi.did.NoticeH\x00R\x06noticeB\x06\n" +
-	"\x04kind\"\x95\x01\n" +
-	"\x06Notice\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\x12\x1e\n" +
+	"\x04kind\"\xc2\x01\n" +
+	"\x06Notice\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x17\n" +
+	"\x04type\x18\x02 \x01(\tH\x01R\x04type\x88\x01\x01\x12\x1e\n" +
 	"\x04from\x18\x03 \x01(\v2\n" +
 	".hi.EntityR\x04from\x12*\n" +
-	"\x05extra\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\x05extra\x12\x17\n" +
-	"\aex_type\x18\x05 \x01(\tR\x06exType2F\n" +
+	"\x05extra\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\x05extra\x12\x1c\n" +
+	"\aex_type\x18\x05 \x01(\tH\x02R\x06exType\x88\x01\x01B\a\n" +
+	"\x05_uuidB\a\n" +
+	"\x05_typeB\n" +
+	"\n" +
+	"\b_ex_type2F\n" +
 	"\x06Notify\x12<\n" +
 	"\vTransaction\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05B\x7f\n" +
 	"\n" +
@@ -234,6 +238,7 @@ func file_hi_did_messaging_proto_init() {
 	file_hi_did_messaging_proto_msgTypes[0].OneofWrappers = []any{
 		(*Packet_Notice)(nil),
 	}
+	file_hi_did_messaging_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

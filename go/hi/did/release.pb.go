@@ -56,14 +56,14 @@ const (
 // (原先想放 extra.brain_version,那样每加一个组件就要动 schema)。
 type ReleaseFile struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
-	Path    string                 `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`       // 相对安装根目录,如 bin/hinj_brain
-	Version string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"` // 该文件自身的版本,如 brain 的 0.6.0;没有就留空
-	Sha256  string                 `protobuf:"bytes,3,opt,name=sha256,proto3" json:"sha256,omitempty"`   // 客户端据此判断"本地这份要不要换"
-	Size    int64                  `protobuf:"varint,4,opt,name=size,proto3" json:"size,omitempty"`
-	Mode    string                 `protobuf:"bytes,5,opt,name=mode,proto3" json:"mode,omitempty"` // 八进制权限,如 "0755";空=沿用默认
+	Path    *string                `protobuf:"bytes,1,opt,name=path,proto3,oneof" json:"path,omitempty"`       // 相对安装根目录,如 bin/hinj_brain
+	Version *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"` // 该文件自身的版本,如 brain 的 0.6.0;没有就不传
+	Sha256  *string                `protobuf:"bytes,3,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`   // 客户端据此判断"本地这份要不要换"
+	Size    *int64                 `protobuf:"varint,4,opt,name=size,proto3,oneof" json:"size,omitempty"`
+	Mode    *string                `protobuf:"bytes,5,opt,name=mode,proto3,oneof" json:"mode,omitempty"` // 八进制权限,如 "0755";不传=沿用默认
 	// overwrite(默认) 覆盖 / keep 已存在就不动(用户配置,不可随机更改) /
 	// delete 本版要删掉的旧文件(否则升级只增不减,废文件越堆越多)
-	Policy        string `protobuf:"bytes,6,opt,name=policy,proto3" json:"policy,omitempty"`
+	Policy        *string `protobuf:"bytes,6,opt,name=policy,proto3,oneof" json:"policy,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -99,43 +99,43 @@ func (*ReleaseFile) Descriptor() ([]byte, []int) {
 }
 
 func (x *ReleaseFile) GetPath() string {
-	if x != nil {
-		return x.Path
+	if x != nil && x.Path != nil {
+		return *x.Path
 	}
 	return ""
 }
 
 func (x *ReleaseFile) GetVersion() string {
-	if x != nil {
-		return x.Version
+	if x != nil && x.Version != nil {
+		return *x.Version
 	}
 	return ""
 }
 
 func (x *ReleaseFile) GetSha256() string {
-	if x != nil {
-		return x.Sha256
+	if x != nil && x.Sha256 != nil {
+		return *x.Sha256
 	}
 	return ""
 }
 
 func (x *ReleaseFile) GetSize() int64 {
-	if x != nil {
-		return x.Size
+	if x != nil && x.Size != nil {
+		return *x.Size
 	}
 	return 0
 }
 
 func (x *ReleaseFile) GetMode() string {
-	if x != nil {
-		return x.Mode
+	if x != nil && x.Mode != nil {
+		return *x.Mode
 	}
 	return ""
 }
 
 func (x *ReleaseFile) GetPolicy() string {
-	if x != nil {
-		return x.Policy
+	if x != nil && x.Policy != nil {
+		return *x.Policy
 	}
 	return ""
 }
@@ -144,9 +144,9 @@ func (x *ReleaseFile) GetPolicy() string {
 // 且下载 url 是 `Latest` 每次现算的预签名(有期限),不该固化进 manifest。
 type ReleaseBundle struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Path          string                 `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"` // **product 桶内**的对象键(不含桶名),如 hinj/linux-aarch64/0.0.9/hinj_bundle_0.0.9.tar.gz
-	Sha256        string                 `protobuf:"bytes,2,opt,name=sha256,proto3" json:"sha256,omitempty"`
-	Size          int64                  `protobuf:"varint,3,opt,name=size,proto3" json:"size,omitempty"`
+	Path          *string                `protobuf:"bytes,1,opt,name=path,proto3,oneof" json:"path,omitempty"` // **product 桶内**的对象键(不含桶名),如 hinj/linux-aarch64/0.0.9/hinj_bundle_0.0.9.tar.gz
+	Sha256        *string                `protobuf:"bytes,2,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`
+	Size          *int64                 `protobuf:"varint,3,opt,name=size,proto3,oneof" json:"size,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -182,22 +182,22 @@ func (*ReleaseBundle) Descriptor() ([]byte, []int) {
 }
 
 func (x *ReleaseBundle) GetPath() string {
-	if x != nil {
-		return x.Path
+	if x != nil && x.Path != nil {
+		return *x.Path
 	}
 	return ""
 }
 
 func (x *ReleaseBundle) GetSha256() string {
-	if x != nil {
-		return x.Sha256
+	if x != nil && x.Sha256 != nil {
+		return *x.Sha256
 	}
 	return ""
 }
 
 func (x *ReleaseBundle) GetSize() int64 {
-	if x != nil {
-		return x.Size
+	if x != nil && x.Size != nil {
+		return *x.Size
 	}
 	return 0
 }
@@ -205,20 +205,20 @@ func (x *ReleaseBundle) GetSize() int64 {
 // 发布清单 = latest.json 的内容。
 type ReleaseManifest struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	Product             string                 `protobuf:"bytes,1,opt,name=product,proto3" json:"product,omitempty"`   // hidid / hiclub / hinj
-	Platform            string                 `protobuf:"bytes,2,opt,name=platform,proto3" json:"platform,omitempty"` // android / ios / linux-aarch64 …
-	Version             string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`
-	MinSupportedVersion string                 `protobuf:"bytes,4,opt,name=min_supported_version,json=minSupportedVersion,proto3" json:"min_supported_version,omitempty"` // 低于它必须强制升级
-	ReleaseTime         int64                  `protobuf:"varint,5,opt,name=release_time,json=releaseTime,proto3" json:"release_time,omitempty"`
+	Product             *string                `protobuf:"bytes,1,opt,name=product,proto3,oneof" json:"product,omitempty"`   // hidid / hiclub / hinj
+	Platform            *string                `protobuf:"bytes,2,opt,name=platform,proto3,oneof" json:"platform,omitempty"` // android / ios / linux-aarch64 …
+	Version             *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`
+	MinSupportedVersion *string                `protobuf:"bytes,4,opt,name=min_supported_version,json=minSupportedVersion,proto3,oneof" json:"min_supported_version,omitempty"` // 低于它必须强制升级
+	ReleaseTime         *int64                 `protobuf:"varint,5,opt,name=release_time,json=releaseTime,proto3,oneof" json:"release_time,omitempty"`
 	Changes             []string               `protobuf:"bytes,6,rep,name=changes,proto3" json:"changes,omitempty"`
 	Bundle              *ReleaseBundle         `protobuf:"bytes,7,opt,name=bundle,proto3" json:"bundle,omitempty"`
 	// full  = 整包覆盖(安卓:下 apk 直接装);
 	// files = 按 files 逐个比 sha256,只拉不同的(机器人:有些配置不能动)
-	UpdateMode string         `protobuf:"bytes,8,opt,name=update_mode,json=updateMode,proto3" json:"update_mode,omitempty"`
+	UpdateMode *string        `protobuf:"bytes,8,opt,name=update_mode,json=updateMode,proto3,oneof" json:"update_mode,omitempty"`
 	Files      []*ReleaseFile `protobuf:"bytes,9,rep,name=files,proto3" json:"files,omitempty"`
 	// **只在 Latest 的响应里现算**(预签名,有期限),不写进 latest.json。
-	DownloadUrl       string `protobuf:"bytes,10,opt,name=download_url,json=downloadUrl,proto3" json:"download_url,omitempty"`
-	DownloadUrlExpire int64  `protobuf:"varint,11,opt,name=download_url_expire,json=downloadUrlExpire,proto3" json:"download_url_expire,omitempty"` // 该 url 的失效时刻(unix 秒)
+	DownloadUrl       *string `protobuf:"bytes,10,opt,name=download_url,json=downloadUrl,proto3,oneof" json:"download_url,omitempty"`
+	DownloadUrlExpire *int64  `protobuf:"varint,11,opt,name=download_url_expire,json=downloadUrlExpire,proto3,oneof" json:"download_url_expire,omitempty"` // 该 url 的失效时刻(unix 秒)
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -254,36 +254,36 @@ func (*ReleaseManifest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ReleaseManifest) GetProduct() string {
-	if x != nil {
-		return x.Product
+	if x != nil && x.Product != nil {
+		return *x.Product
 	}
 	return ""
 }
 
 func (x *ReleaseManifest) GetPlatform() string {
-	if x != nil {
-		return x.Platform
+	if x != nil && x.Platform != nil {
+		return *x.Platform
 	}
 	return ""
 }
 
 func (x *ReleaseManifest) GetVersion() string {
-	if x != nil {
-		return x.Version
+	if x != nil && x.Version != nil {
+		return *x.Version
 	}
 	return ""
 }
 
 func (x *ReleaseManifest) GetMinSupportedVersion() string {
-	if x != nil {
-		return x.MinSupportedVersion
+	if x != nil && x.MinSupportedVersion != nil {
+		return *x.MinSupportedVersion
 	}
 	return ""
 }
 
 func (x *ReleaseManifest) GetReleaseTime() int64 {
-	if x != nil {
-		return x.ReleaseTime
+	if x != nil && x.ReleaseTime != nil {
+		return *x.ReleaseTime
 	}
 	return 0
 }
@@ -303,8 +303,8 @@ func (x *ReleaseManifest) GetBundle() *ReleaseBundle {
 }
 
 func (x *ReleaseManifest) GetUpdateMode() string {
-	if x != nil {
-		return x.UpdateMode
+	if x != nil && x.UpdateMode != nil {
+		return *x.UpdateMode
 	}
 	return ""
 }
@@ -317,24 +317,24 @@ func (x *ReleaseManifest) GetFiles() []*ReleaseFile {
 }
 
 func (x *ReleaseManifest) GetDownloadUrl() string {
-	if x != nil {
-		return x.DownloadUrl
+	if x != nil && x.DownloadUrl != nil {
+		return *x.DownloadUrl
 	}
 	return ""
 }
 
 func (x *ReleaseManifest) GetDownloadUrlExpire() int64 {
-	if x != nil {
-		return x.DownloadUrlExpire
+	if x != nil && x.DownloadUrlExpire != nil {
+		return *x.DownloadUrlExpire
 	}
 	return 0
 }
 
 type UploadPackageResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Path          string                 `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`     // 落好的对象键,填进 Publish 的 manifest.bundle.path
-	Sha256        string                 `protobuf:"bytes,2,opt,name=sha256,proto3" json:"sha256,omitempty"` // 服务端边写边算,供发布方核对
-	Size          int64                  `protobuf:"varint,3,opt,name=size,proto3" json:"size,omitempty"`
+	Path          *string                `protobuf:"bytes,1,opt,name=path,proto3,oneof" json:"path,omitempty"`     // 落好的对象键,填进 Publish 的 manifest.bundle.path
+	Sha256        *string                `protobuf:"bytes,2,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"` // 服务端边写边算,供发布方核对
+	Size          *int64                 `protobuf:"varint,3,opt,name=size,proto3,oneof" json:"size,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -370,22 +370,22 @@ func (*UploadPackageResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *UploadPackageResp) GetPath() string {
-	if x != nil {
-		return x.Path
+	if x != nil && x.Path != nil {
+		return *x.Path
 	}
 	return ""
 }
 
 func (x *UploadPackageResp) GetSha256() string {
-	if x != nil {
-		return x.Sha256
+	if x != nil && x.Sha256 != nil {
+		return *x.Sha256
 	}
 	return ""
 }
 
 func (x *UploadPackageResp) GetSize() int64 {
-	if x != nil {
-		return x.Size
+	if x != nil && x.Size != nil {
+		return *x.Size
 	}
 	return 0
 }
@@ -436,8 +436,8 @@ func (x *PublishReq) GetManifest() *ReleaseManifest {
 
 type LatestReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Product       string                 `protobuf:"bytes,1,opt,name=product,proto3" json:"product,omitempty"`   // hidid / hiclub / hinj
-	Platform      string                 `protobuf:"bytes,2,opt,name=platform,proto3" json:"platform,omitempty"` // android / ios / linux-aarch64 …
+	Product       *string                `protobuf:"bytes,1,opt,name=product,proto3,oneof" json:"product,omitempty"`   // hidid / hiclub / hinj
+	Platform      *string                `protobuf:"bytes,2,opt,name=platform,proto3,oneof" json:"platform,omitempty"` // android / ios / linux-aarch64 …
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -473,25 +473,25 @@ func (*LatestReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *LatestReq) GetProduct() string {
-	if x != nil {
-		return x.Product
+	if x != nil && x.Product != nil {
+		return *x.Product
 	}
 	return ""
 }
 
 func (x *LatestReq) GetPlatform() string {
-	if x != nil {
-		return x.Platform
+	if x != nil && x.Platform != nil {
+		return *x.Platform
 	}
 	return ""
 }
 
 type DownloadReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Product       string                 `protobuf:"bytes,1,opt,name=product,proto3" json:"product,omitempty"`
-	Platform      string                 `protobuf:"bytes,2,opt,name=platform,proto3" json:"platform,omitempty"`
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // 留空=最新版
-	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`  // 断点续传:从第几字节开始。机器人网络不稳,这个有用
+	Product       *string                `protobuf:"bytes,1,opt,name=product,proto3,oneof" json:"product,omitempty"`
+	Platform      *string                `protobuf:"bytes,2,opt,name=platform,proto3,oneof" json:"platform,omitempty"`
+	Version       *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"` // 不传=最新版
+	Offset        *int64                 `protobuf:"varint,4,opt,name=offset,proto3,oneof" json:"offset,omitempty"`  // 断点续传:从第几字节开始。机器人网络不稳,这个有用
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -527,37 +527,37 @@ func (*DownloadReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DownloadReq) GetProduct() string {
-	if x != nil {
-		return x.Product
+	if x != nil && x.Product != nil {
+		return *x.Product
 	}
 	return ""
 }
 
 func (x *DownloadReq) GetPlatform() string {
-	if x != nil {
-		return x.Platform
+	if x != nil && x.Platform != nil {
+		return *x.Platform
 	}
 	return ""
 }
 
 func (x *DownloadReq) GetVersion() string {
-	if x != nil {
-		return x.Version
+	if x != nil && x.Version != nil {
+		return *x.Version
 	}
 	return ""
 }
 
 func (x *DownloadReq) GetOffset() int64 {
-	if x != nil {
-		return x.Offset
+	if x != nil && x.Offset != nil {
+		return *x.Offset
 	}
 	return 0
 }
 
 type DownloadChunk struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chunk         []byte                 `protobuf:"bytes,1,opt,name=chunk,proto3" json:"chunk,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"` // 整包大小,首块带上,便于显示进度
+	Chunk         []byte                 `protobuf:"bytes,1,opt,name=chunk,proto3,oneof" json:"chunk,omitempty"`
+	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"` // 整包大小,首块带上,便于显示进度
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -600,8 +600,8 @@ func (x *DownloadChunk) GetChunk() []byte {
 }
 
 func (x *DownloadChunk) GetTotal() int64 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -610,50 +610,84 @@ var File_hi_did_release_proto protoreflect.FileDescriptor
 
 const file_hi_did_release_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/did/release.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xbd\x01\n" +
-	"\vReleaseFile\x12\x18\n" +
-	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04path\x12\x1e\n" +
-	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\aversion\x12\x1c\n" +
-	"\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x06sha256\x12\x18\n" +
-	"\x04size\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\x04size\x12\x18\n" +
-	"\x04mode\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\x04mode\x12\x1c\n" +
-	"\x06policy\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\x06policy:\x04\x98\xb5\x18\x01\"g\n" +
-	"\rReleaseBundle\x12\x18\n" +
-	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04path\x12\x1c\n" +
-	"\x06sha256\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x06sha256\x12\x18\n" +
-	"\x04size\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01R\x04size:\x04\x98\xb5\x18\x01\"\xe8\x03\n" +
-	"\x0fReleaseManifest\x12\x1e\n" +
-	"\aproduct\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\aproduct\x12 \n" +
-	"\bplatform\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\bplatform\x12\x1e\n" +
-	"\aversion\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\aversion\x128\n" +
-	"\x15min_supported_version\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x13minSupportedVersion\x12'\n" +
-	"\frelease_time\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01R\vreleaseTime\x12\x1e\n" +
+	"\x14hi/did/release.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x98\x02\n" +
+	"\vReleaseFile\x12\x1d\n" +
+	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04path\x88\x01\x01\x12#\n" +
+	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\aversion\x88\x01\x01\x12!\n" +
+	"\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x06sha256\x88\x01\x01\x12\x1d\n" +
+	"\x04size\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01H\x03R\x04size\x88\x01\x01\x12\x1d\n" +
+	"\x04mode\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x04R\x04mode\x88\x01\x01\x12!\n" +
+	"\x06policy\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x05R\x06policy\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_pathB\n" +
+	"\n" +
+	"\b_versionB\t\n" +
+	"\a_sha256B\a\n" +
+	"\x05_sizeB\a\n" +
+	"\x05_modeB\t\n" +
+	"\a_policy\"\x93\x01\n" +
+	"\rReleaseBundle\x12\x1d\n" +
+	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04path\x88\x01\x01\x12!\n" +
+	"\x06sha256\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x06sha256\x88\x01\x01\x12\x1d\n" +
+	"\x04size\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01H\x02R\x04size\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_pathB\t\n" +
+	"\a_sha256B\a\n" +
+	"\x05_size\"\x99\x05\n" +
+	"\x0fReleaseManifest\x12#\n" +
+	"\aproduct\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\aproduct\x88\x01\x01\x12%\n" +
+	"\bplatform\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\bplatform\x88\x01\x01\x12#\n" +
+	"\aversion\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\aversion\x88\x01\x01\x12=\n" +
+	"\x15min_supported_version\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x13minSupportedVersion\x88\x01\x01\x12,\n" +
+	"\frelease_time\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01H\x04R\vreleaseTime\x88\x01\x01\x12\x1e\n" +
 	"\achanges\x18\x06 \x03(\tB\x04\x90\xb5\x18\x01R\achanges\x123\n" +
-	"\x06bundle\x18\a \x01(\v2\x15.hi.did.ReleaseBundleB\x04\x90\xb5\x18\x01R\x06bundle\x12%\n" +
-	"\vupdate_mode\x18\b \x01(\tB\x04\x90\xb5\x18\x01R\n" +
-	"updateMode\x12/\n" +
-	"\x05files\x18\t \x03(\v2\x13.hi.did.ReleaseFileB\x04\x90\xb5\x18\x01R\x05files\x12'\n" +
+	"\x06bundle\x18\a \x01(\v2\x15.hi.did.ReleaseBundleB\x04\x90\xb5\x18\x01R\x06bundle\x12*\n" +
+	"\vupdate_mode\x18\b \x01(\tB\x04\x90\xb5\x18\x01H\x05R\n" +
+	"updateMode\x88\x01\x01\x12/\n" +
+	"\x05files\x18\t \x03(\v2\x13.hi.did.ReleaseFileB\x04\x90\xb5\x18\x01R\x05files\x12,\n" +
 	"\fdownload_url\x18\n" +
-	" \x01(\tB\x04\x90\xb5\x18\x01R\vdownloadUrl\x124\n" +
-	"\x13download_url_expire\x18\v \x01(\x03B\x04\x90\xb5\x18\x01R\x11downloadUrlExpire:\x04\x98\xb5\x18\x01\"k\n" +
-	"\x11UploadPackageResp\x12\x18\n" +
-	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04path\x12\x1c\n" +
-	"\x06sha256\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x06sha256\x12\x18\n" +
-	"\x04size\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x02R\x04size:\x04\x98\xb5\x18\x02\"A\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x01H\x06R\vdownloadUrl\x88\x01\x01\x129\n" +
+	"\x13download_url_expire\x18\v \x01(\x03B\x04\x90\xb5\x18\x01H\aR\x11downloadUrlExpire\x88\x01\x01:\x04\x98\xb5\x18\x01B\n" +
+	"\n" +
+	"\b_productB\v\n" +
+	"\t_platformB\n" +
+	"\n" +
+	"\b_versionB\x18\n" +
+	"\x16_min_supported_versionB\x0f\n" +
+	"\r_release_timeB\x0e\n" +
+	"\f_update_modeB\x0f\n" +
+	"\r_download_urlB\x16\n" +
+	"\x14_download_url_expire\"\x97\x01\n" +
+	"\x11UploadPackageResp\x12\x1d\n" +
+	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04path\x88\x01\x01\x12!\n" +
+	"\x06sha256\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x06sha256\x88\x01\x01\x12\x1d\n" +
+	"\x04size\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\x04size\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_pathB\t\n" +
+	"\a_sha256B\a\n" +
+	"\x05_size\"A\n" +
 	"\n" +
 	"PublishReq\x123\n" +
-	"\bmanifest\x18\x01 \x01(\v2\x17.hi.did.ReleaseManifestR\bmanifest\"A\n" +
-	"\tLatestReq\x12\x18\n" +
-	"\aproduct\x18\x01 \x01(\tR\aproduct\x12\x1a\n" +
-	"\bplatform\x18\x02 \x01(\tR\bplatform\"u\n" +
-	"\vDownloadReq\x12\x18\n" +
-	"\aproduct\x18\x01 \x01(\tR\aproduct\x12\x1a\n" +
-	"\bplatform\x18\x02 \x01(\tR\bplatform\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\tR\aversion\x12\x16\n" +
-	"\x06offset\x18\x04 \x01(\x03R\x06offset\"M\n" +
-	"\rDownloadChunk\x12\x1a\n" +
-	"\x05chunk\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01R\x05chunk\x12\x1a\n" +
-	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\x05total:\x04\x98\xb5\x18\x012\x97\x01\n" +
+	"\bmanifest\x18\x01 \x01(\v2\x17.hi.did.ReleaseManifestR\bmanifest\"d\n" +
+	"\tLatestReq\x12\x1d\n" +
+	"\aproduct\x18\x01 \x01(\tH\x00R\aproduct\x88\x01\x01\x12\x1f\n" +
+	"\bplatform\x18\x02 \x01(\tH\x01R\bplatform\x88\x01\x01B\n" +
+	"\n" +
+	"\b_productB\v\n" +
+	"\t_platform\"\xb9\x01\n" +
+	"\vDownloadReq\x12\x1d\n" +
+	"\aproduct\x18\x01 \x01(\tH\x00R\aproduct\x88\x01\x01\x12\x1f\n" +
+	"\bplatform\x18\x02 \x01(\tH\x01R\bplatform\x88\x01\x01\x12\x1d\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01\x12\x1b\n" +
+	"\x06offset\x18\x04 \x01(\x03H\x03R\x06offset\x88\x01\x01B\n" +
+	"\n" +
+	"\b_productB\v\n" +
+	"\t_platformB\n" +
+	"\n" +
+	"\b_versionB\t\n" +
+	"\a_offset\"k\n" +
+	"\rDownloadChunk\x12\x1f\n" +
+	"\x05chunk\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01H\x00R\x05chunk\x88\x01\x01\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x01R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_chunkB\b\n" +
+	"\x06_total2\x97\x01\n" +
 	"\rReleaseManage\x12H\n" +
 	"\rUploadPackage\x12\x13.hi.UploadStreamReq\x1a\x19.hi.did.UploadPackageResp\"\x05\x8a\xb5\x18\x01\x04(\x01\x12<\n" +
 	"\aPublish\x12\x12.hi.did.PublishReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x042\x87\x01\n" +
@@ -712,6 +746,13 @@ func file_hi_did_release_proto_init() {
 	if File_hi_did_release_proto != nil {
 		return
 	}
+	file_hi_did_release_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_release_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_release_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_did_release_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_did_release_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_did_release_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_did_release_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

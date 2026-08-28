@@ -29,7 +29,7 @@ from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/did/wallet.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x10hi/options.proto\"\xce\x01\n\x12UpdateAddressesReq\x12\x15\n\x03\x64id\x18\x01 \x01(\tH\x00R\x03\x64id\x88\x01\x01\x12\x15\n\x03\x62tc\x18\x02 \x01(\tH\x01R\x03\x62tc\x88\x01\x01\x12\x15\n\x03\x65th\x18\x03 \x01(\tH\x02R\x03\x65th\x88\x01\x01\x12\x15\n\x03trx\x18\x04 \x01(\tH\x03R\x03trx\x88\x01\x01\x12\x15\n\x03sol\x18\x05 \x01(\tH\x04R\x03sol\x88\x01\x01\x12\x15\n\x03\x61pt\x18\x06 \x01(\tH\x05R\x03\x61pt\x88\x01\x01\x42\x06\n\x04_didB\x06\n\x04_btcB\x06\n\x04_ethB\x06\n\x04_trxB\x06\n\x04_solB\x06\n\x04_apt\"$\n\x0cGetWalletReq\x12\x14\n\x05\x63hain\x18\x01 \x01(\tR\x05\x63hain\"\x95\x01\n\rGetWalletResp\x12\x34\n\x04list\x18\x01 \x03(\x0b\x32\x1a.hi.did.GetWalletResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1aH\n\x04Unit\x12\x1a\n\x05\x63hain\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05\x63hain\x12\x1e\n\x07\x61\x64\x64ress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x07\x61\x64\x64ress:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"u\n\x10ListAddressesReq\x12\x31\n\x04list\x18\x01 \x03(\x0b\x32\x1d.hi.did.ListAddressesReq.UnitR\x04list\x1a.\n\x04Unit\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x14\n\x05\x63hain\x18\x02 \x01(\tR\x05\x63hain\"\xb5\x01\n\x11ListAddressesResp\x12\x38\n\x04list\x18\x01 \x03(\x0b\x32\x1e.hi.did.ListAddressesResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a`\n\x04Unit\x12\x16\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03\x64id\x12\x1a\n\x05\x63hain\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05\x63hain\x12\x1e\n\x07\x61\x64\x64ress\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x07\x61\x64\x64ress:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"\x89\x01\n\x0eTotalAssetsReq\x12w\n\x08\x63urrency\x18\x01 \x01(\tB[\xbaHX\xba\x01U\n\x10\x63urrency.iso4217\x12\x1c\x63urrency \xe5\x8f\xaa\xe6\x94\xaf\xe6\x8c\x81 cny / usd\x1a#this.lowerAscii() in [\'cny\', \'usd\']R\x08\x63urrency\"+\n\x0fTotalAssetsResp\x12\x12\n\x01n\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x01n:\x04\x98\xb5\x18\x01\"\xbd\x01\n\x12ListUsersAssetsReq\x12w\n\x08\x63urrency\x18\x01 \x01(\tB[\xbaHX\xba\x01U\n\x10\x63urrency.iso4217\x12\x1c\x63urrency \xe5\x8f\xaa\xe6\x94\xaf\xe6\x8c\x81 cny / usd\x1a#this.lowerAscii() in [\'cny\', \'usd\']R\x08\x63urrency\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"\xcb\x01\n\x13ListUsersAssetsResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01R\x05total\x12:\n\x04list\x18\x02 \x03(\x0b\x32 .hi.did.ListUsersAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x1aV\n\x04Unit\x12\x16\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03\x64id\x12\x1c\n\x06\x61vatar\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x06\x61vatar\x12\x12\n\x01n\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x01n:\x04\x98\xb5\x18\x01:\x04\x98\xb5\x18\x01\"8\n\x10GetUserAssetsReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x12\n\x04\x63oin\x18\x02 \x01(\tR\x04\x63oin\"\x86\x02\n\x11GetUserAssetsResp\x12\x38\n\x04unit\x18\x01 \x03(\x0b\x32\x1e.hi.did.GetUserAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04unit\x12 \n\x08\x65xchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x08\x65xchange\x1a\x8e\x01\n\x04Unit\x12&\n\x04\x63oin\x18\x01 \x01(\x0b\x32\x0c.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04\x63oin\x12\x1e\n\x07\x61\x64\x64ress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x07\x61\x64\x64ress\x12\x1c\n\x06\x61mount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x06\x61mount\x12\x1a\n\x05price\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x05price:\x04\x98\xb5\x18\x01:\x04\x98\xb5\x18\x01\"}\n\x0fUpdateAssetsReq\x12\x35\n\x06\x61ssets\x18\x01 \x03(\x0b\x32\x1d.hi.did.UpdateAssetsReq.AssetR\x06\x61ssets\x1a\x33\n\x05\x41sset\x12\x12\n\x04\x63oin\x18\x01 \x01(\tR\x04\x63oin\x12\x16\n\x06\x61mount\x18\x02 \x01(\tR\x06\x61mount2\x8b\x01\n\x06Wallet\x12\x46\n\x0cUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x39\n\x03Get\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x05\x8a\xb5\x18\x01\x02\x32\xe3\x02\n\x06\x41ssets\x12?\n\x05Total\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12\x46\n\x04List\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12\x41\n\x03Get\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x12K\n\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x05\x8a\xb5\x18\x01\x01\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/did/wallet.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x10hi/options.proto\"\xce\x01\n\x12UpdateAddressesReq\x12\x15\n\x03\x64id\x18\x01 \x01(\tH\x00R\x03\x64id\x88\x01\x01\x12\x15\n\x03\x62tc\x18\x02 \x01(\tH\x01R\x03\x62tc\x88\x01\x01\x12\x15\n\x03\x65th\x18\x03 \x01(\tH\x02R\x03\x65th\x88\x01\x01\x12\x15\n\x03trx\x18\x04 \x01(\tH\x03R\x03trx\x88\x01\x01\x12\x15\n\x03sol\x18\x05 \x01(\tH\x04R\x03sol\x88\x01\x01\x12\x15\n\x03\x61pt\x18\x06 \x01(\tH\x05R\x03\x61pt\x88\x01\x01\x42\x06\n\x04_didB\x06\n\x04_btcB\x06\n\x04_ethB\x06\n\x04_trxB\x06\n\x04_solB\x06\n\x04_apt\"3\n\x0cGetWalletReq\x12\x19\n\x05\x63hain\x18\x01 \x01(\tH\x00R\x05\x63hain\x88\x01\x01\x42\x08\n\x06_chain\"\xb5\x01\n\rGetWalletResp\x12\x34\n\x04list\x18\x01 \x03(\x0b\x32\x1a.hi.did.GetWalletResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1ah\n\x04Unit\x12\x1f\n\x05\x63hain\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05\x63hain\x88\x01\x01\x12#\n\x07\x61\x64\x64ress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x07\x61\x64\x64ress\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_chainB\n\n\x08_address:\x04\x98\xb5\x18\x03\"\x84\x01\n\x10ListAddressesReq\x12\x31\n\x04list\x18\x01 \x03(\x0b\x32\x1d.hi.did.ListAddressesReq.UnitR\x04list\x1a=\n\x04Unit\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x19\n\x05\x63hain\x18\x02 \x01(\tH\x00R\x05\x63hain\x88\x01\x01\x42\x08\n\x06_chain\"\xd6\x01\n\x11ListAddressesResp\x12\x38\n\x04list\x18\x01 \x03(\x0b\x32\x1e.hi.did.ListAddressesResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a\x80\x01\n\x04Unit\x12\x16\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03\x64id\x12\x1f\n\x05\x63hain\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05\x63hain\x88\x01\x01\x12#\n\x07\x61\x64\x64ress\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x07\x61\x64\x64ress\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_chainB\n\n\x08_address:\x04\x98\xb5\x18\x03\"\x9e\x01\n\x0eTotalAssetsReq\x12\x7f\n\x08\x63urrency\x18\x01 \x01(\tB^\xbaH[\xba\x01U\n\x10\x63urrency.iso4217\x12\x1c\x63urrency \xe5\x8f\xaa\xe6\x94\xaf\xe6\x8c\x81 cny / usd\x1a#this.lowerAscii() in [\'cny\', \'usd\']\xc8\x01\x01H\x00R\x08\x63urrency\x88\x01\x01\x42\x0b\n\t_currency\"6\n\x0fTotalAssetsResp\x12\x17\n\x01n\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x01n\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x04\n\x02_n\"\xd2\x01\n\x12ListUsersAssetsReq\x12\x7f\n\x08\x63urrency\x18\x01 \x01(\tB^\xbaH[\xba\x01U\n\x10\x63urrency.iso4217\x12\x1c\x63urrency \xe5\x8f\xaa\xe6\x94\xaf\xe6\x8c\x81 cny / usd\x1a#this.lowerAscii() in [\'cny\', \'usd\']\xc8\x01\x01H\x00R\x08\x63urrency\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x0b\n\t_currency\"\xf5\x01\n\x13ListUsersAssetsResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12:\n\x04list\x18\x02 \x03(\x0b\x32 .hi.did.ListUsersAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x1aq\n\x04Unit\x12\x16\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03\x64id\x12!\n\x06\x61vatar\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06\x61vatar\x88\x01\x01\x12\x17\n\x01n\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x01n\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\t\n\x07_avatarB\x04\n\x02_n:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"F\n\x10GetUserAssetsReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x17\n\x04\x63oin\x18\x02 \x01(\tH\x00R\x04\x63oin\x88\x01\x01\x42\x07\n\x05_coin\"\xc8\x02\n\x11GetUserAssetsResp\x12\x38\n\x04unit\x18\x01 \x03(\x0b\x32\x1e.hi.did.GetUserAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04unit\x12%\n\x08\x65xchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x08\x65xchange\x88\x01\x01\x1a\xbe\x01\n\x04Unit\x12&\n\x04\x63oin\x18\x01 \x01(\x0b\x32\x0c.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04\x63oin\x12#\n\x07\x61\x64\x64ress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x07\x61\x64\x64ress\x88\x01\x01\x12!\n\x06\x61mount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x06\x61mount\x88\x01\x01\x12\x1f\n\x05price\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x05price\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\n\n\x08_addressB\t\n\x07_amountB\x08\n\x06_price:\x04\x98\xb5\x18\x01\x42\x0b\n\t_exchange\"\x9b\x01\n\x0fUpdateAssetsReq\x12\x35\n\x06\x61ssets\x18\x01 \x03(\x0b\x32\x1d.hi.did.UpdateAssetsReq.AssetR\x06\x61ssets\x1aQ\n\x05\x41sset\x12\x17\n\x04\x63oin\x18\x01 \x01(\tH\x00R\x04\x63oin\x88\x01\x01\x12\x1b\n\x06\x61mount\x18\x02 \x01(\tH\x01R\x06\x61mount\x88\x01\x01\x42\x07\n\x05_coinB\t\n\x07_amount2\x8b\x01\n\x06Wallet\x12\x46\n\x0cUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x39\n\x03Get\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x05\x8a\xb5\x18\x01\x02\x32\xe3\x02\n\x06\x41ssets\x12?\n\x05Total\x12\x16.hi.did.TotalAssetsReq\x1a\x17.hi.did.TotalAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12\x46\n\x04List\x12\x1a.hi.did.ListUsersAssetsReq\x1a\x1b.hi.did.ListUsersAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12\x41\n\x03Get\x12\x18.hi.did.GetUserAssetsReq\x1a\x19.hi.did.GetUserAssetsResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n\x0fUpdateAddresses\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x12K\n\rListAddresses\x12\x18.hi.did.ListAddressesReq\x1a\x19.hi.did.ListAddressesResp\"\x05\x8a\xb5\x18\x01\x01\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -60,13 +60,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_LISTADDRESSESRESP']._loaded_options = None
   _globals['_LISTADDRESSESRESP']._serialized_options = b'\230\265\030\003'
   _globals['_TOTALASSETSREQ'].fields_by_name['currency']._loaded_options = None
-  _globals['_TOTALASSETSREQ'].fields_by_name['currency']._serialized_options = b'\272HX\272\001U\n\020currency.iso4217\022\034currency \345\217\252\346\224\257\346\214\201 cny / usd\032#this.lowerAscii() in [\'cny\', \'usd\']'
+  _globals['_TOTALASSETSREQ'].fields_by_name['currency']._serialized_options = b'\272H[\272\001U\n\020currency.iso4217\022\034currency \345\217\252\346\224\257\346\214\201 cny / usd\032#this.lowerAscii() in [\'cny\', \'usd\']\310\001\001'
   _globals['_TOTALASSETSRESP'].fields_by_name['n']._loaded_options = None
   _globals['_TOTALASSETSRESP'].fields_by_name['n']._serialized_options = b'\220\265\030\001'
   _globals['_TOTALASSETSRESP']._loaded_options = None
   _globals['_TOTALASSETSRESP']._serialized_options = b'\230\265\030\001'
   _globals['_LISTUSERSASSETSREQ'].fields_by_name['currency']._loaded_options = None
-  _globals['_LISTUSERSASSETSREQ'].fields_by_name['currency']._serialized_options = b'\272HX\272\001U\n\020currency.iso4217\022\034currency \345\217\252\346\224\257\346\214\201 cny / usd\032#this.lowerAscii() in [\'cny\', \'usd\']'
+  _globals['_LISTUSERSASSETSREQ'].fields_by_name['currency']._serialized_options = b'\272H[\272\001U\n\020currency.iso4217\022\034currency \345\217\252\346\224\257\346\214\201 cny / usd\032#this.lowerAscii() in [\'cny\', \'usd\']\310\001\001'
   _globals['_LISTUSERSASSETSRESP_UNIT'].fields_by_name['did']._loaded_options = None
   _globals['_LISTUSERSASSETSRESP_UNIT'].fields_by_name['did']._serialized_options = b'\220\265\030\001'
   _globals['_LISTUSERSASSETSRESP_UNIT'].fields_by_name['avatar']._loaded_options = None
@@ -114,41 +114,41 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_UPDATEADDRESSESREQ']._serialized_start=144
   _globals['_UPDATEADDRESSESREQ']._serialized_end=350
   _globals['_GETWALLETREQ']._serialized_start=352
-  _globals['_GETWALLETREQ']._serialized_end=388
-  _globals['_GETWALLETRESP']._serialized_start=391
-  _globals['_GETWALLETRESP']._serialized_end=540
-  _globals['_GETWALLETRESP_UNIT']._serialized_start=462
-  _globals['_GETWALLETRESP_UNIT']._serialized_end=534
-  _globals['_LISTADDRESSESREQ']._serialized_start=542
-  _globals['_LISTADDRESSESREQ']._serialized_end=659
-  _globals['_LISTADDRESSESREQ_UNIT']._serialized_start=613
-  _globals['_LISTADDRESSESREQ_UNIT']._serialized_end=659
-  _globals['_LISTADDRESSESRESP']._serialized_start=662
-  _globals['_LISTADDRESSESRESP']._serialized_end=843
-  _globals['_LISTADDRESSESRESP_UNIT']._serialized_start=741
-  _globals['_LISTADDRESSESRESP_UNIT']._serialized_end=837
-  _globals['_TOTALASSETSREQ']._serialized_start=846
-  _globals['_TOTALASSETSREQ']._serialized_end=983
-  _globals['_TOTALASSETSRESP']._serialized_start=985
-  _globals['_TOTALASSETSRESP']._serialized_end=1028
-  _globals['_LISTUSERSASSETSREQ']._serialized_start=1031
-  _globals['_LISTUSERSASSETSREQ']._serialized_end=1220
-  _globals['_LISTUSERSASSETSRESP']._serialized_start=1223
-  _globals['_LISTUSERSASSETSRESP']._serialized_end=1426
-  _globals['_LISTUSERSASSETSRESP_UNIT']._serialized_start=1334
-  _globals['_LISTUSERSASSETSRESP_UNIT']._serialized_end=1420
-  _globals['_GETUSERASSETSREQ']._serialized_start=1428
-  _globals['_GETUSERASSETSREQ']._serialized_end=1484
-  _globals['_GETUSERASSETSRESP']._serialized_start=1487
-  _globals['_GETUSERASSETSRESP']._serialized_end=1749
-  _globals['_GETUSERASSETSRESP_UNIT']._serialized_start=1601
-  _globals['_GETUSERASSETSRESP_UNIT']._serialized_end=1743
-  _globals['_UPDATEASSETSREQ']._serialized_start=1751
-  _globals['_UPDATEASSETSREQ']._serialized_end=1876
-  _globals['_UPDATEASSETSREQ_ASSET']._serialized_start=1825
-  _globals['_UPDATEASSETSREQ_ASSET']._serialized_end=1876
-  _globals['_WALLET']._serialized_start=1879
-  _globals['_WALLET']._serialized_end=2018
-  _globals['_ASSETS']._serialized_start=2021
-  _globals['_ASSETS']._serialized_end=2376
+  _globals['_GETWALLETREQ']._serialized_end=403
+  _globals['_GETWALLETRESP']._serialized_start=406
+  _globals['_GETWALLETRESP']._serialized_end=587
+  _globals['_GETWALLETRESP_UNIT']._serialized_start=477
+  _globals['_GETWALLETRESP_UNIT']._serialized_end=581
+  _globals['_LISTADDRESSESREQ']._serialized_start=590
+  _globals['_LISTADDRESSESREQ']._serialized_end=722
+  _globals['_LISTADDRESSESREQ_UNIT']._serialized_start=661
+  _globals['_LISTADDRESSESREQ_UNIT']._serialized_end=722
+  _globals['_LISTADDRESSESRESP']._serialized_start=725
+  _globals['_LISTADDRESSESRESP']._serialized_end=939
+  _globals['_LISTADDRESSESRESP_UNIT']._serialized_start=805
+  _globals['_LISTADDRESSESRESP_UNIT']._serialized_end=933
+  _globals['_TOTALASSETSREQ']._serialized_start=942
+  _globals['_TOTALASSETSREQ']._serialized_end=1100
+  _globals['_TOTALASSETSRESP']._serialized_start=1102
+  _globals['_TOTALASSETSRESP']._serialized_end=1156
+  _globals['_LISTUSERSASSETSREQ']._serialized_start=1159
+  _globals['_LISTUSERSASSETSREQ']._serialized_end=1369
+  _globals['_LISTUSERSASSETSRESP']._serialized_start=1372
+  _globals['_LISTUSERSASSETSRESP']._serialized_end=1617
+  _globals['_LISTUSERSASSETSRESP_UNIT']._serialized_start=1488
+  _globals['_LISTUSERSASSETSRESP_UNIT']._serialized_end=1601
+  _globals['_GETUSERASSETSREQ']._serialized_start=1619
+  _globals['_GETUSERASSETSREQ']._serialized_end=1689
+  _globals['_GETUSERASSETSRESP']._serialized_start=1692
+  _globals['_GETUSERASSETSRESP']._serialized_end=2020
+  _globals['_GETUSERASSETSRESP_UNIT']._serialized_start=1811
+  _globals['_GETUSERASSETSRESP_UNIT']._serialized_end=2001
+  _globals['_UPDATEASSETSREQ']._serialized_start=2023
+  _globals['_UPDATEASSETSREQ']._serialized_end=2178
+  _globals['_UPDATEASSETSREQ_ASSET']._serialized_start=2097
+  _globals['_UPDATEASSETSREQ_ASSET']._serialized_end=2178
+  _globals['_WALLET']._serialized_start=2181
+  _globals['_WALLET']._serialized_end=2320
+  _globals['_ASSETS']._serialized_start=2323
+  _globals['_ASSETS']._serialized_end=2678
 # @@protoc_insertion_point(module_scope)

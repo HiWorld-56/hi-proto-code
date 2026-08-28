@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/did/payment.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"=\n\x05Order\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n\x03\x64id\x18\x02 \x01(\tR\x03\x64id\x12\x12\n\x04hash\x18\x03 \x01(\tR\x04hash\"\x86\x02\n\x0ePayRequestSpec\x12)\n\rpayee_account\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x0cpayeeAccount\x12%\n\x0bpayee_owner\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\npayeeOwner\x12\x18\n\x04\x63oin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04\x63oin\x12\x1c\n\x06\x61mount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x06\x61mount\x12\x1f\n\x08order_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\x07orderId\x12 \n\x08merchant\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x08merchant\x12!\n\texpire_at\x18\x07 \x01(\x03\x42\x04\x90\xb5\x18\x03R\x08\x65xpireAt:\x04\x98\xb5\x18\x03\"(\n\x0fPayRequestQuery\x12\x15\n\x06req_id\x18\x01 \x01(\tR\x05reqId2s\n\x03Pay\x12\x33\n\x0bGenerateReq\x12\x0e.hi.ClientInfo\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12\x37\n\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x32}\n\nPayRequest\x12\x38\n\x08Register\x12\x16.hi.did.PayRequestSpec\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x03\x12\x35\n\x05\x43lose\x12\r.hi.RequestId\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x32G\n\x0fPayRequestPayer\x12\x34\n\x03Get\x12\x0e.hi.SignedData\x1a\x16.hi.did.PayRequestSpec\"\x05\x8a\xb5\x18\x01\x05\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/did/payment.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"W\n\x05Order\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x10\n\x03\x64id\x18\x02 \x01(\tR\x03\x64id\x12\x17\n\x04hash\x18\x03 \x01(\tH\x01R\x04hash\x88\x01\x01\x42\x05\n\x03_idB\x07\n\x05_hash\"\x87\x03\n\x0ePayRequestSpec\x12.\n\rpayee_account\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x0cpayeeAccount\x88\x01\x01\x12*\n\x0bpayee_owner\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\npayeeOwner\x88\x01\x01\x12\x1d\n\x04\x63oin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04\x63oin\x88\x01\x01\x12!\n\x06\x61mount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x06\x61mount\x88\x01\x01\x12$\n\x08order_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x07orderId\x88\x01\x01\x12%\n\x08merchant\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x08merchant\x88\x01\x01\x12&\n\texpire_at\x18\x07 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x06R\x08\x65xpireAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x10\n\x0e_payee_accountB\x0e\n\x0c_payee_ownerB\x07\n\x05_coinB\t\n\x07_amountB\x0b\n\t_order_idB\x0b\n\t_merchantB\x0c\n\n_expire_at\"8\n\x0fPayRequestQuery\x12\x1a\n\x06req_id\x18\x01 \x01(\tH\x00R\x05reqId\x88\x01\x01\x42\t\n\x07_req_id2s\n\x03Pay\x12\x33\n\x0bGenerateReq\x12\x0e.hi.ClientInfo\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12\x37\n\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x32}\n\nPayRequest\x12\x38\n\x08Register\x12\x16.hi.did.PayRequestSpec\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x03\x12\x35\n\x05\x43lose\x12\r.hi.RequestId\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x32G\n\x0fPayRequestPayer\x12\x34\n\x03Get\x12\x0e.hi.SignedData\x1a\x16.hi.did.PayRequestSpec\"\x05\x8a\xb5\x18\x01\x05\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -62,15 +62,15 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PAYREQUESTPAYER'].methods_by_name['Get']._loaded_options = None
   _globals['_PAYREQUESTPAYER'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\005'
   _globals['_ORDER']._serialized_start=96
-  _globals['_ORDER']._serialized_end=157
-  _globals['_PAYREQUESTSPEC']._serialized_start=160
-  _globals['_PAYREQUESTSPEC']._serialized_end=422
-  _globals['_PAYREQUESTQUERY']._serialized_start=424
-  _globals['_PAYREQUESTQUERY']._serialized_end=464
-  _globals['_PAY']._serialized_start=466
-  _globals['_PAY']._serialized_end=581
-  _globals['_PAYREQUEST']._serialized_start=583
-  _globals['_PAYREQUEST']._serialized_end=708
-  _globals['_PAYREQUESTPAYER']._serialized_start=710
-  _globals['_PAYREQUESTPAYER']._serialized_end=781
+  _globals['_ORDER']._serialized_end=183
+  _globals['_PAYREQUESTSPEC']._serialized_start=186
+  _globals['_PAYREQUESTSPEC']._serialized_end=577
+  _globals['_PAYREQUESTQUERY']._serialized_start=579
+  _globals['_PAYREQUESTQUERY']._serialized_end=635
+  _globals['_PAY']._serialized_start=637
+  _globals['_PAY']._serialized_end=752
+  _globals['_PAYREQUEST']._serialized_start=754
+  _globals['_PAYREQUEST']._serialized_end=879
+  _globals['_PAYREQUESTPAYER']._serialized_start=881
+  _globals['_PAYREQUESTPAYER']._serialized_end=952
 # @@protoc_insertion_point(module_scope)

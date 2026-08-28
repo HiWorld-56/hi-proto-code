@@ -8,12 +8,12 @@ pub struct TradeUnit {
     /// Entity=公开门面
     #[prost(message, optional, tag = "2")]
     pub user: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "3")]
-    pub sum: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub amount: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    pub fee: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub sum: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub fee: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 交易基础卡:被 Content.trade 引用,可分享进群消息 → PARTICIPANT。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -22,48 +22,48 @@ pub struct TradeBase {
     pub from: ::core::option::Option<TradeUnit>,
     #[prost(message, optional, tag = "2")]
     pub to: ::core::option::Option<TradeUnit>,
-    #[prost(string, tag = "3")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(int64, tag = "4")]
-    pub timestamp: i64,
+    #[prost(string, optional, tag = "3")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "4")]
+    pub timestamp: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTradeFeeReq {
-    #[prost(string, tag = "1")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 手续费表:按币种查费率,非用户私有 → 公开。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTradeFeeResp {
-    #[prost(string, tag = "1")]
-    pub fee: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub fee: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTradeReq {
-    #[prost(string, tag = "1")]
-    pub order: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub order: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 只在 my-trades 壳(TradeDetail)里出现,不被 TradeBase 引用 → 可 SELF。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TradeTrans {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     /// Transaction=公开
     #[prost(message, optional, tag = "2")]
     pub trans: ::core::option::Option<super::did::Transaction>,
-    #[prost(string, tag = "3")]
-    pub status: ::prost::alloc::string::String,
-    #[prost(int64, tag = "4")]
-    pub timestamp: i64,
+    #[prost(string, optional, tag = "3")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "4")]
+    pub timestamp: ::core::option::Option<i64>,
 }
 /// 我的交易详情:仅被 SELF 壳(GetTradeResp/AddTradeResp/ListTradesResp)引用 → SELF。
 /// 里面放 PARTICIPANT 的 TradeUnit 合法(2\<=3)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TradeDetail {
-    #[prost(string, tag = "1")]
-    pub order: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub status: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub order: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
     /// TradeUnit=PARTICIPANT
     #[prost(message, optional, tag = "3")]
     pub from: ::core::option::Option<TradeUnit>,
@@ -72,8 +72,8 @@ pub struct TradeDetail {
     /// TradeTrans=SELF
     #[prost(map = "string, message", tag = "5")]
     pub list: ::std::collections::HashMap<::prost::alloc::string::String, TradeTrans>,
-    #[prost(int64, tag = "6")]
-    pub timestamp: i64,
+    #[prost(int64, optional, tag = "6")]
+    pub timestamp: ::core::option::Option<i64>,
 }
 /// 我的交易详情壳。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -93,34 +93,34 @@ pub struct AddTradeResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateTransHashReq {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub hash: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 查自己的交易。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListTradesReq {
     /// 可选:只看该交易。查询主体(用户)从 token 取,不接受 did 入参(越权)
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
-/// 交易统计(内部使用)。id 为空 = 全量。
+/// 交易统计(内部使用)。id 不传 = 全量。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TradeManageListReq {
-    /// 可选:只看该交易;空=全量
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    /// 可选:只看该交易;不传=全量
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 /// 我的交易列表壳:SELF 壳收窄整体私密性,元素放 SELF 的 TradeDetail。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTradesResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<TradeDetail>,
 }
@@ -652,8 +652,8 @@ pub mod auth_client {
 pub struct PullOrdersData {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub nonce: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub nonce: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 我的订单(hidid-pc 为订单主体拉取)→ SELF。
 ///
@@ -669,22 +669,22 @@ pub struct PullOrdersData {
 /// 所以"我这边解得开"不能作为客户端不用升级的理由。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PcOrder {
-    #[prost(string, tag = "1")]
-    pub order_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, tag = "2")]
     pub to_did: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub amount: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub r#type: ::prost::alloc::string::String,
-    #[prost(int64, tag = "5")]
-    pub created_at: i64,
-    #[prost(int64, tag = "6")]
-    pub updated_at: i64,
+    #[prost(string, optional, tag = "3")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "5")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "6")]
+    pub updated_at: ::core::option::Option<i64>,
     #[prost(string, tag = "7")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "8")]
-    pub status: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PullOrdersResp {
@@ -693,14 +693,14 @@ pub struct PullOrdersResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OrderResult {
-    #[prost(string, tag = "1")]
-    pub order_id: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub status: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub tx_hash: ::prost::alloc::string::String,
-    #[prost(int64, tag = "4")]
-    pub timestamp: i64,
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub tx_hash: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "4")]
+    pub timestamp: ::core::option::Option<i64>,
 }
 /// Order.Report 的**签名载荷 schema**(同上,勿当死 message 删)。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -852,50 +852,50 @@ pub mod order_client {
 pub struct FundsRecord {
     /// 幂等键,**由机器人本地生成**(它先落账再动钱,uuid 那时就有了)。
     /// 不用时间戳:补报第二次就会变成两行。
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(enumeration = "FundsKind", tag = "2")]
-    pub kind: i32,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "FundsKind", optional, tag = "2")]
+    pub kind: ::core::option::Option<i32>,
     /// 付款人 = 机器人自己。**上报时不看这一栏**(主体取自凭证),回读时才填 ——
     /// 收在这里是为了让"我的仆从们的流水"一张表里分得清是哪台。
-    #[prost(string, tag = "3")]
-    pub payer: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub payer: ::core::option::Option<::prost::alloc::string::String>,
     /// 收款人的 did。提款时就是主人。
-    #[prost(string, tag = "4")]
-    pub payee: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub payee: ::core::option::Option<::prost::alloc::string::String>,
     /// 收款人在该链上的地址 —— did 是身份,地址是这一笔真正打到的地方,两个都要留:
     /// 对账时人拿着地址去链上翻,而 did 才说得清"这是谁"。
-    #[prost(string, tag = "5")]
-    pub to_address: ::prost::alloc::string::String,
-    #[prost(string, tag = "6")]
-    pub chain: ::prost::alloc::string::String,
-    #[prost(string, tag = "7")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub to_address: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub chain: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "7")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// 人类可读金额,如 "12.5"。**实际发出去的数** —— 全提时它与余额必然不同。
-    #[prost(string, tag = "8")]
-    pub amount: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
     /// 为手续费预留的量,以及它的币种。**手续费是本币** —— 转 USDT-TRC20 烧的是 TRX,
     /// 只给一个数字不给币种,页面上会显示成"手续费 1.1 USDT"。
-    #[prost(string, tag = "9")]
-    pub fee: ::prost::alloc::string::String,
-    #[prost(string, tag = "10")]
-    pub fee_coin: ::prost::alloc::string::String,
-    #[prost(string, tag = "11")]
-    pub tx_hash: ::prost::alloc::string::String,
-    #[prost(enumeration = "FundsStatus", tag = "12")]
-    pub status: i32,
+    #[prost(string, optional, tag = "9")]
+    pub fee: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "10")]
+    pub fee_coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "11")]
+    pub tx_hash: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "FundsStatus", optional, tag = "12")]
+    pub status: ::core::option::Option<i32>,
     /// 失败原因(status=FAILED 时)。原样存机器人报上来的那句话 ——
     /// 它是给人看的("有 USDT 但没 TRX 付手续费"),不参与任何判断。
-    #[prost(string, tag = "13")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "13")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
     /// 这笔钱**发生**的时间(机器人本地落账的时刻),不是上报到达的时刻。
     /// 补报可能迟到几小时,按到达时间排会把顺序打乱。
-    #[prost(int64, tag = "14")]
-    pub created_at: i64,
+    #[prost(int64, optional, tag = "14")]
+    pub created_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListFundsReq {
-    /// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人**。
+    /// 看谁的。不传 = 看我自己;填了则**必须是我的仆从机器人**。
     ///
     /// ⚠️ 与 `Market.ListTransactions` 同一条规矩,别顺手放宽成"填谁都行" ——
     /// 那样它就成了拿别人 did 翻别人流水的口子,而这一栏看起来只是个筛选条件。
@@ -1134,14 +1134,14 @@ pub mod ledger_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ApiKeyInfo {
     /// 归属用户 did(人/软bot/硬bot)
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub value: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub note: ::prost::alloc::string::String,
-    #[prost(int64, tag = "4")]
-    pub created_at: i64,
+    #[prost(string, optional, tag = "1")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "4")]
+    pub created_at: ::core::option::Option<i64>,
 }
 /// ⚠️ **只有机器人能持 apikey** —— 原先设计里"人也能设 apikey",没必要,已废。
 /// 故这里是**机器人 did**。
@@ -1155,8 +1155,8 @@ pub struct ApiKeyInfo {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateApiKeyReq {
     /// 机器人 did;机器人自己 / 它的 master / 超管都能建
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateApiKeyResp {
@@ -1171,22 +1171,22 @@ pub struct EditApiKeyResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListApiKeysReq {
     /// 机器人 did;能查的只有它的 master
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiKeysResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<ApiKeyInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteApiKeyReq {
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod api_key_client {
@@ -1366,13 +1366,13 @@ pub mod api_key_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadResourceReq {
-    #[prost(string, tag = "1")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadResourceResp {
-    #[prost(bytes = "vec", tag = "1")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", optional, tag = "1")]
+    pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
 /// Generated client implementations.
 pub mod source_client {
@@ -2060,13 +2060,13 @@ pub mod speech_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MasterBindReq {
     /// 机器人 did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BindStatusReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BindStatusResp {
@@ -2082,18 +2082,18 @@ pub struct BindStatusResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TransferReq {
     /// 要转让的机器人 did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 新 master 的用户 did
-    #[prost(string, tag = "2")]
-    pub to: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub to: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 在线 agent 列表(club 本地 presence,非转发 ai)。合并原 ListOnlineAgent(按用户)+ ListAllOnlineAgent(全量)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListOnlineReq {
-    /// 可选:只看该用户的在线 agent;空=全部在线
-    #[prost(string, tag = "1")]
-    pub owner_did: ::prost::alloc::string::String,
+    /// 可选:只看该用户的在线 agent;**不传=全部在线**(以前用空串表示,已禁止)
+    #[prost(string, optional, tag = "1")]
+    pub owner_did: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -2102,8 +2102,8 @@ pub struct ListOnlineResp {
     /// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did),不复用 hi.ai.AgentInfo ——
     /// 后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
     /// 此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub infos: ::prost::alloc::vec::Vec<super::Entity>,
 }
@@ -2126,8 +2126,8 @@ pub struct ListAgentsByUsersReq {
 /// 由 club 把 master 填进 AgentInfo.creator —— 关系不穿,各服务填各自视角的值。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAgentsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub agents: ::prost::alloc::vec::Vec<super::ai::AgentInfo>,
 }
@@ -2927,14 +2927,14 @@ pub mod wallet_client {
 }
 /// 列某商户名下的 greeter(扩展表 level >= 8)。
 ///
-/// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"空=自己",因为调用者本身
+/// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"不传=自己",因为调用者本身
 /// 就是商户(ExtendToken 解出);club 的调用者是普通用户、不是商户,"自己"无从谈起。
 /// 故这里不照搬 hi.did.ListGreetersReq —— 同名字段两种语义,是最容易出事的复用。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGreetersReq {
     /// 目标商户 did
-    #[prost(string, tag = "1")]
-    pub merchant: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -3206,14 +3206,14 @@ pub struct PushRegisterReq {
     #[prost(message, optional, tag = "1")]
     pub node: ::core::option::Option<super::ClientInfo>,
     /// 设备Token
-    #[prost(string, tag = "2")]
-    pub token: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub token: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PushUnregisterReq {
     /// 设备Token
-    #[prost(string, tag = "1")]
-    pub token: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub token: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod push_manager_client {
@@ -3360,13 +3360,13 @@ pub mod push_manager_client {
 /// ListNativeReq —— 见下面 ListNative:**没有 agent 字段**,主体只能从凭证里取。
 /// 只带机器人自己的架构:同一版插件两个架构各有一份产物,给错了要到 dlopen 才炸。
 ///
-/// ⚠️ **空 = aarch64**。老 brain 发的是 `Empty`,在 protobuf 里与"字段缺省"等价,
-/// 解出来就是空串 —— 于是它照旧拿到 arm64 那份,零改动继续跑。
-/// 这条兼容是有意的,别改成"空就报错"。
+/// ⚠️ **不传 = aarch64**。老 brain 发的是 `Empty`(根本不带这个字段),optional 之后就是
+/// "没有值" —— 于是它照旧拿到 arm64 那份,零改动继续跑。这条兼容是有意的。
+/// ⛔ **空串不再是合法值**(2026-08-28 起禁止用空串表示"没有"):要么不传,要么给真架构名。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListNativeReq {
-    #[prost(string, tag = "1")]
-    pub arch: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub arch: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ReloadApiKey —— club 专属(hi.ai 无 api_key 概念)。
 /// api_key 存在 c.data(该机器人自己的),用户可在别处删掉某个 apikey,导致插件里存的那个失效;
@@ -3376,17 +3376,17 @@ pub struct ListNativeReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReloadApiKeyReq {
     /// 机器人 did
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 插件 uuid
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReloadApiKeyResp {
     /// 重新写入的 api_key(便于前端就地刷新列表)
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod plugin_client {
@@ -3995,21 +3995,21 @@ pub mod packet {
 /// 免得每次上线都重复处理。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Notice {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     /// Entity=公开门面。**是真实发送者,broker 强制** —— 与 Message.from 同一条不变量,
     /// 详见下面 Message 上方那段。通知没有 ghost,所以这里没有任何回旋余地:
     /// 填成别人,这条通知发不出去(而且发送端看不到报错)。
     #[prost(message, optional, tag = "3")]
     pub from: ::core::option::Option<super::Entity>,
-    #[prost(int64, tag = "4")]
-    pub timestamp: i64,
-    #[prost(int64, tag = "5")]
-    pub expiration: i64,
-    #[prost(string, tag = "6")]
-    pub status: ::prost::alloc::string::String,
+    #[prost(int64, optional, tag = "4")]
+    pub timestamp: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "5")]
+    pub expiration: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "6")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
     /// ⚠️ **Any 是可见性 lint 唯一的结构性缺口**:装进去的真实类型 lint 看不见,
     /// 于是 `level(field.visibility) <= level(message.audience)` 这条规则在这里失效。
     /// 往里塞的类型**必须自己是 VIS_PARTICIPANT 或更宽**,别塞 VIS_SELF 的东西 ——
@@ -4017,15 +4017,15 @@ pub struct Notice {
     /// 已换成专门的公开摘要 hi.ai.PluginLoaded。合法载荷见上面的类型表。
     #[prost(message, optional, tag = "7")]
     pub extra: ::core::option::Option<::pbjson_types::Any>,
-    #[prost(string, tag = "8")]
-    pub ex_type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub ex_type: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Prompt {
-    #[prost(string, tag = "1")]
-    pub custom: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub state: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub custom: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Message.type —— 这条消息是什么。取值就是下面这几个,**别自己发明**。
 ///
@@ -4077,21 +4077,21 @@ pub struct Prompt {
 /// type == chat 时: 发送者显示为 ghost,ghost 为空则显示 from
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Message {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     /// Entity=公开门面
     #[prost(message, optional, tag = "3")]
     pub from: ::core::option::Option<super::Entity>,
     #[prost(message, repeated, tag = "4")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
-    #[prost(int64, tag = "5")]
-    pub timestamp: i64,
+    #[prost(int64, optional, tag = "5")]
+    pub timestamp: ::core::option::Option<i64>,
     #[prost(message, optional, tag = "6")]
     pub extra: ::core::option::Option<::pbjson_types::Any>,
-    #[prost(string, tag = "7")]
-    pub ex_type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "7")]
+    pub ex_type: ::core::option::Option<::prost::alloc::string::String>,
     /// Entity=公开门面
     #[prost(message, optional, tag = "8")]
     pub ghost: ::core::option::Option<super::Entity>,
@@ -4103,8 +4103,8 @@ pub struct Message {
 pub struct Mention {
     #[prost(message, optional, tag = "1")]
     pub group: ::core::option::Option<super::Entity>,
-    #[prost(bool, tag = "2")]
-    pub all: bool,
+    #[prost(bool, optional, tag = "2")]
+    pub all: ::core::option::Option<bool>,
     #[prost(message, repeated, tag = "3")]
     pub list: ::prost::alloc::vec::Vec<super::Entity>,
 }
@@ -4119,8 +4119,8 @@ pub struct Member {
 pub struct MemberExit {
     #[prost(message, optional, tag = "1")]
     pub member: ::core::option::Option<Member>,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Content.type —— **一条消息里这一段是什么**。字符串,取值就是下面这张表,**别自己发明**。
 ///
@@ -4151,8 +4151,8 @@ pub struct MemberExit {
 /// 而**把表写在这里**就已经解决"各自发明"的问题了。新增类型:先往这张表加一行,再去实现。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Content {
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(oneof = "content::Kind", tags = "2, 3, 4")]
     pub kind: ::core::option::Option<content::Kind>,
 }
@@ -4160,8 +4160,8 @@ pub struct Content {
 pub mod content {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Chat {
-        #[prost(string, tag = "1")]
-        pub content: ::prost::alloc::string::String,
+        #[prost(string, optional, tag = "1")]
+        pub content: ::core::option::Option<::prost::alloc::string::String>,
         #[prost(string, optional, tag = "2")]
         pub name: ::core::option::Option<::prost::alloc::string::String>,
         #[prost(uint32, optional, tag = "3")]
@@ -4183,8 +4183,8 @@ pub mod content {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PublishReq {
-    #[prost(string, tag = "1")]
-    pub topic: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub topic: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub payload: ::core::option::Option<Packet>,
 }
@@ -4307,21 +4307,21 @@ pub mod publisher_client {
 pub struct GroupBase {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
-    #[prost(string, tag = "2")]
-    pub background: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub background: ::core::option::Option<::prost::alloc::string::String>,
     /// true=私密群(只能被邀请加入);false=公开群
-    #[prost(bool, tag = "3")]
-    pub private: bool,
+    #[prost(bool, optional, tag = "3")]
+    pub private: ::core::option::Option<bool>,
 }
 /// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupMemberAttr {
     /// owner / admin / member
-    #[prost(string, tag = "1")]
-    pub role: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub role: ::core::option::Option<::prost::alloc::string::String>,
     /// 是否被禁言(群主/管理员设;去写留读)
-    #[prost(bool, tag = "2")]
-    pub muted: bool,
+    #[prost(bool, optional, tag = "2")]
+    pub muted: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupMember {
@@ -4347,19 +4347,19 @@ pub struct GroupMemberView {
     #[prost(message, optional, tag = "2")]
     pub attr: ::core::option::Option<GroupMemberAttr>,
     /// **仅本人可见**的免打扰(SELF,故 audience 必须是 SELF)
-    #[prost(bool, tag = "3")]
-    pub dnd: bool,
+    #[prost(bool, optional, tag = "3")]
+    pub dnd: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 创建群聊
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateGroupReq {
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 创建单聊
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -4370,11 +4370,11 @@ pub struct CreateSingleReq {
 /// 组聊天消息列表参数
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupMessagesReq {
-    #[prost(string, tag = "1")]
-    pub last_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub last_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type
-    #[prost(string, tag = "2")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGroupMessagesResp {
@@ -4384,84 +4384,84 @@ pub struct ListGroupMessagesResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupMembersReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupMemberTotalReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetGroupMemberTotalResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InviteGroupReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct JoinGroupReq {
     /// 凭群 code 申请加入(仅公开群;私密群只能被邀请)
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct QuitGroupReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RemoveGroupReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetRoleReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// admin=添加管理员 / member=取消管理员
-    #[prost(string, tag = "3")]
-    pub role: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub role: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetRoleReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetRoleResp {
-    #[prost(string, tag = "1")]
-    pub role: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub role: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 免打扰(调用者自己):新消息不震动手机。用户自设,非管理操作。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetDndReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
-    #[prost(bool, tag = "2")]
-    pub dnd: bool,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "2")]
+    pub dnd: ::core::option::Option<bool>,
 }
 /// 禁言/解禁成员(群主/管理员):被禁言者去写权限、留读权限(后端移 group:wracl、加 group:racl)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MuteMembersReq {
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// true=禁言,false=解禁
-    #[prost(bool, tag = "3")]
-    pub muted: bool,
+    #[prost(bool, optional, tag = "3")]
+    pub muted: ::core::option::Option<bool>,
 }
 /// 群(主体=群)。用户 token 档(AUTH_USER=必须登录用户)。
 /// ⚠️ 群角色(owner/admin/member)是**每个群各自的角色**,不是全局身份,拦截器无从判断 ——
@@ -4473,7 +4473,7 @@ pub struct MuteMembersReq {
 /// member(私密群): 全禁止(只能被邀请)
 /// 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
 /// 里面的 Entity 带 type/update 等服务端产物。入参只放:定位用的群号 + 真正可改的字段。
-/// **传了就是主动设置**:字段有值(optional 有 presence / name·avatar 非空)即视为"设成这个",
+/// **传了就是主动设置**:字段有 presence 即视为"设成这个"(2026-08-28 起全字段 optional,
 /// 服务端**不拿新值跟旧值比**,照写、推进 update 时间戳、照发通知。
 ///
 /// ⚠️ 别用值比对判断"改没改"。两个坑:
@@ -4486,14 +4486,14 @@ pub struct MuteMembersReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateGroupReq {
     /// 群号(定位;权限由后端校验 owner/admin)
-    #[prost(string, tag = "1")]
-    pub group: ::prost::alloc::string::String,
-    /// 群名(非空=设置)
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    /// 群头像 url(非空=设置)
-    #[prost(string, tag = "3")]
-    pub avatar: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub group: ::core::option::Option<::prost::alloc::string::String>,
+    /// 群名;不传=不动,传了=设成这个(传空串=清空)
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 群头像 url;不传=不动,传了=设成这个(传空串=清空)
+    #[prost(string, optional, tag = "3")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
     /// 群背景 url;**有 presence**:不传=不动,传空串=清空
     #[prost(string, optional, tag = "4")]
     pub background: ::core::option::Option<::prost::alloc::string::String>,
@@ -4901,40 +4901,40 @@ pub struct UserInfo {
     #[prost(string, repeated, tag = "2")]
     pub permissions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// 加好友校验方式(私有,SELF)
-    #[prost(string, tag = "3")]
-    pub verify_policy: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub verify_policy: ::core::option::Option<::prost::alloc::string::String>,
     /// 用户动态(关系可见)
-    #[prost(string, tag = "4")]
-    pub moment: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListSystemMessagesReq {
-    #[prost(string, tag = "1")]
-    pub status: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SystemMessages {
-    #[prost(bool, tag = "1")]
-    pub has_new: bool,
-    #[prost(int32, tag = "2")]
-    pub total: i32,
+    #[prost(bool, optional, tag = "1")]
+    pub has_new: ::core::option::Option<bool>,
+    #[prost(int32, optional, tag = "2")]
+    pub total: ::core::option::Option<i32>,
     /// Notice(messaging)为通知型,关系/群级
     #[prost(message, repeated, tag = "3")]
     pub list: ::prost::alloc::vec::Vec<Notice>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteSystemMessageReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct HandleSystemMessageReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub status: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub status: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 通知回执:**我处理完这条通知了**。与 HandleSystemMessage 不是一回事 ——
 /// 后者是"我对邀请做决定"(accept/reject,带真加好友/真入群的副作用),
@@ -4942,8 +4942,8 @@ pub struct HandleSystemMessageReq {
 /// 以通知 uuid 为唯一标识,所以不用按类型各写一个接口。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarkNoticeProcessedReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RelationInfo {
@@ -4951,11 +4951,11 @@ pub struct RelationInfo {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
     /// 备注名(仅设置者本人可见)
-    #[prost(string, tag = "2")]
-    pub remark: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub remark: ::core::option::Option<::prost::alloc::string::String>,
     /// 用户动态(关系可见)
-    #[prost(string, tag = "3")]
-    pub moment: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 一次拿好友+仆从(同表,一次调用拿全);已删按关系拆开的 ListFriends/ListServitors(重叠)。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -4971,13 +4971,13 @@ pub struct ListRelationsResp {
 pub struct AddFriendReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AddFriendResp {
-    #[prost(enumeration = "FriendRequestStatus", tag = "1")]
-    pub status: i32,
+    #[prost(enumeration = "FriendRequestStatus", optional, tag = "1")]
+    pub status: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteFriendReq {
@@ -4997,26 +4997,26 @@ pub struct GetUserReq {
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UnprocessedSysMsgCountResp {
-    #[prost(int32, tag = "1")]
-    pub count: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub count: ::core::option::Option<i32>,
 }
 /// 改自己的资料。**不收 hi.Entity 整体** —— Entity 带 did/type/update,
 /// 而"改谁"永远取自 token,type/update 是服务端产物。入参只放调用方真正该给的。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateUserReq {
     /// 昵称
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// 头像 url
-    #[prost(string, tag = "4")]
-    pub avatar: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
     /// auto_reject-自动拒绝
     /// manual_accept-手动同意
     /// auto_accept-自动同意
     ///
     /// 添加好友校验方式
-    #[prost(string, tag = "2")]
-    pub verify_policy: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub verify_policy: ::core::option::Option<::prost::alloc::string::String>,
     /// 用户动态
     #[prost(string, optional, tag = "3")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
@@ -5024,11 +5024,11 @@ pub struct UpdateUserReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetRemarkReq {
     /// 被备注的用户did
-    #[prost(string, tag = "1")]
-    pub user: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
     /// 备注名
-    #[prost(string, tag = "2")]
-    pub remark: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub remark: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListOnlineUsersReq {
@@ -5879,8 +5879,8 @@ pub struct Qa {
     #[prost(message, repeated, tag = "1")]
     pub q: ::prost::alloc::vec::Vec<Content>,
     /// assistant
-    #[prost(string, tag = "2")]
-    pub a: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub a: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetHistoryResp {
@@ -5895,10 +5895,10 @@ pub struct GetHistoryResp {
 /// 不上报(app / hiclub web)= 全部由服务端跑完 = 一次调用拿到最终答复。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub cid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
     /// **客户端自己能执行的工具**;空 = 全交服务端跑完
@@ -5910,7 +5910,7 @@ pub struct ChatReq {
     pub custom: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "7")]
     pub state: ::core::option::Option<::prost::alloc::string::String>,
-    /// 语音出音色等;纯文本留空
+    /// 语音出音色等;纯文本不传
     #[prost(string, optional, tag = "8")]
     pub style: ::core::option::Option<::prost::alloc::string::String>,
     /// ── 过程回显开关(**只管输出,不管行为**)──────────────────────────────────────
@@ -5928,43 +5928,43 @@ pub struct ChatReq {
     /// 即便 ai 修好了也永远拿不到回显帧。搬家时别再漏第二次。
     ///
     /// 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-    #[prost(bool, tag = "9")]
-    pub echo_tool_calls: bool,
+    #[prost(bool, optional, tag = "9")]
+    pub echo_tool_calls: ::core::option::Option<bool>,
     /// 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
-    #[prost(bool, tag = "10")]
-    pub echo_memory: bool,
+    #[prost(bool, optional, tag = "10")]
+    pub echo_memory: ::core::option::Option<bool>,
     /// 发 type="echoContext" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
-    #[prost(bool, tag = "11")]
-    pub echo_context: bool,
+    #[prost(bool, optional, tag = "11")]
+    pub echo_context: ::core::option::Option<bool>,
     /// ── 这句话是谁说的 ─────────────────────────────────────────────────────────
     ///
     /// 🔴 **不是"谁在调这个接口"。** 调用方几乎永远是机器人自己(`agent` 就是它),
     /// 而提问者在**它收到的那条 mqtt 消息的 `from`** 里 —— 只有收到消息的那一端知道,
     /// 所以必须由客户端带上来,服务端无法从"谁在调"反推(反推出来的是机器人)。
     ///
-    /// **证明不了就留空**:机器人的语音路(现场人声)无法证明身份,一律空。
-    /// 空 = 匿名提问,插件侧要认人的方法应当直接拒绝,**不许退回成"主人在问"**。
+    /// **证明不了就不传**:机器人的语音路(现场人声)无法证明身份,一律不传。
+    /// 不传 = 匿名提问,插件侧要认人的方法应当直接拒绝,**不许退回成"主人在问"**。
     ///
     /// ⚠️ 它只是**消息流转里的事实**,不是权限凭据。判"是不是主人"要拿服务端现取的
     /// 权威值比对(见 hi.ai.ChatReq.master),动钱一律用那个权威值。
     /// 别拿 `from` 去做流转之外的事。
     ///
     /// ⚠️ 人自己在 app/web 里直接跟助手聊时可以不传,服务端按登录主体推导。
-    #[prost(string, tag = "12")]
-    pub asker: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "12")]
+    pub asker: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResult {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
 }
 /// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResultsReq {
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<ToolCallResult>,
 }
@@ -6223,39 +6223,39 @@ pub mod chat_client {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketListingBrief {
     /// 挂牌 id
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 出让方机器人(只到 Entity,**不吐它的 master**)
     #[prost(message, optional, tag = "2")]
     pub agent: ::core::option::Option<super::Entity>,
     /// ⭐ 下面三个是**读侧现取**的派生值,挂牌行里不存:
     /// title ← 插件壳名;logo / summary ← 出让方**当前激活版**(与"引用跟版"同一口径)。
     /// 改插件名就是改市场标题 —— 单一来源,不会漂。
-    #[prost(string, tag = "3")]
-    pub title: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub summary: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    pub logo: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "6")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(enumeration = "SettleMode", tag = "7")]
-    pub settle_mode: i32,
+    #[prost(enumeration = "SettleMode", optional, tag = "7")]
+    pub settle_mode: ::core::option::Option<i32>,
     /// 十进制字符串,免浮点误差
-    #[prost(string, tag = "8")]
-    pub price: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "9")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// 商品规格:买一次能用多久(秒);0 = 永久
-    #[prost(int64, tag = "10")]
-    pub duration: i64,
+    #[prost(int64, optional, tag = "10")]
+    pub duration: ::core::option::Option<i64>,
     /// 装机数
-    #[prost(int32, tag = "11")]
-    pub install_count: i32,
+    #[prost(int32, optional, tag = "11")]
+    pub install_count: ::core::option::Option<i32>,
     /// 这一摊是谁的货(普通 / 官方 / 内置)。公开 —— 买家要能看出哪个是官方出品,
     /// 那正是这个字段存在的意义;藏起来等于白设。
-    #[prost(enumeration = "MarketListingKind", tag = "12")]
-    pub kind: i32,
+    #[prost(enumeration = "MarketListingKind", optional, tag = "12")]
+    pub kind: ::core::option::Option<i32>,
 }
 /// MarketListingDetail 挂牌详情。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6264,8 +6264,8 @@ pub struct MarketListingDetail {
     pub brief: ::core::option::Option<MarketListingBrief>,
     /// 这个包提供哪些方法。直接取自 hi.ai 那份 tools 数组(已是最终形态、name 带壳前缀),
     /// 买家装之前就知道会得到什么能力。
-    #[prost(string, tag = "2")]
-    pub capabilities: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub capabilities: ::core::option::Option<::prost::alloc::string::String>,
     /// ⚠️ **没有 allow_follow_latest,不要再加回来。**
     /// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
     /// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。
@@ -6276,13 +6276,13 @@ pub struct MarketListingDetail {
     /// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
     /// 出让方自己那张表 —— 用的:草稿/挂牌中/隐藏/已下架必须分得出来,
     /// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
-    #[prost(enumeration = "ListingStatus", tag = "5")]
-    pub status: i32,
+    #[prost(enumeration = "ListingStatus", optional, tag = "5")]
+    pub status: ::core::option::Option<i32>,
     /// 这个挂牌卖的是哪个插件。**出让方那张表要它** —— 「版本」按钮跳到
     /// 「机器人 → 插件」并直接打开这个插件的版本管理,没有它就只能让人自己去翻。
     /// 公开无妨:壳 uuid 不是秘密(装了它的机器人本来就拿得到),真正私有的是脚本 url。
-    #[prost(string, tag = "6")]
-    pub plugin_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub plugin_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。
 ///
@@ -6292,11 +6292,11 @@ pub struct MarketListingDetail {
 /// **别把 grant 详情塞进来。**
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketGrantBrief {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 挂牌标题
-    #[prost(string, tag = "2")]
-    pub title: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
     /// 出让方机器人
     #[prost(message, optional, tag = "3")]
     pub from_agent: ::core::option::Option<super::Entity>,
@@ -6306,12 +6306,12 @@ pub struct MarketGrantBrief {
     /// 申请人
     #[prost(message, optional, tag = "5")]
     pub applicant: ::core::option::Option<super::Entity>,
-    #[prost(enumeration = "SettleMode", tag = "6")]
-    pub settle_mode: i32,
-    #[prost(string, tag = "7")]
-    pub price: ::prost::alloc::string::String,
-    #[prost(string, tag = "8")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(enumeration = "SettleMode", optional, tag = "6")]
+    pub settle_mode: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "7")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "8")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// MarketRenewBrief 「快到期了」通知的载荷 —— **发给受让方机器人本人**。
 ///
@@ -6330,30 +6330,30 @@ pub struct MarketGrantBrief {
 /// (Any 是可见性 lint 唯一的结构性缺口,塞 SELF 的东西会静默泄漏)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketRenewBrief {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 插件标题
-    #[prost(string, tag = "2")]
-    pub title: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
     /// **钱打到这个 did 的地址上** —— 结算实体,不是摊主(后端推导,机器人别自己算)。
     ///
     /// ⚠️ 与 `MarketOrder.payee`(收款人 = 摊主)**不是一个东西**,名字撞了但语义不同:
     /// 这里要的是"往哪儿转账",所以对齐的是 `MarketOrder.payee_account`。
     /// 机器人真去续费时走的是 `CreateRenewOrder` 拿到的订单,以那张单为准;
     /// 这一栏只是提醒里给人看的。
-    #[prost(string, tag = "3")]
-    pub payee: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub payee: ::core::option::Option<::prost::alloc::string::String>,
     /// 人类可读金额
-    #[prost(string, tag = "4")]
-    pub amount: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// 到期时刻(秒)
-    #[prost(int64, tag = "6")]
-    pub expire_at: i64,
+    #[prost(int64, optional, tag = "6")]
+    pub expire_at: ::core::option::Option<i64>,
     /// 用户开没开自动续费
-    #[prost(bool, tag = "7")]
-    pub auto_renew: bool,
+    #[prost(bool, optional, tag = "7")]
+    pub auto_renew: ::core::option::Option<bool>,
 }
 /// MarketGrantView 我的授权 / 我收到的申请(SELF)。
 ///
@@ -6361,10 +6361,10 @@ pub struct MarketRenewBrief {
 /// 「我卖的」= 我**当前**名下机器人的 `from_agent`;「我买的」= 同理的 `to_agent`。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketGrantView {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub listing_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub listing_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 插件标题。**成交时快照**,与 price/coin/duration/settle_mode 同一批。
     ///
     /// ⚠️ 这一条**不适用**「展示信息读侧现取」那条规矩 —— 那条管的是**活体**
@@ -6375,55 +6375,55 @@ pub struct MarketGrantView {
     ///
     /// ⚠️ 读的时候**只用快照,不做「取不到再现取」的回落** —— 回落会让同一行在不同时刻
     /// 显示不同的名字,比空着更难查。
-    #[prost(string, tag = "3")]
-    pub title: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "4")]
     pub from_agent: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "5")]
     pub to_agent: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "6")]
     pub applicant: ::core::option::Option<super::Entity>,
-    #[prost(enumeration = "GrantStatus", tag = "7")]
-    pub status: i32,
-    #[prost(enumeration = "SettleMode", tag = "8")]
-    pub settle_mode: i32,
-    #[prost(string, tag = "9")]
-    pub price: ::prost::alloc::string::String,
-    #[prost(string, tag = "10")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(enumeration = "GrantStatus", optional, tag = "7")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(enumeration = "SettleMode", optional, tag = "8")]
+    pub settle_mode: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "9")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "10")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// ⚠️ 没有 follow_latest:见 hi.ai.PluginView.follow_latest —— 归使用行,不归授权。
     ///
     /// 当前引用的版本
-    #[prost(string, tag = "12")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "12")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// installed_at + duration;0 = 永久
-    #[prost(int64, tag = "13")]
-    pub expire_at: i64,
-    /// 外部流程给的"去付款/去填资料"地址(可空)
-    #[prost(string, tag = "14")]
-    pub action_url: ::prost::alloc::string::String,
+    #[prost(int64, optional, tag = "13")]
+    pub expire_at: ::core::option::Option<i64>,
+    /// 外部流程给的"去付款/去填资料"地址(可不传)
+    #[prost(string, optional, tag = "14")]
+    pub action_url: ::core::option::Option<::prost::alloc::string::String>,
     /// 拒绝/撤销原因
-    #[prost(string, tag = "15")]
-    pub reason: ::prost::alloc::string::String,
-    #[prost(int64, tag = "16")]
-    pub created_at: i64,
-    #[prost(int64, tag = "17")]
-    pub decided_at: i64,
-    #[prost(int64, tag = "18")]
-    pub installed_at: i64,
+    #[prost(string, optional, tag = "15")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "16")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "17")]
+    pub decided_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "18")]
+    pub installed_at: ::core::option::Option<i64>,
     /// 自动续费。**只有硬件机器人能开** —— 续费要它自己掏钱付款,软件机器人没有私钥。
-    #[prost(bool, tag = "19")]
-    pub auto_renew: bool,
+    #[prost(bool, optional, tag = "19")]
+    pub auto_renew: ::core::option::Option<bool>,
     /// 谁先开的口(申请 / 分享)。前端按它决定这一行给"同意/拒绝"还是"审批/驳回",
     /// 后端按它决定 PENDING 时该问谁 —— 见 GrantInitiator。
-    #[prost(enumeration = "GrantInitiator", tag = "20")]
-    pub initiator: i32,
+    #[prost(enumeration = "GrantInitiator", optional, tag = "20")]
+    pub initiator: ::core::option::Option<i32>,
     /// 这条授权是哪个插件。**给前端定位用**:从"我买到的/卖出的"跳到那台机器人的插件页时,
     /// 要用它把插件管理直接打开(`/robot/plugin/<did>?plugin=<uuid>`)——
     /// 只有 listing_uuid 是不够的,插件页认的是插件。
     /// ⚠️ 不复用 11 号(那是删掉的 follow_latest):号不要钱,复用只会让老客户端把 bool 读成 string。
-    #[prost(string, tag = "21")]
-    pub plugin_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "21")]
+    pub plugin_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
 ///
@@ -6442,21 +6442,21 @@ pub struct MarketSeller {
     #[prost(message, repeated, tag = "2")]
     pub agents: ::prost::alloc::vec::Vec<super::Entity>,
     /// 在售挂牌总数
-    #[prost(int32, tag = "3")]
-    pub listing_count: i32,
+    #[prost(int32, optional, tag = "3")]
+    pub listing_count: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSellersResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub sellers: ::prost::alloc::vec::Vec<MarketSeller>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SearchListingsReq {
-    /// 空 = 不过滤
-    #[prost(string, tag = "1")]
-    pub keyword: ::prost::alloc::string::String,
+    /// 不传 = 不过滤
+    #[prost(string, optional, tag = "1")]
+    pub keyword: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
@@ -6465,20 +6465,20 @@ pub struct SearchListingsReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListAgentListingsReq {
     /// 逛这台机器人的"店"
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetListingReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchListingsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<MarketListingBrief>,
 }
@@ -6494,20 +6494,20 @@ pub struct GetListingResp {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateListingReq {
     /// 出让方机器人(须是调用者名下)
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub plugin_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub plugin_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// **建后不可改**
-    #[prost(enumeration = "SettleMode", tag = "3")]
-    pub settle_mode: i32,
-    #[prost(string, tag = "4")]
-    pub price: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(enumeration = "SettleMode", optional, tag = "3")]
+    pub settle_mode: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "4")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// 秒;0 = 永久
-    #[prost(int64, tag = "6")]
-    pub duration: i64,
+    #[prost(int64, optional, tag = "6")]
+    pub duration: ::core::option::Option<i64>,
     /// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
     ///
     /// 那三个是插件**自己就有**的东西(`hi.ai.PluginShell.name`、激活版的 `logo`/`summary`),
@@ -6527,20 +6527,20 @@ pub struct CreateListingReq {
     /// ⚠️ **软件机器人没得选**:它没有私钥,收不了款,后端一律按 master 的账户处理,
     /// 传 false 也会被纠正 —— 不是"帮你改",是那个值与"软件机器人"这件事互相矛盾。
     /// 前端**暂时不给这个选项**(隐藏),先把能力放在契约里。
-    #[prost(bool, tag = "14")]
-    pub payee_to_master: bool,
+    #[prost(bool, optional, tag = "14")]
+    pub payee_to_master: ::core::option::Option<bool>,
     /// ⚠️ 没有 allow_follow_latest:见 MarketListingDetail —— 这件事归使用方,不归挂牌。
     /// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
     ///
     /// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
     /// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
-    #[prost(string, tag = "12")]
-    pub action_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "12")]
+    pub action_url: ::core::option::Option<::prost::alloc::string::String>,
     /// 挂牌类型。**只有平台那个 did 能设 OFFICIAL / BUILTIN**,别人传了直接拒。
     /// BUILTIN 会被强制成免费 / 永久 / 免审(见 MarketListingKind) ——
     /// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
-    #[prost(enumeration = "MarketListingKind", tag = "13")]
-    pub kind: i32,
+    #[prost(enumeration = "MarketListingKind", optional, tag = "13")]
+    pub kind: ::core::option::Option<i32>,
 }
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
 ///
@@ -6548,8 +6548,8 @@ pub struct CreateListingReq {
 /// 重新挂牌复用同一行),该字段在首次 LISTED 之后禁止 UPDATE。否则"下架再上架"就绕过去了。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct EditListingReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub price: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
@@ -6567,31 +6567,31 @@ pub struct EditListingReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetListingStatusReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(enumeration = "ListingStatus", tag = "2")]
-    pub status: i32,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ListingStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListMyListingsReq {
     /// 可选:只看这台机器人的
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListMyListingsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     /// Detail=PUBLIC,放进 SELF 壳合法
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<MarketListingDetail>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateListingResp {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ApplyReq 申请把某个挂牌的插件装到自己的机器人上。
 ///
@@ -6605,11 +6605,11 @@ pub struct CreateListingResp {
 /// 反过来现在写成 user-only 的形状,将来就是破坏性改动。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplyReq {
-    #[prost(string, tag = "1")]
-    pub listing_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub listing_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 装到哪台机器人上
-    #[prost(string, tag = "2")]
-    pub to_agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub to_agent: ::core::option::Option<::prost::alloc::string::String>,
     /// ⚠️ 没有 follow_latest:买完之后在"机器人 → 插件"那一行上自己开关(hi.ai 的 c.follow_latest)。
     ///
     /// 外部流程要的额外参数,原样转给商户后台
@@ -6620,24 +6620,24 @@ pub struct ApplyReq {
 pub struct MarketPayment {
     /// 付款凭据号。**对外给出去的是它,不是主订单号** ——
     /// 付款方唤起 hidid 时带的、回调里回来的、人工查账时客人报的,都是这个号。
-    #[prost(string, tag = "1")]
-    pub pay_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub pay_id: ::core::option::Option<::prost::alloc::string::String>,
     /// 属于哪张业务单
-    #[prost(string, tag = "2")]
-    pub order_id: ::prost::alloc::string::String,
-    #[prost(enumeration = "MarketPaymentStatus", tag = "3")]
-    pub status: i32,
+    #[prost(string, optional, tag = "2")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "MarketPaymentStatus", optional, tag = "3")]
+    pub status: ::core::option::Option<i32>,
     /// 认走它的那笔转账
-    #[prost(string, tag = "4")]
-    pub tx_hash: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub tx_hash: ::core::option::Option<::prost::alloc::string::String>,
     /// 这张凭据的有效期(秒)
-    #[prost(int64, tag = "5")]
-    pub expire_at: i64,
-    #[prost(int64, tag = "6")]
-    pub created_at: i64,
+    #[prost(int64, optional, tag = "5")]
+    pub expire_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "6")]
+    pub created_at: ::core::option::Option<i64>,
     /// 作废/失效的原因。不可推导,而它是人工查账退款的依据。
-    #[prost(string, tag = "7")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "7")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
     /// ── 交易记录用的四样 ────────────────────────────────────────────────
     ///
     /// payer:**真的把钱付出去的那个人**,认款时才落 —— 付款之前这一栏就是空的,
@@ -6656,25 +6656,25 @@ pub struct MarketPayment {
     ///
     /// 两个都不在这张表上另存一份:payee/amount/coin 在订单上不可变,
     /// 读的时候 join 出来即可,存两份只会给自己留一个会漂的口子。
-    #[prost(string, tag = "8")]
-    pub payer: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
-    pub payee: ::prost::alloc::string::String,
-    #[prost(string, tag = "10")]
-    pub amount: ::prost::alloc::string::String,
-    #[prost(string, tag = "11")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub payer: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "9")]
+    pub payee: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "10")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "11")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// **这一笔打到哪个账户**。与 payee(收款人)分开:见上面那段。
     /// 它是**落库的快照**,不是 join 出来的 —— 因为 server 可以被改,而这一笔的目标不能变。
-    #[prost(string, tag = "12")]
-    pub to_account: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "12")]
+    pub to_account: ::core::option::Option<::prost::alloc::string::String>,
     /// **二维码里装的就是这个号**(hidid 的 `M` 号,见 hi.did.PayRequest)。
     ///
     /// 扫码方按它去 hidid 取要素(收款账号/币种/金额/业务单号),**改不了** ——
     /// 所以码里不需要金额和地址,被替换也只会"查不到这个号"。
-    /// 空 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
-    #[prost(string, tag = "13")]
-    pub pay_req_id: ::prost::alloc::string::String,
+    /// 不传 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
+    #[prost(string, optional, tag = "13")]
+    pub pay_req_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 我的交易记录。**只覆盖插件市场的订单**,不是全站流水。
 ///
@@ -6683,7 +6683,7 @@ pub struct MarketPayment {
 /// 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListTransactionsReq {
-    /// 看谁的。**空 = 我 + 我当前名下的全部机器人**(默认就该是全景:收款人是摊主,
+    /// 看谁的。**不传 = 我 + 我当前名下的全部机器人**(默认就该是全景:收款人是摊主,
     /// 只看用户自己的 did 会把卖出收入整片漏掉,而且不报错);填了则**必须是我的仆从机器人**,
     /// 只看那一台。
     ///
@@ -6703,8 +6703,8 @@ pub struct ListTransactionsResp {
     /// 而 club 的 repo 在 `limit > 100` 时**悄悄回落到 20**,于是页面上少行、不报错。
     /// 这是 2026-08-26 前端接分页时补的:市场里其它列表(ListMyListings /
     /// ListGrants / SearchListings / ListSellers)一直都有,只有这个漏了。
-    #[prost(int32, tag = "2")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "2")]
+    pub total: ::core::option::Option<i32>,
 }
 /// 查单笔 —— 当事人是我、**或是我的仆从机器人**,才查得到。
 /// 查不到与不属于你**回同一个错**:否则这就成了探测别人交易是否存在的口子。
@@ -6713,24 +6713,24 @@ pub struct ListTransactionsResp {
 /// 把范围交给了它 —— 而范围正是这个接口唯一在守的东西。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTransactionReq {
-    #[prost(string, tag = "1")]
-    pub pay_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub pay_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketOrder {
     /// 付款回报时的唯一凭据
-    #[prost(string, tag = "1")]
-    pub order_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
     /// 履行到哪笔授权上
-    #[prost(string, tag = "2")]
-    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 给**哪台机器人**
-    #[prost(string, tag = "3")]
-    pub target_agent: ::prost::alloc::string::String,
-    #[prost(enumeration = "MarketOrderKind", tag = "4")]
-    pub kind: i32,
-    #[prost(enumeration = "MarketOrderStatus", tag = "5")]
-    pub status: i32,
+    #[prost(string, optional, tag = "3")]
+    pub target_agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "MarketOrderKind", optional, tag = "4")]
+    pub kind: ::core::option::Option<i32>,
+    #[prost(enumeration = "MarketOrderStatus", optional, tag = "5")]
+    pub status: ::core::option::Option<i32>,
     /// ⭐ **收款人与收款账号是两件事,各记一行** —— 去银行存钱要姓名也要账号,缺一不可。
     ///
     /// payee         = **谁在收款**(交易者):**恒等于摊主**(出让方机器人)。
@@ -6751,25 +6751,25 @@ pub struct MarketOrder {
     /// ⚠️ **两个都由后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
     /// ⚠️ `payee_account` 在**开单那一刻解析并写死**(与价格/时长同批快照):
     /// 卖家之后改 server,旧单不能跟着飘。
-    #[prost(string, tag = "6")]
-    pub payee: ::prost::alloc::string::String,
-    #[prost(string, tag = "13")]
-    pub payee_account: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub payee: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "13")]
+    pub payee_account: ::core::option::Option<::prost::alloc::string::String>,
     /// 付款人(买家)。**只记账,不作判据** —— 市场认款从来不看谁掏的钱,
     /// 判据是"这张单要的钱到账了没有"。记它是为了让当事人查得到自己的交易。
     ///
     /// 没有 payer_account:判据不看付款侧,加一个没人读的列只会让人以为它是判据。
-    #[prost(string, tag = "14")]
-    pub payer: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "14")]
+    pub payer: ::core::option::Option<::prost::alloc::string::String>,
     /// 人类可读金额,如 "9.9"
-    #[prost(string, tag = "7")]
-    pub amount: ::prost::alloc::string::String,
-    #[prost(string, tag = "8")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "7")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "8")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// ⚠️ **没有 expire_at** —— 有效期挪到**付款凭据**上了(MarketPayment.expire_at)。
     /// 业务单不过期:凭据超时只是那一次付款作废,这台机器人要续期这件事还在。
-    #[prost(int64, tag = "10")]
-    pub created_at: i64,
+    #[prost(int64, optional, tag = "10")]
+    pub created_at: ::core::option::Option<i64>,
     /// 把付款结果**报给哪个商户** —— 即图示里唤起 hidid 时要带的「商户DID」。
     ///
     /// 付款方(hidid app / 机器人里的 hidid 模块)付完款调 `hi.did.Pay.Notify`,
@@ -6779,8 +6779,8 @@ pub struct MarketOrder {
     ///
     /// ⚠️ 由订单带出来,**不让机器人硬编码**:它随环境变(dev/prod 是两个商户),
     /// 写死在设备里就意味着换环境要刷全网机器人。
-    #[prost(string, tag = "11")]
-    pub merchant: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "11")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
     /// **当前这张付款凭据**(没被接替、也没超时的那一张)。付款方要用的号在它里面。
     /// 历史凭据不在这里 —— 要看换号过程走 ListPayments。
     #[prost(message, optional, tag = "12")]
@@ -6792,15 +6792,15 @@ pub struct MarketOrder {
 /// 幂等:当前凭据还活着(未超时未认款)就原样返回它,不会开出一堆。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct IssuePaymentReq {
-    #[prost(string, tag = "1")]
-    pub order_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 这张业务单的**全部**付款凭据,按时间正序 —— 换过几次号、每次为什么没成,就是它。
 /// 人工查账退款看的就是这个列表 + 客人报的那个 pay_id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListPaymentsReq {
-    #[prost(string, tag = "1")]
-    pub order_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPaymentsResp {
@@ -6813,8 +6813,8 @@ pub struct ListPaymentsResp {
 /// grant 决定了 target_agent —— 不接受入参指定,否则就成了"替别人的机器人开单"。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateRenewOrderReq {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketPayInfo {
@@ -6823,35 +6823,35 @@ pub struct MarketPayInfo {
     /// 不知道该拿哪个去付款 —— 所以换成下面两个名字,各自说清自己是什么。
     ///
     /// 人类可读金额,如 "9.9"
-    #[prost(string, tag = "2")]
-    pub amount: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub coin: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
     /// **钱打到这个 did 的地址上** —— 结算实体(默认=收款人本人)。付款方只认它。
-    #[prost(string, tag = "4")]
-    pub payee_account: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "4")]
+    pub payee_account: ::core::option::Option<::prost::alloc::string::String>,
     /// **显示给用户看"你在付给谁"** —— 收款人,即**摊主本人**(出让方机器人)。
     /// 跳蚤市场下用户是把钱付给一个陌生的机器人,看不清收款人就不该让他按确认。
     ///
     /// ⚠️ 与 `payee_account` 常常**不是同一个 did**(软件机器人的钱落在它主人账户上),
     /// 这正是两个字段分开的理由:付款方按 account 转账,界面按 owner 显示。
-    #[prost(string, tag = "5")]
-    pub payee_owner: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub payee_owner: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ApplyResp
 ///
 /// status=INSTALLED → 免费/已批,直接就能用了
 /// status=PENDING + pay 非空       → 去付款(唤起 hidid app)
-/// status=PENDING + action_url 非空 → 去外部流程办理(EXTERNAL)
+/// status=PENDING + action_url 有值 → 去外部流程办理(EXTERNAL)
 /// status=PENDING 且两者都空        → 等出让方 master 审批(APPROVAL)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ApplyResp {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    #[prost(enumeration = "GrantStatus", tag = "2")]
-    pub status: i32,
-    #[prost(string, tag = "3")]
-    pub action_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "GrantStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub action_url: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "4")]
     pub pay: ::core::option::Option<MarketPayInfo>,
     /// 付费购买时顺带开出的账单。付款方拿它去付,再用 Market.ReportPayment 认领。
@@ -6862,11 +6862,11 @@ pub struct ApplyResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DecideGrantReq {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 拒绝/撤销原因,给人看的
-    #[prost(string, tag = "2")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ⚠️ `initiator` 是**过滤器**:不传=全部;传 OFFER 就是"收到的分享"那张表。
 /// 收到的分享与买来的授权混在一张列表里,用户分不清"这是我买的"还是"别人送我的",
@@ -6874,18 +6874,18 @@ pub struct DecideGrantReq {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGrantsReq {
     /// 可选:按状态筛
-    #[prost(enumeration = "GrantStatus", tag = "1")]
-    pub status: i32,
+    #[prost(enumeration = "GrantStatus", optional, tag = "1")]
+    pub status: ::core::option::Option<i32>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
     /// 可选:按"谁开的口"筛。传 OFFER 就是"收到的分享"那张表
-    #[prost(enumeration = "GrantInitiator", tag = "3")]
-    pub initiator: i32,
+    #[prost(enumeration = "GrantInitiator", optional, tag = "3")]
+    pub initiator: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGrantsResp {
-    #[prost(int32, tag = "1")]
-    pub total: i32,
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<MarketGrantView>,
 }
@@ -6902,10 +6902,10 @@ pub struct ListGrantsResp {
 /// 用户在 hiclub 里随手开关;真正执行续费的是机器人自己(见 plugin-grant-expiring 通知)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetAutoRenewReq {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    #[prost(bool, tag = "2")]
-    pub enabled: bool,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "2")]
+    pub enabled: ::core::option::Option<bool>,
 }
 /// ── 分享(Offer)——「我想给」那条路 ───────────────────────────────────────────
 ///
@@ -6926,60 +6926,60 @@ pub struct SetAutoRenewReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OfferReq {
     /// 分享哪个挂牌(HIDDEN 也行:不公开、只定向送)
-    #[prost(string, tag = "1")]
-    pub listing_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub listing_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 送给哪台机器人
-    #[prost(string, tag = "2")]
-    pub to_agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub to_agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OfferResp {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 送给**自己名下**的机器人 → 不需要谁同意,直接 INSTALLED;
     /// 送给别人的 → PENDING(等对方 master);对方无主 → REJECTED(reason 里写明)。
-    #[prost(enumeration = "GrantStatus", tag = "2")]
-    pub status: i32,
-    #[prost(string, tag = "3")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(enumeration = "GrantStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// DecideOfferReq 受让方 master 接受 / 拒绝一条分享。
 /// **主体是受让方**(与 DecideGrantReq 的主体是出让方正好相反,所以不复用那个类型 ——
 /// 复用会让"这个接口该校验哪一侧"变成一件要靠记忆的事)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DecideOfferReq {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    /// 拒绝理由(可空);接受时忽略
-    #[prost(string, tag = "2")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 拒绝理由(可不传);接受时忽略
+    #[prost(string, optional, tag = "2")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketManageListListingsReq {
     /// 可选:按机器人筛
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 可选:按状态筛
-    #[prost(enumeration = "ListingStatus", tag = "2")]
-    pub status: i32,
+    #[prost(enumeration = "ListingStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketManageListGrantsReq {
-    #[prost(string, tag = "1")]
-    pub listing_uuid: ::prost::alloc::string::String,
-    #[prost(enumeration = "GrantStatus", tag = "2")]
-    pub status: i32,
+    #[prost(string, optional, tag = "1")]
+    pub listing_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "GrantStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ForceDelistReq {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Pull 的**签名载荷 schema**(rpc 收 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
 /// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**。
@@ -6989,44 +6989,44 @@ pub struct ForceDelistReq {
 /// 字段不存在,"替别人拉单"在类型上就说不出来(同 MasterBindReq 删 master 那次)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketPullData {
-    #[prost(string, tag = "1")]
-    pub nonce: ::prost::alloc::string::String,
-    #[prost(int64, tag = "2")]
-    pub timestamp: i64,
+    #[prost(string, optional, tag = "1")]
+    pub nonce: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub timestamp: ::core::option::Option<i64>,
 }
 /// 一条待处理的申请。**这是商户能拿到的全部** —— 不吐买方机器人的私有配置,
 /// 只给它做业务决策(收款 / 审资质 / 纳私域)真正需要的那些。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketPendingGrant {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub listing_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub plugin_uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub title: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub listing_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub plugin_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
     /// 受让方机器人 did
-    #[prost(string, tag = "5")]
-    pub to_agent: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub to_agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 购买者 did ← 商户据此调 hi.did.Merchant.AddUsers 把他纳入自己的私域。
     /// ⚠️ 那一步**由商户自己做,不是 club 代做**:AddUsers 的主体由 ExtendToken 解出
     /// "加到自己名下",club 手里只有 club 自己的商户凭证,代调只会加到 club 名下。
-    #[prost(string, tag = "6")]
-    pub to_master: ::prost::alloc::string::String,
-    #[prost(enumeration = "SettleMode", tag = "7")]
-    pub settle_mode: i32,
-    #[prost(string, tag = "8")]
-    pub price: ::prost::alloc::string::String,
-    #[prost(string, tag = "9")]
-    pub coin: ::prost::alloc::string::String,
-    #[prost(int64, tag = "10")]
-    pub duration: i64,
+    #[prost(string, optional, tag = "6")]
+    pub to_master: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "SettleMode", optional, tag = "7")]
+    pub settle_mode: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "8")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "9")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "10")]
+    pub duration: ::core::option::Option<i64>,
     /// 申请方填的额外参数
     #[prost(message, optional, tag = "11")]
     pub params: ::core::option::Option<::pbjson_types::Struct>,
-    #[prost(int64, tag = "12")]
-    pub created_at: i64,
+    #[prost(int64, optional, tag = "12")]
+    pub created_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketPullResp {
@@ -7038,23 +7038,23 @@ pub struct MarketPullResp {
 /// (同 `PullOrdersData` / `ReportResultsData` 的先例)。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketNotifyData {
-    #[prost(string, tag = "1")]
-    pub grant_uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 商户侧单号
-    #[prost(string, tag = "2")]
-    pub outer_id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub outer_id: ::core::option::Option<::prost::alloc::string::String>,
     /// approved / rejected
-    #[prost(string, tag = "3")]
-    pub result: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub reason: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub result: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
     /// 可选:商户回填实际生效条款(实付金额 / 有效期)
     #[prost(message, optional, tag = "5")]
     pub terms_override: ::core::option::Option<::pbjson_types::Struct>,
-    #[prost(string, tag = "6")]
-    pub nonce: ::prost::alloc::string::String,
-    #[prost(int64, tag = "7")]
-    pub timestamp: i64,
+    #[prost(string, optional, tag = "6")]
+    pub nonce: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "7")]
+    pub timestamp: ::core::option::Option<i64>,
 }
 /// SettleMode 结算方式。**挂牌后不可改** —— 改价可以,改"钱怎么走"不行。
 ///

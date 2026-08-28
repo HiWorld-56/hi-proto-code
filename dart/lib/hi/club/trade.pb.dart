@@ -910,7 +910,7 @@ class ListTradesReq extends $pb.GeneratedMessage {
   $3.Pagination ensurePagination() => $_ensure(1);
 }
 
-/// 交易统计(内部使用)。id 为空 = 全量。
+/// 交易统计(内部使用)。id 不传 = 全量。
 class TradeManageListReq extends $pb.GeneratedMessage {
   factory TradeManageListReq({
     $core.String? id,

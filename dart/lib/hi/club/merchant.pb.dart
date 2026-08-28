@@ -20,7 +20,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// 列某商户名下的 greeter(扩展表 level >= 8)。
 ///
-/// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"空=自己",因为调用者本身
+/// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"不传=自己",因为调用者本身
 ///    就是商户(ExtendToken 解出);club 的调用者是普通用户、不是商户,"自己"无从谈起。
 ///    故这里不照搬 hi.did.ListGreetersReq —— 同名字段两种语义,是最容易出事的复用。
 class ListGreetersReq extends $pb.GeneratedMessage {

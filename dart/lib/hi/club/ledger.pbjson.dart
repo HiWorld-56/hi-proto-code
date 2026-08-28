@@ -49,7 +49,16 @@ final $typed_data.Uint8List fundsStatusDescriptor = $convert.base64Decode(
 const FundsRecord$json = {
   '1': 'FundsRecord',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
     {
       '1': 'kind',
       '3': 2,
@@ -57,17 +66,100 @@ const FundsRecord$json = {
       '5': 14,
       '6': '.hi.club.FundsKind',
       '8': {},
-      '10': 'kind'
+      '9': 1,
+      '10': 'kind',
+      '17': true
     },
-    {'1': 'payer', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'payer'},
-    {'1': 'payee', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'payee'},
-    {'1': 'to_address', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'toAddress'},
-    {'1': 'chain', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'chain'},
-    {'1': 'coin', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'coin'},
-    {'1': 'amount', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'amount'},
-    {'1': 'fee', '3': 9, '4': 1, '5': 9, '8': {}, '10': 'fee'},
-    {'1': 'fee_coin', '3': 10, '4': 1, '5': 9, '8': {}, '10': 'feeCoin'},
-    {'1': 'tx_hash', '3': 11, '4': 1, '5': 9, '8': {}, '10': 'txHash'},
+    {
+      '1': 'payer',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'payer',
+      '17': true
+    },
+    {
+      '1': 'payee',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'payee',
+      '17': true
+    },
+    {
+      '1': 'to_address',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'toAddress',
+      '17': true
+    },
+    {
+      '1': 'chain',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'chain',
+      '17': true
+    },
+    {
+      '1': 'coin',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 6,
+      '10': 'coin',
+      '17': true
+    },
+    {
+      '1': 'amount',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 7,
+      '10': 'amount',
+      '17': true
+    },
+    {
+      '1': 'fee',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 8,
+      '10': 'fee',
+      '17': true
+    },
+    {
+      '1': 'fee_coin',
+      '3': 10,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 9,
+      '10': 'feeCoin',
+      '17': true
+    },
+    {
+      '1': 'tx_hash',
+      '3': 11,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 10,
+      '10': 'txHash',
+      '17': true
+    },
     {
       '1': 'status',
       '3': 12,
@@ -75,25 +167,65 @@ const FundsRecord$json = {
       '5': 14,
       '6': '.hi.club.FundsStatus',
       '8': {},
-      '10': 'status'
+      '9': 11,
+      '10': 'status',
+      '17': true
     },
-    {'1': 'reason', '3': 13, '4': 1, '5': 9, '8': {}, '10': 'reason'},
-    {'1': 'created_at', '3': 14, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
+    {
+      '1': 'reason',
+      '3': 13,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 12,
+      '10': 'reason',
+      '17': true
+    },
+    {
+      '1': 'created_at',
+      '3': 14,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 13,
+      '10': 'createdAt',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_kind'},
+    {'1': '_payer'},
+    {'1': '_payee'},
+    {'1': '_to_address'},
+    {'1': '_chain'},
+    {'1': '_coin'},
+    {'1': '_amount'},
+    {'1': '_fee'},
+    {'1': '_fee_coin'},
+    {'1': '_tx_hash'},
+    {'1': '_status'},
+    {'1': '_reason'},
+    {'1': '_created_at'},
+  ],
 };
 
 /// Descriptor for `FundsRecord`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List fundsRecordDescriptor = $convert.base64Decode(
-    'CgtGdW5kc1JlY29yZBIkCgR1dWlkGAEgASgJQhC6SAlyBzIFXlxTKySQtRgDUgR1dWlkEiwKBG'
-    'tpbmQYAiABKA4yEi5oaS5jbHViLkZ1bmRzS2luZEIEkLUYA1IEa2luZBIaCgVwYXllchgDIAEo'
-    'CUIEkLUYA1IFcGF5ZXISGgoFcGF5ZWUYBCABKAlCBJC1GANSBXBheWVlEiMKCnRvX2FkZHJlc3'
-    'MYBSABKAlCBJC1GANSCXRvQWRkcmVzcxIaCgVjaGFpbhgGIAEoCUIEkLUYA1IFY2hhaW4SGAoE'
-    'Y29pbhgHIAEoCUIEkLUYA1IEY29pbhIcCgZhbW91bnQYCCABKAlCBJC1GANSBmFtb3VudBIWCg'
-    'NmZWUYCSABKAlCBJC1GANSA2ZlZRIfCghmZWVfY29pbhgKIAEoCUIEkLUYA1IHZmVlQ29pbhId'
-    'Cgd0eF9oYXNoGAsgASgJQgSQtRgDUgZ0eEhhc2gSMgoGc3RhdHVzGAwgASgOMhQuaGkuY2x1Yi'
-    '5GdW5kc1N0YXR1c0IEkLUYA1IGc3RhdHVzEhwKBnJlYXNvbhgNIAEoCUIEkLUYA1IGcmVhc29u'
-    'EiMKCmNyZWF0ZWRfYXQYDiABKANCBJC1GANSCWNyZWF0ZWRBdDoEmLUYAw==');
+    'CgtGdW5kc1JlY29yZBIsCgR1dWlkGAEgASgJQhO6SAzIAQFyBzIFXlxTKySQtRgDSABSBHV1aW'
+    'SIAQESMQoEa2luZBgCIAEoDjISLmhpLmNsdWIuRnVuZHNLaW5kQgSQtRgDSAFSBGtpbmSIAQES'
+    'HwoFcGF5ZXIYAyABKAlCBJC1GANIAlIFcGF5ZXKIAQESHwoFcGF5ZWUYBCABKAlCBJC1GANIA1'
+    'IFcGF5ZWWIAQESKAoKdG9fYWRkcmVzcxgFIAEoCUIEkLUYA0gEUgl0b0FkZHJlc3OIAQESHwoF'
+    'Y2hhaW4YBiABKAlCBJC1GANIBVIFY2hhaW6IAQESHQoEY29pbhgHIAEoCUIEkLUYA0gGUgRjb2'
+    'luiAEBEiEKBmFtb3VudBgIIAEoCUIEkLUYA0gHUgZhbW91bnSIAQESGwoDZmVlGAkgASgJQgSQ'
+    'tRgDSAhSA2ZlZYgBARIkCghmZWVfY29pbhgKIAEoCUIEkLUYA0gJUgdmZWVDb2luiAEBEiIKB3'
+    'R4X2hhc2gYCyABKAlCBJC1GANIClIGdHhIYXNoiAEBEjcKBnN0YXR1cxgMIAEoDjIULmhpLmNs'
+    'dWIuRnVuZHNTdGF0dXNCBJC1GANIC1IGc3RhdHVziAEBEiEKBnJlYXNvbhgNIAEoCUIEkLUYA0'
+    'gMUgZyZWFzb26IAQESKAoKY3JlYXRlZF9hdBgOIAEoA0IEkLUYA0gNUgljcmVhdGVkQXSIAQE6'
+    'BJi1GANCBwoFX3V1aWRCBwoFX2tpbmRCCAoGX3BheWVyQggKBl9wYXllZUINCgtfdG9fYWRkcm'
+    'Vzc0IICgZfY2hhaW5CBwoFX2NvaW5CCQoHX2Ftb3VudEIGCgRfZmVlQgsKCV9mZWVfY29pbkIK'
+    'CghfdHhfaGFzaEIJCgdfc3RhdHVzQgkKB19yZWFzb25CDQoLX2NyZWF0ZWRfYXQ=');
 
 @$core.Deprecated('Use listFundsReqDescriptor instead')
 const ListFundsReq$json = {

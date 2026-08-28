@@ -52,25 +52,40 @@ const UserInfo$json = {
       '4': 1,
       '5': 9,
       '8': {},
-      '10': 'verifyPolicy'
+      '9': 0,
+      '10': 'verifyPolicy',
+      '17': true
     },
-    {'1': 'moment', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'moment'},
+    {
+      '1': 'moment',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'moment',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_verify_policy'},
+    {'1': '_moment'},
+  ],
 };
 
 /// Descriptor for `UserInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userInfoDescriptor = $convert.base64Decode(
     'CghVc2VySW5mbxIkCgRiYXNlGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgRiYXNlEiYKC3Blcm'
-    '1pc3Npb25zGAIgAygJQgSQtRgDUgtwZXJtaXNzaW9ucxIpCg12ZXJpZnlfcG9saWN5GAMgASgJ'
-    'QgSQtRgDUgx2ZXJpZnlQb2xpY3kSHAoGbW9tZW50GAQgASgJQgSQtRgCUgZtb21lbnQ6BJi1GA'
-    'M=');
+    '1pc3Npb25zGAIgAygJQgSQtRgDUgtwZXJtaXNzaW9ucxIuCg12ZXJpZnlfcG9saWN5GAMgASgJ'
+    'QgSQtRgDSABSDHZlcmlmeVBvbGljeYgBARIhCgZtb21lbnQYBCABKAlCBJC1GAJIAVIGbW9tZW'
+    '50iAEBOgSYtRgDQhAKDl92ZXJpZnlfcG9saWN5QgkKB19tb21lbnQ=');
 
 @$core.Deprecated('Use listSystemMessagesReqDescriptor instead')
 const ListSystemMessagesReq$json = {
   '1': 'ListSystemMessagesReq',
   '2': [
-    {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    {'1': 'status', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'status', '17': true},
     {
       '1': 'pagination',
       '3': 2,
@@ -80,19 +95,40 @@ const ListSystemMessagesReq$json = {
       '10': 'pagination'
     },
   ],
+  '8': [
+    {'1': '_status'},
+  ],
 };
 
 /// Descriptor for `ListSystemMessagesReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listSystemMessagesReqDescriptor = $convert.base64Decode(
-    'ChVMaXN0U3lzdGVtTWVzc2FnZXNSZXESFgoGc3RhdHVzGAEgASgJUgZzdGF0dXMSLgoKcGFnaW'
-    '5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+    'ChVMaXN0U3lzdGVtTWVzc2FnZXNSZXESGwoGc3RhdHVzGAEgASgJSABSBnN0YXR1c4gBARIuCg'
+    'pwYWdpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkIJCgdfc3RhdHVz');
 
 @$core.Deprecated('Use systemMessagesDescriptor instead')
 const SystemMessages$json = {
   '1': 'SystemMessages',
   '2': [
-    {'1': 'has_new', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'hasNew'},
-    {'1': 'total', '3': 2, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'has_new',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'hasNew',
+      '17': true
+    },
+    {
+      '1': 'total',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 1,
+      '10': 'total',
+      '17': true
+    },
     {
       '1': 'list',
       '3': 3,
@@ -104,54 +140,70 @@ const SystemMessages$json = {
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_has_new'},
+    {'1': '_total'},
+  ],
 };
 
 /// Descriptor for `SystemMessages`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List systemMessagesDescriptor = $convert.base64Decode(
-    'Cg5TeXN0ZW1NZXNzYWdlcxIdCgdoYXNfbmV3GAEgASgIQgSQtRgDUgZoYXNOZXcSGgoFdG90YW'
-    'wYAiABKAVCBJC1GANSBXRvdGFsEikKBGxpc3QYAyADKAsyDy5oaS5jbHViLk5vdGljZUIEkLUY'
-    'AlIEbGlzdDoEmLUYAw==');
+    'Cg5TeXN0ZW1NZXNzYWdlcxIiCgdoYXNfbmV3GAEgASgIQgSQtRgDSABSBmhhc05ld4gBARIfCg'
+    'V0b3RhbBgCIAEoBUIEkLUYA0gBUgV0b3RhbIgBARIpCgRsaXN0GAMgAygLMg8uaGkuY2x1Yi5O'
+    'b3RpY2VCBJC1GAJSBGxpc3Q6BJi1GANCCgoIX2hhc19uZXdCCAoGX3RvdGFs');
 
 @$core.Deprecated('Use deleteSystemMessageReqDescriptor instead')
 const DeleteSystemMessageReq$json = {
   '1': 'DeleteSystemMessageReq',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
+  ],
+  '8': [
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `DeleteSystemMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteSystemMessageReqDescriptor =
     $convert.base64Decode(
-        'ChZEZWxldGVTeXN0ZW1NZXNzYWdlUmVxEhIKBHV1aWQYASABKAlSBHV1aWQ=');
+        'ChZEZWxldGVTeXN0ZW1NZXNzYWdlUmVxEhcKBHV1aWQYASABKAlIAFIEdXVpZIgBAUIHCgVfdX'
+        'VpZA==');
 
 @$core.Deprecated('Use handleSystemMessageReqDescriptor instead')
 const HandleSystemMessageReq$json = {
   '1': 'HandleSystemMessageReq',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'status', '3': 2, '4': 1, '5': 9, '10': 'status'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
+    {'1': 'status', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'status', '17': true},
+  ],
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_status'},
   ],
 };
 
 /// Descriptor for `HandleSystemMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List handleSystemMessageReqDescriptor =
     $convert.base64Decode(
-        'ChZIYW5kbGVTeXN0ZW1NZXNzYWdlUmVxEhIKBHV1aWQYASABKAlSBHV1aWQSFgoGc3RhdHVzGA'
-        'IgASgJUgZzdGF0dXM=');
+        'ChZIYW5kbGVTeXN0ZW1NZXNzYWdlUmVxEhcKBHV1aWQYASABKAlIAFIEdXVpZIgBARIbCgZzdG'
+        'F0dXMYAiABKAlIAVIGc3RhdHVziAEBQgcKBV91dWlkQgkKB19zdGF0dXM=');
 
 @$core.Deprecated('Use markNoticeProcessedReqDescriptor instead')
 const MarkNoticeProcessedReq$json = {
   '1': 'MarkNoticeProcessedReq',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
+  ],
+  '8': [
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `MarkNoticeProcessedReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List markNoticeProcessedReqDescriptor =
     $convert.base64Decode(
-        'ChZNYXJrTm90aWNlUHJvY2Vzc2VkUmVxEhIKBHV1aWQYASABKAlSBHV1aWQ=');
+        'ChZNYXJrTm90aWNlUHJvY2Vzc2VkUmVxEhcKBHV1aWQYASABKAlIAFIEdXVpZIgBAUIHCgVfdX'
+        'VpZA==');
 
 @$core.Deprecated('Use relationInfoDescriptor instead')
 const RelationInfo$json = {
@@ -166,17 +218,39 @@ const RelationInfo$json = {
       '8': {},
       '10': 'base'
     },
-    {'1': 'remark', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'remark'},
-    {'1': 'moment', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'moment'},
+    {
+      '1': 'remark',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'remark',
+      '17': true
+    },
+    {
+      '1': 'moment',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'moment',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_remark'},
+    {'1': '_moment'},
+  ],
 };
 
 /// Descriptor for `RelationInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List relationInfoDescriptor = $convert.base64Decode(
-    'CgxSZWxhdGlvbkluZm8SJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIcCg'
-    'ZyZW1hcmsYAiABKAlCBJC1GANSBnJlbWFyaxIcCgZtb21lbnQYAyABKAlCBJC1GAJSBm1vbWVu'
-    'dDoEmLUYAw==');
+    'CgxSZWxhdGlvbkluZm8SJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIhCg'
+    'ZyZW1hcmsYAiABKAlCBJC1GANIAFIGcmVtYXJriAEBEiEKBm1vbWVudBgDIAEoCUIEkLUYAkgB'
+    'UgZtb21lbnSIAQE6BJi1GANCCQoHX3JlbWFya0IJCgdfbW9tZW50');
 
 @$core.Deprecated('Use listRelationsRespDescriptor instead')
 const ListRelationsResp$json = {
@@ -215,13 +289,17 @@ const AddFriendReq$json = {
   '1': 'AddFriendReq',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
+    {'1': 'type', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'type', '17': true},
+  ],
+  '8': [
+    {'1': '_type'},
   ],
 };
 
 /// Descriptor for `AddFriendReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List addFriendReqDescriptor = $convert.base64Decode(
-    'CgxBZGRGcmllbmRSZXESEAoDZGlkGAEgASgJUgNkaWQSEgoEdHlwZRgCIAEoCVIEdHlwZQ==');
+    'CgxBZGRGcmllbmRSZXESEAoDZGlkGAEgASgJUgNkaWQSFwoEdHlwZRgCIAEoCUgAUgR0eXBliA'
+    'EBQgcKBV90eXBl');
 
 @$core.Deprecated('Use addFriendRespDescriptor instead')
 const AddFriendResp$json = {
@@ -234,16 +312,21 @@ const AddFriendResp$json = {
       '5': 14,
       '6': '.hi.club.FriendRequestStatus',
       '8': {},
-      '10': 'status'
+      '9': 0,
+      '10': 'status',
+      '17': true
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_status'},
+  ],
 };
 
 /// Descriptor for `AddFriendResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List addFriendRespDescriptor = $convert.base64Decode(
-    'Cg1BZGRGcmllbmRSZXNwEjoKBnN0YXR1cxgBIAEoDjIcLmhpLmNsdWIuRnJpZW5kUmVxdWVzdF'
-    'N0YXR1c0IEkLUYAlIGc3RhdHVzOgSYtRgC');
+    'Cg1BZGRGcmllbmRSZXNwEj8KBnN0YXR1cxgBIAEoDjIcLmhpLmNsdWIuRnJpZW5kUmVxdWVzdF'
+    'N0YXR1c0IEkLUYAkgAUgZzdGF0dXOIAQE6BJi1GAJCCQoHX3N0YXR1cw==');
 
 @$core.Deprecated('Use deleteFriendReqDescriptor instead')
 const DeleteFriendReq$json = {
@@ -295,50 +378,78 @@ final $typed_data.Uint8List getUserReqDescriptor =
 const UnprocessedSysMsgCountResp$json = {
   '1': 'UnprocessedSysMsgCountResp',
   '2': [
-    {'1': 'count', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'count'},
+    {
+      '1': 'count',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'count',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_count'},
+  ],
 };
 
 /// Descriptor for `UnprocessedSysMsgCountResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List unprocessedSysMsgCountRespDescriptor =
     $convert.base64Decode(
-        'ChpVbnByb2Nlc3NlZFN5c01zZ0NvdW50UmVzcBIaCgVjb3VudBgBIAEoBUIEkLUYA1IFY291bn'
-        'Q6BJi1GAM=');
+        'ChpVbnByb2Nlc3NlZFN5c01zZ0NvdW50UmVzcBIfCgVjb3VudBgBIAEoBUIEkLUYA0gAUgVjb3'
+        'VudIgBAToEmLUYA0IICgZfY291bnQ=');
 
 @$core.Deprecated('Use updateUserReqDescriptor instead')
 const UpdateUserReq$json = {
   '1': 'UpdateUserReq',
   '2': [
-    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'avatar', '3': 4, '4': 1, '5': 9, '10': 'avatar'},
-    {'1': 'verify_policy', '3': 2, '4': 1, '5': 9, '10': 'verifyPolicy'},
-    {'1': 'moment', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'moment', '17': true},
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
+    {'1': 'avatar', '3': 4, '4': 1, '5': 9, '9': 1, '10': 'avatar', '17': true},
+    {
+      '1': 'verify_policy',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'verifyPolicy',
+      '17': true
+    },
+    {'1': 'moment', '3': 3, '4': 1, '5': 9, '9': 3, '10': 'moment', '17': true},
   ],
   '8': [
+    {'1': '_name'},
+    {'1': '_avatar'},
+    {'1': '_verify_policy'},
     {'1': '_moment'},
   ],
 };
 
 /// Descriptor for `UpdateUserReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateUserReqDescriptor = $convert.base64Decode(
-    'Cg1VcGRhdGVVc2VyUmVxEhIKBG5hbWUYASABKAlSBG5hbWUSFgoGYXZhdGFyGAQgASgJUgZhdm'
-    'F0YXISIwoNdmVyaWZ5X3BvbGljeRgCIAEoCVIMdmVyaWZ5UG9saWN5EhsKBm1vbWVudBgDIAEo'
-    'CUgAUgZtb21lbnSIAQFCCQoHX21vbWVudA==');
+    'Cg1VcGRhdGVVc2VyUmVxEhcKBG5hbWUYASABKAlIAFIEbmFtZYgBARIbCgZhdmF0YXIYBCABKA'
+    'lIAVIGYXZhdGFyiAEBEigKDXZlcmlmeV9wb2xpY3kYAiABKAlIAlIMdmVyaWZ5UG9saWN5iAEB'
+    'EhsKBm1vbWVudBgDIAEoCUgDUgZtb21lbnSIAQFCBwoFX25hbWVCCQoHX2F2YXRhckIQCg5fdm'
+    'VyaWZ5X3BvbGljeUIJCgdfbW9tZW50');
 
 @$core.Deprecated('Use setRemarkReqDescriptor instead')
 const SetRemarkReq$json = {
   '1': 'SetRemarkReq',
   '2': [
-    {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
-    {'1': 'remark', '3': 2, '4': 1, '5': 9, '10': 'remark'},
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'user', '17': true},
+    {'1': 'remark', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'remark', '17': true},
+  ],
+  '8': [
+    {'1': '_user'},
+    {'1': '_remark'},
   ],
 };
 
 /// Descriptor for `SetRemarkReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setRemarkReqDescriptor = $convert.base64Decode(
-    'CgxTZXRSZW1hcmtSZXESEgoEdXNlchgBIAEoCVIEdXNlchIWCgZyZW1hcmsYAiABKAlSBnJlbW'
-    'Fyaw==');
+    'CgxTZXRSZW1hcmtSZXESFwoEdXNlchgBIAEoCUgAUgR1c2VyiAEBEhsKBnJlbWFyaxgCIAEoCU'
+    'gBUgZyZW1hcmuIAQFCBwoFX3VzZXJCCQoHX3JlbWFyaw==');
 
 @$core.Deprecated('Use listOnlineUsersReqDescriptor instead')
 const ListOnlineUsersReq$json = {

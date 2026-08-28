@@ -19,12 +19,16 @@ import 'dart:typed_data' as $typed_data;
 const EditProfileReq$json = {
   '1': 'EditProfileReq',
   '2': [
-    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'avatar', '3': 2, '4': 1, '5': 9, '10': 'avatar'},
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
+    {'1': 'avatar', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'avatar', '17': true},
+  ],
+  '8': [
+    {'1': '_name'},
+    {'1': '_avatar'},
   ],
 };
 
 /// Descriptor for `EditProfileReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List editProfileReqDescriptor = $convert.base64Decode(
-    'Cg5FZGl0UHJvZmlsZVJlcRISCgRuYW1lGAEgASgJUgRuYW1lEhYKBmF2YXRhchgCIAEoCVIGYX'
-    'ZhdGFy');
+    'Cg5FZGl0UHJvZmlsZVJlcRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESGwoGYXZhdGFyGAIgAS'
+    'gJSAFSBmF2YXRhcogBAUIHCgVfbmFtZUIJCgdfYXZhdGFy');

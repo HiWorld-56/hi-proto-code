@@ -77,8 +77,8 @@ func (MerchantPermission) EnumDescriptor() ([]byte, []int) {
 
 type InviteCodeCreateResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	IsActive      bool                   `protobuf:"varint,2,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	IsActive      *bool                  `protobuf:"varint,2,opt,name=is_active,json=isActive,proto3,oneof" json:"is_active,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -114,23 +114,23 @@ func (*InviteCodeCreateResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *InviteCodeCreateResp) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 func (x *InviteCodeCreateResp) GetIsActive() bool {
-	if x != nil {
-		return x.IsActive
+	if x != nil && x.IsActive != nil {
+		return *x.IsActive
 	}
 	return false
 }
 
 type InviteCodeEditReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	Note          string                 `protobuf:"bytes,2,opt,name=note,proto3" json:"note,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	Note          *string                `protobuf:"bytes,2,opt,name=note,proto3,oneof" json:"note,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -166,22 +166,22 @@ func (*InviteCodeEditReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *InviteCodeEditReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 func (x *InviteCodeEditReq) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
 
 type InviteCodeListResp struct {
 	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Total         int32                      `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                     `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Infos         []*InviteCodeListResp_Unit `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -218,8 +218,8 @@ func (*InviteCodeListResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *InviteCodeListResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -233,7 +233,7 @@ func (x *InviteCodeListResp) GetInfos() []*InviteCodeListResp_Unit {
 
 type InviteCodeDeleteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -269,16 +269,16 @@ func (*InviteCodeDeleteReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *InviteCodeDeleteReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 type InviteCodeVerifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Code          *string                `protobuf:"bytes,2,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Did           string                 `protobuf:"bytes,3,opt,name=did,proto3" json:"did,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -315,15 +315,15 @@ func (*InviteCodeVerifyReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *InviteCodeVerifyReq) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *InviteCodeVerifyReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -337,7 +337,7 @@ func (x *InviteCodeVerifyReq) GetDid() string {
 
 type MerchantManageListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -374,8 +374,8 @@ func (*MerchantManageListReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantManageListReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -389,7 +389,7 @@ func (x *MerchantManageListReq) GetPagination() *hi.Pagination {
 
 type MerchantManageListResp struct {
 	state         protoimpl.MessageState         `protogen:"open.v1"`
-	Total         int32                          `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                         `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*MerchantManageListResp_Unit `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -426,8 +426,8 @@ func (*MerchantManageListResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantManageListResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -442,7 +442,7 @@ func (x *MerchantManageListResp) GetList() []*MerchantManageListResp_Unit {
 type MerchantManageEditReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Comment       string                 `protobuf:"bytes,2,opt,name=comment,proto3" json:"comment,omitempty"`
+	Comment       *string                `protobuf:"bytes,2,opt,name=comment,proto3,oneof" json:"comment,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -485,8 +485,8 @@ func (x *MerchantManageEditReq) GetDid() string {
 }
 
 func (x *MerchantManageEditReq) GetComment() string {
-	if x != nil {
-		return x.Comment
+	if x != nil && x.Comment != nil {
+		return *x.Comment
 	}
 	return ""
 }
@@ -501,9 +501,9 @@ func (x *MerchantManageEditReq) GetComment() string {
 //	对应 topic 即可收到,不必各自维护一条到 hidid 的登录态)。
 type MerchantSetPermissionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                                   // 目标商户
-	Perm          MerchantPermission     `protobuf:"varint,2,opt,name=perm,proto3,enum=hi.did.MerchantPermission" json:"perm,omitempty"` // 要改的权限位
-	Granted       bool                   `protobuf:"varint,3,opt,name=granted,proto3" json:"granted,omitempty"`                          // true=授予,false=撤销
+	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                                         // 目标商户
+	Perm          *MerchantPermission    `protobuf:"varint,2,opt,name=perm,proto3,enum=hi.did.MerchantPermission,oneof" json:"perm,omitempty"` // 要改的权限位
+	Granted       *bool                  `protobuf:"varint,3,opt,name=granted,proto3,oneof" json:"granted,omitempty"`                          // true=授予,false=撤销
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -546,15 +546,15 @@ func (x *MerchantSetPermissionReq) GetDid() string {
 }
 
 func (x *MerchantSetPermissionReq) GetPerm() MerchantPermission {
-	if x != nil {
-		return x.Perm
+	if x != nil && x.Perm != nil {
+		return *x.Perm
 	}
 	return MerchantPermission_MERCHANT_PERM_UNSPECIFIED
 }
 
 func (x *MerchantSetPermissionReq) GetGranted() bool {
-	if x != nil {
-		return x.Granted
+	if x != nil && x.Granted != nil {
+		return *x.Granted
 	}
 	return false
 }
@@ -567,7 +567,7 @@ func (x *MerchantSetPermissionReq) GetGranted() bool {
 // ═══════════════════════════════════════════════════════════════════════════
 type BroadcastAppUpdateReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           string                 `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"` // 目标 app:hidid/hiclub/hinj;空=all。进 Notice.ex_type,客户端按此过滤。
+	App           *string                `protobuf:"bytes,1,opt,name=app,proto3,oneof" json:"app,omitempty"` // 目标 app:hidid/hiclub/hinj;不传=all。进 Notice.ex_type,客户端按此过滤。
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -603,8 +603,8 @@ func (*BroadcastAppUpdateReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *BroadcastAppUpdateReq) GetApp() string {
-	if x != nil {
-		return x.App
+	if x != nil && x.App != nil {
+		return *x.App
 	}
 	return ""
 }
@@ -626,7 +626,7 @@ func (x *BroadcastAppUpdateReq) GetApp() string {
 // 这也是这里只放 uuid 的另一半理由:uuid 就是过滤器本身。
 type BroadcastPluginUpdateReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PluginUuid    string                 `protobuf:"bytes,1,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"` // 哪个插件的壳;空=让大家把自己的插件全都核对一遍
+	PluginUuid    *string                `protobuf:"bytes,1,opt,name=plugin_uuid,json=pluginUuid,proto3,oneof" json:"plugin_uuid,omitempty"` // 哪个插件的壳;不传=让大家把自己的插件全都核对一遍
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -662,18 +662,18 @@ func (*BroadcastPluginUpdateReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *BroadcastPluginUpdateReq) GetPluginUuid() string {
-	if x != nil {
-		return x.PluginUuid
+	if x != nil && x.PluginUuid != nil {
+		return *x.PluginUuid
 	}
 	return ""
 }
 
 type InviteCodeListResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	IsActive      bool                   `protobuf:"varint,2,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	IsActive      *bool                  `protobuf:"varint,2,opt,name=is_active,json=isActive,proto3,oneof" json:"is_active,omitempty"`
+	Note          *string                `protobuf:"bytes,3,opt,name=note,proto3,oneof" json:"note,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -709,29 +709,29 @@ func (*InviteCodeListResp_Unit) Descriptor() ([]byte, []int) {
 }
 
 func (x *InviteCodeListResp_Unit) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 func (x *InviteCodeListResp_Unit) GetIsActive() bool {
-	if x != nil {
-		return x.IsActive
+	if x != nil && x.IsActive != nil {
+		return *x.IsActive
 	}
 	return false
 }
 
 func (x *InviteCodeListResp_Unit) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
 
 func (x *InviteCodeListResp_Unit) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
@@ -739,7 +739,7 @@ func (x *InviteCodeListResp_Unit) GetCreatedAt() int64 {
 type MerchantManageListResp_Unit struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	Base    *MerchantInfo          `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Comment string                 `protobuf:"bytes,2,opt,name=comment,proto3" json:"comment,omitempty"`
+	Comment *string                `protobuf:"bytes,2,opt,name=comment,proto3,oneof" json:"comment,omitempty"`
 	// 该商户持有的权限位(仅超管可见)。空=普通商户,什么附加能力都没有。
 	Permissions   []MerchantPermission `protobuf:"varint,3,rep,packed,name=permissions,proto3,enum=hi.did.MerchantPermission" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -784,8 +784,8 @@ func (x *MerchantManageListResp_Unit) GetBase() *MerchantInfo {
 }
 
 func (x *MerchantManageListResp_Unit) GetComment() string {
-	if x != nil {
-		return x.Comment
+	if x != nil && x.Comment != nil {
+		return *x.Comment
 	}
 	return ""
 }
@@ -801,52 +801,77 @@ var File_hi_did_admin_proto protoreflect.FileDescriptor
 
 const file_hi_did_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/did/admin.proto\x12\x06hi.did\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"Y\n" +
-	"\x14InviteCodeCreateResp\x12\x18\n" +
-	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04code\x12!\n" +
-	"\tis_active\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03R\bisActive:\x04\x98\xb5\x18\x03\";\n" +
-	"\x11InviteCodeEditReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x12\n" +
-	"\x04note\x18\x02 \x01(\tR\x04note\"\xfe\x01\n" +
-	"\x12InviteCodeListResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12;\n" +
-	"\x05infos\x18\x02 \x03(\v2\x1f.hi.did.InviteCodeListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1a\x88\x01\n" +
-	"\x04Unit\x12\x18\n" +
-	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04code\x12!\n" +
-	"\tis_active\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03R\bisActive\x12\x18\n" +
-	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12#\n" +
+	"\x12hi/did/admin.proto\x12\x06hi.did\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"z\n" +
+	"\x14InviteCodeCreateResp\x12\x1d\n" +
+	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12&\n" +
+	"\tis_active\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03H\x01R\bisActive\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_codeB\f\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\")\n" +
-	"\x13InviteCodeDeleteReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"K\n" +
-	"\x13InviteCodeVerifyReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\x12\x10\n" +
-	"\x03did\x18\x03 \x01(\tR\x03did\"[\n" +
-	"\x15MerchantManageListReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12.\n" +
+	"_is_active\"W\n" +
+	"\x11InviteCodeEditReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01\x12\x17\n" +
+	"\x04note\x18\x02 \x01(\tH\x01R\x04note\x88\x01\x01B\a\n" +
+	"\x05_codeB\a\n" +
+	"\x05_note\"\xd0\x02\n" +
+	"\x12InviteCodeListResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12;\n" +
+	"\x05infos\x18\x02 \x03(\v2\x1f.hi.did.InviteCodeListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1a\xcb\x01\n" +
+	"\x04Unit\x12\x1d\n" +
+	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12&\n" +
+	"\tis_active\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03H\x01R\bisActive\x88\x01\x01\x12\x1d\n" +
+	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04note\x88\x01\x01\x12(\n" +
+	"\n" +
+	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_codeB\f\n" +
+	"\n" +
+	"_is_activeB\a\n" +
+	"\x05_noteB\r\n" +
+	"\v_created_at:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"7\n" +
+	"\x13InviteCodeDeleteReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01B\a\n" +
+	"\x05_code\"e\n" +
+	"\x13InviteCodeVerifyReq\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\x02 \x01(\tH\x01R\x04code\x88\x01\x01\x12\x10\n" +
+	"\x03did\x18\x03 \x01(\tR\x03didB\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_code\"i\n" +
+	"\x15MerchantManageListReq\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\x9c\x02\n" +
-	"\x16MerchantManageListResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12=\n" +
-	"\x04list\x18\x02 \x03(\v2#.hi.did.MerchantManageListResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a\xa0\x01\n" +
+	"paginationB\a\n" +
+	"\x05_name\"\xbc\x02\n" +
+	"\x16MerchantManageListResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n" +
+	"\x04list\x18\x02 \x03(\v2#.hi.did.MerchantManageListResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a\xb1\x01\n" +
 	"\x04Unit\x12.\n" +
-	"\x04base\x18\x01 \x01(\v2\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04base\x12\x1e\n" +
-	"\acomment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\acomment\x12B\n" +
-	"\vpermissions\x18\x03 \x03(\x0e2\x1a.hi.did.MerchantPermissionB\x04\x90\xb5\x18\x03R\vpermissions:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"C\n" +
+	"\x04base\x18\x01 \x01(\v2\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04base\x12#\n" +
+	"\acomment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\acomment\x88\x01\x01\x12B\n" +
+	"\vpermissions\x18\x03 \x03(\x0e2\x1a.hi.did.MerchantPermissionB\x04\x90\xb5\x18\x03R\vpermissions:\x04\x98\xb5\x18\x03B\n" +
+	"\n" +
+	"\b_comment:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"T\n" +
 	"\x15MerchantManageEditReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x18\n" +
-	"\acomment\x18\x02 \x01(\tR\acomment\"\x84\x01\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x1d\n" +
+	"\acomment\x18\x02 \x01(\tH\x00R\acomment\x88\x01\x01B\n" +
+	"\n" +
+	"\b_comment\"\xa3\x01\n" +
 	"\x18MerchantSetPermissionReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12.\n" +
-	"\x04perm\x18\x02 \x01(\x0e2\x1a.hi.did.MerchantPermissionR\x04perm\x12\x18\n" +
-	"\agranted\x18\x03 \x01(\bR\agranted\")\n" +
-	"\x15BroadcastAppUpdateReq\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\";\n" +
-	"\x18BroadcastPluginUpdateReq\x12\x1f\n" +
-	"\vplugin_uuid\x18\x01 \x01(\tR\n" +
-	"pluginUuid*K\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x123\n" +
+	"\x04perm\x18\x02 \x01(\x0e2\x1a.hi.did.MerchantPermissionH\x00R\x04perm\x88\x01\x01\x12\x1d\n" +
+	"\agranted\x18\x03 \x01(\bH\x01R\agranted\x88\x01\x01B\a\n" +
+	"\x05_permB\n" +
+	"\n" +
+	"\b_granted\"6\n" +
+	"\x15BroadcastAppUpdateReq\x12\x15\n" +
+	"\x03app\x18\x01 \x01(\tH\x00R\x03app\x88\x01\x01B\x06\n" +
+	"\x04_app\"P\n" +
+	"\x18BroadcastPluginUpdateReq\x12$\n" +
+	"\vplugin_uuid\x18\x01 \x01(\tH\x00R\n" +
+	"pluginUuid\x88\x01\x01B\x0e\n" +
+	"\f_plugin_uuid*K\n" +
 	"\x12MerchantPermission\x12\x1d\n" +
 	"\x19MERCHANT_PERM_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12MERCHANT_PERM_MQTT\x10\x012\x96\x02\n" +
@@ -948,6 +973,19 @@ func file_hi_did_admin_proto_init() {
 		return
 	}
 	file_hi_did_merchant_proto_init()
+	file_hi_did_admin_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_did_admin_proto_msgTypes[12].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

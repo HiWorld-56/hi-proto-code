@@ -43,8 +43,8 @@ final $typed_data.Uint8List packetDescriptor = $convert.base64Decode(
 const Notice$json = {
   '1': 'Notice',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
+    {'1': 'type', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'type', '17': true},
     {'1': 'from', '3': 3, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'from'},
     {
       '1': 'extra',
@@ -54,12 +54,26 @@ const Notice$json = {
       '6': '.google.protobuf.Any',
       '10': 'extra'
     },
-    {'1': 'ex_type', '3': 5, '4': 1, '5': 9, '10': 'exType'},
+    {
+      '1': 'ex_type',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'exType',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_type'},
+    {'1': '_ex_type'},
   ],
 };
 
 /// Descriptor for `Notice`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List noticeDescriptor = $convert.base64Decode(
-    'CgZOb3RpY2USEgoEdXVpZBgBIAEoCVIEdXVpZBISCgR0eXBlGAIgASgJUgR0eXBlEh4KBGZyb2'
-    '0YAyABKAsyCi5oaS5FbnRpdHlSBGZyb20SKgoFZXh0cmEYBCABKAsyFC5nb29nbGUucHJvdG9i'
-    'dWYuQW55UgVleHRyYRIXCgdleF90eXBlGAUgASgJUgZleFR5cGU=');
+    'CgZOb3RpY2USFwoEdXVpZBgBIAEoCUgAUgR1dWlkiAEBEhcKBHR5cGUYAiABKAlIAVIEdHlwZY'
+    'gBARIeCgRmcm9tGAMgASgLMgouaGkuRW50aXR5UgRmcm9tEioKBWV4dHJhGAQgASgLMhQuZ29v'
+    'Z2xlLnByb3RvYnVmLkFueVIFZXh0cmESHAoHZXhfdHlwZRgFIAEoCUgCUgZleFR5cGWIAQFCBw'
+    'oFX3V1aWRCBwoFX3R5cGVCCgoIX2V4X3R5cGU=');

@@ -21,14 +21,14 @@ pub struct PluginAnnex {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReq {
     /// = 激活版 b.url
-    #[prost(string, tag = "1")]
-    pub code_archive_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code_archive_url: ::core::option::Option<::prost::alloc::string::String>,
     /// function-call 的 arguments(JSON 对象),按 ** 展开成关键字实参
-    #[prost(string, tag = "2")]
-    pub code_params: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub code_params: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳 uuid
-    #[prost(string, tag = "3")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "4")]
     pub envs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// → 字典全局变量 plugin_annex
@@ -43,8 +43,8 @@ pub struct RunReq {
     /// ⚠️ **不要把带前缀的名字传进来。** 喂给模型的工具名是 `<壳前缀>_<原名>`
     /// (前缀保证不同插件包的同名方法不撞,见 hi/ai/plugin.proto 的 PluginVersion.description),
     /// 但那是 hiai↔模型之间的事 —— 前缀在 hiai 侧切掉,包里和这里只认原始名。
-    #[prost(string, tag = "6")]
-    pub function: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub function: ::core::option::Option<::prost::alloc::string::String>,
     /// ── 本轮的两个身份 → 注入成脚本里的 plugin_builtin.asker / .master ───────────
     ///
     /// 与 `annex` 同为**注入面**(模型看不见、用户改不了),但**来源完全不同**:
@@ -53,12 +53,12 @@ pub struct RunReq {
     /// **内置键最后写、无条件覆盖** —— 否则用户在版本扩展数据里填一个同名键就能冒名,
     /// 而且静默。
     ///
-    /// 这句话是谁说的;**空 = 匿名**(如现场语音)。消息事实,不是权限凭据
-    #[prost(string, tag = "7")]
-    pub asker: ::prost::alloc::string::String,
+    /// 这句话是谁说的;**不传 = 匿名**(如现场语音)。消息事实,不是权限凭据
+    #[prost(string, optional, tag = "7")]
+    pub asker: ::core::option::Option<::prost::alloc::string::String>,
     /// 这台机器人的主人,**服务端现取的权威值**;判权限与动钱都用它
-    #[prost(string, tag = "8")]
-    pub master: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "8")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunResp {
@@ -100,49 +100,50 @@ pub struct CleanupReq {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BuildReq {
     /// rust 源码包 zip(= 这一版的 b.url)
-    #[prost(string, tag = "1")]
-    pub code_archive_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code_archive_url: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳 uuid(产物命名与日志用)
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 版本号
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
     /// 目标架构:`aarch64` / `x86_64`(与 rust 的 `std::env::consts::ARCH` 同名,
     /// 机器人上报的就是那个常量 —— 两边用同一套词,省掉一层映射)。
     ///
-    /// ⚠️ **空 = aarch64**。老调用方(还没跟上的 hi-ai)发不带这个字段的请求,
+    /// ⚠️ **不传 = aarch64**。老调用方(还没跟上的 hi-ai)发不带这个字段的请求,
     /// 编出来的仍是硬件机器人那一份 —— 而不是编出个谁也装不上的东西。
-    #[prost(string, tag = "4")]
-    pub arch: ::prost::alloc::string::String,
+    /// ⛔ 空串不是合法值:要么不传,要么给真架构名。
+    #[prost(string, optional, tag = "4")]
+    pub arch: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BuildResp {
     /// 编出来了没有。**false 时 rpc 本身仍是成功的**,理由见上。
-    #[prost(bool, tag = "1")]
-    pub ok: bool,
+    #[prost(bool, optional, tag = "1")]
+    pub ok: ::core::option::Option<bool>,
     /// 编好的 .so(hiai 私有桶)
-    #[prost(string, tag = "2")]
-    pub artifact_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub artifact_url: ::core::option::Option<::prost::alloc::string::String>,
     /// 产物摘要,机器人下完照此核对
-    #[prost(string, tag = "3")]
-    pub sha256: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
     /// 从**编出来的那个 `.so` 里真读出来的** ABI 版本(qemu 跑 aarch64 verifier 得到),
     /// 不是从源码或 Cargo.toml 猜的。x86 上 dlopen 不了 aarch64 的 .so,
     /// 只查 ELF machine + 导出符号是查不出这个值的。
-    #[prost(uint32, tag = "4")]
-    pub abi_version: u32,
+    #[prost(uint32, optional, tag = "4")]
+    pub abi_version: ::core::option::Option<u32>,
     /// 同样是从 .so 里真读出来的 manifest(OpenAI tools 数组,**原始名、不带壳前缀**)。
     /// hi-ai 拿它跟包里的 description.json 比对 —— 两者不一致说明作者改了 json 却没改代码
     /// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
-    #[prost(string, tag = "5")]
-    pub manifest: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "5")]
+    pub manifest: ::core::option::Option<::prost::alloc::string::String>,
     /// 失败原因(给发版的人看的一句话)
-    #[prost(string, tag = "6")]
-    pub error: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "6")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
     /// 编译日志尾部(失败时才有意义)
-    #[prost(string, tag = "7")]
-    pub log: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "7")]
+    pub log: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod runner_client {

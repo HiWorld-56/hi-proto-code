@@ -28,12 +28,12 @@ type Order struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 订单号。**由三方定义,hidid 不解释它** —— GenerateReq 出的 req_id 是一种,
 	// 三方自己的业务单号(如插件市场的 `MKT-xxx`)也是一种,原样转给商户即可。
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// **商户DID**,不是付款人 —— 付款人是 SignedData 的签名者。
 	// hidid 按它查出商户注册的 endpoint,回调 `PayCallback.Pay`。
 	// 这正是"付款方不必认识三方接口"的支点:银行 app 不该知道美团的 API 长什么样。
-	Did           string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
-	Hash          string `protobuf:"bytes,3,opt,name=hash,proto3" json:"hash,omitempty"` // 链上交易 hash
+	Did           string  `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	Hash          *string `protobuf:"bytes,3,opt,name=hash,proto3,oneof" json:"hash,omitempty"` // 链上交易 hash
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -69,8 +69,8 @@ func (*Order) Descriptor() ([]byte, []int) {
 }
 
 func (x *Order) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -83,8 +83,8 @@ func (x *Order) GetDid() string {
 }
 
 func (x *Order) GetHash() string {
-	if x != nil {
-		return x.Hash
+	if x != nil && x.Hash != nil {
+		return *x.Hash
 	}
 	return ""
 }
@@ -108,17 +108,17 @@ func (x *Order) GetHash() string {
 type PayRequestSpec struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 钱打到**这个 did 的地址**上 —— 结算实体(三方已解析好,hidid 不再转换)。
-	PayeeAccount string `protobuf:"bytes,1,opt,name=payee_account,json=payeeAccount,proto3" json:"payee_account,omitempty"`
+	PayeeAccount *string `protobuf:"bytes,1,opt,name=payee_account,json=payeeAccount,proto3,oneof" json:"payee_account,omitempty"`
 	// 显示用:**谁在收款**。跳蚤市场下付款方是把钱给一个陌生主体,看不清收款人不该让他确认。
-	PayeeOwner string `protobuf:"bytes,2,opt,name=payee_owner,json=payeeOwner,proto3" json:"payee_owner,omitempty"`
-	Coin       string `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
-	Amount     string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读,如 "9.9"
+	PayeeOwner *string `protobuf:"bytes,2,opt,name=payee_owner,json=payeeOwner,proto3,oneof" json:"payee_owner,omitempty"`
+	Coin       *string `protobuf:"bytes,3,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Amount     *string `protobuf:"bytes,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 人类可读,如 "9.9"
 	// 三方业务单号。**付款方回执时原样填进 `Order.id`**,hidid 不解释它。
-	OrderId string `protobuf:"bytes,5,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId *string `protobuf:"bytes,5,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`
 	// 把付款结果报给哪个商户(回执路由)。登记时由 hidid 按调用者身份填,**不收入参** ——
 	// 收了就等于让人把别人的付款结果引到自己这儿。
-	Merchant      string `protobuf:"bytes,6,opt,name=merchant,proto3" json:"merchant,omitempty"`
-	ExpireAt      int64  `protobuf:"varint,7,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"` // 秒;过期后 GetRequest 查不到
+	Merchant      *string `protobuf:"bytes,6,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"`
+	ExpireAt      *int64  `protobuf:"varint,7,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"` // 秒;过期后 GetRequest 查不到
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -154,50 +154,50 @@ func (*PayRequestSpec) Descriptor() ([]byte, []int) {
 }
 
 func (x *PayRequestSpec) GetPayeeAccount() string {
-	if x != nil {
-		return x.PayeeAccount
+	if x != nil && x.PayeeAccount != nil {
+		return *x.PayeeAccount
 	}
 	return ""
 }
 
 func (x *PayRequestSpec) GetPayeeOwner() string {
-	if x != nil {
-		return x.PayeeOwner
+	if x != nil && x.PayeeOwner != nil {
+		return *x.PayeeOwner
 	}
 	return ""
 }
 
 func (x *PayRequestSpec) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *PayRequestSpec) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *PayRequestSpec) GetOrderId() string {
-	if x != nil {
-		return x.OrderId
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
 	}
 	return ""
 }
 
 func (x *PayRequestSpec) GetMerchant() string {
-	if x != nil {
-		return x.Merchant
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
 	}
 	return ""
 }
 
 func (x *PayRequestSpec) GetExpireAt() int64 {
-	if x != nil {
-		return x.ExpireAt
+	if x != nil && x.ExpireAt != nil {
+		return *x.ExpireAt
 	}
 	return 0
 }
@@ -214,7 +214,7 @@ func (x *PayRequestSpec) GetExpireAt() int64 {
 // 载荷(SignedData.Data,JSON):`{"req_id":"M…"}`。
 type PayRequestQuery struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReqId         string                 `protobuf:"bytes,1,opt,name=req_id,json=reqId,proto3" json:"req_id,omitempty"`
+	ReqId         *string                `protobuf:"bytes,1,opt,name=req_id,json=reqId,proto3,oneof" json:"req_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -250,8 +250,8 @@ func (*PayRequestQuery) Descriptor() ([]byte, []int) {
 }
 
 func (x *PayRequestQuery) GetReqId() string {
-	if x != nil {
-		return x.ReqId
+	if x != nil && x.ReqId != nil {
+		return *x.ReqId
 	}
 	return ""
 }
@@ -260,22 +260,33 @@ var File_hi_did_payment_proto protoreflect.FileDescriptor
 
 const file_hi_did_payment_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/did/payment.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"=\n" +
-	"\x05Order\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
-	"\x03did\x18\x02 \x01(\tR\x03did\x12\x12\n" +
-	"\x04hash\x18\x03 \x01(\tR\x04hash\"\x86\x02\n" +
-	"\x0ePayRequestSpec\x12)\n" +
-	"\rpayee_account\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\fpayeeAccount\x12%\n" +
-	"\vpayee_owner\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
-	"payeeOwner\x12\x18\n" +
-	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12\x1c\n" +
-	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x1f\n" +
-	"\border_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12 \n" +
-	"\bmerchant\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\bmerchant\x12!\n" +
-	"\texpire_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03R\bexpireAt:\x04\x98\xb5\x18\x03\"(\n" +
-	"\x0fPayRequestQuery\x12\x15\n" +
-	"\x06req_id\x18\x01 \x01(\tR\x05reqId2s\n" +
+	"\x14hi/did/payment.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"W\n" +
+	"\x05Order\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x10\n" +
+	"\x03did\x18\x02 \x01(\tR\x03did\x12\x17\n" +
+	"\x04hash\x18\x03 \x01(\tH\x01R\x04hash\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_hash\"\x87\x03\n" +
+	"\x0ePayRequestSpec\x12.\n" +
+	"\rpayee_account\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\fpayeeAccount\x88\x01\x01\x12*\n" +
+	"\vpayee_owner\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\n" +
+	"payeeOwner\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04coin\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x06amount\x88\x01\x01\x12$\n" +
+	"\border_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\aorderId\x88\x01\x01\x12%\n" +
+	"\bmerchant\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\bmerchant\x88\x01\x01\x12&\n" +
+	"\texpire_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03H\x06R\bexpireAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x10\n" +
+	"\x0e_payee_accountB\x0e\n" +
+	"\f_payee_ownerB\a\n" +
+	"\x05_coinB\t\n" +
+	"\a_amountB\v\n" +
+	"\t_order_idB\v\n" +
+	"\t_merchantB\f\n" +
+	"\n" +
+	"_expire_at\"8\n" +
+	"\x0fPayRequestQuery\x12\x1a\n" +
+	"\x06req_id\x18\x01 \x01(\tH\x00R\x05reqId\x88\x01\x01B\t\n" +
+	"\a_req_id2s\n" +
 	"\x03Pay\x123\n" +
 	"\vGenerateReq\x12\x0e.hi.ClientInfo\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x127\n" +
 	"\x06Notify\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x052}\n" +
@@ -333,6 +344,9 @@ func file_hi_did_payment_proto_init() {
 	if File_hi_did_payment_proto != nil {
 		return
 	}
+	file_hi_did_payment_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_payment_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_payment_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

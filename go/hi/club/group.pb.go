@@ -29,8 +29,8 @@ const (
 type GroupBase struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Background    string                 `protobuf:"bytes,2,opt,name=background,proto3" json:"background,omitempty"`
-	Private       bool                   `protobuf:"varint,3,opt,name=private,proto3" json:"private,omitempty"` // true=私密群(只能被邀请加入);false=公开群
+	Background    *string                `protobuf:"bytes,2,opt,name=background,proto3,oneof" json:"background,omitempty"`
+	Private       *bool                  `protobuf:"varint,3,opt,name=private,proto3,oneof" json:"private,omitempty"` // true=私密群(只能被邀请加入);false=公开群
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,15 +73,15 @@ func (x *GroupBase) GetBase() *hi.Entity {
 }
 
 func (x *GroupBase) GetBackground() string {
-	if x != nil {
-		return x.Background
+	if x != nil && x.Background != nil {
+		return *x.Background
 	}
 	return ""
 }
 
 func (x *GroupBase) GetPrivate() bool {
-	if x != nil {
-		return x.Private
+	if x != nil && x.Private != nil {
+		return *x.Private
 	}
 	return false
 }
@@ -89,8 +89,8 @@ func (x *GroupBase) GetPrivate() bool {
 // 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
 type GroupMemberAttr struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          string                 `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`    // owner / admin / member
-	Muted         bool                   `protobuf:"varint,2,opt,name=muted,proto3" json:"muted,omitempty"` // 是否被禁言(群主/管理员设;去写留读)
+	Role          *string                `protobuf:"bytes,1,opt,name=role,proto3,oneof" json:"role,omitempty"`    // owner / admin / member
+	Muted         *bool                  `protobuf:"varint,2,opt,name=muted,proto3,oneof" json:"muted,omitempty"` // 是否被禁言(群主/管理员设;去写留读)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -126,15 +126,15 @@ func (*GroupMemberAttr) Descriptor() ([]byte, []int) {
 }
 
 func (x *GroupMemberAttr) GetRole() string {
-	if x != nil {
-		return x.Role
+	if x != nil && x.Role != nil {
+		return *x.Role
 	}
 	return ""
 }
 
 func (x *GroupMemberAttr) GetMuted() bool {
-	if x != nil {
-		return x.Muted
+	if x != nil && x.Muted != nil {
+		return *x.Muted
 	}
 	return false
 }
@@ -248,8 +248,8 @@ func (x *GroupInfo) GetList() []*GroupMember {
 type GroupMemberView struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *GroupBase             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Attr          *GroupMemberAttr       `protobuf:"bytes,2,opt,name=attr,proto3" json:"attr,omitempty"` // 我的 role/muted
-	Dnd           bool                   `protobuf:"varint,3,opt,name=dnd,proto3" json:"dnd,omitempty"`  // **仅本人可见**的免打扰(SELF,故 audience 必须是 SELF)
+	Attr          *GroupMemberAttr       `protobuf:"bytes,2,opt,name=attr,proto3" json:"attr,omitempty"`      // 我的 role/muted
+	Dnd           *bool                  `protobuf:"varint,3,opt,name=dnd,proto3,oneof" json:"dnd,omitempty"` // **仅本人可见**的免打扰(SELF,故 audience 必须是 SELF)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -299,15 +299,15 @@ func (x *GroupMemberView) GetAttr() *GroupMemberAttr {
 }
 
 func (x *GroupMemberView) GetDnd() bool {
-	if x != nil {
-		return x.Dnd
+	if x != nil && x.Dnd != nil {
+		return *x.Dnd
 	}
 	return false
 }
 
 type GetGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -343,8 +343,8 @@ func (*GetGroupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetGroupReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -352,7 +352,7 @@ func (x *GetGroupReq) GetCode() string {
 // 创建群聊
 type CreateGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -388,8 +388,8 @@ func (*CreateGroupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateGroupReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -442,8 +442,8 @@ func (x *CreateSingleReq) GetDid() string {
 // 组聊天消息列表参数
 type ListGroupMessagesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LastUuid      string                 `protobuf:"bytes,1,opt,name=last_uuid,json=lastUuid,proto3" json:"last_uuid,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"` // 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type
+	LastUuid      *string                `protobuf:"bytes,1,opt,name=last_uuid,json=lastUuid,proto3,oneof" json:"last_uuid,omitempty"`
+	Code          *string                `protobuf:"bytes,2,opt,name=code,proto3,oneof" json:"code,omitempty"` // 群/单聊 code;群类型由后端按 code 查 GroupModel.group_type
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -479,15 +479,15 @@ func (*ListGroupMessagesReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListGroupMessagesReq) GetLastUuid() string {
-	if x != nil {
-		return x.LastUuid
+	if x != nil && x.LastUuid != nil {
+		return *x.LastUuid
 	}
 	return ""
 }
 
 func (x *ListGroupMessagesReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -538,7 +538,7 @@ func (x *ListGroupMessagesResp) GetList() []*Packet {
 
 type ListGroupMembersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -575,8 +575,8 @@ func (*ListGroupMembersReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListGroupMembersReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -590,7 +590,7 @@ func (x *ListGroupMembersReq) GetPagination() *hi.Pagination {
 
 type GetGroupMemberTotalReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -626,15 +626,15 @@ func (*GetGroupMemberTotalReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetGroupMemberTotalReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 type GetGroupMemberTotalResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -670,15 +670,15 @@ func (*GetGroupMemberTotalResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetGroupMemberTotalResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
 
 type InviteGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Members       []string               `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -715,8 +715,8 @@ func (*InviteGroupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *InviteGroupReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -730,7 +730,7 @@ func (x *InviteGroupReq) GetMembers() []string {
 
 type JoinGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"` // 凭群 code 申请加入(仅公开群;私密群只能被邀请)
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"` // 凭群 code 申请加入(仅公开群;私密群只能被邀请)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -766,15 +766,15 @@ func (*JoinGroupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *JoinGroupReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 type QuitGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -810,15 +810,15 @@ func (*QuitGroupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *QuitGroupReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 type RemoveGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Members       []string               `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -855,8 +855,8 @@ func (*RemoveGroupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *RemoveGroupReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -870,9 +870,9 @@ func (x *RemoveGroupReq) GetMembers() []string {
 
 type SetRoleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Members       []string               `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
-	Role          string                 `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"` // admin=添加管理员 / member=取消管理员
+	Role          *string                `protobuf:"bytes,3,opt,name=role,proto3,oneof" json:"role,omitempty"` // admin=添加管理员 / member=取消管理员
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -908,8 +908,8 @@ func (*SetRoleReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetRoleReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -922,15 +922,15 @@ func (x *SetRoleReq) GetMembers() []string {
 }
 
 func (x *SetRoleReq) GetRole() string {
-	if x != nil {
-		return x.Role
+	if x != nil && x.Role != nil {
+		return *x.Role
 	}
 	return ""
 }
 
 type GetRoleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -966,15 +966,15 @@ func (*GetRoleReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetRoleReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 type GetRoleResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          string                 `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *string                `protobuf:"bytes,1,opt,name=role,proto3,oneof" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1010,8 +1010,8 @@ func (*GetRoleResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetRoleResp) GetRole() string {
-	if x != nil {
-		return x.Role
+	if x != nil && x.Role != nil {
+		return *x.Role
 	}
 	return ""
 }
@@ -1019,8 +1019,8 @@ func (x *GetRoleResp) GetRole() string {
 // 免打扰(调用者自己):新消息不震动手机。用户自设,非管理操作。
 type SetDndReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	Dnd           bool                   `protobuf:"varint,2,opt,name=dnd,proto3" json:"dnd,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	Dnd           *bool                  `protobuf:"varint,2,opt,name=dnd,proto3,oneof" json:"dnd,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1056,15 +1056,15 @@ func (*SetDndReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetDndReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
 
 func (x *SetDndReq) GetDnd() bool {
-	if x != nil {
-		return x.Dnd
+	if x != nil && x.Dnd != nil {
+		return *x.Dnd
 	}
 	return false
 }
@@ -1072,9 +1072,9 @@ func (x *SetDndReq) GetDnd() bool {
 // 禁言/解禁成员(群主/管理员):被禁言者去写权限、留读权限(后端移 group:wracl、加 group:racl)。
 type MuteMembersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Members       []string               `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
-	Muted         bool                   `protobuf:"varint,3,opt,name=muted,proto3" json:"muted,omitempty"` // true=禁言,false=解禁
+	Muted         *bool                  `protobuf:"varint,3,opt,name=muted,proto3,oneof" json:"muted,omitempty"` // true=禁言,false=解禁
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1110,8 +1110,8 @@ func (*MuteMembersReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MuteMembersReq) GetCode() string {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return ""
 }
@@ -1124,8 +1124,8 @@ func (x *MuteMembersReq) GetMembers() []string {
 }
 
 func (x *MuteMembersReq) GetMuted() bool {
-	if x != nil {
-		return x.Muted
+	if x != nil && x.Muted != nil {
+		return *x.Muted
 	}
 	return false
 }
@@ -1144,7 +1144,7 @@ func (x *MuteMembersReq) GetMuted() bool {
 //
 // 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
 // 里面的 Entity 带 type/update 等服务端产物。入参只放:定位用的群号 + 真正可改的字段。
-// **传了就是主动设置**:字段有值(optional 有 presence / name·avatar 非空)即视为"设成这个",
+// **传了就是主动设置**:字段有 presence 即视为"设成这个"(2026-08-28 起全字段 optional,
 // 服务端**不拿新值跟旧值比**,照写、推进 update 时间戳、照发通知。
 //
 // ⚠️ 别用值比对判断"改没改"。两个坑:
@@ -1156,9 +1156,9 @@ func (x *MuteMembersReq) GetMuted() bool {
 // 上游只负责"我这次确实设置了"这个事实。
 type UpdateGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Group         string                 `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"`                 // 群号(定位;权限由后端校验 owner/admin)
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                   // 群名(非空=设置)
-	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`               // 群头像 url(非空=设置)
+	Group         *string                `protobuf:"bytes,1,opt,name=group,proto3,oneof" json:"group,omitempty"`           // 群号(定位;权限由后端校验 owner/admin)
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`             // 群名;不传=不动,传了=设成这个(传空串=清空)
+	Avatar        *string                `protobuf:"bytes,3,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`         // 群头像 url;不传=不动,传了=设成这个(传空串=清空)
 	Background    *string                `protobuf:"bytes,4,opt,name=background,proto3,oneof" json:"background,omitempty"` // 群背景 url;**有 presence**:不传=不动,传空串=清空
 	Private       *bool                  `protobuf:"varint,5,opt,name=private,proto3,oneof" json:"private,omitempty"`      // true=私密群(只能被邀请);false=公开群。不传=不动
 	unknownFields protoimpl.UnknownFields
@@ -1196,22 +1196,22 @@ func (*UpdateGroupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateGroupReq) GetGroup() string {
-	if x != nil {
-		return x.Group
+	if x != nil && x.Group != nil {
+		return *x.Group
 	}
 	return ""
 }
 
 func (x *UpdateGroupReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *UpdateGroupReq) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
@@ -1234,83 +1234,112 @@ var File_hi_club_group_proto protoreflect.FileDescriptor
 
 const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"}\n" +
+	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xa2\x01\n" +
 	"\tGroupBase\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12$\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12)\n" +
 	"\n" +
-	"background\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\n" +
-	"background\x12\x1e\n" +
-	"\aprivate\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01R\aprivate:\x04\x98\xb5\x18\x01\"M\n" +
-	"\x0fGroupMemberAttr\x12\x18\n" +
-	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04role\x12\x1a\n" +
-	"\x05muted\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02R\x05muted:\x04\x98\xb5\x18\x02\"m\n" +
+	"background\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
+	"background\x88\x01\x01\x12#\n" +
+	"\aprivate\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01H\x01R\aprivate\x88\x01\x01:\x04\x98\xb5\x18\x01B\r\n" +
+	"\v_backgroundB\n" +
+	"\n" +
+	"\b_private\"j\n" +
+	"\x0fGroupMemberAttr\x12\x1d\n" +
+	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04role\x88\x01\x01\x12\x1f\n" +
+	"\x05muted\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02H\x01R\x05muted\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_roleB\b\n" +
+	"\x06_muted\"m\n" +
 	"\vGroupMember\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x122\n" +
 	"\x04attr\x18\x02 \x01(\v2\x18.hi.club.GroupMemberAttrB\x04\x90\xb5\x18\x02R\x04attr:\x04\x98\xb5\x18\x02\"o\n" +
 	"\tGroupInfo\x12,\n" +
 	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseB\x04\x90\xb5\x18\x01R\x04base\x12.\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.GroupMemberB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"\x91\x01\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.GroupMemberB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"\x9e\x01\n" +
 	"\x0fGroupMemberView\x12,\n" +
 	"\x04base\x18\x01 \x01(\v2\x12.hi.club.GroupBaseB\x04\x90\xb5\x18\x01R\x04base\x122\n" +
-	"\x04attr\x18\x02 \x01(\v2\x18.hi.club.GroupMemberAttrB\x04\x90\xb5\x18\x02R\x04attr\x12\x16\n" +
-	"\x03dnd\x18\x03 \x01(\bB\x04\x90\xb5\x18\x03R\x03dnd:\x04\x98\xb5\x18\x03\"!\n" +
-	"\vGetGroupReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"$\n" +
-	"\x0eCreateGroupReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"#\n" +
+	"\x04attr\x18\x02 \x01(\v2\x18.hi.club.GroupMemberAttrB\x04\x90\xb5\x18\x02R\x04attr\x12\x1b\n" +
+	"\x03dnd\x18\x03 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x03dnd\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
+	"\x04_dnd\"/\n" +
+	"\vGetGroupReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01B\a\n" +
+	"\x05_code\"2\n" +
+	"\x0eCreateGroupReq\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01B\a\n" +
+	"\x05_name\"#\n" +
 	"\x0fCreateSingleReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\"G\n" +
-	"\x14ListGroupMessagesReq\x12\x1b\n" +
-	"\tlast_uuid\x18\x01 \x01(\tR\blastUuid\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\"H\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\"h\n" +
+	"\x14ListGroupMessagesReq\x12 \n" +
+	"\tlast_uuid\x18\x01 \x01(\tH\x00R\blastUuid\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\x02 \x01(\tH\x01R\x04code\x88\x01\x01B\f\n" +
+	"\n" +
+	"_last_uuidB\a\n" +
+	"\x05_code\"H\n" +
 	"\x15ListGroupMessagesResp\x12)\n" +
-	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"Y\n" +
-	"\x13ListGroupMembersReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12.\n" +
+	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.PacketB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"g\n" +
+	"\x13ListGroupMembersReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\",\n" +
-	"\x16GetGroupMemberTotalReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\";\n" +
-	"\x17GetGroupMemberTotalResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02R\x05total:\x04\x98\xb5\x18\x02\">\n" +
-	"\x0eInviteGroupReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amembers\x18\x02 \x03(\tR\amembers\"\"\n" +
-	"\fJoinGroupReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"\"\n" +
-	"\fQuitGroupReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\">\n" +
-	"\x0eRemoveGroupReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amembers\x18\x02 \x03(\tR\amembers\"N\n" +
+	"paginationB\a\n" +
+	"\x05_code\":\n" +
+	"\x16GetGroupMemberTotalReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01B\a\n" +
+	"\x05_code\"J\n" +
+	"\x17GetGroupMemberTotalResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_total\"L\n" +
+	"\x0eInviteGroupReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01\x12\x18\n" +
+	"\amembers\x18\x02 \x03(\tR\amembersB\a\n" +
+	"\x05_code\"0\n" +
+	"\fJoinGroupReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01B\a\n" +
+	"\x05_code\"0\n" +
+	"\fQuitGroupReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01B\a\n" +
+	"\x05_code\"L\n" +
+	"\x0eRemoveGroupReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01\x12\x18\n" +
+	"\amembers\x18\x02 \x03(\tR\amembersB\a\n" +
+	"\x05_code\"j\n" +
 	"\n" +
-	"SetRoleReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amembers\x18\x02 \x03(\tR\amembers\x12\x12\n" +
-	"\x04role\x18\x03 \x01(\tR\x04role\" \n" +
+	"SetRoleReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01\x12\x18\n" +
+	"\amembers\x18\x02 \x03(\tR\amembers\x12\x17\n" +
+	"\x04role\x18\x03 \x01(\tH\x01R\x04role\x88\x01\x01B\a\n" +
+	"\x05_codeB\a\n" +
+	"\x05_role\".\n" +
 	"\n" +
-	"GetRoleReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"-\n" +
-	"\vGetRoleResp\x12\x18\n" +
-	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04role:\x04\x98\xb5\x18\x02\"1\n" +
-	"\tSetDndReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x10\n" +
-	"\x03dnd\x18\x02 \x01(\bR\x03dnd\"T\n" +
-	"\x0eMuteMembersReq\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amembers\x18\x02 \x03(\tR\amembers\x12\x14\n" +
-	"\x05muted\x18\x03 \x01(\bR\x05muted\"\xbf\x01\n" +
-	"\x0eUpdateGroupReq\x12\"\n" +
-	"\x05group\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05group\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x03 \x01(\tR\x06avatar\x12#\n" +
+	"GetRoleReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01B\a\n" +
+	"\x05_code\";\n" +
+	"\vGetRoleResp\x12\x1d\n" +
+	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04role\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_role\"L\n" +
+	"\tSetDndReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01\x12\x15\n" +
+	"\x03dnd\x18\x02 \x01(\bH\x01R\x03dnd\x88\x01\x01B\a\n" +
+	"\x05_codeB\x06\n" +
+	"\x04_dnd\"q\n" +
+	"\x0eMuteMembersReq\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01\x12\x18\n" +
+	"\amembers\x18\x02 \x03(\tR\amembers\x12\x19\n" +
+	"\x05muted\x18\x03 \x01(\bH\x01R\x05muted\x88\x01\x01B\a\n" +
+	"\x05_codeB\b\n" +
+	"\x06_muted\"\xef\x01\n" +
+	"\x0eUpdateGroupReq\x12*\n" +
+	"\x05group\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05group\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06avatar\x18\x03 \x01(\tH\x02R\x06avatar\x88\x01\x01\x12#\n" +
 	"\n" +
-	"background\x18\x04 \x01(\tH\x00R\n" +
+	"background\x18\x04 \x01(\tH\x03R\n" +
 	"background\x88\x01\x01\x12\x1d\n" +
-	"\aprivate\x18\x05 \x01(\bH\x01R\aprivate\x88\x01\x01B\r\n" +
+	"\aprivate\x18\x05 \x01(\bH\x04R\aprivate\x88\x01\x01B\b\n" +
+	"\x06_groupB\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatarB\r\n" +
 	"\v_backgroundB\n" +
 	"\n" +
 	"\b_private2\x80\b\n" +
@@ -1428,6 +1457,24 @@ func file_hi_club_group_proto_init() {
 		return
 	}
 	file_hi_club_messaging_proto_init()
+	file_hi_club_group_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[17].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[18].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[19].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[20].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[21].OneofWrappers = []any{}
 	file_hi_club_group_proto_msgTypes[22].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

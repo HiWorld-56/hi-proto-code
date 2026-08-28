@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/ai/api_key.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xcd\x01\n\nApiKeyInfo\x12\x1a\n\x05value\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05value\x12\x16\n\x03\x64id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x03\x64id\x12#\n\nrate_limit\x18\x03 \x01(\x05\x42\x04\x90\xb5\x18\x03R\trateLimit\x12!\n\tis_active\x18\x04 \x01(\x08\x42\x04\x90\xb5\x18\x03R\x08isActive\x12\x18\n\x04note\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12#\n\ncreated_at\x18\x06 \x01(\x03\x42\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"E\n\x10\x43reateApiKeyResp\x12+\n\x04info\x18\x01 \x01(\x0b\x32\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"<\n\rEditApiKeyReq\x12\x17\n\x07\x61pi_key\x18\x01 \x01(\tR\x06\x61piKey\x12\x12\n\x04note\x18\x02 \x01(\tR\x04note\"C\n\x0e\x45\x64itApiKeyResp\x12+\n\x04info\x18\x01 \x01(\x0b\x32\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"b\n\x0fListApiKeysResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x05total\x12-\n\x05infos\x18\x02 \x03(\x0b\x32\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"*\n\x0f\x44\x65leteApiKeyReq\x12\x17\n\x07\x61pi_key\x18\x01 \x01(\tR\x06\x61piKey2\xfe\x01\n\x06\x41piKey\x12@\n\x06\x43reate\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n\x04\x45\x64it\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12\x35\n\x04List\x12\x0e.hi.Pagination\x1a\x16.hi.ai.ListApiKeysResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n\x06\x44\x65lete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/ai/api_key.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa5\x02\n\nApiKeyInfo\x12\x1f\n\x05value\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05value\x88\x01\x01\x12\x16\n\x03\x64id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x03\x64id\x12(\n\nrate_limit\x18\x03 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x01R\trateLimit\x88\x01\x01\x12&\n\tis_active\x18\x04 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x02R\x08isActive\x88\x01\x01\x12\x1d\n\x04note\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x04note\x88\x01\x01\x12(\n\ncreated_at\x18\x06 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x04R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_valueB\r\n\x0b_rate_limitB\x0c\n\n_is_activeB\x07\n\x05_noteB\r\n\x0b_created_at\"E\n\x10\x43reateApiKeyResp\x12+\n\x04info\x18\x01 \x01(\x0b\x32\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"[\n\rEditApiKeyReq\x12\x1c\n\x07\x61pi_key\x18\x01 \x01(\tH\x00R\x06\x61piKey\x88\x01\x01\x12\x17\n\x04note\x18\x02 \x01(\tH\x01R\x04note\x88\x01\x01\x42\n\n\x08_api_keyB\x07\n\x05_note\"C\n\x0e\x45\x64itApiKeyResp\x12+\n\x04info\x18\x01 \x01(\x0b\x32\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"q\n\x0fListApiKeysResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12-\n\x05infos\x18\x02 \x03(\x0b\x32\x11.hi.ai.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\";\n\x0f\x44\x65leteApiKeyReq\x12\x1c\n\x07\x61pi_key\x18\x01 \x01(\tH\x00R\x06\x61piKey\x88\x01\x01\x42\n\n\x08_api_key2\xfe\x01\n\x06\x41piKey\x12@\n\x06\x43reate\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12:\n\x04\x45\x64it\x12\x14.hi.ai.EditApiKeyReq\x1a\x15.hi.ai.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x03\x12\x35\n\x04List\x12\x0e.hi.Pagination\x1a\x16.hi.ai.ListApiKeysResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n\x06\x44\x65lete\x12\x16.hi.ai.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -72,17 +72,17 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_APIKEY'].methods_by_name['Delete']._loaded_options = None
   _globals['_APIKEY'].methods_by_name['Delete']._serialized_options = b'\212\265\030\001\003'
   _globals['_APIKEYINFO']._serialized_start=95
-  _globals['_APIKEYINFO']._serialized_end=300
-  _globals['_CREATEAPIKEYRESP']._serialized_start=302
-  _globals['_CREATEAPIKEYRESP']._serialized_end=371
-  _globals['_EDITAPIKEYREQ']._serialized_start=373
-  _globals['_EDITAPIKEYREQ']._serialized_end=433
-  _globals['_EDITAPIKEYRESP']._serialized_start=435
-  _globals['_EDITAPIKEYRESP']._serialized_end=502
-  _globals['_LISTAPIKEYSRESP']._serialized_start=504
-  _globals['_LISTAPIKEYSRESP']._serialized_end=602
-  _globals['_DELETEAPIKEYREQ']._serialized_start=604
-  _globals['_DELETEAPIKEYREQ']._serialized_end=646
-  _globals['_APIKEY']._serialized_start=649
-  _globals['_APIKEY']._serialized_end=903
+  _globals['_APIKEYINFO']._serialized_end=388
+  _globals['_CREATEAPIKEYRESP']._serialized_start=390
+  _globals['_CREATEAPIKEYRESP']._serialized_end=459
+  _globals['_EDITAPIKEYREQ']._serialized_start=461
+  _globals['_EDITAPIKEYREQ']._serialized_end=552
+  _globals['_EDITAPIKEYRESP']._serialized_start=554
+  _globals['_EDITAPIKEYRESP']._serialized_end=621
+  _globals['_LISTAPIKEYSRESP']._serialized_start=623
+  _globals['_LISTAPIKEYSRESP']._serialized_end=736
+  _globals['_DELETEAPIKEYREQ']._serialized_start=738
+  _globals['_DELETEAPIKEYREQ']._serialized_end=797
+  _globals['_APIKEY']._serialized_start=800
+  _globals['_APIKEY']._serialized_end=1054
 # @@protoc_insertion_point(module_scope)

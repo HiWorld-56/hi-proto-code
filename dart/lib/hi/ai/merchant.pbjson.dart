@@ -19,7 +19,7 @@ import 'dart:typed_data' as $typed_data;
 const MerchantListReq$json = {
   '1': 'MerchantListReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'did', '17': true},
     {
       '1': 'pagination',
       '3': 2,
@@ -29,18 +29,30 @@ const MerchantListReq$json = {
       '10': 'pagination'
     },
   ],
+  '8': [
+    {'1': '_did'},
+  ],
 };
 
 /// Descriptor for `MerchantListReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantListReqDescriptor = $convert.base64Decode(
-    'Cg9NZXJjaGFudExpc3RSZXESEAoDZGlkGAEgASgJUgNkaWQSLgoKcGFnaW5hdGlvbhgCIAEoCz'
-    'IOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+    'Cg9NZXJjaGFudExpc3RSZXESFQoDZGlkGAEgASgJSABSA2RpZIgBARIuCgpwYWdpbmF0aW9uGA'
+    'IgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkIGCgRfZGlk');
 
 @$core.Deprecated('Use merchantListRespDescriptor instead')
 const MerchantListResp$json = {
   '1': 'MerchantListResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'total',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
     {
       '1': 'infos',
       '3': 2,
@@ -53,6 +65,9 @@ const MerchantListResp$json = {
   ],
   '3': [MerchantListResp_Unit$json],
   '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
 };
 
 @$core.Deprecated('Use merchantListRespDescriptor instead')
@@ -68,30 +83,65 @@ const MerchantListResp_Unit$json = {
       '8': {},
       '10': 'base'
     },
-    {'1': 'created_at', '3': 2, '4': 1, '5': 3, '8': {}, '10': 'createdAt'},
-    {'1': 'remark', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'remark'},
+    {
+      '1': 'created_at',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 0,
+      '10': 'createdAt',
+      '17': true
+    },
+    {
+      '1': 'remark',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'remark',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_created_at'},
+    {'1': '_remark'},
+  ],
 };
 
 /// Descriptor for `MerchantListResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantListRespDescriptor = $convert.base64Decode(
-    'ChBNZXJjaGFudExpc3RSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBI4CgVpbmZvcx'
-    'gCIAMoCzIcLmhpLmFpLk1lcmNoYW50TGlzdFJlc3AuVW5pdEIEkLUYA1IFaW5mb3MadQoEVW5p'
-    'dBIkCgRiYXNlGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgRiYXNlEiMKCmNyZWF0ZWRfYXQYAi'
-    'ABKANCBJC1GANSCWNyZWF0ZWRBdBIcCgZyZW1hcmsYAyABKAlCBJC1GANSBnJlbWFyazoEmLUY'
-    'AzoEmLUYAw==');
+    'ChBNZXJjaGFudExpc3RSZXNwEh8KBXRvdGFsGAEgASgFQgSQtRgDSABSBXRvdGFsiAEBEjgKBW'
+    'luZm9zGAIgAygLMhwuaGkuYWkuTWVyY2hhbnRMaXN0UmVzcC5Vbml0QgSQtRgDUgVpbmZvcxqZ'
+    'AQoEVW5pdBIkCgRiYXNlGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgRiYXNlEigKCmNyZWF0ZW'
+    'RfYXQYAiABKANCBJC1GANIAFIJY3JlYXRlZEF0iAEBEiEKBnJlbWFyaxgDIAEoCUIEkLUYA0gB'
+    'UgZyZW1hcmuIAQE6BJi1GANCDQoLX2NyZWF0ZWRfYXRCCQoHX3JlbWFyazoEmLUYA0IICgZfdG'
+    '90YWw=');
 
 @$core.Deprecated('Use merchantEditReqDescriptor instead')
 const MerchantEditReq$json = {
   '1': 'MerchantEditReq',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
-    {'1': 'remark', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'remark'},
+    {
+      '1': 'remark',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'remark',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_remark'},
   ],
 };
 
 /// Descriptor for `MerchantEditReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantEditReqDescriptor = $convert.base64Decode(
-    'Cg9NZXJjaGFudEVkaXRSZXESHgoDZGlkGAEgASgJQgy6SAlyBzIFXlxTKyRSA2RpZBIgCgZyZW'
-    '1hcmsYAiABKAlCCLpIBXIDGP8BUgZyZW1hcms=');
+    'Cg9NZXJjaGFudEVkaXRSZXESHgoDZGlkGAEgASgJQgy6SAlyBzIFXlxTKyRSA2RpZBIlCgZyZW'
+    '1hcmsYAiABKAlCCLpIBXIDGP8BSABSBnJlbWFya4gBAUIJCgdfcmVtYXJr');

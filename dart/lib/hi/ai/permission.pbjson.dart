@@ -47,16 +47,28 @@ const PermissionInfo$json = {
       '8': {},
       '10': 'permissions'
     },
-    {'1': 'note', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'note'},
+    {
+      '1': 'note',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'note',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_note'},
+  ],
 };
 
 /// Descriptor for `PermissionInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionInfoDescriptor = $convert.base64Decode(
     'Cg5QZXJtaXNzaW9uSW5mbxIWCgNkaWQYASABKAlCBJC1GANSA2RpZBI9CgtwZXJtaXNzaW9ucx'
-    'gCIAMoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlQgSQtRgDUgtwZXJtaXNzaW9ucxIYCgRub3Rl'
-    'GAMgASgJQgSQtRgDUgRub3RlOgSYtRgD');
+    'gCIAMoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlQgSQtRgDUgtwZXJtaXNzaW9ucxIdCgRub3Rl'
+    'GAMgASgJQgSQtRgDSABSBG5vdGWIAQE6BJi1GANCBwoFX25vdGU=');
 
 @$core.Deprecated('Use listAgentPermissionsReqDescriptor instead')
 const ListAgentPermissionsReq$json = {
@@ -105,15 +117,20 @@ const PermissionAddReq$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.ai.PermissionType',
-      '10': 'type'
+      '9': 0,
+      '10': 'type',
+      '17': true
     },
+  ],
+  '8': [
+    {'1': '_type'},
   ],
 };
 
 /// Descriptor for `PermissionAddReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionAddReqDescriptor = $convert.base64Decode(
-    'ChBQZXJtaXNzaW9uQWRkUmVxEh4KA2RpZBgBIAEoCUIMukgJcgcyBV5cUyskUgNkaWQSKQoEdH'
-    'lwZRgCIAEoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlUgR0eXBl');
+    'ChBQZXJtaXNzaW9uQWRkUmVxEh4KA2RpZBgBIAEoCUIMukgJcgcyBV5cUyskUgNkaWQSLgoEdH'
+    'lwZRgCIAEoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlSABSBHR5cGWIAQFCBwoFX3R5cGU=');
 
 @$core.Deprecated('Use permissionDeleteReqDescriptor instead')
 const PermissionDeleteReq$json = {
@@ -126,28 +143,35 @@ const PermissionDeleteReq$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.ai.PermissionType',
-      '10': 'type'
+      '9': 0,
+      '10': 'type',
+      '17': true
     },
+  ],
+  '8': [
+    {'1': '_type'},
   ],
 };
 
 /// Descriptor for `PermissionDeleteReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionDeleteReqDescriptor = $convert.base64Decode(
-    'ChNQZXJtaXNzaW9uRGVsZXRlUmVxEh4KA2RpZBgBIAEoCUIMukgJcgcyBV5cUyskUgNkaWQSKQ'
-    'oEdHlwZRgCIAEoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlUgR0eXBl');
+    'ChNQZXJtaXNzaW9uRGVsZXRlUmVxEh4KA2RpZBgBIAEoCUIMukgJcgcyBV5cUyskUgNkaWQSLg'
+    'oEdHlwZRgCIAEoDjIVLmhpLmFpLlBlcm1pc3Npb25UeXBlSABSBHR5cGWIAQFCBwoFX3R5cGU=');
 
 @$core.Deprecated('Use permissionListReqDescriptor instead')
 const PermissionListReq$json = {
   '1': 'PermissionListReq',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'did', '17': true},
     {
       '1': 'type',
       '3': 2,
       '4': 1,
       '5': 14,
       '6': '.hi.ai.PermissionType',
-      '10': 'type'
+      '9': 1,
+      '10': 'type',
+      '17': true
     },
     {
       '1': 'pagination',
@@ -158,19 +182,32 @@ const PermissionListReq$json = {
       '10': 'pagination'
     },
   ],
+  '8': [
+    {'1': '_did'},
+    {'1': '_type'},
+  ],
 };
 
 /// Descriptor for `PermissionListReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionListReqDescriptor = $convert.base64Decode(
-    'ChFQZXJtaXNzaW9uTGlzdFJlcRIQCgNkaWQYASABKAlSA2RpZBIpCgR0eXBlGAIgASgOMhUuaG'
-    'kuYWkuUGVybWlzc2lvblR5cGVSBHR5cGUSLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2lu'
-    'YXRpb25SCnBhZ2luYXRpb24=');
+    'ChFQZXJtaXNzaW9uTGlzdFJlcRIVCgNkaWQYASABKAlIAFIDZGlkiAEBEi4KBHR5cGUYAiABKA'
+    '4yFS5oaS5haS5QZXJtaXNzaW9uVHlwZUgBUgR0eXBliAEBEi4KCnBhZ2luYXRpb24YAyABKAsy'
+    'Di5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9uQgYKBF9kaWRCBwoFX3R5cGU=');
 
 @$core.Deprecated('Use permissionListRespDescriptor instead')
 const PermissionListResp$json = {
   '1': 'PermissionListResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'total',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
     {
       '1': 'infos',
       '3': 2,
@@ -182,23 +219,30 @@ const PermissionListResp$json = {
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
 };
 
 /// Descriptor for `PermissionListResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionListRespDescriptor = $convert.base64Decode(
-    'ChJQZXJtaXNzaW9uTGlzdFJlc3ASGgoFdG90YWwYASABKAVCBJC1GANSBXRvdGFsEjEKBWluZm'
-    '9zGAIgAygLMhUuaGkuYWkuUGVybWlzc2lvbkluZm9CBJC1GANSBWluZm9zOgSYtRgD');
+    'ChJQZXJtaXNzaW9uTGlzdFJlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQESMQ'
+    'oFaW5mb3MYAiADKAsyFS5oaS5haS5QZXJtaXNzaW9uSW5mb0IEkLUYA1IFaW5mb3M6BJi1GANC'
+    'CAoGX3RvdGFs');
 
 @$core.Deprecated('Use permissionEditReqDescriptor instead')
 const PermissionEditReq$json = {
   '1': 'PermissionEditReq',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
-    {'1': 'note', '3': 2, '4': 1, '5': 9, '10': 'note'},
+    {'1': 'note', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'note', '17': true},
+  ],
+  '8': [
+    {'1': '_note'},
   ],
 };
 
 /// Descriptor for `PermissionEditReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List permissionEditReqDescriptor = $convert.base64Decode(
-    'ChFQZXJtaXNzaW9uRWRpdFJlcRIeCgNkaWQYASABKAlCDLpICXIHMgVeXFMrJFIDZGlkEhIKBG'
-    '5vdGUYAiABKAlSBG5vdGU=');
+    'ChFQZXJtaXNzaW9uRWRpdFJlcRIeCgNkaWQYASABKAlCDLpICXIHMgVeXFMrJFIDZGlkEhcKBG'
+    '5vdGUYAiABKAlIAFIEbm90ZYgBAUIHCgVfbm90ZQ==');

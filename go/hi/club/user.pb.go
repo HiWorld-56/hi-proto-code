@@ -77,10 +77,10 @@ func (FriendRequestStatus) EnumDescriptor() ([]byte, []int) {
 
 type UserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`                                     // 名片 name/avatar
-	Permissions   []string               `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"`                       // 我的权限列表(SELF)
-	VerifyPolicy  string                 `protobuf:"bytes,3,opt,name=verify_policy,json=verifyPolicy,proto3" json:"verify_policy,omitempty"` // 加好友校验方式(私有,SELF)
-	Moment        string                 `protobuf:"bytes,4,opt,name=moment,proto3" json:"moment,omitempty"`                                 // 用户动态(关系可见)
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`                                           // 名片 name/avatar
+	Permissions   []string               `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"`                             // 我的权限列表(SELF)
+	VerifyPolicy  *string                `protobuf:"bytes,3,opt,name=verify_policy,json=verifyPolicy,proto3,oneof" json:"verify_policy,omitempty"` // 加好友校验方式(私有,SELF)
+	Moment        *string                `protobuf:"bytes,4,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                 // 用户动态(关系可见)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -130,22 +130,22 @@ func (x *UserInfo) GetPermissions() []string {
 }
 
 func (x *UserInfo) GetVerifyPolicy() string {
-	if x != nil {
-		return x.VerifyPolicy
+	if x != nil && x.VerifyPolicy != nil {
+		return *x.VerifyPolicy
 	}
 	return ""
 }
 
 func (x *UserInfo) GetMoment() string {
-	if x != nil {
-		return x.Moment
+	if x != nil && x.Moment != nil {
+		return *x.Moment
 	}
 	return ""
 }
 
 type ListSystemMessagesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Status        *string                `protobuf:"bytes,1,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -182,8 +182,8 @@ func (*ListSystemMessagesReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListSystemMessagesReq) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
@@ -197,8 +197,8 @@ func (x *ListSystemMessagesReq) GetPagination() *hi.Pagination {
 
 type SystemMessages struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	HasNew        bool                   `protobuf:"varint,1,opt,name=has_new,json=hasNew,proto3" json:"has_new,omitempty"`
-	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	HasNew        *bool                  `protobuf:"varint,1,opt,name=has_new,json=hasNew,proto3,oneof" json:"has_new,omitempty"`
+	Total         *int32                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*Notice              `protobuf:"bytes,3,rep,name=list,proto3" json:"list,omitempty"` // Notice(messaging)为通知型,关系/群级
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -235,15 +235,15 @@ func (*SystemMessages) Descriptor() ([]byte, []int) {
 }
 
 func (x *SystemMessages) GetHasNew() bool {
-	if x != nil {
-		return x.HasNew
+	if x != nil && x.HasNew != nil {
+		return *x.HasNew
 	}
 	return false
 }
 
 func (x *SystemMessages) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -257,7 +257,7 @@ func (x *SystemMessages) GetList() []*Notice {
 
 type DeleteSystemMessageReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -293,16 +293,16 @@ func (*DeleteSystemMessageReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteSystemMessageReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 type HandleSystemMessageReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Status        *string                `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -338,15 +338,15 @@ func (*HandleSystemMessageReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *HandleSystemMessageReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *HandleSystemMessageReq) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
@@ -357,7 +357,7 @@ func (x *HandleSystemMessageReq) GetStatus() string {
 // 以通知 uuid 为唯一标识,所以不用按类型各写一个接口。
 type MarkNoticeProcessedReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -393,17 +393,17 @@ func (*MarkNoticeProcessedReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarkNoticeProcessedReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 type RelationInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`     // 名片
-	Remark        string                 `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"` // 备注名(仅设置者本人可见)
-	Moment        string                 `protobuf:"bytes,3,opt,name=moment,proto3" json:"moment,omitempty"` // 用户动态(关系可见)
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`           // 名片
+	Remark        *string                `protobuf:"bytes,2,opt,name=remark,proto3,oneof" json:"remark,omitempty"` // 备注名(仅设置者本人可见)
+	Moment        *string                `protobuf:"bytes,3,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 用户动态(关系可见)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -446,15 +446,15 @@ func (x *RelationInfo) GetBase() *hi.Entity {
 }
 
 func (x *RelationInfo) GetRemark() string {
-	if x != nil {
-		return x.Remark
+	if x != nil && x.Remark != nil {
+		return *x.Remark
 	}
 	return ""
 }
 
 func (x *RelationInfo) GetMoment() string {
-	if x != nil {
-		return x.Moment
+	if x != nil && x.Moment != nil {
+		return *x.Moment
 	}
 	return ""
 }
@@ -515,7 +515,7 @@ func (x *ListRelationsResp) GetServitor() []*RelationInfo {
 type AddFriendReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -558,15 +558,15 @@ func (x *AddFriendReq) GetDid() string {
 }
 
 func (x *AddFriendReq) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
 
 type AddFriendResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        FriendRequestStatus    `protobuf:"varint,1,opt,name=status,proto3,enum=hi.club.FriendRequestStatus" json:"status,omitempty"`
+	Status        *FriendRequestStatus   `protobuf:"varint,1,opt,name=status,proto3,enum=hi.club.FriendRequestStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -602,8 +602,8 @@ func (*AddFriendResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *AddFriendResp) GetStatus() FriendRequestStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return FriendRequestStatus_FRIEND_REQUEST_STATUS_UNSPECIFIED
 }
@@ -742,7 +742,7 @@ func (x *GetUserReq) GetDid() string {
 
 type UnprocessedSysMsgCountResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Count         int32                  `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	Count         *int32                 `protobuf:"varint,1,opt,name=count,proto3,oneof" json:"count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -778,8 +778,8 @@ func (*UnprocessedSysMsgCountResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *UnprocessedSysMsgCountResp) GetCount() int32 {
-	if x != nil {
-		return x.Count
+	if x != nil && x.Count != nil {
+		return *x.Count
 	}
 	return 0
 }
@@ -788,13 +788,13 @@ func (x *UnprocessedSysMsgCountResp) GetCount() int32 {
 // 而"改谁"永远取自 token,type/update 是服务端产物。入参只放调用方真正该给的。
 type UpdateUserReq struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
-	Name   string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`     // 昵称
-	Avatar string                 `protobuf:"bytes,4,opt,name=avatar,proto3" json:"avatar,omitempty"` // 头像 url
+	Name   *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`     // 昵称
+	Avatar *string                `protobuf:"bytes,4,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"` // 头像 url
 	// auto_reject-自动拒绝
 	// manual_accept-手动同意
 	// auto_accept-自动同意
-	VerifyPolicy  string  `protobuf:"bytes,2,opt,name=verify_policy,json=verifyPolicy,proto3" json:"verify_policy,omitempty"` // 添加好友校验方式
-	Moment        *string `protobuf:"bytes,3,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                           // 用户动态
+	VerifyPolicy  *string `protobuf:"bytes,2,opt,name=verify_policy,json=verifyPolicy,proto3,oneof" json:"verify_policy,omitempty"` // 添加好友校验方式
+	Moment        *string `protobuf:"bytes,3,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                 // 用户动态
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -830,22 +830,22 @@ func (*UpdateUserReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateUserReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *UpdateUserReq) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
 
 func (x *UpdateUserReq) GetVerifyPolicy() string {
-	if x != nil {
-		return x.VerifyPolicy
+	if x != nil && x.VerifyPolicy != nil {
+		return *x.VerifyPolicy
 	}
 	return ""
 }
@@ -859,8 +859,8 @@ func (x *UpdateUserReq) GetMoment() string {
 
 type SetRemarkReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`     // 被备注的用户did
-	Remark        string                 `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"` // 备注名
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"`     // 被备注的用户did
+	Remark        *string                `protobuf:"bytes,2,opt,name=remark,proto3,oneof" json:"remark,omitempty"` // 备注名
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -896,15 +896,15 @@ func (*SetRemarkReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetRemarkReq) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
 
 func (x *SetRemarkReq) GetRemark() string {
-	if x != nil {
-		return x.Remark
+	if x != nil && x.Remark != nil {
+		return *x.Remark
 	}
 	return ""
 }
@@ -1001,60 +1001,80 @@ var File_hi_club_user_proto protoreflect.FileDescriptor
 
 const file_hi_club_user_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/user.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x13hi/club/group.proto\x1a\x10hi/options.proto\"\xa7\x01\n" +
+	"\x12hi/club/user.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x13hi/club/group.proto\x1a\x10hi/options.proto\"\xce\x01\n" +
 	"\bUserInfo\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12&\n" +
-	"\vpermissions\x18\x02 \x03(\tB\x04\x90\xb5\x18\x03R\vpermissions\x12)\n" +
-	"\rverify_policy\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\fverifyPolicy\x12\x1c\n" +
-	"\x06moment\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02R\x06moment:\x04\x98\xb5\x18\x03\"_\n" +
-	"\x15ListSystemMessagesReq\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\x12.\n" +
+	"\vpermissions\x18\x02 \x03(\tB\x04\x90\xb5\x18\x03R\vpermissions\x12.\n" +
+	"\rverify_policy\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\fverifyPolicy\x88\x01\x01\x12!\n" +
+	"\x06moment\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x03B\x10\n" +
+	"\x0e_verify_policyB\t\n" +
+	"\a_moment\"o\n" +
+	"\x15ListSystemMessagesReq\x12\x1b\n" +
+	"\x06status\x18\x01 \x01(\tH\x00R\x06status\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"|\n" +
-	"\x0eSystemMessages\x12\x1d\n" +
-	"\ahas_new\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03R\x06hasNew\x12\x1a\n" +
-	"\x05total\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12)\n" +
-	"\x04list\x18\x03 \x03(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x03\",\n" +
-	"\x16DeleteSystemMessageReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"D\n" +
-	"\x16HandleSystemMessageReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\",\n" +
-	"\x16MarkNoticeProcessedReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"v\n" +
+	"paginationB\t\n" +
+	"\a_status\"\x9c\x01\n" +
+	"\x0eSystemMessages\x12\"\n" +
+	"\ahas_new\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x06hasNew\x88\x01\x01\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03H\x01R\x05total\x88\x01\x01\x12)\n" +
+	"\x04list\x18\x03 \x03(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x03B\n" +
+	"\n" +
+	"\b_has_newB\b\n" +
+	"\x06_total\":\n" +
+	"\x16DeleteSystemMessageReq\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01B\a\n" +
+	"\x05_uuid\"b\n" +
+	"\x16HandleSystemMessageReq\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x02 \x01(\tH\x01R\x06status\x88\x01\x01B\a\n" +
+	"\x05_uuidB\t\n" +
+	"\a_status\":\n" +
+	"\x16MarkNoticeProcessedReq\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01B\a\n" +
+	"\x05_uuid\"\x96\x01\n" +
 	"\fRelationInfo\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12\x1c\n" +
-	"\x06remark\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06remark\x12\x1c\n" +
-	"\x06moment\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x06moment:\x04\x98\xb5\x18\x03\"\x87\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12!\n" +
+	"\x06remark\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06remark\x88\x01\x01\x12!\n" +
+	"\x06moment\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_remarkB\t\n" +
+	"\a_moment\"\x87\x01\n" +
 	"\x11ListRelationsResp\x123\n" +
 	"\x06friend\x18\x01 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\x06friend\x127\n" +
-	"\bservitor\x18\x02 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\bservitor:\x04\x98\xb5\x18\x03\"4\n" +
+	"\bservitor\x18\x02 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\bservitor:\x04\x98\xb5\x18\x03\"B\n" +
 	"\fAddFriendReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\"Q\n" +
-	"\rAddFriendResp\x12:\n" +
-	"\x06status\x18\x01 \x01(\x0e2\x1c.hi.club.FriendRequestStatusB\x04\x90\xb5\x18\x02R\x06status:\x04\x98\xb5\x18\x02\"#\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x17\n" +
+	"\x04type\x18\x02 \x01(\tH\x00R\x04type\x88\x01\x01B\a\n" +
+	"\x05_type\"a\n" +
+	"\rAddFriendResp\x12?\n" +
+	"\x06status\x18\x01 \x01(\x0e2\x1c.hi.club.FriendRequestStatusB\x04\x90\xb5\x18\x02H\x00R\x06status\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_status\"#\n" +
 	"\x0fDeleteFriendReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\"D\n" +
 	"\x0eListGroupsResp\x12,\n" +
 	"\x04list\x18\x01 \x03(\v2\x12.hi.club.GroupBaseB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x03\"\x1e\n" +
 	"\n" +
 	"GetUserReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\">\n" +
-	"\x1aUnprocessedSysMsgCountResp\x12\x1a\n" +
-	"\x05count\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05count:\x04\x98\xb5\x18\x03\"\x88\x01\n" +
-	"\rUpdateUserReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x04 \x01(\tR\x06avatar\x12#\n" +
-	"\rverify_policy\x18\x02 \x01(\tR\fverifyPolicy\x12\x1b\n" +
-	"\x06moment\x18\x03 \x01(\tH\x00R\x06moment\x88\x01\x01B\t\n" +
-	"\a_moment\":\n" +
-	"\fSetRemarkReq\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\x12\x16\n" +
-	"\x06remark\x18\x02 \x01(\tR\x06remark\"*\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\"M\n" +
+	"\x1aUnprocessedSysMsgCountResp\x12\x1f\n" +
+	"\x05count\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05count\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_count\"\xbd\x01\n" +
+	"\rUpdateUserReq\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06avatar\x18\x04 \x01(\tH\x01R\x06avatar\x88\x01\x01\x12(\n" +
+	"\rverify_policy\x18\x02 \x01(\tH\x02R\fverifyPolicy\x88\x01\x01\x12\x1b\n" +
+	"\x06moment\x18\x03 \x01(\tH\x03R\x06moment\x88\x01\x01B\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatarB\x10\n" +
+	"\x0e_verify_policyB\t\n" +
+	"\a_moment\"X\n" +
+	"\fSetRemarkReq\x12\x17\n" +
+	"\x04user\x18\x01 \x01(\tH\x00R\x04user\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\x02 \x01(\tH\x01R\x06remark\x88\x01\x01B\a\n" +
+	"\x05_userB\t\n" +
+	"\a_remark\"*\n" +
 	"\x12ListOnlineUsersReq\x12\x14\n" +
 	"\x05users\x18\x01 \x03(\tR\x05users\"A\n" +
 	"\x13ListOnlineUsersResp\x12$\n" +
@@ -1182,7 +1202,18 @@ func file_hi_club_user_proto_init() {
 	}
 	file_hi_club_messaging_proto_init()
 	file_hi_club_group_proto_init()
+	file_hi_club_user_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[13].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

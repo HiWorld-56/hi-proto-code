@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xc2\x01\n\x04\x43oin\x12\x18\n\x04icon\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04icon\x12\x18\n\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12 \n\x08\x63\x61tegory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x08\x63\x61tegory\x12\x1a\n\x05\x63hain\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x05\x63hain\x12 \n\x08\x63ontract\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\x08\x63ontract\x12 \n\x08\x64\x65\x63imals\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01R\x08\x64\x65\x63imals:\x04\x98\xb5\x18\x01\"=\n\rListCoinsResp\x12&\n\x04list\x18\x01 \x03(\x0b\x32\x0c.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"9\n\x17ListSuperAdminUsersResp\x12\x18\n\x04list\x18\x01 \x03(\tB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"1\n\rUserTotalResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01R\x05total:\x04\x98\xb5\x18\x01\x32\xd3\x01\n\x04\x42\x61se\x12\x41\n\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12\x45\n\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12\x41\n\tUserTotal\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.UserTotalResp\"\x05\x8a\xb5\x18\x01\x01\x32U\n\nSuperAdmin\x12G\n\x04List\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x06\x8a\xb5\x18\x02\x02\x03\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa3\x02\n\x04\x43oin\x12\x1d\n\x04icon\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04icon\x88\x01\x01\x12\x1d\n\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12%\n\x08\x63\x61tegory\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x08\x63\x61tegory\x88\x01\x01\x12\x1f\n\x05\x63hain\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x05\x63hain\x88\x01\x01\x12%\n\x08\x63ontract\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x04R\x08\x63ontract\x88\x01\x01\x12%\n\x08\x64\x65\x63imals\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01H\x05R\x08\x64\x65\x63imals\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x07\n\x05_iconB\x07\n\x05_nameB\x0b\n\t_categoryB\x08\n\x06_chainB\x0b\n\t_contractB\x0b\n\t_decimals\"=\n\rListCoinsResp\x12&\n\x04list\x18\x01 \x03(\x0b\x32\x0c.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"9\n\x17ListSuperAdminUsersResp\x12\x18\n\x04list\x18\x01 \x03(\tB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"@\n\rUserTotalResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total2\xd3\x01\n\x04\x42\x61se\x12\x41\n\tListCoins\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.ListCoinsResp\"\x05\x8a\xb5\x18\x01\x01\x12\x45\n\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01\x12\x41\n\tUserTotal\x12\x16.google.protobuf.Empty\x1a\x15.hi.did.UserTotalResp\"\x05\x8a\xb5\x18\x01\x01\x32U\n\nSuperAdmin\x12G\n\x04List\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x06\x8a\xb5\x18\x02\x02\x03\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -70,15 +70,15 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SUPERADMIN'].methods_by_name['List']._loaded_options = None
   _globals['_SUPERADMIN'].methods_by_name['List']._serialized_options = b'\212\265\030\002\002\003'
   _globals['_COIN']._serialized_start=94
-  _globals['_COIN']._serialized_end=288
-  _globals['_LISTCOINSRESP']._serialized_start=290
-  _globals['_LISTCOINSRESP']._serialized_end=351
-  _globals['_LISTSUPERADMINUSERSRESP']._serialized_start=353
-  _globals['_LISTSUPERADMINUSERSRESP']._serialized_end=410
-  _globals['_USERTOTALRESP']._serialized_start=412
-  _globals['_USERTOTALRESP']._serialized_end=461
-  _globals['_BASE']._serialized_start=464
-  _globals['_BASE']._serialized_end=675
-  _globals['_SUPERADMIN']._serialized_start=677
-  _globals['_SUPERADMIN']._serialized_end=762
+  _globals['_COIN']._serialized_end=385
+  _globals['_LISTCOINSRESP']._serialized_start=387
+  _globals['_LISTCOINSRESP']._serialized_end=448
+  _globals['_LISTSUPERADMINUSERSRESP']._serialized_start=450
+  _globals['_LISTSUPERADMINUSERSRESP']._serialized_end=507
+  _globals['_USERTOTALRESP']._serialized_start=509
+  _globals['_USERTOTALRESP']._serialized_end=573
+  _globals['_BASE']._serialized_start=576
+  _globals['_BASE']._serialized_end=787
+  _globals['_SUPERADMIN']._serialized_start=789
+  _globals['_SUPERADMIN']._serialized_end=874
 # @@protoc_insertion_point(module_scope)

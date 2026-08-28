@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/order.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"8\n\x0ePullOrdersData\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x14\n\x05nonce\x18\x02 \x01(\tR\x05nonce\"\x85\x02\n\x07PcOrder\x12\x1f\n\x08order_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x07orderId\x12\x1b\n\x06to_did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05toDid\x12\x1c\n\x06\x61mount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06\x61mount\x12\x18\n\x04type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12#\n\ncreated_at\x18\x05 \x01(\x03\x42\x04\x90\xb5\x18\x03R\tcreatedAt\x12#\n\nupdated_at\x18\x06 \x01(\x03\x42\x04\x90\xb5\x18\x03R\tupdatedAt\x12\x16\n\x03\x64id\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03R\x03\x64id\x12\x1c\n\x06status\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03R\x06status:\x04\x98\xb5\x18\x03\"F\n\x0ePullOrdersResp\x12.\n\x06orders\x18\x01 \x03(\x0b\x32\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"w\n\x0bOrderResult\x12\x19\n\x08order_id\x18\x01 \x01(\tR\x07orderId\x12\x16\n\x06status\x18\x02 \x01(\tR\x06status\x12\x17\n\x07tx_hash\x18\x03 \x01(\tR\x06txHash\x12\x1c\n\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"S\n\x11ReportResultsData\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12,\n\x06orders\x18\x02 \x03(\x0b\x32\x14.hi.club.OrderResultR\x06orders2x\n\x05Order\x12\x36\n\x04Pull\x12\x0e.hi.SignedData\x1a\x17.hi.club.PullOrdersResp\"\x05\x8a\xb5\x18\x01\x05\x12\x37\n\x06Report\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/order.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"G\n\x0ePullOrdersData\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x19\n\x05nonce\x18\x02 \x01(\tH\x00R\x05nonce\x88\x01\x01\x42\x08\n\x06_nonce\"\xed\x02\n\x07PcOrder\x12$\n\x08order_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07orderId\x88\x01\x01\x12\x1b\n\x06to_did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05toDid\x12!\n\x06\x61mount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06\x61mount\x88\x01\x01\x12\x1d\n\x04type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04type\x88\x01\x01\x12(\n\ncreated_at\x18\x05 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01\x12(\n\nupdated_at\x18\x06 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x04R\tupdatedAt\x88\x01\x01\x12\x16\n\x03\x64id\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03R\x03\x64id\x12!\n\x06status\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x06status\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_order_idB\t\n\x07_amountB\x07\n\x05_typeB\r\n\x0b_created_atB\r\n\x0b_updated_atB\t\n\x07_status\"F\n\x0ePullOrdersResp\x12.\n\x06orders\x18\x01 \x03(\x0b\x32\x10.hi.club.PcOrderB\x04\x90\xb5\x18\x03R\x06orders:\x04\x98\xb5\x18\x03\"\xbd\x01\n\x0bOrderResult\x12\x1e\n\x08order_id\x18\x01 \x01(\tH\x00R\x07orderId\x88\x01\x01\x12\x1b\n\x06status\x18\x02 \x01(\tH\x01R\x06status\x88\x01\x01\x12\x1c\n\x07tx_hash\x18\x03 \x01(\tH\x02R\x06txHash\x88\x01\x01\x12!\n\ttimestamp\x18\x04 \x01(\x03H\x03R\ttimestamp\x88\x01\x01\x42\x0b\n\t_order_idB\t\n\x07_statusB\n\n\x08_tx_hashB\x0c\n\n_timestamp\"S\n\x11ReportResultsData\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12,\n\x06orders\x18\x02 \x03(\x0b\x32\x14.hi.club.OrderResultR\x06orders2x\n\x05Order\x12\x36\n\x04Pull\x12\x0e.hi.SignedData\x1a\x17.hi.club.PullOrdersResp\"\x05\x8a\xb5\x18\x01\x05\x12\x37\n\x06Report\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -62,15 +62,15 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ORDER'].methods_by_name['Report']._loaded_options = None
   _globals['_ORDER'].methods_by_name['Report']._serialized_options = b'\212\265\030\001\005'
   _globals['_PULLORDERSDATA']._serialized_start=96
-  _globals['_PULLORDERSDATA']._serialized_end=152
-  _globals['_PCORDER']._serialized_start=155
-  _globals['_PCORDER']._serialized_end=416
-  _globals['_PULLORDERSRESP']._serialized_start=418
-  _globals['_PULLORDERSRESP']._serialized_end=488
-  _globals['_ORDERRESULT']._serialized_start=490
-  _globals['_ORDERRESULT']._serialized_end=609
-  _globals['_REPORTRESULTSDATA']._serialized_start=611
-  _globals['_REPORTRESULTSDATA']._serialized_end=694
-  _globals['_ORDER']._serialized_start=696
-  _globals['_ORDER']._serialized_end=816
+  _globals['_PULLORDERSDATA']._serialized_end=167
+  _globals['_PCORDER']._serialized_start=170
+  _globals['_PCORDER']._serialized_end=535
+  _globals['_PULLORDERSRESP']._serialized_start=537
+  _globals['_PULLORDERSRESP']._serialized_end=607
+  _globals['_ORDERRESULT']._serialized_start=610
+  _globals['_ORDERRESULT']._serialized_end=799
+  _globals['_REPORTRESULTSDATA']._serialized_start=801
+  _globals['_REPORTRESULTSDATA']._serialized_end=884
+  _globals['_ORDER']._serialized_start=886
+  _globals['_ORDER']._serialized_end=1006
 # @@protoc_insertion_point(module_scope)

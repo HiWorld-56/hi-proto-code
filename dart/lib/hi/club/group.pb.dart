@@ -1404,7 +1404,7 @@ class MuteMembersReq extends $pb.GeneratedMessage {
 ///   member(私密群): 全禁止(只能被邀请)
 /// 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
 /// 里面的 Entity 带 type/update 等服务端产物。入参只放:定位用的群号 + 真正可改的字段。
-/// **传了就是主动设置**:字段有值(optional 有 presence / name·avatar 非空)即视为"设成这个",
+/// **传了就是主动设置**:字段有 presence 即视为"设成这个"(2026-08-28 起全字段 optional,
 /// 服务端**不拿新值跟旧值比**,照写、推进 update 时间戳、照发通知。
 ///
 /// ⚠️ 别用值比对判断"改没改"。两个坑:

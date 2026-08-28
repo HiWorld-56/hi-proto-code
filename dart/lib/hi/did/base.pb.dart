@@ -113,7 +113,7 @@ class Coin extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearChain() => $_clearField(4);
 
-  /// 合约(FA / token)地址。**空 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
+  /// 合约(FA / token)地址。**不传 = 该链的原生币**(BTC/ETH/TRX/SOL/APT)。
   @$pb.TagNumber(5)
   $core.String get contract => $_getSZ(4);
   @$pb.TagNumber(5)

@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/did/auth.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"l\n\x0fRefreshTokenReq\x12\"\n\x04node\x18\x01 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\x12\x10\n\x03\x64id\x18\x02 \x01(\tR\x03\x64id\x12#\n\rrefresh_token\x18\x03 \x01(\tR\x0crefreshToken\"W\n\x08LoginReq\x12\x15\n\x06req_id\x18\x01 \x01(\tR\x05reqId\x12\x10\n\x03\x64id\x18\x02 \x01(\tR\x03\x64id\x12\"\n\x04node\x18\x03 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\"\x91\x01\n\tLoginResp\x12$\n\x04user\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x12)\n\x05token\x18\x02 \x01(\x0b\x32\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n\x04mqtt\x18\x03 \x01(\x0b\x32\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\"H\n\x10GenerateReqIdReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\"\n\x04node\x18\x02 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\"\xb3\x01\n\rReqStatusResp\x12$\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04\x62\x61se\x12\x1c\n\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12)\n\x05token\x18\x03 \x01(\x0b\x32\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n\x04mqtt\x18\x04 \x01(\x0b\x32\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\"&\n\tLogoutReq\x12\x19\n\x03\x64id\x18\x01 \x01(\x0b\x32\x07.hi.DIDR\x03\x64id2\xeb\x02\n\x04\x41uth\x12=\n\x0cRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12\x32\n\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x12\x39\n\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x12?\n\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n\x0cGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12\x37\n\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/did/auth.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x83\x01\n\x0fRefreshTokenReq\x12\"\n\x04node\x18\x01 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\x12\x10\n\x03\x64id\x18\x02 \x01(\tR\x03\x64id\x12(\n\rrefresh_token\x18\x03 \x01(\tH\x00R\x0crefreshToken\x88\x01\x01\x42\x10\n\x0e_refresh_token\"g\n\x08LoginReq\x12\x1a\n\x06req_id\x18\x01 \x01(\tH\x00R\x05reqId\x88\x01\x01\x12\x10\n\x03\x64id\x18\x02 \x01(\tR\x03\x64id\x12\"\n\x04node\x18\x03 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04nodeB\t\n\x07_req_id\"\x91\x01\n\tLoginResp\x12$\n\x04user\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x12)\n\x05token\x18\x02 \x01(\x0b\x32\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n\x04mqtt\x18\x03 \x01(\x0b\x32\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\"H\n\x10GenerateReqIdReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\"\n\x04node\x18\x02 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\"\xc3\x01\n\rReqStatusResp\x12$\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04\x62\x61se\x12!\n\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06status\x88\x01\x01\x12)\n\x05token\x18\x03 \x01(\x0b\x32\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n\x04mqtt\x18\x04 \x01(\x0b\x32\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\x42\t\n\x07_status\"&\n\tLogoutReq\x12\x19\n\x03\x64id\x18\x01 \x01(\x0b\x32\x07.hi.DIDR\x03\x64id2\xeb\x02\n\x04\x41uth\x12=\n\x0cRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12\x32\n\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x12\x39\n\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x12?\n\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n\x0cGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12\x37\n\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -65,18 +65,18 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AUTH'].methods_by_name['GetReqStatus']._serialized_options = b'\212\265\030\001\001'
   _globals['_AUTH'].methods_by_name['Logout']._loaded_options = None
   _globals['_AUTH'].methods_by_name['Logout']._serialized_options = b'\212\265\030\001\005'
-  _globals['_REFRESHTOKENREQ']._serialized_start=93
-  _globals['_REFRESHTOKENREQ']._serialized_end=201
-  _globals['_LOGINREQ']._serialized_start=203
-  _globals['_LOGINREQ']._serialized_end=290
-  _globals['_LOGINRESP']._serialized_start=293
-  _globals['_LOGINRESP']._serialized_end=438
-  _globals['_GENERATEREQIDREQ']._serialized_start=440
-  _globals['_GENERATEREQIDREQ']._serialized_end=512
-  _globals['_REQSTATUSRESP']._serialized_start=515
-  _globals['_REQSTATUSRESP']._serialized_end=694
-  _globals['_LOGOUTREQ']._serialized_start=696
-  _globals['_LOGOUTREQ']._serialized_end=734
-  _globals['_AUTH']._serialized_start=737
-  _globals['_AUTH']._serialized_end=1100
+  _globals['_REFRESHTOKENREQ']._serialized_start=94
+  _globals['_REFRESHTOKENREQ']._serialized_end=225
+  _globals['_LOGINREQ']._serialized_start=227
+  _globals['_LOGINREQ']._serialized_end=330
+  _globals['_LOGINRESP']._serialized_start=333
+  _globals['_LOGINRESP']._serialized_end=478
+  _globals['_GENERATEREQIDREQ']._serialized_start=480
+  _globals['_GENERATEREQIDREQ']._serialized_end=552
+  _globals['_REQSTATUSRESP']._serialized_start=555
+  _globals['_REQSTATUSRESP']._serialized_end=750
+  _globals['_LOGOUTREQ']._serialized_start=752
+  _globals['_LOGOUTREQ']._serialized_end=790
+  _globals['_AUTH']._serialized_start=793
+  _globals['_AUTH']._serialized_end=1156
 # @@protoc_insertion_point(module_scope)

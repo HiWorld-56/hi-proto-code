@@ -25,16 +25,29 @@ const SettingInfo$json = {
       '4': 1,
       '5': 9,
       '8': {},
-      '10': 'proxyEndpoint'
+      '9': 0,
+      '10': 'proxyEndpoint',
+      '17': true
     },
-    {'1': 'proxy_enable', '3': 2, '4': 1, '5': 8, '8': {}, '10': 'proxyEnable'},
+    {
+      '1': 'proxy_enable',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 1,
+      '10': 'proxyEnable',
+      '17': true
+    },
     {
       '1': 'openai_endpoint',
       '3': 3,
       '4': 1,
       '5': 9,
       '8': {},
-      '10': 'openaiEndpoint'
+      '9': 2,
+      '10': 'openaiEndpoint',
+      '17': true
     },
     {
       '1': 'openai_endpoint_enable',
@@ -42,18 +55,28 @@ const SettingInfo$json = {
       '4': 1,
       '5': 8,
       '8': {},
-      '10': 'openaiEndpointEnable'
+      '9': 3,
+      '10': 'openaiEndpointEnable',
+      '17': true
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_proxy_endpoint'},
+    {'1': '_proxy_enable'},
+    {'1': '_openai_endpoint'},
+    {'1': '_openai_endpoint_enable'},
+  ],
 };
 
 /// Descriptor for `SettingInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List settingInfoDescriptor = $convert.base64Decode(
-    'CgtTZXR0aW5nSW5mbxIrCg5wcm94eV9lbmRwb2ludBgBIAEoCUIEkLUYA1INcHJveHlFbmRwb2'
-    'ludBInCgxwcm94eV9lbmFibGUYAiABKAhCBJC1GANSC3Byb3h5RW5hYmxlEi0KD29wZW5haV9l'
-    'bmRwb2ludBgDIAEoCUIEkLUYA1IOb3BlbmFpRW5kcG9pbnQSOgoWb3BlbmFpX2VuZHBvaW50X2'
-    'VuYWJsZRgEIAEoCEIEkLUYA1IUb3BlbmFpRW5kcG9pbnRFbmFibGU6BJi1GAM=');
+    'CgtTZXR0aW5nSW5mbxIwCg5wcm94eV9lbmRwb2ludBgBIAEoCUIEkLUYA0gAUg1wcm94eUVuZH'
+    'BvaW50iAEBEiwKDHByb3h5X2VuYWJsZRgCIAEoCEIEkLUYA0gBUgtwcm94eUVuYWJsZYgBARIy'
+    'Cg9vcGVuYWlfZW5kcG9pbnQYAyABKAlCBJC1GANIAlIOb3BlbmFpRW5kcG9pbnSIAQESPwoWb3'
+    'BlbmFpX2VuZHBvaW50X2VuYWJsZRgEIAEoCEIEkLUYA0gDUhRvcGVuYWlFbmRwb2ludEVuYWJs'
+    'ZYgBAToEmLUYA0IRCg9fcHJveHlfZW5kcG9pbnRCDwoNX3Byb3h5X2VuYWJsZUISChBfb3Blbm'
+    'FpX2VuZHBvaW50QhkKF19vcGVuYWlfZW5kcG9pbnRfZW5hYmxl');
 
 @$core.Deprecated('Use settingEditReqDescriptor instead')
 const SettingEditReq$json = {

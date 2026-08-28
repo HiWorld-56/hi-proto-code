@@ -21,29 +21,44 @@ const RefreshTokenReq$json = {
   '2': [
     {'1': 'node', '3': 1, '4': 1, '5': 11, '6': '.hi.ClientInfo', '10': 'node'},
     {'1': 'did', '3': 2, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'refresh_token', '3': 3, '4': 1, '5': 9, '10': 'refreshToken'},
+    {
+      '1': 'refresh_token',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'refreshToken',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_refresh_token'},
   ],
 };
 
 /// Descriptor for `RefreshTokenReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List refreshTokenReqDescriptor = $convert.base64Decode(
     'Cg9SZWZyZXNoVG9rZW5SZXESIgoEbm9kZRgBIAEoCzIOLmhpLkNsaWVudEluZm9SBG5vZGUSEA'
-    'oDZGlkGAIgASgJUgNkaWQSIwoNcmVmcmVzaF90b2tlbhgDIAEoCVIMcmVmcmVzaFRva2Vu');
+    'oDZGlkGAIgASgJUgNkaWQSKAoNcmVmcmVzaF90b2tlbhgDIAEoCUgAUgxyZWZyZXNoVG9rZW6I'
+    'AQFCEAoOX3JlZnJlc2hfdG9rZW4=');
 
 @$core.Deprecated('Use loginReqDescriptor instead')
 const LoginReq$json = {
   '1': 'LoginReq',
   '2': [
-    {'1': 'req_id', '3': 1, '4': 1, '5': 9, '10': 'reqId'},
+    {'1': 'req_id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'reqId', '17': true},
     {'1': 'did', '3': 2, '4': 1, '5': 9, '10': 'did'},
     {'1': 'node', '3': 3, '4': 1, '5': 11, '6': '.hi.ClientInfo', '10': 'node'},
+  ],
+  '8': [
+    {'1': '_req_id'},
   ],
 };
 
 /// Descriptor for `LoginReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List loginReqDescriptor = $convert.base64Decode(
-    'CghMb2dpblJlcRIVCgZyZXFfaWQYASABKAlSBXJlcUlkEhAKA2RpZBgCIAEoCVIDZGlkEiIKBG'
-    '5vZGUYAyABKAsyDi5oaS5DbGllbnRJbmZvUgRub2Rl');
+    'CghMb2dpblJlcRIaCgZyZXFfaWQYASABKAlIAFIFcmVxSWSIAQESEAoDZGlkGAIgASgJUgNkaW'
+    'QSIgoEbm9kZRgDIAEoCzIOLmhpLkNsaWVudEluZm9SBG5vZGVCCQoHX3JlcV9pZA==');
 
 @$core.Deprecated('Use loginRespDescriptor instead')
 const LoginResp$json = {
@@ -113,7 +128,16 @@ const ReqStatusResp$json = {
       '8': {},
       '10': 'base'
     },
-    {'1': 'status', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'status'},
+    {
+      '1': 'status',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'status',
+      '17': true
+    },
     {
       '1': 'token',
       '3': 3,
@@ -134,14 +158,17 @@ const ReqStatusResp$json = {
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_status'},
+  ],
 };
 
 /// Descriptor for `ReqStatusResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List reqStatusRespDescriptor = $convert.base64Decode(
-    'Cg1SZXFTdGF0dXNSZXNwEiQKBGJhc2UYASABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBGJhc2USHA'
-    'oGc3RhdHVzGAIgASgJQgSQtRgDUgZzdGF0dXMSKQoFdG9rZW4YAyABKAsyDS5oaS5BdXRoVG9r'
-    'ZW5CBJC1GANSBXRva2VuEi0KBG1xdHQYBCABKAsyEy5oaS5NcXR0Q3JlZGVudGlhbHNCBJC1GA'
-    'NSBG1xdHQ6BJi1GAM=');
+    'Cg1SZXFTdGF0dXNSZXNwEiQKBGJhc2UYASABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBGJhc2USIQ'
+    'oGc3RhdHVzGAIgASgJQgSQtRgDSABSBnN0YXR1c4gBARIpCgV0b2tlbhgDIAEoCzINLmhpLkF1'
+    'dGhUb2tlbkIEkLUYA1IFdG9rZW4SLQoEbXF0dBgEIAEoCzITLmhpLk1xdHRDcmVkZW50aWFsc0'
+    'IEkLUYA1IEbXF0dDoEmLUYA0IJCgdfc3RhdHVz');
 
 @$core.Deprecated('Use logoutReqDescriptor instead')
 const LogoutReq$json = {

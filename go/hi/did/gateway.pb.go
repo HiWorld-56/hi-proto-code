@@ -34,9 +34,9 @@ type GatewayConfigUnit struct {
 	// ⚠️ **这不是链标识**,别跟 `chain` 字段那套(btc/eth/trx/sol/aptos,见 wallet.proto)混。
 	// 它是"配哪个节点/服务商"的名字 —— 所以才会有 tatum(数据 API)、
 	// 以及 tron 拆成 grpc/http 两条。两套词汇长得像、含义不同,混用会静默查空。
-	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Url           string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	ApiKey        string `protobuf:"bytes,3,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
+	Name          *string `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Url           *string `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`
+	ApiKey        *string `protobuf:"bytes,3,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,22 +72,22 @@ func (*GatewayConfigUnit) Descriptor() ([]byte, []int) {
 }
 
 func (x *GatewayConfigUnit) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *GatewayConfigUnit) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
 
 func (x *GatewayConfigUnit) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
+	if x != nil && x.ApiKey != nil {
+		return *x.ApiKey
 	}
 	return ""
 }
@@ -184,11 +184,15 @@ var File_hi_did_gateway_proto protoreflect.FileDescriptor
 
 const file_hi_did_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"j\n" +
-	"\x11GatewayConfigUnit\x12\x18\n" +
-	"\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12\x16\n" +
-	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12\x1d\n" +
-	"\aapi_key\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x06apiKey:\x04\x98\xb5\x18\x02\"R\n" +
+	"\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x96\x01\n" +
+	"\x11GatewayConfigUnit\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x03url\x88\x01\x01\x12\"\n" +
+	"\aapi_key\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x06apiKey\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_nameB\x06\n" +
+	"\x04_urlB\n" +
+	"\n" +
+	"\b_api_key\"R\n" +
 	"\x15GatewayConfigListResp\x123\n" +
 	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GatewayConfigUnitB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"D\n" +
 	"\x13GatewayConfigSetReq\x12-\n" +
@@ -243,6 +247,7 @@ func file_hi_did_gateway_proto_init() {
 	if File_hi_did_gateway_proto != nil {
 		return
 	}
+	file_hi_did_gateway_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

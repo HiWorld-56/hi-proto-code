@@ -20,23 +20,30 @@ const PushRegisterReq$json = {
   '1': 'PushRegisterReq',
   '2': [
     {'1': 'node', '3': 1, '4': 1, '5': 11, '6': '.hi.ClientInfo', '10': 'node'},
-    {'1': 'token', '3': 2, '4': 1, '5': 9, '10': 'token'},
+    {'1': 'token', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'token', '17': true},
+  ],
+  '8': [
+    {'1': '_token'},
   ],
 };
 
 /// Descriptor for `PushRegisterReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pushRegisterReqDescriptor = $convert.base64Decode(
-    'Cg9QdXNoUmVnaXN0ZXJSZXESIgoEbm9kZRgBIAEoCzIOLmhpLkNsaWVudEluZm9SBG5vZGUSFA'
-    'oFdG9rZW4YAiABKAlSBXRva2Vu');
+    'Cg9QdXNoUmVnaXN0ZXJSZXESIgoEbm9kZRgBIAEoCzIOLmhpLkNsaWVudEluZm9SBG5vZGUSGQ'
+    'oFdG9rZW4YAiABKAlIAFIFdG9rZW6IAQFCCAoGX3Rva2Vu');
 
 @$core.Deprecated('Use pushUnregisterReqDescriptor instead')
 const PushUnregisterReq$json = {
   '1': 'PushUnregisterReq',
   '2': [
-    {'1': 'token', '3': 1, '4': 1, '5': 9, '10': 'token'},
+    {'1': 'token', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'token', '17': true},
+  ],
+  '8': [
+    {'1': '_token'},
   ],
 };
 
 /// Descriptor for `PushUnregisterReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pushUnregisterReqDescriptor = $convert
-    .base64Decode('ChFQdXNoVW5yZWdpc3RlclJlcRIUCgV0b2tlbhgBIAEoCVIFdG9rZW4=');
+final $typed_data.Uint8List pushUnregisterReqDescriptor = $convert.base64Decode(
+    'ChFQdXNoVW5yZWdpc3RlclJlcRIZCgV0b2tlbhgBIAEoCUgAUgV0b2tlbogBAUIICgZfdG9rZW'
+    '4=');

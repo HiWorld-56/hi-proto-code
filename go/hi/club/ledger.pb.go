@@ -138,32 +138,32 @@ type FundsRecord struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 幂等键,**由机器人本地生成**(它先落账再动钱,uuid 那时就有了)。
 	// 不用时间戳:补报第二次就会变成两行。
-	Uuid string    `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Kind FundsKind `protobuf:"varint,2,opt,name=kind,proto3,enum=hi.club.FundsKind" json:"kind,omitempty"`
+	Uuid *string    `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Kind *FundsKind `protobuf:"varint,2,opt,name=kind,proto3,enum=hi.club.FundsKind,oneof" json:"kind,omitempty"`
 	// 付款人 = 机器人自己。**上报时不看这一栏**(主体取自凭证),回读时才填 ——
 	// 收在这里是为了让"我的仆从们的流水"一张表里分得清是哪台。
-	Payer string `protobuf:"bytes,3,opt,name=payer,proto3" json:"payer,omitempty"`
+	Payer *string `protobuf:"bytes,3,opt,name=payer,proto3,oneof" json:"payer,omitempty"`
 	// 收款人的 did。提款时就是主人。
-	Payee string `protobuf:"bytes,4,opt,name=payee,proto3" json:"payee,omitempty"`
+	Payee *string `protobuf:"bytes,4,opt,name=payee,proto3,oneof" json:"payee,omitempty"`
 	// 收款人在该链上的地址 —— did 是身份,地址是这一笔真正打到的地方,两个都要留:
 	// 对账时人拿着地址去链上翻,而 did 才说得清"这是谁"。
-	ToAddress string `protobuf:"bytes,5,opt,name=to_address,json=toAddress,proto3" json:"to_address,omitempty"`
-	Chain     string `protobuf:"bytes,6,opt,name=chain,proto3" json:"chain,omitempty"`
-	Coin      string `protobuf:"bytes,7,opt,name=coin,proto3" json:"coin,omitempty"`
+	ToAddress *string `protobuf:"bytes,5,opt,name=to_address,json=toAddress,proto3,oneof" json:"to_address,omitempty"`
+	Chain     *string `protobuf:"bytes,6,opt,name=chain,proto3,oneof" json:"chain,omitempty"`
+	Coin      *string `protobuf:"bytes,7,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	// 人类可读金额,如 "12.5"。**实际发出去的数** —— 全提时它与余额必然不同。
-	Amount string `protobuf:"bytes,8,opt,name=amount,proto3" json:"amount,omitempty"`
+	Amount *string `protobuf:"bytes,8,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
 	// 为手续费预留的量,以及它的币种。**手续费是本币** —— 转 USDT-TRC20 烧的是 TRX,
 	// 只给一个数字不给币种,页面上会显示成"手续费 1.1 USDT"。
-	Fee     string      `protobuf:"bytes,9,opt,name=fee,proto3" json:"fee,omitempty"`
-	FeeCoin string      `protobuf:"bytes,10,opt,name=fee_coin,json=feeCoin,proto3" json:"fee_coin,omitempty"`
-	TxHash  string      `protobuf:"bytes,11,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
-	Status  FundsStatus `protobuf:"varint,12,opt,name=status,proto3,enum=hi.club.FundsStatus" json:"status,omitempty"`
+	Fee     *string      `protobuf:"bytes,9,opt,name=fee,proto3,oneof" json:"fee,omitempty"`
+	FeeCoin *string      `protobuf:"bytes,10,opt,name=fee_coin,json=feeCoin,proto3,oneof" json:"fee_coin,omitempty"`
+	TxHash  *string      `protobuf:"bytes,11,opt,name=tx_hash,json=txHash,proto3,oneof" json:"tx_hash,omitempty"`
+	Status  *FundsStatus `protobuf:"varint,12,opt,name=status,proto3,enum=hi.club.FundsStatus,oneof" json:"status,omitempty"`
 	// 失败原因(status=FAILED 时)。原样存机器人报上来的那句话 ——
 	// 它是给人看的("有 USDT 但没 TRX 付手续费"),不参与任何判断。
-	Reason string `protobuf:"bytes,13,opt,name=reason,proto3" json:"reason,omitempty"`
+	Reason *string `protobuf:"bytes,13,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
 	// 这笔钱**发生**的时间(机器人本地落账的时刻),不是上报到达的时刻。
 	// 补报可能迟到几小时,按到达时间排会把顺序打乱。
-	CreatedAt     int64 `protobuf:"varint,14,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt     *int64 `protobuf:"varint,14,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -199,106 +199,106 @@ func (*FundsRecord) Descriptor() ([]byte, []int) {
 }
 
 func (x *FundsRecord) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetKind() FundsKind {
-	if x != nil {
-		return x.Kind
+	if x != nil && x.Kind != nil {
+		return *x.Kind
 	}
 	return FundsKind_FUNDS_KIND_UNSPECIFIED
 }
 
 func (x *FundsRecord) GetPayer() string {
-	if x != nil {
-		return x.Payer
+	if x != nil && x.Payer != nil {
+		return *x.Payer
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetPayee() string {
-	if x != nil {
-		return x.Payee
+	if x != nil && x.Payee != nil {
+		return *x.Payee
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetToAddress() string {
-	if x != nil {
-		return x.ToAddress
+	if x != nil && x.ToAddress != nil {
+		return *x.ToAddress
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetChain() string {
-	if x != nil {
-		return x.Chain
+	if x != nil && x.Chain != nil {
+		return *x.Chain
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetFee() string {
-	if x != nil {
-		return x.Fee
+	if x != nil && x.Fee != nil {
+		return *x.Fee
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetFeeCoin() string {
-	if x != nil {
-		return x.FeeCoin
+	if x != nil && x.FeeCoin != nil {
+		return *x.FeeCoin
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetTxHash() string {
-	if x != nil {
-		return x.TxHash
+	if x != nil && x.TxHash != nil {
+		return *x.TxHash
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetStatus() FundsStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return FundsStatus_FUNDS_STATUS_UNSPECIFIED
 }
 
 func (x *FundsRecord) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
 
 func (x *FundsRecord) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
 
 type ListFundsReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人**。
+	// 看谁的。不传 = 看我自己;填了则**必须是我的仆从机器人**。
 	//
 	// ⚠️ 与 `Market.ListTransactions` 同一条规矩,别顺手放宽成"填谁都行" ——
 	//
@@ -401,25 +401,41 @@ var File_hi_club_ledger_proto protoreflect.FileDescriptor
 
 const file_hi_club_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/ledger.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xe7\x03\n" +
-	"\vFundsRecord\x12$\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x10\xbaH\tr\a2\x05^\\S+$\x90\xb5\x18\x03R\x04uuid\x12,\n" +
-	"\x04kind\x18\x02 \x01(\x0e2\x12.hi.club.FundsKindB\x04\x90\xb5\x18\x03R\x04kind\x12\x1a\n" +
-	"\x05payer\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x05payer\x12\x1a\n" +
-	"\x05payee\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12#\n" +
+	"\x14hi/club/ledger.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xc9\x05\n" +
+	"\vFundsRecord\x12,\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x13\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x121\n" +
+	"\x04kind\x18\x02 \x01(\x0e2\x12.hi.club.FundsKindB\x04\x90\xb5\x18\x03H\x01R\x04kind\x88\x01\x01\x12\x1f\n" +
+	"\x05payer\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x05payer\x88\x01\x01\x12\x1f\n" +
+	"\x05payee\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05payee\x88\x01\x01\x12(\n" +
 	"\n" +
-	"to_address\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\ttoAddress\x12\x1a\n" +
-	"\x05chain\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x05chain\x12\x18\n" +
-	"\x04coin\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12\x1c\n" +
-	"\x06amount\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x16\n" +
-	"\x03fee\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x03fee\x12\x1f\n" +
+	"to_address\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\ttoAddress\x88\x01\x01\x12\x1f\n" +
+	"\x05chain\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x05chain\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x04coin\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\x06amount\x88\x01\x01\x12\x1b\n" +
+	"\x03fee\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\bR\x03fee\x88\x01\x01\x12$\n" +
 	"\bfee_coin\x18\n" +
-	" \x01(\tB\x04\x90\xb5\x18\x03R\afeeCoin\x12\x1d\n" +
-	"\atx_hash\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x06txHash\x122\n" +
-	"\x06status\x18\f \x01(\x0e2\x14.hi.club.FundsStatusB\x04\x90\xb5\x18\x03R\x06status\x12\x1c\n" +
-	"\x06reason\x18\r \x01(\tB\x04\x90\xb5\x18\x03R\x06reason\x12#\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x03H\tR\afeeCoin\x88\x01\x01\x12\"\n" +
+	"\atx_hash\x18\v \x01(\tB\x04\x90\xb5\x18\x03H\n" +
+	"R\x06txHash\x88\x01\x01\x127\n" +
+	"\x06status\x18\f \x01(\x0e2\x14.hi.club.FundsStatusB\x04\x90\xb5\x18\x03H\vR\x06status\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\r \x01(\tB\x04\x90\xb5\x18\x03H\fR\x06reason\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x0e \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"P\n" +
+	"created_at\x18\x0e \x01(\x03B\x04\x90\xb5\x18\x03H\rR\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_uuidB\a\n" +
+	"\x05_kindB\b\n" +
+	"\x06_payerB\b\n" +
+	"\x06_payeeB\r\n" +
+	"\v_to_addressB\b\n" +
+	"\x06_chainB\a\n" +
+	"\x05_coinB\t\n" +
+	"\a_amountB\x06\n" +
+	"\x04_feeB\v\n" +
+	"\t_fee_coinB\n" +
+	"\n" +
+	"\b_tx_hashB\t\n" +
+	"\a_statusB\t\n" +
+	"\a_reasonB\r\n" +
+	"\v_created_at\"P\n" +
 	"\fListFundsReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
@@ -484,6 +500,7 @@ func file_hi_club_ledger_proto_init() {
 	if File_hi_club_ledger_proto != nil {
 		return
 	}
+	file_hi_club_ledger_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

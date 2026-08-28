@@ -29,7 +29,7 @@ from hi.ai import agent_pb2 as hi_dot_ai_dot_agent__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/agent.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"3\n\rMasterBindReq\x12\"\n\x05\x61gent\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x05\x61gent\"%\n\rBindStatusReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\"@\n\x0e\x42indStatusResp\x12(\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x01\"3\n\x0bTransferReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\x12\x0e\n\x02to\x18\x02 \x01(\tR\x02to\"\\\n\rListOnlineReq\x12\x1b\n\towner_did\x18\x01 \x01(\tR\x08ownerDid\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"Z\n\x0eListOnlineResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01R\x05total\x12&\n\x05infos\x18\x02 \x03(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\"\\\n\x14ListAgentsByUsersReq\x12\x14\n\x05users\x18\x01 \x03(\tR\x05users\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"b\n\x0eListAgentsResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x05total\x12.\n\x06\x61gents\x18\x02 \x03(\x0b\x32\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06\x61gents:\x04\x98\xb5\x18\x03\x32\xd9\x05\n\x05\x41gent\x12<\n\x04List\x12\x14.hi.ai.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x0f\x43reateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12.\n\x04\x45\x64it\x12\x13.hi.ai.EditAgentReq\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x06\x44\x65lete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x35\n\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x08GetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x02\x12\x43\n\nBindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x45\n\x0cUnbindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x44\n\nBindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n\x08Transfer\x12\x14.hi.club.TransferReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x32V\n\x0e\x41gentDirectory\x12\x44\n\nListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\"\x05\x8a\xb5\x18\x01\x01\x32T\n\x0b\x41gentManage\x12\x45\n\x04List\x12\x1d.hi.club.ListAgentsByUsersReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/agent.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"E\n\rMasterBindReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"4\n\rBindStatusReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"@\n\x0e\x42indStatusResp\x12(\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x01\"N\n\x0bTransferReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x13\n\x02to\x18\x02 \x01(\tH\x01R\x02to\x88\x01\x01\x42\x08\n\x06_agentB\x05\n\x03_to\"o\n\rListOnlineReq\x12 \n\towner_did\x18\x01 \x01(\tH\x00R\x08ownerDid\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x0c\n\n_owner_did\"i\n\x0eListOnlineResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12&\n\x05infos\x18\x02 \x03(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"\\\n\x14ListAgentsByUsersReq\x12\x14\n\x05users\x18\x01 \x03(\tR\x05users\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"q\n\x0eListAgentsResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12.\n\x06\x61gents\x18\x02 \x03(\x0b\x32\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06\x61gents:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total2\xd9\x05\n\x05\x41gent\x12<\n\x04List\x12\x14.hi.ai.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x0f\x43reateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12.\n\x04\x45\x64it\x12\x13.hi.ai.EditAgentReq\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x06\x44\x65lete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x35\n\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x08GetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x02\x12\x43\n\nBindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x45\n\x0cUnbindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x44\n\nBindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n\x08Transfer\x12\x14.hi.club.TransferReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x32V\n\x0e\x41gentDirectory\x12\x44\n\nListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\"\x05\x8a\xb5\x18\x01\x01\x32T\n\x0b\x41gentManage\x12\x45\n\x04List\x12\x1d.hi.club.ListAgentsByUsersReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -38,7 +38,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z)github.com/HiWorld-56/hi-proto/go/hi/club'
   _globals['_MASTERBINDREQ'].fields_by_name['agent']._loaded_options = None
-  _globals['_MASTERBINDREQ'].fields_by_name['agent']._serialized_options = b'\272H\tr\0072\005^\\S+$'
+  _globals['_MASTERBINDREQ'].fields_by_name['agent']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
   _globals['_BINDSTATUSRESP'].fields_by_name['master']._loaded_options = None
   _globals['_BINDSTATUSRESP'].fields_by_name['master']._serialized_options = b'\220\265\030\001'
   _globals['_BINDSTATUSRESP']._loaded_options = None
@@ -82,25 +82,25 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AGENTMANAGE'].methods_by_name['List']._loaded_options = None
   _globals['_AGENTMANAGE'].methods_by_name['List']._serialized_options = b'\212\265\030\001\004'
   _globals['_MASTERBINDREQ']._serialized_start=144
-  _globals['_MASTERBINDREQ']._serialized_end=195
-  _globals['_BINDSTATUSREQ']._serialized_start=197
-  _globals['_BINDSTATUSREQ']._serialized_end=234
-  _globals['_BINDSTATUSRESP']._serialized_start=236
-  _globals['_BINDSTATUSRESP']._serialized_end=300
-  _globals['_TRANSFERREQ']._serialized_start=302
-  _globals['_TRANSFERREQ']._serialized_end=353
-  _globals['_LISTONLINEREQ']._serialized_start=355
-  _globals['_LISTONLINEREQ']._serialized_end=447
-  _globals['_LISTONLINERESP']._serialized_start=449
-  _globals['_LISTONLINERESP']._serialized_end=539
-  _globals['_LISTAGENTSBYUSERSREQ']._serialized_start=541
-  _globals['_LISTAGENTSBYUSERSREQ']._serialized_end=633
-  _globals['_LISTAGENTSRESP']._serialized_start=635
-  _globals['_LISTAGENTSRESP']._serialized_end=733
-  _globals['_AGENT']._serialized_start=736
-  _globals['_AGENT']._serialized_end=1465
-  _globals['_AGENTDIRECTORY']._serialized_start=1467
-  _globals['_AGENTDIRECTORY']._serialized_end=1553
-  _globals['_AGENTMANAGE']._serialized_start=1555
-  _globals['_AGENTMANAGE']._serialized_end=1639
+  _globals['_MASTERBINDREQ']._serialized_end=213
+  _globals['_BINDSTATUSREQ']._serialized_start=215
+  _globals['_BINDSTATUSREQ']._serialized_end=267
+  _globals['_BINDSTATUSRESP']._serialized_start=269
+  _globals['_BINDSTATUSRESP']._serialized_end=333
+  _globals['_TRANSFERREQ']._serialized_start=335
+  _globals['_TRANSFERREQ']._serialized_end=413
+  _globals['_LISTONLINEREQ']._serialized_start=415
+  _globals['_LISTONLINEREQ']._serialized_end=526
+  _globals['_LISTONLINERESP']._serialized_start=528
+  _globals['_LISTONLINERESP']._serialized_end=633
+  _globals['_LISTAGENTSBYUSERSREQ']._serialized_start=635
+  _globals['_LISTAGENTSBYUSERSREQ']._serialized_end=727
+  _globals['_LISTAGENTSRESP']._serialized_start=729
+  _globals['_LISTAGENTSRESP']._serialized_end=842
+  _globals['_AGENT']._serialized_start=845
+  _globals['_AGENT']._serialized_end=1574
+  _globals['_AGENTDIRECTORY']._serialized_start=1576
+  _globals['_AGENTDIRECTORY']._serialized_end=1662
+  _globals['_AGENTMANAGE']._serialized_start=1664
+  _globals['_AGENTMANAGE']._serialized_end=1748
 # @@protoc_insertion_point(module_scope)

@@ -28,7 +28,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/ai/merchant.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"S\n\x0fMerchantListReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"\xe5\x01\n\x10MerchantListResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x05total\x12\x38\n\x05infos\x18\x02 \x03(\x0b\x32\x1c.hi.ai.MerchantListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1au\n\x04Unit\x12$\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04\x62\x61se\x12#\n\ncreated_at\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03R\tcreatedAt\x12\x1c\n\x06remark\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06remark:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"S\n\x0fMerchantEditReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x03\x64id\x12 \n\x06remark\x18\x02 \x01(\tB\x08\xbaH\x05r\x03\x18\xff\x01R\x06remark2\x89\x01\n\x08Merchant\x12>\n\x04List\x12\x16.hi.ai.MerchantListReq\x1a\x17.hi.ai.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04\x12=\n\x04\x45\x64it\x12\x16.hi.ai.MerchantEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/ai/merchant.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"`\n\x0fMerchantListReq\x12\x15\n\x03\x64id\x18\x01 \x01(\tH\x00R\x03\x64id\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x06\n\x04_did\"\x99\x02\n\x10MerchantListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12\x38\n\x05infos\x18\x02 \x03(\x0b\x32\x1c.hi.ai.MerchantListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1a\x99\x01\n\x04Unit\x12$\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04\x62\x61se\x12(\n\ncreated_at\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x00R\tcreatedAt\x88\x01\x01\x12!\n\x06remark\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06remark\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\r\n\x0b_created_atB\t\n\x07_remark:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"c\n\x0fMerchantEditReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x03\x64id\x12%\n\x06remark\x18\x02 \x01(\tB\x08\xbaH\x05r\x03\x18\xff\x01H\x00R\x06remark\x88\x01\x01\x42\t\n\x07_remark2\x89\x01\n\x08Merchant\x12>\n\x04List\x12\x16.hi.ai.MerchantListReq\x1a\x17.hi.ai.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04\x12=\n\x04\x45\x64it\x12\x16.hi.ai.MerchantEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -59,13 +59,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_MERCHANT'].methods_by_name['Edit']._loaded_options = None
   _globals['_MERCHANT'].methods_by_name['Edit']._serialized_options = b'\212\265\030\001\004'
   _globals['_MERCHANTLISTREQ']._serialized_start=124
-  _globals['_MERCHANTLISTREQ']._serialized_end=207
-  _globals['_MERCHANTLISTRESP']._serialized_start=210
-  _globals['_MERCHANTLISTRESP']._serialized_end=439
-  _globals['_MERCHANTLISTRESP_UNIT']._serialized_start=316
-  _globals['_MERCHANTLISTRESP_UNIT']._serialized_end=433
-  _globals['_MERCHANTEDITREQ']._serialized_start=441
-  _globals['_MERCHANTEDITREQ']._serialized_end=524
-  _globals['_MERCHANT']._serialized_start=527
-  _globals['_MERCHANT']._serialized_end=664
+  _globals['_MERCHANTLISTREQ']._serialized_end=220
+  _globals['_MERCHANTLISTRESP']._serialized_start=223
+  _globals['_MERCHANTLISTRESP']._serialized_end=504
+  _globals['_MERCHANTLISTRESP_UNIT']._serialized_start=335
+  _globals['_MERCHANTLISTRESP_UNIT']._serialized_end=488
+  _globals['_MERCHANTEDITREQ']._serialized_start=506
+  _globals['_MERCHANTEDITREQ']._serialized_end=605
+  _globals['_MERCHANT']._serialized_start=608
+  _globals['_MERCHANT']._serialized_end=745
 # @@protoc_insertion_point(module_scope)

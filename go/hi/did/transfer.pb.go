@@ -24,12 +24,12 @@ const (
 
 type Transaction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Hash          string                 `protobuf:"bytes,1,opt,name=hash,proto3" json:"hash,omitempty"`
-	Amount        string                 `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	Hash          *string                `protobuf:"bytes,1,opt,name=hash,proto3,oneof" json:"hash,omitempty"`
+	Amount        *string                `protobuf:"bytes,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
 	Coin          *Coin                  `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
 	From          *hi.Entity             `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`
 	To            *hi.Entity             `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"`
-	Remark        string                 `protobuf:"bytes,6,opt,name=remark,proto3" json:"remark,omitempty"`
+	Remark        *string                `protobuf:"bytes,6,opt,name=remark,proto3,oneof" json:"remark,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -65,15 +65,15 @@ func (*Transaction) Descriptor() ([]byte, []int) {
 }
 
 func (x *Transaction) GetHash() string {
-	if x != nil {
-		return x.Hash
+	if x != nil && x.Hash != nil {
+		return *x.Hash
 	}
 	return ""
 }
 
 func (x *Transaction) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
@@ -100,18 +100,18 @@ func (x *Transaction) GetTo() *hi.Entity {
 }
 
 func (x *Transaction) GetRemark() string {
-	if x != nil {
-		return x.Remark
+	if x != nil && x.Remark != nil {
+		return *x.Remark
 	}
 	return ""
 }
 
 type HistoryReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
-	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	Cursor        string                 `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"` // 分页游标，第一页为空
-	Limit         int32                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`  // 最大返回数
+	Coin          *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Address       *string                `protobuf:"bytes,2,opt,name=address,proto3,oneof" json:"address,omitempty"`
+	Cursor        *string                `protobuf:"bytes,3,opt,name=cursor,proto3,oneof" json:"cursor,omitempty"` // 分页游标，第一页不传
+	Limit         *int32                 `protobuf:"varint,4,opt,name=limit,proto3,oneof" json:"limit,omitempty"`  // 最大返回数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -147,29 +147,29 @@ func (*HistoryReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *HistoryReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *HistoryReq) GetAddress() string {
-	if x != nil {
-		return x.Address
+	if x != nil && x.Address != nil {
+		return *x.Address
 	}
 	return ""
 }
 
 func (x *HistoryReq) GetCursor() string {
-	if x != nil {
-		return x.Cursor
+	if x != nil && x.Cursor != nil {
+		return *x.Cursor
 	}
 	return ""
 }
 
 func (x *HistoryReq) GetLimit() int32 {
-	if x != nil {
-		return x.Limit
+	if x != nil && x.Limit != nil {
+		return *x.Limit
 	}
 	return 0
 }
@@ -177,7 +177,7 @@ func (x *HistoryReq) GetLimit() int32 {
 type HistoryResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	List          []*HistoryResp_Unit    `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	NextCursor    string                 `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"` // 下一页游标
+	NextCursor    *string                `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3,oneof" json:"next_cursor,omitempty"` // 下一页游标
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -220,16 +220,16 @@ func (x *HistoryResp) GetList() []*HistoryResp_Unit {
 }
 
 func (x *HistoryResp) GetNextCursor() string {
-	if x != nil {
-		return x.NextCursor
+	if x != nil && x.NextCursor != nil {
+		return *x.NextCursor
 	}
 	return ""
 }
 
 type TxStatusReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
-	Hash          string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+	Coin          *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Hash          *string                `protobuf:"bytes,2,opt,name=hash,proto3,oneof" json:"hash,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -265,23 +265,23 @@ func (*TxStatusReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *TxStatusReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *TxStatusReq) GetHash() string {
-	if x != nil {
-		return x.Hash
+	if x != nil && x.Hash != nil {
+		return *x.Hash
 	}
 	return ""
 }
 
 type TxStatusResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`        // pending / confirming / success / failed / notfound
-	Progress      uint32                 `protobuf:"varint,2,opt,name=progress,proto3" json:"progress,omitempty"` // 进度，0-100
+	State         *string                `protobuf:"bytes,1,opt,name=state,proto3,oneof" json:"state,omitempty"`        // pending / confirming / success / failed / notfound
+	Progress      *uint32                `protobuf:"varint,2,opt,name=progress,proto3,oneof" json:"progress,omitempty"` // 进度，0-100
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -317,15 +317,15 @@ func (*TxStatusResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *TxStatusResp) GetState() string {
-	if x != nil {
-		return x.State
+	if x != nil && x.State != nil {
+		return *x.State
 	}
 	return ""
 }
 
 func (x *TxStatusResp) GetProgress() uint32 {
-	if x != nil {
-		return x.Progress
+	if x != nil && x.Progress != nil {
+		return *x.Progress
 	}
 	return 0
 }
@@ -347,8 +347,8 @@ func (x *TxStatusResp) GetProgress() uint32 {
 // 返回的都是链上公开数据,故与同 service 的其它方法同档(AUTH_NONE)。
 type TxDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"` // 用来定位链/合约/精度
-	Hash          string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+	Coin          *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"` // 用来定位链/合约/精度
+	Hash          *string                `protobuf:"bytes,2,opt,name=hash,proto3,oneof" json:"hash,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -384,33 +384,33 @@ func (*TxDetailReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *TxDetailReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *TxDetailReq) GetHash() string {
-	if x != nil {
-		return x.Hash
+	if x != nil && x.Hash != nil {
+		return *x.Hash
 	}
 	return ""
 }
 
 type TxDetailResp struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	State           string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"` // pending / confirming / success / failed / notfound
-	ConfirmedBlocks int64                  `protobuf:"varint,2,opt,name=confirmed_blocks,json=confirmedBlocks,proto3" json:"confirmed_blocks,omitempty"`
-	Timestamp       int64                  `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"` // 交易时间(ms)。业务侧据此做时限校验
-	From            string                 `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`            // 链上地址(不是 DID)
-	To              string                 `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"`                // 链上地址(不是 DID)
-	Amount          string                 `protobuf:"bytes,6,opt,name=amount,proto3" json:"amount,omitempty"`        // **人类可读**,已按币种精度换算
-	Contract        string                 `protobuf:"bytes,7,opt,name=contract,proto3" json:"contract,omitempty"`    // 合约地址;空=原生币
+	State           *string                `protobuf:"bytes,1,opt,name=state,proto3,oneof" json:"state,omitempty"` // pending / confirming / success / failed / notfound
+	ConfirmedBlocks *int64                 `protobuf:"varint,2,opt,name=confirmed_blocks,json=confirmedBlocks,proto3,oneof" json:"confirmed_blocks,omitempty"`
+	Timestamp       *int64                 `protobuf:"varint,3,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"` // 交易时间(ms)。业务侧据此做时限校验
+	From            *string                `protobuf:"bytes,4,opt,name=from,proto3,oneof" json:"from,omitempty"`            // 链上地址(不是 DID)
+	To              *string                `protobuf:"bytes,5,opt,name=to,proto3,oneof" json:"to,omitempty"`                // 链上地址(不是 DID)
+	Amount          *string                `protobuf:"bytes,6,opt,name=amount,proto3,oneof" json:"amount,omitempty"`        // **人类可读**,已按币种精度换算
+	Contract        *string                `protobuf:"bytes,7,opt,name=contract,proto3,oneof" json:"contract,omitempty"`    // 合约地址;不传=原生币
 	// 该 hash 在缓存窗口内被**成功且合法地核验**过几次。业务侧据此防伪。
 	// ⚠️ 别拿它当硬闸:响应丢了导致的重试、崩在中途导致的重试,都会让它变大 ——
 	//
 	//	早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
-	QueryCount    uint32 `protobuf:"varint,8,opt,name=query_count,json=queryCount,proto3" json:"query_count,omitempty"`
+	QueryCount    *uint32 `protobuf:"varint,8,opt,name=query_count,json=queryCount,proto3,oneof" json:"query_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -446,66 +446,66 @@ func (*TxDetailResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *TxDetailResp) GetState() string {
-	if x != nil {
-		return x.State
+	if x != nil && x.State != nil {
+		return *x.State
 	}
 	return ""
 }
 
 func (x *TxDetailResp) GetConfirmedBlocks() int64 {
-	if x != nil {
-		return x.ConfirmedBlocks
+	if x != nil && x.ConfirmedBlocks != nil {
+		return *x.ConfirmedBlocks
 	}
 	return 0
 }
 
 func (x *TxDetailResp) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
 
 func (x *TxDetailResp) GetFrom() string {
-	if x != nil {
-		return x.From
+	if x != nil && x.From != nil {
+		return *x.From
 	}
 	return ""
 }
 
 func (x *TxDetailResp) GetTo() string {
-	if x != nil {
-		return x.To
+	if x != nil && x.To != nil {
+		return *x.To
 	}
 	return ""
 }
 
 func (x *TxDetailResp) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *TxDetailResp) GetContract() string {
-	if x != nil {
-		return x.Contract
+	if x != nil && x.Contract != nil {
+		return *x.Contract
 	}
 	return ""
 }
 
 func (x *TxDetailResp) GetQueryCount() uint32 {
-	if x != nil {
-		return x.QueryCount
+	if x != nil && x.QueryCount != nil {
+		return *x.QueryCount
 	}
 	return 0
 }
 
 type VerifyTransactionReq struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
-	Coin   string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`     // 预期币种（did 据此定位链/合约/精度）
-	Hash   string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`     // 链上交易 hash
-	Amount string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"` // 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
+	Coin   *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"`     // 预期币种（did 据此定位链/合约/精度）
+	Hash   *string                `protobuf:"bytes,2,opt,name=hash,proto3,oneof" json:"hash,omitempty"`     // 链上交易 hash
+	Amount *string                `protobuf:"bytes,3,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
 	// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
 	//
 	// ⚠️ **必填,不要改成 optional。** 曾经为了插件市场("按订单认款,不关心谁付的")
@@ -517,8 +517,8 @@ type VerifyTransactionReq struct {
 	//
 	//	不关心付款方的业务应当去查**交易明细**,自己按业务规则比对,
 	//	而不是让公用的验证器变松。
-	From          string `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`
-	To            string `protobuf:"bytes,5,opt,name=to,proto3" json:"to,omitempty"` // 预期收款方 **DID**（同上）
+	From          *string `protobuf:"bytes,4,opt,name=from,proto3,oneof" json:"from,omitempty"`
+	To            *string `protobuf:"bytes,5,opt,name=to,proto3,oneof" json:"to,omitempty"` // 预期收款方 **DID**（同上）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -554,48 +554,48 @@ func (*VerifyTransactionReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *VerifyTransactionReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *VerifyTransactionReq) GetHash() string {
-	if x != nil {
-		return x.Hash
+	if x != nil && x.Hash != nil {
+		return *x.Hash
 	}
 	return ""
 }
 
 func (x *VerifyTransactionReq) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *VerifyTransactionReq) GetFrom() string {
-	if x != nil {
-		return x.From
+	if x != nil && x.From != nil {
+		return *x.From
 	}
 	return ""
 }
 
 func (x *VerifyTransactionReq) GetTo() string {
-	if x != nil {
-		return x.To
+	if x != nil && x.To != nil {
+		return *x.To
 	}
 	return ""
 }
 
 type VerifyTransactionResp struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	State           string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`                                             // pending / confirming / success / failed / notfound
-	Passed          bool                   `protobuf:"varint,2,opt,name=passed,proto3" json:"passed,omitempty"`                                          // 业务校验是否通过（仅 state=success 有意义）
-	Reason          string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`                                           // 未过原因：AMOUNT_ERR / FROM_ERR / TO_ERR / CONTRACTADDRESS_ERR
-	ConfirmedBlocks int64                  `protobuf:"varint,4,opt,name=confirmed_blocks,json=confirmedBlocks,proto3" json:"confirmed_blocks,omitempty"` // 链上确认数
-	Timestamp       int64                  `protobuf:"varint,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                                    // 交易时间（ms）；调用方据此自行做时限校验（业务层解耦）
-	QueryCount      uint32                 `protobuf:"varint,6,opt,name=query_count,json=queryCount,proto3" json:"query_count,omitempty"`                // 该 hash 在缓存窗口内被查询次数（业务侧据此防伪）
+	State           *string                `protobuf:"bytes,1,opt,name=state,proto3,oneof" json:"state,omitempty"`                                             // pending / confirming / success / failed / notfound
+	Passed          *bool                  `protobuf:"varint,2,opt,name=passed,proto3,oneof" json:"passed,omitempty"`                                          // 业务校验是否通过（仅 state=success 有意义）
+	Reason          *string                `protobuf:"bytes,3,opt,name=reason,proto3,oneof" json:"reason,omitempty"`                                           // 未过原因：AMOUNT_ERR / FROM_ERR / TO_ERR / CONTRACTADDRESS_ERR
+	ConfirmedBlocks *int64                 `protobuf:"varint,4,opt,name=confirmed_blocks,json=confirmedBlocks,proto3,oneof" json:"confirmed_blocks,omitempty"` // 链上确认数
+	Timestamp       *int64                 `protobuf:"varint,5,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`                                    // 交易时间（ms）；调用方据此自行做时限校验（业务层解耦）
+	QueryCount      *uint32                `protobuf:"varint,6,opt,name=query_count,json=queryCount,proto3,oneof" json:"query_count,omitempty"`                // 该 hash 在缓存窗口内被查询次数（业务侧据此防伪）
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -631,43 +631,43 @@ func (*VerifyTransactionResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *VerifyTransactionResp) GetState() string {
-	if x != nil {
-		return x.State
+	if x != nil && x.State != nil {
+		return *x.State
 	}
 	return ""
 }
 
 func (x *VerifyTransactionResp) GetPassed() bool {
-	if x != nil {
-		return x.Passed
+	if x != nil && x.Passed != nil {
+		return *x.Passed
 	}
 	return false
 }
 
 func (x *VerifyTransactionResp) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
 
 func (x *VerifyTransactionResp) GetConfirmedBlocks() int64 {
-	if x != nil {
-		return x.ConfirmedBlocks
+	if x != nil && x.ConfirmedBlocks != nil {
+		return *x.ConfirmedBlocks
 	}
 	return 0
 }
 
 func (x *VerifyTransactionResp) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
 
 func (x *VerifyTransactionResp) GetQueryCount() uint32 {
-	if x != nil {
-		return x.QueryCount
+	if x != nil && x.QueryCount != nil {
+		return *x.QueryCount
 	}
 	return 0
 }
@@ -675,9 +675,9 @@ func (x *VerifyTransactionResp) GetQueryCount() uint32 {
 type HistoryResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Trans         *Transaction           `protobuf:"bytes,1,opt,name=trans,proto3" json:"trans,omitempty"`
-	Direction     string                 `protobuf:"bytes,2,opt,name=direction,proto3" json:"direction,omitempty"` // in（转入）/ out（转出）/ self（自转）
-	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`       // pending / confirming / success / failed / notfound
-	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Direction     *string                `protobuf:"bytes,2,opt,name=direction,proto3,oneof" json:"direction,omitempty"` // in（转入）/ out（转出）/ self（自转）
+	Status        *string                `protobuf:"bytes,3,opt,name=status,proto3,oneof" json:"status,omitempty"`       // pending / confirming / success / failed / notfound
+	Timestamp     *int64                 `protobuf:"varint,4,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -720,22 +720,22 @@ func (x *HistoryResp_Unit) GetTrans() *Transaction {
 }
 
 func (x *HistoryResp_Unit) GetDirection() string {
-	if x != nil {
-		return x.Direction
+	if x != nil && x.Direction != nil {
+		return *x.Direction
 	}
 	return ""
 }
 
 func (x *HistoryResp_Unit) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
 
 func (x *HistoryResp_Unit) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
@@ -744,64 +744,105 @@ var File_hi_did_transfer_proto protoreflect.FileDescriptor
 
 const file_hi_did_transfer_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/did/transfer.proto\x12\x06hi.did\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\xd9\x01\n" +
-	"\vTransaction\x12\x18\n" +
-	"\x04hash\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04hash\x12\x1c\n" +
-	"\x06amount\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x06amount\x12&\n" +
+	"\x15hi/did/transfer.proto\x12\x06hi.did\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\x87\x02\n" +
+	"\vTransaction\x12\x1d\n" +
+	"\x04hash\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04hash\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x06amount\x88\x01\x01\x12&\n" +
 	"\x04coin\x18\x03 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04coin\x12$\n" +
 	"\x04from\x18\x04 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04from\x12 \n" +
 	"\x02to\x18\x05 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x02to\x12\x1c\n" +
-	"\x06remark\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\x06remark:\x04\x98\xb5\x18\x01\"h\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x02to\x12!\n" +
+	"\x06remark\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x06remark\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_hashB\t\n" +
+	"\a_amountB\t\n" +
+	"\a_remark\"\xa6\x01\n" +
 	"\n" +
-	"HistoryReq\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x18\n" +
-	"\aaddress\x18\x02 \x01(\tR\aaddress\x12\x16\n" +
-	"\x06cursor\x18\x03 \x01(\tR\x06cursor\x12\x14\n" +
-	"\x05limit\x18\x04 \x01(\x05R\x05limit\"\x94\x02\n" +
+	"HistoryReq\x12\x17\n" +
+	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01\x12\x1d\n" +
+	"\aaddress\x18\x02 \x01(\tH\x01R\aaddress\x88\x01\x01\x12\x1b\n" +
+	"\x06cursor\x18\x03 \x01(\tH\x02R\x06cursor\x88\x01\x01\x12\x19\n" +
+	"\x05limit\x18\x04 \x01(\x05H\x03R\x05limit\x88\x01\x01B\a\n" +
+	"\x05_coinB\n" +
+	"\n" +
+	"\b_addressB\t\n" +
+	"\a_cursorB\b\n" +
+	"\x06_limit\"\xdf\x02\n" +
 	"\vHistoryResp\x122\n" +
-	"\x04list\x18\x01 \x03(\v2\x18.hi.did.HistoryResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x12%\n" +
-	"\vnext_cursor\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\n" +
-	"nextCursor\x1a\xa3\x01\n" +
+	"\x04list\x18\x01 \x03(\v2\x18.hi.did.HistoryResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x12*\n" +
+	"\vnext_cursor\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
+	"nextCursor\x88\x01\x01\x1a\xd9\x01\n" +
 	"\x04Unit\x12/\n" +
-	"\x05trans\x18\x01 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01R\x05trans\x12\"\n" +
-	"\tdirection\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\tdirection\x12\x1c\n" +
-	"\x06status\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x06status\x12\"\n" +
-	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\ttimestamp:\x04\x98\xb5\x18\x01:\x04\x98\xb5\x18\x01\"5\n" +
-	"\vTxStatusReq\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x12\n" +
-	"\x04hash\x18\x02 \x01(\tR\x04hash\"R\n" +
-	"\fTxStatusResp\x12\x1a\n" +
-	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12 \n" +
-	"\bprogress\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01R\bprogress:\x04\x98\xb5\x18\x01\"5\n" +
-	"\vTxDetailReq\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x12\n" +
-	"\x04hash\x18\x02 \x01(\tR\x04hash\"\x9c\x02\n" +
-	"\fTxDetailResp\x12\x1a\n" +
-	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12/\n" +
-	"\x10confirmed_blocks\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01R\x0fconfirmedBlocks\x12\"\n" +
-	"\ttimestamp\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01R\ttimestamp\x12\x18\n" +
-	"\x04from\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x04from\x12\x14\n" +
-	"\x02to\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\x02to\x12\x1c\n" +
-	"\x06amount\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\x06amount\x12 \n" +
-	"\bcontract\x18\a \x01(\tB\x04\x90\xb5\x18\x01R\bcontract\x12%\n" +
-	"\vquery_count\x18\b \x01(\rB\x04\x90\xb5\x18\x01R\n" +
-	"queryCount:\x04\x98\xb5\x18\x01\"z\n" +
-	"\x14VerifyTransactionReq\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x12\n" +
-	"\x04hash\x18\x02 \x01(\tR\x04hash\x12\x16\n" +
-	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x12\n" +
-	"\x04from\x18\x04 \x01(\tR\x04from\x12\x0e\n" +
-	"\x02to\x18\x05 \x01(\tR\x02to\"\xf1\x01\n" +
-	"\x15VerifyTransactionResp\x12\x1a\n" +
-	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05state\x12\x1c\n" +
-	"\x06passed\x18\x02 \x01(\bB\x04\x90\xb5\x18\x01R\x06passed\x12\x1c\n" +
-	"\x06reason\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x06reason\x12/\n" +
-	"\x10confirmed_blocks\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01R\x0fconfirmedBlocks\x12\"\n" +
-	"\ttimestamp\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01R\ttimestamp\x12%\n" +
-	"\vquery_count\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01R\n" +
-	"queryCount:\x04\x98\xb5\x18\x012\xcd\x02\n" +
+	"\x05trans\x18\x01 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01R\x05trans\x12'\n" +
+	"\tdirection\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\tdirection\x88\x01\x01\x12!\n" +
+	"\x06status\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x06status\x88\x01\x01\x12'\n" +
+	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01H\x02R\ttimestamp\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
+	"\n" +
+	"_directionB\t\n" +
+	"\a_statusB\f\n" +
+	"\n" +
+	"_timestamp:\x04\x98\xb5\x18\x01B\x0e\n" +
+	"\f_next_cursor\"Q\n" +
+	"\vTxStatusReq\x12\x17\n" +
+	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01\x12\x17\n" +
+	"\x04hash\x18\x02 \x01(\tH\x01R\x04hash\x88\x01\x01B\a\n" +
+	"\x05_coinB\a\n" +
+	"\x05_hash\"s\n" +
+	"\fTxStatusResp\x12\x1f\n" +
+	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05state\x88\x01\x01\x12%\n" +
+	"\bprogress\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01H\x01R\bprogress\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_stateB\v\n" +
+	"\t_progress\"Q\n" +
+	"\vTxDetailReq\x12\x17\n" +
+	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01\x12\x17\n" +
+	"\x04hash\x18\x02 \x01(\tH\x01R\x04hash\x88\x01\x01B\a\n" +
+	"\x05_coinB\a\n" +
+	"\x05_hash\"\xa9\x03\n" +
+	"\fTxDetailResp\x12\x1f\n" +
+	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05state\x88\x01\x01\x124\n" +
+	"\x10confirmed_blocks\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x01R\x0fconfirmedBlocks\x88\x01\x01\x12'\n" +
+	"\ttimestamp\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01H\x02R\ttimestamp\x88\x01\x01\x12\x1d\n" +
+	"\x04from\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x04from\x88\x01\x01\x12\x19\n" +
+	"\x02to\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x04R\x02to\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x05R\x06amount\x88\x01\x01\x12%\n" +
+	"\bcontract\x18\a \x01(\tB\x04\x90\xb5\x18\x01H\x06R\bcontract\x88\x01\x01\x12*\n" +
+	"\vquery_count\x18\b \x01(\rB\x04\x90\xb5\x18\x01H\aR\n" +
+	"queryCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_stateB\x13\n" +
+	"\x11_confirmed_blocksB\f\n" +
+	"\n" +
+	"_timestampB\a\n" +
+	"\x05_fromB\x05\n" +
+	"\x03_toB\t\n" +
+	"\a_amountB\v\n" +
+	"\t_contractB\x0e\n" +
+	"\f_query_count\"\xc0\x01\n" +
+	"\x14VerifyTransactionReq\x12\x17\n" +
+	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01\x12\x17\n" +
+	"\x04hash\x18\x02 \x01(\tH\x01R\x04hash\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\x03 \x01(\tH\x02R\x06amount\x88\x01\x01\x12\x17\n" +
+	"\x04from\x18\x04 \x01(\tH\x03R\x04from\x88\x01\x01\x12\x13\n" +
+	"\x02to\x18\x05 \x01(\tH\x04R\x02to\x88\x01\x01B\a\n" +
+	"\x05_coinB\a\n" +
+	"\x05_hashB\t\n" +
+	"\a_amountB\a\n" +
+	"\x05_fromB\x05\n" +
+	"\x03_to\"\xe2\x02\n" +
+	"\x15VerifyTransactionResp\x12\x1f\n" +
+	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05state\x88\x01\x01\x12!\n" +
+	"\x06passed\x18\x02 \x01(\bB\x04\x90\xb5\x18\x01H\x01R\x06passed\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x06reason\x88\x01\x01\x124\n" +
+	"\x10confirmed_blocks\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01H\x03R\x0fconfirmedBlocks\x88\x01\x01\x12'\n" +
+	"\ttimestamp\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01H\x04R\ttimestamp\x88\x01\x01\x12*\n" +
+	"\vquery_count\x18\x06 \x01(\rB\x04\x90\xb5\x18\x01H\x05R\n" +
+	"queryCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_stateB\t\n" +
+	"\a_passedB\t\n" +
+	"\a_reasonB\x13\n" +
+	"\x11_confirmed_blocksB\f\n" +
+	"\n" +
+	"_timestampB\x0e\n" +
+	"\f_query_count2\xcd\x02\n" +
 	"\bTransfer\x129\n" +
 	"\aHistory\x12\x12.hi.did.HistoryReq\x1a\x13.hi.did.HistoryResp\"\x05\x8a\xb5\x18\x01\x01\x12<\n" +
 	"\bTxStatus\x12\x13.hi.did.TxStatusReq\x1a\x14.hi.did.TxStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12W\n" +
@@ -869,6 +910,16 @@ func file_hi_did_transfer_proto_init() {
 		return
 	}
 	file_hi_did_base_proto_init()
+	file_hi_did_transfer_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_did_transfer_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

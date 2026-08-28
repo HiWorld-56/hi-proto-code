@@ -36,13 +36,13 @@ type MerchantInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`
 	Server        *hi.Entity             `protobuf:"bytes,2,opt,name=server,proto3" json:"server,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Logo          string                 `protobuf:"bytes,4,opt,name=logo,proto3" json:"logo,omitempty"`
+	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Logo          *string                `protobuf:"bytes,4,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
 	PublicCoins   []*Coin                `protobuf:"bytes,5,rep,name=public_coins,json=publicCoins,proto3" json:"public_coins,omitempty"`    // 公共币种
 	CustomTokens  []*Coin                `protobuf:"bytes,6,rep,name=custom_tokens,json=customTokens,proto3" json:"custom_tokens,omitempty"` // 自定义币种
-	Endpoint      string                 `protobuf:"bytes,7,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	Scheme        string                 `protobuf:"bytes,8,opt,name=scheme,proto3" json:"scheme,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Endpoint      *string                `protobuf:"bytes,7,opt,name=endpoint,proto3,oneof" json:"endpoint,omitempty"`
+	Scheme        *string                `protobuf:"bytes,8,opt,name=scheme,proto3,oneof" json:"scheme,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,9,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -92,15 +92,15 @@ func (x *MerchantInfo) GetServer() *hi.Entity {
 }
 
 func (x *MerchantInfo) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *MerchantInfo) GetLogo() string {
-	if x != nil {
-		return x.Logo
+	if x != nil && x.Logo != nil {
+		return *x.Logo
 	}
 	return ""
 }
@@ -120,22 +120,22 @@ func (x *MerchantInfo) GetCustomTokens() []*Coin {
 }
 
 func (x *MerchantInfo) GetEndpoint() string {
-	if x != nil {
-		return x.Endpoint
+	if x != nil && x.Endpoint != nil {
+		return *x.Endpoint
 	}
 	return ""
 }
 
 func (x *MerchantInfo) GetScheme() string {
-	if x != nil {
-		return x.Scheme
+	if x != nil && x.Scheme != nil {
+		return *x.Scheme
 	}
 	return ""
 }
 
 func (x *MerchantInfo) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
@@ -197,11 +197,11 @@ func (x *MerchantGetResp) GetInfo() *MerchantInfo {
 // comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
 type MerchantSetReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Logo          string                 `protobuf:"bytes,2,opt,name=logo,proto3" json:"logo,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Logo          *string                `protobuf:"bytes,2,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
 	Coins         []string               `protobuf:"bytes,3,rep,name=coins,proto3" json:"coins,omitempty"`
-	Endpoint      string                 `protobuf:"bytes,4,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	Scheme        string                 `protobuf:"bytes,5,opt,name=scheme,proto3" json:"scheme,omitempty"`
+	Endpoint      *string                `protobuf:"bytes,4,opt,name=endpoint,proto3,oneof" json:"endpoint,omitempty"`
+	Scheme        *string                `protobuf:"bytes,5,opt,name=scheme,proto3,oneof" json:"scheme,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -237,15 +237,15 @@ func (*MerchantSetReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantSetReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *MerchantSetReq) GetLogo() string {
-	if x != nil {
-		return x.Logo
+	if x != nil && x.Logo != nil {
+		return *x.Logo
 	}
 	return ""
 }
@@ -258,22 +258,22 @@ func (x *MerchantSetReq) GetCoins() []string {
 }
 
 func (x *MerchantSetReq) GetEndpoint() string {
-	if x != nil {
-		return x.Endpoint
+	if x != nil && x.Endpoint != nil {
+		return *x.Endpoint
 	}
 	return ""
 }
 
 func (x *MerchantSetReq) GetScheme() string {
-	if x != nil {
-		return x.Scheme
+	if x != nil && x.Scheme != nil {
+		return *x.Scheme
 	}
 	return ""
 }
 
 type MerchantListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*MerchantInfo        `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -310,8 +310,8 @@ func (*MerchantListResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantListResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -415,8 +415,8 @@ func (x *UserExtensionInfo) GetNote() string {
 // (同样的理由见 hi-ai 的插件 description.json:也是后端读、前端只管传。)
 type SetUserCardReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`       // 目标用户 did,**必须在调用者名下**
-	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"` // .json 文件正文;服务端校验是合法 json 才入库
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"`       // 目标用户 did,**必须在调用者名下**
+	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"` // .json 文件正文;服务端校验是合法 json 才入库
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -452,8 +452,8 @@ func (*SetUserCardReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetUserCardReq) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
@@ -522,8 +522,8 @@ func (x *UserExtensionUnit) GetInfo() *UserExtensionInfo {
 // ⚠️ 入参里**没有授权方 did** —— 授权方永远取自 token,故商户只能改自己的授权列表。
 type GrantReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Grantee       string                 `protobuf:"bytes,1,opt,name=grantee,proto3" json:"grantee,omitempty"` // 被授权方商户 did
-	Note          string                 `protobuf:"bytes,2,opt,name=note,proto3" json:"note,omitempty"`       // 备注,给人看的
+	Grantee       *string                `protobuf:"bytes,1,opt,name=grantee,proto3,oneof" json:"grantee,omitempty"` // 被授权方商户 did
+	Note          *string                `protobuf:"bytes,2,opt,name=note,proto3,oneof" json:"note,omitempty"`       // 备注,给人看的
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -559,15 +559,15 @@ func (*GrantReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GrantReq) GetGrantee() string {
-	if x != nil {
-		return x.Grantee
+	if x != nil && x.Grantee != nil {
+		return *x.Grantee
 	}
 	return ""
 }
 
 func (x *GrantReq) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
@@ -575,8 +575,8 @@ func (x *GrantReq) GetNote() string {
 type GrantUnit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Grantee       *hi.Entity             `protobuf:"bytes,1,opt,name=grantee,proto3" json:"grantee,omitempty"` // 被授权方
-	Note          string                 `protobuf:"bytes,2,opt,name=note,proto3" json:"note,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // ms
+	Note          *string                `protobuf:"bytes,2,opt,name=note,proto3,oneof" json:"note,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,3,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"` // ms
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -619,15 +619,15 @@ func (x *GrantUnit) GetGrantee() *hi.Entity {
 }
 
 func (x *GrantUnit) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
 
 func (x *GrantUnit) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
@@ -677,7 +677,7 @@ func (x *ListGrantsResp) GetGrants() []*GrantUnit {
 }
 
 // ── 商户管理用户(扩展数据)的入参 ───────────────────────────────────
-// merchant 空=自己(取 ExtendToken);非空=指定商户(须先获该商户授权,requireGrant)。
+// merchant 不传=自己(取 ExtendToken);传了=指定商户(须先获该商户授权,requireGrant)。
 // ── 读自己名下的用户(Merchant,免 grant)──
 // **没有 merchant 字段** —— 商户身份恒取自 ExtendToken。
 //
@@ -689,7 +689,7 @@ func (x *ListGrantsResp) GetGrants() []*GrantUnit {
 //	读自己的在这里,跨商户的在 MerchantGranted(整个 service 走 requireGrant)。
 type GetUserReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 用户 did
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"` // 用户 did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -725,15 +725,15 @@ func (*GetUserReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserReq) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
 
 type ListUsersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 可选:按用户 did 过滤
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"` // 可选:按用户 did 过滤
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -770,8 +770,8 @@ func (*ListUsersReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUsersReq) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
@@ -787,8 +787,8 @@ func (x *ListUsersReq) GetPagination() *hi.Pagination {
 // merchant 必填 —— 这个 service 存在的意义就是跨商户,省掉它就没得跨。
 type GrantedGetUserReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Merchant      string                 `protobuf:"bytes,1,opt,name=merchant,proto3" json:"merchant,omitempty"` // 目标商户(须先授权给我)
-	User          string                 `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	Merchant      *string                `protobuf:"bytes,1,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"` // 目标商户(须先授权给我)
+	User          *string                `protobuf:"bytes,2,opt,name=user,proto3,oneof" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -824,23 +824,23 @@ func (*GrantedGetUserReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GrantedGetUserReq) GetMerchant() string {
-	if x != nil {
-		return x.Merchant
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
 	}
 	return ""
 }
 
 func (x *GrantedGetUserReq) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
 
 type GrantedListUsersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Merchant      string                 `protobuf:"bytes,1,opt,name=merchant,proto3" json:"merchant,omitempty"`
-	User          string                 `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"` // 可选:按用户 did 过滤
+	Merchant      *string                `protobuf:"bytes,1,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"`
+	User          *string                `protobuf:"bytes,2,opt,name=user,proto3,oneof" json:"user,omitempty"` // 可选:按用户 did 过滤
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -877,15 +877,15 @@ func (*GrantedListUsersReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GrantedListUsersReq) GetMerchant() string {
-	if x != nil {
-		return x.Merchant
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
 	}
 	return ""
 }
 
 func (x *GrantedListUsersReq) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
@@ -899,7 +899,7 @@ func (x *GrantedListUsersReq) GetPagination() *hi.Pagination {
 
 type GrantedListGreetersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Merchant      string                 `protobuf:"bytes,1,opt,name=merchant,proto3" json:"merchant,omitempty"`
+	Merchant      *string                `protobuf:"bytes,1,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -936,8 +936,8 @@ func (*GrantedListGreetersReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GrantedListGreetersReq) GetMerchant() string {
-	if x != nil {
-		return x.Merchant
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
 	}
 	return ""
 }
@@ -1002,7 +1002,7 @@ func (x *ListGreetersReq) GetPagination() *hi.Pagination {
 
 type ListUsersResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Units         []*UserExtensionUnit   `protobuf:"bytes,2,rep,name=units,proto3" json:"units,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1039,8 +1039,8 @@ func (*ListUsersResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUsersResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -1060,10 +1060,10 @@ func (x *ListUsersResp) GetUnits() []*UserExtensionUnit {
 //	改哪个用户(user)+ 要写的值。
 type SetUserUnit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`     // 用户 did
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`     // 昵称(空=不改)
-	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"` // 头像 url(空=不改)
-	Info          *UserExtensionInfo     `protobuf:"bytes,4,opt,name=info,proto3" json:"info,omitempty"`     // 该商户维护的扩展信息
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"`     // 用户 did
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`     // 昵称;不传=不改,传空串=清空
+	Avatar        *string                `protobuf:"bytes,3,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"` // 头像 url;不传=不改,传空串=清空
+	Info          *UserExtensionInfo     `protobuf:"bytes,4,opt,name=info,proto3" json:"info,omitempty"`           // 该商户维护的扩展信息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1099,22 +1099,22 @@ func (*SetUserUnit) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetUserUnit) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
 
 func (x *SetUserUnit) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *SetUserUnit) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
@@ -1360,7 +1360,7 @@ func (x *ListMerchantsReq) GetPagination() *hi.Pagination {
 
 type GetUserMqttReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // 用户 did
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"` // 用户 did
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1396,8 +1396,8 @@ func (*GetUserMqttReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserMqttReq) GetUser() string {
-	if x != nil {
-		return x.User
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
@@ -1406,8 +1406,8 @@ func (x *GetUserMqttReq) GetUser() string {
 // username/password 设计上穿透(为将来动态密码留口)。商户可见 OK(邀请码注册可追责)。
 type GetUserMqttResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	Username      *string                `protobuf:"bytes,1,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Password      *string                `protobuf:"bytes,2,opt,name=password,proto3,oneof" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1443,15 +1443,15 @@ func (*GetUserMqttResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserMqttResp) GetUsername() string {
-	if x != nil {
-		return x.Username
+	if x != nil && x.Username != nil {
+		return *x.Username
 	}
 	return ""
 }
 
 func (x *GetUserMqttResp) GetPassword() string {
-	if x != nil {
-		return x.Password
+	if x != nil && x.Password != nil {
+		return *x.Password
 	}
 	return ""
 }
@@ -1465,7 +1465,7 @@ func (x *GetUserMqttResp) GetPassword() string {
 //	单开这个门面,以后要开放别的公开字段也有地方放,且物理上不可能带出敏感字段。
 type MerchantPubSchemeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Scheme        string                 `protobuf:"bytes,1,opt,name=scheme,proto3" json:"scheme,omitempty"` // 商户业务 app 的回调 scheme;只有 scheme,别的一概不给
+	Scheme        *string                `protobuf:"bytes,1,opt,name=scheme,proto3,oneof" json:"scheme,omitempty"` // 商户业务 app 的回调 scheme;只有 scheme,别的一概不给
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1501,8 +1501,8 @@ func (*MerchantPubSchemeResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantPubSchemeResp) GetScheme() string {
-	if x != nil {
-		return x.Scheme
+	if x != nil && x.Scheme != nil {
+		return *x.Scheme
 	}
 	return ""
 }
@@ -1554,8 +1554,8 @@ func (x *MerchantPubServerResp) GetServer() *hi.Entity {
 // 商户的扩展库访问凭证:extoken(=ExtendToken,商户的 API 凭证)+ extend 表名。
 type MerchantExDBResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"` // ExtendToken
-	Table         string                 `protobuf:"bytes,2,opt,name=table,proto3" json:"table,omitempty"` // 扩展数据表名
+	Token         *string                `protobuf:"bytes,1,opt,name=token,proto3,oneof" json:"token,omitempty"` // ExtendToken
+	Table         *string                `protobuf:"bytes,2,opt,name=table,proto3,oneof" json:"table,omitempty"` // 扩展数据表名
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1591,24 +1591,24 @@ func (*MerchantExDBResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantExDBResp) GetToken() string {
-	if x != nil {
-		return x.Token
+	if x != nil && x.Token != nil {
+		return *x.Token
 	}
 	return ""
 }
 
 func (x *MerchantExDBResp) GetTable() string {
-	if x != nil {
-		return x.Table
+	if x != nil && x.Table != nil {
+		return *x.Table
 	}
 	return ""
 }
 
 // 改商户的结算实体(收款/付款 server)。
-// server 空 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
+// server 不传 = **恢复默认**(= master 自己);默认值语义见 MerchantPub.Server。
 type SetServerReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Server        string                 `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"` // 结算实体 did;留空=恢复默认(master)
+	Server        *string                `protobuf:"bytes,1,opt,name=server,proto3,oneof" json:"server,omitempty"` // 结算实体 did;不传=恢复默认(master)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1644,8 +1644,8 @@ func (*SetServerReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetServerReq) GetServer() string {
-	if x != nil {
-		return x.Server
+	if x != nil && x.Server != nil {
+		return *x.Server
 	}
 	return ""
 }
@@ -1653,7 +1653,7 @@ func (x *SetServerReq) GetServer() string {
 type MerchantNotifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Nonce         string                 `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	Nonce         *string                `protobuf:"bytes,2,opt,name=nonce,proto3,oneof" json:"nonce,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1696,16 +1696,16 @@ func (x *MerchantNotifyReq) GetDid() string {
 }
 
 func (x *MerchantNotifyReq) GetNonce() string {
-	if x != nil {
-		return x.Nonce
+	if x != nil && x.Nonce != nil {
+		return *x.Nonce
 	}
 	return ""
 }
 
 type OrderEventResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Event         string                 `protobuf:"bytes,1,opt,name=event,proto3" json:"event,omitempty"`
-	Payload       string                 `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	Event         *string                `protobuf:"bytes,1,opt,name=event,proto3,oneof" json:"event,omitempty"`
+	Payload       *string                `protobuf:"bytes,2,opt,name=payload,proto3,oneof" json:"payload,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1741,15 +1741,15 @@ func (*OrderEventResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *OrderEventResp) GetEvent() string {
-	if x != nil {
-		return x.Event
+	if x != nil && x.Event != nil {
+		return *x.Event
 	}
 	return ""
 }
 
 func (x *OrderEventResp) GetPayload() string {
-	if x != nil {
-		return x.Payload
+	if x != nil && x.Payload != nil {
+		return *x.Payload
 	}
 	return ""
 }
@@ -1758,31 +1758,41 @@ var File_hi_did_merchant_proto protoreflect.FileDescriptor
 
 const file_hi_did_merchant_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/did/merchant.proto\x12\x06hi.did\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\xf1\x02\n" +
+	"\x15hi/did/merchant.proto\x12\x06hi.did\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\xc3\x03\n" +
 	"\fMerchantInfo\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master\x12(\n" +
 	"\x06server\x18\x02 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x06server\x12\x18\n" +
-	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x04name\x12\x18\n" +
-	"\x04logo\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02R\x04logo\x125\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06server\x12\x1d\n" +
+	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04name\x88\x01\x01\x12\x1d\n" +
+	"\x04logo\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04logo\x88\x01\x01\x125\n" +
 	"\fpublic_coins\x18\x05 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x02R\vpublicCoins\x127\n" +
-	"\rcustom_tokens\x18\x06 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x02R\fcustomTokens\x12 \n" +
-	"\bendpoint\x18\a \x01(\tB\x04\x90\xb5\x18\x02R\bendpoint\x12\x1c\n" +
-	"\x06scheme\x18\b \x01(\tB\x04\x90\xb5\x18\x02R\x06scheme\x12#\n" +
+	"\rcustom_tokens\x18\x06 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x02R\fcustomTokens\x12%\n" +
+	"\bendpoint\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x02R\bendpoint\x88\x01\x01\x12!\n" +
+	"\x06scheme\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x06scheme\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\t \x01(\x03B\x04\x90\xb5\x18\x02R\tcreatedAt:\x04\x98\xb5\x18\x02\"G\n" +
+	"created_at\x18\t \x01(\x03B\x04\x90\xb5\x18\x02H\x04R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_nameB\a\n" +
+	"\x05_logoB\v\n" +
+	"\t_endpointB\t\n" +
+	"\a_schemeB\r\n" +
+	"\v_created_at\"G\n" +
 	"\x0fMerchantGetResp\x12.\n" +
-	"\x04info\x18\x01 \x01(\v2\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04info:\x04\x98\xb5\x18\x02\"\x82\x01\n" +
-	"\x0eMerchantSetReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04logo\x18\x02 \x01(\tR\x04logo\x12\x14\n" +
-	"\x05coins\x18\x03 \x03(\tR\x05coins\x12\x1a\n" +
-	"\bendpoint\x18\x04 \x01(\tR\bendpoint\x12\x16\n" +
-	"\x06scheme\x18\x05 \x01(\tR\x06scheme\"d\n" +
-	"\x10MerchantListResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02R\x05total\x12.\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"\xea\x01\n" +
+	"\x04info\x18\x01 \x01(\v2\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04info:\x04\x98\xb5\x18\x02\"\xc0\x01\n" +
+	"\x0eMerchantSetReq\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x17\n" +
+	"\x04logo\x18\x02 \x01(\tH\x01R\x04logo\x88\x01\x01\x12\x14\n" +
+	"\x05coins\x18\x03 \x03(\tR\x05coins\x12\x1f\n" +
+	"\bendpoint\x18\x04 \x01(\tH\x02R\bendpoint\x88\x01\x01\x12\x1b\n" +
+	"\x06scheme\x18\x05 \x01(\tH\x03R\x06scheme\x88\x01\x01B\a\n" +
+	"\x05_nameB\a\n" +
+	"\x05_logoB\v\n" +
+	"\t_endpointB\t\n" +
+	"\a_scheme\"s\n" +
+	"\x10MerchantListResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01\x12.\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_total\"\xea\x01\n" +
 	"\x11UserExtensionInfo\x12\x1d\n" +
 	"\x04logo\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04logo\x88\x01\x01\x12\x1f\n" +
 	"\x05level\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x02H\x01R\x05level\x88\x01\x01\x12\x1d\n" +
@@ -1793,59 +1803,79 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\x06_levelB\a\n" +
 	"\x05_cardB\t\n" +
 	"\a_extendB\a\n" +
-	"\x05_note\"U\n" +
-	"\x0eSetUserCardReq\x12 \n" +
-	"\x04user\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04user\x12!\n" +
-	"\acontent\x18\x02 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\"t\n" +
+	"\x05_note\"z\n" +
+	"\x0eSetUserCardReq\x12(\n" +
+	"\x04user\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04user\x88\x01\x01\x12)\n" +
+	"\acontent\x18\x02 \x01(\fB\n" +
+	"\xbaH\a\xc8\x01\x01z\x02\x10\x01H\x01R\acontent\x88\x01\x01B\a\n" +
+	"\x05_userB\n" +
+	"\n" +
+	"\b_content\"t\n" +
 	"\x11UserExtensionUnit\x12$\n" +
 	"\x04user\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x123\n" +
-	"\x04info\x18\x02 \x01(\v2\x19.hi.did.UserExtensionInfoB\x04\x90\xb5\x18\x02R\x04info:\x04\x98\xb5\x18\x02\"F\n" +
-	"\bGrantReq\x12&\n" +
-	"\agrantee\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\agrantee\x12\x12\n" +
-	"\x04note\x18\x02 \x01(\tR\x04note\"|\n" +
+	"\x04info\x18\x02 \x01(\v2\x19.hi.did.UserExtensionInfoB\x04\x90\xb5\x18\x02R\x04info:\x04\x98\xb5\x18\x02\"h\n" +
+	"\bGrantReq\x12.\n" +
+	"\agrantee\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\agrantee\x88\x01\x01\x12\x17\n" +
+	"\x04note\x18\x02 \x01(\tH\x01R\x04note\x88\x01\x01B\n" +
+	"\n" +
+	"\b_granteeB\a\n" +
+	"\x05_note\"\x9e\x01\n" +
 	"\tGrantUnit\x12*\n" +
 	"\agrantee\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\agrantee\x12\x18\n" +
-	"\x04note\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04note\x12#\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\agrantee\x12\x1d\n" +
+	"\x04note\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04note\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"G\n" +
+	"created_at\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_noteB\r\n" +
+	"\v_created_at\"G\n" +
 	"\x0eListGrantsResp\x12/\n" +
-	"\x06grants\x18\x01 \x03(\v2\x11.hi.did.GrantUnitB\x04\x90\xb5\x18\x03R\x06grants:\x04\x98\xb5\x18\x03\".\n" +
+	"\x06grants\x18\x01 \x03(\v2\x11.hi.did.GrantUnitB\x04\x90\xb5\x18\x03R\x06grants:\x04\x98\xb5\x18\x03\"?\n" +
 	"\n" +
-	"GetUserReq\x12 \n" +
-	"\x04user\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04user\"R\n" +
-	"\fListUsersReq\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\x12.\n" +
+	"GetUserReq\x12(\n" +
+	"\x04user\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04user\x88\x01\x01B\a\n" +
+	"\x05_user\"`\n" +
+	"\fListUsersReq\x12\x17\n" +
+	"\x04user\x18\x01 \x01(\tH\x00R\x04user\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"_\n" +
-	"\x11GrantedGetUserReq\x12(\n" +
-	"\bmerchant\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\bmerchant\x12 \n" +
-	"\x04user\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04user\"\x83\x01\n" +
-	"\x13GrantedListUsersReq\x12(\n" +
-	"\bmerchant\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\bmerchant\x12\x12\n" +
-	"\x04user\x18\x02 \x01(\tR\x04user\x12.\n" +
+	"paginationB\a\n" +
+	"\x05_user\"\x85\x01\n" +
+	"\x11GrantedGetUserReq\x120\n" +
+	"\bmerchant\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\bmerchant\x88\x01\x01\x12(\n" +
+	"\x04user\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x04user\x88\x01\x01B\v\n" +
+	"\t_merchantB\a\n" +
+	"\x05_user\"\xa6\x01\n" +
+	"\x13GrantedListUsersReq\x120\n" +
+	"\bmerchant\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\bmerchant\x88\x01\x01\x12\x17\n" +
+	"\x04user\x18\x02 \x01(\tH\x01R\x04user\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"r\n" +
-	"\x16GrantedListGreetersReq\x12(\n" +
-	"\bmerchant\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\bmerchant\x12.\n" +
+	"paginationB\v\n" +
+	"\t_merchantB\a\n" +
+	"\x05_user\"\x87\x01\n" +
+	"\x16GrantedListGreetersReq\x120\n" +
+	"\bmerchant\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\bmerchant\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"A\n" +
+	"paginationB\v\n" +
+	"\t_merchant\"A\n" +
 	"\x0fListGreetersReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"h\n" +
-	"\rListUsersResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02R\x05total\x125\n" +
-	"\x05units\x18\x02 \x03(\v2\x19.hi.did.UserExtensionUnitB\x04\x90\xb5\x18\x02R\x05units:\x04\x98\xb5\x18\x02\"\x8a\x01\n" +
-	"\vSetUserUnit\x12 \n" +
-	"\x04user\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04user\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x03 \x01(\tR\x06avatar\x12-\n" +
-	"\x04info\x18\x04 \x01(\v2\x19.hi.did.UserExtensionInfoR\x04info\"8\n" +
+	"pagination\"w\n" +
+	"\rListUsersResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01\x125\n" +
+	"\x05units\x18\x02 \x03(\v2\x19.hi.did.UserExtensionUnitB\x04\x90\xb5\x18\x02R\x05units:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_total\"\xb9\x01\n" +
+	"\vSetUserUnit\x12(\n" +
+	"\x04user\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04user\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06avatar\x18\x03 \x01(\tH\x02R\x06avatar\x88\x01\x01\x12-\n" +
+	"\x04info\x18\x04 \x01(\v2\x19.hi.did.UserExtensionInfoR\x04infoB\a\n" +
+	"\x05_userB\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatar\"8\n" +
 	"\vSetUsersReq\x12)\n" +
 	"\x05units\x18\x01 \x03(\v2\x13.hi.did.SetUserUnitR\x05units\"<\n" +
 	"\fSetUsersResp\x12&\n" +
@@ -1859,28 +1889,39 @@ const file_hi_did_merchant_proto_rawDesc = "" +
 	"\buser_did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\auserDid\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"$\n" +
-	"\x0eGetUserMqttReq\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\"[\n" +
-	"\x0fGetUserMqttResp\x12 \n" +
-	"\busername\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\busername\x12 \n" +
-	"\bpassword\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\bpassword:\x04\x98\xb5\x18\x02\";\n" +
-	"\x15MerchantPubSchemeResp\x12\x1c\n" +
-	"\x06scheme\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x06scheme:\x04\x98\xb5\x18\x01\"G\n" +
+	"pagination\"2\n" +
+	"\x0eGetUserMqttReq\x12\x17\n" +
+	"\x04user\x18\x01 \x01(\tH\x00R\x04user\x88\x01\x01B\a\n" +
+	"\x05_user\"\x7f\n" +
+	"\x0fGetUserMqttResp\x12%\n" +
+	"\busername\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\busername\x88\x01\x01\x12%\n" +
+	"\bpassword\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\bpassword\x88\x01\x01:\x04\x98\xb5\x18\x02B\v\n" +
+	"\t_usernameB\v\n" +
+	"\t_password\"K\n" +
+	"\x15MerchantPubSchemeResp\x12!\n" +
+	"\x06scheme\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06scheme\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_scheme\"G\n" +
 	"\x15MerchantPubServerResp\x12(\n" +
 	"\x06server\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x06server:\x04\x98\xb5\x18\x01\"P\n" +
-	"\x10MerchantExDBResp\x12\x1a\n" +
-	"\x05token\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05token\x12\x1a\n" +
-	"\x05table\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05table:\x04\x98\xb5\x18\x03\"&\n" +
-	"\fSetServerReq\x12\x16\n" +
-	"\x06server\x18\x01 \x01(\tR\x06server\";\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06server:\x04\x98\xb5\x18\x01\"n\n" +
+	"\x10MerchantExDBResp\x12\x1f\n" +
+	"\x05token\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05token\x88\x01\x01\x12\x1f\n" +
+	"\x05table\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05table\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_tokenB\b\n" +
+	"\x06_table\"6\n" +
+	"\fSetServerReq\x12\x1b\n" +
+	"\x06server\x18\x01 \x01(\tH\x00R\x06server\x88\x01\x01B\t\n" +
+	"\a_server\"J\n" +
 	"\x11MerchantNotifyReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
-	"\x05nonce\x18\x02 \x01(\tR\x05nonce\"R\n" +
-	"\x0eOrderEventResp\x12\x1a\n" +
-	"\x05event\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05event\x12\x1e\n" +
-	"\apayload\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\apayload:\x04\x98\xb5\x18\x032\xa9\a\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x19\n" +
+	"\x05nonce\x18\x02 \x01(\tH\x00R\x05nonce\x88\x01\x01B\b\n" +
+	"\x06_nonce\"r\n" +
+	"\x0eOrderEventResp\x12\x1f\n" +
+	"\x05event\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05event\x88\x01\x01\x12#\n" +
+	"\apayload\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\apayload\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_eventB\n" +
+	"\n" +
+	"\b_payload2\xa9\a\n" +
 	"\bMerchant\x12=\n" +
 	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.did.MerchantGetResp\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
 	"\x06Update\x12\x16.hi.did.MerchantSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12?\n" +
@@ -2049,7 +2090,27 @@ func file_hi_did_merchant_proto_init() {
 		return
 	}
 	file_hi_did_base_proto_init()
+	file_hi_did_merchant_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_did_merchant_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[17].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[23].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[24].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[25].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[27].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[28].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[29].OneofWrappers = []any{}
+	file_hi_did_merchant_proto_msgTypes[30].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

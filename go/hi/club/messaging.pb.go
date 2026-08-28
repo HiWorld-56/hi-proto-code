@@ -124,15 +124,15 @@ func (*Packet_Message) isPacket_Kind() {}
 // 免得每次上线都重复处理。
 type Notice struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Uuid  string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type  string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Uuid  *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Type  *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	// Entity=公开门面。**是真实发送者,broker 强制** —— 与 Message.from 同一条不变量,
 	// 详见下面 Message 上方那段。通知没有 ghost,所以这里没有任何回旋余地:
 	// 填成别人,这条通知发不出去(而且发送端看不到报错)。
 	From       *hi.Entity `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"`
-	Timestamp  int64      `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Expiration int64      `protobuf:"varint,5,opt,name=expiration,proto3" json:"expiration,omitempty"`
-	Status     string     `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	Timestamp  *int64     `protobuf:"varint,4,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
+	Expiration *int64     `protobuf:"varint,5,opt,name=expiration,proto3,oneof" json:"expiration,omitempty"`
+	Status     *string    `protobuf:"bytes,6,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	// ⚠️ **Any 是可见性 lint 唯一的结构性缺口**:装进去的真实类型 lint 看不见,
 	//
 	//	于是 `level(field.visibility) <= level(message.audience)` 这条规则在这里失效。
@@ -140,7 +140,7 @@ type Notice struct {
 	//	plugin-load 曾塞 hi.ai.PluginView(SELF,body.url 是私有 bucket 的脚本地址),
 	//	已换成专门的公开摘要 hi.ai.PluginLoaded。合法载荷见上面的类型表。
 	Extra         *anypb.Any `protobuf:"bytes,7,opt,name=extra,proto3" json:"extra,omitempty"`
-	ExType        string     `protobuf:"bytes,8,opt,name=ex_type,json=exType,proto3" json:"ex_type,omitempty"`
+	ExType        *string    `protobuf:"bytes,8,opt,name=ex_type,json=exType,proto3,oneof" json:"ex_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -176,15 +176,15 @@ func (*Notice) Descriptor() ([]byte, []int) {
 }
 
 func (x *Notice) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *Notice) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -197,22 +197,22 @@ func (x *Notice) GetFrom() *hi.Entity {
 }
 
 func (x *Notice) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
 
 func (x *Notice) GetExpiration() int64 {
-	if x != nil {
-		return x.Expiration
+	if x != nil && x.Expiration != nil {
+		return *x.Expiration
 	}
 	return 0
 }
 
 func (x *Notice) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
@@ -225,16 +225,16 @@ func (x *Notice) GetExtra() *anypb.Any {
 }
 
 func (x *Notice) GetExType() string {
-	if x != nil {
-		return x.ExType
+	if x != nil && x.ExType != nil {
+		return *x.ExType
 	}
 	return ""
 }
 
 type Prompt struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Custom        string                 `protobuf:"bytes,1,opt,name=custom,proto3" json:"custom,omitempty"`
-	State         string                 `protobuf:"bytes,2,opt,name=state,proto3" json:"state,omitempty"`
+	Custom        *string                `protobuf:"bytes,1,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
+	State         *string                `protobuf:"bytes,2,opt,name=state,proto3,oneof" json:"state,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -270,15 +270,15 @@ func (*Prompt) Descriptor() ([]byte, []int) {
 }
 
 func (x *Prompt) GetCustom() string {
-	if x != nil {
-		return x.Custom
+	if x != nil && x.Custom != nil {
+		return *x.Custom
 	}
 	return ""
 }
 
 func (x *Prompt) GetState() string {
-	if x != nil {
-		return x.State
+	if x != nil && x.State != nil {
+		return *x.State
 	}
 	return ""
 }
@@ -332,13 +332,13 @@ func (x *Prompt) GetState() string {
 // type == chat 时: 发送者显示为 ghost,ghost 为空则显示 from
 type Message struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	From          *hi.Entity             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // Entity=公开门面
 	Conts         []*Content             `protobuf:"bytes,4,rep,name=conts,proto3" json:"conts,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Timestamp     *int64                 `protobuf:"varint,5,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	Extra         *anypb.Any             `protobuf:"bytes,6,opt,name=extra,proto3" json:"extra,omitempty"`
-	ExType        string                 `protobuf:"bytes,7,opt,name=ex_type,json=exType,proto3" json:"ex_type,omitempty"`
+	ExType        *string                `protobuf:"bytes,7,opt,name=ex_type,json=exType,proto3,oneof" json:"ex_type,omitempty"`
 	Ghost         *hi.Entity             `protobuf:"bytes,8,opt,name=ghost,proto3" json:"ghost,omitempty"` // Entity=公开门面
 	Prompt        *Prompt                `protobuf:"bytes,9,opt,name=prompt,proto3" json:"prompt,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -376,15 +376,15 @@ func (*Message) Descriptor() ([]byte, []int) {
 }
 
 func (x *Message) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *Message) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -404,8 +404,8 @@ func (x *Message) GetConts() []*Content {
 }
 
 func (x *Message) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
@@ -418,8 +418,8 @@ func (x *Message) GetExtra() *anypb.Any {
 }
 
 func (x *Message) GetExType() string {
-	if x != nil {
-		return x.ExType
+	if x != nil && x.ExType != nil {
+		return *x.ExType
 	}
 	return ""
 }
@@ -442,7 +442,7 @@ func (x *Message) GetPrompt() *Prompt {
 type Mention struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Group         *hi.Entity             `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"`
-	All           bool                   `protobuf:"varint,2,opt,name=all,proto3" json:"all,omitempty"`
+	All           *bool                  `protobuf:"varint,2,opt,name=all,proto3,oneof" json:"all,omitempty"`
 	List          []*hi.Entity           `protobuf:"bytes,3,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -486,8 +486,8 @@ func (x *Mention) GetGroup() *hi.Entity {
 }
 
 func (x *Mention) GetAll() bool {
-	if x != nil {
-		return x.All
+	if x != nil && x.All != nil {
+		return *x.All
 	}
 	return false
 }
@@ -554,7 +554,7 @@ func (x *Member) GetUser() *hi.Entity {
 type MemberExit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Member        *Member                `protobuf:"bytes,1,opt,name=member,proto3" json:"member,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -597,8 +597,8 @@ func (x *MemberExit) GetMember() *Member {
 }
 
 func (x *MemberExit) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -632,7 +632,7 @@ func (x *MemberExit) GetType() string {
 // 而**把表写在这里**就已经解决"各自发明"的问题了。新增类型:先往这张表加一行,再去实现。
 type Content struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Type  string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Type  *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	// Types that are valid to be assigned to Kind:
 	//
 	//	*Content_Chat_
@@ -674,8 +674,8 @@ func (*Content) Descriptor() ([]byte, []int) {
 }
 
 func (x *Content) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -738,7 +738,7 @@ func (*Content_Trade) isContent_Kind() {}
 
 type PublishReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Topic         string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
+	Topic         *string                `protobuf:"bytes,1,opt,name=topic,proto3,oneof" json:"topic,omitempty"`
 	Payload       *Packet                `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -775,8 +775,8 @@ func (*PublishReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *PublishReq) GetTopic() string {
-	if x != nil {
-		return x.Topic
+	if x != nil && x.Topic != nil {
+		return *x.Topic
 	}
 	return ""
 }
@@ -790,7 +790,7 @@ func (x *PublishReq) GetPayload() *Packet {
 
 type Content_Chat struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	Content       *string                `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Size          *uint32                `protobuf:"varint,3,opt,name=size,proto3,oneof" json:"size,omitempty"`
 	Duration      *uint32                `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
@@ -829,8 +829,8 @@ func (*Content_Chat) Descriptor() ([]byte, []int) {
 }
 
 func (x *Content_Chat) GetContent() string {
-	if x != nil {
-		return x.Content
+	if x != nil && x.Content != nil {
+		return *x.Content
 	}
 	return ""
 }
@@ -864,67 +864,89 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x06Packet\x12/\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02H\x00R\x06notice\x122\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageB\x04\x90\xb5\x18\x02H\x00R\amessage:\x04\x98\xb5\x18\x02B\x06\n" +
-	"\x04kind\"\xa1\x02\n" +
-	"\x06Notice\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04uuid\x12\x18\n" +
-	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x04type\x12$\n" +
+	"\x04kind\"\x85\x03\n" +
+	"\x06Notice\x12\x1d\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
+	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x12$\n" +
 	"\x04from\x18\x03 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04from\x12\"\n" +
-	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x02R\ttimestamp\x12$\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04from\x12'\n" +
+	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\ttimestamp\x88\x01\x01\x12)\n" +
 	"\n" +
-	"expiration\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x02R\n" +
-	"expiration\x12\x1c\n" +
-	"\x06status\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02R\x06status\x120\n" +
-	"\x05extra\x18\a \x01(\v2\x14.google.protobuf.AnyB\x04\x90\xb5\x18\x02R\x05extra\x12\x1d\n" +
-	"\aex_type\x18\b \x01(\tB\x04\x90\xb5\x18\x02R\x06exType:\x04\x98\xb5\x18\x02\"H\n" +
-	"\x06Prompt\x12\x1c\n" +
-	"\x06custom\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x06custom\x12\x1a\n" +
-	"\x05state\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x05state:\x04\x98\xb5\x18\x02\"\xe3\x02\n" +
-	"\aMessage\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04uuid\x12\x18\n" +
-	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x04type\x12$\n" +
+	"expiration\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x02H\x03R\n" +
+	"expiration\x88\x01\x01\x12!\n" +
+	"\x06status\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\x06status\x88\x01\x01\x120\n" +
+	"\x05extra\x18\a \x01(\v2\x14.google.protobuf.AnyB\x04\x90\xb5\x18\x02R\x05extra\x12\"\n" +
+	"\aex_type\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\x05R\x06exType\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_uuidB\a\n" +
+	"\x05_typeB\f\n" +
+	"\n" +
+	"_timestampB\r\n" +
+	"\v_expirationB\t\n" +
+	"\a_statusB\n" +
+	"\n" +
+	"\b_ex_type\"g\n" +
+	"\x06Prompt\x12!\n" +
+	"\x06custom\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06custom\x88\x01\x01\x12\x1f\n" +
+	"\x05state\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x05state\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_customB\b\n" +
+	"\x06_state\"\xa3\x03\n" +
+	"\aMessage\x12\x1d\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
+	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x12$\n" +
 	"\x04from\x18\x03 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04from\x12,\n" +
-	"\x05conts\x18\x04 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x05conts\x12\"\n" +
-	"\ttimestamp\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x02R\ttimestamp\x120\n" +
-	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyB\x04\x90\xb5\x18\x02R\x05extra\x12\x1d\n" +
-	"\aex_type\x18\a \x01(\tB\x04\x90\xb5\x18\x02R\x06exType\x12&\n" +
+	"\x05conts\x18\x04 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x05conts\x12'\n" +
+	"\ttimestamp\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\ttimestamp\x88\x01\x01\x120\n" +
+	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyB\x04\x90\xb5\x18\x02R\x05extra\x12\"\n" +
+	"\aex_type\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x06exType\x88\x01\x01\x12&\n" +
 	"\x05ghost\x18\b \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x05ghost\x12-\n" +
-	"\x06prompt\x18\t \x01(\v2\x0f.hi.club.PromptB\x04\x90\xb5\x18\x02R\x06prompt:\x04\x98\xb5\x18\x02\"]\n" +
+	"\x06prompt\x18\t \x01(\v2\x0f.hi.club.PromptB\x04\x90\xb5\x18\x02R\x06prompt:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_uuidB\a\n" +
+	"\x05_typeB\f\n" +
+	"\n" +
+	"_timestampB\n" +
+	"\n" +
+	"\b_ex_type\"j\n" +
 	"\aMention\x12 \n" +
 	"\x05group\x18\x01 \x01(\v2\n" +
-	".hi.EntityR\x05group\x12\x10\n" +
-	"\x03all\x18\x02 \x01(\bR\x03all\x12\x1e\n" +
+	".hi.EntityR\x05group\x12\x15\n" +
+	"\x03all\x18\x02 \x01(\bH\x00R\x03all\x88\x01\x01\x12\x1e\n" +
 	"\x04list\x18\x03 \x03(\v2\n" +
-	".hi.EntityR\x04list\"J\n" +
+	".hi.EntityR\x04listB\x06\n" +
+	"\x04_all\"J\n" +
 	"\x06Member\x12 \n" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\"I\n" +
+	".hi.EntityR\x04user\"W\n" +
 	"\n" +
 	"MemberExit\x12'\n" +
-	"\x06member\x18\x01 \x01(\v2\x0f.hi.club.MemberR\x06member\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\"\xfc\x02\n" +
-	"\aContent\x12\x18\n" +
-	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\x04type\x121\n" +
+	"\x06member\x18\x01 \x01(\v2\x0f.hi.club.MemberR\x06member\x12\x17\n" +
+	"\x04type\x18\x02 \x01(\tH\x00R\x04type\x88\x01\x01B\a\n" +
+	"\x05_type\"\x9b\x03\n" +
+	"\aContent\x12\x1d\n" +
+	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
 	"\x05trans\x18\x03 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01H\x00R\x05trans\x120\n" +
-	"\x05trade\x18\x04 \x01(\v2\x12.hi.club.TradeBaseB\x04\x90\xb5\x18\x02H\x00R\x05trade\x1a\xb0\x01\n" +
-	"\x04Chat\x12\x1e\n" +
-	"\acontent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\acontent\x12\x1d\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04name\x88\x01\x01\x12\x1d\n" +
-	"\x04size\x18\x03 \x01(\rB\x04\x90\xb5\x18\x02H\x01R\x04size\x88\x01\x01\x12%\n" +
-	"\bduration\x18\x04 \x01(\rB\x04\x90\xb5\x18\x02H\x02R\bduration\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05trade\x18\x04 \x01(\v2\x12.hi.club.TradeBaseB\x04\x90\xb5\x18\x02H\x00R\x05trade\x1a\xc1\x01\n" +
+	"\x04Chat\x12#\n" +
+	"\acontent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\acontent\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04name\x88\x01\x01\x12\x1d\n" +
+	"\x04size\x18\x03 \x01(\rB\x04\x90\xb5\x18\x02H\x02R\x04size\x88\x01\x01\x12%\n" +
+	"\bduration\x18\x04 \x01(\rB\x04\x90\xb5\x18\x02H\x03R\bduration\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\n" +
+	"\b_contentB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_sizeB\v\n" +
 	"\t_duration:\x04\x98\xb5\x18\x02B\x06\n" +
-	"\x04kind\"M\n" +
+	"\x04kindB\a\n" +
+	"\x05_type\"\\\n" +
 	"\n" +
-	"PublishReq\x12\x14\n" +
-	"\x05topic\x18\x01 \x01(\tR\x05topic\x12)\n" +
-	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayload2J\n" +
+	"PublishReq\x12\x19\n" +
+	"\x05topic\x18\x01 \x01(\tH\x00R\x05topic\x88\x01\x01\x12)\n" +
+	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayloadB\b\n" +
+	"\x06_topic2J\n" +
 	"\tPublisher\x12=\n" +
 	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x85\x01\n" +
 	"\vcom.hi.clubB\x0eMessagingProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
@@ -997,11 +1019,17 @@ func file_hi_club_messaging_proto_init() {
 		(*Packet_Notice)(nil),
 		(*Packet_Message)(nil),
 	}
+	file_hi_club_messaging_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[6].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[7].OneofWrappers = []any{
 		(*Content_Chat_)(nil),
 		(*Content_Trans)(nil),
 		(*Content_Trade)(nil),
 	}
+	file_hi_club_messaging_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

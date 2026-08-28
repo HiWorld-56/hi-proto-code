@@ -262,7 +262,7 @@ class MasterEvent extends $pb.GeneratedMessage {
 
   /// 触发源:
   ///   bind    绑定了主人(master = 新主人)
-  ///   unbind  解绑(master 为空)
+  ///   unbind  解绑(master 不传)
   ///   update  **主人还是那个人,但他改了资料**(master = 主人当前完整的 Entity)
   /// ⚠️ update 这档别按 did 判重 —— did 没变正是它的常态,变的是 name/avatar。
   @$pb.TagNumber(2)
@@ -1122,7 +1122,7 @@ class StatusEvent extends $pb.GeneratedMessage {
 ///  `target_version`：目标版本号，也就是准备更新到的版本。
 ///  `progress`： 更新进度，通常是 `0-100` 的百分比。
 ///  `message` ： 给用户或前端展示的状态说明，例如“正在下载更新包”。
-///  `error` ：错误信息。更新失败时记录失败原因；正常情况下通常为空。
+///  `error` ：错误信息。更新失败时记录失败原因；正常情况下不传。
 ///  `changes` ：版本变更列表，通常是 changelog，例如修复了哪些问题、增加了哪些功能。
 ///  `trigger`：更新触发来源，例如 `manual` 手动触发、`auto` 自动检查、`startup` 启动时触发等。
 ///  `updated_at` ：状态最后更新时间，通常是 Unix 时间戳。具体是秒还是毫秒要看实现约定。

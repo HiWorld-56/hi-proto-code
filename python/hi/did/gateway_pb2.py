@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"j\n\x11GatewayConfigUnit\x12\x18\n\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12\x16\n\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12\x1d\n\x07\x61pi_key\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x06\x61piKey:\x04\x98\xb5\x18\x02\"R\n\x15GatewayConfigListResp\x12\x33\n\x04list\x18\x01 \x03(\x0b\x32\x19.hi.did.GatewayConfigUnitB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"D\n\x13GatewayConfigSetReq\x12-\n\x04list\x18\x01 \x03(\x0b\x32\x19.hi.did.GatewayConfigUnitR\x04list2P\n\x07Gateway\x12\x45\n\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x06\x8a\xb5\x18\x02\x02\x03\x32M\n\rGatewayDevice\x12<\n\x04List\x12\x0e.hi.SignedData\x1a\x1d.hi.did.GatewayConfigListResp\"\x05\x8a\xb5\x18\x01\x05\x32Q\n\x0cGatewayAdmin\x12\x41\n\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/did/gateway.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x96\x01\n\x11GatewayConfigUnit\x12\x1d\n\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04name\x88\x01\x01\x12\x1b\n\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x03url\x88\x01\x01\x12\"\n\x07\x61pi_key\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x06\x61piKey\x88\x01\x01:\x04\x98\xb5\x18\x02\x42\x07\n\x05_nameB\x06\n\x04_urlB\n\n\x08_api_key\"R\n\x15GatewayConfigListResp\x12\x33\n\x04list\x18\x01 \x03(\x0b\x32\x19.hi.did.GatewayConfigUnitB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02\"D\n\x13GatewayConfigSetReq\x12-\n\x04list\x18\x01 \x03(\x0b\x32\x19.hi.did.GatewayConfigUnitR\x04list2P\n\x07Gateway\x12\x45\n\x04List\x12\x16.google.protobuf.Empty\x1a\x1d.hi.did.GatewayConfigListResp\"\x06\x8a\xb5\x18\x02\x02\x03\x32M\n\rGatewayDevice\x12<\n\x04List\x12\x0e.hi.SignedData\x1a\x1d.hi.did.GatewayConfigListResp\"\x05\x8a\xb5\x18\x01\x05\x32Q\n\x0cGatewayAdmin\x12\x41\n\x03Set\x12\x1b.hi.did.GatewayConfigSetReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -53,16 +53,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GATEWAYDEVICE'].methods_by_name['List']._serialized_options = b'\212\265\030\001\005'
   _globals['_GATEWAYADMIN'].methods_by_name['Set']._loaded_options = None
   _globals['_GATEWAYADMIN'].methods_by_name['Set']._serialized_options = b'\212\265\030\001\004'
-  _globals['_GATEWAYCONFIGUNIT']._serialized_start=96
-  _globals['_GATEWAYCONFIGUNIT']._serialized_end=202
-  _globals['_GATEWAYCONFIGLISTRESP']._serialized_start=204
-  _globals['_GATEWAYCONFIGLISTRESP']._serialized_end=286
-  _globals['_GATEWAYCONFIGSETREQ']._serialized_start=288
-  _globals['_GATEWAYCONFIGSETREQ']._serialized_end=356
-  _globals['_GATEWAY']._serialized_start=358
-  _globals['_GATEWAY']._serialized_end=438
-  _globals['_GATEWAYDEVICE']._serialized_start=440
-  _globals['_GATEWAYDEVICE']._serialized_end=517
-  _globals['_GATEWAYADMIN']._serialized_start=519
-  _globals['_GATEWAYADMIN']._serialized_end=600
+  _globals['_GATEWAYCONFIGUNIT']._serialized_start=97
+  _globals['_GATEWAYCONFIGUNIT']._serialized_end=247
+  _globals['_GATEWAYCONFIGLISTRESP']._serialized_start=249
+  _globals['_GATEWAYCONFIGLISTRESP']._serialized_end=331
+  _globals['_GATEWAYCONFIGSETREQ']._serialized_start=333
+  _globals['_GATEWAYCONFIGSETREQ']._serialized_end=401
+  _globals['_GATEWAY']._serialized_start=403
+  _globals['_GATEWAY']._serialized_end=483
+  _globals['_GATEWAYDEVICE']._serialized_start=485
+  _globals['_GATEWAYDEVICE']._serialized_end=562
+  _globals['_GATEWAYADMIN']._serialized_start=564
+  _globals['_GATEWAYADMIN']._serialized_end=645
 # @@protoc_insertion_point(module_scope)

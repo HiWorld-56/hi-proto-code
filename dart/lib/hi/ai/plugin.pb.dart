@@ -2117,7 +2117,7 @@ class DeleteVersionReq extends $pb.GeneratedMessage {
 }
 
 /// 批量删版本:删该插件在 **[min_version, max_version] 范围内**(按三级版本号数值比较,含端点)的全部版本。
-/// min_version 空=不设下界,max_version 空=不设上界(两者都空=全部版本)。**仅创建者可删**。
+/// min_version 不传=不设下界,max_version 不传=不设上界(两者都不传=全部版本)。**仅创建者可删**。
 class DeleteVersionsReq extends $pb.GeneratedMessage {
   factory DeleteVersionsReq({
     $core.String? agent,
@@ -3087,8 +3087,9 @@ class ListNativeReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearAgent() => $_clearField(1);
 
-  /// 机器人自己的架构。**空 = aarch64** —— 现网机器人全是 arm64,
+  /// 机器人自己的架构。**不传 = aarch64** —— 现网机器人全是 arm64,
   /// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
+  /// ⛔ 空串不是合法值:要么不传,要么给真架构名。
   @$pb.TagNumber(2)
   $core.String get arch => $_getSZ(1);
   @$pb.TagNumber(2)

@@ -97,40 +97,61 @@ const MasterEvent$json = {
   '1': 'MasterEvent',
   '2': [
     {'1': 'master', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'master'},
-    {'1': 'trigger', '3': 2, '4': 1, '5': 9, '10': 'trigger'},
+    {
+      '1': 'trigger',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'trigger',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_trigger'},
   ],
 };
 
 /// Descriptor for `MasterEvent`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List masterEventDescriptor = $convert.base64Decode(
-    'CgtNYXN0ZXJFdmVudBIiCgZtYXN0ZXIYASABKAsyCi5oaS5FbnRpdHlSBm1hc3RlchIYCgd0cm'
-    'lnZ2VyGAIgASgJUgd0cmlnZ2Vy');
+    'CgtNYXN0ZXJFdmVudBIiCgZtYXN0ZXIYASABKAsyCi5oaS5FbnRpdHlSBm1hc3RlchIdCgd0cm'
+    'lnZ2VyGAIgASgJSABSB3RyaWdnZXKIAQFCCgoIX3RyaWdnZXI=');
 
 @$core.Deprecated('Use textReplyDescriptor instead')
 const TextReply$json = {
   '1': 'TextReply',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'value', '17': true},
+  ],
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_value'},
   ],
 };
 
 /// Descriptor for `TextReply`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List textReplyDescriptor = $convert.base64Decode(
-    'CglUZXh0UmVwbHkSEgoEdXVpZBgBIAEoCVIEdXVpZBIUCgV2YWx1ZRgCIAEoCVIFdmFsdWU=');
+    'CglUZXh0UmVwbHkSFwoEdXVpZBgBIAEoCUgAUgR1dWlkiAEBEhkKBXZhbHVlGAIgASgJSAFSBX'
+    'ZhbHVliAEBQgcKBV91dWlkQggKBl92YWx1ZQ==');
 
 @$core.Deprecated('Use audioPlayDescriptor instead')
 const AudioPlay$json = {
   '1': 'AudioPlay',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'audio', '3': 2, '4': 1, '5': 12, '10': 'audio'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
+    {'1': 'audio', '3': 2, '4': 1, '5': 12, '9': 1, '10': 'audio', '17': true},
+  ],
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_audio'},
   ],
 };
 
 /// Descriptor for `AudioPlay`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List audioPlayDescriptor = $convert.base64Decode(
-    'CglBdWRpb1BsYXkSEgoEdXVpZBgBIAEoCVIEdXVpZBIUCgVhdWRpbxgCIAEoDFIFYXVkaW8=');
+    'CglBdWRpb1BsYXkSFwoEdXVpZBgBIAEoCUgAUgR1dWlkiAEBEhkKBWF1ZGlvGAIgASgMSAFSBW'
+    'F1ZGlviAEBQgcKBV91dWlkQggKBl9hdWRpbw==');
 
 @$core.Deprecated('Use binanceSettingsDescriptor instead')
 const BinanceSettings$json = {
@@ -144,29 +165,61 @@ const BinanceSettings$json = {
       '6': '.hi.ninja.BinanceCredentials',
       '10': 'credentials'
     },
-    {'1': 'initial_capital', '3': 2, '4': 1, '5': 9, '10': 'initialCapital'},
+    {
+      '1': 'initial_capital',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'initialCapital',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_initial_capital'},
   ],
 };
 
 /// Descriptor for `BinanceSettings`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List binanceSettingsDescriptor = $convert.base64Decode(
     'Cg9CaW5hbmNlU2V0dGluZ3MSPgoLY3JlZGVudGlhbHMYASABKAsyHC5oaS5uaW5qYS5CaW5hbm'
-    'NlQ3JlZGVudGlhbHNSC2NyZWRlbnRpYWxzEicKD2luaXRpYWxfY2FwaXRhbBgCIAEoCVIOaW5p'
-    'dGlhbENhcGl0YWw=');
+    'NlQ3JlZGVudGlhbHNSC2NyZWRlbnRpYWxzEiwKD2luaXRpYWxfY2FwaXRhbBgCIAEoCUgAUg5p'
+    'bml0aWFsQ2FwaXRhbIgBAUISChBfaW5pdGlhbF9jYXBpdGFs');
 
 @$core.Deprecated('Use binanceCredentialsDescriptor instead')
 const BinanceCredentials$json = {
   '1': 'BinanceCredentials',
   '2': [
-    {'1': 'api_key', '3': 1, '4': 1, '5': 9, '10': 'apiKey'},
-    {'1': 'api_secret', '3': 2, '4': 1, '5': 9, '10': 'apiSecret'},
+    {
+      '1': 'api_key',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'apiKey',
+      '17': true
+    },
+    {
+      '1': 'api_secret',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'apiSecret',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_api_key'},
+    {'1': '_api_secret'},
   ],
 };
 
 /// Descriptor for `BinanceCredentials`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List binanceCredentialsDescriptor = $convert.base64Decode(
-    'ChJCaW5hbmNlQ3JlZGVudGlhbHMSFwoHYXBpX2tleRgBIAEoCVIGYXBpS2V5Eh0KCmFwaV9zZW'
-    'NyZXQYAiABKAlSCWFwaVNlY3JldA==');
+    'ChJCaW5hbmNlQ3JlZGVudGlhbHMSHAoHYXBpX2tleRgBIAEoCUgAUgZhcGlLZXmIAQESIgoKYX'
+    'BpX3NlY3JldBgCIAEoCUgBUglhcGlTZWNyZXSIAQFCCgoIX2FwaV9rZXlCDQoLX2FwaV9zZWNy'
+    'ZXQ=');
 
 @$core.Deprecated('Use brainToFaceDescriptor instead')
 const BrainToFace$json = {
@@ -398,44 +451,128 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
 const StatusEvent$json = {
   '1': 'StatusEvent',
   '2': [
-    {'1': 'ntp', '3': 1, '4': 1, '5': 8, '10': 'ntp'},
-    {'1': 'wifi', '3': 2, '4': 1, '5': 8, '10': 'wifi'},
-    {'1': 'usb', '3': 3, '4': 1, '5': 8, '10': 'usb'},
+    {'1': 'ntp', '3': 1, '4': 1, '5': 8, '9': 0, '10': 'ntp', '17': true},
+    {'1': 'wifi', '3': 2, '4': 1, '5': 8, '9': 1, '10': 'wifi', '17': true},
+    {'1': 'usb', '3': 3, '4': 1, '5': 8, '9': 2, '10': 'usb', '17': true},
+  ],
+  '8': [
+    {'1': '_ntp'},
+    {'1': '_wifi'},
+    {'1': '_usb'},
   ],
 };
 
 /// Descriptor for `StatusEvent`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List statusEventDescriptor = $convert.base64Decode(
-    'CgtTdGF0dXNFdmVudBIQCgNudHAYASABKAhSA250cBISCgR3aWZpGAIgASgIUgR3aWZpEhAKA3'
-    'VzYhgDIAEoCFIDdXNi');
+    'CgtTdGF0dXNFdmVudBIVCgNudHAYASABKAhIAFIDbnRwiAEBEhcKBHdpZmkYAiABKAhIAVIEd2'
+    'lmaYgBARIVCgN1c2IYAyABKAhIAlIDdXNiiAEBQgYKBF9udHBCBwoFX3dpZmlCBgoEX3VzYg==');
 
 @$core.Deprecated('Use updateInfoDescriptor instead')
 const UpdateInfo$json = {
   '1': 'UpdateInfo',
   '2': [
-    {'1': 'state', '3': 1, '4': 1, '5': 9, '10': 'state'},
-    {'1': 'current_version', '3': 2, '4': 1, '5': 9, '10': 'currentVersion'},
-    {'1': 'target_version', '3': 3, '4': 1, '5': 9, '10': 'targetVersion'},
-    {'1': 'progress', '3': 4, '4': 1, '5': 13, '10': 'progress'},
-    {'1': 'message', '3': 5, '4': 1, '5': 9, '10': 'message'},
-    {'1': 'error', '3': 6, '4': 1, '5': 9, '10': 'error'},
+    {'1': 'state', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'state', '17': true},
+    {
+      '1': 'current_version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'currentVersion',
+      '17': true
+    },
+    {
+      '1': 'target_version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'targetVersion',
+      '17': true
+    },
+    {
+      '1': 'progress',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'progress',
+      '17': true
+    },
+    {
+      '1': 'message',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 4,
+      '10': 'message',
+      '17': true
+    },
+    {'1': 'error', '3': 6, '4': 1, '5': 9, '9': 5, '10': 'error', '17': true},
     {'1': 'changes', '3': 7, '4': 3, '5': 9, '10': 'changes'},
-    {'1': 'trigger', '3': 8, '4': 1, '5': 9, '10': 'trigger'},
-    {'1': 'updated_at', '3': 9, '4': 1, '5': 4, '10': 'updatedAt'},
-    {'1': 'downloaded_bytes', '3': 10, '4': 1, '5': 4, '10': 'downloadedBytes'},
-    {'1': 'total_bytes', '3': 11, '4': 1, '5': 4, '10': 'totalBytes'},
+    {
+      '1': 'trigger',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '9': 6,
+      '10': 'trigger',
+      '17': true
+    },
+    {
+      '1': 'updated_at',
+      '3': 9,
+      '4': 1,
+      '5': 4,
+      '9': 7,
+      '10': 'updatedAt',
+      '17': true
+    },
+    {
+      '1': 'downloaded_bytes',
+      '3': 10,
+      '4': 1,
+      '5': 4,
+      '9': 8,
+      '10': 'downloadedBytes',
+      '17': true
+    },
+    {
+      '1': 'total_bytes',
+      '3': 11,
+      '4': 1,
+      '5': 4,
+      '9': 9,
+      '10': 'totalBytes',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_state'},
+    {'1': '_current_version'},
+    {'1': '_target_version'},
+    {'1': '_progress'},
+    {'1': '_message'},
+    {'1': '_error'},
+    {'1': '_trigger'},
+    {'1': '_updated_at'},
+    {'1': '_downloaded_bytes'},
+    {'1': '_total_bytes'},
   ],
 };
 
 /// Descriptor for `UpdateInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateInfoDescriptor = $convert.base64Decode(
-    'CgpVcGRhdGVJbmZvEhQKBXN0YXRlGAEgASgJUgVzdGF0ZRInCg9jdXJyZW50X3ZlcnNpb24YAi'
-    'ABKAlSDmN1cnJlbnRWZXJzaW9uEiUKDnRhcmdldF92ZXJzaW9uGAMgASgJUg10YXJnZXRWZXJz'
-    'aW9uEhoKCHByb2dyZXNzGAQgASgNUghwcm9ncmVzcxIYCgdtZXNzYWdlGAUgASgJUgdtZXNzYW'
-    'dlEhQKBWVycm9yGAYgASgJUgVlcnJvchIYCgdjaGFuZ2VzGAcgAygJUgdjaGFuZ2VzEhgKB3Ry'
-    'aWdnZXIYCCABKAlSB3RyaWdnZXISHQoKdXBkYXRlZF9hdBgJIAEoBFIJdXBkYXRlZEF0EikKEG'
-    'Rvd25sb2FkZWRfYnl0ZXMYCiABKARSD2Rvd25sb2FkZWRCeXRlcxIfCgt0b3RhbF9ieXRlcxgL'
-    'IAEoBFIKdG90YWxCeXRlcw==');
+    'CgpVcGRhdGVJbmZvEhkKBXN0YXRlGAEgASgJSABSBXN0YXRliAEBEiwKD2N1cnJlbnRfdmVyc2'
+    'lvbhgCIAEoCUgBUg5jdXJyZW50VmVyc2lvbogBARIqCg50YXJnZXRfdmVyc2lvbhgDIAEoCUgC'
+    'Ug10YXJnZXRWZXJzaW9uiAEBEh8KCHByb2dyZXNzGAQgASgNSANSCHByb2dyZXNziAEBEh0KB2'
+    '1lc3NhZ2UYBSABKAlIBFIHbWVzc2FnZYgBARIZCgVlcnJvchgGIAEoCUgFUgVlcnJvcogBARIY'
+    'CgdjaGFuZ2VzGAcgAygJUgdjaGFuZ2VzEh0KB3RyaWdnZXIYCCABKAlIBlIHdHJpZ2dlcogBAR'
+    'IiCgp1cGRhdGVkX2F0GAkgASgESAdSCXVwZGF0ZWRBdIgBARIuChBkb3dubG9hZGVkX2J5dGVz'
+    'GAogASgESAhSD2Rvd25sb2FkZWRCeXRlc4gBARIkCgt0b3RhbF9ieXRlcxgLIAEoBEgJUgp0b3'
+    'RhbEJ5dGVziAEBQggKBl9zdGF0ZUISChBfY3VycmVudF92ZXJzaW9uQhEKD190YXJnZXRfdmVy'
+    'c2lvbkILCglfcHJvZ3Jlc3NCCgoIX21lc3NhZ2VCCAoGX2Vycm9yQgoKCF90cmlnZ2VyQg0KC1'
+    '91cGRhdGVkX2F0QhMKEV9kb3dubG9hZGVkX2J5dGVzQg4KDF90b3RhbF9ieXRlcw==');
 
 @$core.Deprecated('Use faceToBrainDescriptor instead')
 const FaceToBrain$json = {
@@ -485,22 +622,65 @@ final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
 const PluginProgress$json = {
   '1': 'PluginProgress',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'title', '3': 2, '4': 1, '5': 9, '10': 'title'},
+    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
+    {'1': 'title', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'title', '17': true},
     {
       '1': 'state',
       '3': 3,
       '4': 1,
       '5': 14,
       '6': '.hi.ninja.PluginProgress.State',
-      '10': 'state'
+      '9': 2,
+      '10': 'state',
+      '17': true
     },
-    {'1': 'progress', '3': 4, '4': 1, '5': 13, '10': 'progress'},
-    {'1': 'downloaded_bytes', '3': 5, '4': 1, '5': 4, '10': 'downloadedBytes'},
-    {'1': 'total_bytes', '3': 6, '4': 1, '5': 4, '10': 'totalBytes'},
-    {'1': 'message', '3': 7, '4': 1, '5': 9, '10': 'message'},
+    {
+      '1': 'progress',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'progress',
+      '17': true
+    },
+    {
+      '1': 'downloaded_bytes',
+      '3': 5,
+      '4': 1,
+      '5': 4,
+      '9': 4,
+      '10': 'downloadedBytes',
+      '17': true
+    },
+    {
+      '1': 'total_bytes',
+      '3': 6,
+      '4': 1,
+      '5': 4,
+      '9': 5,
+      '10': 'totalBytes',
+      '17': true
+    },
+    {
+      '1': 'message',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '9': 6,
+      '10': 'message',
+      '17': true
+    },
   ],
   '4': [PluginProgress_State$json],
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_title'},
+    {'1': '_state'},
+    {'1': '_progress'},
+    {'1': '_downloaded_bytes'},
+    {'1': '_total_bytes'},
+    {'1': '_message'},
+  ],
 };
 
 @$core.Deprecated('Use pluginProgressDescriptor instead')
@@ -517,13 +697,15 @@ const PluginProgress_State$json = {
 
 /// Descriptor for `PluginProgress`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginProgressDescriptor = $convert.base64Decode(
-    'Cg5QbHVnaW5Qcm9ncmVzcxISCgR1dWlkGAEgASgJUgR1dWlkEhQKBXRpdGxlGAIgASgJUgV0aX'
-    'RsZRI0CgVzdGF0ZRgDIAEoDjIeLmhpLm5pbmphLlBsdWdpblByb2dyZXNzLlN0YXRlUgVzdGF0'
-    'ZRIaCghwcm9ncmVzcxgEIAEoDVIIcHJvZ3Jlc3MSKQoQZG93bmxvYWRlZF9ieXRlcxgFIAEoBF'
-    'IPZG93bmxvYWRlZEJ5dGVzEh8KC3RvdGFsX2J5dGVzGAYgASgEUgp0b3RhbEJ5dGVzEhgKB21l'
-    'c3NhZ2UYByABKAlSB21lc3NhZ2UiaQoFU3RhdGUSEQoNU1RBVEVfVU5LTk9XThAAEhUKEVNUQV'
-    'RFX0RPV05MT0FESU5HEAESFAoQU1RBVEVfSU5TVEFMTElORxACEg4KClNUQVRFX0RPTkUQAxIQ'
-    'CgxTVEFURV9GQUlMRUQQBA==');
+    'Cg5QbHVnaW5Qcm9ncmVzcxIXCgR1dWlkGAEgASgJSABSBHV1aWSIAQESGQoFdGl0bGUYAiABKA'
+    'lIAVIFdGl0bGWIAQESOQoFc3RhdGUYAyABKA4yHi5oaS5uaW5qYS5QbHVnaW5Qcm9ncmVzcy5T'
+    'dGF0ZUgCUgVzdGF0ZYgBARIfCghwcm9ncmVzcxgEIAEoDUgDUghwcm9ncmVzc4gBARIuChBkb3'
+    'dubG9hZGVkX2J5dGVzGAUgASgESARSD2Rvd25sb2FkZWRCeXRlc4gBARIkCgt0b3RhbF9ieXRl'
+    'cxgGIAEoBEgFUgp0b3RhbEJ5dGVziAEBEh0KB21lc3NhZ2UYByABKAlIBlIHbWVzc2FnZYgBAS'
+    'JpCgVTdGF0ZRIRCg1TVEFURV9VTktOT1dOEAASFQoRU1RBVEVfRE9XTkxPQURJTkcQARIUChBT'
+    'VEFURV9JTlNUQUxMSU5HEAISDgoKU1RBVEVfRE9ORRADEhAKDFNUQVRFX0ZBSUxFRBAEQgcKBV'
+    '91dWlkQggKBl90aXRsZUIICgZfc3RhdGVCCwoJX3Byb2dyZXNzQhMKEV9kb3dubG9hZGVkX2J5'
+    'dGVzQg4KDF90b3RhbF9ieXRlc0IKCghfbWVzc2FnZQ==');
 
 @$core.Deprecated('Use updateActionDescriptor instead')
 const UpdateAction$json = {
@@ -535,10 +717,15 @@ const UpdateAction$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.ninja.UpdateAction.Action',
-      '10': 'action'
+      '9': 0,
+      '10': 'action',
+      '17': true
     },
   ],
   '4': [UpdateAction_Action$json],
+  '8': [
+    {'1': '_action'},
+  ],
 };
 
 @$core.Deprecated('Use updateActionDescriptor instead')
@@ -554,6 +741,7 @@ const UpdateAction_Action$json = {
 
 /// Descriptor for `UpdateAction`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateActionDescriptor = $convert.base64Decode(
-    'CgxVcGRhdGVBY3Rpb24SNQoGYWN0aW9uGAEgASgOMh0uaGkubmluamEuVXBkYXRlQWN0aW9uLk'
-    'FjdGlvblIGYWN0aW9uIlQKBkFjdGlvbhISCg5BQ1RJT05fVU5LTk9XThAAEhAKDEFDVElPTl9D'
-    'SEVDSxABEhAKDEFDVElPTl9BUFBMWRACEhIKDkFDVElPTl9ESVNNSVNTEAM=');
+    'CgxVcGRhdGVBY3Rpb24SOgoGYWN0aW9uGAEgASgOMh0uaGkubmluamEuVXBkYXRlQWN0aW9uLk'
+    'FjdGlvbkgAUgZhY3Rpb26IAQEiVAoGQWN0aW9uEhIKDkFDVElPTl9VTktOT1dOEAASEAoMQUNU'
+    'SU9OX0NIRUNLEAESEAoMQUNUSU9OX0FQUExZEAISEgoOQUNUSU9OX0RJU01JU1MQA0IJCgdfYW'
+    'N0aW9u');

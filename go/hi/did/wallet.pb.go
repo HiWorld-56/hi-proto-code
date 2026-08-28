@@ -110,7 +110,7 @@ func (x *UpdateAddressesReq) GetApt() string {
 
 type GetWalletReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chain         string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"` // did 从 token 取(自服务,不接受任意 did 入参)
+	Chain         *string                `protobuf:"bytes,1,opt,name=chain,proto3,oneof" json:"chain,omitempty"` // did 从 token 取(自服务,不接受任意 did 入参)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -146,8 +146,8 @@ func (*GetWalletReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetWalletReq) GetChain() string {
-	if x != nil {
-		return x.Chain
+	if x != nil && x.Chain != nil {
+		return *x.Chain
 	}
 	return ""
 }
@@ -294,7 +294,7 @@ func (x *ListAddressesResp) GetList() []*ListAddressesResp_Unit {
 // 不做成 enum 是有意的:币种要扩展时 enum 的增删比字符串麻烦得多。
 type TotalAssetsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Currency      string                 `protobuf:"bytes,1,opt,name=currency,proto3" json:"currency,omitempty"`
+	Currency      *string                `protobuf:"bytes,1,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -330,15 +330,15 @@ func (*TotalAssetsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *TotalAssetsReq) GetCurrency() string {
-	if x != nil {
-		return x.Currency
+	if x != nil && x.Currency != nil {
+		return *x.Currency
 	}
 	return ""
 }
 
 type TotalAssetsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	N             string                 `protobuf:"bytes,1,opt,name=n,proto3" json:"n,omitempty"`
+	N             *string                `protobuf:"bytes,1,opt,name=n,proto3,oneof" json:"n,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -374,15 +374,15 @@ func (*TotalAssetsResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *TotalAssetsResp) GetN() string {
-	if x != nil {
-		return x.N
+	if x != nil && x.N != nil {
+		return *x.N
 	}
 	return ""
 }
 
 type ListUsersAssetsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Currency      string                 `protobuf:"bytes,1,opt,name=currency,proto3" json:"currency,omitempty"`
+	Currency      *string                `protobuf:"bytes,1,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -419,8 +419,8 @@ func (*ListUsersAssetsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUsersAssetsReq) GetCurrency() string {
-	if x != nil {
-		return x.Currency
+	if x != nil && x.Currency != nil {
+		return *x.Currency
 	}
 	return ""
 }
@@ -434,7 +434,7 @@ func (x *ListUsersAssetsReq) GetPagination() *hi.Pagination {
 
 type ListUsersAssetsResp struct {
 	state         protoimpl.MessageState      `protogen:"open.v1"`
-	Total         int32                       `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                      `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*ListUsersAssetsResp_Unit `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -471,8 +471,8 @@ func (*ListUsersAssetsResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUsersAssetsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -487,7 +487,7 @@ func (x *ListUsersAssetsResp) GetList() []*ListUsersAssetsResp_Unit {
 type GetUserAssetsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Coin          string                 `protobuf:"bytes,2,opt,name=coin,proto3" json:"coin,omitempty"`
+	Coin          *string                `protobuf:"bytes,2,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -530,8 +530,8 @@ func (x *GetUserAssetsReq) GetDid() string {
 }
 
 func (x *GetUserAssetsReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
@@ -541,7 +541,7 @@ func (x *GetUserAssetsReq) GetCoin() string {
 type GetUserAssetsResp struct {
 	state         protoimpl.MessageState    `protogen:"open.v1"`
 	Unit          []*GetUserAssetsResp_Unit `protobuf:"bytes,1,rep,name=unit,proto3" json:"unit,omitempty"`
-	Exchange      string                    `protobuf:"bytes,2,opt,name=exchange,proto3" json:"exchange,omitempty"` // 汇率：USD->CNY
+	Exchange      *string                   `protobuf:"bytes,2,opt,name=exchange,proto3,oneof" json:"exchange,omitempty"` // 汇率：USD->CNY
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -584,8 +584,8 @@ func (x *GetUserAssetsResp) GetUnit() []*GetUserAssetsResp_Unit {
 }
 
 func (x *GetUserAssetsResp) GetExchange() string {
-	if x != nil {
-		return x.Exchange
+	if x != nil && x.Exchange != nil {
+		return *x.Exchange
 	}
 	return ""
 }
@@ -638,8 +638,8 @@ func (x *UpdateAssetsReq) GetAssets() []*UpdateAssetsReq_Asset {
 
 type GetWalletResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chain         string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
-	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	Chain         *string                `protobuf:"bytes,1,opt,name=chain,proto3,oneof" json:"chain,omitempty"`
+	Address       *string                `protobuf:"bytes,2,opt,name=address,proto3,oneof" json:"address,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -675,15 +675,15 @@ func (*GetWalletResp_Unit) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetWalletResp_Unit) GetChain() string {
-	if x != nil {
-		return x.Chain
+	if x != nil && x.Chain != nil {
+		return *x.Chain
 	}
 	return ""
 }
 
 func (x *GetWalletResp_Unit) GetAddress() string {
-	if x != nil {
-		return x.Address
+	if x != nil && x.Address != nil {
+		return *x.Address
 	}
 	return ""
 }
@@ -691,7 +691,7 @@ func (x *GetWalletResp_Unit) GetAddress() string {
 type ListAddressesReq_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Chain         string                 `protobuf:"bytes,2,opt,name=chain,proto3" json:"chain,omitempty"`
+	Chain         *string                `protobuf:"bytes,2,opt,name=chain,proto3,oneof" json:"chain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -734,8 +734,8 @@ func (x *ListAddressesReq_Unit) GetDid() string {
 }
 
 func (x *ListAddressesReq_Unit) GetChain() string {
-	if x != nil {
-		return x.Chain
+	if x != nil && x.Chain != nil {
+		return *x.Chain
 	}
 	return ""
 }
@@ -743,8 +743,8 @@ func (x *ListAddressesReq_Unit) GetChain() string {
 type ListAddressesResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Chain         string                 `protobuf:"bytes,2,opt,name=chain,proto3" json:"chain,omitempty"`
-	Address       string                 `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
+	Chain         *string                `protobuf:"bytes,2,opt,name=chain,proto3,oneof" json:"chain,omitempty"`
+	Address       *string                `protobuf:"bytes,3,opt,name=address,proto3,oneof" json:"address,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -787,15 +787,15 @@ func (x *ListAddressesResp_Unit) GetDid() string {
 }
 
 func (x *ListAddressesResp_Unit) GetChain() string {
-	if x != nil {
-		return x.Chain
+	if x != nil && x.Chain != nil {
+		return *x.Chain
 	}
 	return ""
 }
 
 func (x *ListAddressesResp_Unit) GetAddress() string {
-	if x != nil {
-		return x.Address
+	if x != nil && x.Address != nil {
+		return *x.Address
 	}
 	return ""
 }
@@ -803,8 +803,8 @@ func (x *ListAddressesResp_Unit) GetAddress() string {
 type ListUsersAssetsResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	N             string                 `protobuf:"bytes,3,opt,name=n,proto3" json:"n,omitempty"`
+	Avatar        *string                `protobuf:"bytes,2,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`
+	N             *string                `protobuf:"bytes,3,opt,name=n,proto3,oneof" json:"n,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -847,15 +847,15 @@ func (x *ListUsersAssetsResp_Unit) GetDid() string {
 }
 
 func (x *ListUsersAssetsResp_Unit) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
 
 func (x *ListUsersAssetsResp_Unit) GetN() string {
-	if x != nil {
-		return x.N
+	if x != nil && x.N != nil {
+		return *x.N
 	}
 	return ""
 }
@@ -863,9 +863,9 @@ func (x *ListUsersAssetsResp_Unit) GetN() string {
 type GetUserAssetsResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Coin          *Coin                  `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
-	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	Amount        string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"` // 金额
-	Price         string                 `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`   // 币价，单位USDT
+	Address       *string                `protobuf:"bytes,2,opt,name=address,proto3,oneof" json:"address,omitempty"`
+	Amount        *string                `protobuf:"bytes,3,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 金额
+	Price         *string                `protobuf:"bytes,4,opt,name=price,proto3,oneof" json:"price,omitempty"`   // 币价，单位USDT
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -908,30 +908,30 @@ func (x *GetUserAssetsResp_Unit) GetCoin() *Coin {
 }
 
 func (x *GetUserAssetsResp_Unit) GetAddress() string {
-	if x != nil {
-		return x.Address
+	if x != nil && x.Address != nil {
+		return *x.Address
 	}
 	return ""
 }
 
 func (x *GetUserAssetsResp_Unit) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *GetUserAssetsResp_Unit) GetPrice() string {
-	if x != nil {
-		return x.Price
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return ""
 }
 
 type UpdateAssetsReq_Asset struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"` // 币种标识:btc/eth/usdt_erc20/trx/usdt_trc20/sol/apt/...
-	Amount        string                 `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	Coin          *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"` // 币种标识:btc/eth/usdt_erc20/trx/usdt_trc20/sol/apt/...
+	Amount        *string                `protobuf:"bytes,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -967,15 +967,15 @@ func (*UpdateAssetsReq_Asset) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateAssetsReq_Asset) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *UpdateAssetsReq_Asset) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
@@ -997,59 +997,81 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\x04_ethB\x06\n" +
 	"\x04_trxB\x06\n" +
 	"\x04_solB\x06\n" +
-	"\x04_apt\"$\n" +
-	"\fGetWalletReq\x12\x14\n" +
-	"\x05chain\x18\x01 \x01(\tR\x05chain\"\x95\x01\n" +
+	"\x04_apt\"3\n" +
+	"\fGetWalletReq\x12\x19\n" +
+	"\x05chain\x18\x01 \x01(\tH\x00R\x05chain\x88\x01\x01B\b\n" +
+	"\x06_chain\"\xb5\x01\n" +
 	"\rGetWalletResp\x124\n" +
-	"\x04list\x18\x01 \x03(\v2\x1a.hi.did.GetWalletResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1aH\n" +
-	"\x04Unit\x12\x1a\n" +
-	"\x05chain\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05chain\x12\x1e\n" +
-	"\aaddress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aaddress:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"u\n" +
+	"\x04list\x18\x01 \x03(\v2\x1a.hi.did.GetWalletResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1ah\n" +
+	"\x04Unit\x12\x1f\n" +
+	"\x05chain\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05chain\x88\x01\x01\x12#\n" +
+	"\aaddress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aaddress\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_chainB\n" +
+	"\n" +
+	"\b_address:\x04\x98\xb5\x18\x03\"\x84\x01\n" +
 	"\x10ListAddressesReq\x121\n" +
-	"\x04list\x18\x01 \x03(\v2\x1d.hi.did.ListAddressesReq.UnitR\x04list\x1a.\n" +
+	"\x04list\x18\x01 \x03(\v2\x1d.hi.did.ListAddressesReq.UnitR\x04list\x1a=\n" +
 	"\x04Unit\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x14\n" +
-	"\x05chain\x18\x02 \x01(\tR\x05chain\"\xb5\x01\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x19\n" +
+	"\x05chain\x18\x02 \x01(\tH\x00R\x05chain\x88\x01\x01B\b\n" +
+	"\x06_chain\"\xd6\x01\n" +
 	"\x11ListAddressesResp\x128\n" +
-	"\x04list\x18\x01 \x03(\v2\x1e.hi.did.ListAddressesResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a`\n" +
+	"\x04list\x18\x01 \x03(\v2\x1e.hi.did.ListAddressesResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a\x80\x01\n" +
 	"\x04Unit\x12\x16\n" +
-	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12\x1a\n" +
-	"\x05chain\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x05chain\x12\x1e\n" +
-	"\aaddress\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\aaddress:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"\x89\x01\n" +
-	"\x0eTotalAssetsReq\x12w\n" +
-	"\bcurrency\x18\x01 \x01(\tB[\xbaHX\xba\x01U\n" +
-	"\x10currency.iso4217\x12\x1ccurrency 只支持 cny / usd\x1a#this.lowerAscii() in ['cny', 'usd']R\bcurrency\"+\n" +
-	"\x0fTotalAssetsResp\x12\x12\n" +
-	"\x01n\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x01n:\x04\x98\xb5\x18\x01\"\xbd\x01\n" +
-	"\x12ListUsersAssetsReq\x12w\n" +
-	"\bcurrency\x18\x01 \x01(\tB[\xbaHX\xba\x01U\n" +
-	"\x10currency.iso4217\x12\x1ccurrency 只支持 cny / usd\x1a#this.lowerAscii() in ['cny', 'usd']R\bcurrency\x12.\n" +
+	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12\x1f\n" +
+	"\x05chain\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05chain\x88\x01\x01\x12#\n" +
+	"\aaddress\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aaddress\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_chainB\n" +
+	"\n" +
+	"\b_address:\x04\x98\xb5\x18\x03\"\x9e\x01\n" +
+	"\x0eTotalAssetsReq\x12\x7f\n" +
+	"\bcurrency\x18\x01 \x01(\tB^\xbaH[\xba\x01U\n" +
+	"\x10currency.iso4217\x12\x1ccurrency 只支持 cny / usd\x1a#this.lowerAscii() in ['cny', 'usd']\xc8\x01\x01H\x00R\bcurrency\x88\x01\x01B\v\n" +
+	"\t_currency\"6\n" +
+	"\x0fTotalAssetsResp\x12\x17\n" +
+	"\x01n\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x01n\x88\x01\x01:\x04\x98\xb5\x18\x01B\x04\n" +
+	"\x02_n\"\xd2\x01\n" +
+	"\x12ListUsersAssetsReq\x12\x7f\n" +
+	"\bcurrency\x18\x01 \x01(\tB^\xbaH[\xba\x01U\n" +
+	"\x10currency.iso4217\x12\x1ccurrency 只支持 cny / usd\x1a#this.lowerAscii() in ['cny', 'usd']\xc8\x01\x01H\x00R\bcurrency\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\xcb\x01\n" +
-	"\x13ListUsersAssetsResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x12:\n" +
-	"\x04list\x18\x02 \x03(\v2 .hi.did.ListUsersAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x1aV\n" +
+	"paginationB\v\n" +
+	"\t_currency\"\xf5\x01\n" +
+	"\x13ListUsersAssetsResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12:\n" +
+	"\x04list\x18\x02 \x03(\v2 .hi.did.ListUsersAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x1aq\n" +
 	"\x04Unit\x12\x16\n" +
-	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03did\x12\x1c\n" +
-	"\x06avatar\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x06avatar\x12\x12\n" +
-	"\x01n\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x01n:\x04\x98\xb5\x18\x01:\x04\x98\xb5\x18\x01\"8\n" +
+	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03did\x12!\n" +
+	"\x06avatar\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06avatar\x88\x01\x01\x12\x17\n" +
+	"\x01n\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x01n\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_avatarB\x04\n" +
+	"\x02_n:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total\"F\n" +
 	"\x10GetUserAssetsReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x12\n" +
-	"\x04coin\x18\x02 \x01(\tR\x04coin\"\x86\x02\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x17\n" +
+	"\x04coin\x18\x02 \x01(\tH\x00R\x04coin\x88\x01\x01B\a\n" +
+	"\x05_coin\"\xc8\x02\n" +
 	"\x11GetUserAssetsResp\x128\n" +
-	"\x04unit\x18\x01 \x03(\v2\x1e.hi.did.GetUserAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04unit\x12 \n" +
-	"\bexchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\bexchange\x1a\x8e\x01\n" +
+	"\x04unit\x18\x01 \x03(\v2\x1e.hi.did.GetUserAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04unit\x12%\n" +
+	"\bexchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bexchange\x88\x01\x01\x1a\xbe\x01\n" +
 	"\x04Unit\x12&\n" +
-	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04coin\x12\x1e\n" +
-	"\aaddress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\aaddress\x12\x1c\n" +
-	"\x06amount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x06amount\x12\x1a\n" +
-	"\x05price\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x05price:\x04\x98\xb5\x18\x01:\x04\x98\xb5\x18\x01\"}\n" +
+	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04coin\x12#\n" +
+	"\aaddress\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\aaddress\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x06amount\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x05price\x88\x01\x01:\x04\x98\xb5\x18\x01B\n" +
+	"\n" +
+	"\b_addressB\t\n" +
+	"\a_amountB\b\n" +
+	"\x06_price:\x04\x98\xb5\x18\x01B\v\n" +
+	"\t_exchange\"\x9b\x01\n" +
 	"\x0fUpdateAssetsReq\x125\n" +
-	"\x06assets\x18\x01 \x03(\v2\x1d.hi.did.UpdateAssetsReq.AssetR\x06assets\x1a3\n" +
-	"\x05Asset\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\x12\x16\n" +
-	"\x06amount\x18\x02 \x01(\tR\x06amount2\x8b\x01\n" +
+	"\x06assets\x18\x01 \x03(\v2\x1d.hi.did.UpdateAssetsReq.AssetR\x06assets\x1aQ\n" +
+	"\x05Asset\x12\x17\n" +
+	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\x02 \x01(\tH\x01R\x06amount\x88\x01\x01B\a\n" +
+	"\x05_coinB\t\n" +
+	"\a_amount2\x8b\x01\n" +
 	"\x06Wallet\x12F\n" +
 	"\fUpdateAssets\x12\x17.hi.did.UpdateAssetsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x03Get\x12\x14.hi.did.GetWalletReq\x1a\x15.hi.did.GetWalletResp\"\x05\x8a\xb5\x18\x01\x022\xe3\x02\n" +
@@ -1136,6 +1158,19 @@ func file_hi_did_wallet_proto_init() {
 	}
 	file_hi_did_base_proto_init()
 	file_hi_did_wallet_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_did_wallet_proto_msgTypes[17].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

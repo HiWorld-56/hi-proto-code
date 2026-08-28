@@ -28,11 +28,11 @@ pub struct MasterEvent {
     pub master: ::core::option::Option<super::Entity>,
     /// 触发源:
     /// bind    绑定了主人(master = 新主人)
-    /// unbind  解绑(master 为空)
+    /// unbind  解绑(master 不传)
     /// update  **主人还是那个人,但他改了资料**(master = 主人当前完整的 Entity)
     /// ⚠️ update 这档别按 did 判重 —— did 没变正是它的常态,变的是 name/avatar。
-    #[prost(string, tag = "2")]
-    pub trigger: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub trigger: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// AI 文字回复
 /// uuid 由 brain 在本次对话开始时生成，通过 show_im_request（覆写 Message.uuid）
@@ -40,19 +40,19 @@ pub struct MasterEvent {
 /// value 为 AI 输出的纯文本，不封装为 Message 结构。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TextReply {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub value: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// TTS 音频播放
 /// uuid 与对应的 TextReply.uuid 一致，audio 为完整音频文件的原始字节。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AudioPlay {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(bytes = "vec", tag = "2")]
-    pub audio: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bytes = "vec", optional, tag = "2")]
+    pub audio: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
 /// 币安接入设置。**凭证与业务参数分开放** —— 初始本金不是凭证，
 /// 它是算累计收益用的基数；混在一条里，改一次本金就得把 api_secret 整条重发一遍。
@@ -61,17 +61,17 @@ pub struct BinanceSettings {
     #[prost(message, optional, tag = "1")]
     pub credentials: ::core::option::Option<BinanceCredentials>,
     /// 初始本金。**十进制字符串**，与本仓所有金额字段同口径（免浮点误差）。
-    #[prost(string, tag = "2")]
-    pub initial_capital: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub initial_capital: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 币安 API 凭证。
 /// ⚠️ `api_secret` 是敏感字段，**只允许走 brain ↔ face 这条本地 ZMQ**，不出机器。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceCredentials {
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub api_secret: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub api_secret: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// brain -> face：所有指令通过 oneof 路由
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -168,12 +168,12 @@ pub mod brain_to_face {
 /// wifi: 服务器 TCP 443 可达
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct StatusEvent {
-    #[prost(bool, tag = "1")]
-    pub ntp: bool,
-    #[prost(bool, tag = "2")]
-    pub wifi: bool,
-    #[prost(bool, tag = "3")]
-    pub usb: bool,
+    #[prost(bool, optional, tag = "1")]
+    pub ntp: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "2")]
+    pub wifi: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "3")]
+    pub usb: ::core::option::Option<bool>,
 }
 /// 资源更新进度信息
 /// `state`：当前更新状态，例如 `idle`、`checking`、`downloading`、`installing`、`success`、`failed` 等。
@@ -181,7 +181,7 @@ pub struct StatusEvent {
 /// `target_version`：目标版本号，也就是准备更新到的版本。
 /// `progress`： 更新进度，通常是 `0-100` 的百分比。
 /// `message` ： 给用户或前端展示的状态说明，例如“正在下载更新包”。
-/// `error` ：错误信息。更新失败时记录失败原因；正常情况下通常为空。
+/// `error` ：错误信息。更新失败时记录失败原因；正常情况下不传。
 /// `changes` ：版本变更列表，通常是 changelog，例如修复了哪些问题、增加了哪些功能。
 /// `trigger`：更新触发来源，例如 `manual` 手动触发、`auto` 自动检查、`startup` 启动时触发等。
 /// `updated_at` ：状态最后更新时间，通常是 Unix 时间戳。具体是秒还是毫秒要看实现约定。
@@ -189,28 +189,28 @@ pub struct StatusEvent {
 /// `total_bytes`：需要下载的总字节数。可用于计算下载百分比。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateInfo {
-    #[prost(string, tag = "1")]
-    pub state: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub current_version: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub target_version: ::prost::alloc::string::String,
-    #[prost(uint32, tag = "4")]
-    pub progress: u32,
-    #[prost(string, tag = "5")]
-    pub message: ::prost::alloc::string::String,
-    #[prost(string, tag = "6")]
-    pub error: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub current_version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub target_version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "4")]
+    pub progress: ::core::option::Option<u32>,
+    #[prost(string, optional, tag = "5")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "7")]
     pub changes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, tag = "8")]
-    pub trigger: ::prost::alloc::string::String,
-    #[prost(uint64, tag = "9")]
-    pub updated_at: u64,
-    #[prost(uint64, tag = "10")]
-    pub downloaded_bytes: u64,
-    #[prost(uint64, tag = "11")]
-    pub total_bytes: u64,
+    #[prost(string, optional, tag = "8")]
+    pub trigger: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "9")]
+    pub updated_at: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "10")]
+    pub downloaded_bytes: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "11")]
+    pub total_bytes: ::core::option::Option<u64>,
 }
 /// face -> brain
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -243,25 +243,25 @@ pub mod face_to_brain {
 /// **face 那边不该为"插件"和"固件"学两套进度模型。**
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginProgress {
-    #[prost(string, tag = "1")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 给用户看的名字;取不到就退回 uuid
-    #[prost(string, tag = "2")]
-    pub title: ::prost::alloc::string::String,
-    #[prost(enumeration = "plugin_progress::State", tag = "3")]
-    pub state: i32,
+    #[prost(string, optional, tag = "2")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "plugin_progress::State", optional, tag = "3")]
+    pub state: ::core::option::Option<i32>,
     /// 0-100。**总长度未知时恒为 0** —— 服务端不给 Content-Length 是有可能的,
     /// 那时候宁可不显示百分比,也别编一个会往回跳的数字。
-    #[prost(uint32, tag = "4")]
-    pub progress: u32,
-    #[prost(uint64, tag = "5")]
-    pub downloaded_bytes: u64,
+    #[prost(uint32, optional, tag = "4")]
+    pub progress: ::core::option::Option<u32>,
+    #[prost(uint64, optional, tag = "5")]
+    pub downloaded_bytes: ::core::option::Option<u64>,
     /// 0 = 未知
-    #[prost(uint64, tag = "6")]
-    pub total_bytes: u64,
+    #[prost(uint64, optional, tag = "6")]
+    pub total_bytes: ::core::option::Option<u64>,
     /// 失败原因(state=FAILED 时)
-    #[prost(string, tag = "7")]
-    pub message: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "7")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Nested message and enum types in `PluginProgress`.
 pub mod plugin_progress {
@@ -318,8 +318,8 @@ pub mod plugin_progress {
 /// 更新动作
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateAction {
-    #[prost(enumeration = "update_action::Action", tag = "1")]
-    pub action: i32,
+    #[prost(enumeration = "update_action::Action", optional, tag = "1")]
+    pub action: ::core::option::Option<i32>,
 }
 /// Nested message and enum types in `UpdateAction`.
 pub mod update_action {

@@ -1180,7 +1180,7 @@ class CreateContentReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearContent() => $_clearField(2);
 
-  /// 文件名。**可空** —— 空了后端按内容前 10 字派生一个。
+  /// 文件名。**可不传** —— 不传时后端按内容前 10 字派生一个。
   ///
   /// 为什么要收:文本训练在前端是让用户自己起名的(上传文件那条路天然带文件名),
   /// 而派生出来的"前10字…"在列表里全是一个样,用户根本认不出自己传的是哪份。

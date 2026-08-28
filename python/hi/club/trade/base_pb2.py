@@ -29,7 +29,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18hi/club/trade/base.proto\x12\rhi.club.trade\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/order.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"a\n\rListTradesReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x0e\n\x02id\x18\x02 \x01(\tR\x02id\x12.\n\npagination\x18\x03 \x01(\x0b\x32\x0e.hi.PaginationR\npagination2\xd6\x02\n\x05Trade\x12\x42\n\x06GetFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x06\x12\x39\n\x03Get\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x06\x12\x39\n\x03\x41\x64\x64\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x05\x8a\xb5\x18\x01\x06\x12M\n\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06\x12\x44\n\x04List\x12\x1c.hi.club.trade.ListTradesReq\x1a\x17.hi.club.ListTradesResp\"\x05\x8a\xb5\x18\x01\x06\x32R\n\x0bTradeManage\x12\x43\n\x04List\x12\x1b.hi.club.TradeManageListReq\x1a\x17.hi.club.ListTradesResp\"\x05\x8a\xb5\x18\x01\x06\x32x\n\x05Order\x12\x36\n\x04Pull\x12\x0e.hi.SignedData\x1a\x17.hi.club.PullOrdersResp\"\x05\x8a\xb5\x18\x01\x06\x12\x37\n\x06Report\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06\x42\x31Z/github.com/HiWorld-56/hi-proto/go/hi/club/tradeb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18hi/club/trade/base.proto\x12\rhi.club.trade\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/order.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"m\n\rListTradesReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x13\n\x02id\x18\x02 \x01(\tH\x00R\x02id\x88\x01\x01\x12.\n\npagination\x18\x03 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x05\n\x03_id2\xd6\x02\n\x05Trade\x12\x42\n\x06GetFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x06\x12\x39\n\x03Get\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x06\x12\x39\n\x03\x41\x64\x64\x12\x14.hi.club.AddTradeReq\x1a\x15.hi.club.AddTradeResp\"\x05\x8a\xb5\x18\x01\x06\x12M\n\x0fUpdateTransHash\x12\x1b.hi.club.UpdateTransHashReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06\x12\x44\n\x04List\x12\x1c.hi.club.trade.ListTradesReq\x1a\x17.hi.club.ListTradesResp\"\x05\x8a\xb5\x18\x01\x06\x32R\n\x0bTradeManage\x12\x43\n\x04List\x12\x1b.hi.club.TradeManageListReq\x1a\x17.hi.club.ListTradesResp\"\x05\x8a\xb5\x18\x01\x06\x32x\n\x05Order\x12\x36\n\x04Pull\x12\x0e.hi.SignedData\x1a\x17.hi.club.PullOrdersResp\"\x05\x8a\xb5\x18\x01\x06\x12\x37\n\x06Report\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06\x42\x31Z/github.com/HiWorld-56/hi-proto/go/hi/club/tradeb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -54,11 +54,11 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ORDER'].methods_by_name['Report']._loaded_options = None
   _globals['_ORDER'].methods_by_name['Report']._serialized_options = b'\212\265\030\001\006'
   _globals['_LISTTRADESREQ']._serialized_start=149
-  _globals['_LISTTRADESREQ']._serialized_end=246
-  _globals['_TRADE']._serialized_start=249
-  _globals['_TRADE']._serialized_end=591
-  _globals['_TRADEMANAGE']._serialized_start=593
-  _globals['_TRADEMANAGE']._serialized_end=675
-  _globals['_ORDER']._serialized_start=677
-  _globals['_ORDER']._serialized_end=797
+  _globals['_LISTTRADESREQ']._serialized_end=258
+  _globals['_TRADE']._serialized_start=261
+  _globals['_TRADE']._serialized_end=603
+  _globals['_TRADEMANAGE']._serialized_start=605
+  _globals['_TRADEMANAGE']._serialized_end=687
+  _globals['_ORDER']._serialized_start=689
+  _globals['_ORDER']._serialized_end=809
 # @@protoc_insertion_point(module_scope)

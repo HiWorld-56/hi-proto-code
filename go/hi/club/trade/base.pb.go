@@ -58,7 +58,7 @@ type ListTradesReq struct {
 	// 查谁的交易。**数据过滤条件,不是鉴权凭据** —— 调用方(club)已经鉴过权,
 	// 这里不会、也不该再去验证它是不是"真的调用者"。
 	Did           string         `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Id            string         `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"` // 可选:只看该交易
+	Id            *string        `protobuf:"bytes,2,opt,name=id,proto3,oneof" json:"id,omitempty"` // 可选:只看该交易
 	Pagination    *hi.Pagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -102,8 +102,8 @@ func (x *ListTradesReq) GetDid() string {
 }
 
 func (x *ListTradesReq) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -119,13 +119,14 @@ var File_hi_club_trade_base_proto protoreflect.FileDescriptor
 
 const file_hi_club_trade_base_proto_rawDesc = "" +
 	"\n" +
-	"\x18hi/club/trade/base.proto\x12\rhi.club.trade\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/order.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"a\n" +
+	"\x18hi/club/trade/base.proto\x12\rhi.club.trade\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/order.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"m\n" +
 	"\rListTradesReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\tR\x02id\x12.\n" +
+	"\x03did\x18\x01 \x01(\tR\x03did\x12\x13\n" +
+	"\x02id\x18\x02 \x01(\tH\x00R\x02id\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination2\xd6\x02\n" +
+	"paginationB\x05\n" +
+	"\x03_id2\xd6\x02\n" +
 	"\x05Trade\x12B\n" +
 	"\x06GetFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x06\x129\n" +
 	"\x03Get\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x06\x129\n" +
@@ -198,6 +199,7 @@ func file_hi_club_trade_base_proto_init() {
 	if File_hi_club_trade_base_proto != nil {
 		return
 	}
+	file_hi_club_trade_base_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

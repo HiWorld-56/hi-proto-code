@@ -24,8 +24,8 @@ const (
 
 type SignedData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	Signature     string                 `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
+	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3,oneof" json:"data,omitempty"`
+	Signature     *string                `protobuf:"bytes,2,opt,name=signature,proto3,oneof" json:"signature,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -68,15 +68,15 @@ func (x *SignedData) GetData() []byte {
 }
 
 func (x *SignedData) GetSignature() string {
-	if x != nil {
-		return x.Signature
+	if x != nil && x.Signature != nil {
+		return *x.Signature
 	}
 	return ""
 }
 
 type DID struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -112,8 +112,8 @@ func (*DID) Descriptor() ([]byte, []int) {
 }
 
 func (x *DID) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -130,11 +130,11 @@ func (x *DID) GetId() string {
 // single     单聊
 type Entity struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Type          *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	Did           string                 `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Avatar        string                 `protobuf:"bytes,4,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	Update        int64                  `protobuf:"varint,5,opt,name=update,proto3" json:"update,omitempty"`
+	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Avatar        *string                `protobuf:"bytes,4,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`
+	Update        *int64                 `protobuf:"varint,5,opt,name=update,proto3,oneof" json:"update,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -170,8 +170,8 @@ func (*Entity) Descriptor() ([]byte, []int) {
 }
 
 func (x *Entity) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -184,31 +184,31 @@ func (x *Entity) GetDid() string {
 }
 
 func (x *Entity) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *Entity) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
 
 func (x *Entity) GetUpdate() int64 {
-	if x != nil {
-		return x.Update
+	if x != nil && x.Update != nil {
+		return *x.Update
 	}
 	return 0
 }
 
 type MqttCredentials struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Password      *string                `protobuf:"bytes,3,opt,name=password,proto3,oneof" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -244,30 +244,30 @@ func (*MqttCredentials) Descriptor() ([]byte, []int) {
 }
 
 func (x *MqttCredentials) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *MqttCredentials) GetUsername() string {
-	if x != nil {
-		return x.Username
+	if x != nil && x.Username != nil {
+		return *x.Username
 	}
 	return ""
 }
 
 func (x *MqttCredentials) GetPassword() string {
-	if x != nil {
-		return x.Password
+	if x != nil && x.Password != nil {
+		return *x.Password
 	}
 	return ""
 }
 
 type AuthToken struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	Token         *string                `protobuf:"bytes,1,opt,name=token,proto3,oneof" json:"token,omitempty"`
+	RefreshToken  *string                `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3,oneof" json:"refresh_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -303,15 +303,15 @@ func (*AuthToken) Descriptor() ([]byte, []int) {
 }
 
 func (x *AuthToken) GetToken() string {
-	if x != nil {
-		return x.Token
+	if x != nil && x.Token != nil {
+		return *x.Token
 	}
 	return ""
 }
 
 func (x *AuthToken) GetRefreshToken() string {
-	if x != nil {
-		return x.RefreshToken
+	if x != nil && x.RefreshToken != nil {
+		return *x.RefreshToken
 	}
 	return ""
 }
@@ -319,7 +319,7 @@ func (x *AuthToken) GetRefreshToken() string {
 // ⚠️ 被后端 Go 引用(pc_order/notify_pull_order 的签名载荷),proto 里无 rpc 引用,勿当死 message 删。
 type Nonce struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Nonce         string                 `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	Nonce         *string                `protobuf:"bytes,1,opt,name=nonce,proto3,oneof" json:"nonce,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -355,15 +355,15 @@ func (*Nonce) Descriptor() ([]byte, []int) {
 }
 
 func (x *Nonce) GetNonce() string {
-	if x != nil {
-		return x.Nonce
+	if x != nil && x.Nonce != nil {
+		return *x.Nonce
 	}
 	return ""
 }
 
 type RequestId struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -399,8 +399,8 @@ func (*RequestId) Descriptor() ([]byte, []int) {
 }
 
 func (x *RequestId) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -408,7 +408,7 @@ func (x *RequestId) GetId() string {
 // ⚠️ 被后端 Go 引用(chat),proto 里无 rpc 引用,勿当死 message 删。
 type State struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         bool                   `protobuf:"varint,1,opt,name=state,proto3" json:"state,omitempty"`
+	State         *bool                  `protobuf:"varint,1,opt,name=state,proto3,oneof" json:"state,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -444,8 +444,8 @@ func (*State) Descriptor() ([]byte, []int) {
 }
 
 func (x *State) GetState() bool {
-	if x != nil {
-		return x.State
+	if x != nil && x.State != nil {
+		return *x.State
 	}
 	return false
 }
@@ -453,7 +453,7 @@ func (x *State) GetState() bool {
 // ⚠️ 被后端 Go 引用,proto 里无 rpc 引用,勿当死 message 删。
 type Number struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	N             int64                  `protobuf:"varint,1,opt,name=n,proto3" json:"n,omitempty"`
+	N             *int64                 `protobuf:"varint,1,opt,name=n,proto3,oneof" json:"n,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -489,17 +489,17 @@ func (*Number) Descriptor() ([]byte, []int) {
 }
 
 func (x *Number) GetN() int64 {
-	if x != nil {
-		return x.N
+	if x != nil && x.N != nil {
+		return *x.N
 	}
 	return 0
 }
 
 type ClientInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           string                 `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"` // HiDID、HiAI、HiClub、HiMedia、Third
-	Dev           string                 `protobuf:"bytes,2,opt,name=dev,proto3" json:"dev,omitempty"` // web、app、pc、embeded
-	Mac           string                 `protobuf:"bytes,3,opt,name=mac,proto3" json:"mac,omitempty"` // Null / Mac or Static UUID (Preventing being kicked off)
+	App           *string                `protobuf:"bytes,1,opt,name=app,proto3,oneof" json:"app,omitempty"` // HiDID、HiAI、HiClub、HiMedia、Third
+	Dev           *string                `protobuf:"bytes,2,opt,name=dev,proto3,oneof" json:"dev,omitempty"` // web、app、pc、embeded
+	Mac           *string                `protobuf:"bytes,3,opt,name=mac,proto3,oneof" json:"mac,omitempty"` // Null / Mac or Static UUID (Preventing being kicked off)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -535,30 +535,30 @@ func (*ClientInfo) Descriptor() ([]byte, []int) {
 }
 
 func (x *ClientInfo) GetApp() string {
-	if x != nil {
-		return x.App
+	if x != nil && x.App != nil {
+		return *x.App
 	}
 	return ""
 }
 
 func (x *ClientInfo) GetDev() string {
-	if x != nil {
-		return x.Dev
+	if x != nil && x.Dev != nil {
+		return *x.Dev
 	}
 	return ""
 }
 
 func (x *ClientInfo) GetMac() string {
-	if x != nil {
-		return x.Mac
+	if x != nil && x.Mac != nil {
+		return *x.Mac
 	}
 	return ""
 }
 
 type Pagination struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Page          *int32                 `protobuf:"varint,1,opt,name=page,proto3,oneof" json:"page,omitempty"`
+	Limit         *int32                 `protobuf:"varint,2,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -594,15 +594,15 @@ func (*Pagination) Descriptor() ([]byte, []int) {
 }
 
 func (x *Pagination) GetPage() int32 {
-	if x != nil {
-		return x.Page
+	if x != nil && x.Page != nil {
+		return *x.Page
 	}
 	return 0
 }
 
 func (x *Pagination) GetLimit() int32 {
-	if x != nil {
-		return x.Limit
+	if x != nil && x.Limit != nil {
+		return *x.Limit
 	}
 	return 0
 }
@@ -610,8 +610,8 @@ func (x *Pagination) GetLimit() int32 {
 // 服务自身版本/环境(所有 Base 服务共用;各服务实现返回自己的 bin 版本与探测到的环境)。
 type ServerVersionResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Version       string                 `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"` // bin 版本(git tag 注入)
-	Env           string                 `protobuf:"bytes,2,opt,name=env,proto3" json:"env,omitempty"`         // 运行环境:dev/prod(echo 探测得出)
+	Version       *string                `protobuf:"bytes,1,opt,name=version,proto3,oneof" json:"version,omitempty"` // bin 版本(git tag 注入)
+	Env           *string                `protobuf:"bytes,2,opt,name=env,proto3,oneof" json:"env,omitempty"`         // 运行环境:dev/prod(echo 探测得出)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -647,15 +647,15 @@ func (*ServerVersionResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ServerVersionResp) GetVersion() string {
-	if x != nil {
-		return x.Version
+	if x != nil && x.Version != nil {
+		return *x.Version
 	}
 	return ""
 }
 
 func (x *ServerVersionResp) GetEnv() string {
-	if x != nil {
-		return x.Env
+	if x != nil && x.Env != nil {
+		return *x.Env
 	}
 	return ""
 }
@@ -668,8 +668,8 @@ func (x *ServerVersionResp) GetEnv() string {
 //	hiai   → hiai/plugin/<uuid>              聊天/AI 媒体 → temp/<YYYY_MM>(14 天过期)
 type UploadReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 原始文件名(允许空格等,仅用于取扩展名;存储侧随机改名)
-	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"` // 原始文件名(允许空格等,仅用于取扩展名;存储侧随机改名)
+	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -705,8 +705,8 @@ func (*UploadReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *UploadReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -803,8 +803,8 @@ func (*UploadStreamReq_Chunk) isUploadStreamReq_Data() {}
 
 type UploadMeta struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 允许空格等,仅用于取扩展名
-	Size          int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"` // 允许空格等,仅用于取扩展名
+	Size          *int64                 `protobuf:"varint,2,opt,name=size,proto3,oneof" json:"size,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -840,22 +840,22 @@ func (*UploadMeta) Descriptor() ([]byte, []int) {
 }
 
 func (x *UploadMeta) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *UploadMeta) GetSize() int64 {
-	if x != nil {
-		return x.Size
+	if x != nil && x.Size != nil {
+		return *x.Size
 	}
 	return 0
 }
 
 type UploadResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	ThumbUrl      *string                `protobuf:"bytes,2,opt,name=thumb_url,json=thumbUrl,proto3,oneof" json:"thumb_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -892,8 +892,8 @@ func (*UploadResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *UploadResp) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
@@ -908,7 +908,7 @@ func (x *UploadResp) GetThumbUrl() string {
 // 删除一个已上传的资源对象。各模块的 Source.Delete 共用。
 type DeleteResourceReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"` // 上传时拿到的完整 url
+	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"` // 上传时拿到的完整 url
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -944,8 +944,8 @@ func (*DeleteResourceReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteResourceReq) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
 	}
 	return ""
 }
@@ -954,65 +954,101 @@ var File_hi_common_proto protoreflect.FileDescriptor
 
 const file_hi_common_proto_rawDesc = "" +
 	"\n" +
-	"\x0fhi/common.proto\x12\x02hi\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\">\n" +
+	"\x0fhi/common.proto\x12\x02hi\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"_\n" +
 	"\n" +
-	"SignedData\x12\x12\n" +
-	"\x04data\x18\x01 \x01(\fR\x04data\x12\x1c\n" +
-	"\tsignature\x18\x02 \x01(\tR\tsignature\"!\n" +
-	"\x03DID\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x02id:\x04\x98\xb5\x18\x01\"\x96\x01\n" +
-	"\x06Entity\x12\x18\n" +
-	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04type\x12\x16\n" +
-	"\x03did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03did\x12\x18\n" +
-	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x04name\x12\x1c\n" +
-	"\x06avatar\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\x06avatar\x12\x1c\n" +
-	"\x06update\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01R\x06update:\x04\x98\xb5\x18\x01\"q\n" +
-	"\x0fMqttCredentials\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x02id\x12 \n" +
-	"\busername\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\busername\x12 \n" +
-	"\bpassword\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\bpassword:\x04\x98\xb5\x18\x03\"X\n" +
-	"\tAuthToken\x12\x1a\n" +
-	"\x05token\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05token\x12)\n" +
-	"\rrefresh_token\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\frefreshToken:\x04\x98\xb5\x18\x03\"\x1d\n" +
-	"\x05Nonce\x12\x14\n" +
-	"\x05nonce\x18\x01 \x01(\tR\x05nonce\"'\n" +
-	"\tRequestId\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x02id:\x04\x98\xb5\x18\x01\"\x1d\n" +
-	"\x05State\x12\x14\n" +
-	"\x05state\x18\x01 \x01(\bR\x05state\"\x16\n" +
-	"\x06Number\x12\f\n" +
-	"\x01n\x18\x01 \x01(\x03R\x01n\"B\n" +
+	"SignedData\x12\x17\n" +
+	"\x04data\x18\x01 \x01(\fH\x00R\x04data\x88\x01\x01\x12!\n" +
+	"\tsignature\x18\x02 \x01(\tH\x01R\tsignature\x88\x01\x01B\a\n" +
+	"\x05_dataB\f\n" +
 	"\n" +
-	"ClientInfo\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\x12\x10\n" +
-	"\x03dev\x18\x02 \x01(\tR\x03dev\x12\x10\n" +
-	"\x03mac\x18\x03 \x01(\tR\x03mac\"6\n" +
+	"_signature\"-\n" +
+	"\x03DID\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x02id\x88\x01\x01:\x04\x98\xb5\x18\x01B\x05\n" +
+	"\x03_id\"\xd2\x01\n" +
+	"\x06Entity\x12\x1d\n" +
+	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04type\x88\x01\x01\x12\x16\n" +
+	"\x03did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03did\x12\x1d\n" +
+	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12!\n" +
+	"\x06avatar\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x06avatar\x88\x01\x01\x12!\n" +
+	"\x06update\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01H\x03R\x06update\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_typeB\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatarB\t\n" +
+	"\a_update\"\xa1\x01\n" +
+	"\x0fMqttCredentials\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12%\n" +
+	"\busername\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\busername\x88\x01\x01\x12%\n" +
+	"\bpassword\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\bpassword\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_usernameB\v\n" +
+	"\t_password\"~\n" +
+	"\tAuthToken\x12\x1f\n" +
+	"\x05token\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05token\x88\x01\x01\x12.\n" +
+	"\rrefresh_token\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\frefreshToken\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_tokenB\x10\n" +
+	"\x0e_refresh_token\",\n" +
+	"\x05Nonce\x12\x19\n" +
+	"\x05nonce\x18\x01 \x01(\tH\x00R\x05nonce\x88\x01\x01B\b\n" +
+	"\x06_nonce\"3\n" +
+	"\tRequestId\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x02id\x88\x01\x01:\x04\x98\xb5\x18\x01B\x05\n" +
+	"\x03_id\",\n" +
+	"\x05State\x12\x19\n" +
+	"\x05state\x18\x01 \x01(\bH\x00R\x05state\x88\x01\x01B\b\n" +
+	"\x06_state\"!\n" +
+	"\x06Number\x12\x11\n" +
+	"\x01n\x18\x01 \x01(\x03H\x00R\x01n\x88\x01\x01B\x04\n" +
+	"\x02_n\"i\n" +
 	"\n" +
-	"Pagination\x12\x12\n" +
-	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limit\"Q\n" +
-	"\x11ServerVersionResp\x12\x1e\n" +
-	"\aversion\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\aversion\x12\x16\n" +
-	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03env:\x04\x98\xb5\x18\x01\"K\n" +
-	"\tUploadReq\x12\x1b\n" +
-	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12!\n" +
-	"\acontent\x18\x02 \x01(\fB\a\xbaH\x04z\x02\x10\x01R\acontent\"W\n" +
+	"ClientInfo\x12\x15\n" +
+	"\x03app\x18\x01 \x01(\tH\x00R\x03app\x88\x01\x01\x12\x15\n" +
+	"\x03dev\x18\x02 \x01(\tH\x01R\x03dev\x88\x01\x01\x12\x15\n" +
+	"\x03mac\x18\x03 \x01(\tH\x02R\x03mac\x88\x01\x01B\x06\n" +
+	"\x04_appB\x06\n" +
+	"\x04_devB\x06\n" +
+	"\x04_mac\"S\n" +
+	"\n" +
+	"Pagination\x12\x17\n" +
+	"\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x19\n" +
+	"\x05limit\x18\x02 \x01(\x05H\x01R\x05limit\x88\x01\x01B\a\n" +
+	"\x05_pageB\b\n" +
+	"\x06_limit\"o\n" +
+	"\x11ServerVersionResp\x12#\n" +
+	"\aversion\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\aversion\x88\x01\x01\x12\x1b\n" +
+	"\x03env\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x03env\x88\x01\x01:\x04\x98\xb5\x18\x01B\n" +
+	"\n" +
+	"\b_versionB\x06\n" +
+	"\x04_env\"p\n" +
+	"\tUploadReq\x12#\n" +
+	"\x04name\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x04name\x88\x01\x01\x12)\n" +
+	"\acontent\x18\x02 \x01(\fB\n" +
+	"\xbaH\a\xc8\x01\x01z\x02\x10\x01H\x01R\acontent\x88\x01\x01B\a\n" +
+	"\x05_nameB\n" +
+	"\n" +
+	"\b_content\"W\n" +
 	"\x0fUploadStreamReq\x12$\n" +
 	"\x04meta\x18\x01 \x01(\v2\x0e.hi.UploadMetaH\x00R\x04meta\x12\x16\n" +
 	"\x05chunk\x18\x02 \x01(\fH\x00R\x05chunkB\x06\n" +
-	"\x04data\"F\n" +
+	"\x04data\"h\n" +
 	"\n" +
-	"UploadMeta\x12\x1b\n" +
-	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12\x1b\n" +
-	"\x04size\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\"`\n" +
+	"UploadMeta\x12#\n" +
+	"\x04name\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x04name\x88\x01\x01\x12#\n" +
+	"\x04size\x18\x02 \x01(\x03B\n" +
+	"\xbaH\a\xc8\x01\x01\"\x02 \x00H\x01R\x04size\x88\x01\x01B\a\n" +
+	"\x05_nameB\a\n" +
+	"\x05_size\"m\n" +
 	"\n" +
-	"UploadResp\x12\x16\n" +
-	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03url\x12&\n" +
-	"\tthumb_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
+	"UploadResp\x12\x1b\n" +
+	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01\x12&\n" +
+	"\tthumb_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\x06\n" +
+	"\x04_urlB\f\n" +
 	"\n" +
-	"_thumb_url\"3\n" +
-	"\x11DeleteResourceReq\x12\x1e\n" +
-	"\x03url\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03urlBc\n" +
+	"_thumb_url\"C\n" +
+	"\x11DeleteResourceReq\x12&\n" +
+	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x03url\x88\x01\x01B\x06\n" +
+	"\x04_urlBc\n" +
 	"\x06com.hiB\vCommonProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
 var (
@@ -1062,11 +1098,26 @@ func file_hi_common_proto_init() {
 		return
 	}
 	file_hi_options_proto_init()
+	file_hi_common_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_common_proto_msgTypes[13].OneofWrappers = []any{
 		(*UploadStreamReq_Meta)(nil),
 		(*UploadStreamReq_Chunk)(nil),
 	}
+	file_hi_common_proto_msgTypes[14].OneofWrappers = []any{}
 	file_hi_common_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_common_proto_msgTypes[16].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

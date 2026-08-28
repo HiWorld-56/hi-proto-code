@@ -19,13 +19,16 @@ import 'dart:typed_data' as $typed_data;
 const GetPriceReq$json = {
   '1': 'GetPriceReq',
   '2': [
-    {'1': 'coin', '3': 1, '4': 1, '5': 9, '10': 'coin'},
+    {'1': 'coin', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'coin', '17': true},
+  ],
+  '8': [
+    {'1': '_coin'},
   ],
 };
 
 /// Descriptor for `GetPriceReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getPriceReqDescriptor =
-    $convert.base64Decode('CgtHZXRQcmljZVJlcRISCgRjb2luGAEgASgJUgRjb2lu');
+final $typed_data.Uint8List getPriceReqDescriptor = $convert.base64Decode(
+    'CgtHZXRQcmljZVJlcRIXCgRjb2luGAEgASgJSABSBGNvaW6IAQFCBwoFX2NvaW4=');
 
 @$core.Deprecated('Use getPriceRespDescriptor instead')
 const GetPriceResp$json = {
@@ -40,17 +43,38 @@ const GetPriceResp$json = {
       '8': {},
       '10': 'list'
     },
-    {'1': 'exchange', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'exchange'},
+    {
+      '1': 'exchange',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'exchange',
+      '17': true
+    },
   ],
   '3': [GetPriceResp_Unit$json],
   '7': {},
+  '8': [
+    {'1': '_exchange'},
+  ],
 };
 
 @$core.Deprecated('Use getPriceRespDescriptor instead')
 const GetPriceResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'price', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'price'},
+    {
+      '1': 'price',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'price',
+      '17': true
+    },
     {
       '1': 'coin',
       '3': 2,
@@ -62,11 +86,14 @@ const GetPriceResp_Unit$json = {
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_price'},
+  ],
 };
 
 /// Descriptor for `GetPriceResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getPriceRespDescriptor = $convert.base64Decode(
     'CgxHZXRQcmljZVJlc3ASMwoEbGlzdBgBIAMoCzIZLmhpLmRpZC5HZXRQcmljZVJlc3AuVW5pdE'
-    'IEkLUYAVIEbGlzdBIgCghleGNoYW5nZRgCIAEoCUIEkLUYAVIIZXhjaGFuZ2UaUAoEVW5pdBIa'
-    'CgVwcmljZRgBIAEoCUIEkLUYAVIFcHJpY2USJgoEY29pbhgCIAEoCzIMLmhpLmRpZC5Db2luQg'
-    'SQtRgBUgRjb2luOgSYtRgBOgSYtRgB');
+    'IEkLUYAVIEbGlzdBIlCghleGNoYW5nZRgCIAEoCUIEkLUYAUgAUghleGNoYW5nZYgBARpfCgRV'
+    'bml0Eh8KBXByaWNlGAEgASgJQgSQtRgBSABSBXByaWNliAEBEiYKBGNvaW4YAiABKAsyDC5oaS'
+    '5kaWQuQ29pbkIEkLUYAVIEY29pbjoEmLUYAUIICgZfcHJpY2U6BJi1GAFCCwoJX2V4Y2hhbmdl');

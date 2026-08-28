@@ -565,12 +565,14 @@ class ChatReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   void clearAsker() => $_clearField(12);
 
-  /// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时为空。
+  /// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时**不传**。
   ///
   /// 🔴 **只能服务端算,不收客户端的** —— 所以 hi.club.ChatReq 里**故意没有**这个字段。
   /// ⚠️ 每轮现取、不做长缓存:换主人(解绑/重绑)要立刻生效 —— 主人是活体,不是单据快照。
   ///
-  /// 插件判"是不是主人"的唯一正确写法:`master` 非空且 `asker == master`;
+  /// 插件判"是不是主人"的唯一正确写法:`master` **有值**且 `asker == master`;
+  /// (以前两个"没有"都是空串,`asker == master` 在皆空时会成立 —— 现在两者都是 null,
+  ///  null != null 不成立,但**仍然必须先判 master 有值**,别只写相等。)
   /// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
   @$pb.TagNumber(13)
   $core.String get master => $_getSZ(12);

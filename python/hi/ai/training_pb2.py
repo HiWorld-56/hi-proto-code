@@ -28,7 +28,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"6\n\x08StartReq\x12\x14\n\x05uuids\x18\x01 \x03(\tR\x05uuids\x12\x14\n\x05\x61gent\x18\x02 \x01(\tR\x05\x61gent\"!\n\tStatusReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\"\x9a\x01\n\nStatusResp\x12\x1c\n\x06status\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12!\n\tmem_count\x18\x02 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x08memCount\x12%\n\x0bslice_count\x18\x03 \x01(\x05\x42\x04\x90\xb5\x18\x03R\nsliceCount\x12\x1e\n\x07message\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x07message:\x04\x98\xb5\x18\x03\" \n\x08\x43learReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\"[\n\rUploadFileReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\x12\x1a\n\x08\x66ilename\x18\x02 \x01(\tR\x08\x66ilename\x12\x18\n\x07\x63ontent\x18\x03 \x01(\x0cR\x07\x63ontent\"\xea\x02\n\x0cTrainingFile\x12\x18\n\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12\x1e\n\x07\x63ontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x07\x63ontent\x12\x1a\n\x05\x61gent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x05\x61gent\x12\x1a\n\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x05title\x12\x18\n\x04size\x18\x05 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x04size\x12\x18\n\x04type\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1b\n\x06is_use\x18\x07 \x01(\x08\x42\x04\x90\xb5\x18\x03R\x05isUse\x12\x1c\n\x06\x64igest\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03R\x06\x64igest\x12)\n\rtraining_time\x18\t \x01(\x03\x42\x04\x90\xb5\x18\x03R\x0ctrainingTime\x12#\n\ncreated_at\x18\n \x01(\x03\x42\x04\x90\xb5\x18\x03R\tcreatedAt\x12#\n\nupdated_at\x18\x0b \x01(\x03\x42\x04\x90\xb5\x18\x03R\tupdatedAt:\x04\x98\xb5\x18\x03\"f\n\x0cListFilesReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\x12\x10\n\x03use\x18\x02 \x01(\x08R\x03use\x12.\n\npagination\x18\x03 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"`\n\rListFilesResp\x12\x1a\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03R\x05total\x12-\n\x04list\x18\x02 \x03(\x0b\x32\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"<\n\x0e\x44\x65leteFilesReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\x12\x14\n\x05uuids\x18\x02 \x03(\tR\x05uuids\"0\n\x16\x44\x65leteFilesByAgentsReq\x12\x16\n\x06\x61gents\x18\x01 \x03(\tR\x06\x61gents\"W\n\x0f\x44ownloadFileReq\x12\"\n\x05\x61gent\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x05\x61gent\x12 \n\x04uuid\x18\x02 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x04uuid\"R\n\x10\x44ownloadFileResp\x12\x1e\n\x07\x63ontent\x18\x01 \x01(\x0c\x42\x04\x90\xb5\x18\x03R\x07\x63ontent\x12\x18\n\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04name:\x04\x98\xb5\x18\x03\"6\n\nGetFileReq\x12\x12\n\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n\x05\x61gent\x18\x02 \x01(\tR\x05\x61gent\"B\n\x0bGetFileResp\x12-\n\x04\x66ile\x18\x01 \x01(\x0b\x32\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04\x66ile:\x04\x98\xb5\x18\x03\"V\n\x10UpdateContentReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\x12\x12\n\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x18\n\x07\x63ontent\x18\x03 \x01(\tR\x07\x63ontent\"X\n\x10\x43reateContentReq\x12\x14\n\x05\x61gent\x18\x01 \x01(\tR\x05\x61gent\x12\x18\n\x07\x63ontent\x18\x02 \x01(\tR\x07\x63ontent\x12\x14\n\x05title\x18\x03 \x01(\tR\x05title\"H\n\x11\x43reateContentResp\x12-\n\x04\x66ile\x18\x01 \x01(\x0b\x32\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04\x66ile:\x04\x98\xb5\x18\x03\"Q\n\rEditDigestReq\x12\x12\n\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x14\n\x05\x61gent\x18\x02 \x01(\tR\x05\x61gent\x12\x16\n\x06\x64igest\x18\x03 \x01(\tR\x06\x64igest2\x9b\x05\n\x08Training\x12\x37\n\x05Start\x12\x0f.hi.ai.StartReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12\x34\n\x06Status\x12\x10.hi.ai.StatusReq\x1a\x11.hi.ai.StatusResp\"\x05\x8a\xb5\x18\x01\x03\x12\x37\n\x05\x43lear\x12\x0f.hi.ai.ClearReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12=\n\tListFiles\x12\x13.hi.ai.ListFilesReq\x1a\x14.hi.ai.ListFilesResp\"\x05\x8a\xb5\x18\x01\x03\x12\x37\n\x07GetFile\x12\x11.hi.ai.GetFileReq\x1a\x12.hi.ai.GetFileResp\"\x05\x8a\xb5\x18\x01\x03\x12\x43\n\x0b\x44\x65leteFiles\x12\x15.hi.ai.DeleteFilesReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12S\n\x13\x44\x65leteFilesByAgents\x12\x1d.hi.ai.DeleteFilesByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12I\n\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\"\x05\x8a\xb5\x18\x01\x03\x12G\n\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12\x41\n\nEditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/ai/training.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"E\n\x08StartReq\x12\x14\n\x05uuids\x18\x01 \x03(\tR\x05uuids\x12\x19\n\x05\x61gent\x18\x02 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"0\n\tStatusReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"\xe3\x01\n\nStatusResp\x12!\n\x06status\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06status\x88\x01\x01\x12&\n\tmem_count\x18\x02 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x01R\x08memCount\x88\x01\x01\x12*\n\x0bslice_count\x18\x03 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x02R\nsliceCount\x88\x01\x01\x12#\n\x07message\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x07message\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\t\n\x07_statusB\x0c\n\n_mem_countB\x0e\n\x0c_slice_countB\n\n\x08_message\"/\n\x08\x43learReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"\x8d\x01\n\rUploadFileReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x1f\n\x08\x66ilename\x18\x02 \x01(\tH\x01R\x08\x66ilename\x88\x01\x01\x12\x1d\n\x07\x63ontent\x18\x03 \x01(\x0cH\x02R\x07\x63ontent\x88\x01\x01\x42\x08\n\x06_agentB\x0b\n\t_filenameB\n\n\x08_content\"\xa2\x04\n\x0cTrainingFile\x12\x1d\n\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12#\n\x07\x63ontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x07\x63ontent\x88\x01\x01\x12\x1f\n\x05\x61gent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x05\x61gent\x88\x01\x01\x12\x1f\n\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05title\x88\x01\x01\x12\x1d\n\x04size\x18\x05 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x04R\x04size\x88\x01\x01\x12\x1d\n\x04type\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x04type\x88\x01\x01\x12 \n\x06is_use\x18\x07 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x06R\x05isUse\x88\x01\x01\x12!\n\x06\x64igest\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03H\x07R\x06\x64igest\x88\x01\x01\x12.\n\rtraining_time\x18\t \x01(\x03\x42\x04\x90\xb5\x18\x03H\x08R\x0ctrainingTime\x88\x01\x01\x12(\n\ncreated_at\x18\n \x01(\x03\x42\x04\x90\xb5\x18\x03H\tR\tcreatedAt\x88\x01\x01\x12(\n\nupdated_at\x18\x0b \x01(\x03\x42\x04\x90\xb5\x18\x03H\nR\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_uuidB\n\n\x08_contentB\x08\n\x06_agentB\x08\n\x06_titleB\x07\n\x05_sizeB\x07\n\x05_typeB\t\n\x07_is_useB\t\n\x07_digestB\x10\n\x0e_training_timeB\r\n\x0b_created_atB\r\n\x0b_updated_at\"\x82\x01\n\x0cListFilesReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x15\n\x03use\x18\x02 \x01(\x08H\x01R\x03use\x88\x01\x01\x12.\n\npagination\x18\x03 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x08\n\x06_agentB\x06\n\x04_use\"o\n\rListFilesResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12-\n\x04list\x18\x02 \x03(\x0b\x32\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"K\n\x0e\x44\x65leteFilesReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x14\n\x05uuids\x18\x02 \x03(\tR\x05uuidsB\x08\n\x06_agent\"0\n\x16\x44\x65leteFilesByAgentsReq\x12\x16\n\x06\x61gents\x18\x01 \x03(\tR\x06\x61gents\"z\n\x0f\x44ownloadFileReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x12(\n\x04uuid\x18\x02 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x01R\x04uuid\x88\x01\x01\x42\x08\n\x06_agentB\x07\n\x05_uuid\"q\n\x10\x44ownloadFileResp\x12#\n\x07\x63ontent\x18\x01 \x01(\x0c\x42\x04\x90\xb5\x18\x03H\x00R\x07\x63ontent\x88\x01\x01\x12\x1d\n\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04name\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\n\n\x08_contentB\x07\n\x05_name\"S\n\nGetFileReq\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05\x61gent\x18\x02 \x01(\tH\x01R\x05\x61gent\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_agent\"B\n\x0bGetFileResp\x12-\n\x04\x66ile\x18\x01 \x01(\x0b\x32\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04\x66ile:\x04\x98\xb5\x18\x03\"\x84\x01\n\x10UpdateContentReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x17\n\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n\x07\x63ontent\x18\x03 \x01(\tH\x02R\x07\x63ontent\x88\x01\x01\x42\x08\n\x06_agentB\x07\n\x05_uuidB\n\n\x08_content\"\x87\x01\n\x10\x43reateContentReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x1d\n\x07\x63ontent\x18\x02 \x01(\tH\x01R\x07\x63ontent\x88\x01\x01\x12\x19\n\x05title\x18\x03 \x01(\tH\x02R\x05title\x88\x01\x01\x42\x08\n\x06_agentB\n\n\x08_contentB\x08\n\x06_title\"H\n\x11\x43reateContentResp\x12-\n\x04\x66ile\x18\x01 \x01(\x0b\x32\x13.hi.ai.TrainingFileB\x04\x90\xb5\x18\x03R\x04\x66ile:\x04\x98\xb5\x18\x03\"~\n\rEditDigestReq\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05\x61gent\x18\x02 \x01(\tH\x01R\x05\x61gent\x88\x01\x01\x12\x1b\n\x06\x64igest\x18\x03 \x01(\tH\x02R\x06\x64igest\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_agentB\t\n\x07_digest2\x9b\x05\n\x08Training\x12\x37\n\x05Start\x12\x0f.hi.ai.StartReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12\x34\n\x06Status\x12\x10.hi.ai.StatusReq\x1a\x11.hi.ai.StatusResp\"\x05\x8a\xb5\x18\x01\x03\x12\x37\n\x05\x43lear\x12\x0f.hi.ai.ClearReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12=\n\tListFiles\x12\x13.hi.ai.ListFilesReq\x1a\x14.hi.ai.ListFilesResp\"\x05\x8a\xb5\x18\x01\x03\x12\x37\n\x07GetFile\x12\x11.hi.ai.GetFileReq\x1a\x12.hi.ai.GetFileResp\"\x05\x8a\xb5\x18\x01\x03\x12\x43\n\x0b\x44\x65leteFiles\x12\x15.hi.ai.DeleteFilesReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12S\n\x13\x44\x65leteFilesByAgents\x12\x1d.hi.ai.DeleteFilesByAgentsReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12I\n\rCreateContent\x12\x17.hi.ai.CreateContentReq\x1a\x18.hi.ai.CreateContentResp\"\x05\x8a\xb5\x18\x01\x03\x12G\n\rUpdateContent\x12\x17.hi.ai.UpdateContentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12\x41\n\nEditDigest\x12\x14.hi.ai.EditDigestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -77,9 +77,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_LISTFILESRESP']._loaded_options = None
   _globals['_LISTFILESRESP']._serialized_options = b'\230\265\030\003'
   _globals['_DOWNLOADFILEREQ'].fields_by_name['agent']._loaded_options = None
-  _globals['_DOWNLOADFILEREQ'].fields_by_name['agent']._serialized_options = b'\272H\tr\0072\005^\\S+$'
+  _globals['_DOWNLOADFILEREQ'].fields_by_name['agent']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
   _globals['_DOWNLOADFILEREQ'].fields_by_name['uuid']._loaded_options = None
-  _globals['_DOWNLOADFILEREQ'].fields_by_name['uuid']._serialized_options = b'\272H\tr\0072\005^\\S+$'
+  _globals['_DOWNLOADFILEREQ'].fields_by_name['uuid']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
   _globals['_DOWNLOADFILERESP'].fields_by_name['content']._loaded_options = None
   _globals['_DOWNLOADFILERESP'].fields_by_name['content']._serialized_options = b'\220\265\030\003'
   _globals['_DOWNLOADFILERESP'].fields_by_name['name']._loaded_options = None
@@ -115,41 +115,41 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_TRAINING'].methods_by_name['EditDigest']._loaded_options = None
   _globals['_TRAINING'].methods_by_name['EditDigest']._serialized_options = b'\212\265\030\001\003'
   _globals['_STARTREQ']._serialized_start=124
-  _globals['_STARTREQ']._serialized_end=178
-  _globals['_STATUSREQ']._serialized_start=180
-  _globals['_STATUSREQ']._serialized_end=213
-  _globals['_STATUSRESP']._serialized_start=216
-  _globals['_STATUSRESP']._serialized_end=370
-  _globals['_CLEARREQ']._serialized_start=372
-  _globals['_CLEARREQ']._serialized_end=404
-  _globals['_UPLOADFILEREQ']._serialized_start=406
-  _globals['_UPLOADFILEREQ']._serialized_end=497
-  _globals['_TRAININGFILE']._serialized_start=500
-  _globals['_TRAININGFILE']._serialized_end=862
-  _globals['_LISTFILESREQ']._serialized_start=864
-  _globals['_LISTFILESREQ']._serialized_end=966
-  _globals['_LISTFILESRESP']._serialized_start=968
-  _globals['_LISTFILESRESP']._serialized_end=1064
-  _globals['_DELETEFILESREQ']._serialized_start=1066
-  _globals['_DELETEFILESREQ']._serialized_end=1126
-  _globals['_DELETEFILESBYAGENTSREQ']._serialized_start=1128
-  _globals['_DELETEFILESBYAGENTSREQ']._serialized_end=1176
-  _globals['_DOWNLOADFILEREQ']._serialized_start=1178
-  _globals['_DOWNLOADFILEREQ']._serialized_end=1265
-  _globals['_DOWNLOADFILERESP']._serialized_start=1267
-  _globals['_DOWNLOADFILERESP']._serialized_end=1349
-  _globals['_GETFILEREQ']._serialized_start=1351
-  _globals['_GETFILEREQ']._serialized_end=1405
-  _globals['_GETFILERESP']._serialized_start=1407
-  _globals['_GETFILERESP']._serialized_end=1473
-  _globals['_UPDATECONTENTREQ']._serialized_start=1475
-  _globals['_UPDATECONTENTREQ']._serialized_end=1561
-  _globals['_CREATECONTENTREQ']._serialized_start=1563
-  _globals['_CREATECONTENTREQ']._serialized_end=1651
-  _globals['_CREATECONTENTRESP']._serialized_start=1653
-  _globals['_CREATECONTENTRESP']._serialized_end=1725
-  _globals['_EDITDIGESTREQ']._serialized_start=1727
-  _globals['_EDITDIGESTREQ']._serialized_end=1808
-  _globals['_TRAINING']._serialized_start=1811
-  _globals['_TRAINING']._serialized_end=2478
+  _globals['_STARTREQ']._serialized_end=193
+  _globals['_STATUSREQ']._serialized_start=195
+  _globals['_STATUSREQ']._serialized_end=243
+  _globals['_STATUSRESP']._serialized_start=246
+  _globals['_STATUSRESP']._serialized_end=473
+  _globals['_CLEARREQ']._serialized_start=475
+  _globals['_CLEARREQ']._serialized_end=522
+  _globals['_UPLOADFILEREQ']._serialized_start=525
+  _globals['_UPLOADFILEREQ']._serialized_end=666
+  _globals['_TRAININGFILE']._serialized_start=669
+  _globals['_TRAININGFILE']._serialized_end=1215
+  _globals['_LISTFILESREQ']._serialized_start=1218
+  _globals['_LISTFILESREQ']._serialized_end=1348
+  _globals['_LISTFILESRESP']._serialized_start=1350
+  _globals['_LISTFILESRESP']._serialized_end=1461
+  _globals['_DELETEFILESREQ']._serialized_start=1463
+  _globals['_DELETEFILESREQ']._serialized_end=1538
+  _globals['_DELETEFILESBYAGENTSREQ']._serialized_start=1540
+  _globals['_DELETEFILESBYAGENTSREQ']._serialized_end=1588
+  _globals['_DOWNLOADFILEREQ']._serialized_start=1590
+  _globals['_DOWNLOADFILEREQ']._serialized_end=1712
+  _globals['_DOWNLOADFILERESP']._serialized_start=1714
+  _globals['_DOWNLOADFILERESP']._serialized_end=1827
+  _globals['_GETFILEREQ']._serialized_start=1829
+  _globals['_GETFILEREQ']._serialized_end=1912
+  _globals['_GETFILERESP']._serialized_start=1914
+  _globals['_GETFILERESP']._serialized_end=1980
+  _globals['_UPDATECONTENTREQ']._serialized_start=1983
+  _globals['_UPDATECONTENTREQ']._serialized_end=2115
+  _globals['_CREATECONTENTREQ']._serialized_start=2118
+  _globals['_CREATECONTENTREQ']._serialized_end=2253
+  _globals['_CREATECONTENTRESP']._serialized_start=2255
+  _globals['_CREATECONTENTRESP']._serialized_end=2327
+  _globals['_EDITDIGESTREQ']._serialized_start=2329
+  _globals['_EDITDIGESTREQ']._serialized_end=2455
+  _globals['_TRAINING']._serialized_start=2458
+  _globals['_TRAINING']._serialized_end=3125
 # @@protoc_insertion_point(module_scope)

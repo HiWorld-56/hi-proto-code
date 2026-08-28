@@ -25,9 +25,9 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// ListNativeReq —— 见下面 ListNative:**没有 agent 字段**,主体只能从凭证里取。
 /// 只带机器人自己的架构:同一版插件两个架构各有一份产物,给错了要到 dlopen 才炸。
 ///
-/// ⚠️ **空 = aarch64**。老 brain 发的是 `Empty`,在 protobuf 里与"字段缺省"等价,
-///    解出来就是空串 —— 于是它照旧拿到 arm64 那份,零改动继续跑。
-///    这条兼容是有意的,别改成"空就报错"。
+/// ⚠️ **不传 = aarch64**。老 brain 发的是 `Empty`(根本不带这个字段),optional 之后就是
+///    "没有值" —— 于是它照旧拿到 arm64 那份,零改动继续跑。这条兼容是有意的。
+///    ⛔ **空串不再是合法值**(2026-08-28 起禁止用空串表示"没有"):要么不传,要么给真架构名。
 class ListNativeReq extends $pb.GeneratedMessage {
   factory ListNativeReq({
     $core.String? arch,

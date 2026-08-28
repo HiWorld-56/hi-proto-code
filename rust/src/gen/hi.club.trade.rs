@@ -8,8 +8,8 @@ pub struct ListTradesReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
     /// 可选:只看该交易
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "2")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::super::Pagination>,
 }

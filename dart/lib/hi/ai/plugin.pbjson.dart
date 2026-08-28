@@ -65,8 +65,26 @@ final $typed_data.Uint8List pluginSourceDescriptor = $convert.base64Decode(
 const PluginShell$json = {
   '1': 'PluginShell',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
     {
       '1': 'runtime',
       '3': 3,
@@ -74,46 +92,145 @@ const PluginShell$json = {
       '5': 14,
       '6': '.hi.ai.PluginRuntime',
       '8': {},
-      '10': 'runtime'
+      '9': 2,
+      '10': 'runtime',
+      '17': true
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_name'},
+    {'1': '_runtime'},
+  ],
 };
 
 /// Descriptor for `PluginShell`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginShellDescriptor = $convert.base64Decode(
-    'CgtQbHVnaW5TaGVsbBIYCgR1dWlkGAEgASgJQgSQtRgDUgR1dWlkEhgKBG5hbWUYAiABKAlCBJ'
-    'C1GAFSBG5hbWUSNAoHcnVudGltZRgDIAEoDjIULmhpLmFpLlBsdWdpblJ1bnRpbWVCBJC1GANS'
-    'B3J1bnRpbWU6BJi1GAM=');
+    'CgtQbHVnaW5TaGVsbBIdCgR1dWlkGAEgASgJQgSQtRgDSABSBHV1aWSIAQESHQoEbmFtZRgCIA'
+    'EoCUIEkLUYAUgBUgRuYW1liAEBEjkKB3J1bnRpbWUYAyABKA4yFC5oaS5haS5QbHVnaW5SdW50'
+    'aW1lQgSQtRgDSAJSB3J1bnRpbWWIAQE6BJi1GANCBwoFX3V1aWRCBwoFX25hbWVCCgoIX3J1bn'
+    'RpbWU=');
 
 @$core.Deprecated('Use pluginVersionDescriptor instead')
 const PluginVersion$json = {
   '1': 'PluginVersion',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'version', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'version'},
-    {'1': 'logo', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'logo'},
-    {'1': 'summary', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'summary'},
-    {'1': 'url', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'url'},
-    {'1': 'description', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'description'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'logo',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'logo',
+      '17': true
+    },
+    {
+      '1': 'summary',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'summary',
+      '17': true
+    },
+    {
+      '1': 'url',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'url',
+      '17': true
+    },
+    {
+      '1': 'description',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'description',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_version'},
+    {'1': '_logo'},
+    {'1': '_summary'},
+    {'1': '_url'},
+    {'1': '_description'},
+  ],
 };
 
 /// Descriptor for `PluginVersion`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginVersionDescriptor = $convert.base64Decode(
-    'Cg1QbHVnaW5WZXJzaW9uEhgKBHV1aWQYASABKAlCBJC1GANSBHV1aWQSHgoHdmVyc2lvbhgCIA'
-    'EoCUIEkLUYAVIHdmVyc2lvbhIYCgRsb2dvGAMgASgJQgSQtRgBUgRsb2dvEh4KB3N1bW1hcnkY'
-    'BCABKAlCBJC1GAFSB3N1bW1hcnkSFgoDdXJsGAUgASgJQgSQtRgDUgN1cmwSJgoLZGVzY3JpcH'
-    'Rpb24YBiABKAlCBJC1GAFSC2Rlc2NyaXB0aW9uOgSYtRgD');
+    'Cg1QbHVnaW5WZXJzaW9uEh0KBHV1aWQYASABKAlCBJC1GANIAFIEdXVpZIgBARIjCgd2ZXJzaW'
+    '9uGAIgASgJQgSQtRgBSAFSB3ZlcnNpb26IAQESHQoEbG9nbxgDIAEoCUIEkLUYAUgCUgRsb2dv'
+    'iAEBEiMKB3N1bW1hcnkYBCABKAlCBJC1GAFIA1IHc3VtbWFyeYgBARIbCgN1cmwYBSABKAlCBJ'
+    'C1GANIBFIDdXJsiAEBEisKC2Rlc2NyaXB0aW9uGAYgASgJQgSQtRgBSAVSC2Rlc2NyaXB0aW9u'
+    'iAEBOgSYtRgDQgcKBV91dWlkQgoKCF92ZXJzaW9uQgcKBV9sb2dvQgoKCF9zdW1tYXJ5QgYKBF'
+    '91cmxCDgoMX2Rlc2NyaXB0aW9u');
 
 @$core.Deprecated('Use pluginBuildDescriptor instead')
 const PluginBuild$json = {
   '1': 'PluginBuild',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'version', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'version'},
-    {'1': 'arch', '3': 11, '4': 1, '5': 9, '8': {}, '10': 'arch'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'arch',
+      '3': 11,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'arch',
+      '17': true
+    },
     {
       '1': 'status',
       '3': 3,
@@ -121,29 +238,110 @@ const PluginBuild$json = {
       '5': 14,
       '6': '.hi.ai.PluginBuildStatus',
       '8': {},
-      '10': 'status'
+      '9': 3,
+      '10': 'status',
+      '17': true
     },
-    {'1': 'artifact_url', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'artifactUrl'},
-    {'1': 'sha256', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'sha256'},
-    {'1': 'abi_version', '3': 6, '4': 1, '5': 13, '8': {}, '10': 'abiVersion'},
-    {'1': 'error', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'error'},
-    {'1': 'log', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'log'},
-    {'1': 'started_at', '3': 9, '4': 1, '5': 3, '8': {}, '10': 'startedAt'},
-    {'1': 'finished_at', '3': 10, '4': 1, '5': 3, '8': {}, '10': 'finishedAt'},
+    {
+      '1': 'artifact_url',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'artifactUrl',
+      '17': true
+    },
+    {
+      '1': 'sha256',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'sha256',
+      '17': true
+    },
+    {
+      '1': 'abi_version',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 6,
+      '10': 'abiVersion',
+      '17': true
+    },
+    {
+      '1': 'error',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 7,
+      '10': 'error',
+      '17': true
+    },
+    {
+      '1': 'log',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 8,
+      '10': 'log',
+      '17': true
+    },
+    {
+      '1': 'started_at',
+      '3': 9,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 9,
+      '10': 'startedAt',
+      '17': true
+    },
+    {
+      '1': 'finished_at',
+      '3': 10,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 10,
+      '10': 'finishedAt',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_version'},
+    {'1': '_arch'},
+    {'1': '_status'},
+    {'1': '_artifact_url'},
+    {'1': '_sha256'},
+    {'1': '_abi_version'},
+    {'1': '_error'},
+    {'1': '_log'},
+    {'1': '_started_at'},
+    {'1': '_finished_at'},
+  ],
 };
 
 /// Descriptor for `PluginBuild`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginBuildDescriptor = $convert.base64Decode(
-    'CgtQbHVnaW5CdWlsZBIYCgR1dWlkGAEgASgJQgSQtRgDUgR1dWlkEh4KB3ZlcnNpb24YAiABKA'
-    'lCBJC1GANSB3ZlcnNpb24SGAoEYXJjaBgLIAEoCUIEkLUYA1IEYXJjaBI2CgZzdGF0dXMYAyAB'
-    'KA4yGC5oaS5haS5QbHVnaW5CdWlsZFN0YXR1c0IEkLUYA1IGc3RhdHVzEicKDGFydGlmYWN0X3'
-    'VybBgEIAEoCUIEkLUYA1ILYXJ0aWZhY3RVcmwSHAoGc2hhMjU2GAUgASgJQgSQtRgDUgZzaGEy'
-    'NTYSJQoLYWJpX3ZlcnNpb24YBiABKA1CBJC1GANSCmFiaVZlcnNpb24SGgoFZXJyb3IYByABKA'
-    'lCBJC1GANSBWVycm9yEhYKA2xvZxgIIAEoCUIEkLUYA1IDbG9nEiMKCnN0YXJ0ZWRfYXQYCSAB'
-    'KANCBJC1GANSCXN0YXJ0ZWRBdBIlCgtmaW5pc2hlZF9hdBgKIAEoA0IEkLUYA1IKZmluaXNoZW'
-    'RBdDoEmLUYAw==');
+    'CgtQbHVnaW5CdWlsZBIdCgR1dWlkGAEgASgJQgSQtRgDSABSBHV1aWSIAQESIwoHdmVyc2lvbh'
+    'gCIAEoCUIEkLUYA0gBUgd2ZXJzaW9uiAEBEh0KBGFyY2gYCyABKAlCBJC1GANIAlIEYXJjaIgB'
+    'ARI7CgZzdGF0dXMYAyABKA4yGC5oaS5haS5QbHVnaW5CdWlsZFN0YXR1c0IEkLUYA0gDUgZzdG'
+    'F0dXOIAQESLAoMYXJ0aWZhY3RfdXJsGAQgASgJQgSQtRgDSARSC2FydGlmYWN0VXJsiAEBEiEK'
+    'BnNoYTI1NhgFIAEoCUIEkLUYA0gFUgZzaGEyNTaIAQESKgoLYWJpX3ZlcnNpb24YBiABKA1CBJ'
+    'C1GANIBlIKYWJpVmVyc2lvbogBARIfCgVlcnJvchgHIAEoCUIEkLUYA0gHUgVlcnJvcogBARIb'
+    'CgNsb2cYCCABKAlCBJC1GANICFIDbG9niAEBEigKCnN0YXJ0ZWRfYXQYCSABKANCBJC1GANICV'
+    'IJc3RhcnRlZEF0iAEBEioKC2ZpbmlzaGVkX2F0GAogASgDQgSQtRgDSApSCmZpbmlzaGVkQXSI'
+    'AQE6BJi1GANCBwoFX3V1aWRCCgoIX3ZlcnNpb25CBwoFX2FyY2hCCQoHX3N0YXR1c0IPCg1fYX'
+    'J0aWZhY3RfdXJsQgkKB19zaGEyNTZCDgoMX2FiaV92ZXJzaW9uQggKBl9lcnJvckIGCgRfbG9n'
+    'Qg0KC19zdGFydGVkX2F0Qg4KDF9maW5pc2hlZF9hdA==');
 
 @$core.Deprecated('Use pluginViewDescriptor instead')
 const PluginView$json = {
@@ -167,7 +365,16 @@ const PluginView$json = {
       '8': {},
       '10': 'active'
     },
-    {'1': 'enabled', '3': 3, '4': 1, '5': 8, '8': {}, '10': 'enabled'},
+    {
+      '1': 'enabled',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'enabled',
+      '17': true
+    },
     {
       '1': 'source',
       '3': 4,
@@ -175,9 +382,20 @@ const PluginView$json = {
       '5': 14,
       '6': '.hi.ai.PluginSource',
       '8': {},
-      '10': 'source'
+      '9': 1,
+      '10': 'source',
+      '17': true
     },
-    {'1': 'ref_count', '3': 5, '4': 1, '5': 5, '8': {}, '10': 'refCount'},
+    {
+      '1': 'ref_count',
+      '3': 5,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 2,
+      '10': 'refCount',
+      '17': true
+    },
     {
       '1': 'data',
       '3': 6,
@@ -211,23 +429,32 @@ const PluginView$json = {
       '4': 1,
       '5': 8,
       '8': {},
-      '10': 'followLatest'
+      '9': 3,
+      '10': 'followLatest',
+      '17': true
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_enabled'},
+    {'1': '_source'},
+    {'1': '_ref_count'},
+    {'1': '_follow_latest'},
+  ],
 };
 
 /// Descriptor for `PluginView`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginViewDescriptor = $convert.base64Decode(
     'CgpQbHVnaW5WaWV3Ei4KBXNoZWxsGAEgASgLMhIuaGkuYWkuUGx1Z2luU2hlbGxCBJC1GANSBX'
     'NoZWxsEjIKBmFjdGl2ZRgCIAEoCzIULmhpLmFpLlBsdWdpblZlcnNpb25CBJC1GANSBmFjdGl2'
-    'ZRIeCgdlbmFibGVkGAMgASgIQgSQtRgDUgdlbmFibGVkEjEKBnNvdXJjZRgEIAEoDjITLmhpLm'
-    'FpLlBsdWdpblNvdXJjZUIEkLUYA1IGc291cmNlEiEKCXJlZl9jb3VudBgFIAEoBUIEkLUYA1II'
-    'cmVmQ291bnQSMQoEZGF0YRgGIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RCBJC1GANSBG'
-    'RhdGESQAoMdmVyc2lvbl9kYXRhGAcgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdEIEkLUY'
-    'A1ILdmVyc2lvbkRhdGESMAoGYnVpbGRzGAwgAygLMhIuaGkuYWkuUGx1Z2luQnVpbGRCBJC1GA'
-    'NSBmJ1aWxkcxIpCg1mb2xsb3dfbGF0ZXN0GAkgASgIQgSQtRgDUgxmb2xsb3dMYXRlc3Q6BJi1'
-    'GAM=');
+    'ZRIjCgdlbmFibGVkGAMgASgIQgSQtRgDSABSB2VuYWJsZWSIAQESNgoGc291cmNlGAQgASgOMh'
+    'MuaGkuYWkuUGx1Z2luU291cmNlQgSQtRgDSAFSBnNvdXJjZYgBARImCglyZWZfY291bnQYBSAB'
+    'KAVCBJC1GANIAlIIcmVmQ291bnSIAQESMQoEZGF0YRgGIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi'
+    '5TdHJ1Y3RCBJC1GANSBGRhdGESQAoMdmVyc2lvbl9kYXRhGAcgASgLMhcuZ29vZ2xlLnByb3Rv'
+    'YnVmLlN0cnVjdEIEkLUYA1ILdmVyc2lvbkRhdGESMAoGYnVpbGRzGAwgAygLMhIuaGkuYWkuUG'
+    'x1Z2luQnVpbGRCBJC1GANSBmJ1aWxkcxIuCg1mb2xsb3dfbGF0ZXN0GAkgASgIQgSQtRgDSANS'
+    'DGZvbGxvd0xhdGVzdIgBAToEmLUYA0IKCghfZW5hYmxlZEIJCgdfc291cmNlQgwKCl9yZWZfY2'
+    '91bnRCEAoOX2ZvbGxvd19sYXRlc3Q=');
 
 @$core.Deprecated('Use pluginVersionViewDescriptor instead')
 const PluginVersionView$json = {
@@ -242,7 +469,16 @@ const PluginVersionView$json = {
       '8': {},
       '10': 'version'
     },
-    {'1': 'active', '3': 2, '4': 1, '5': 8, '8': {}, '10': 'active'},
+    {
+      '1': 'active',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'active',
+      '17': true
+    },
     {
       '1': 'data',
       '3': 3,
@@ -263,39 +499,104 @@ const PluginVersionView$json = {
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_active'},
+  ],
 };
 
 /// Descriptor for `PluginVersionView`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginVersionViewDescriptor = $convert.base64Decode(
     'ChFQbHVnaW5WZXJzaW9uVmlldxI0Cgd2ZXJzaW9uGAEgASgLMhQuaGkuYWkuUGx1Z2luVmVyc2'
-    'lvbkIEkLUYA1IHdmVyc2lvbhIcCgZhY3RpdmUYAiABKAhCBJC1GANSBmFjdGl2ZRIxCgRkYXRh'
-    'GAMgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdEIEkLUYA1IEZGF0YRIwCgZidWlsZHMYBS'
-    'ADKAsyEi5oaS5haS5QbHVnaW5CdWlsZEIEkLUYA1IGYnVpbGRzOgSYtRgD');
+    'lvbkIEkLUYA1IHdmVyc2lvbhIhCgZhY3RpdmUYAiABKAhCBJC1GANIAFIGYWN0aXZliAEBEjEK'
+    'BGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0QgSQtRgDUgRkYXRhEjAKBmJ1aW'
+    'xkcxgFIAMoCzISLmhpLmFpLlBsdWdpbkJ1aWxkQgSQtRgDUgZidWlsZHM6BJi1GANCCQoHX2Fj'
+    'dGl2ZQ==');
 
 @$core.Deprecated('Use pluginLoadedDescriptor instead')
 const PluginLoaded$json = {
   '1': 'PluginLoaded',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'version'},
-    {'1': 'enabled', '3': 4, '4': 1, '5': 8, '8': {}, '10': 'enabled'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'enabled',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 3,
+      '10': 'enabled',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_name'},
+    {'1': '_version'},
+    {'1': '_enabled'},
+  ],
 };
 
 /// Descriptor for `PluginLoaded`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginLoadedDescriptor = $convert.base64Decode(
-    'CgxQbHVnaW5Mb2FkZWQSGAoEdXVpZBgBIAEoCUIEkLUYAlIEdXVpZBIYCgRuYW1lGAIgASgJQg'
-    'SQtRgCUgRuYW1lEh4KB3ZlcnNpb24YAyABKAlCBJC1GAJSB3ZlcnNpb24SHgoHZW5hYmxlZBgE'
-    'IAEoCEIEkLUYAlIHZW5hYmxlZDoEmLUYAg==');
+    'CgxQbHVnaW5Mb2FkZWQSHQoEdXVpZBgBIAEoCUIEkLUYAkgAUgR1dWlkiAEBEh0KBG5hbWUYAi'
+    'ABKAlCBJC1GAJIAVIEbmFtZYgBARIjCgd2ZXJzaW9uGAMgASgJQgSQtRgCSAJSB3ZlcnNpb26I'
+    'AQESIwoHZW5hYmxlZBgEIAEoCEIEkLUYAkgDUgdlbmFibGVkiAEBOgSYtRgCQgcKBV91dWlkQg'
+    'cKBV9uYW1lQgoKCF92ZXJzaW9uQgoKCF9lbmFibGVk');
 
 @$core.Deprecated('Use createShellReqDescriptor instead')
 const CreateShellReq$json = {
   '1': 'CreateShellReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
     {
       '1': 'data',
       '3': 3,
@@ -305,32 +606,58 @@ const CreateShellReq$json = {
       '10': 'data'
     },
   ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_name'},
+  ],
 };
 
 /// Descriptor for `CreateShellReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createShellReqDescriptor = $convert.base64Decode(
-    'Cg5DcmVhdGVTaGVsbFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudBIbCg'
-    'RuYW1lGAIgASgJQge6SARyAhABUgRuYW1lEisKBGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9i'
-    'dWYuU3RydWN0UgRkYXRh');
+    'Cg5DcmVhdGVTaGVsbFJlcRIqCgVhZ2VudBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBWFnZW'
+    '50iAEBEiMKBG5hbWUYAiABKAlCCrpIB8gBAXICEAFIAVIEbmFtZYgBARIrCgRkYXRhGAMgASgL'
+    'MhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFIEZGF0YUIICgZfYWdlbnRCBwoFX25hbWU=');
 
 @$core.Deprecated('Use createShellRespDescriptor instead')
 const CreateShellResp$json = {
   '1': 'CreateShellResp',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_uuid'},
+  ],
 };
 
 /// Descriptor for `CreateShellResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createShellRespDescriptor = $convert.base64Decode(
-    'Cg9DcmVhdGVTaGVsbFJlc3ASGAoEdXVpZBgBIAEoCUIEkLUYA1IEdXVpZDoEmLUYAw==');
+    'Cg9DcmVhdGVTaGVsbFJlc3ASHQoEdXVpZBgBIAEoCUIEkLUYA0gAUgR1dWlkiAEBOgSYtRgDQg'
+    'cKBV91dWlk');
 
 @$core.Deprecated('Use createVersionReqDescriptor instead')
 const CreateVersionReq$json = {
   '1': 'CreateVersionReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
     {
       '1': 'version',
       '3': 2,
@@ -348,27 +675,30 @@ const CreateVersionReq$json = {
       '10': 'data'
     },
   ],
+  '8': [
+    {'1': '_agent'},
+  ],
 };
 
 /// Descriptor for `CreateVersionReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createVersionReqDescriptor = $convert.base64Decode(
-    'ChBDcmVhdGVWZXJzaW9uUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50Ei'
-    '4KB3ZlcnNpb24YAiABKAsyFC5oaS5haS5QbHVnaW5WZXJzaW9uUgd2ZXJzaW9uEisKBGRhdGEY'
-    'AyABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0UgRkYXRh');
+    'ChBDcmVhdGVWZXJzaW9uUmVxEioKBWFnZW50GAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIFYW'
+    'dlbnSIAQESLgoHdmVyc2lvbhgCIAEoCzIULmhpLmFpLlBsdWdpblZlcnNpb25SB3ZlcnNpb24S'
+    'KwoEZGF0YRgDIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RSBGRhdGFCCAoGX2FnZW50');
 
 @$core.Deprecated('Use editPluginReqDescriptor instead')
 const EditPluginReq$json = {
   '1': 'EditPluginReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
     {
       '1': 'data',
       '3': 3,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Struct',
-      '9': 0,
+      '9': 2,
       '10': 'data',
       '17': true
     },
@@ -377,7 +707,7 @@ const EditPluginReq$json = {
       '3': 4,
       '4': 1,
       '5': 9,
-      '9': 1,
+      '9': 3,
       '10': 'version',
       '17': true
     },
@@ -387,12 +717,14 @@ const EditPluginReq$json = {
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Struct',
-      '9': 2,
+      '9': 4,
       '10': 'versionData',
       '17': true
     },
   ],
   '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
     {'1': '_data'},
     {'1': '_version'},
     {'1': '_version_data'},
@@ -401,11 +733,11 @@ const EditPluginReq$json = {
 
 /// Descriptor for `EditPluginReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List editPluginReqDescriptor = $convert.base64Decode(
-    'Cg1FZGl0UGx1Z2luUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBISCgR1dWlkGAIgASgJUgR1dW'
-    'lkEjAKBGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0SABSBGRhdGGIAQESHQoH'
-    'dmVyc2lvbhgEIAEoCUgBUgd2ZXJzaW9uiAEBEj8KDHZlcnNpb25fZGF0YRgFIAEoCzIXLmdvb2'
-    'dsZS5wcm90b2J1Zi5TdHJ1Y3RIAlILdmVyc2lvbkRhdGGIAQFCBwoFX2RhdGFCCgoIX3ZlcnNp'
-    'b25CDwoNX3ZlcnNpb25fZGF0YQ==');
+    'Cg1FZGl0UGx1Z2luUmVxEhkKBWFnZW50GAEgASgJSABSBWFnZW50iAEBEhcKBHV1aWQYAiABKA'
+    'lIAVIEdXVpZIgBARIwCgRkYXRhGAMgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdEgCUgRk'
+    'YXRhiAEBEh0KB3ZlcnNpb24YBCABKAlIA1IHdmVyc2lvbogBARI/Cgx2ZXJzaW9uX2RhdGEYBS'
+    'ABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0SARSC3ZlcnNpb25EYXRhiAEBQggKBl9hZ2Vu'
+    'dEIHCgVfdXVpZEIHCgVfZGF0YUIKCghfdmVyc2lvbkIPCg1fdmVyc2lvbl9kYXRh');
 
 @$core.Deprecated('Use setEnabledReqDescriptor instead')
 const SetEnabledReq$json = {
@@ -426,16 +758,40 @@ final $typed_data.Uint8List setEnabledReqDescriptor = $convert.base64Decode(
 const SetFollowLatestReq$json = {
   '1': 'SetFollowLatestReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'on', '3': 3, '4': 1, '5': 8, '10': 'on'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+    {'1': 'on', '3': 3, '4': 1, '5': 8, '9': 2, '10': 'on', '17': true},
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_on'},
   ],
 };
 
 /// Descriptor for `SetFollowLatestReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setFollowLatestReqDescriptor = $convert.base64Decode(
-    'ChJTZXRGb2xsb3dMYXRlc3RSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbn'
-    'QSIAoEdXVpZBgCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlkEg4KAm9uGAMgASgIUgJvbg==');
+    'ChJTZXRGb2xsb3dMYXRlc3RSZXESKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUg'
+    'VhZ2VudIgBARIoCgR1dWlkGAIgASgJQg+6SAzIAQFyBzIFXlxTKyRIAVIEdXVpZIgBARITCgJv'
+    'bhgDIAEoCEgCUgJvbogBAUIICgZfYWdlbnRCBwoFX3V1aWRCBQoDX29u');
 
 @$core.Deprecated('Use setActiveReqDescriptor instead')
 const SetActiveReq$json = {
@@ -456,29 +812,64 @@ final $typed_data.Uint8List setActiveReqDescriptor = $convert.base64Decode(
 const SetActiveAllReq$json = {
   '1': 'SetActiveAllReq',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'version', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'version'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'version',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_version'},
   ],
 };
 
 /// Descriptor for `SetActiveAllReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setActiveAllReqDescriptor = $convert.base64Decode(
-    'Cg9TZXRBY3RpdmVBbGxSZXESIAoEdXVpZBgBIAEoCUIMukgJcgcyBV5cUyskUgR1dWlkEiYKB3'
-    'ZlcnNpb24YAiABKAlCDLpICXIHMgVeXFMrJFIHdmVyc2lvbg==');
+    'Cg9TZXRBY3RpdmVBbGxSZXESKAoEdXVpZBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBHV1aW'
+    'SIAQESLgoHdmVyc2lvbhgCIAEoCUIPukgMyAEBcgcyBV5cUyskSAFSB3ZlcnNpb26IAQFCBwoF'
+    'X3V1aWRCCgoIX3ZlcnNpb24=');
 
 @$core.Deprecated('Use setActiveAllRespDescriptor instead')
 const SetActiveAllResp$json = {
   '1': 'SetActiveAllResp',
   '2': [
-    {'1': 'switched', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'switched'},
+    {
+      '1': 'switched',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'switched',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_switched'},
+  ],
 };
 
 /// Descriptor for `SetActiveAllResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setActiveAllRespDescriptor = $convert.base64Decode(
-    'ChBTZXRBY3RpdmVBbGxSZXNwEiAKCHN3aXRjaGVkGAEgASgFQgSQtRgDUghzd2l0Y2hlZDoEmL'
-    'UYAw==');
+    'ChBTZXRBY3RpdmVBbGxSZXNwEiUKCHN3aXRjaGVkGAEgASgFQgSQtRgDSABSCHN3aXRjaGVkiA'
+    'EBOgSYtRgDQgsKCV9zd2l0Y2hlZA==');
 
 @$core.Deprecated('Use downloadScriptReqDescriptor instead')
 const DownloadScriptReq$json = {
@@ -499,16 +890,39 @@ final $typed_data.Uint8List downloadScriptReqDescriptor = $convert.base64Decode(
 const DownloadScriptResp$json = {
   '1': 'DownloadScriptResp',
   '2': [
-    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
+    {
+      '1': 'content',
+      '3': 1,
+      '4': 1,
+      '5': 12,
+      '8': {},
+      '9': 0,
+      '10': 'content',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_content'},
+    {'1': '_name'},
+  ],
 };
 
 /// Descriptor for `DownloadScriptResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List downloadScriptRespDescriptor = $convert.base64Decode(
-    'ChJEb3dubG9hZFNjcmlwdFJlc3ASHgoHY29udGVudBgBIAEoDEIEkLUYA1IHY29udGVudBIYCg'
-    'RuYW1lGAIgASgJQgSQtRgDUgRuYW1lOgSYtRgD');
+    'ChJEb3dubG9hZFNjcmlwdFJlc3ASIwoHY29udGVudBgBIAEoDEIEkLUYA0gAUgdjb250ZW50iA'
+    'EBEh0KBG5hbWUYAiABKAlCBJC1GANIAVIEbmFtZYgBAToEmLUYA0IKCghfY29udGVudEIHCgVf'
+    'bmFtZQ==');
 
 @$core.Deprecated('Use listPluginsReqDescriptor instead')
 const ListPluginsReq$json = {
@@ -557,7 +971,16 @@ final $typed_data.Uint8List listVersionsReqDescriptor = $convert.base64Decode(
 const ListPluginsResp$json = {
   '1': 'ListPluginsResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'total',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
     {
       '1': 'list',
       '3': 2,
@@ -569,18 +992,30 @@ const ListPluginsResp$json = {
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
 };
 
 /// Descriptor for `ListPluginsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listPluginsRespDescriptor = $convert.base64Decode(
-    'Cg9MaXN0UGx1Z2luc1Jlc3ASGgoFdG90YWwYASABKAVCBJC1GANSBXRvdGFsEisKBGxpc3QYAi'
-    'ADKAsyES5oaS5haS5QbHVnaW5WaWV3QgSQtRgDUgRsaXN0OgSYtRgD');
+    'Cg9MaXN0UGx1Z2luc1Jlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQESKwoEbG'
+    'lzdBgCIAMoCzIRLmhpLmFpLlBsdWdpblZpZXdCBJC1GANSBGxpc3Q6BJi1GANCCAoGX3RvdGFs');
 
 @$core.Deprecated('Use listVersionsRespDescriptor instead')
 const ListVersionsResp$json = {
   '1': 'ListVersionsResp',
   '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'total'},
+    {
+      '1': 'total',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
     {
       '1': 'list',
       '3': 2,
@@ -592,12 +1027,16 @@ const ListVersionsResp$json = {
     },
   ],
   '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
 };
 
 /// Descriptor for `ListVersionsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listVersionsRespDescriptor = $convert.base64Decode(
-    'ChBMaXN0VmVyc2lvbnNSZXNwEhoKBXRvdGFsGAEgASgFQgSQtRgDUgV0b3RhbBIyCgRsaXN0GA'
-    'IgAygLMhguaGkuYWkuUGx1Z2luVmVyc2lvblZpZXdCBJC1GANSBGxpc3Q6BJi1GAM=');
+    'ChBMaXN0VmVyc2lvbnNSZXNwEh8KBXRvdGFsGAEgASgFQgSQtRgDSABSBXRvdGFsiAEBEjIKBG'
+    'xpc3QYAiADKAsyGC5oaS5haS5QbHVnaW5WZXJzaW9uVmlld0IEkLUYA1IEbGlzdDoEmLUYA0II'
+    'CgZfdG90YWw=');
 
 @$core.Deprecated('Use getPluginReqDescriptor instead')
 const GetPluginReq$json = {
@@ -639,78 +1078,210 @@ final $typed_data.Uint8List getPluginRespDescriptor = $convert.base64Decode(
 const DeleteVersionReq$json = {
   '1': 'DeleteVersionReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'version'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_version'},
   ],
 };
 
 /// Descriptor for `DeleteVersionReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteVersionReqDescriptor = $convert.base64Decode(
-    'ChBEZWxldGVWZXJzaW9uUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50Ei'
-    'AKBHV1aWQYAiABKAlCDLpICXIHMgVeXFMrJFIEdXVpZBImCgd2ZXJzaW9uGAMgASgJQgy6SAly'
-    'BzIFXlxTKyRSB3ZlcnNpb24=');
+    'ChBEZWxldGVWZXJzaW9uUmVxEioKBWFnZW50GAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIFYW'
+    'dlbnSIAQESKAoEdXVpZBgCIAEoCUIPukgMyAEBcgcyBV5cUyskSAFSBHV1aWSIAQESLgoHdmVy'
+    'c2lvbhgDIAEoCUIPukgMyAEBcgcyBV5cUyskSAJSB3ZlcnNpb26IAQFCCAoGX2FnZW50QgcKBV'
+    '91dWlkQgoKCF92ZXJzaW9u');
 
 @$core.Deprecated('Use deleteVersionsReqDescriptor instead')
 const DeleteVersionsReq$json = {
   '1': 'DeleteVersionsReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'min_version', '3': 3, '4': 1, '5': 9, '10': 'minVersion'},
-    {'1': 'max_version', '3': 4, '4': 1, '5': 9, '10': 'maxVersion'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'min_version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'minVersion',
+      '17': true
+    },
+    {
+      '1': 'max_version',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '9': 3,
+      '10': 'maxVersion',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_min_version'},
+    {'1': '_max_version'},
   ],
 };
 
 /// Descriptor for `DeleteVersionsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteVersionsReqDescriptor = $convert.base64Decode(
-    'ChFEZWxldGVWZXJzaW9uc1JlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudB'
-    'IgCgR1dWlkGAIgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQSHwoLbWluX3ZlcnNpb24YAyABKAlS'
-    'Cm1pblZlcnNpb24SHwoLbWF4X3ZlcnNpb24YBCABKAlSCm1heFZlcnNpb24=');
+    'ChFEZWxldGVWZXJzaW9uc1JlcRIqCgVhZ2VudBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBW'
+    'FnZW50iAEBEigKBHV1aWQYAiABKAlCD7pIDMgBAXIHMgVeXFMrJEgBUgR1dWlkiAEBEiQKC21p'
+    'bl92ZXJzaW9uGAMgASgJSAJSCm1pblZlcnNpb26IAQESJAoLbWF4X3ZlcnNpb24YBCABKAlIA1'
+    'IKbWF4VmVyc2lvbogBAUIICgZfYWdlbnRCBwoFX3V1aWRCDgoMX21pbl92ZXJzaW9uQg4KDF9t'
+    'YXhfdmVyc2lvbg==');
 
 @$core.Deprecated('Use deleteVersionListReqDescriptor instead')
 const DeleteVersionListReq$json = {
   '1': 'DeleteVersionListReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
     {'1': 'versions', '3': 3, '4': 3, '5': 9, '10': 'versions'},
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `DeleteVersionListReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteVersionListReqDescriptor = $convert.base64Decode(
-    'ChREZWxldGVWZXJzaW9uTGlzdFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2'
-    'VudBIgCgR1dWlkGAIgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQSGgoIdmVyc2lvbnMYAyADKAlS'
-    'CHZlcnNpb25z');
+    'ChREZWxldGVWZXJzaW9uTGlzdFJlcRIqCgVhZ2VudBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSA'
+    'BSBWFnZW50iAEBEigKBHV1aWQYAiABKAlCD7pIDMgBAXIHMgVeXFMrJEgBUgR1dWlkiAEBEhoK'
+    'CHZlcnNpb25zGAMgAygJUgh2ZXJzaW9uc0IICgZfYWdlbnRCBwoFX3V1aWQ=');
 
 @$core.Deprecated('Use deleteShellReqDescriptor instead')
 const DeleteShellReq$json = {
   '1': 'DeleteShellReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `DeleteShellReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteShellReqDescriptor = $convert.base64Decode(
-    'Cg5EZWxldGVTaGVsbFJlcRIiCgVhZ2VudBgBIAEoCUIMukgJcgcyBV5cUyskUgVhZ2VudBIgCg'
-    'R1dWlkGAIgASgJQgy6SAlyBzIFXlxTKyRSBHV1aWQ=');
+    'Cg5EZWxldGVTaGVsbFJlcRIqCgVhZ2VudBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBWFnZW'
+    '50iAEBEigKBHV1aWQYAiABKAlCD7pIDMgBAXIHMgVeXFMrJEgBUgR1dWlkiAEBQggKBl9hZ2Vu'
+    'dEIHCgVfdXVpZA==');
 
 @$core.Deprecated('Use deleteShellsReqDescriptor instead')
 const DeleteShellsReq$json = {
   '1': 'DeleteShellsReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
     {'1': 'uuids', '3': 2, '4': 3, '5': 9, '10': 'uuids'},
+  ],
+  '8': [
+    {'1': '_agent'},
   ],
 };
 
 /// Descriptor for `DeleteShellsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteShellsReqDescriptor = $convert.base64Decode(
-    'Cg9EZWxldGVTaGVsbHNSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQSFA'
-    'oFdXVpZHMYAiADKAlSBXV1aWRz');
+    'Cg9EZWxldGVTaGVsbHNSZXESKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUgVhZ2'
+    'VudIgBARIUCgV1dWlkcxgCIAMoCVIFdXVpZHNCCAoGX2FnZW50');
 
 @$core.Deprecated('Use deletePluginByAgentsReqDescriptor instead')
 const DeletePluginByAgentsReq$json = {
@@ -729,9 +1300,35 @@ final $typed_data.Uint8List deletePluginByAgentsReqDescriptor =
 const CreateReferenceReq$json = {
   '1': 'CreateReferenceReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
     {
       '1': 'data',
       '3': 4,
@@ -749,28 +1346,57 @@ const CreateReferenceReq$json = {
       '10': 'versionData'
     },
   ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_version'},
+  ],
 };
 
 /// Descriptor for `CreateReferenceReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createReferenceReqDescriptor = $convert.base64Decode(
-    'ChJDcmVhdGVSZWZlcmVuY2VSZXESIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbn'
-    'QSIAoEdXVpZBgCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3Zl'
-    'cnNpb24SKwoEZGF0YRgEIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi5TdHJ1Y3RSBGRhdGESOgoMdm'
-    'Vyc2lvbl9kYXRhGAUgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdFILdmVyc2lvbkRhdGE=');
+    'ChJDcmVhdGVSZWZlcmVuY2VSZXESKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUg'
+    'VhZ2VudIgBARIoCgR1dWlkGAIgASgJQg+6SAzIAQFyBzIFXlxTKyRIAVIEdXVpZIgBARIdCgd2'
+    'ZXJzaW9uGAMgASgJSAJSB3ZlcnNpb26IAQESKwoEZGF0YRgEIAEoCzIXLmdvb2dsZS5wcm90b2'
+    'J1Zi5TdHJ1Y3RSBGRhdGESOgoMdmVyc2lvbl9kYXRhGAUgASgLMhcuZ29vZ2xlLnByb3RvYnVm'
+    'LlN0cnVjdFILdmVyc2lvbkRhdGFCCAoGX2FnZW50QgcKBV91dWlkQgoKCF92ZXJzaW9u');
 
 @$core.Deprecated('Use pluginRefDescriptor instead')
 const PluginRef$json = {
   '1': 'PluginRef',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `PluginRef`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginRefDescriptor = $convert.base64Decode(
-    'CglQbHVnaW5SZWYSIgoFYWdlbnQYASABKAlCDLpICXIHMgVeXFMrJFIFYWdlbnQSIAoEdXVpZB'
-    'gCIAEoCUIMukgJcgcyBV5cUyskUgR1dWlk');
+    'CglQbHVnaW5SZWYSKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUgVhZ2VudIgBAR'
+    'IoCgR1dWlkGAIgASgJQg+6SAzIAQFyBzIFXlxTKyRIAVIEdXVpZIgBAUIICgZfYWdlbnRCBwoF'
+    'X3V1aWQ=');
 
 @$core.Deprecated('Use publicBriefsReqDescriptor instead')
 const PublicBriefsReq$json = {
@@ -796,22 +1422,86 @@ final $typed_data.Uint8List publicBriefsReqDescriptor = $convert.base64Decode(
 const PluginPublicBrief$json = {
   '1': 'PluginPublicBrief',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'version', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'version'},
-    {'1': 'logo', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'logo'},
-    {'1': 'summary', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'summary'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'logo',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'logo',
+      '17': true
+    },
+    {
+      '1': 'summary',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'summary',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_name'},
+    {'1': '_version'},
+    {'1': '_logo'},
+    {'1': '_summary'},
+  ],
 };
 
 /// Descriptor for `PluginPublicBrief`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginPublicBriefDescriptor = $convert.base64Decode(
-    'ChFQbHVnaW5QdWJsaWNCcmllZhIaCgVhZ2VudBgBIAEoCUIEkLUYAVIFYWdlbnQSGAoEdXVpZB'
-    'gCIAEoCUIEkLUYAVIEdXVpZBIYCgRuYW1lGAMgASgJQgSQtRgBUgRuYW1lEh4KB3ZlcnNpb24Y'
-    'BCABKAlCBJC1GAFSB3ZlcnNpb24SGAoEbG9nbxgFIAEoCUIEkLUYAVIEbG9nbxIeCgdzdW1tYX'
-    'J5GAYgASgJQgSQtRgBUgdzdW1tYXJ5OgSYtRgB');
+    'ChFQbHVnaW5QdWJsaWNCcmllZhIfCgVhZ2VudBgBIAEoCUIEkLUYAUgAUgVhZ2VudIgBARIdCg'
+    'R1dWlkGAIgASgJQgSQtRgBSAFSBHV1aWSIAQESHQoEbmFtZRgDIAEoCUIEkLUYAUgCUgRuYW1l'
+    'iAEBEiMKB3ZlcnNpb24YBCABKAlCBJC1GAFIA1IHdmVyc2lvbogBARIdCgRsb2dvGAUgASgJQg'
+    'SQtRgBSARSBGxvZ2+IAQESIwoHc3VtbWFyeRgGIAEoCUIEkLUYAUgFUgdzdW1tYXJ5iAEBOgSY'
+    'tRgBQggKBl9hZ2VudEIHCgVfdXVpZEIHCgVfbmFtZUIKCghfdmVyc2lvbkIHCgVfbG9nb0IKCg'
+    'hfc3VtbWFyeQ==');
 
 @$core.Deprecated('Use publicBriefsRespDescriptor instead')
 const PublicBriefsResp$json = {
@@ -839,39 +1529,136 @@ final $typed_data.Uint8List publicBriefsRespDescriptor = $convert.base64Decode(
 const NativePlugin$json = {
   '1': 'NativePlugin',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'version'},
-    {'1': 'fn_prefix', '3': 4, '4': 1, '5': 9, '8': {}, '10': 'fnPrefix'},
-    {'1': 'url', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'url'},
-    {'1': 'sha256', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'sha256'},
-    {'1': 'abi_version', '3': 7, '4': 1, '5': 13, '8': {}, '10': 'abiVersion'},
-    {'1': 'arch', '3': 8, '4': 1, '5': 9, '8': {}, '10': 'arch'},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'fn_prefix',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'fnPrefix',
+      '17': true
+    },
+    {
+      '1': 'url',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'url',
+      '17': true
+    },
+    {
+      '1': 'sha256',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'sha256',
+      '17': true
+    },
+    {
+      '1': 'abi_version',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 6,
+      '10': 'abiVersion',
+      '17': true
+    },
+    {
+      '1': 'arch',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 7,
+      '10': 'arch',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_name'},
+    {'1': '_version'},
+    {'1': '_fn_prefix'},
+    {'1': '_url'},
+    {'1': '_sha256'},
+    {'1': '_abi_version'},
+    {'1': '_arch'},
+  ],
 };
 
 /// Descriptor for `NativePlugin`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List nativePluginDescriptor = $convert.base64Decode(
-    'CgxOYXRpdmVQbHVnaW4SGAoEdXVpZBgBIAEoCUIEkLUYA1IEdXVpZBIYCgRuYW1lGAIgASgJQg'
-    'SQtRgDUgRuYW1lEh4KB3ZlcnNpb24YAyABKAlCBJC1GANSB3ZlcnNpb24SIQoJZm5fcHJlZml4'
-    'GAQgASgJQgSQtRgDUghmblByZWZpeBIWCgN1cmwYBSABKAlCBJC1GANSA3VybBIcCgZzaGEyNT'
-    'YYBiABKAlCBJC1GANSBnNoYTI1NhIlCgthYmlfdmVyc2lvbhgHIAEoDUIEkLUYA1IKYWJpVmVy'
-    'c2lvbhIYCgRhcmNoGAggASgJQgSQtRgDUgRhcmNoOgSYtRgD');
+    'CgxOYXRpdmVQbHVnaW4SHQoEdXVpZBgBIAEoCUIEkLUYA0gAUgR1dWlkiAEBEh0KBG5hbWUYAi'
+    'ABKAlCBJC1GANIAVIEbmFtZYgBARIjCgd2ZXJzaW9uGAMgASgJQgSQtRgDSAJSB3ZlcnNpb26I'
+    'AQESJgoJZm5fcHJlZml4GAQgASgJQgSQtRgDSANSCGZuUHJlZml4iAEBEhsKA3VybBgFIAEoCU'
+    'IEkLUYA0gEUgN1cmyIAQESIQoGc2hhMjU2GAYgASgJQgSQtRgDSAVSBnNoYTI1NogBARIqCgth'
+    'YmlfdmVyc2lvbhgHIAEoDUIEkLUYA0gGUgphYmlWZXJzaW9uiAEBEh0KBGFyY2gYCCABKAlCBJ'
+    'C1GANIB1IEYXJjaIgBAToEmLUYA0IHCgVfdXVpZEIHCgVfbmFtZUIKCghfdmVyc2lvbkIMCgpf'
+    'Zm5fcHJlZml4QgYKBF91cmxCCQoHX3NoYTI1NkIOCgxfYWJpX3ZlcnNpb25CBwoFX2FyY2g=');
 
 @$core.Deprecated('Use listNativeReqDescriptor instead')
 const ListNativeReq$json = {
   '1': 'ListNativeReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'arch', '3': 2, '4': 1, '5': 9, '10': 'arch'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {'1': 'arch', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'arch', '17': true},
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_arch'},
   ],
 };
 
 /// Descriptor for `ListNativeReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listNativeReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0TmF0aXZlUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50EhIKBG'
-    'FyY2gYAiABKAlSBGFyY2g=');
+    'Cg1MaXN0TmF0aXZlUmVxEioKBWFnZW50GAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIFYWdlbn'
+    'SIAQESFwoEYXJjaBgCIAEoCUgBUgRhcmNoiAEBQggKBl9hZ2VudEIHCgVfYXJjaA==');
 
 @$core.Deprecated('Use listNativeRespDescriptor instead')
 const ListNativeResp$json = {
@@ -899,14 +1686,47 @@ final $typed_data.Uint8List listNativeRespDescriptor = $convert.base64Decode(
 const RetryBuildReq$json = {
   '1': 'RetryBuildReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'uuid'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'version'},
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_version'},
   ],
 };
 
 /// Descriptor for `RetryBuildReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List retryBuildReqDescriptor = $convert.base64Decode(
-    'Cg1SZXRyeUJ1aWxkUmVxEiIKBWFnZW50GAEgASgJQgy6SAlyBzIFXlxTKyRSBWFnZW50EiAKBH'
-    'V1aWQYAiABKAlCDLpICXIHMgVeXFMrJFIEdXVpZBImCgd2ZXJzaW9uGAMgASgJQgy6SAlyBzIF'
-    'XlxTKyRSB3ZlcnNpb24=');
+    'Cg1SZXRyeUJ1aWxkUmVxEioKBWFnZW50GAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIFYWdlbn'
+    'SIAQESKAoEdXVpZBgCIAEoCUIPukgMyAEBcgcyBV5cUyskSAFSBHV1aWSIAQESLgoHdmVyc2lv'
+    'bhgDIAEoCUIPukgMyAEBcgcyBV5cUyskSAJSB3ZlcnNpb26IAQFCCAoGX2FnZW50QgcKBV91dW'
+    'lkQgoKCF92ZXJzaW9u');

@@ -107,7 +107,7 @@ type PermissionInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                                                   // 机器人 did
 	Permissions   []PermissionType       `protobuf:"varint,2,rep,packed,name=permissions,proto3,enum=hi.ai.PermissionType" json:"permissions,omitempty"` // 当前持有的档位
-	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`                                                 // 备注(为什么被撤,给人看的)
+	Note          *string                `protobuf:"bytes,3,opt,name=note,proto3,oneof" json:"note,omitempty"`                                           // 备注(为什么被撤,给人看的)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -157,8 +157,8 @@ func (x *PermissionInfo) GetPermissions() []PermissionType {
 }
 
 func (x *PermissionInfo) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
@@ -254,7 +254,7 @@ func (x *ListAgentPermissionsResp) GetInfos() []*PermissionInfo {
 type PermissionAddReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 机器人 did
-	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"`
+	Type          *PermissionType        `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType,oneof" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -297,8 +297,8 @@ func (x *PermissionAddReq) GetDid() string {
 }
 
 func (x *PermissionAddReq) GetType() PermissionType {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return PermissionType_PERMISSION_UNSPECIFIED
 }
@@ -306,7 +306,7 @@ func (x *PermissionAddReq) GetType() PermissionType {
 type PermissionDeleteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"`
+	Type          *PermissionType        `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType,oneof" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -349,8 +349,8 @@ func (x *PermissionDeleteReq) GetDid() string {
 }
 
 func (x *PermissionDeleteReq) GetType() PermissionType {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return PermissionType_PERMISSION_UNSPECIFIED
 }
@@ -358,8 +358,8 @@ func (x *PermissionDeleteReq) GetType() PermissionType {
 // 按档位分页列持有者(club 超管页穿透过来用)。**只出调用者名下的机器人**。
 type PermissionListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                              // 可选:按 did 过滤
-	Type          PermissionType         `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType" json:"type,omitempty"` // **必填**,须是四档之一;列全部传 NORMAL(所有机器人都持有它),不是 UNSPECIFIED
+	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`                              // 可选:按 did 过滤;**不传=不筛**(以前用空串表示,已禁止)
+	Type          *PermissionType        `protobuf:"varint,2,opt,name=type,proto3,enum=hi.ai.PermissionType,oneof" json:"type,omitempty"` // **必填**,须是四档之一;列全部传 NORMAL(所有机器人都持有它),不是 UNSPECIFIED
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -396,15 +396,15 @@ func (*PermissionListReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *PermissionListReq) GetDid() string {
-	if x != nil {
-		return x.Did
+	if x != nil && x.Did != nil {
+		return *x.Did
 	}
 	return ""
 }
 
 func (x *PermissionListReq) GetType() PermissionType {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return PermissionType_PERMISSION_UNSPECIFIED
 }
@@ -418,7 +418,7 @@ func (x *PermissionListReq) GetPagination() *hi.Pagination {
 
 type PermissionListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Infos         []*PermissionInfo      `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -455,8 +455,8 @@ func (*PermissionListResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *PermissionListResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -471,7 +471,7 @@ func (x *PermissionListResp) GetInfos() []*PermissionInfo {
 type PermissionEditReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Note          string                 `protobuf:"bytes,2,opt,name=note,proto3" json:"note,omitempty"` // 备注
+	Note          *string                `protobuf:"bytes,2,opt,name=note,proto3,oneof" json:"note,omitempty"` // 备注
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -514,8 +514,8 @@ func (x *PermissionEditReq) GetDid() string {
 }
 
 func (x *PermissionEditReq) GetNote() string {
-	if x != nil {
-		return x.Note
+	if x != nil && x.Note != nil {
+		return *x.Note
 	}
 	return ""
 }
@@ -524,33 +524,40 @@ var File_hi_ai_permission_proto protoreflect.FileDescriptor
 
 const file_hi_ai_permission_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/ai/permission.proto\x12\x05hi.ai\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x87\x01\n" +
+	"\x16hi/ai/permission.proto\x12\x05hi.ai\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x95\x01\n" +
 	"\x0ePermissionInfo\x12\x16\n" +
 	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03did\x12=\n" +
-	"\vpermissions\x18\x02 \x03(\x0e2\x15.hi.ai.PermissionTypeB\x04\x90\xb5\x18\x03R\vpermissions\x12\x18\n" +
-	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04note:\x04\x98\xb5\x18\x03\"1\n" +
+	"\vpermissions\x18\x02 \x03(\x0e2\x15.hi.ai.PermissionTypeB\x04\x90\xb5\x18\x03R\vpermissions\x12\x1d\n" +
+	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04note\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_note\"1\n" +
 	"\x17ListAgentPermissionsReq\x12\x16\n" +
 	"\x06agents\x18\x01 \x03(\tR\x06agents\"S\n" +
 	"\x18ListAgentPermissionsResp\x121\n" +
-	"\x05infos\x18\x01 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"]\n" +
+	"\x05infos\x18\x01 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"k\n" +
 	"\x10PermissionAddReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12)\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"`\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12.\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeH\x00R\x04type\x88\x01\x01B\a\n" +
+	"\x05_type\"n\n" +
 	"\x13PermissionDeleteReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12)\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\"\x80\x01\n" +
-	"\x11PermissionListReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12)\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeR\x04type\x12.\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12.\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeH\x00R\x04type\x88\x01\x01B\a\n" +
+	"\x05_type\"\x9b\x01\n" +
+	"\x11PermissionListReq\x12\x15\n" +
+	"\x03did\x18\x01 \x01(\tH\x00R\x03did\x88\x01\x01\x12.\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x15.hi.ai.PermissionTypeH\x01R\x04type\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"i\n" +
-	"\x12PermissionListResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x121\n" +
-	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"G\n" +
+	"paginationB\x06\n" +
+	"\x04_didB\a\n" +
+	"\x05_type\"x\n" +
+	"\x12PermissionListResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x121\n" +
+	"\x05infos\x18\x02 \x03(\v2\x15.hi.ai.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"U\n" +
 	"\x11PermissionEditReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12\x12\n" +
-	"\x04note\x18\x02 \x01(\tR\x04note*\x87\x01\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12\x17\n" +
+	"\x04note\x18\x02 \x01(\tH\x00R\x04note\x88\x01\x01B\a\n" +
+	"\x05_note*\x87\x01\n" +
 	"\x0ePermissionType\x12\x1a\n" +
 	"\x16PERMISSION_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11PERMISSION_NORMAL\x10\x01\x12\x17\n" +
@@ -624,6 +631,12 @@ func file_hi_ai_permission_proto_init() {
 	if File_hi_ai_permission_proto != nil {
 		return
 	}
+	file_hi_ai_permission_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ai_permission_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ai_permission_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_ai_permission_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_ai_permission_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ai_permission_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

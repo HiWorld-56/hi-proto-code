@@ -39,9 +39,25 @@ final $typed_data.Uint8List pluginAnnexDescriptor = $convert.base64Decode(
 const RunReq$json = {
   '1': 'RunReq',
   '2': [
-    {'1': 'code_archive_url', '3': 1, '4': 1, '5': 9, '10': 'codeArchiveUrl'},
-    {'1': 'code_params', '3': 2, '4': 1, '5': 9, '10': 'codeParams'},
-    {'1': 'uuid', '3': 3, '4': 1, '5': 9, '10': 'uuid'},
+    {
+      '1': 'code_archive_url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'codeArchiveUrl',
+      '17': true
+    },
+    {
+      '1': 'code_params',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'codeParams',
+      '17': true
+    },
+    {'1': 'uuid', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'uuid', '17': true},
     {'1': 'envs', '3': 4, '4': 3, '5': 9, '10': 'envs'},
     {
       '1': 'annex',
@@ -51,19 +67,37 @@ const RunReq$json = {
       '6': '.hi.ai.plugin.PluginAnnex',
       '10': 'annex'
     },
-    {'1': 'function', '3': 6, '4': 1, '5': 9, '10': 'function'},
-    {'1': 'asker', '3': 7, '4': 1, '5': 9, '10': 'asker'},
-    {'1': 'master', '3': 8, '4': 1, '5': 9, '10': 'master'},
+    {
+      '1': 'function',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 3,
+      '10': 'function',
+      '17': true
+    },
+    {'1': 'asker', '3': 7, '4': 1, '5': 9, '9': 4, '10': 'asker', '17': true},
+    {'1': 'master', '3': 8, '4': 1, '5': 9, '9': 5, '10': 'master', '17': true},
+  ],
+  '8': [
+    {'1': '_code_archive_url'},
+    {'1': '_code_params'},
+    {'1': '_uuid'},
+    {'1': '_function'},
+    {'1': '_asker'},
+    {'1': '_master'},
   ],
 };
 
 /// Descriptor for `RunReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List runReqDescriptor = $convert.base64Decode(
-    'CgZSdW5SZXESKAoQY29kZV9hcmNoaXZlX3VybBgBIAEoCVIOY29kZUFyY2hpdmVVcmwSHwoLY2'
-    '9kZV9wYXJhbXMYAiABKAlSCmNvZGVQYXJhbXMSEgoEdXVpZBgDIAEoCVIEdXVpZBISCgRlbnZz'
-    'GAQgAygJUgRlbnZzEi8KBWFubmV4GAUgASgLMhkuaGkuYWkucGx1Z2luLlBsdWdpbkFubmV4Ug'
-    'Vhbm5leBIaCghmdW5jdGlvbhgGIAEoCVIIZnVuY3Rpb24SFAoFYXNrZXIYByABKAlSBWFza2Vy'
-    'EhYKBm1hc3RlchgIIAEoCVIGbWFzdGVy');
+    'CgZSdW5SZXESLQoQY29kZV9hcmNoaXZlX3VybBgBIAEoCUgAUg5jb2RlQXJjaGl2ZVVybIgBAR'
+    'IkCgtjb2RlX3BhcmFtcxgCIAEoCUgBUgpjb2RlUGFyYW1ziAEBEhcKBHV1aWQYAyABKAlIAlIE'
+    'dXVpZIgBARISCgRlbnZzGAQgAygJUgRlbnZzEi8KBWFubmV4GAUgASgLMhkuaGkuYWkucGx1Z2'
+    'luLlBsdWdpbkFubmV4UgVhbm5leBIfCghmdW5jdGlvbhgGIAEoCUgDUghmdW5jdGlvbogBARIZ'
+    'CgVhc2tlchgHIAEoCUgEUgVhc2tlcogBARIbCgZtYXN0ZXIYCCABKAlIBVIGbWFzdGVyiAEBQh'
+    'MKEV9jb2RlX2FyY2hpdmVfdXJsQg4KDF9jb2RlX3BhcmFtc0IHCgVfdXVpZEILCglfZnVuY3Rp'
+    'b25CCAoGX2Fza2VyQgkKB19tYXN0ZXI=');
 
 @$core.Deprecated('Use runRespDescriptor instead')
 const RunResp$json = {
@@ -103,38 +137,135 @@ final $typed_data.Uint8List cleanupReqDescriptor = $convert.base64Decode(
 const BuildReq$json = {
   '1': 'BuildReq',
   '2': [
-    {'1': 'code_archive_url', '3': 1, '4': 1, '5': 9, '10': 'codeArchiveUrl'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
-    {'1': 'arch', '3': 4, '4': 1, '5': 9, '10': 'arch'},
+    {
+      '1': 'code_archive_url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'codeArchiveUrl',
+      '17': true
+    },
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+    {'1': 'arch', '3': 4, '4': 1, '5': 9, '9': 3, '10': 'arch', '17': true},
+  ],
+  '8': [
+    {'1': '_code_archive_url'},
+    {'1': '_uuid'},
+    {'1': '_version'},
+    {'1': '_arch'},
   ],
 };
 
 /// Descriptor for `BuildReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List buildReqDescriptor = $convert.base64Decode(
-    'CghCdWlsZFJlcRIoChBjb2RlX2FyY2hpdmVfdXJsGAEgASgJUg5jb2RlQXJjaGl2ZVVybBISCg'
-    'R1dWlkGAIgASgJUgR1dWlkEhgKB3ZlcnNpb24YAyABKAlSB3ZlcnNpb24SEgoEYXJjaBgEIAEo'
-    'CVIEYXJjaA==');
+    'CghCdWlsZFJlcRItChBjb2RlX2FyY2hpdmVfdXJsGAEgASgJSABSDmNvZGVBcmNoaXZlVXJsiA'
+    'EBEhcKBHV1aWQYAiABKAlIAVIEdXVpZIgBARIdCgd2ZXJzaW9uGAMgASgJSAJSB3ZlcnNpb26I'
+    'AQESFwoEYXJjaBgEIAEoCUgDUgRhcmNoiAEBQhMKEV9jb2RlX2FyY2hpdmVfdXJsQgcKBV91dW'
+    'lkQgoKCF92ZXJzaW9uQgcKBV9hcmNo');
 
 @$core.Deprecated('Use buildRespDescriptor instead')
 const BuildResp$json = {
   '1': 'BuildResp',
   '2': [
-    {'1': 'ok', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'ok'},
-    {'1': 'artifact_url', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'artifactUrl'},
-    {'1': 'sha256', '3': 3, '4': 1, '5': 9, '8': {}, '10': 'sha256'},
-    {'1': 'abi_version', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'abiVersion'},
-    {'1': 'manifest', '3': 5, '4': 1, '5': 9, '8': {}, '10': 'manifest'},
-    {'1': 'error', '3': 6, '4': 1, '5': 9, '8': {}, '10': 'error'},
-    {'1': 'log', '3': 7, '4': 1, '5': 9, '8': {}, '10': 'log'},
+    {
+      '1': 'ok',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'ok',
+      '17': true
+    },
+    {
+      '1': 'artifact_url',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'artifactUrl',
+      '17': true
+    },
+    {
+      '1': 'sha256',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'sha256',
+      '17': true
+    },
+    {
+      '1': 'abi_version',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 3,
+      '10': 'abiVersion',
+      '17': true
+    },
+    {
+      '1': 'manifest',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'manifest',
+      '17': true
+    },
+    {
+      '1': 'error',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'error',
+      '17': true
+    },
+    {
+      '1': 'log',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 6,
+      '10': 'log',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_ok'},
+    {'1': '_artifact_url'},
+    {'1': '_sha256'},
+    {'1': '_abi_version'},
+    {'1': '_manifest'},
+    {'1': '_error'},
+    {'1': '_log'},
+  ],
 };
 
 /// Descriptor for `BuildResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List buildRespDescriptor = $convert.base64Decode(
-    'CglCdWlsZFJlc3ASFAoCb2sYASABKAhCBJC1GANSAm9rEicKDGFydGlmYWN0X3VybBgCIAEoCU'
-    'IEkLUYA1ILYXJ0aWZhY3RVcmwSHAoGc2hhMjU2GAMgASgJQgSQtRgDUgZzaGEyNTYSJQoLYWJp'
-    'X3ZlcnNpb24YBCABKA1CBJC1GANSCmFiaVZlcnNpb24SIAoIbWFuaWZlc3QYBSABKAlCBJC1GA'
-    'NSCG1hbmlmZXN0EhoKBWVycm9yGAYgASgJQgSQtRgDUgVlcnJvchIWCgNsb2cYByABKAlCBJC1'
-    'GANSA2xvZzoEmLUYAw==');
+    'CglCdWlsZFJlc3ASGQoCb2sYASABKAhCBJC1GANIAFICb2uIAQESLAoMYXJ0aWZhY3RfdXJsGA'
+    'IgASgJQgSQtRgDSAFSC2FydGlmYWN0VXJsiAEBEiEKBnNoYTI1NhgDIAEoCUIEkLUYA0gCUgZz'
+    'aGEyNTaIAQESKgoLYWJpX3ZlcnNpb24YBCABKA1CBJC1GANIA1IKYWJpVmVyc2lvbogBARIlCg'
+    'htYW5pZmVzdBgFIAEoCUIEkLUYA0gEUghtYW5pZmVzdIgBARIfCgVlcnJvchgGIAEoCUIEkLUY'
+    'A0gFUgVlcnJvcogBARIbCgNsb2cYByABKAlCBJC1GANIBlIDbG9niAEBOgSYtRgDQgUKA19va0'
+    'IPCg1fYXJ0aWZhY3RfdXJsQgkKB19zaGEyNTZCDgoMX2FiaV92ZXJzaW9uQgsKCV9tYW5pZmVz'
+    'dEIICgZfZXJyb3JCBgoEX2xvZw==');

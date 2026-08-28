@@ -589,24 +589,24 @@ func (MarketPaymentStatus) EnumDescriptor() ([]byte, []int) {
 // MarketListingBrief 挂牌摘要(搜索结果一行)。
 type MarketListingBrief struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Uuid  string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`   // 挂牌 id
-	Agent *hi.Entity             `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"` // 出让方机器人(只到 Entity,**不吐它的 master**)
+	Uuid  *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"` // 挂牌 id
+	Agent *hi.Entity             `protobuf:"bytes,2,opt,name=agent,proto3" json:"agent,omitempty"`     // 出让方机器人(只到 Entity,**不吐它的 master**)
 	// ⭐ 下面三个是**读侧现取**的派生值,挂牌行里不存:
 	//
 	//	title ← 插件壳名;logo / summary ← 出让方**当前激活版**(与"引用跟版"同一口径)。
 	//	改插件名就是改市场标题 —— 单一来源,不会漂。
-	Title        string     `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Summary      string     `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`
-	Logo         string     `protobuf:"bytes,5,opt,name=logo,proto3" json:"logo,omitempty"`
-	Tags         []string   `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
-	SettleMode   SettleMode `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
-	Price        string     `protobuf:"bytes,8,opt,name=price,proto3" json:"price,omitempty"` // 十进制字符串,免浮点误差
-	Coin         string     `protobuf:"bytes,9,opt,name=coin,proto3" json:"coin,omitempty"`
-	Duration     int64      `protobuf:"varint,10,opt,name=duration,proto3" json:"duration,omitempty"`                             // 商品规格:买一次能用多久(秒);0 = 永久
-	InstallCount int32      `protobuf:"varint,11,opt,name=install_count,json=installCount,proto3" json:"install_count,omitempty"` // 装机数
+	Title        *string     `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`
+	Summary      *string     `protobuf:"bytes,4,opt,name=summary,proto3,oneof" json:"summary,omitempty"`
+	Logo         *string     `protobuf:"bytes,5,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
+	Tags         []string    `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	SettleMode   *SettleMode `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"`
+	Price        *string     `protobuf:"bytes,8,opt,name=price,proto3,oneof" json:"price,omitempty"` // 十进制字符串,免浮点误差
+	Coin         *string     `protobuf:"bytes,9,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Duration     *int64      `protobuf:"varint,10,opt,name=duration,proto3,oneof" json:"duration,omitempty"`                             // 商品规格:买一次能用多久(秒);0 = 永久
+	InstallCount *int32      `protobuf:"varint,11,opt,name=install_count,json=installCount,proto3,oneof" json:"install_count,omitempty"` // 装机数
 	// 这一摊是谁的货(普通 / 官方 / 内置)。公开 —— 买家要能看出哪个是官方出品,
 	// 那正是这个字段存在的意义;藏起来等于白设。
-	Kind          MarketListingKind `protobuf:"varint,12,opt,name=kind,proto3,enum=hi.club.MarketListingKind" json:"kind,omitempty"`
+	Kind          *MarketListingKind `protobuf:"varint,12,opt,name=kind,proto3,enum=hi.club.MarketListingKind,oneof" json:"kind,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -642,8 +642,8 @@ func (*MarketListingBrief) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketListingBrief) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
@@ -656,22 +656,22 @@ func (x *MarketListingBrief) GetAgent() *hi.Entity {
 }
 
 func (x *MarketListingBrief) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
 
 func (x *MarketListingBrief) GetSummary() string {
-	if x != nil {
-		return x.Summary
+	if x != nil && x.Summary != nil {
+		return *x.Summary
 	}
 	return ""
 }
 
 func (x *MarketListingBrief) GetLogo() string {
-	if x != nil {
-		return x.Logo
+	if x != nil && x.Logo != nil {
+		return *x.Logo
 	}
 	return ""
 }
@@ -684,43 +684,43 @@ func (x *MarketListingBrief) GetTags() []string {
 }
 
 func (x *MarketListingBrief) GetSettleMode() SettleMode {
-	if x != nil {
-		return x.SettleMode
+	if x != nil && x.SettleMode != nil {
+		return *x.SettleMode
 	}
 	return SettleMode_SETTLE_MODE_UNSPECIFIED
 }
 
 func (x *MarketListingBrief) GetPrice() string {
-	if x != nil {
-		return x.Price
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return ""
 }
 
 func (x *MarketListingBrief) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *MarketListingBrief) GetDuration() int64 {
-	if x != nil {
-		return x.Duration
+	if x != nil && x.Duration != nil {
+		return *x.Duration
 	}
 	return 0
 }
 
 func (x *MarketListingBrief) GetInstallCount() int32 {
-	if x != nil {
-		return x.InstallCount
+	if x != nil && x.InstallCount != nil {
+		return *x.InstallCount
 	}
 	return 0
 }
 
 func (x *MarketListingBrief) GetKind() MarketListingKind {
-	if x != nil {
-		return x.Kind
+	if x != nil && x.Kind != nil {
+		return *x.Kind
 	}
 	return MarketListingKind_MARKET_LISTING_KIND_UNSPECIFIED
 }
@@ -731,7 +731,7 @@ type MarketListingDetail struct {
 	Brief *MarketListingBrief    `protobuf:"bytes,1,opt,name=brief,proto3" json:"brief,omitempty"`
 	// 这个包提供哪些方法。直接取自 hi.ai 那份 tools 数组(已是最终形态、name 带壳前缀),
 	// 买家装之前就知道会得到什么能力。
-	Capabilities string `protobuf:"bytes,2,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
+	Capabilities *string `protobuf:"bytes,2,opt,name=capabilities,proto3,oneof" json:"capabilities,omitempty"`
 	// ⚠️ **没有 allow_follow_latest,不要再加回来。**
 	// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
 	// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。
@@ -741,11 +741,11 @@ type MarketListingDetail struct {
 	// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
 	// 出让方自己那张表 —— 用的:草稿/挂牌中/隐藏/已下架必须分得出来,
 	// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
-	Status ListingStatus `protobuf:"varint,5,opt,name=status,proto3,enum=hi.club.ListingStatus" json:"status,omitempty"`
+	Status *ListingStatus `protobuf:"varint,5,opt,name=status,proto3,enum=hi.club.ListingStatus,oneof" json:"status,omitempty"`
 	// 这个挂牌卖的是哪个插件。**出让方那张表要它** —— 「版本」按钮跳到
 	// 「机器人 → 插件」并直接打开这个插件的版本管理,没有它就只能让人自己去翻。
 	// 公开无妨:壳 uuid 不是秘密(装了它的机器人本来就拿得到),真正私有的是脚本 url。
-	PluginUuid    string `protobuf:"bytes,6,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"`
+	PluginUuid    *string `protobuf:"bytes,6,opt,name=plugin_uuid,json=pluginUuid,proto3,oneof" json:"plugin_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -788,8 +788,8 @@ func (x *MarketListingDetail) GetBrief() *MarketListingBrief {
 }
 
 func (x *MarketListingDetail) GetCapabilities() string {
-	if x != nil {
-		return x.Capabilities
+	if x != nil && x.Capabilities != nil {
+		return *x.Capabilities
 	}
 	return ""
 }
@@ -802,15 +802,15 @@ func (x *MarketListingDetail) GetVersions() []string {
 }
 
 func (x *MarketListingDetail) GetStatus() ListingStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ListingStatus_LISTING_STATUS_UNSPECIFIED
 }
 
 func (x *MarketListingDetail) GetPluginUuid() string {
-	if x != nil {
-		return x.PluginUuid
+	if x != nil && x.PluginUuid != nil {
+		return *x.PluginUuid
 	}
 	return ""
 }
@@ -824,14 +824,14 @@ func (x *MarketListingDetail) GetPluginUuid() string {
 //	**别把 grant 详情塞进来。**
 type MarketGrantBrief struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid     string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                          // 挂牌标题
+	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	Title         *string                `protobuf:"bytes,2,opt,name=title,proto3,oneof" json:"title,omitempty"`                    // 挂牌标题
 	FromAgent     *hi.Entity             `protobuf:"bytes,3,opt,name=from_agent,json=fromAgent,proto3" json:"from_agent,omitempty"` // 出让方机器人
 	ToAgent       *hi.Entity             `protobuf:"bytes,4,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"`       // 受让方机器人
 	Applicant     *hi.Entity             `protobuf:"bytes,5,opt,name=applicant,proto3" json:"applicant,omitempty"`                  // 申请人
-	SettleMode    SettleMode             `protobuf:"varint,6,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
-	Price         string                 `protobuf:"bytes,7,opt,name=price,proto3" json:"price,omitempty"`
-	Coin          string                 `protobuf:"bytes,8,opt,name=coin,proto3" json:"coin,omitempty"`
+	SettleMode    *SettleMode            `protobuf:"varint,6,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"`
+	Price         *string                `protobuf:"bytes,7,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	Coin          *string                `protobuf:"bytes,8,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -867,15 +867,15 @@ func (*MarketGrantBrief) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketGrantBrief) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *MarketGrantBrief) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
@@ -902,22 +902,22 @@ func (x *MarketGrantBrief) GetApplicant() *hi.Entity {
 }
 
 func (x *MarketGrantBrief) GetSettleMode() SettleMode {
-	if x != nil {
-		return x.SettleMode
+	if x != nil && x.SettleMode != nil {
+		return *x.SettleMode
 	}
 	return SettleMode_SETTLE_MODE_UNSPECIFIED
 }
 
 func (x *MarketGrantBrief) GetPrice() string {
-	if x != nil {
-		return x.Price
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return ""
 }
 
 func (x *MarketGrantBrief) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
@@ -942,8 +942,8 @@ func (x *MarketGrantBrief) GetCoin() string {
 //	(Any 是可见性 lint 唯一的结构性缺口,塞 SELF 的东西会静默泄漏)。
 type MarketRenewBrief struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	Title     string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"` // 插件标题
+	GrantUuid *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	Title     *string                `protobuf:"bytes,2,opt,name=title,proto3,oneof" json:"title,omitempty"` // 插件标题
 	// **钱打到这个 did 的地址上** —— 结算实体,不是摊主(后端推导,机器人别自己算)。
 	//
 	// ⚠️ 与 `MarketOrder.payee`(收款人 = 摊主)**不是一个东西**,名字撞了但语义不同:
@@ -951,11 +951,11 @@ type MarketRenewBrief struct {
 	//	这里要的是"往哪儿转账",所以对齐的是 `MarketOrder.payee_account`。
 	//	机器人真去续费时走的是 `CreateRenewOrder` 拿到的订单,以那张单为准;
 	//	这一栏只是提醒里给人看的。
-	Payee         string `protobuf:"bytes,3,opt,name=payee,proto3" json:"payee,omitempty"`
-	Amount        string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额
-	Coin          string `protobuf:"bytes,5,opt,name=coin,proto3" json:"coin,omitempty"`
-	ExpireAt      int64  `protobuf:"varint,6,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"`    // 到期时刻(秒)
-	AutoRenew     bool   `protobuf:"varint,7,opt,name=auto_renew,json=autoRenew,proto3" json:"auto_renew,omitempty"` // 用户开没开自动续费
+	Payee         *string `protobuf:"bytes,3,opt,name=payee,proto3,oneof" json:"payee,omitempty"`
+	Amount        *string `protobuf:"bytes,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 人类可读金额
+	Coin          *string `protobuf:"bytes,5,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	ExpireAt      *int64  `protobuf:"varint,6,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`    // 到期时刻(秒)
+	AutoRenew     *bool   `protobuf:"varint,7,opt,name=auto_renew,json=autoRenew,proto3,oneof" json:"auto_renew,omitempty"` // 用户开没开自动续费
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -991,50 +991,50 @@ func (*MarketRenewBrief) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketRenewBrief) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *MarketRenewBrief) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
 
 func (x *MarketRenewBrief) GetPayee() string {
-	if x != nil {
-		return x.Payee
+	if x != nil && x.Payee != nil {
+		return *x.Payee
 	}
 	return ""
 }
 
 func (x *MarketRenewBrief) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *MarketRenewBrief) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *MarketRenewBrief) GetExpireAt() int64 {
-	if x != nil {
-		return x.ExpireAt
+	if x != nil && x.ExpireAt != nil {
+		return *x.ExpireAt
 	}
 	return 0
 }
 
 func (x *MarketRenewBrief) GetAutoRenew() bool {
-	if x != nil {
-		return x.AutoRenew
+	if x != nil && x.AutoRenew != nil {
+		return *x.AutoRenew
 	}
 	return false
 }
@@ -1046,8 +1046,8 @@ func (x *MarketRenewBrief) GetAutoRenew() bool {
 //	「我卖的」= 我**当前**名下机器人的 `from_agent`;「我买的」= 同理的 `to_agent`。
 type MarketGrantView struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	Uuid        string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	ListingUuid string                 `protobuf:"bytes,2,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"`
+	Uuid        *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	ListingUuid *string                `protobuf:"bytes,2,opt,name=listing_uuid,json=listingUuid,proto3,oneof" json:"listing_uuid,omitempty"`
 	// 插件标题。**成交时快照**,与 price/coin/duration/settle_mode 同一批。
 	//
 	// ⚠️ 这一条**不适用**「展示信息读侧现取」那条规矩 —— 那条管的是**活体**
@@ -1060,32 +1060,32 @@ type MarketGrantView struct {
 	// ⚠️ 读的时候**只用快照,不做「取不到再现取」的回落** —— 回落会让同一行在不同时刻
 	//
 	//	显示不同的名字,比空着更难查。
-	Title      string      `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	FromAgent  *hi.Entity  `protobuf:"bytes,4,opt,name=from_agent,json=fromAgent,proto3" json:"from_agent,omitempty"`
-	ToAgent    *hi.Entity  `protobuf:"bytes,5,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"`
-	Applicant  *hi.Entity  `protobuf:"bytes,6,opt,name=applicant,proto3" json:"applicant,omitempty"`
-	Status     GrantStatus `protobuf:"varint,7,opt,name=status,proto3,enum=hi.club.GrantStatus" json:"status,omitempty"`
-	SettleMode SettleMode  `protobuf:"varint,8,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
-	Price      string      `protobuf:"bytes,9,opt,name=price,proto3" json:"price,omitempty"`
-	Coin       string      `protobuf:"bytes,10,opt,name=coin,proto3" json:"coin,omitempty"`
+	Title      *string      `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`
+	FromAgent  *hi.Entity   `protobuf:"bytes,4,opt,name=from_agent,json=fromAgent,proto3" json:"from_agent,omitempty"`
+	ToAgent    *hi.Entity   `protobuf:"bytes,5,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"`
+	Applicant  *hi.Entity   `protobuf:"bytes,6,opt,name=applicant,proto3" json:"applicant,omitempty"`
+	Status     *GrantStatus `protobuf:"varint,7,opt,name=status,proto3,enum=hi.club.GrantStatus,oneof" json:"status,omitempty"`
+	SettleMode *SettleMode  `protobuf:"varint,8,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"`
+	Price      *string      `protobuf:"bytes,9,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	Coin       *string      `protobuf:"bytes,10,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	// ⚠️ 没有 follow_latest:见 hi.ai.PluginView.follow_latest —— 归使用行,不归授权。
-	Version     string `protobuf:"bytes,12,opt,name=version,proto3" json:"version,omitempty"`                      // 当前引用的版本
-	ExpireAt    int64  `protobuf:"varint,13,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"`   // installed_at + duration;0 = 永久
-	ActionUrl   string `protobuf:"bytes,14,opt,name=action_url,json=actionUrl,proto3" json:"action_url,omitempty"` // 外部流程给的"去付款/去填资料"地址(可空)
-	Reason      string `protobuf:"bytes,15,opt,name=reason,proto3" json:"reason,omitempty"`                        // 拒绝/撤销原因
-	CreatedAt   int64  `protobuf:"varint,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	DecidedAt   int64  `protobuf:"varint,17,opt,name=decided_at,json=decidedAt,proto3" json:"decided_at,omitempty"`
-	InstalledAt int64  `protobuf:"varint,18,opt,name=installed_at,json=installedAt,proto3" json:"installed_at,omitempty"`
+	Version     *string `protobuf:"bytes,12,opt,name=version,proto3,oneof" json:"version,omitempty"`                      // 当前引用的版本
+	ExpireAt    *int64  `protobuf:"varint,13,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`   // installed_at + duration;0 = 永久
+	ActionUrl   *string `protobuf:"bytes,14,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"` // 外部流程给的"去付款/去填资料"地址(可不传)
+	Reason      *string `protobuf:"bytes,15,opt,name=reason,proto3,oneof" json:"reason,omitempty"`                        // 拒绝/撤销原因
+	CreatedAt   *int64  `protobuf:"varint,16,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	DecidedAt   *int64  `protobuf:"varint,17,opt,name=decided_at,json=decidedAt,proto3,oneof" json:"decided_at,omitempty"`
+	InstalledAt *int64  `protobuf:"varint,18,opt,name=installed_at,json=installedAt,proto3,oneof" json:"installed_at,omitempty"`
 	// 自动续费。**只有硬件机器人能开** —— 续费要它自己掏钱付款,软件机器人没有私钥。
-	AutoRenew bool `protobuf:"varint,19,opt,name=auto_renew,json=autoRenew,proto3" json:"auto_renew,omitempty"`
+	AutoRenew *bool `protobuf:"varint,19,opt,name=auto_renew,json=autoRenew,proto3,oneof" json:"auto_renew,omitempty"`
 	// 谁先开的口(申请 / 分享)。前端按它决定这一行给"同意/拒绝"还是"审批/驳回",
 	// 后端按它决定 PENDING 时该问谁 —— 见 GrantInitiator。
-	Initiator GrantInitiator `protobuf:"varint,20,opt,name=initiator,proto3,enum=hi.club.GrantInitiator" json:"initiator,omitempty"`
+	Initiator *GrantInitiator `protobuf:"varint,20,opt,name=initiator,proto3,enum=hi.club.GrantInitiator,oneof" json:"initiator,omitempty"`
 	// 这条授权是哪个插件。**给前端定位用**:从"我买到的/卖出的"跳到那台机器人的插件页时,
 	// 要用它把插件管理直接打开(`/robot/plugin/<did>?plugin=<uuid>`)——
 	// 只有 listing_uuid 是不够的,插件页认的是插件。
 	// ⚠️ 不复用 11 号(那是删掉的 follow_latest):号不要钱,复用只会让老客户端把 bool 读成 string。
-	PluginUuid    string `protobuf:"bytes,21,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"`
+	PluginUuid    *string `protobuf:"bytes,21,opt,name=plugin_uuid,json=pluginUuid,proto3,oneof" json:"plugin_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1121,22 +1121,22 @@ func (*MarketGrantView) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketGrantView) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *MarketGrantView) GetListingUuid() string {
-	if x != nil {
-		return x.ListingUuid
+	if x != nil && x.ListingUuid != nil {
+		return *x.ListingUuid
 	}
 	return ""
 }
 
 func (x *MarketGrantView) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
@@ -1163,99 +1163,99 @@ func (x *MarketGrantView) GetApplicant() *hi.Entity {
 }
 
 func (x *MarketGrantView) GetStatus() GrantStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return GrantStatus_GRANT_STATUS_UNSPECIFIED
 }
 
 func (x *MarketGrantView) GetSettleMode() SettleMode {
-	if x != nil {
-		return x.SettleMode
+	if x != nil && x.SettleMode != nil {
+		return *x.SettleMode
 	}
 	return SettleMode_SETTLE_MODE_UNSPECIFIED
 }
 
 func (x *MarketGrantView) GetPrice() string {
-	if x != nil {
-		return x.Price
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return ""
 }
 
 func (x *MarketGrantView) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *MarketGrantView) GetVersion() string {
-	if x != nil {
-		return x.Version
+	if x != nil && x.Version != nil {
+		return *x.Version
 	}
 	return ""
 }
 
 func (x *MarketGrantView) GetExpireAt() int64 {
-	if x != nil {
-		return x.ExpireAt
+	if x != nil && x.ExpireAt != nil {
+		return *x.ExpireAt
 	}
 	return 0
 }
 
 func (x *MarketGrantView) GetActionUrl() string {
-	if x != nil {
-		return x.ActionUrl
+	if x != nil && x.ActionUrl != nil {
+		return *x.ActionUrl
 	}
 	return ""
 }
 
 func (x *MarketGrantView) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
 
 func (x *MarketGrantView) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
 
 func (x *MarketGrantView) GetDecidedAt() int64 {
-	if x != nil {
-		return x.DecidedAt
+	if x != nil && x.DecidedAt != nil {
+		return *x.DecidedAt
 	}
 	return 0
 }
 
 func (x *MarketGrantView) GetInstalledAt() int64 {
-	if x != nil {
-		return x.InstalledAt
+	if x != nil && x.InstalledAt != nil {
+		return *x.InstalledAt
 	}
 	return 0
 }
 
 func (x *MarketGrantView) GetAutoRenew() bool {
-	if x != nil {
-		return x.AutoRenew
+	if x != nil && x.AutoRenew != nil {
+		return *x.AutoRenew
 	}
 	return false
 }
 
 func (x *MarketGrantView) GetInitiator() GrantInitiator {
-	if x != nil {
-		return x.Initiator
+	if x != nil && x.Initiator != nil {
+		return *x.Initiator
 	}
 	return GrantInitiator_GRANT_INITIATOR_UNSPECIFIED
 }
 
 func (x *MarketGrantView) GetPluginUuid() string {
-	if x != nil {
-		return x.PluginUuid
+	if x != nil && x.PluginUuid != nil {
+		return *x.PluginUuid
 	}
 	return ""
 }
@@ -1271,9 +1271,9 @@ func (x *MarketGrantView) GetPluginUuid() string {
 //	没挂牌的机器人不会出现在这里。
 type MarketSeller struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`                                  // 卖家(主人)
-	Agents        []*hi.Entity           `protobuf:"bytes,2,rep,name=agents,proto3" json:"agents,omitempty"`                                  // 他名下**有在售挂牌**的摊位
-	ListingCount  int32                  `protobuf:"varint,3,opt,name=listing_count,json=listingCount,proto3" json:"listing_count,omitempty"` // 在售挂牌总数
+	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`                                        // 卖家(主人)
+	Agents        []*hi.Entity           `protobuf:"bytes,2,rep,name=agents,proto3" json:"agents,omitempty"`                                        // 他名下**有在售挂牌**的摊位
+	ListingCount  *int32                 `protobuf:"varint,3,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"` // 在售挂牌总数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1323,15 +1323,15 @@ func (x *MarketSeller) GetAgents() []*hi.Entity {
 }
 
 func (x *MarketSeller) GetListingCount() int32 {
-	if x != nil {
-		return x.ListingCount
+	if x != nil && x.ListingCount != nil {
+		return *x.ListingCount
 	}
 	return 0
 }
 
 type ListSellersResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Sellers       []*MarketSeller        `protobuf:"bytes,2,rep,name=sellers,proto3" json:"sellers,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1368,8 +1368,8 @@ func (*ListSellersResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListSellersResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -1383,7 +1383,7 @@ func (x *ListSellersResp) GetSellers() []*MarketSeller {
 
 type SearchListingsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Keyword       string                 `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"` // 空 = 不过滤
+	Keyword       *string                `protobuf:"bytes,1,opt,name=keyword,proto3,oneof" json:"keyword,omitempty"` // 不传 = 不过滤
 	Tags          []string               `protobuf:"bytes,2,rep,name=tags,proto3" json:"tags,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1421,8 +1421,8 @@ func (*SearchListingsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SearchListingsReq) GetKeyword() string {
-	if x != nil {
-		return x.Keyword
+	if x != nil && x.Keyword != nil {
+		return *x.Keyword
 	}
 	return ""
 }
@@ -1443,7 +1443,7 @@ func (x *SearchListingsReq) GetPagination() *hi.Pagination {
 
 type ListAgentListingsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 逛这台机器人的"店"
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 逛这台机器人的"店"
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1480,8 +1480,8 @@ func (*ListAgentListingsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListAgentListingsReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -1495,7 +1495,7 @@ func (x *ListAgentListingsReq) GetPagination() *hi.Pagination {
 
 type GetListingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1531,15 +1531,15 @@ func (*GetListingReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetListingReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 type SearchListingsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*MarketListingBrief  `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1576,8 +1576,8 @@ func (*SearchListingsResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *SearchListingsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -1640,12 +1640,12 @@ func (x *GetListingResp) GetDetail() *MarketListingDetail {
 //	否则授权链失控(B 从 A 拿的转手挂给 C,A 撤 B 的权时 C 怎么办)。后端穿透 ai 查 c.source。
 type CreateListingReq struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
-	Agent      string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 出让方机器人(须是调用者名下)
-	PluginUuid string                 `protobuf:"bytes,2,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"`
-	SettleMode SettleMode             `protobuf:"varint,3,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"` // **建后不可改**
-	Price      string                 `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
-	Coin       string                 `protobuf:"bytes,5,opt,name=coin,proto3" json:"coin,omitempty"`
-	Duration   int64                  `protobuf:"varint,6,opt,name=duration,proto3" json:"duration,omitempty"` // 秒;0 = 永久
+	Agent      *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 出让方机器人(须是调用者名下)
+	PluginUuid *string                `protobuf:"bytes,2,opt,name=plugin_uuid,json=pluginUuid,proto3,oneof" json:"plugin_uuid,omitempty"`
+	SettleMode *SettleMode            `protobuf:"varint,3,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"` // **建后不可改**
+	Price      *string                `protobuf:"bytes,4,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	Coin       *string                `protobuf:"bytes,5,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Duration   *int64                 `protobuf:"varint,6,opt,name=duration,proto3,oneof" json:"duration,omitempty"` // 秒;0 = 永久
 	// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
 	//
 	// 那三个是插件**自己就有**的东西(`hi.ai.PluginShell.name`、激活版的 `logo`/`summary`),
@@ -1665,17 +1665,17 @@ type CreateListingReq struct {
 	//	传 false 也会被纠正 —— 不是"帮你改",是那个值与"软件机器人"这件事互相矛盾。
 	//
 	// 前端**暂时不给这个选项**(隐藏),先把能力放在契约里。
-	PayeeToMaster bool `protobuf:"varint,14,opt,name=payee_to_master,json=payeeToMaster,proto3" json:"payee_to_master,omitempty"`
+	PayeeToMaster *bool `protobuf:"varint,14,opt,name=payee_to_master,json=payeeToMaster,proto3,oneof" json:"payee_to_master,omitempty"`
 	// ⚠️ 没有 allow_follow_latest:见 MarketListingDetail —— 这件事归使用方,不归挂牌。
 	// 外部流程的**办理页地址**(付款 / 填资料)。静态配置,club 拼上 grant_uuid 给前端跳转。
 	//
 	// 为什么是静态的:商户不再同步返回 action_url 了(它是"来拉"的一方,不在申请这条链路上)。
 	// 一个商户的收款页本来就固定,每次 RPC 去要一遍是白跑。
-	ActionUrl string `protobuf:"bytes,12,opt,name=action_url,json=actionUrl,proto3" json:"action_url,omitempty"`
+	ActionUrl *string `protobuf:"bytes,12,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"`
 	// 挂牌类型。**只有平台那个 did 能设 OFFICIAL / BUILTIN**,别人传了直接拒。
 	// BUILTIN 会被强制成免费 / 永久 / 免审(见 MarketListingKind) ——
 	// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
-	Kind          MarketListingKind `protobuf:"varint,13,opt,name=kind,proto3,enum=hi.club.MarketListingKind" json:"kind,omitempty"`
+	Kind          *MarketListingKind `protobuf:"varint,13,opt,name=kind,proto3,enum=hi.club.MarketListingKind,oneof" json:"kind,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1711,43 +1711,43 @@ func (*CreateListingReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateListingReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *CreateListingReq) GetPluginUuid() string {
-	if x != nil {
-		return x.PluginUuid
+	if x != nil && x.PluginUuid != nil {
+		return *x.PluginUuid
 	}
 	return ""
 }
 
 func (x *CreateListingReq) GetSettleMode() SettleMode {
-	if x != nil {
-		return x.SettleMode
+	if x != nil && x.SettleMode != nil {
+		return *x.SettleMode
 	}
 	return SettleMode_SETTLE_MODE_UNSPECIFIED
 }
 
 func (x *CreateListingReq) GetPrice() string {
-	if x != nil {
-		return x.Price
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return ""
 }
 
 func (x *CreateListingReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *CreateListingReq) GetDuration() int64 {
-	if x != nil {
-		return x.Duration
+	if x != nil && x.Duration != nil {
+		return *x.Duration
 	}
 	return 0
 }
@@ -1760,22 +1760,22 @@ func (x *CreateListingReq) GetTags() []string {
 }
 
 func (x *CreateListingReq) GetPayeeToMaster() bool {
-	if x != nil {
-		return x.PayeeToMaster
+	if x != nil && x.PayeeToMaster != nil {
+		return *x.PayeeToMaster
 	}
 	return false
 }
 
 func (x *CreateListingReq) GetActionUrl() string {
-	if x != nil {
-		return x.ActionUrl
+	if x != nil && x.ActionUrl != nil {
+		return *x.ActionUrl
 	}
 	return ""
 }
 
 func (x *CreateListingReq) GetKind() MarketListingKind {
-	if x != nil {
-		return x.Kind
+	if x != nil && x.Kind != nil {
+		return *x.Kind
 	}
 	return MarketListingKind_MARKET_LISTING_KIND_UNSPECIFIED
 }
@@ -1787,7 +1787,7 @@ func (x *CreateListingReq) GetKind() MarketListingKind {
 //	重新挂牌复用同一行),该字段在首次 LISTED 之后禁止 UPDATE。否则"下架再上架"就绕过去了。
 type EditListingReq struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
-	Uuid     string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Uuid     *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	Price    *string                `protobuf:"bytes,2,opt,name=price,proto3,oneof" json:"price,omitempty"`
 	Coin     *string                `protobuf:"bytes,3,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	Duration *int64                 `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
@@ -1830,8 +1830,8 @@ func (*EditListingReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *EditListingReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
@@ -1880,8 +1880,8 @@ func (x *EditListingReq) GetActionUrl() string {
 
 type SetListingStatusReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Status        ListingStatus          `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.ListingStatus" json:"status,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Status        *ListingStatus         `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.ListingStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1917,22 +1917,22 @@ func (*SetListingStatusReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetListingStatusReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *SetListingStatusReq) GetStatus() ListingStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ListingStatus_LISTING_STATUS_UNSPECIFIED
 }
 
 type ListMyListingsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"` // 可选:只看这台机器人的
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 可选:只看这台机器人的
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1969,8 +1969,8 @@ func (*ListMyListingsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListMyListingsReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
@@ -1984,7 +1984,7 @@ func (x *ListMyListingsReq) GetPagination() *hi.Pagination {
 
 type ListMyListingsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*MarketListingDetail `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"` // Detail=PUBLIC,放进 SELF 壳合法
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2021,8 +2021,8 @@ func (*ListMyListingsResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListMyListingsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -2036,7 +2036,7 @@ func (x *ListMyListingsResp) GetList() []*MarketListingDetail {
 
 type CreateListingResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2072,8 +2072,8 @@ func (*CreateListingResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateListingResp) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
@@ -2092,8 +2092,8 @@ func (x *CreateListingResp) GetUuid() string {
 //	反过来现在写成 user-only 的形状,将来就是破坏性改动。
 type ApplyReq struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	ListingUuid string                 `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"`
-	ToAgent     string                 `protobuf:"bytes,2,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"` // 装到哪台机器人上
+	ListingUuid *string                `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3,oneof" json:"listing_uuid,omitempty"`
+	ToAgent     *string                `protobuf:"bytes,2,opt,name=to_agent,json=toAgent,proto3,oneof" json:"to_agent,omitempty"` // 装到哪台机器人上
 	// ⚠️ 没有 follow_latest:买完之后在"机器人 → 插件"那一行上自己开关(hi.ai 的 c.follow_latest)。
 	Params        *structpb.Struct `protobuf:"bytes,4,opt,name=params,proto3" json:"params,omitempty"` // 外部流程要的额外参数,原样转给商户后台
 	unknownFields protoimpl.UnknownFields
@@ -2131,15 +2131,15 @@ func (*ApplyReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ApplyReq) GetListingUuid() string {
-	if x != nil {
-		return x.ListingUuid
+	if x != nil && x.ListingUuid != nil {
+		return *x.ListingUuid
 	}
 	return ""
 }
 
 func (x *ApplyReq) GetToAgent() string {
-	if x != nil {
-		return x.ToAgent
+	if x != nil && x.ToAgent != nil {
+		return *x.ToAgent
 	}
 	return ""
 }
@@ -2155,14 +2155,14 @@ type MarketPayment struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 付款凭据号。**对外给出去的是它,不是主订单号** ——
 	// 付款方唤起 hidid 时带的、回调里回来的、人工查账时客人报的,都是这个号。
-	PayId     string              `protobuf:"bytes,1,opt,name=pay_id,json=payId,proto3" json:"pay_id,omitempty"`
-	OrderId   string              `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"` // 属于哪张业务单
-	Status    MarketPaymentStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.club.MarketPaymentStatus" json:"status,omitempty"`
-	TxHash    string              `protobuf:"bytes,4,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`        // 认走它的那笔转账
-	ExpireAt  int64               `protobuf:"varint,5,opt,name=expire_at,json=expireAt,proto3" json:"expire_at,omitempty"` // 这张凭据的有效期(秒)
-	CreatedAt int64               `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	PayId     *string              `protobuf:"bytes,1,opt,name=pay_id,json=payId,proto3,oneof" json:"pay_id,omitempty"`
+	OrderId   *string              `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"` // 属于哪张业务单
+	Status    *MarketPaymentStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.club.MarketPaymentStatus,oneof" json:"status,omitempty"`
+	TxHash    *string              `protobuf:"bytes,4,opt,name=tx_hash,json=txHash,proto3,oneof" json:"tx_hash,omitempty"`        // 认走它的那笔转账
+	ExpireAt  *int64               `protobuf:"varint,5,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"` // 这张凭据的有效期(秒)
+	CreatedAt *int64               `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	// 作废/失效的原因。不可推导,而它是人工查账退款的依据。
-	Reason string `protobuf:"bytes,7,opt,name=reason,proto3" json:"reason,omitempty"`
+	Reason *string `protobuf:"bytes,7,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
 	// ── 交易记录用的四样 ────────────────────────────────────────────────
 	//
 	// payer:**真的把钱付出去的那个人**,认款时才落 —— 付款之前这一栏就是空的,
@@ -2183,19 +2183,19 @@ type MarketPayment struct {
 	//
 	// 两个都不在这张表上另存一份:payee/amount/coin 在订单上不可变,
 	// 读的时候 join 出来即可,存两份只会给自己留一个会漂的口子。
-	Payer  string `protobuf:"bytes,8,opt,name=payer,proto3" json:"payer,omitempty"`
-	Payee  string `protobuf:"bytes,9,opt,name=payee,proto3" json:"payee,omitempty"`
-	Amount string `protobuf:"bytes,10,opt,name=amount,proto3" json:"amount,omitempty"`
-	Coin   string `protobuf:"bytes,11,opt,name=coin,proto3" json:"coin,omitempty"`
+	Payer  *string `protobuf:"bytes,8,opt,name=payer,proto3,oneof" json:"payer,omitempty"`
+	Payee  *string `protobuf:"bytes,9,opt,name=payee,proto3,oneof" json:"payee,omitempty"`
+	Amount *string `protobuf:"bytes,10,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
+	Coin   *string `protobuf:"bytes,11,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	// **这一笔打到哪个账户**。与 payee(收款人)分开:见上面那段。
 	// 它是**落库的快照**,不是 join 出来的 —— 因为 server 可以被改,而这一笔的目标不能变。
-	ToAccount string `protobuf:"bytes,12,opt,name=to_account,json=toAccount,proto3" json:"to_account,omitempty"`
+	ToAccount *string `protobuf:"bytes,12,opt,name=to_account,json=toAccount,proto3,oneof" json:"to_account,omitempty"`
 	// **二维码里装的就是这个号**(hidid 的 `M` 号,见 hi.did.PayRequest)。
 	//
 	// 扫码方按它去 hidid 取要素(收款账号/币种/金额/业务单号),**改不了** ——
 	// 所以码里不需要金额和地址,被替换也只会"查不到这个号"。
-	// 空 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
-	PayReqId      string `protobuf:"bytes,13,opt,name=pay_req_id,json=payReqId,proto3" json:"pay_req_id,omitempty"`
+	// 不传 = 这张凭据还没登记(登记失败不该让开单失败,页面上重开一张即可)。
+	PayReqId      *string `protobuf:"bytes,13,opt,name=pay_req_id,json=payReqId,proto3,oneof" json:"pay_req_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2231,92 +2231,92 @@ func (*MarketPayment) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketPayment) GetPayId() string {
-	if x != nil {
-		return x.PayId
+	if x != nil && x.PayId != nil {
+		return *x.PayId
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetOrderId() string {
-	if x != nil {
-		return x.OrderId
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetStatus() MarketPaymentStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return MarketPaymentStatus_MARKET_PAYMENT_STATUS_PENDING
 }
 
 func (x *MarketPayment) GetTxHash() string {
-	if x != nil {
-		return x.TxHash
+	if x != nil && x.TxHash != nil {
+		return *x.TxHash
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetExpireAt() int64 {
-	if x != nil {
-		return x.ExpireAt
+	if x != nil && x.ExpireAt != nil {
+		return *x.ExpireAt
 	}
 	return 0
 }
 
 func (x *MarketPayment) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
 
 func (x *MarketPayment) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetPayer() string {
-	if x != nil {
-		return x.Payer
+	if x != nil && x.Payer != nil {
+		return *x.Payer
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetPayee() string {
-	if x != nil {
-		return x.Payee
+	if x != nil && x.Payee != nil {
+		return *x.Payee
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetToAccount() string {
-	if x != nil {
-		return x.ToAccount
+	if x != nil && x.ToAccount != nil {
+		return *x.ToAccount
 	}
 	return ""
 }
 
 func (x *MarketPayment) GetPayReqId() string {
-	if x != nil {
-		return x.PayReqId
+	if x != nil && x.PayReqId != nil {
+		return *x.PayReqId
 	}
 	return ""
 }
@@ -2328,7 +2328,7 @@ func (x *MarketPayment) GetPayReqId() string {
 // 这样就不需要再为"谁能看哪张单"编一套额外的可见性规则。
 type ListTransactionsReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 看谁的。**空 = 我 + 我当前名下的全部机器人**(默认就该是全景:收款人是摊主,
+	// 看谁的。**不传 = 我 + 我当前名下的全部机器人**(默认就该是全景:收款人是摊主,
 	// 只看用户自己的 did 会把卖出收入整片漏掉,而且不报错);填了则**必须是我的仆从机器人**,
 	// 只看那一台。
 	//
@@ -2393,7 +2393,7 @@ type ListTransactionsResp struct {
 	// 而 club 的 repo 在 `limit > 100` 时**悄悄回落到 20**,于是页面上少行、不报错。
 	// 这是 2026-08-26 前端接分页时补的:市场里其它列表(ListMyListings /
 	// ListGrants / SearchListings / ListSellers)一直都有,只有这个漏了。
-	Total         int32 `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2436,8 +2436,8 @@ func (x *ListTransactionsResp) GetList() []*MarketPayment {
 }
 
 func (x *ListTransactionsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -2449,7 +2449,7 @@ func (x *ListTransactionsResp) GetTotal() int32 {
 // 把范围交给了它 —— 而范围正是这个接口唯一在守的东西。
 type GetTransactionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PayId         string                 `protobuf:"bytes,1,opt,name=pay_id,json=payId,proto3" json:"pay_id,omitempty"`
+	PayId         *string                `protobuf:"bytes,1,opt,name=pay_id,json=payId,proto3,oneof" json:"pay_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2485,19 +2485,19 @@ func (*GetTransactionReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetTransactionReq) GetPayId() string {
-	if x != nil {
-		return x.PayId
+	if x != nil && x.PayId != nil {
+		return *x.PayId
 	}
 	return ""
 }
 
 type MarketOrder struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	OrderId     string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`             // 付款回报时的唯一凭据
-	GrantUuid   string                 `protobuf:"bytes,2,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`       // 履行到哪笔授权上
-	TargetAgent string                 `protobuf:"bytes,3,opt,name=target_agent,json=targetAgent,proto3" json:"target_agent,omitempty"` // 给**哪台机器人**
-	Kind        MarketOrderKind        `protobuf:"varint,4,opt,name=kind,proto3,enum=hi.club.MarketOrderKind" json:"kind,omitempty"`
-	Status      MarketOrderStatus      `protobuf:"varint,5,opt,name=status,proto3,enum=hi.club.MarketOrderStatus" json:"status,omitempty"`
+	OrderId     *string                `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`             // 付款回报时的唯一凭据
+	GrantUuid   *string                `protobuf:"bytes,2,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`       // 履行到哪笔授权上
+	TargetAgent *string                `protobuf:"bytes,3,opt,name=target_agent,json=targetAgent,proto3,oneof" json:"target_agent,omitempty"` // 给**哪台机器人**
+	Kind        *MarketOrderKind       `protobuf:"varint,4,opt,name=kind,proto3,enum=hi.club.MarketOrderKind,oneof" json:"kind,omitempty"`
+	Status      *MarketOrderStatus     `protobuf:"varint,5,opt,name=status,proto3,enum=hi.club.MarketOrderStatus,oneof" json:"status,omitempty"`
 	// ⭐ **收款人与收款账号是两件事,各记一行** —— 去银行存钱要姓名也要账号,缺一不可。
 	//
 	//	payee         = **谁在收款**(交易者):**恒等于摊主**(出让方机器人)。
@@ -2519,18 +2519,18 @@ type MarketOrder struct {
 	// ⚠️ `payee_account` 在**开单那一刻解析并写死**(与价格/时长同批快照):
 	//
 	//	卖家之后改 server,旧单不能跟着飘。
-	Payee        string `protobuf:"bytes,6,opt,name=payee,proto3" json:"payee,omitempty"`
-	PayeeAccount string `protobuf:"bytes,13,opt,name=payee_account,json=payeeAccount,proto3" json:"payee_account,omitempty"`
+	Payee        *string `protobuf:"bytes,6,opt,name=payee,proto3,oneof" json:"payee,omitempty"`
+	PayeeAccount *string `protobuf:"bytes,13,opt,name=payee_account,json=payeeAccount,proto3,oneof" json:"payee_account,omitempty"`
 	// 付款人(买家)。**只记账,不作判据** —— 市场认款从来不看谁掏的钱,
 	// 判据是"这张单要的钱到账了没有"。记它是为了让当事人查得到自己的交易。
 	//
 	// 没有 payer_account:判据不看付款侧,加一个没人读的列只会让人以为它是判据。
-	Payer  string `protobuf:"bytes,14,opt,name=payer,proto3" json:"payer,omitempty"`
-	Amount string `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
-	Coin   string `protobuf:"bytes,8,opt,name=coin,proto3" json:"coin,omitempty"`
+	Payer  *string `protobuf:"bytes,14,opt,name=payer,proto3,oneof" json:"payer,omitempty"`
+	Amount *string `protobuf:"bytes,7,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
+	Coin   *string `protobuf:"bytes,8,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	// ⚠️ **没有 expire_at** —— 有效期挪到**付款凭据**上了(MarketPayment.expire_at)。
 	// 业务单不过期:凭据超时只是那一次付款作废,这台机器人要续期这件事还在。
-	CreatedAt int64 `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *int64 `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	// 把付款结果**报给哪个商户** —— 即图示里唤起 hidid 时要带的「商户DID」。
 	//
 	// 付款方(hidid app / 机器人里的 hidid 模块)付完款调 `hi.did.Pay.Notify`,
@@ -2541,7 +2541,7 @@ type MarketOrder struct {
 	// ⚠️ 由订单带出来,**不让机器人硬编码**:它随环境变(dev/prod 是两个商户),
 	//
 	//	写死在设备里就意味着换环境要刷全网机器人。
-	Merchant string `protobuf:"bytes,11,opt,name=merchant,proto3" json:"merchant,omitempty"`
+	Merchant *string `protobuf:"bytes,11,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"`
 	// **当前这张付款凭据**(没被接替、也没超时的那一张)。付款方要用的号在它里面。
 	// 历史凭据不在这里 —— 要看换号过程走 ListPayments。
 	Payment       *MarketPayment `protobuf:"bytes,12,opt,name=payment,proto3" json:"payment,omitempty"`
@@ -2580,85 +2580,85 @@ func (*MarketOrder) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketOrder) GetOrderId() string {
-	if x != nil {
-		return x.OrderId
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetTargetAgent() string {
-	if x != nil {
-		return x.TargetAgent
+	if x != nil && x.TargetAgent != nil {
+		return *x.TargetAgent
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetKind() MarketOrderKind {
-	if x != nil {
-		return x.Kind
+	if x != nil && x.Kind != nil {
+		return *x.Kind
 	}
 	return MarketOrderKind_MARKET_ORDER_KIND_PURCHASE
 }
 
 func (x *MarketOrder) GetStatus() MarketOrderStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return MarketOrderStatus_MARKET_ORDER_STATUS_OPEN
 }
 
 func (x *MarketOrder) GetPayee() string {
-	if x != nil {
-		return x.Payee
+	if x != nil && x.Payee != nil {
+		return *x.Payee
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetPayeeAccount() string {
-	if x != nil {
-		return x.PayeeAccount
+	if x != nil && x.PayeeAccount != nil {
+		return *x.PayeeAccount
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetPayer() string {
-	if x != nil {
-		return x.Payer
+	if x != nil && x.Payer != nil {
+		return *x.Payer
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *MarketOrder) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
 
 func (x *MarketOrder) GetMerchant() string {
-	if x != nil {
-		return x.Merchant
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
 	}
 	return ""
 }
@@ -2676,7 +2676,7 @@ func (x *MarketOrder) GetPayment() *MarketPayment {
 // 幂等:当前凭据还活着(未超时未认款)就原样返回它,不会开出一堆。
 type IssuePaymentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId       *string                `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2712,8 +2712,8 @@ func (*IssuePaymentReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *IssuePaymentReq) GetOrderId() string {
-	if x != nil {
-		return x.OrderId
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
 	}
 	return ""
 }
@@ -2722,7 +2722,7 @@ func (x *IssuePaymentReq) GetOrderId() string {
 // 人工查账退款看的就是这个列表 + 客人报的那个 pay_id。
 type ListPaymentsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId       *string                `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2758,8 +2758,8 @@ func (*ListPaymentsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListPaymentsReq) GetOrderId() string {
-	if x != nil {
-		return x.OrderId
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
 	}
 	return ""
 }
@@ -2814,7 +2814,7 @@ func (x *ListPaymentsResp) GetList() []*MarketPayment {
 // grant 决定了 target_agent —— 不接受入参指定,否则就成了"替别人的机器人开单"。
 type CreateRenewOrderReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid     string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
+	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2850,8 +2850,8 @@ func (*CreateRenewOrderReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateRenewOrderReq) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
@@ -2862,17 +2862,17 @@ type MarketPayInfo struct {
 	//
 	//	而付款方拿它**直接当转账目标**。现在收款人与收款账号分开了,叫 payee 会让人
 	//	不知道该拿哪个去付款 —— 所以换成下面两个名字,各自说清自己是什么。
-	Amount string `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
-	Coin   string `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
+	Amount *string `protobuf:"bytes,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 人类可读金额,如 "9.9"
+	Coin   *string `protobuf:"bytes,3,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	// **钱打到这个 did 的地址上** —— 结算实体(默认=收款人本人)。付款方只认它。
-	PayeeAccount string `protobuf:"bytes,4,opt,name=payee_account,json=payeeAccount,proto3" json:"payee_account,omitempty"`
+	PayeeAccount *string `protobuf:"bytes,4,opt,name=payee_account,json=payeeAccount,proto3,oneof" json:"payee_account,omitempty"`
 	// **显示给用户看"你在付给谁"** —— 收款人,即**摊主本人**(出让方机器人)。
 	// 跳蚤市场下用户是把钱付给一个陌生的机器人,看不清收款人就不该让他按确认。
 	//
 	// ⚠️ 与 `payee_account` 常常**不是同一个 did**(软件机器人的钱落在它主人账户上),
 	//
 	//	这正是两个字段分开的理由:付款方按 account 转账,界面按 owner 显示。
-	PayeeOwner    string `protobuf:"bytes,5,opt,name=payee_owner,json=payeeOwner,proto3" json:"payee_owner,omitempty"`
+	PayeeOwner    *string `protobuf:"bytes,5,opt,name=payee_owner,json=payeeOwner,proto3,oneof" json:"payee_owner,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2908,29 +2908,29 @@ func (*MarketPayInfo) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketPayInfo) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *MarketPayInfo) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *MarketPayInfo) GetPayeeAccount() string {
-	if x != nil {
-		return x.PayeeAccount
+	if x != nil && x.PayeeAccount != nil {
+		return *x.PayeeAccount
 	}
 	return ""
 }
 
 func (x *MarketPayInfo) GetPayeeOwner() string {
-	if x != nil {
-		return x.PayeeOwner
+	if x != nil && x.PayeeOwner != nil {
+		return *x.PayeeOwner
 	}
 	return ""
 }
@@ -2939,13 +2939,13 @@ func (x *MarketPayInfo) GetPayeeOwner() string {
 //
 //	status=INSTALLED → 免费/已批,直接就能用了
 //	status=PENDING + pay 非空       → 去付款(唤起 hidid app)
-//	status=PENDING + action_url 非空 → 去外部流程办理(EXTERNAL)
+//	status=PENDING + action_url 有值 → 去外部流程办理(EXTERNAL)
 //	status=PENDING 且两者都空        → 等出让方 master 审批(APPROVAL)
 type ApplyResp struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	Status    GrantStatus            `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.GrantStatus" json:"status,omitempty"`
-	ActionUrl string                 `protobuf:"bytes,3,opt,name=action_url,json=actionUrl,proto3" json:"action_url,omitempty"`
+	GrantUuid *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	Status    *GrantStatus           `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.GrantStatus,oneof" json:"status,omitempty"`
+	ActionUrl *string                `protobuf:"bytes,3,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"`
 	Pay       *MarketPayInfo         `protobuf:"bytes,4,opt,name=pay,proto3" json:"pay,omitempty"`
 	// 付费购买时顺带开出的账单。付款方拿它去付,再用 Market.ReportPayment 认领。
 	// **pay 是它的摘要**(收款方/金额/币种),留着是因为前端唤起 hidid app 只要这三样;
@@ -2986,22 +2986,22 @@ func (*ApplyResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ApplyResp) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *ApplyResp) GetStatus() GrantStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return GrantStatus_GRANT_STATUS_UNSPECIFIED
 }
 
 func (x *ApplyResp) GetActionUrl() string {
-	if x != nil {
-		return x.ActionUrl
+	if x != nil && x.ActionUrl != nil {
+		return *x.ActionUrl
 	}
 	return ""
 }
@@ -3022,8 +3022,8 @@ func (x *ApplyResp) GetOrder() *MarketOrder {
 
 type DecideGrantReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid     string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"` // 拒绝/撤销原因,给人看的
+	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	Reason        *string                `protobuf:"bytes,2,opt,name=reason,proto3,oneof" json:"reason,omitempty"` // 拒绝/撤销原因,给人看的
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3059,15 +3059,15 @@ func (*DecideGrantReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DecideGrantReq) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *DecideGrantReq) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
@@ -3077,9 +3077,9 @@ func (x *DecideGrantReq) GetReason() string {
 // 而两者的下一步动作也不同(前者续费/切版本,后者同意/拒绝)。
 type ListGrantsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        GrantStatus            `protobuf:"varint,1,opt,name=status,proto3,enum=hi.club.GrantStatus" json:"status,omitempty"` // 可选:按状态筛
+	Status        *GrantStatus           `protobuf:"varint,1,opt,name=status,proto3,enum=hi.club.GrantStatus,oneof" json:"status,omitempty"` // 可选:按状态筛
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	Initiator     GrantInitiator         `protobuf:"varint,3,opt,name=initiator,proto3,enum=hi.club.GrantInitiator" json:"initiator,omitempty"` // 可选:按"谁开的口"筛。传 OFFER 就是"收到的分享"那张表
+	Initiator     *GrantInitiator        `protobuf:"varint,3,opt,name=initiator,proto3,enum=hi.club.GrantInitiator,oneof" json:"initiator,omitempty"` // 可选:按"谁开的口"筛。传 OFFER 就是"收到的分享"那张表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3115,8 +3115,8 @@ func (*ListGrantsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListGrantsReq) GetStatus() GrantStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return GrantStatus_GRANT_STATUS_UNSPECIFIED
 }
@@ -3129,15 +3129,15 @@ func (x *ListGrantsReq) GetPagination() *hi.Pagination {
 }
 
 func (x *ListGrantsReq) GetInitiator() GrantInitiator {
-	if x != nil {
-		return x.Initiator
+	if x != nil && x.Initiator != nil {
+		return *x.Initiator
 	}
 	return GrantInitiator_GRANT_INITIATOR_UNSPECIFIED
 }
 
 type ListGrantsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*MarketGrantView     `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3174,8 +3174,8 @@ func (*ListGrantsResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListGrantsResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -3202,8 +3202,8 @@ func (x *ListGrantsResp) GetList() []*MarketGrantView {
 // 用户在 hiclub 里随手开关;真正执行续费的是机器人自己(见 plugin-grant-expiring 通知)。
 type SetAutoRenewReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid     string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	Enabled       bool                   `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	Enabled       *bool                  `protobuf:"varint,2,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3239,15 +3239,15 @@ func (*SetAutoRenewReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *SetAutoRenewReq) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *SetAutoRenewReq) GetEnabled() bool {
-	if x != nil {
-		return x.Enabled
+	if x != nil && x.Enabled != nil {
+		return *x.Enabled
 	}
 	return false
 }
@@ -3271,8 +3271,8 @@ func (x *SetAutoRenewReq) GetEnabled() bool {
 // grant 上记 initiator=OFFER 与买来的区分开,否则对账时看不出这份为什么没付款。
 type OfferReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ListingUuid   string                 `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"` // 分享哪个挂牌(HIDDEN 也行:不公开、只定向送)
-	ToAgent       string                 `protobuf:"bytes,2,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"`             // 送给哪台机器人
+	ListingUuid   *string                `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3,oneof" json:"listing_uuid,omitempty"` // 分享哪个挂牌(HIDDEN 也行:不公开、只定向送)
+	ToAgent       *string                `protobuf:"bytes,2,opt,name=to_agent,json=toAgent,proto3,oneof" json:"to_agent,omitempty"`             // 送给哪台机器人
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3308,26 +3308,26 @@ func (*OfferReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *OfferReq) GetListingUuid() string {
-	if x != nil {
-		return x.ListingUuid
+	if x != nil && x.ListingUuid != nil {
+		return *x.ListingUuid
 	}
 	return ""
 }
 
 func (x *OfferReq) GetToAgent() string {
-	if x != nil {
-		return x.ToAgent
+	if x != nil && x.ToAgent != nil {
+		return *x.ToAgent
 	}
 	return ""
 }
 
 type OfferResp struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
+	GrantUuid *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
 	// 送给**自己名下**的机器人 → 不需要谁同意,直接 INSTALLED;
 	// 送给别人的 → PENDING(等对方 master);对方无主 → REJECTED(reason 里写明)。
-	Status        GrantStatus `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.GrantStatus" json:"status,omitempty"`
-	Reason        string      `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
+	Status        *GrantStatus `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.GrantStatus,oneof" json:"status,omitempty"`
+	Reason        *string      `protobuf:"bytes,3,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3363,22 +3363,22 @@ func (*OfferResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *OfferResp) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *OfferResp) GetStatus() GrantStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return GrantStatus_GRANT_STATUS_UNSPECIFIED
 }
 
 func (x *OfferResp) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
@@ -3388,8 +3388,8 @@ func (x *OfferResp) GetReason() string {
 // 复用会让"这个接口该校验哪一侧"变成一件要靠记忆的事)。
 type DecideOfferReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid     string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"` // 拒绝理由(可空);接受时忽略
+	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	Reason        *string                `protobuf:"bytes,2,opt,name=reason,proto3,oneof" json:"reason,omitempty"` // 拒绝理由(可不传);接受时忽略
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3425,23 +3425,23 @@ func (*DecideOfferReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *DecideOfferReq) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *DecideOfferReq) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
 
 type MarketManageListListingsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`                               // 可选:按机器人筛
-	Status        ListingStatus          `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.ListingStatus" json:"status,omitempty"` // 可选:按状态筛
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`                               // 可选:按机器人筛
+	Status        *ListingStatus         `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.ListingStatus,oneof" json:"status,omitempty"` // 可选:按状态筛
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3478,15 +3478,15 @@ func (*MarketManageListListingsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketManageListListingsReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *MarketManageListListingsReq) GetStatus() ListingStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ListingStatus_LISTING_STATUS_UNSPECIFIED
 }
@@ -3500,8 +3500,8 @@ func (x *MarketManageListListingsReq) GetPagination() *hi.Pagination {
 
 type MarketManageListGrantsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ListingUuid   string                 `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"`
-	Status        GrantStatus            `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.GrantStatus" json:"status,omitempty"`
+	ListingUuid   *string                `protobuf:"bytes,1,opt,name=listing_uuid,json=listingUuid,proto3,oneof" json:"listing_uuid,omitempty"`
+	Status        *GrantStatus           `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.GrantStatus,oneof" json:"status,omitempty"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3538,15 +3538,15 @@ func (*MarketManageListGrantsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketManageListGrantsReq) GetListingUuid() string {
-	if x != nil {
-		return x.ListingUuid
+	if x != nil && x.ListingUuid != nil {
+		return *x.ListingUuid
 	}
 	return ""
 }
 
 func (x *MarketManageListGrantsReq) GetStatus() GrantStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return GrantStatus_GRANT_STATUS_UNSPECIFIED
 }
@@ -3560,8 +3560,8 @@ func (x *MarketManageListGrantsReq) GetPagination() *hi.Pagination {
 
 type ForceDelistReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Reason        *string                `protobuf:"bytes,2,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3597,15 +3597,15 @@ func (*ForceDelistReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ForceDelistReq) GetUuid() string {
-	if x != nil {
-		return x.Uuid
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
 	}
 	return ""
 }
 
 func (x *ForceDelistReq) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
@@ -3618,8 +3618,8 @@ func (x *ForceDelistReq) GetReason() string {
 // 字段不存在,"替别人拉单"在类型上就说不出来(同 MasterBindReq 删 master 那次)。
 type MarketPullData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Nonce         string                 `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Nonce         *string                `protobuf:"bytes,1,opt,name=nonce,proto3,oneof" json:"nonce,omitempty"`
+	Timestamp     *int64                 `protobuf:"varint,2,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3655,15 +3655,15 @@ func (*MarketPullData) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketPullData) GetNonce() string {
-	if x != nil {
-		return x.Nonce
+	if x != nil && x.Nonce != nil {
+		return *x.Nonce
 	}
 	return ""
 }
 
 func (x *MarketPullData) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
@@ -3672,22 +3672,22 @@ func (x *MarketPullData) GetTimestamp() int64 {
 // 只给它做业务决策(收款 / 审资质 / 纳私域)真正需要的那些。
 type MarketPendingGrant struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid   string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	ListingUuid string                 `protobuf:"bytes,2,opt,name=listing_uuid,json=listingUuid,proto3" json:"listing_uuid,omitempty"`
-	PluginUuid  string                 `protobuf:"bytes,3,opt,name=plugin_uuid,json=pluginUuid,proto3" json:"plugin_uuid,omitempty"`
-	Title       string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
-	ToAgent     string                 `protobuf:"bytes,5,opt,name=to_agent,json=toAgent,proto3" json:"to_agent,omitempty"` // 受让方机器人 did
+	GrantUuid   *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	ListingUuid *string                `protobuf:"bytes,2,opt,name=listing_uuid,json=listingUuid,proto3,oneof" json:"listing_uuid,omitempty"`
+	PluginUuid  *string                `protobuf:"bytes,3,opt,name=plugin_uuid,json=pluginUuid,proto3,oneof" json:"plugin_uuid,omitempty"`
+	Title       *string                `protobuf:"bytes,4,opt,name=title,proto3,oneof" json:"title,omitempty"`
+	ToAgent     *string                `protobuf:"bytes,5,opt,name=to_agent,json=toAgent,proto3,oneof" json:"to_agent,omitempty"` // 受让方机器人 did
 	// 购买者 did ← 商户据此调 hi.did.Merchant.AddUsers 把他纳入自己的私域。
 	// ⚠️ 那一步**由商户自己做,不是 club 代做**:AddUsers 的主体由 ExtendToken 解出
 	//
 	//	"加到自己名下",club 手里只有 club 自己的商户凭证,代调只会加到 club 名下。
-	ToMaster      string           `protobuf:"bytes,6,opt,name=to_master,json=toMaster,proto3" json:"to_master,omitempty"`
-	SettleMode    SettleMode       `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode" json:"settle_mode,omitempty"`
-	Price         string           `protobuf:"bytes,8,opt,name=price,proto3" json:"price,omitempty"`
-	Coin          string           `protobuf:"bytes,9,opt,name=coin,proto3" json:"coin,omitempty"`
-	Duration      int64            `protobuf:"varint,10,opt,name=duration,proto3" json:"duration,omitempty"`
+	ToMaster      *string          `protobuf:"bytes,6,opt,name=to_master,json=toMaster,proto3,oneof" json:"to_master,omitempty"`
+	SettleMode    *SettleMode      `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"`
+	Price         *string          `protobuf:"bytes,8,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	Coin          *string          `protobuf:"bytes,9,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Duration      *int64           `protobuf:"varint,10,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
 	Params        *structpb.Struct `protobuf:"bytes,11,opt,name=params,proto3" json:"params,omitempty"` // 申请方填的额外参数
-	CreatedAt     int64            `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt     *int64           `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3723,71 +3723,71 @@ func (*MarketPendingGrant) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketPendingGrant) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetListingUuid() string {
-	if x != nil {
-		return x.ListingUuid
+	if x != nil && x.ListingUuid != nil {
+		return *x.ListingUuid
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetPluginUuid() string {
-	if x != nil {
-		return x.PluginUuid
+	if x != nil && x.PluginUuid != nil {
+		return *x.PluginUuid
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetTitle() string {
-	if x != nil {
-		return x.Title
+	if x != nil && x.Title != nil {
+		return *x.Title
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetToAgent() string {
-	if x != nil {
-		return x.ToAgent
+	if x != nil && x.ToAgent != nil {
+		return *x.ToAgent
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetToMaster() string {
-	if x != nil {
-		return x.ToMaster
+	if x != nil && x.ToMaster != nil {
+		return *x.ToMaster
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetSettleMode() SettleMode {
-	if x != nil {
-		return x.SettleMode
+	if x != nil && x.SettleMode != nil {
+		return *x.SettleMode
 	}
 	return SettleMode_SETTLE_MODE_UNSPECIFIED
 }
 
 func (x *MarketPendingGrant) GetPrice() string {
-	if x != nil {
-		return x.Price
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
 
 func (x *MarketPendingGrant) GetDuration() int64 {
-	if x != nil {
-		return x.Duration
+	if x != nil && x.Duration != nil {
+		return *x.Duration
 	}
 	return 0
 }
@@ -3800,8 +3800,8 @@ func (x *MarketPendingGrant) GetParams() *structpb.Struct {
 }
 
 func (x *MarketPendingGrant) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
@@ -3856,13 +3856,13 @@ func (x *MarketPullResp) GetList() []*MarketPendingGrant {
 //	(同 `PullOrdersData` / `ReportResultsData` 的先例)。
 type MarketNotifyData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GrantUuid     string                 `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3" json:"grant_uuid,omitempty"`
-	OuterId       string                 `protobuf:"bytes,2,opt,name=outer_id,json=outerId,proto3" json:"outer_id,omitempty"` // 商户侧单号
-	Result        string                 `protobuf:"bytes,3,opt,name=result,proto3" json:"result,omitempty"`                  // approved / rejected
-	Reason        string                 `protobuf:"bytes,4,opt,name=reason,proto3" json:"reason,omitempty"`
+	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
+	OuterId       *string                `protobuf:"bytes,2,opt,name=outer_id,json=outerId,proto3,oneof" json:"outer_id,omitempty"` // 商户侧单号
+	Result        *string                `protobuf:"bytes,3,opt,name=result,proto3,oneof" json:"result,omitempty"`                  // approved / rejected
+	Reason        *string                `protobuf:"bytes,4,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
 	TermsOverride *structpb.Struct       `protobuf:"bytes,5,opt,name=terms_override,json=termsOverride,proto3" json:"terms_override,omitempty"` // 可选:商户回填实际生效条款(实付金额 / 有效期)
-	Nonce         string                 `protobuf:"bytes,6,opt,name=nonce,proto3" json:"nonce,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,7,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Nonce         *string                `protobuf:"bytes,6,opt,name=nonce,proto3,oneof" json:"nonce,omitempty"`
+	Timestamp     *int64                 `protobuf:"varint,7,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3898,29 +3898,29 @@ func (*MarketNotifyData) Descriptor() ([]byte, []int) {
 }
 
 func (x *MarketNotifyData) GetGrantUuid() string {
-	if x != nil {
-		return x.GrantUuid
+	if x != nil && x.GrantUuid != nil {
+		return *x.GrantUuid
 	}
 	return ""
 }
 
 func (x *MarketNotifyData) GetOuterId() string {
-	if x != nil {
-		return x.OuterId
+	if x != nil && x.OuterId != nil {
+		return *x.OuterId
 	}
 	return ""
 }
 
 func (x *MarketNotifyData) GetResult() string {
-	if x != nil {
-		return x.Result
+	if x != nil && x.Result != nil {
+		return *x.Result
 	}
 	return ""
 }
 
 func (x *MarketNotifyData) GetReason() string {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return ""
 }
@@ -3933,15 +3933,15 @@ func (x *MarketNotifyData) GetTermsOverride() *structpb.Struct {
 }
 
 func (x *MarketNotifyData) GetNonce() string {
-	if x != nil {
-		return x.Nonce
+	if x != nil && x.Nonce != nil {
+		return *x.Nonce
 	}
 	return ""
 }
 
 func (x *MarketNotifyData) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
@@ -3950,305 +3950,463 @@ var File_hi_club_market_proto protoreflect.FileDescriptor
 
 const file_hi_club_market_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/market.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xc1\x03\n" +
-	"\x12MarketListingBrief\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x04uuid\x12&\n" +
+	"\x14hi/club/market.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xe6\x04\n" +
+	"\x12MarketListingBrief\x12\x1d\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04uuid\x88\x01\x01\x12&\n" +
 	"\x05agent\x18\x02 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x05agent\x12\x1a\n" +
-	"\x05title\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01R\x05title\x12\x1e\n" +
-	"\asummary\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01R\asummary\x12\x18\n" +
-	"\x04logo\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01R\x04logo\x12\x18\n" +
-	"\x04tags\x18\x06 \x03(\tB\x04\x90\xb5\x18\x01R\x04tags\x12:\n" +
-	"\vsettle_mode\x18\a \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x01R\n" +
-	"settleMode\x12\x1a\n" +
-	"\x05price\x18\b \x01(\tB\x04\x90\xb5\x18\x01R\x05price\x12\x18\n" +
-	"\x04coin\x18\t \x01(\tB\x04\x90\xb5\x18\x01R\x04coin\x12 \n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05agent\x12\x1f\n" +
+	"\x05title\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x05title\x88\x01\x01\x12#\n" +
+	"\asummary\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\asummary\x88\x01\x01\x12\x1d\n" +
+	"\x04logo\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x04logo\x88\x01\x01\x12\x18\n" +
+	"\x04tags\x18\x06 \x03(\tB\x04\x90\xb5\x18\x01R\x04tags\x12?\n" +
+	"\vsettle_mode\x18\a \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x01H\x04R\n" +
+	"settleMode\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\b \x01(\tB\x04\x90\xb5\x18\x01H\x05R\x05price\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\t \x01(\tB\x04\x90\xb5\x18\x01H\x06R\x04coin\x88\x01\x01\x12%\n" +
 	"\bduration\x18\n" +
-	" \x01(\x03B\x04\x90\xb5\x18\x01R\bduration\x12)\n" +
-	"\rinstall_count\x18\v \x01(\x05B\x04\x90\xb5\x18\x01R\finstallCount\x124\n" +
-	"\x04kind\x18\f \x01(\x0e2\x1a.hi.club.MarketListingKindB\x04\x90\xb5\x18\x01R\x04kind:\x04\x98\xb5\x18\x01\"\xfd\x01\n" +
-	"\x13MarketListingDetail\x127\n" +
-	"\x05brief\x18\x01 \x01(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x05brief\x12(\n" +
-	"\fcapabilities\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\fcapabilities\x12 \n" +
-	"\bversions\x18\x04 \x03(\tB\x04\x90\xb5\x18\x01R\bversions\x124\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x16.hi.club.ListingStatusB\x04\x90\xb5\x18\x01R\x06status\x12%\n" +
-	"\vplugin_uuid\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01R\n" +
-	"pluginUuid:\x04\x98\xb5\x18\x01\"\xd9\x02\n" +
-	"\x10MarketGrantBrief\x12#\n" +
+	" \x01(\x03B\x04\x90\xb5\x18\x01H\aR\bduration\x88\x01\x01\x12.\n" +
+	"\rinstall_count\x18\v \x01(\x05B\x04\x90\xb5\x18\x01H\bR\finstallCount\x88\x01\x01\x129\n" +
+	"\x04kind\x18\f \x01(\x0e2\x1a.hi.club.MarketListingKindB\x04\x90\xb5\x18\x01H\tR\x04kind\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_uuidB\b\n" +
+	"\x06_titleB\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\tgrantUuid\x12\x1a\n" +
-	"\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x05title\x12/\n" +
+	"\b_summaryB\a\n" +
+	"\x05_logoB\x0e\n" +
+	"\f_settle_modeB\b\n" +
+	"\x06_priceB\a\n" +
+	"\x05_coinB\v\n" +
+	"\t_durationB\x10\n" +
+	"\x0e_install_countB\a\n" +
+	"\x05_kind\"\xb8\x02\n" +
+	"\x13MarketListingDetail\x127\n" +
+	"\x05brief\x18\x01 \x01(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x05brief\x12-\n" +
+	"\fcapabilities\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\fcapabilities\x88\x01\x01\x12 \n" +
+	"\bversions\x18\x04 \x03(\tB\x04\x90\xb5\x18\x01R\bversions\x129\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x16.hi.club.ListingStatusB\x04\x90\xb5\x18\x01H\x01R\x06status\x88\x01\x01\x12*\n" +
+	"\vplugin_uuid\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\n" +
+	"pluginUuid\x88\x01\x01:\x04\x98\xb5\x18\x01B\x0f\n" +
+	"\r_capabilitiesB\t\n" +
+	"\a_statusB\x0e\n" +
+	"\f_plugin_uuid\"\xae\x03\n" +
+	"\x10MarketGrantBrief\x12(\n" +
+	"\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\tgrantUuid\x88\x01\x01\x12\x1f\n" +
+	"\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x05title\x88\x01\x01\x12/\n" +
 	"\n" +
 	"from_agent\x18\x03 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\tfromAgent\x12+\n" +
 	"\bto_agent\x18\x04 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\atoAgent\x12.\n" +
 	"\tapplicant\x18\x05 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\tapplicant\x12:\n" +
-	"\vsettle_mode\x18\x06 \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x02R\n" +
-	"settleMode\x12\x1a\n" +
-	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02R\x05price\x12\x18\n" +
-	"\x04coin\x18\b \x01(\tB\x04\x90\xb5\x18\x02R\x04coin:\x04\x98\xb5\x18\x02\"\xf5\x01\n" +
-	"\x10MarketRenewBrief\x12#\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\tapplicant\x12?\n" +
+	"\vsettle_mode\x18\x06 \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x02H\x02R\n" +
+	"settleMode\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x05price\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\x04R\x04coin\x88\x01\x01:\x04\x98\xb5\x18\x02B\r\n" +
+	"\v_grant_uuidB\b\n" +
+	"\x06_titleB\x0e\n" +
+	"\f_settle_modeB\b\n" +
+	"\x06_priceB\a\n" +
+	"\x05_coin\"\xec\x02\n" +
+	"\x10MarketRenewBrief\x12(\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02R\tgrantUuid\x12\x1a\n" +
-	"\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02R\x05title\x12\x1a\n" +
-	"\x05payee\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x05payee\x12\x1c\n" +
-	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02R\x06amount\x12\x18\n" +
-	"\x04coin\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02R\x04coin\x12!\n" +
-	"\texpire_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x02R\bexpireAt\x12#\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\tgrantUuid\x88\x01\x01\x12\x1f\n" +
+	"\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x05title\x88\x01\x01\x12\x1f\n" +
+	"\x05payee\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x05payee\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x06amount\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\x04coin\x88\x01\x01\x12&\n" +
+	"\texpire_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x02H\x05R\bexpireAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"auto_renew\x18\a \x01(\bB\x04\x90\xb5\x18\x02R\tautoRenew:\x04\x98\xb5\x18\x02\"\xac\x06\n" +
-	"\x0fMarketGrantView\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid\x12'\n" +
-	"\flisting_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vlistingUuid\x12\x1a\n" +
-	"\x05title\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x05title\x12/\n" +
+	"auto_renew\x18\a \x01(\bB\x04\x90\xb5\x18\x02H\x06R\tautoRenew\x88\x01\x01:\x04\x98\xb5\x18\x02B\r\n" +
+	"\v_grant_uuidB\b\n" +
+	"\x06_titleB\b\n" +
+	"\x06_payeeB\t\n" +
+	"\a_amountB\a\n" +
+	"\x05_coinB\f\n" +
+	"\n" +
+	"_expire_atB\r\n" +
+	"\v_auto_renew\"\xe3\b\n" +
+	"\x0fMarketGrantView\x12\x1d\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12,\n" +
+	"\flisting_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\vlistingUuid\x88\x01\x01\x12\x1f\n" +
+	"\x05title\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x05title\x88\x01\x01\x12/\n" +
 	"\n" +
 	"from_agent\x18\x04 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\tfromAgent\x12+\n" +
 	"\bto_agent\x18\x05 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\atoAgent\x12.\n" +
 	"\tapplicant\x18\x06 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\tapplicant\x122\n" +
-	"\x06status\x18\a \x01(\x0e2\x14.hi.club.GrantStatusB\x04\x90\xb5\x18\x03R\x06status\x12:\n" +
-	"\vsettle_mode\x18\b \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x03R\n" +
-	"settleMode\x12\x1a\n" +
-	"\x05price\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x05price\x12\x18\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\tapplicant\x127\n" +
+	"\x06status\x18\a \x01(\x0e2\x14.hi.club.GrantStatusB\x04\x90\xb5\x18\x03H\x03R\x06status\x88\x01\x01\x12?\n" +
+	"\vsettle_mode\x18\b \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x03H\x04R\n" +
+	"settleMode\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x05price\x88\x01\x01\x12\x1d\n" +
 	"\x04coin\x18\n" +
-	" \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12\x1e\n" +
-	"\aversion\x18\f \x01(\tB\x04\x90\xb5\x18\x03R\aversion\x12!\n" +
-	"\texpire_at\x18\r \x01(\x03B\x04\x90\xb5\x18\x03R\bexpireAt\x12#\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x04coin\x88\x01\x01\x12#\n" +
+	"\aversion\x18\f \x01(\tB\x04\x90\xb5\x18\x03H\aR\aversion\x88\x01\x01\x12&\n" +
+	"\texpire_at\x18\r \x01(\x03B\x04\x90\xb5\x18\x03H\bR\bexpireAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"action_url\x18\x0e \x01(\tB\x04\x90\xb5\x18\x03R\tactionUrl\x12\x1c\n" +
-	"\x06reason\x18\x0f \x01(\tB\x04\x90\xb5\x18\x03R\x06reason\x12#\n" +
+	"action_url\x18\x0e \x01(\tB\x04\x90\xb5\x18\x03H\tR\tactionUrl\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\x0f \x01(\tB\x04\x90\xb5\x18\x03H\n" +
+	"R\x06reason\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x10 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12#\n" +
+	"created_at\x18\x10 \x01(\x03B\x04\x90\xb5\x18\x03H\vR\tcreatedAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"decided_at\x18\x11 \x01(\x03B\x04\x90\xb5\x18\x03R\tdecidedAt\x12'\n" +
-	"\finstalled_at\x18\x12 \x01(\x03B\x04\x90\xb5\x18\x03R\vinstalledAt\x12#\n" +
+	"decided_at\x18\x11 \x01(\x03B\x04\x90\xb5\x18\x03H\fR\tdecidedAt\x88\x01\x01\x12,\n" +
+	"\finstalled_at\x18\x12 \x01(\x03B\x04\x90\xb5\x18\x03H\rR\vinstalledAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"auto_renew\x18\x13 \x01(\bB\x04\x90\xb5\x18\x03R\tautoRenew\x12;\n" +
-	"\tinitiator\x18\x14 \x01(\x0e2\x17.hi.club.GrantInitiatorB\x04\x90\xb5\x18\x03R\tinitiator\x12%\n" +
-	"\vplugin_uuid\x18\x15 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
-	"pluginUuid:\x04\x98\xb5\x18\x03\"\x93\x01\n" +
+	"auto_renew\x18\x13 \x01(\bB\x04\x90\xb5\x18\x03H\x0eR\tautoRenew\x88\x01\x01\x12@\n" +
+	"\tinitiator\x18\x14 \x01(\x0e2\x17.hi.club.GrantInitiatorB\x04\x90\xb5\x18\x03H\x0fR\tinitiator\x88\x01\x01\x12*\n" +
+	"\vplugin_uuid\x18\x15 \x01(\tB\x04\x90\xb5\x18\x03H\x10R\n" +
+	"pluginUuid\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_uuidB\x0f\n" +
+	"\r_listing_uuidB\b\n" +
+	"\x06_titleB\t\n" +
+	"\a_statusB\x0e\n" +
+	"\f_settle_modeB\b\n" +
+	"\x06_priceB\a\n" +
+	"\x05_coinB\n" +
+	"\n" +
+	"\b_versionB\f\n" +
+	"\n" +
+	"_expire_atB\r\n" +
+	"\v_action_urlB\t\n" +
+	"\a_reasonB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_decided_atB\x0f\n" +
+	"\r_installed_atB\r\n" +
+	"\v_auto_renewB\f\n" +
+	"\n" +
+	"_initiatorB\x0e\n" +
+	"\f_plugin_uuid\"\xaa\x01\n" +
 	"\fMarketSeller\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master\x12(\n" +
 	"\x06agents\x18\x02 \x03(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x06agents\x12)\n" +
-	"\rlisting_count\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x01R\flistingCount:\x04\x98\xb5\x18\x01\"j\n" +
-	"\x0fListSellersResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x125\n" +
-	"\asellers\x18\x02 \x03(\v2\x15.hi.club.MarketSellerB\x04\x90\xb5\x18\x01R\asellers:\x04\x98\xb5\x18\x01\"q\n" +
-	"\x11SearchListingsReq\x12\x18\n" +
-	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x12\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06agents\x12.\n" +
+	"\rlisting_count\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\flistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\x10\n" +
+	"\x0e_listing_count\"y\n" +
+	"\x0fListSellersResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x125\n" +
+	"\asellers\x18\x02 \x03(\v2\x15.hi.club.MarketSellerB\x04\x90\xb5\x18\x01R\asellers:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total\"\x82\x01\n" +
+	"\x11SearchListingsReq\x12\x1d\n" +
+	"\akeyword\x18\x01 \x01(\tH\x00R\akeyword\x88\x01\x01\x12\x12\n" +
 	"\x04tags\x18\x02 \x03(\tR\x04tags\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"j\n" +
-	"\x14ListAgentListingsReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12.\n" +
+	"paginationB\n" +
+	"\n" +
+	"\b_keyword\"|\n" +
+	"\x14ListAgentListingsReq\x12*\n" +
+	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"1\n" +
-	"\rGetListingReq\x12 \n" +
-	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\"m\n" +
-	"\x12SearchListingsResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01R\x05total\x125\n" +
-	"\x04list\x18\x02 \x03(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"R\n" +
+	"paginationB\b\n" +
+	"\x06_agent\"B\n" +
+	"\rGetListingReq\x12(\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04uuid\x88\x01\x01B\a\n" +
+	"\x05_uuid\"|\n" +
+	"\x12SearchListingsResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x125\n" +
+	"\x04list\x18\x02 \x03(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total\"R\n" +
 	"\x0eGetListingResp\x12:\n" +
-	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\xec\x02\n" +
-	"\x10CreateListingReq\x12\"\n" +
-	"\x05agent\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05agent\x12-\n" +
-	"\vplugin_uuid\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\n" +
-	"pluginUuid\x124\n" +
-	"\vsettle_mode\x18\x03 \x01(\x0e2\x13.hi.club.SettleModeR\n" +
-	"settleMode\x12\x14\n" +
-	"\x05price\x18\x04 \x01(\tR\x05price\x12\x12\n" +
-	"\x04coin\x18\x05 \x01(\tR\x04coin\x12\x1a\n" +
-	"\bduration\x18\x06 \x01(\x03R\bduration\x12\x12\n" +
+	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\x95\x04\n" +
+	"\x10CreateListingReq\x12*\n" +
+	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x125\n" +
+	"\vplugin_uuid\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\n" +
+	"pluginUuid\x88\x01\x01\x129\n" +
+	"\vsettle_mode\x18\x03 \x01(\x0e2\x13.hi.club.SettleModeH\x02R\n" +
+	"settleMode\x88\x01\x01\x12\x19\n" +
+	"\x05price\x18\x04 \x01(\tH\x03R\x05price\x88\x01\x01\x12\x17\n" +
+	"\x04coin\x18\x05 \x01(\tH\x04R\x04coin\x88\x01\x01\x12\x1f\n" +
+	"\bduration\x18\x06 \x01(\x03H\x05R\bduration\x88\x01\x01\x12\x12\n" +
 	"\x04tags\x18\n" +
-	" \x03(\tR\x04tags\x12&\n" +
-	"\x0fpayee_to_master\x18\x0e \x01(\bR\rpayeeToMaster\x12\x1d\n" +
+	" \x03(\tR\x04tags\x12+\n" +
+	"\x0fpayee_to_master\x18\x0e \x01(\bH\x06R\rpayeeToMaster\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"action_url\x18\f \x01(\tR\tactionUrl\x12.\n" +
-	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindR\x04kind\"\xaf\x02\n" +
-	"\x0eEditListingReq\x12 \n" +
-	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12\x19\n" +
-	"\x05price\x18\x02 \x01(\tH\x00R\x05price\x88\x01\x01\x12\x17\n" +
-	"\x04coin\x18\x03 \x01(\tH\x01R\x04coin\x88\x01\x01\x12\x1f\n" +
-	"\bduration\x18\x04 \x01(\x03H\x02R\bduration\x88\x01\x01\x12\x12\n" +
-	"\x04tags\x18\b \x03(\tR\x04tags\x12+\n" +
-	"\x0fpayee_to_master\x18\v \x01(\bH\x03R\rpayeeToMaster\x88\x01\x01\x12\"\n" +
-	"\n" +
-	"action_url\x18\n" +
-	" \x01(\tH\x04R\tactionUrl\x88\x01\x01B\b\n" +
+	"action_url\x18\f \x01(\tH\aR\tactionUrl\x88\x01\x01\x123\n" +
+	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindH\bR\x04kind\x88\x01\x01B\b\n" +
+	"\x06_agentB\x0e\n" +
+	"\f_plugin_uuidB\x0e\n" +
+	"\f_settle_modeB\b\n" +
 	"\x06_priceB\a\n" +
 	"\x05_coinB\v\n" +
 	"\t_durationB\x12\n" +
 	"\x10_payee_to_masterB\r\n" +
-	"\v_action_url\"g\n" +
-	"\x13SetListingStatusReq\x12 \n" +
-	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12.\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x16.hi.club.ListingStatusR\x06status\"Y\n" +
-	"\x11ListMyListingsReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12.\n" +
+	"\v_action_urlB\a\n" +
+	"\x05_kind\"\xc0\x02\n" +
+	"\x0eEditListingReq\x12(\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
+	"\x05price\x18\x02 \x01(\tH\x01R\x05price\x88\x01\x01\x12\x17\n" +
+	"\x04coin\x18\x03 \x01(\tH\x02R\x04coin\x88\x01\x01\x12\x1f\n" +
+	"\bduration\x18\x04 \x01(\x03H\x03R\bduration\x88\x01\x01\x12\x12\n" +
+	"\x04tags\x18\b \x03(\tR\x04tags\x12+\n" +
+	"\x0fpayee_to_master\x18\v \x01(\bH\x04R\rpayeeToMaster\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"action_url\x18\n" +
+	" \x01(\tH\x05R\tactionUrl\x88\x01\x01B\a\n" +
+	"\x05_uuidB\b\n" +
+	"\x06_priceB\a\n" +
+	"\x05_coinB\v\n" +
+	"\t_durationB\x12\n" +
+	"\x10_payee_to_masterB\r\n" +
+	"\v_action_url\"\x88\x01\n" +
+	"\x13SetListingStatusReq\x12(\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04uuid\x88\x01\x01\x123\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x16.hi.club.ListingStatusH\x01R\x06status\x88\x01\x01B\a\n" +
+	"\x05_uuidB\t\n" +
+	"\a_status\"h\n" +
+	"\x11ListMyListingsReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"n\n" +
-	"\x12ListMyListingsResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x126\n" +
-	"\x04list\x18\x02 \x03(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"3\n" +
-	"\x11CreateListingResp\x12\x18\n" +
-	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04uuid:\x04\x98\xb5\x18\x03\"\x95\x01\n" +
-	"\bApplyReq\x12/\n" +
-	"\flisting_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\vlistingUuid\x12'\n" +
-	"\bto_agent\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\atoAgent\x12/\n" +
-	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06params\"\xcd\x03\n" +
-	"\rMarketPayment\x12\x1b\n" +
-	"\x06pay_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05payId\x12\x1f\n" +
-	"\border_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12:\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1c.hi.club.MarketPaymentStatusB\x04\x90\xb5\x18\x03R\x06status\x12\x1d\n" +
-	"\atx_hash\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x06txHash\x12!\n" +
-	"\texpire_at\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x03R\bexpireAt\x12#\n" +
+	"paginationB\b\n" +
+	"\x06_agent\"}\n" +
+	"\x12ListMyListingsResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x126\n" +
+	"\x04list\x18\x02 \x03(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"A\n" +
+	"\x11CreateListingResp\x12\x1d\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_uuid\"\xc3\x01\n" +
+	"\bApplyReq\x127\n" +
+	"\flisting_uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\vlistingUuid\x88\x01\x01\x12/\n" +
+	"\bto_agent\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\atoAgent\x88\x01\x01\x12/\n" +
+	"\x06params\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x06paramsB\x0f\n" +
+	"\r_listing_uuidB\v\n" +
+	"\t_to_agent\"\xab\x05\n" +
+	"\rMarketPayment\x12 \n" +
+	"\x06pay_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05payId\x88\x01\x01\x12$\n" +
+	"\border_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aorderId\x88\x01\x01\x12?\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1c.hi.club.MarketPaymentStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12\"\n" +
+	"\atx_hash\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x06txHash\x88\x01\x01\x12&\n" +
+	"\texpire_at\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x03H\x04R\bexpireAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12\x1c\n" +
-	"\x06reason\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x06reason\x12\x1a\n" +
-	"\x05payer\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x05payer\x12\x1a\n" +
-	"\x05payee\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12\x1c\n" +
+	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\tcreatedAt\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x06reason\x88\x01\x01\x12\x1f\n" +
+	"\x05payer\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\x05payer\x88\x01\x01\x12\x1f\n" +
+	"\x05payee\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\bR\x05payee\x88\x01\x01\x12!\n" +
 	"\x06amount\x18\n" +
-	" \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
-	"\x04coin\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12#\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x03H\tR\x06amount\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\v \x01(\tB\x04\x90\xb5\x18\x03H\n" +
+	"R\x04coin\x88\x01\x01\x12(\n" +
 	"\n" +
-	"to_account\x18\f \x01(\tB\x04\x90\xb5\x18\x03R\ttoAccount\x12\"\n" +
+	"to_account\x18\f \x01(\tB\x04\x90\xb5\x18\x03H\vR\ttoAccount\x88\x01\x01\x12'\n" +
 	"\n" +
-	"pay_req_id\x18\r \x01(\tB\x04\x90\xb5\x18\x03R\bpayReqId:\x04\x98\xb5\x18\x03\"W\n" +
+	"pay_req_id\x18\r \x01(\tB\x04\x90\xb5\x18\x03H\fR\bpayReqId\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_pay_idB\v\n" +
+	"\t_order_idB\t\n" +
+	"\a_statusB\n" +
+	"\n" +
+	"\b_tx_hashB\f\n" +
+	"\n" +
+	"_expire_atB\r\n" +
+	"\v_created_atB\t\n" +
+	"\a_reasonB\b\n" +
+	"\x06_payerB\b\n" +
+	"\x06_payeeB\t\n" +
+	"\a_amountB\a\n" +
+	"\x05_coinB\r\n" +
+	"\v_to_accountB\r\n" +
+	"\v_pay_req_id\"W\n" +
 	"\x13ListTransactionsReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"j\n" +
+	"pagination\"y\n" +
 	"\x14ListTransactionsResp\x120\n" +
-	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list\x12\x1a\n" +
-	"\x05total\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total:\x04\x98\xb5\x18\x03\"8\n" +
-	"\x11GetTransactionReq\x12#\n" +
-	"\x06pay_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x05payId\"\x8a\x04\n" +
-	"\vMarketOrder\x12\x1f\n" +
-	"\border_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\aorderId\x12#\n" +
+	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"K\n" +
+	"\x11GetTransactionReq\x12+\n" +
+	"\x06pay_id\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05payId\x88\x01\x01B\t\n" +
+	"\a_pay_id\"\xdd\x05\n" +
+	"\vMarketOrder\x12$\n" +
+	"\border_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aorderId\x88\x01\x01\x12(\n" +
 	"\n" +
-	"grant_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\tgrantUuid\x12'\n" +
-	"\ftarget_agent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\vtargetAgent\x122\n" +
-	"\x04kind\x18\x04 \x01(\x0e2\x18.hi.club.MarketOrderKindB\x04\x90\xb5\x18\x03R\x04kind\x128\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x1a.hi.club.MarketOrderStatusB\x04\x90\xb5\x18\x03R\x06status\x12\x1a\n" +
-	"\x05payee\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\x05payee\x12)\n" +
-	"\rpayee_account\x18\r \x01(\tB\x04\x90\xb5\x18\x03R\fpayeeAccount\x12\x1a\n" +
-	"\x05payer\x18\x0e \x01(\tB\x04\x90\xb5\x18\x03R\x05payer\x12\x1c\n" +
-	"\x06amount\x18\a \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
-	"\x04coin\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12#\n" +
+	"grant_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\tgrantUuid\x88\x01\x01\x12,\n" +
+	"\ftarget_agent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\vtargetAgent\x88\x01\x01\x127\n" +
+	"\x04kind\x18\x04 \x01(\x0e2\x18.hi.club.MarketOrderKindB\x04\x90\xb5\x18\x03H\x03R\x04kind\x88\x01\x01\x12=\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x1a.hi.club.MarketOrderStatusB\x04\x90\xb5\x18\x03H\x04R\x06status\x88\x01\x01\x12\x1f\n" +
+	"\x05payee\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x05payee\x88\x01\x01\x12.\n" +
+	"\rpayee_account\x18\r \x01(\tB\x04\x90\xb5\x18\x03H\x06R\fpayeeAccount\x88\x01\x01\x12\x1f\n" +
+	"\x05payer\x18\x0e \x01(\tB\x04\x90\xb5\x18\x03H\aR\x05payer\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\bR\x06amount\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\tR\x04coin\x88\x01\x01\x12(\n" +
 	"\n" +
 	"created_at\x18\n" +
-	" \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12 \n" +
-	"\bmerchant\x18\v \x01(\tB\x04\x90\xb5\x18\x03R\bmerchant\x126\n" +
-	"\apayment\x18\f \x01(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\apayment:\x04\x98\xb5\x18\x03\":\n" +
-	"\x0fIssuePaymentReq\x12'\n" +
-	"\border_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aorderId\":\n" +
-	"\x0fListPaymentsReq\x12'\n" +
-	"\border_id\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\aorderId\"J\n" +
+	" \x01(\x03B\x04\x90\xb5\x18\x03H\n" +
+	"R\tcreatedAt\x88\x01\x01\x12%\n" +
+	"\bmerchant\x18\v \x01(\tB\x04\x90\xb5\x18\x03H\vR\bmerchant\x88\x01\x01\x126\n" +
+	"\apayment\x18\f \x01(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\apayment:\x04\x98\xb5\x18\x03B\v\n" +
+	"\t_order_idB\r\n" +
+	"\v_grant_uuidB\x0f\n" +
+	"\r_target_agentB\a\n" +
+	"\x05_kindB\t\n" +
+	"\a_statusB\b\n" +
+	"\x06_payeeB\x10\n" +
+	"\x0e_payee_accountB\b\n" +
+	"\x06_payerB\t\n" +
+	"\a_amountB\a\n" +
+	"\x05_coinB\r\n" +
+	"\v_created_atB\v\n" +
+	"\t_merchant\"O\n" +
+	"\x0fIssuePaymentReq\x12/\n" +
+	"\border_id\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\aorderId\x88\x01\x01B\v\n" +
+	"\t_order_id\"O\n" +
+	"\x0fListPaymentsReq\x12/\n" +
+	"\border_id\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\aorderId\x88\x01\x01B\v\n" +
+	"\t_order_id\"J\n" +
 	"\x10ListPaymentsResp\x120\n" +
-	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"B\n" +
-	"\x13CreateRenewOrderReq\x12+\n" +
+	"\x04list\x18\x01 \x03(\v2\x16.hi.club.MarketPaymentB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"Y\n" +
+	"\x13CreateRenewOrderReq\x123\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\"\x9f\x01\n" +
-	"\rMarketPayInfo\x12\x1c\n" +
-	"\x06amount\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06amount\x12\x18\n" +
-	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12)\n" +
-	"\rpayee_account\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\fpayeeAccount\x12%\n" +
-	"\vpayee_owner\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
-	"payeeOwner:\x04\x98\xb5\x18\x03\"\xf1\x01\n" +
-	"\tApplyResp\x12#\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\tgrantUuid\x88\x01\x01B\r\n" +
+	"\v_grant_uuid\"\xe9\x01\n" +
+	"\rMarketPayInfo\x12!\n" +
+	"\x06amount\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06amount\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04coin\x88\x01\x01\x12.\n" +
+	"\rpayee_account\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\fpayeeAccount\x88\x01\x01\x12*\n" +
+	"\vpayee_owner\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\n" +
+	"payeeOwner\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_amountB\a\n" +
+	"\x05_coinB\x10\n" +
+	"\x0e_payee_accountB\x0e\n" +
+	"\f_payee_owner\"\xa9\x02\n" +
+	"\tApplyResp\x12(\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\tgrantUuid\x122\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x14.hi.club.GrantStatusB\x04\x90\xb5\x18\x03R\x06status\x12#\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\tgrantUuid\x88\x01\x01\x127\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x14.hi.club.GrantStatusB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x12(\n" +
 	"\n" +
-	"action_url\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\tactionUrl\x12.\n" +
+	"action_url\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\tactionUrl\x88\x01\x01\x12.\n" +
 	"\x03pay\x18\x04 \x01(\v2\x16.hi.club.MarketPayInfoB\x04\x90\xb5\x18\x03R\x03pay\x120\n" +
-	"\x05order\x18\x05 \x01(\v2\x14.hi.club.MarketOrderB\x04\x90\xb5\x18\x03R\x05order:\x04\x98\xb5\x18\x03\"U\n" +
-	"\x0eDecideGrantReq\x12+\n" +
+	"\x05order\x18\x05 \x01(\v2\x14.hi.club.MarketOrderB\x04\x90\xb5\x18\x03R\x05order:\x04\x98\xb5\x18\x03B\r\n" +
+	"\v_grant_uuidB\t\n" +
+	"\a_statusB\r\n" +
+	"\v_action_url\"|\n" +
+	"\x0eDecideGrantReq\x123\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\x12\x16\n" +
-	"\x06reason\x18\x02 \x01(\tR\x06reason\"\xa4\x01\n" +
-	"\rListGrantsReq\x12,\n" +
-	"\x06status\x18\x01 \x01(\x0e2\x14.hi.club.GrantStatusR\x06status\x12.\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\tgrantUuid\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x02 \x01(\tH\x01R\x06reason\x88\x01\x01B\r\n" +
+	"\v_grant_uuidB\t\n" +
+	"\a_reason\"\xc7\x01\n" +
+	"\rListGrantsReq\x121\n" +
+	"\x06status\x18\x01 \x01(\x0e2\x14.hi.club.GrantStatusH\x00R\x06status\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\x125\n" +
-	"\tinitiator\x18\x03 \x01(\x0e2\x17.hi.club.GrantInitiatorR\tinitiator\"f\n" +
-	"\x0eListGrantsResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x122\n" +
-	"\x04list\x18\x02 \x03(\v2\x18.hi.club.MarketGrantViewB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"X\n" +
-	"\x0fSetAutoRenewReq\x12+\n" +
+	"pagination\x12:\n" +
+	"\tinitiator\x18\x03 \x01(\x0e2\x17.hi.club.GrantInitiatorH\x01R\tinitiator\x88\x01\x01B\t\n" +
+	"\a_statusB\f\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\x12\x18\n" +
-	"\aenabled\x18\x02 \x01(\bR\aenabled\"d\n" +
-	"\bOfferReq\x12/\n" +
-	"\flisting_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\vlistingUuid\x12'\n" +
-	"\bto_agent\x18\x02 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\atoAgent\"\x88\x01\n" +
-	"\tOfferResp\x12#\n" +
+	"_initiator\"u\n" +
+	"\x0eListGrantsResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x122\n" +
+	"\x04list\x18\x02 \x03(\v2\x18.hi.club.MarketGrantViewB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"\x80\x01\n" +
+	"\x0fSetAutoRenewReq\x123\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\tgrantUuid\x122\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x14.hi.club.GrantStatusB\x04\x90\xb5\x18\x03R\x06status\x12\x1c\n" +
-	"\x06reason\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06reason:\x04\x98\xb5\x18\x03\"U\n" +
-	"\x0eDecideOfferReq\x12+\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\tgrantUuid\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\x02 \x01(\bH\x01R\aenabled\x88\x01\x01B\r\n" +
+	"\v_grant_uuidB\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\tgrantUuid\x12\x16\n" +
-	"\x06reason\x18\x02 \x01(\tR\x06reason\"\x93\x01\n" +
-	"\x1bMarketManageListListingsReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12.\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x16.hi.club.ListingStatusR\x06status\x12.\n" +
+	"\b_enabled\"\x92\x01\n" +
+	"\bOfferReq\x127\n" +
+	"\flisting_uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\vlistingUuid\x88\x01\x01\x12/\n" +
+	"\bto_agent\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\atoAgent\x88\x01\x01B\x0f\n" +
+	"\r_listing_uuidB\v\n" +
+	"\t_to_agent\"\xbc\x01\n" +
+	"\tOfferResp\x12(\n" +
+	"\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\tgrantUuid\x88\x01\x01\x127\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x14.hi.club.GrantStatusB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06reason\x88\x01\x01:\x04\x98\xb5\x18\x03B\r\n" +
+	"\v_grant_uuidB\t\n" +
+	"\a_statusB\t\n" +
+	"\a_reason\"|\n" +
+	"\x0eDecideOfferReq\x123\n" +
+	"\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\tgrantUuid\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x02 \x01(\tH\x01R\x06reason\x88\x01\x01B\r\n" +
+	"\v_grant_uuidB\t\n" +
+	"\a_reason\"\xb2\x01\n" +
+	"\x1bMarketManageListListingsReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x123\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x16.hi.club.ListingStatusH\x01R\x06status\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\x9c\x01\n" +
-	"\x19MarketManageListGrantsReq\x12!\n" +
-	"\flisting_uuid\x18\x01 \x01(\tR\vlistingUuid\x12,\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x14.hi.club.GrantStatusR\x06status\x12.\n" +
+	"paginationB\b\n" +
+	"\x06_agentB\t\n" +
+	"\a_status\"\xc2\x01\n" +
+	"\x19MarketManageListGrantsReq\x12&\n" +
+	"\flisting_uuid\x18\x01 \x01(\tH\x00R\vlistingUuid\x88\x01\x01\x121\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x14.hi.club.GrantStatusH\x01R\x06status\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"J\n" +
-	"\x0eForceDelistReq\x12 \n" +
-	"\x04uuid\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x04uuid\x12\x16\n" +
-	"\x06reason\x18\x02 \x01(\tR\x06reason\"D\n" +
-	"\x0eMarketPullData\x12\x14\n" +
-	"\x05nonce\x18\x01 \x01(\tR\x05nonce\x12\x1c\n" +
-	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\"\xdf\x03\n" +
-	"\x12MarketPendingGrant\x12#\n" +
+	"paginationB\x0f\n" +
+	"\r_listing_uuidB\t\n" +
+	"\a_status\"k\n" +
+	"\x0eForceDelistReq\x12(\n" +
+	"\x04uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04uuid\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x02 \x01(\tH\x01R\x06reason\x88\x01\x01B\a\n" +
+	"\x05_uuidB\t\n" +
+	"\a_reason\"f\n" +
+	"\x0eMarketPullData\x12\x19\n" +
+	"\x05nonce\x18\x01 \x01(\tH\x00R\x05nonce\x88\x01\x01\x12!\n" +
+	"\ttimestamp\x18\x02 \x01(\x03H\x01R\ttimestamp\x88\x01\x01B\b\n" +
+	"\x06_nonceB\f\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\tgrantUuid\x12'\n" +
-	"\flisting_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\vlistingUuid\x12%\n" +
-	"\vplugin_uuid\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\n" +
-	"pluginUuid\x12\x1a\n" +
-	"\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x05title\x12\x1f\n" +
-	"\bto_agent\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03R\atoAgent\x12!\n" +
-	"\tto_master\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03R\btoMaster\x12:\n" +
-	"\vsettle_mode\x18\a \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x03R\n" +
-	"settleMode\x12\x1a\n" +
-	"\x05price\x18\b \x01(\tB\x04\x90\xb5\x18\x03R\x05price\x12\x18\n" +
-	"\x04coin\x18\t \x01(\tB\x04\x90\xb5\x18\x03R\x04coin\x12 \n" +
+	"_timestamp\"\xaa\x05\n" +
+	"\x12MarketPendingGrant\x12(\n" +
+	"\n" +
+	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\tgrantUuid\x88\x01\x01\x12,\n" +
+	"\flisting_uuid\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\vlistingUuid\x88\x01\x01\x12*\n" +
+	"\vplugin_uuid\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\n" +
+	"pluginUuid\x88\x01\x01\x12\x1f\n" +
+	"\x05title\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05title\x88\x01\x01\x12$\n" +
+	"\bto_agent\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\atoAgent\x88\x01\x01\x12&\n" +
+	"\tto_master\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\btoMaster\x88\x01\x01\x12?\n" +
+	"\vsettle_mode\x18\a \x01(\x0e2\x13.hi.club.SettleModeB\x04\x90\xb5\x18\x03H\x06R\n" +
+	"settleMode\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\x05price\x88\x01\x01\x12\x1d\n" +
+	"\x04coin\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\bR\x04coin\x88\x01\x01\x12%\n" +
 	"\bduration\x18\n" +
-	" \x01(\x03B\x04\x90\xb5\x18\x03R\bduration\x125\n" +
-	"\x06params\x18\v \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x06params\x12#\n" +
+	" \x01(\x03B\x04\x90\xb5\x18\x03H\tR\bduration\x88\x01\x01\x125\n" +
+	"\x06params\x18\v \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x06params\x12(\n" +
 	"\n" +
-	"created_at\x18\f \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt:\x04\x98\xb5\x18\x03\"M\n" +
+	"created_at\x18\f \x01(\x03B\x04\x90\xb5\x18\x03H\n" +
+	"R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\r\n" +
+	"\v_grant_uuidB\x0f\n" +
+	"\r_listing_uuidB\x0e\n" +
+	"\f_plugin_uuidB\b\n" +
+	"\x06_titleB\v\n" +
+	"\t_to_agentB\f\n" +
+	"\n" +
+	"_to_masterB\x0e\n" +
+	"\f_settle_modeB\b\n" +
+	"\x06_priceB\a\n" +
+	"\x05_coinB\v\n" +
+	"\t_durationB\r\n" +
+	"\v_created_at\"M\n" +
 	"\x0eMarketPullResp\x125\n" +
-	"\x04list\x18\x01 \x03(\v2\x1b.hi.club.MarketPendingGrantB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xf0\x01\n" +
-	"\x10MarketNotifyData\x12\x1d\n" +
+	"\x04list\x18\x01 \x03(\v2\x1b.hi.club.MarketPendingGrantB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xd8\x02\n" +
+	"\x10MarketNotifyData\x12\"\n" +
 	"\n" +
-	"grant_uuid\x18\x01 \x01(\tR\tgrantUuid\x12\x19\n" +
-	"\bouter_id\x18\x02 \x01(\tR\aouterId\x12\x16\n" +
-	"\x06result\x18\x03 \x01(\tR\x06result\x12\x16\n" +
-	"\x06reason\x18\x04 \x01(\tR\x06reason\x12>\n" +
-	"\x0eterms_override\x18\x05 \x01(\v2\x17.google.protobuf.StructR\rtermsOverride\x12\x14\n" +
-	"\x05nonce\x18\x06 \x01(\tR\x05nonce\x12\x1c\n" +
-	"\ttimestamp\x18\a \x01(\x03R\ttimestamp*\x89\x01\n" +
+	"grant_uuid\x18\x01 \x01(\tH\x00R\tgrantUuid\x88\x01\x01\x12\x1e\n" +
+	"\bouter_id\x18\x02 \x01(\tH\x01R\aouterId\x88\x01\x01\x12\x1b\n" +
+	"\x06result\x18\x03 \x01(\tH\x02R\x06result\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x04 \x01(\tH\x03R\x06reason\x88\x01\x01\x12>\n" +
+	"\x0eterms_override\x18\x05 \x01(\v2\x17.google.protobuf.StructR\rtermsOverride\x12\x19\n" +
+	"\x05nonce\x18\x06 \x01(\tH\x04R\x05nonce\x88\x01\x01\x12!\n" +
+	"\ttimestamp\x18\a \x01(\x03H\x05R\ttimestamp\x88\x01\x01B\r\n" +
+	"\v_grant_uuidB\v\n" +
+	"\t_outer_idB\t\n" +
+	"\a_resultB\t\n" +
+	"\a_reasonB\b\n" +
+	"\x06_nonceB\f\n" +
+	"\n" +
+	"_timestamp*\x89\x01\n" +
 	"\n" +
 	"SettleMode\x12\x1b\n" +
 	"\x17SETTLE_MODE_UNSPECIFIED\x10\x00\x12\x14\n" +
@@ -4523,7 +4681,46 @@ func file_hi_club_market_proto_init() {
 	if File_hi_club_market_proto != nil {
 		return
 	}
+	file_hi_club_market_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[17].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[18].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[19].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[21].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[22].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[23].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[24].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[25].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[27].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[28].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[29].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[30].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[31].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[32].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[33].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[34].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[35].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[36].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[37].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[38].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[39].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[40].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[41].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[43].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

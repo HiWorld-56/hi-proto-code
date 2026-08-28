@@ -19,38 +19,57 @@ import 'dart:typed_data' as $typed_data;
 const ListNativeReq$json = {
   '1': 'ListNativeReq',
   '2': [
-    {'1': 'arch', '3': 1, '4': 1, '5': 9, '10': 'arch'},
+    {'1': 'arch', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'arch', '17': true},
+  ],
+  '8': [
+    {'1': '_arch'},
   ],
 };
 
 /// Descriptor for `ListNativeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listNativeReqDescriptor =
-    $convert.base64Decode('Cg1MaXN0TmF0aXZlUmVxEhIKBGFyY2gYASABKAlSBGFyY2g=');
+final $typed_data.Uint8List listNativeReqDescriptor = $convert.base64Decode(
+    'Cg1MaXN0TmF0aXZlUmVxEhcKBGFyY2gYASABKAlIAFIEYXJjaIgBAUIHCgVfYXJjaA==');
 
 @$core.Deprecated('Use reloadApiKeyReqDescriptor instead')
 const ReloadApiKeyReq$json = {
   '1': 'ReloadApiKeyReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `ReloadApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List reloadApiKeyReqDescriptor = $convert.base64Decode(
-    'Cg9SZWxvYWRBcGlLZXlSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHV1aWQYAiABKAlSBH'
-    'V1aWQ=');
+    'Cg9SZWxvYWRBcGlLZXlSZXESGQoFYWdlbnQYASABKAlIAFIFYWdlbnSIAQESFwoEdXVpZBgCIA'
+    'EoCUgBUgR1dWlkiAEBQggKBl9hZ2VudEIHCgVfdXVpZA==');
 
 @$core.Deprecated('Use reloadApiKeyRespDescriptor instead')
 const ReloadApiKeyResp$json = {
   '1': 'ReloadApiKeyResp',
   '2': [
-    {'1': 'api_key', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'apiKey'},
+    {
+      '1': 'api_key',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'apiKey',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_api_key'},
+  ],
 };
 
 /// Descriptor for `ReloadApiKeyResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List reloadApiKeyRespDescriptor = $convert.base64Decode(
-    'ChBSZWxvYWRBcGlLZXlSZXNwEh0KB2FwaV9rZXkYASABKAlCBJC1GANSBmFwaUtleToEmLUYAw'
-    '==');
+    'ChBSZWxvYWRBcGlLZXlSZXNwEiIKB2FwaV9rZXkYASABKAlCBJC1GANIAFIGYXBpS2V5iAEBOg'
+    'SYtRgDQgoKCF9hcGlfa2V5');

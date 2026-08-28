@@ -26,8 +26,8 @@ const (
 
 type QA struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Q             []*Content             `protobuf:"bytes,1,rep,name=q,proto3" json:"q,omitempty"` // User(club Content=PARTICIPANT)
-	A             string                 `protobuf:"bytes,2,opt,name=a,proto3" json:"a,omitempty"` // assistant
+	Q             []*Content             `protobuf:"bytes,1,rep,name=q,proto3" json:"q,omitempty"`       // User(club Content=PARTICIPANT)
+	A             *string                `protobuf:"bytes,2,opt,name=a,proto3,oneof" json:"a,omitempty"` // assistant
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,8 +70,8 @@ func (x *QA) GetQ() []*Content {
 }
 
 func (x *QA) GetA() string {
-	if x != nil {
-		return x.A
+	if x != nil && x.A != nil {
+		return *x.A
 	}
 	return ""
 }
@@ -128,14 +128,14 @@ func (x *GetHistoryResp) GetList() []*QA {
 //	不上报(app / hiclub web)= 全部由服务端跑完 = 一次调用拿到最终答复。
 type ChatReq struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
-	Agent      string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid        string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
+	Agent      *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Cid        *string                `protobuf:"bytes,2,opt,name=cid,proto3,oneof" json:"cid,omitempty"`
 	Conts      []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
 	Tools      []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
 	ToolChoice *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
 	Custom     *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
 	State      *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出音色等;纯文本留空
+	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出音色等;纯文本不传
 	// ── 过程回显开关(**只管输出,不管行为**)──────────────────────────────────────
 	// 与 hi.ai.ChatReq 的同名字段一一对应,club 原样透传。**仅流式有意义。**
 	// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这几个只决定
@@ -152,9 +152,9 @@ type ChatReq struct {
 	//	(Stream→CompleteStream)时从请求里漏掉过,而且 club 这层是**双层丢** ——
 	//	自己没有字段,转发给 ai 时自然也带不上,于是经 club 进来的调用方(app / hiclub web)
 	//	即便 ai 修好了也永远拿不到回显帧。搬家时别再漏第二次。
-	EchoToolCalls bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-	EchoMemory    bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
-	EchoContext   bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3" json:"echo_context,omitempty"`        // 发 type="echoContext" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
+	EchoToolCalls *bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3,oneof" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+	EchoMemory    *bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3,oneof" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
+	EchoContext   *bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3,oneof" json:"echo_context,omitempty"`        // 发 type="echoContext" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
 	// ── 这句话是谁说的 ─────────────────────────────────────────────────────────
 	//
 	// 🔴 **不是"谁在调这个接口"。** 调用方几乎永远是机器人自己(`agent` 就是它),
@@ -162,8 +162,8 @@ type ChatReq struct {
 	//	而提问者在**它收到的那条 mqtt 消息的 `from`** 里 —— 只有收到消息的那一端知道,
 	//	所以必须由客户端带上来,服务端无法从"谁在调"反推(反推出来的是机器人)。
 	//
-	// **证明不了就留空**:机器人的语音路(现场人声)无法证明身份,一律空。
-	// 空 = 匿名提问,插件侧要认人的方法应当直接拒绝,**不许退回成"主人在问"**。
+	// **证明不了就不传**:机器人的语音路(现场人声)无法证明身份,一律不传。
+	// 不传 = 匿名提问,插件侧要认人的方法应当直接拒绝,**不许退回成"主人在问"**。
 	//
 	// ⚠️ 它只是**消息流转里的事实**,不是权限凭据。判"是不是主人"要拿服务端现取的
 	//
@@ -171,7 +171,7 @@ type ChatReq struct {
 	//	别拿 `from` 去做流转之外的事。
 	//
 	// ⚠️ 人自己在 app/web 里直接跟助手聊时可以不传,服务端按登录主体推导。
-	Asker         string `protobuf:"bytes,12,opt,name=asker,proto3" json:"asker,omitempty"`
+	Asker         *string `protobuf:"bytes,12,opt,name=asker,proto3,oneof" json:"asker,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -207,15 +207,15 @@ func (*ChatReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ChatReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *ChatReq) GetCid() string {
-	if x != nil {
-		return x.Cid
+	if x != nil && x.Cid != nil {
+		return *x.Cid
 	}
 	return ""
 }
@@ -263,36 +263,36 @@ func (x *ChatReq) GetStyle() string {
 }
 
 func (x *ChatReq) GetEchoToolCalls() bool {
-	if x != nil {
-		return x.EchoToolCalls
+	if x != nil && x.EchoToolCalls != nil {
+		return *x.EchoToolCalls
 	}
 	return false
 }
 
 func (x *ChatReq) GetEchoMemory() bool {
-	if x != nil {
-		return x.EchoMemory
+	if x != nil && x.EchoMemory != nil {
+		return *x.EchoMemory
 	}
 	return false
 }
 
 func (x *ChatReq) GetEchoContext() bool {
-	if x != nil {
-		return x.EchoContext
+	if x != nil && x.EchoContext != nil {
+		return *x.EchoContext
 	}
 	return false
 }
 
 func (x *ChatReq) GetAsker() string {
-	if x != nil {
-		return x.Asker
+	if x != nil && x.Asker != nil {
+		return *x.Asker
 	}
 	return ""
 }
 
 type ToolCallResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	Conts         []*Content             `protobuf:"bytes,2,rep,name=conts,proto3" json:"conts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -329,8 +329,8 @@ func (*ToolCallResult) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolCallResult) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -345,7 +345,7 @@ func (x *ToolCallResult) GetConts() []*Content {
 // 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。
 type ToolCallResultsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	List          []*ToolCallResult      `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -382,8 +382,8 @@ func (*ToolCallResultsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolCallResultsReq) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -399,38 +399,47 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"D\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"O\n" +
 	"\x02QA\x12$\n" +
-	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x12\n" +
-	"\x01a\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x01a:\x04\x98\xb5\x18\x03\"=\n" +
+	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x17\n" +
+	"\x01a\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x01a\x88\x01\x01:\x04\x98\xb5\x18\x03B\x04\n" +
+	"\x02_a\"=\n" +
 	"\x0eGetHistoryResp\x12%\n" +
-	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xac\x03\n" +
-	"\aChatReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
-	"\x03cid\x18\x02 \x01(\tR\x03cid\x12&\n" +
+	"\x04list\x18\x01 \x03(\v2\v.hi.club.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x9b\x04\n" +
+	"\aChatReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x15\n" +
+	"\x03cid\x18\x02 \x01(\tH\x01R\x03cid\x88\x01\x01\x12&\n" +
 	"\x05conts\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05conts\x12'\n" +
 	"\x05tools\x18\x04 \x03(\v2\x11.hi.ai.ToolSupplyR\x05tools\x12$\n" +
-	"\vtool_choice\x18\x05 \x01(\tH\x00R\n" +
+	"\vtool_choice\x18\x05 \x01(\tH\x02R\n" +
 	"toolChoice\x88\x01\x01\x12\x1b\n" +
-	"\x06custom\x18\x06 \x01(\tH\x01R\x06custom\x88\x01\x01\x12\x19\n" +
-	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01\x12\x19\n" +
-	"\x05style\x18\b \x01(\tH\x03R\x05style\x88\x01\x01\x12&\n" +
-	"\x0fecho_tool_calls\x18\t \x01(\bR\rechoToolCalls\x12\x1f\n" +
+	"\x06custom\x18\x06 \x01(\tH\x03R\x06custom\x88\x01\x01\x12\x19\n" +
+	"\x05state\x18\a \x01(\tH\x04R\x05state\x88\x01\x01\x12\x19\n" +
+	"\x05style\x18\b \x01(\tH\x05R\x05style\x88\x01\x01\x12+\n" +
+	"\x0fecho_tool_calls\x18\t \x01(\bH\x06R\rechoToolCalls\x88\x01\x01\x12$\n" +
 	"\vecho_memory\x18\n" +
-	" \x01(\bR\n" +
-	"echoMemory\x12!\n" +
-	"\fecho_context\x18\v \x01(\bR\vechoContext\x12\x14\n" +
-	"\x05asker\x18\f \x01(\tR\x05askerB\x0e\n" +
+	" \x01(\bH\aR\n" +
+	"echoMemory\x88\x01\x01\x12&\n" +
+	"\fecho_context\x18\v \x01(\bH\bR\vechoContext\x88\x01\x01\x12\x19\n" +
+	"\x05asker\x18\f \x01(\tH\tR\x05asker\x88\x01\x01B\b\n" +
+	"\x06_agentB\x06\n" +
+	"\x04_cidB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
 	"\x06_stateB\b\n" +
-	"\x06_style\"H\n" +
-	"\x0eToolCallResult\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12&\n" +
-	"\x05conts\x18\x02 \x03(\v2\x10.hi.club.ContentR\x05conts\"Q\n" +
-	"\x12ToolCallResultsReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12+\n" +
-	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04list2\xe3\x03\n" +
+	"\x06_styleB\x12\n" +
+	"\x10_echo_tool_callsB\x0e\n" +
+	"\f_echo_memoryB\x0f\n" +
+	"\r_echo_contextB\b\n" +
+	"\x06_asker\"T\n" +
+	"\x0eToolCallResult\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n" +
+	"\x05conts\x18\x02 \x03(\v2\x10.hi.club.ContentR\x05contsB\x05\n" +
+	"\x03_id\"]\n" +
+	"\x12ToolCallResultsReq\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12+\n" +
+	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04listB\x05\n" +
+	"\x03_id2\xe3\x03\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
@@ -505,7 +514,10 @@ func file_hi_club_chat_proto_init() {
 		return
 	}
 	file_hi_club_messaging_proto_init()
+	file_hi_club_chat_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_club_chat_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_club_chat_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_chat_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

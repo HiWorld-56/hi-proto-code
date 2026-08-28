@@ -19,24 +19,49 @@ import 'dart:typed_data' as $typed_data;
 const DownloadResourceReq$json = {
   '1': 'DownloadResourceReq',
   '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'url'},
+    {
+      '1': 'url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'url',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_url'},
   ],
 };
 
 /// Descriptor for `DownloadResourceReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List downloadResourceReqDescriptor = $convert.base64Decode(
-    'ChNEb3dubG9hZFJlc291cmNlUmVxEh4KA3VybBgBIAEoCUIMukgJcgcyBV5cUyskUgN1cmw=');
+    'ChNEb3dubG9hZFJlc291cmNlUmVxEiYKA3VybBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSA3'
+    'VybIgBAUIGCgRfdXJs');
 
 @$core.Deprecated('Use downloadResourceRespDescriptor instead')
 const DownloadResourceResp$json = {
   '1': 'DownloadResourceResp',
   '2': [
-    {'1': 'content', '3': 1, '4': 1, '5': 12, '8': {}, '10': 'content'},
+    {
+      '1': 'content',
+      '3': 1,
+      '4': 1,
+      '5': 12,
+      '8': {},
+      '9': 0,
+      '10': 'content',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_content'},
+  ],
 };
 
 /// Descriptor for `DownloadResourceResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List downloadResourceRespDescriptor = $convert.base64Decode(
-    'ChREb3dubG9hZFJlc291cmNlUmVzcBIeCgdjb250ZW50GAEgASgMQgSQtRgBUgdjb250ZW50Og'
-    'SYtRgB');
+    'ChREb3dubG9hZFJlc291cmNlUmVzcBIjCgdjb250ZW50GAEgASgMQgSQtRgBSABSB2NvbnRlbn'
+    'SIAQE6BJi1GAFCCgoIX2NvbnRlbnQ=');

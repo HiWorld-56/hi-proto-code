@@ -29,9 +29,9 @@ type TradeUnit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Coin          *did.Coin              `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"` // Coin=公开
 	User          *hi.Entity             `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"` // Entity=公开门面
-	Sum           string                 `protobuf:"bytes,3,opt,name=sum,proto3" json:"sum,omitempty"`
-	Amount        string                 `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
-	Fee           string                 `protobuf:"bytes,5,opt,name=fee,proto3" json:"fee,omitempty"`
+	Sum           *string                `protobuf:"bytes,3,opt,name=sum,proto3,oneof" json:"sum,omitempty"`
+	Amount        *string                `protobuf:"bytes,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
+	Fee           *string                `protobuf:"bytes,5,opt,name=fee,proto3,oneof" json:"fee,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -81,22 +81,22 @@ func (x *TradeUnit) GetUser() *hi.Entity {
 }
 
 func (x *TradeUnit) GetSum() string {
-	if x != nil {
-		return x.Sum
+	if x != nil && x.Sum != nil {
+		return *x.Sum
 	}
 	return ""
 }
 
 func (x *TradeUnit) GetAmount() string {
-	if x != nil {
-		return x.Amount
+	if x != nil && x.Amount != nil {
+		return *x.Amount
 	}
 	return ""
 }
 
 func (x *TradeUnit) GetFee() string {
-	if x != nil {
-		return x.Fee
+	if x != nil && x.Fee != nil {
+		return *x.Fee
 	}
 	return ""
 }
@@ -106,8 +106,8 @@ type TradeBase struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	From          *TradeUnit             `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
 	To            *TradeUnit             `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Id            string                 `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Id            *string                `protobuf:"bytes,3,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Timestamp     *int64                 `protobuf:"varint,4,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -157,22 +157,22 @@ func (x *TradeBase) GetTo() *TradeUnit {
 }
 
 func (x *TradeBase) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *TradeBase) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
 
 type GetTradeFeeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
+	Coin          *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -208,8 +208,8 @@ func (*GetTradeFeeReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetTradeFeeReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
@@ -217,7 +217,7 @@ func (x *GetTradeFeeReq) GetCoin() string {
 // 手续费表:按币种查费率,非用户私有 → 公开。
 type GetTradeFeeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Fee           string                 `protobuf:"bytes,1,opt,name=fee,proto3" json:"fee,omitempty"`
+	Fee           *string                `protobuf:"bytes,1,opt,name=fee,proto3,oneof" json:"fee,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -253,15 +253,15 @@ func (*GetTradeFeeResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetTradeFeeResp) GetFee() string {
-	if x != nil {
-		return x.Fee
+	if x != nil && x.Fee != nil {
+		return *x.Fee
 	}
 	return ""
 }
 
 type GetTradeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Order         string                 `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
+	Order         *string                `protobuf:"bytes,1,opt,name=order,proto3,oneof" json:"order,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -297,8 +297,8 @@ func (*GetTradeReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetTradeReq) GetOrder() string {
-	if x != nil {
-		return x.Order
+	if x != nil && x.Order != nil {
+		return *x.Order
 	}
 	return ""
 }
@@ -306,10 +306,10 @@ func (x *GetTradeReq) GetOrder() string {
 // 只在 my-trades 壳(TradeDetail)里出现,不被 TradeBase 引用 → 可 SELF。
 type TradeTrans struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	Trans         *did.Transaction       `protobuf:"bytes,2,opt,name=trans,proto3" json:"trans,omitempty"` // Transaction=公开
-	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Status        *string                `protobuf:"bytes,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Timestamp     *int64                 `protobuf:"varint,4,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -345,8 +345,8 @@ func (*TradeTrans) Descriptor() ([]byte, []int) {
 }
 
 func (x *TradeTrans) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -359,15 +359,15 @@ func (x *TradeTrans) GetTrans() *did.Transaction {
 }
 
 func (x *TradeTrans) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
 
 func (x *TradeTrans) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
@@ -376,12 +376,12 @@ func (x *TradeTrans) GetTimestamp() int64 {
 // 里面放 PARTICIPANT 的 TradeUnit 合法(2<=3)。
 type TradeDetail struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Order         string                 `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	Order         *string                `protobuf:"bytes,1,opt,name=order,proto3,oneof" json:"order,omitempty"`
+	Status        *string                `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	From          *TradeUnit             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // TradeUnit=PARTICIPANT
 	To            *TradeUnit             `protobuf:"bytes,4,opt,name=to,proto3" json:"to,omitempty"`
 	List          map[string]*TradeTrans `protobuf:"bytes,5,rep,name=list,proto3" json:"list,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // TradeTrans=SELF
-	Timestamp     int64                  `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Timestamp     *int64                 `protobuf:"varint,6,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -417,15 +417,15 @@ func (*TradeDetail) Descriptor() ([]byte, []int) {
 }
 
 func (x *TradeDetail) GetOrder() string {
-	if x != nil {
-		return x.Order
+	if x != nil && x.Order != nil {
+		return *x.Order
 	}
 	return ""
 }
 
 func (x *TradeDetail) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
@@ -452,8 +452,8 @@ func (x *TradeDetail) GetList() map[string]*TradeTrans {
 }
 
 func (x *TradeDetail) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
 	}
 	return 0
 }
@@ -593,8 +593,8 @@ func (x *AddTradeResp) GetDetail() *TradeDetail {
 
 type UpdateTransHashReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Hash          string                 `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Hash          *string                `protobuf:"bytes,2,opt,name=hash,proto3,oneof" json:"hash,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -630,15 +630,15 @@ func (*UpdateTransHashReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateTransHashReq) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *UpdateTransHashReq) GetHash() string {
-	if x != nil {
-		return x.Hash
+	if x != nil && x.Hash != nil {
+		return *x.Hash
 	}
 	return ""
 }
@@ -646,7 +646,7 @@ func (x *UpdateTransHashReq) GetHash() string {
 // 查自己的交易。
 type ListTradesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // 可选:只看该交易。查询主体(用户)从 token 取,不接受 did 入参(越权)
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 可选:只看该交易。查询主体(用户)从 token 取,不接受 did 入参(越权)
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -683,8 +683,8 @@ func (*ListTradesReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListTradesReq) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -696,10 +696,10 @@ func (x *ListTradesReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-// 交易统计(内部使用)。id 为空 = 全量。
+// 交易统计(内部使用)。id 不传 = 全量。
 type TradeManageListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // 可选:只看该交易;空=全量
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 可选:只看该交易;不传=全量
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -736,8 +736,8 @@ func (*TradeManageListReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *TradeManageListReq) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -752,7 +752,7 @@ func (x *TradeManageListReq) GetPagination() *hi.Pagination {
 // 我的交易列表壳:SELF 壳收窄整体私密性,元素放 SELF 的 TradeDetail。
 type ListTradesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	List          []*TradeDetail         `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -789,8 +789,8 @@ func (*ListTradesResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListTradesResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -806,63 +806,85 @@ var File_hi_club_trade_proto protoreflect.FileDescriptor
 
 const file_hi_club_trade_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/trade.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\"\xad\x01\n" +
+	"\x13hi/club/trade.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\"\xd7\x01\n" +
 	"\tTradeUnit\x12&\n" +
 	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04coin\x12$\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x12\x16\n" +
-	"\x03sum\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x03sum\x12\x1c\n" +
-	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02R\x06amount\x12\x16\n" +
-	"\x03fee\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02R\x03fee:\x04\x98\xb5\x18\x02\"\xa3\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x12\x1b\n" +
+	"\x03sum\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x03sum\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x06amount\x88\x01\x01\x12\x1b\n" +
+	"\x03fee\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x03fee\x88\x01\x01:\x04\x98\xb5\x18\x02B\x06\n" +
+	"\x04_sumB\t\n" +
+	"\a_amountB\x06\n" +
+	"\x04_fee\"\xc2\x01\n" +
 	"\tTradeBase\x12,\n" +
 	"\x04from\x18\x01 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x04from\x12(\n" +
-	"\x02to\x18\x02 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x02to\x12\x14\n" +
-	"\x02id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02R\x02id\x12\"\n" +
-	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x02R\ttimestamp:\x04\x98\xb5\x18\x02\"$\n" +
-	"\x0eGetTradeFeeReq\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\"/\n" +
-	"\x0fGetTradeFeeResp\x12\x16\n" +
-	"\x03fee\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03fee:\x04\x98\xb5\x18\x01\"#\n" +
-	"\vGetTradeReq\x12\x14\n" +
-	"\x05order\x18\x01 \x01(\tR\x05order\"\x9b\x01\n" +
+	"\x02to\x18\x02 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x02to\x12\x19\n" +
+	"\x02id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12'\n" +
+	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\ttimestamp\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
+	"\x03_idB\f\n" +
 	"\n" +
-	"TradeTrans\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x02id\x12/\n" +
-	"\x05trans\x18\x02 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01R\x05trans\x12\x1c\n" +
-	"\x06status\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12\"\n" +
-	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03R\ttimestamp:\x04\x98\xb5\x18\x03\"\xd1\x02\n" +
-	"\vTradeDetail\x12\x1a\n" +
-	"\x05order\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x05order\x12\x1c\n" +
-	"\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06status\x12,\n" +
+	"_timestamp\"2\n" +
+	"\x0eGetTradeFeeReq\x12\x17\n" +
+	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01B\a\n" +
+	"\x05_coin\"<\n" +
+	"\x0fGetTradeFeeResp\x12\x1b\n" +
+	"\x03fee\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x03fee\x88\x01\x01:\x04\x98\xb5\x18\x01B\x06\n" +
+	"\x04_fee\"2\n" +
+	"\vGetTradeReq\x12\x19\n" +
+	"\x05order\x18\x01 \x01(\tH\x00R\x05order\x88\x01\x01B\b\n" +
+	"\x06_order\"\xca\x01\n" +
+	"\n" +
+	"TradeTrans\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12/\n" +
+	"\x05trans\x18\x02 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01R\x05trans\x12!\n" +
+	"\x06status\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x12'\n" +
+	"\ttimestamp\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03H\x02R\ttimestamp\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\t\n" +
+	"\a_statusB\f\n" +
+	"\n" +
+	"_timestamp\"\x83\x03\n" +
+	"\vTradeDetail\x12\x1f\n" +
+	"\x05order\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05order\x88\x01\x01\x12!\n" +
+	"\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x12,\n" +
 	"\x04from\x18\x03 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x04from\x12(\n" +
 	"\x02to\x18\x04 \x01(\v2\x12.hi.club.TradeUnitB\x04\x90\xb5\x18\x02R\x02to\x128\n" +
-	"\x04list\x18\x05 \x03(\v2\x1e.hi.club.TradeDetail.ListEntryB\x04\x90\xb5\x18\x03R\x04list\x12\"\n" +
-	"\ttimestamp\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03R\ttimestamp\x1aL\n" +
+	"\x04list\x18\x05 \x03(\v2\x1e.hi.club.TradeDetail.ListEntryB\x04\x90\xb5\x18\x03R\x04list\x12'\n" +
+	"\ttimestamp\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x02R\ttimestamp\x88\x01\x01\x1aL\n" +
 	"\tListEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12)\n" +
-	"\x05value\x18\x02 \x01(\v2\x13.hi.club.TradeTransR\x05value:\x028\x01:\x04\x98\xb5\x18\x03\"H\n" +
+	"\x05value\x18\x02 \x01(\v2\x13.hi.club.TradeTransR\x05value:\x028\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_orderB\t\n" +
+	"\a_statusB\f\n" +
+	"\n" +
+	"_timestamp\"H\n" +
 	"\fGetTradeResp\x122\n" +
 	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x06detail:\x04\x98\xb5\x18\x03\";\n" +
 	"\vAddTradeReq\x12,\n" +
 	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailR\x06detail\"H\n" +
 	"\fAddTradeResp\x122\n" +
-	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x06detail:\x04\x98\xb5\x18\x03\"8\n" +
-	"\x12UpdateTransHashReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04hash\x18\x02 \x01(\tR\x04hash\"O\n" +
-	"\rListTradesReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +
+	"\x06detail\x18\x01 \x01(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x06detail:\x04\x98\xb5\x18\x03\"R\n" +
+	"\x12UpdateTransHashReq\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04hash\x18\x02 \x01(\tH\x01R\x04hash\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_hash\"[\n" +
+	"\rListTradesReq\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"T\n" +
-	"\x12TradeManageListReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +
+	"paginationB\x05\n" +
+	"\x03_id\"`\n" +
+	"\x12TradeManageListReq\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"b\n" +
-	"\x0eListTradesResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x12.\n" +
-	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x032\xd0\x02\n" +
+	"paginationB\x05\n" +
+	"\x03_id\"q\n" +
+	"\x0eListTradesResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12.\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.hi.club.TradeDetailB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total2\xd0\x02\n" +
 	"\x05Trade\x12B\n" +
 	"\x06GetFee\x12\x17.hi.club.GetTradeFeeReq\x1a\x18.hi.club.GetTradeFeeResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x03Get\x12\x14.hi.club.GetTradeReq\x1a\x15.hi.club.GetTradeResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
@@ -949,6 +971,17 @@ func file_hi_club_trade_proto_init() {
 	if File_hi_club_trade_proto != nil {
 		return
 	}
+	file_hi_club_trade_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_club_trade_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

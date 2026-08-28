@@ -27,8 +27,8 @@ const (
 // ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 type Content struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
-	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	Type          *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	Content       *string                `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -64,22 +64,22 @@ func (*Content) Descriptor() ([]byte, []int) {
 }
 
 func (x *Content) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
 
 func (x *Content) GetContent() string {
-	if x != nil {
-		return x.Content
+	if x != nil && x.Content != nil {
+		return *x.Content
 	}
 	return ""
 }
 
 type NewSessionResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cid           string                 `protobuf:"bytes,1,opt,name=cid,proto3" json:"cid,omitempty"` // 新会话 id;原 GenerateCidResp
+	Cid           *string                `protobuf:"bytes,1,opt,name=cid,proto3,oneof" json:"cid,omitempty"` // 新会话 id;原 GenerateCidResp
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -115,15 +115,15 @@ func (*NewSessionResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *NewSessionResp) GetCid() string {
-	if x != nil {
-		return x.Cid
+	if x != nil && x.Cid != nil {
+		return *x.Cid
 	}
 	return ""
 }
 
 type ClearHistoryReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cid           string                 `protobuf:"bytes,1,opt,name=cid,proto3" json:"cid,omitempty"`
+	Cid           *string                `protobuf:"bytes,1,opt,name=cid,proto3,oneof" json:"cid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -159,15 +159,15 @@ func (*ClearHistoryReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ClearHistoryReq) GetCid() string {
-	if x != nil {
-		return x.Cid
+	if x != nil && x.Cid != nil {
+		return *x.Cid
 	}
 	return ""
 }
 
 type GetHistoryReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cid           string                 `protobuf:"bytes,1,opt,name=cid,proto3" json:"cid,omitempty"` // cid 已唯一定位会话,不再带 agent
+	Cid           *string                `protobuf:"bytes,1,opt,name=cid,proto3,oneof" json:"cid,omitempty"` // cid 已唯一定位会话,不再带 agent
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -203,16 +203,16 @@ func (*GetHistoryReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetHistoryReq) GetCid() string {
-	if x != nil {
-		return x.Cid
+	if x != nil && x.Cid != nil {
+		return *x.Cid
 	}
 	return ""
 }
 
 type QA struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	A             string                 `protobuf:"bytes,1,opt,name=a,proto3" json:"a,omitempty"` // assistant
-	Q             []*Content             `protobuf:"bytes,2,rep,name=q,proto3" json:"q,omitempty"` // User
+	A             *string                `protobuf:"bytes,1,opt,name=a,proto3,oneof" json:"a,omitempty"` // assistant
+	Q             []*Content             `protobuf:"bytes,2,rep,name=q,proto3" json:"q,omitempty"`       // User
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -248,8 +248,8 @@ func (*QA) Descriptor() ([]byte, []int) {
 }
 
 func (x *QA) GetA() string {
-	if x != nil {
-		return x.A
+	if x != nil && x.A != nil {
+		return *x.A
 	}
 	return ""
 }
@@ -321,14 +321,14 @@ func (x *GetHistoryResp) GetList() []*QA {
 // 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
 type ChatReq struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
-	Agent      string                 `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`
-	Cid        string                 `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
+	Agent      *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Cid        *string                `protobuf:"bytes,2,opt,name=cid,proto3,oneof" json:"cid,omitempty"`
 	Conts      []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
 	Tools      []*ToolSupply          `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
 	ToolChoice *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
 	Custom     *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
 	State      *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出的音色等;纯文本场景留空
+	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出的音色等;纯文本场景不传
 	// ── 过程回显开关:要不要把中间过程一并流给调用方(**只管输出,不管行为**)──────────
 	//
 	// 一律 `echo_` 前缀,对应流式帧 `echoXxx`。**仅流式(ConverseStream/ResumeStream)有意义。**
@@ -347,26 +347,30 @@ type ChatReq struct {
 	//
 	//	**从请求里漏掉过**,而读它们的代码原样留着 → 恒 false → 回显帧与记忆片段
 	//	从此再没发出去过,**不报错、类型也对,只是值永远是零值**。搬家时别再漏第二次。
-	EchoToolCalls bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-	EchoMemory    bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
+	EchoToolCalls *bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3,oneof" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+	EchoMemory    *bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3,oneof" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
 	// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
 	// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
 	// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
-	EchoContext bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3" json:"echo_context,omitempty"`
+	EchoContext *bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3,oneof" json:"echo_context,omitempty"`
 	// 这句话是谁说的。**不是"谁在调"** —— 调用方几乎永远是机器人自己(`agent`),
 	// 提问者在它收到的那条 mqtt 消息的 `from` 里,由 club 带过来。
 	// **证明不了就空**(机器人语音路 = 现场人声,无法证明身份)。
 	//
 	// 🔴 它是**消息事实,不是权限凭据**。判权限用下面的 `master` 比对,别单独拿它当依据。
-	Asker string `protobuf:"bytes,12,opt,name=asker,proto3" json:"asker,omitempty"`
-	// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时为空。
+	Asker *string `protobuf:"bytes,12,opt,name=asker,proto3,oneof" json:"asker,omitempty"`
+	// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时**不传**。
 	//
 	// 🔴 **只能服务端算,不收客户端的** —— 所以 hi.club.ChatReq 里**故意没有**这个字段。
 	// ⚠️ 每轮现取、不做长缓存:换主人(解绑/重绑)要立刻生效 —— 主人是活体,不是单据快照。
 	//
-	// 插件判"是不是主人"的唯一正确写法:`master` 非空且 `asker == master`;
+	// 插件判"是不是主人"的唯一正确写法:`master` **有值**且 `asker == master`;
+	// (以前两个"没有"都是空串,`asker == master` 在皆空时会成立 —— 现在两者都是 null,
+	//
+	//	null != null 不成立,但**仍然必须先判 master 有值**,别只写相等。)
+	//
 	// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
-	Master        string `protobuf:"bytes,13,opt,name=master,proto3" json:"master,omitempty"`
+	Master        *string `protobuf:"bytes,13,opt,name=master,proto3,oneof" json:"master,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -402,15 +406,15 @@ func (*ChatReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ChatReq) GetAgent() string {
-	if x != nil {
-		return x.Agent
+	if x != nil && x.Agent != nil {
+		return *x.Agent
 	}
 	return ""
 }
 
 func (x *ChatReq) GetCid() string {
-	if x != nil {
-		return x.Cid
+	if x != nil && x.Cid != nil {
+		return *x.Cid
 	}
 	return ""
 }
@@ -458,43 +462,43 @@ func (x *ChatReq) GetStyle() string {
 }
 
 func (x *ChatReq) GetEchoToolCalls() bool {
-	if x != nil {
-		return x.EchoToolCalls
+	if x != nil && x.EchoToolCalls != nil {
+		return *x.EchoToolCalls
 	}
 	return false
 }
 
 func (x *ChatReq) GetEchoMemory() bool {
-	if x != nil {
-		return x.EchoMemory
+	if x != nil && x.EchoMemory != nil {
+		return *x.EchoMemory
 	}
 	return false
 }
 
 func (x *ChatReq) GetEchoContext() bool {
-	if x != nil {
-		return x.EchoContext
+	if x != nil && x.EchoContext != nil {
+		return *x.EchoContext
 	}
 	return false
 }
 
 func (x *ChatReq) GetAsker() string {
-	if x != nil {
-		return x.Asker
+	if x != nil && x.Asker != nil {
+		return *x.Asker
 	}
 	return ""
 }
 
 func (x *ChatReq) GetMaster() string {
-	if x != nil {
-		return x.Master
+	if x != nil && x.Master != nil {
+		return *x.Master
 	}
 	return ""
 }
 
 type ToolCallResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	Conts         []*Content             `protobuf:"bytes,2,rep,name=conts,proto3" json:"conts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -531,8 +535,8 @@ func (*ToolCallResult) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolCallResult) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -547,7 +551,7 @@ func (x *ToolCallResult) GetConts() []*Content {
 // 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。续跑的模态由原始调用的 id 决定。
 type ToolCallResultsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	List          []*ToolCallResult      `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -584,8 +588,8 @@ func (*ToolCallResultsReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolCallResultsReq) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -599,7 +603,7 @@ func (x *ToolCallResultsReq) GetList() []*ToolCallResult {
 
 type ToolSupply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Type          *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	Function      *ToolSupply_Function   `protobuf:"bytes,2,opt,name=function,proto3" json:"function,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -636,8 +640,8 @@ func (*ToolSupply) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolSupply) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -651,8 +655,8 @@ func (x *ToolSupply) GetFunction() *ToolSupply_Function {
 
 type ToolCall struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	Function      *ToolCall_Function     `protobuf:"bytes,3,opt,name=function,proto3" json:"function,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -689,15 +693,15 @@ func (*ToolCall) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolCall) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *ToolCall) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -722,8 +726,8 @@ func (x *ToolCall) GetFunction() *ToolCall_Function {
 //	否则整轮对话就停在半路,表现为"机器人不理我了"。
 type ChatResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Final         bool                   `protobuf:"varint,1,opt,name=final,proto3" json:"final,omitempty"`
-	Result        string                 `protobuf:"bytes,2,opt,name=result,proto3" json:"result,omitempty"`
+	Final         *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
+	Result        *string                `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
 	Tools         []*ToolCall            `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -760,15 +764,15 @@ func (*ChatResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ChatResp) GetFinal() bool {
-	if x != nil {
-		return x.Final
+	if x != nil && x.Final != nil {
+		return *x.Final
 	}
 	return false
 }
 
 func (x *ChatResp) GetResult() string {
-	if x != nil {
-		return x.Result
+	if x != nil && x.Result != nil {
+		return *x.Result
 	}
 	return ""
 }
@@ -816,11 +820,11 @@ func (x *ChatResp) GetTools() []*ToolCall {
 // 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
 type ConverseStreamResp struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
-	Code    int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
-	Type    string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	Message string                 `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	Code    *int32                 `protobuf:"varint,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	Type    *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	Message *string                `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"`
 	// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
-	Id            string      `protobuf:"bytes,4,opt,name=id,proto3" json:"id,omitempty"`       // 续跑 id(Resume 时带回)
+	Id            *string     `protobuf:"bytes,4,opt,name=id,proto3,oneof" json:"id,omitempty"` // 续跑 id(Resume 时带回)
 	Tools         []*ToolCall `protobuf:"bytes,5,rep,name=tools,proto3" json:"tools,omitempty"` // 待客户端执行的工具
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -857,29 +861,29 @@ func (*ConverseStreamResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *ConverseStreamResp) GetCode() int32 {
-	if x != nil {
-		return x.Code
+	if x != nil && x.Code != nil {
+		return *x.Code
 	}
 	return 0
 }
 
 func (x *ConverseStreamResp) GetType() string {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
 
 func (x *ConverseStreamResp) GetMessage() string {
-	if x != nil {
-		return x.Message
+	if x != nil && x.Message != nil {
+		return *x.Message
 	}
 	return ""
 }
 
 func (x *ConverseStreamResp) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -893,8 +897,8 @@ func (x *ConverseStreamResp) GetTools() []*ToolCall {
 
 type ToolSupply_Function struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Description   *string                `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	Parameters    *structpb.Struct       `protobuf:"bytes,3,opt,name=parameters,proto3,oneof" json:"parameters,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -931,15 +935,15 @@ func (*ToolSupply_Function) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolSupply_Function) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *ToolSupply_Function) GetDescription() string {
-	if x != nil {
-		return x.Description
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
@@ -953,8 +957,8 @@ func (x *ToolSupply_Function) GetParameters() *structpb.Struct {
 
 type ToolCall_Function struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Arguments     string                 `protobuf:"bytes,2,opt,name=arguments,proto3" json:"arguments,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Arguments     *string                `protobuf:"bytes,2,opt,name=arguments,proto3,oneof" json:"arguments,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -990,15 +994,15 @@ func (*ToolCall_Function) Descriptor() ([]byte, []int) {
 }
 
 func (x *ToolCall_Function) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *ToolCall_Function) GetArguments() string {
-	if x != nil {
-		return x.Arguments
+	if x != nil && x.Arguments != nil {
+		return *x.Arguments
 	}
 	return ""
 }
@@ -1007,76 +1011,108 @@ var File_hi_ai_chat_proto protoreflect.FileDescriptor
 
 const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/options.proto\"I\n" +
-	"\aContent\x12\x18\n" +
-	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1e\n" +
-	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\acontent:\x04\x98\xb5\x18\x03\".\n" +
-	"\x0eNewSessionResp\x12\x16\n" +
-	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03cid:\x04\x98\xb5\x18\x03\"#\n" +
-	"\x0fClearHistoryReq\x12\x10\n" +
-	"\x03cid\x18\x01 \x01(\tR\x03cid\"!\n" +
-	"\rGetHistoryReq\x12\x10\n" +
-	"\x03cid\x18\x01 \x01(\tR\x03cid\"B\n" +
-	"\x02QA\x12\x12\n" +
-	"\x01a\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x01a\x12\"\n" +
-	"\x01q\x18\x02 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x01q:\x04\x98\xb5\x18\x03\";\n" +
+	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/options.proto\"h\n" +
+	"\aContent\x12\x1d\n" +
+	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04type\x88\x01\x01\x12#\n" +
+	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_typeB\n" +
+	"\n" +
+	"\b_content\";\n" +
+	"\x0eNewSessionResp\x12\x1b\n" +
+	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03cid\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
+	"\x04_cid\"0\n" +
+	"\x0fClearHistoryReq\x12\x15\n" +
+	"\x03cid\x18\x01 \x01(\tH\x00R\x03cid\x88\x01\x01B\x06\n" +
+	"\x04_cid\".\n" +
+	"\rGetHistoryReq\x12\x15\n" +
+	"\x03cid\x18\x01 \x01(\tH\x00R\x03cid\x88\x01\x01B\x06\n" +
+	"\x04_cid\"M\n" +
+	"\x02QA\x12\x17\n" +
+	"\x01a\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x01a\x88\x01\x01\x12\"\n" +
+	"\x01q\x18\x02 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x01q:\x04\x98\xb5\x18\x03B\x04\n" +
+	"\x02_a\";\n" +
 	"\x0eGetHistoryResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xc2\x03\n" +
-	"\aChatReq\x12\x14\n" +
-	"\x05agent\x18\x01 \x01(\tR\x05agent\x12\x10\n" +
-	"\x03cid\x18\x02 \x01(\tR\x03cid\x12$\n" +
+	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xc1\x04\n" +
+	"\aChatReq\x12\x19\n" +
+	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x15\n" +
+	"\x03cid\x18\x02 \x01(\tH\x01R\x03cid\x88\x01\x01\x12$\n" +
 	"\x05conts\x18\x03 \x03(\v2\x0e.hi.ai.ContentR\x05conts\x12'\n" +
 	"\x05tools\x18\x04 \x03(\v2\x11.hi.ai.ToolSupplyR\x05tools\x12$\n" +
-	"\vtool_choice\x18\x05 \x01(\tH\x00R\n" +
+	"\vtool_choice\x18\x05 \x01(\tH\x02R\n" +
 	"toolChoice\x88\x01\x01\x12\x1b\n" +
-	"\x06custom\x18\x06 \x01(\tH\x01R\x06custom\x88\x01\x01\x12\x19\n" +
-	"\x05state\x18\a \x01(\tH\x02R\x05state\x88\x01\x01\x12\x19\n" +
-	"\x05style\x18\b \x01(\tH\x03R\x05style\x88\x01\x01\x12&\n" +
-	"\x0fecho_tool_calls\x18\t \x01(\bR\rechoToolCalls\x12\x1f\n" +
+	"\x06custom\x18\x06 \x01(\tH\x03R\x06custom\x88\x01\x01\x12\x19\n" +
+	"\x05state\x18\a \x01(\tH\x04R\x05state\x88\x01\x01\x12\x19\n" +
+	"\x05style\x18\b \x01(\tH\x05R\x05style\x88\x01\x01\x12+\n" +
+	"\x0fecho_tool_calls\x18\t \x01(\bH\x06R\rechoToolCalls\x88\x01\x01\x12$\n" +
 	"\vecho_memory\x18\n" +
-	" \x01(\bR\n" +
-	"echoMemory\x12!\n" +
-	"\fecho_context\x18\v \x01(\bR\vechoContext\x12\x14\n" +
-	"\x05asker\x18\f \x01(\tR\x05asker\x12\x16\n" +
-	"\x06master\x18\r \x01(\tR\x06masterB\x0e\n" +
+	" \x01(\bH\aR\n" +
+	"echoMemory\x88\x01\x01\x12&\n" +
+	"\fecho_context\x18\v \x01(\bH\bR\vechoContext\x88\x01\x01\x12\x19\n" +
+	"\x05asker\x18\f \x01(\tH\tR\x05asker\x88\x01\x01\x12\x1b\n" +
+	"\x06master\x18\r \x01(\tH\n" +
+	"R\x06master\x88\x01\x01B\b\n" +
+	"\x06_agentB\x06\n" +
+	"\x04_cidB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
 	"\a_customB\b\n" +
 	"\x06_stateB\b\n" +
-	"\x06_style\"F\n" +
-	"\x0eToolCallResult\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12$\n" +
-	"\x05conts\x18\x02 \x03(\v2\x0e.hi.ai.ContentR\x05conts\"O\n" +
-	"\x12ToolCallResultsReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12)\n" +
-	"\x04list\x18\x02 \x03(\v2\x15.hi.ai.ToolCallResultR\x04list\"\xe8\x01\n" +
+	"\x06_styleB\x12\n" +
+	"\x10_echo_tool_callsB\x0e\n" +
+	"\f_echo_memoryB\x0f\n" +
+	"\r_echo_contextB\b\n" +
+	"\x06_askerB\t\n" +
+	"\a_master\"R\n" +
+	"\x0eToolCallResult\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12$\n" +
+	"\x05conts\x18\x02 \x03(\v2\x0e.hi.ai.ContentR\x05contsB\x05\n" +
+	"\x03_id\"[\n" +
+	"\x12ToolCallResultsReq\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12)\n" +
+	"\x04list\x18\x02 \x03(\v2\x15.hi.ai.ToolCallResultR\x04listB\x05\n" +
+	"\x03_id\"\x99\x02\n" +
 	"\n" +
-	"ToolSupply\x12\x12\n" +
-	"\x04type\x18\x01 \x01(\tR\x04type\x126\n" +
-	"\bfunction\x18\x02 \x01(\v2\x1a.hi.ai.ToolSupply.FunctionR\bfunction\x1a\x8d\x01\n" +
-	"\bFunction\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12<\n" +
+	"ToolSupply\x12\x17\n" +
+	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x126\n" +
+	"\bfunction\x18\x02 \x01(\v2\x1a.hi.ai.ToolSupply.FunctionR\bfunction\x1a\xb0\x01\n" +
+	"\bFunction\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x02 \x01(\tH\x01R\vdescription\x88\x01\x01\x12<\n" +
 	"\n" +
-	"parameters\x18\x03 \x01(\v2\x17.google.protobuf.StructH\x00R\n" +
-	"parameters\x88\x01\x01B\r\n" +
-	"\v_parameters\"\xcc\x01\n" +
-	"\bToolCall\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x02id\x12\x18\n" +
-	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12:\n" +
-	"\bfunction\x18\x03 \x01(\v2\x18.hi.ai.ToolCall.FunctionB\x04\x90\xb5\x18\x03R\bfunction\x1aN\n" +
-	"\bFunction\x12\x18\n" +
-	"\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x04name\x12\"\n" +
-	"\targuments\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\targuments:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"w\n" +
-	"\bChatResp\x12\x1a\n" +
-	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03R\x05final\x12\x1c\n" +
-	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x06result\x12+\n" +
-	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x03\"\xb1\x01\n" +
-	"\x12ConverseStreamResp\x12\x18\n" +
-	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x04code\x12\x18\n" +
-	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03R\x04type\x12\x1e\n" +
-	"\amessage\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\amessage\x12\x14\n" +
-	"\x02id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03R\x02id\x12+\n" +
-	"\x05tools\x18\x05 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x032\xd9\x03\n" +
+	"parameters\x18\x03 \x01(\v2\x17.google.protobuf.StructH\x02R\n" +
+	"parameters\x88\x01\x01B\a\n" +
+	"\x05_nameB\x0e\n" +
+	"\f_descriptionB\r\n" +
+	"\v_parametersB\a\n" +
+	"\x05_type\"\x87\x02\n" +
+	"\bToolCall\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12\x1d\n" +
+	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04type\x88\x01\x01\x12:\n" +
+	"\bfunction\x18\x03 \x01(\v2\x18.hi.ai.ToolCall.FunctionB\x04\x90\xb5\x18\x03R\bfunction\x1ao\n" +
+	"\bFunction\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04name\x88\x01\x01\x12'\n" +
+	"\targuments\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\targuments\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_nameB\f\n" +
+	"\n" +
+	"_arguments:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_type\"\x96\x01\n" +
+	"\bChatResp\x12\x1f\n" +
+	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x05final\x88\x01\x01\x12!\n" +
+	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06result\x88\x01\x01\x12+\n" +
+	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_finalB\t\n" +
+	"\a_result\"\xea\x01\n" +
+	"\x12ConverseStreamResp\x12\x1d\n" +
+	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
+	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04type\x88\x01\x01\x12#\n" +
+	"\amessage\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\amessage\x88\x01\x01\x12\x19\n" +
+	"\x02id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x02id\x88\x01\x01\x12+\n" +
+	"\x05tools\x18\x05 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_codeB\a\n" +
+	"\x05_typeB\n" +
+	"\n" +
+	"\b_messageB\x05\n" +
+	"\x03_id2\xd9\x03\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
@@ -1159,8 +1195,20 @@ func file_hi_ai_chat_proto_init() {
 	if File_hi_ai_chat_proto != nil {
 		return
 	}
+	file_hi_ai_chat_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

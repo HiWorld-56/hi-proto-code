@@ -20,7 +20,7 @@ const ListTradesReq$json = {
   '1': 'ListTradesReq',
   '2': [
     {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
-    {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
+    {'1': 'id', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
     {
       '1': 'pagination',
       '3': 3,
@@ -30,9 +30,12 @@ const ListTradesReq$json = {
       '10': 'pagination'
     },
   ],
+  '8': [
+    {'1': '_id'},
+  ],
 };
 
 /// Descriptor for `ListTradesReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listTradesReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0VHJhZGVzUmVxEhAKA2RpZBgBIAEoCVIDZGlkEg4KAmlkGAIgASgJUgJpZBIuCgpwYW'
-    'dpbmF0aW9uGAMgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbg==');
+    'Cg1MaXN0VHJhZGVzUmVxEhAKA2RpZBgBIAEoCVIDZGlkEhMKAmlkGAIgASgJSABSAmlkiAEBEi'
+    '4KCnBhZ2luYXRpb24YAyABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9uQgUKA19pZA==');

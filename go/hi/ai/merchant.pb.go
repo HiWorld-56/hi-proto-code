@@ -27,7 +27,7 @@ const (
 // ── 商户目录 ─────────────────────────────────────────────────────────────
 type MerchantListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"` // 可选:按 did 过滤
+	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"` // 可选:按 did 过滤;**不传=不筛**(以前用空串表示,已禁止)
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -64,8 +64,8 @@ func (*MerchantListReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantListReq) GetDid() string {
-	if x != nil {
-		return x.Did
+	if x != nil && x.Did != nil {
+		return *x.Did
 	}
 	return ""
 }
@@ -83,7 +83,7 @@ func (x *MerchantListReq) GetPagination() *hi.Pagination {
 // 私有字段不该靠"反正只有超管调"来兜,受众得写在结构上。
 type MerchantListResp struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Total         int32                    `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Total         *int32                   `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	Infos         []*MerchantListResp_Unit `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -120,8 +120,8 @@ func (*MerchantListResp) Descriptor() ([]byte, []int) {
 }
 
 func (x *MerchantListResp) GetTotal() int32 {
-	if x != nil {
-		return x.Total
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return 0
 }
@@ -137,7 +137,7 @@ func (x *MerchantListResp) GetInfos() []*MerchantListResp_Unit {
 type MerchantEditReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Remark        string                 `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"` // 列宽 255,超了当场拒,别到 DB 才截断
+	Remark        *string                `protobuf:"bytes,2,opt,name=remark,proto3,oneof" json:"remark,omitempty"` // 列宽 255,超了当场拒,别到 DB 才截断
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -180,8 +180,8 @@ func (x *MerchantEditReq) GetDid() string {
 }
 
 func (x *MerchantEditReq) GetRemark() string {
-	if x != nil {
-		return x.Remark
+	if x != nil && x.Remark != nil {
+		return *x.Remark
 	}
 	return ""
 }
@@ -189,8 +189,8 @@ func (x *MerchantEditReq) GetRemark() string {
 type MerchantListResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"` // hi.Entity 恒 PUBLIC
-	CreatedAt     int64                  `protobuf:"varint,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	Remark        string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"` // 超管写的内部备注,商户本人看不到也改不了
+	CreatedAt     *int64                 `protobuf:"varint,2,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	Remark        *string                `protobuf:"bytes,3,opt,name=remark,proto3,oneof" json:"remark,omitempty"` // 超管写的内部备注,商户本人看不到也改不了
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -233,15 +233,15 @@ func (x *MerchantListResp_Unit) GetBase() *hi.Entity {
 }
 
 func (x *MerchantListResp_Unit) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
 	}
 	return 0
 }
 
 func (x *MerchantListResp_Unit) GetRemark() string {
-	if x != nil {
-		return x.Remark
+	if x != nil && x.Remark != nil {
+		return *x.Remark
 	}
 	return ""
 }
@@ -250,24 +250,29 @@ var File_hi_ai_merchant_proto protoreflect.FileDescriptor
 
 const file_hi_ai_merchant_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/ai/merchant.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"S\n" +
-	"\x0fMerchantListReq\x12\x10\n" +
-	"\x03did\x18\x01 \x01(\tR\x03did\x12.\n" +
+	"\x14hi/ai/merchant.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"`\n" +
+	"\x0fMerchantListReq\x12\x15\n" +
+	"\x03did\x18\x01 \x01(\tH\x00R\x03did\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\"\xe5\x01\n" +
-	"\x10MerchantListResp\x12\x1a\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03R\x05total\x128\n" +
-	"\x05infos\x18\x02 \x03(\v2\x1c.hi.ai.MerchantListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1au\n" +
+	"paginationB\x06\n" +
+	"\x04_did\"\x99\x02\n" +
+	"\x10MerchantListResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x128\n" +
+	"\x05infos\x18\x02 \x03(\v2\x1c.hi.ai.MerchantListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1a\x99\x01\n" +
 	"\x04Unit\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12#\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12(\n" +
 	"\n" +
-	"created_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03R\tcreatedAt\x12\x1c\n" +
-	"\x06remark\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03R\x06remark:\x04\x98\xb5\x18\x03:\x04\x98\xb5\x18\x03\"S\n" +
+	"created_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03H\x00R\tcreatedAt\x88\x01\x01\x12!\n" +
+	"\x06remark\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06remark\x88\x01\x01:\x04\x98\xb5\x18\x03B\r\n" +
+	"\v_created_atB\t\n" +
+	"\a_remark:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"c\n" +
 	"\x0fMerchantEditReq\x12\x1e\n" +
-	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12 \n" +
-	"\x06remark\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xff\x01R\x06remark2\x89\x01\n" +
+	"\x03did\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$R\x03did\x12%\n" +
+	"\x06remark\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xff\x01H\x00R\x06remark\x88\x01\x01B\t\n" +
+	"\a_remark2\x89\x01\n" +
 	"\bMerchant\x12>\n" +
 	"\x04List\x12\x16.hi.ai.MerchantListReq\x1a\x17.hi.ai.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04\x12=\n" +
 	"\x04Edit\x12\x16.hi.ai.MerchantEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04Bx\n" +
@@ -315,6 +320,10 @@ func file_hi_ai_merchant_proto_init() {
 	if File_hi_ai_merchant_proto != nil {
 		return
 	}
+	file_hi_ai_merchant_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ai_merchant_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ai_merchant_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_ai_merchant_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

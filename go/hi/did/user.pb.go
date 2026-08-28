@@ -33,8 +33,8 @@ const (
 //	通则:**参数用专用消息,返回才用 Entity 这类对象**(各端自取所需)。
 type EditProfileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`     // 昵称
-	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"` // 头像 url
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`     // 昵称
+	Avatar        *string                `protobuf:"bytes,2,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"` // 头像 url
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,15 +70,15 @@ func (*EditProfileReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *EditProfileReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *EditProfileReq) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
+	if x != nil && x.Avatar != nil {
+		return *x.Avatar
 	}
 	return ""
 }
@@ -87,10 +87,12 @@ var File_hi_did_user_proto protoreflect.FileDescriptor
 
 const file_hi_did_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"<\n" +
-	"\x0eEditProfileReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x02 \x01(\tR\x06avatar2m\n" +
+	"\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"Z\n" +
+	"\x0eEditProfileReq\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06avatar\x18\x02 \x01(\tH\x01R\x06avatar\x88\x01\x01B\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_avatar2m\n" +
 	"\x04User\x121\n" +
 	"\x04Edit\x12\x16.hi.did.EditProfileReq\x1a\n" +
 	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
@@ -134,6 +136,7 @@ func file_hi_did_user_proto_init() {
 	if File_hi_did_user_proto != nil {
 		return
 	}
+	file_hi_did_user_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

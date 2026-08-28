@@ -296,7 +296,7 @@ class ListFundsReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListFundsReq>(create);
   static ListFundsReq? _defaultInstance;
 
-  /// 看谁的。空 = 看我自己;填了则**必须是我的仆从机器人**。
+  /// 看谁的。不传 = 看我自己;填了则**必须是我的仆从机器人**。
   ///
   /// ⚠️ 与 `Market.ListTransactions` 同一条规矩,别顺手放宽成"填谁都行" ——
   ///    那样它就成了拿别人 did 翻别人流水的口子,而这一栏看起来只是个筛选条件。

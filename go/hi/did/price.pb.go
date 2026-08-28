@@ -24,7 +24,7 @@ const (
 
 type GetPriceReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          string                 `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
+	Coin          *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -60,8 +60,8 @@ func (*GetPriceReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetPriceReq) GetCoin() string {
-	if x != nil {
-		return x.Coin
+	if x != nil && x.Coin != nil {
+		return *x.Coin
 	}
 	return ""
 }
@@ -69,7 +69,7 @@ func (x *GetPriceReq) GetCoin() string {
 type GetPriceResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	List          []*GetPriceResp_Unit   `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	Exchange      string                 `protobuf:"bytes,2,opt,name=exchange,proto3" json:"exchange,omitempty"`
+	Exchange      *string                `protobuf:"bytes,2,opt,name=exchange,proto3,oneof" json:"exchange,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -112,15 +112,15 @@ func (x *GetPriceResp) GetList() []*GetPriceResp_Unit {
 }
 
 func (x *GetPriceResp) GetExchange() string {
-	if x != nil {
-		return x.Exchange
+	if x != nil && x.Exchange != nil {
+		return *x.Exchange
 	}
 	return ""
 }
 
 type GetPriceResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Price         string                 `protobuf:"bytes,1,opt,name=price,proto3" json:"price,omitempty"`
+	Price         *string                `protobuf:"bytes,1,opt,name=price,proto3,oneof" json:"price,omitempty"`
 	Coin          *Coin                  `protobuf:"bytes,2,opt,name=coin,proto3" json:"coin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -157,8 +157,8 @@ func (*GetPriceResp_Unit) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetPriceResp_Unit) GetPrice() string {
-	if x != nil {
-		return x.Price
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return ""
 }
@@ -174,15 +174,18 @@ var File_hi_did_price_proto protoreflect.FileDescriptor
 
 const file_hi_did_price_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/did/price.proto\x12\x06hi.did\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"!\n" +
-	"\vGetPriceReq\x12\x12\n" +
-	"\x04coin\x18\x01 \x01(\tR\x04coin\"\xbd\x01\n" +
+	"\x12hi/did/price.proto\x12\x06hi.did\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"/\n" +
+	"\vGetPriceReq\x12\x17\n" +
+	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01B\a\n" +
+	"\x05_coin\"\xde\x01\n" +
 	"\fGetPriceResp\x123\n" +
-	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GetPriceResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x12 \n" +
-	"\bexchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\bexchange\x1aP\n" +
-	"\x04Unit\x12\x1a\n" +
-	"\x05price\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x05price\x12&\n" +
-	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04coin:\x04\x98\xb5\x18\x01:\x04\x98\xb5\x18\x012@\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.hi.did.GetPriceResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x12%\n" +
+	"\bexchange\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\bexchange\x88\x01\x01\x1a_\n" +
+	"\x04Unit\x12\x1f\n" +
+	"\x05price\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05price\x88\x01\x01\x12&\n" +
+	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04coin:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_price:\x04\x98\xb5\x18\x01B\v\n" +
+	"\t_exchange2@\n" +
 	"\x05Price\x127\n" +
 	"\x03Get\x12\x13.hi.did.GetPriceReq\x1a\x14.hi.did.GetPriceResp\"\x05\x8a\xb5\x18\x01\x01B{\n" +
 	"\n" +
@@ -226,6 +229,9 @@ func file_hi_did_price_proto_init() {
 		return
 	}
 	file_hi_did_base_proto_init()
+	file_hi_did_price_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_price_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_price_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
