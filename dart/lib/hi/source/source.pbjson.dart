@@ -642,9 +642,9 @@ const GetObjectStreamReq$json = {
 final $typed_data.Uint8List getObjectStreamReqDescriptor = $convert.base64Decode(
     'ChJHZXRPYmplY3RTdHJlYW1SZXESLAoGYnVja2V0GAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAF'
     'IGYnVja2V0iAEBEiwKBm9iamVjdBgCIAEoCUIPukgMyAEBcgcyBV5cUyskSAFSBm9iamVjdIgB'
-    'ARInCgZvZmZzZXQYAyABKANCCrpIB8gBASICKABIAlIGb2Zmc2V0iAEBEiUKBWxpbWl0GAQgAS'
-    'gDQgq6SAfIAQEiAigASANSBWxpbWl0iAEBQgkKB19idWNrZXRCCQoHX29iamVjdEIJCgdfb2Zm'
-    'c2V0QggKBl9saW1pdA==');
+    'ARInCgZvZmZzZXQYAyABKANCCrpIB8gBASICKABIAlIGb2Zmc2V0iAEBEiIKBWxpbWl0GAQgAS'
+    'gDQge6SAQiAiAASANSBWxpbWl0iAEBQgkKB19idWNrZXRCCQoHX29iamVjdEIJCgdfb2Zmc2V0'
+    'QggKBl9saW1pdA==');
 
 @$core.Deprecated('Use getObjectStreamRespDescriptor instead')
 const GetObjectStreamResp$json = {

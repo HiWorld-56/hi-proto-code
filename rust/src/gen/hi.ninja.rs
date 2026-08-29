@@ -256,7 +256,7 @@ pub struct PluginProgress {
     pub progress: ::core::option::Option<u32>,
     #[prost(uint64, optional, tag = "5")]
     pub downloaded_bytes: ::core::option::Option<u64>,
-    /// 0 = 未知
+    /// **不传 = 未知**(服务端没给 Content-Length);0 是真实取值:空文件
     #[prost(uint64, optional, tag = "6")]
     pub total_bytes: ::core::option::Option<u64>,
     /// 失败原因(state=FAILED 时)

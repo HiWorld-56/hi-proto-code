@@ -67,8 +67,8 @@ pub struct RunResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CleanupReq {
-    #[prost(string, tag = "1")]
-    pub code_archive_url: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub code_archive_url: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ── NATIVE 构建契约(独立构建服务实现,hiai 只作调用方)────────────────────────
 ///

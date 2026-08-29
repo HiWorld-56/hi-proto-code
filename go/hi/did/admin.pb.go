@@ -503,7 +503,7 @@ type MerchantSetPermissionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`                                         // 目标商户
 	Perm          *MerchantPermission    `protobuf:"varint,2,opt,name=perm,proto3,enum=hi.did.MerchantPermission,oneof" json:"perm,omitempty"` // 要改的权限位
-	Granted       *bool                  `protobuf:"varint,3,opt,name=granted,proto3,oneof" json:"granted,omitempty"`                          // true=授予,false=撤销
+	Granted       *bool                  `protobuf:"varint,3,opt,name=granted,proto3,oneof" json:"granted,omitempty"`                          // true=授予,false=撤销。**必传** —— 不传不是 false,是漏了字段(服务端报错)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

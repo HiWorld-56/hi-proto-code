@@ -4449,6 +4449,7 @@ pub struct GetRoleResp {
 pub struct SetDndReq {
     #[prost(string, optional, tag = "1")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
+    /// **必传** —— 不传不是 false,是漏了字段(服务端报错)
     #[prost(bool, optional, tag = "2")]
     pub dnd: ::core::option::Option<bool>,
 }
@@ -4459,7 +4460,7 @@ pub struct MuteMembersReq {
     pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, repeated, tag = "2")]
     pub members: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// true=禁言,false=解禁
+    /// true=禁言,false=解禁。**必传** —— 不传不是 false,是漏了字段(服务端报错)
     #[prost(bool, optional, tag = "3")]
     pub muted: ::core::option::Option<bool>,
 }
@@ -6904,6 +6905,7 @@ pub struct ListGrantsResp {
 pub struct SetAutoRenewReq {
     #[prost(string, optional, tag = "1")]
     pub grant_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// **必传** —— 不传不是 false,是漏了字段(服务端报错)
     #[prost(bool, optional, tag = "2")]
     pub enabled: ::core::option::Option<bool>,
 }

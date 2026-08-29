@@ -952,12 +952,13 @@ pub struct EditPluginReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetEnabledReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(bool, tag = "3")]
-    pub enabled: bool,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// **必传** —— 不传不是 false,是漏了字段(服务端报错)
+    #[prost(bool, optional, tag = "3")]
+    pub enabled: ::core::option::Option<bool>,
 }
 /// SetFollowLatestReq 改 c.follow_latest —— **在"机器人 → 插件"那一行上操作**。
 /// 打开之后,作者每发一版(NATIVE 是编成功之后)这台机器人就自动切过去;
@@ -968,17 +969,18 @@ pub struct SetFollowLatestReq {
     pub agent: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// **必传** —— 不传不是 false,是漏了字段(服务端报错)
     #[prost(bool, optional, tag = "3")]
     pub on: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActiveReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// SetActiveAll 把**所有使用方**切到同一版 —— 官方/内置插件发新版时用。
 ///
@@ -1007,12 +1009,12 @@ pub struct SetActiveAllResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub version: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadScriptResp {
@@ -1023,19 +1025,15 @@ pub struct DownloadScriptResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListPluginsReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListVersionsReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "3")]
-    pub pagination: ::core::option::Option<super::Pagination>,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPluginsResp {
@@ -1053,10 +1051,10 @@ pub struct ListVersionsResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPluginReq {
-    #[prost(string, tag = "1")]
-    pub agent: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub uuid: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetPluginResp {

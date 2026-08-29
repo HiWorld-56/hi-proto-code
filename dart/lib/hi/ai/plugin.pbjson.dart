@@ -743,16 +743,30 @@ final $typed_data.Uint8List editPluginReqDescriptor = $convert.base64Decode(
 const SetEnabledReq$json = {
   '1': 'SetEnabledReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'enabled', '3': 3, '4': 1, '5': 8, '10': 'enabled'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+    {
+      '1': 'enabled',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '9': 2,
+      '10': 'enabled',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_enabled'},
   ],
 };
 
 /// Descriptor for `SetEnabledReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setEnabledReqDescriptor = $convert.base64Decode(
-    'Cg1TZXRFbmFibGVkUmVxEhQKBWFnZW50GAEgASgJUgVhZ2VudBISCgR1dWlkGAIgASgJUgR1dW'
-    'lkEhgKB2VuYWJsZWQYAyABKAhSB2VuYWJsZWQ=');
+    'Cg1TZXRFbmFibGVkUmVxEhkKBWFnZW50GAEgASgJSABSBWFnZW50iAEBEhcKBHV1aWQYAiABKA'
+    'lIAVIEdXVpZIgBARIdCgdlbmFibGVkGAMgASgISAJSB2VuYWJsZWSIAQFCCAoGX2FnZW50QgcK'
+    'BV91dWlkQgoKCF9lbmFibGVk');
 
 @$core.Deprecated('Use setFollowLatestReqDescriptor instead')
 const SetFollowLatestReq$json = {
@@ -797,16 +811,30 @@ final $typed_data.Uint8List setFollowLatestReqDescriptor = $convert.base64Decode
 const SetActiveReq$json = {
   '1': 'SetActiveReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_version'},
   ],
 };
 
 /// Descriptor for `SetActiveReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setActiveReqDescriptor = $convert.base64Decode(
-    'CgxTZXRBY3RpdmVSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHV1aWQYAiABKAlSBHV1aW'
-    'QSGAoHdmVyc2lvbhgDIAEoCVIHdmVyc2lvbg==');
+    'CgxTZXRBY3RpdmVSZXESGQoFYWdlbnQYASABKAlIAFIFYWdlbnSIAQESFwoEdXVpZBgCIAEoCU'
+    'gBUgR1dWlkiAEBEh0KB3ZlcnNpb24YAyABKAlIAlIHdmVyc2lvbogBAUIICgZfYWdlbnRCBwoF'
+    'X3V1aWRCCgoIX3ZlcnNpb24=');
 
 @$core.Deprecated('Use setActiveAllReqDescriptor instead')
 const SetActiveAllReq$json = {
@@ -875,16 +903,30 @@ final $typed_data.Uint8List setActiveAllRespDescriptor = $convert.base64Decode(
 const DownloadScriptReq$json = {
   '1': 'DownloadScriptReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
+    {'1': '_version'},
   ],
 };
 
 /// Descriptor for `DownloadScriptReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List downloadScriptReqDescriptor = $convert.base64Decode(
-    'ChFEb3dubG9hZFNjcmlwdFJlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSEgoEdXVpZBgCIAEoCV'
-    'IEdXVpZBIYCgd2ZXJzaW9uGAMgASgJUgd2ZXJzaW9u');
+    'ChFEb3dubG9hZFNjcmlwdFJlcRIZCgVhZ2VudBgBIAEoCUgAUgVhZ2VudIgBARIXCgR1dWlkGA'
+    'IgASgJSAFSBHV1aWSIAQESHQoHdmVyc2lvbhgDIAEoCUgCUgd2ZXJzaW9uiAEBQggKBl9hZ2Vu'
+    'dEIHCgVfdXVpZEIKCghfdmVyc2lvbg==');
 
 @$core.Deprecated('Use downloadScriptRespDescriptor instead')
 const DownloadScriptResp$json = {
@@ -928,44 +970,34 @@ final $typed_data.Uint8List downloadScriptRespDescriptor = $convert.base64Decode
 const ListPluginsReq$json = {
   '1': 'ListPluginsReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {
-      '1': 'pagination',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
-    },
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+  ],
+  '8': [
+    {'1': '_agent'},
   ],
 };
 
 /// Descriptor for `ListPluginsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listPluginsReqDescriptor = $convert.base64Decode(
-    'Cg5MaXN0UGx1Z2luc1JlcRIUCgVhZ2VudBgBIAEoCVIFYWdlbnQSLgoKcGFnaW5hdGlvbhgCIA'
-    'EoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+    'Cg5MaXN0UGx1Z2luc1JlcRIZCgVhZ2VudBgBIAEoCUgAUgVhZ2VudIgBAUIICgZfYWdlbnQ=');
 
 @$core.Deprecated('Use listVersionsReqDescriptor instead')
 const ListVersionsReq$json = {
   '1': 'ListVersionsReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
-    {
-      '1': 'pagination',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
-    },
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `ListVersionsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listVersionsReqDescriptor = $convert.base64Decode(
-    'Cg9MaXN0VmVyc2lvbnNSZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHV1aWQYAiABKAlSBH'
-    'V1aWQSLgoKcGFnaW5hdGlvbhgDIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24=');
+    'Cg9MaXN0VmVyc2lvbnNSZXESGQoFYWdlbnQYASABKAlIAFIFYWdlbnSIAQESFwoEdXVpZBgCIA'
+    'EoCUgBUgR1dWlkiAEBQggKBl9hZ2VudEIHCgVfdXVpZA==');
 
 @$core.Deprecated('Use listPluginsRespDescriptor instead')
 const ListPluginsResp$json = {
@@ -1042,15 +1074,19 @@ final $typed_data.Uint8List listVersionsRespDescriptor = $convert.base64Decode(
 const GetPluginReq$json = {
   '1': 'GetPluginReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '10': 'agent'},
-    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '10': 'uuid'},
+    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_uuid'},
   ],
 };
 
 /// Descriptor for `GetPluginReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getPluginReqDescriptor = $convert.base64Decode(
-    'CgxHZXRQbHVnaW5SZXESFAoFYWdlbnQYASABKAlSBWFnZW50EhIKBHV1aWQYAiABKAlSBHV1aW'
-    'Q=');
+    'CgxHZXRQbHVnaW5SZXESGQoFYWdlbnQYASABKAlIAFIFYWdlbnSIAQESFwoEdXVpZBgCIAEoCU'
+    'gBUgR1dWlkiAEBQggKBl9hZ2VudEIHCgVfdXVpZA==');
 
 @$core.Deprecated('Use getPluginRespDescriptor instead')
 const GetPluginResp$json = {

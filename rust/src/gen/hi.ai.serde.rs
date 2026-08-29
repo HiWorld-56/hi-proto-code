@@ -4400,24 +4400,24 @@ impl serde::Serialize for DownloadScriptReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if self.agent.is_some() {
             len += 1;
         }
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
-        if !self.version.is_empty() {
+        if self.version.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.DownloadScriptReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
         }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
-        if !self.version.is_empty() {
-            struct_ser.serialize_field("version", &self.version)?;
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
         }
         struct_ser.end()
     }
@@ -4491,26 +4491,26 @@ impl<'de> serde::Deserialize<'de> for DownloadScriptReq {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            agent__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Version => {
                             if version__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("version"));
                             }
-                            version__ = Some(map_.next_value()?);
+                            version__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(DownloadScriptReq {
-                    agent: agent__.unwrap_or_default(),
-                    uuid: uuid__.unwrap_or_default(),
-                    version: version__.unwrap_or_default(),
+                    agent: agent__,
+                    uuid: uuid__,
+                    version: version__,
                 })
             }
         }
@@ -5844,18 +5844,18 @@ impl serde::Serialize for GetPluginReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if self.agent.is_some() {
             len += 1;
         }
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.GetPluginReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
         }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
         struct_ser.end()
     }
@@ -5925,19 +5925,19 @@ impl<'de> serde::Deserialize<'de> for GetPluginReq {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            agent__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(GetPluginReq {
-                    agent: agent__.unwrap_or_default(),
-                    uuid: uuid__.unwrap_or_default(),
+                    agent: agent__,
+                    uuid: uuid__,
                 })
             }
         }
@@ -7330,18 +7330,12 @@ impl serde::Serialize for ListPluginsReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
-            len += 1;
-        }
-        if self.pagination.is_some() {
+        if self.agent.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListPluginsReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
-        }
-        if let Some(v) = self.pagination.as_ref() {
-            struct_ser.serialize_field("pagination", v)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
         }
         struct_ser.end()
     }
@@ -7354,13 +7348,11 @@ impl<'de> serde::Deserialize<'de> for ListPluginsReq {
     {
         const FIELDS: &[&str] = &[
             "agent",
-            "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
-            Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7383,7 +7375,6 @@ impl<'de> serde::Deserialize<'de> for ListPluginsReq {
                     {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
-                            "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7404,26 +7395,18 @@ impl<'de> serde::Deserialize<'de> for ListPluginsReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut agent__ = None;
-                let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            agent__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Pagination => {
-                            if pagination__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("pagination"));
-                            }
-                            pagination__ = map_.next_value()?;
+                            agent__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(ListPluginsReq {
-                    agent: agent__.unwrap_or_default(),
-                    pagination: pagination__,
+                    agent: agent__,
                 })
             }
         }
@@ -7656,24 +7639,18 @@ impl serde::Serialize for ListVersionsReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if self.agent.is_some() {
             len += 1;
         }
-        if !self.uuid.is_empty() {
-            len += 1;
-        }
-        if self.pagination.is_some() {
+        if self.uuid.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListVersionsReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
         }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
-        }
-        if let Some(v) = self.pagination.as_ref() {
-            struct_ser.serialize_field("pagination", v)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
         struct_ser.end()
     }
@@ -7687,14 +7664,12 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
         const FIELDS: &[&str] = &[
             "agent",
             "uuid",
-            "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
             Uuid,
-            Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7718,7 +7693,6 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
-                            "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7740,33 +7714,25 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
             {
                 let mut agent__ = None;
                 let mut uuid__ = None;
-                let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            agent__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Pagination => {
-                            if pagination__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("pagination"));
-                            }
-                            pagination__ = map_.next_value()?;
+                            uuid__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(ListVersionsReq {
-                    agent: agent__.unwrap_or_default(),
-                    uuid: uuid__.unwrap_or_default(),
-                    pagination: pagination__,
+                    agent: agent__,
+                    uuid: uuid__,
                 })
             }
         }
@@ -12221,24 +12187,24 @@ impl serde::Serialize for SetActiveReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if self.agent.is_some() {
             len += 1;
         }
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
-        if !self.version.is_empty() {
+        if self.version.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.SetActiveReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
         }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
-        if !self.version.is_empty() {
-            struct_ser.serialize_field("version", &self.version)?;
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
         }
         struct_ser.end()
     }
@@ -12312,26 +12278,26 @@ impl<'de> serde::Deserialize<'de> for SetActiveReq {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            agent__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Version => {
                             if version__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("version"));
                             }
-                            version__ = Some(map_.next_value()?);
+                            version__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(SetActiveReq {
-                    agent: agent__.unwrap_or_default(),
-                    uuid: uuid__.unwrap_or_default(),
-                    version: version__.unwrap_or_default(),
+                    agent: agent__,
+                    uuid: uuid__,
+                    version: version__,
                 })
             }
         }
@@ -12346,24 +12312,24 @@ impl serde::Serialize for SetEnabledReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.agent.is_empty() {
+        if self.agent.is_some() {
             len += 1;
         }
-        if !self.uuid.is_empty() {
+        if self.uuid.is_some() {
             len += 1;
         }
-        if self.enabled {
+        if self.enabled.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.SetEnabledReq", len)?;
-        if !self.agent.is_empty() {
-            struct_ser.serialize_field("agent", &self.agent)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
         }
-        if !self.uuid.is_empty() {
-            struct_ser.serialize_field("uuid", &self.uuid)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
         }
-        if self.enabled {
-            struct_ser.serialize_field("enabled", &self.enabled)?;
+        if let Some(v) = self.enabled.as_ref() {
+            struct_ser.serialize_field("enabled", v)?;
         }
         struct_ser.end()
     }
@@ -12437,26 +12403,26 @@ impl<'de> serde::Deserialize<'de> for SetEnabledReq {
                             if agent__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("agent"));
                             }
-                            agent__ = Some(map_.next_value()?);
+                            agent__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("uuid"));
                             }
-                            uuid__ = Some(map_.next_value()?);
+                            uuid__ = map_.next_value()?;
                         }
                         GeneratedField::Enabled => {
                             if enabled__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("enabled"));
                             }
-                            enabled__ = Some(map_.next_value()?);
+                            enabled__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(SetEnabledReq {
-                    agent: agent__.unwrap_or_default(),
-                    uuid: uuid__.unwrap_or_default(),
-                    enabled: enabled__.unwrap_or_default(),
+                    agent: agent__,
+                    uuid: uuid__,
+                    enabled: enabled__,
                 })
             }
         }

@@ -3176,7 +3176,7 @@ pub struct MerchantSetPermissionReq {
     /// 要改的权限位
     #[prost(enumeration = "MerchantPermission", optional, tag = "2")]
     pub perm: ::core::option::Option<i32>,
-    /// true=授予,false=撤销
+    /// true=授予,false=撤销。**必传** —— 不传不是 false,是漏了字段(服务端报错)
     #[prost(bool, optional, tag = "3")]
     pub granted: ::core::option::Option<bool>,
 }

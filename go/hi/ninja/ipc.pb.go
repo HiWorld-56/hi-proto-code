@@ -1373,7 +1373,7 @@ type PluginProgress struct {
 	// 那时候宁可不显示百分比,也别编一个会往回跳的数字。
 	Progress        *uint32 `protobuf:"varint,4,opt,name=progress,proto3,oneof" json:"progress,omitempty"`
 	DownloadedBytes *uint64 `protobuf:"varint,5,opt,name=downloaded_bytes,json=downloadedBytes,proto3,oneof" json:"downloaded_bytes,omitempty"`
-	TotalBytes      *uint64 `protobuf:"varint,6,opt,name=total_bytes,json=totalBytes,proto3,oneof" json:"total_bytes,omitempty"` // 0 = 未知
+	TotalBytes      *uint64 `protobuf:"varint,6,opt,name=total_bytes,json=totalBytes,proto3,oneof" json:"total_bytes,omitempty"` // **不传 = 未知**(服务端没给 Content-Length);0 是真实取值:空文件
 	Message         *string `protobuf:"bytes,7,opt,name=message,proto3,oneof" json:"message,omitempty"`                          // 失败原因(state=FAILED 时)
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache

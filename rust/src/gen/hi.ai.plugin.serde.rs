@@ -346,12 +346,12 @@ impl serde::Serialize for CleanupReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.code_archive_url.is_empty() {
+        if self.code_archive_url.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.CleanupReq", len)?;
-        if !self.code_archive_url.is_empty() {
-            struct_ser.serialize_field("codeArchiveUrl", &self.code_archive_url)?;
+        if let Some(v) = self.code_archive_url.as_ref() {
+            struct_ser.serialize_field("codeArchiveUrl", v)?;
         }
         struct_ser.end()
     }
@@ -418,12 +418,12 @@ impl<'de> serde::Deserialize<'de> for CleanupReq {
                             if code_archive_url__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("codeArchiveUrl"));
                             }
-                            code_archive_url__ = Some(map_.next_value()?);
+                            code_archive_url__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(CleanupReq {
-                    code_archive_url: code_archive_url__.unwrap_or_default(),
+                    code_archive_url: code_archive_url__,
                 })
             }
         }

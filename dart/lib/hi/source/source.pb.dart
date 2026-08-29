@@ -1123,6 +1123,9 @@ class GetObjectStreamReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearOffset() => $_clearField(3);
 
+  /// ⚠️ **不传 = 取到结尾**,不是 `0 = 到结尾`。0 的字面意思是"要 0 个字节",
+  ///    拿它当"不限"是用零值表示 null —— 真想要 0 字节的调用会被当成要整个文件。
+  ///    (offset 不同:`0` 就是"从第 0 个字节起",是真实取值,所以它保持必传。)
   @$pb.TagNumber(4)
   $fixnum.Int64 get limit => $_getI64(3);
   @$pb.TagNumber(4)

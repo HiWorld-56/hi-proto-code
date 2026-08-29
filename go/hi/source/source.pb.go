@@ -895,11 +895,15 @@ func (x *PutObjectReq) GetContent() []byte {
 // 按对象键流式下载。既有的 DownloadStream 按 **url** 取,而调用方手里是对象键 ——
 // 让它自己拼 minio url 就得把 base 配一份过去,base 一改两边就散。
 type GetObjectStreamReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bucket        *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
-	Object        *string                `protobuf:"bytes,2,opt,name=object,proto3,oneof" json:"object,omitempty"`
-	Offset        *int64                 `protobuf:"varint,3,opt,name=offset,proto3,oneof" json:"offset,omitempty"` // 断点续传起点;0=从头
-	Limit         *int64                 `protobuf:"varint,4,opt,name=limit,proto3,oneof" json:"limit,omitempty"`   // 0=到结尾
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Bucket *string                `protobuf:"bytes,1,opt,name=bucket,proto3,oneof" json:"bucket,omitempty"`
+	Object *string                `protobuf:"bytes,2,opt,name=object,proto3,oneof" json:"object,omitempty"`
+	Offset *int64                 `protobuf:"varint,3,opt,name=offset,proto3,oneof" json:"offset,omitempty"` // 断点续传起点;0=从头
+	// ⚠️ **不传 = 取到结尾**,不是 `0 = 到结尾`。0 的字面意思是"要 0 个字节",
+	//
+	//	拿它当"不限"是用零值表示 null —— 真想要 0 字节的调用会被当成要整个文件。
+	//	(offset 不同:`0` 就是"从第 0 个字节起",是真实取值,所以它保持必传。)
+	Limit         *int64 `protobuf:"varint,4,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1220,14 +1224,13 @@ const file_hi_source_source_proto_rawDesc = "" +
 	"\a_bucketB\t\n" +
 	"\a_objectB\n" +
 	"\n" +
-	"\b_content\"\xeb\x01\n" +
+	"\b_content\"\xe8\x01\n" +
 	"\x12GetObjectStreamReq\x12,\n" +
 	"\x06bucket\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x06bucket\x88\x01\x01\x12,\n" +
 	"\x06object\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x06object\x88\x01\x01\x12'\n" +
 	"\x06offset\x18\x03 \x01(\x03B\n" +
-	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x02R\x06offset\x88\x01\x01\x12%\n" +
-	"\x05limit\x18\x04 \x01(\x03B\n" +
-	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x03R\x05limit\x88\x01\x01B\t\n" +
+	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x02R\x06offset\x88\x01\x01\x12\"\n" +
+	"\x05limit\x18\x04 \x01(\x03B\a\xbaH\x04\"\x02 \x00H\x03R\x05limit\x88\x01\x01B\t\n" +
 	"\a_bucketB\t\n" +
 	"\a_objectB\t\n" +
 	"\a_offsetB\b\n" +

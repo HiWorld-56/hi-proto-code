@@ -125,13 +125,25 @@ final $typed_data.Uint8List runRespDescriptor = $convert.base64Decode(
 const CleanupReq$json = {
   '1': 'CleanupReq',
   '2': [
-    {'1': 'code_archive_url', '3': 1, '4': 1, '5': 9, '10': 'codeArchiveUrl'},
+    {
+      '1': 'code_archive_url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'codeArchiveUrl',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_code_archive_url'},
   ],
 };
 
 /// Descriptor for `CleanupReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List cleanupReqDescriptor = $convert.base64Decode(
-    'CgpDbGVhbnVwUmVxEigKEGNvZGVfYXJjaGl2ZV91cmwYASABKAlSDmNvZGVBcmNoaXZlVXJs');
+    'CgpDbGVhbnVwUmVxEi0KEGNvZGVfYXJjaGl2ZV91cmwYASABKAlIAFIOY29kZUFyY2hpdmVVcm'
+    'yIAQFCEwoRX2NvZGVfYXJjaGl2ZV91cmw=');
 
 @$core.Deprecated('Use buildReqDescriptor instead')
 const BuildReq$json = {

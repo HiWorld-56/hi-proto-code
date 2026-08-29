@@ -1020,7 +1020,7 @@ func (x *GetRoleResp) GetRole() string {
 type SetDndReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
-	Dnd           *bool                  `protobuf:"varint,2,opt,name=dnd,proto3,oneof" json:"dnd,omitempty"`
+	Dnd           *bool                  `protobuf:"varint,2,opt,name=dnd,proto3,oneof" json:"dnd,omitempty"` // **必传** —— 不传不是 false,是漏了字段(服务端报错)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1074,7 +1074,7 @@ type MuteMembersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Members       []string               `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
-	Muted         *bool                  `protobuf:"varint,3,opt,name=muted,proto3,oneof" json:"muted,omitempty"` // true=禁言,false=解禁
+	Muted         *bool                  `protobuf:"varint,3,opt,name=muted,proto3,oneof" json:"muted,omitempty"` // true=禁言,false=解禁。**必传** —— 不传不是 false,是漏了字段(服务端报错)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

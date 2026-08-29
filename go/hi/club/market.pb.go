@@ -3203,7 +3203,7 @@ func (x *ListGrantsResp) GetList() []*MarketGrantView {
 type SetAutoRenewReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`
-	Enabled       *bool                  `protobuf:"varint,2,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
+	Enabled       *bool                  `protobuf:"varint,2,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"` // **必传** —— 不传不是 false,是漏了字段(服务端报错)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

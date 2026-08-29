@@ -270,7 +270,7 @@ func (x *RunResp) GetConts() []*ai.Content {
 
 type CleanupReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	CodeArchiveUrl string                 `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3" json:"code_archive_url,omitempty"`
+	CodeArchiveUrl *string                `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3,oneof" json:"code_archive_url,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -306,8 +306,8 @@ func (*CleanupReq) Descriptor() ([]byte, []int) {
 }
 
 func (x *CleanupReq) GetCodeArchiveUrl() string {
-	if x != nil {
-		return x.CodeArchiveUrl
+	if x != nil && x.CodeArchiveUrl != nil {
+		return *x.CodeArchiveUrl
 	}
 	return ""
 }
@@ -536,10 +536,11 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x06_askerB\t\n" +
 	"\a_master\";\n" +
 	"\aRunResp\x12*\n" +
-	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"6\n" +
+	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"P\n" +
 	"\n" +
-	"CleanupReq\x12(\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tR\x0ecodeArchiveUrl\"\xbd\x01\n" +
+	"CleanupReq\x12-\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01B\x13\n" +
+	"\x11_code_archive_url\"\xbd\x01\n" +
 	"\bBuildReq\x12-\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01\x12\x17\n" +
 	"\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
@@ -620,6 +621,7 @@ func file_hi_ai_plugin_base_proto_init() {
 		return
 	}
 	file_hi_ai_plugin_base_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_ai_plugin_base_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_ai_plugin_base_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
