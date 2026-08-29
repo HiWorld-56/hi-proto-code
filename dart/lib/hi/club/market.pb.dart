@@ -184,6 +184,10 @@ class MarketListingBrief extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   void clearCoin() => $_clearField(9);
 
+  /// 商品规格:买一次能用多久(秒)。**不传 = 永久**。
+  ///
+  /// ⚠️ 原来写的是 `0 = 永久`。0 秒的字面意思是"买了立刻就过期",拿它当"永不过期"
+  ///    是用零值表示 null —— 而且方向恰好相反,读错一次就是把永久授权当成已过期。
   @$pb.TagNumber(10)
   $fixnum.Int64 get duration => $_getI64(9);
   @$pb.TagNumber(10)
@@ -1693,6 +1697,7 @@ class EditListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearDuration() => $_clearField(4);
 
+  /// 那是"换商品规格",走下架重挂
   /// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
   @$pb.TagNumber(8)
   $pb.PbList<$core.String> get tags => $_getList(4);

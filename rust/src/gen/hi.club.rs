@@ -6247,7 +6247,10 @@ pub struct MarketListingBrief {
     pub price: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "9")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    /// 商品规格:买一次能用多久(秒);0 = 永久
+    /// 商品规格:买一次能用多久(秒)。**不传 = 永久**。
+    ///
+    /// ⚠️ 原来写的是 `0 = 永久`。0 秒的字面意思是"买了立刻就过期",拿它当"永不过期"
+    /// 是用零值表示 null —— 而且方向恰好相反,读错一次就是把永久授权当成已过期。
     #[prost(int64, optional, tag = "10")]
     pub duration: ::core::option::Option<i64>,
     /// 装机数
@@ -6349,7 +6352,7 @@ pub struct MarketRenewBrief {
     pub amount: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "5")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    /// 到期时刻(秒)
+    /// 到期时刻(秒);**不传 = 永不过期**
     #[prost(int64, optional, tag = "6")]
     pub expire_at: ::core::option::Option<i64>,
     /// 用户开没开自动续费
@@ -6397,7 +6400,7 @@ pub struct MarketGrantView {
     /// 当前引用的版本
     #[prost(string, optional, tag = "12")]
     pub version: ::core::option::Option<::prost::alloc::string::String>,
-    /// installed_at + duration;0 = 永久
+    /// installed_at + duration;**不传 = 永不过期**(理由同 duration)
     #[prost(int64, optional, tag = "13")]
     pub expire_at: ::core::option::Option<i64>,
     /// 外部流程给的"去付款/去填资料"地址(可不传)
@@ -6506,7 +6509,7 @@ pub struct CreateListingReq {
     pub price: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "5")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    /// 秒;0 = 永久
+    /// 秒;**不传 = 永久**(0 秒 = 买了立刻过期,是合法但没人要的值)
     #[prost(int64, optional, tag = "6")]
     pub duration: ::core::option::Option<i64>,
     /// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
@@ -6555,8 +6558,10 @@ pub struct EditListingReq {
     pub price: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    /// 秒;不传=不改。要改成永久没有办法用这个字段表达,
     #[prost(int64, optional, tag = "4")]
     pub duration: ::core::option::Option<i64>,
+    /// 那是"换商品规格",走下架重挂
     /// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
     #[prost(string, repeated, tag = "8")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -7022,6 +7027,7 @@ pub struct MarketPendingGrant {
     pub price: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "9")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    /// 秒;不传=永久(成交时快照)
     #[prost(int64, optional, tag = "10")]
     pub duration: ::core::option::Option<i64>,
     /// 申请方填的额外参数

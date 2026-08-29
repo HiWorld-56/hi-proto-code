@@ -595,15 +595,20 @@ type MarketListingBrief struct {
 	//
 	//	title ← 插件壳名;logo / summary ← 出让方**当前激活版**(与"引用跟版"同一口径)。
 	//	改插件名就是改市场标题 —— 单一来源,不会漂。
-	Title        *string     `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`
-	Summary      *string     `protobuf:"bytes,4,opt,name=summary,proto3,oneof" json:"summary,omitempty"`
-	Logo         *string     `protobuf:"bytes,5,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
-	Tags         []string    `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
-	SettleMode   *SettleMode `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"`
-	Price        *string     `protobuf:"bytes,8,opt,name=price,proto3,oneof" json:"price,omitempty"` // 十进制字符串,免浮点误差
-	Coin         *string     `protobuf:"bytes,9,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
-	Duration     *int64      `protobuf:"varint,10,opt,name=duration,proto3,oneof" json:"duration,omitempty"`                             // 商品规格:买一次能用多久(秒);0 = 永久
-	InstallCount *int32      `protobuf:"varint,11,opt,name=install_count,json=installCount,proto3,oneof" json:"install_count,omitempty"` // 装机数
+	Title      *string     `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`
+	Summary    *string     `protobuf:"bytes,4,opt,name=summary,proto3,oneof" json:"summary,omitempty"`
+	Logo       *string     `protobuf:"bytes,5,opt,name=logo,proto3,oneof" json:"logo,omitempty"`
+	Tags       []string    `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	SettleMode *SettleMode `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"`
+	Price      *string     `protobuf:"bytes,8,opt,name=price,proto3,oneof" json:"price,omitempty"` // 十进制字符串,免浮点误差
+	Coin       *string     `protobuf:"bytes,9,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	// 商品规格:买一次能用多久(秒)。**不传 = 永久**。
+	//
+	// ⚠️ 原来写的是 `0 = 永久`。0 秒的字面意思是"买了立刻就过期",拿它当"永不过期"
+	//
+	//	是用零值表示 null —— 而且方向恰好相反,读错一次就是把永久授权当成已过期。
+	Duration     *int64 `protobuf:"varint,10,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
+	InstallCount *int32 `protobuf:"varint,11,opt,name=install_count,json=installCount,proto3,oneof" json:"install_count,omitempty"` // 装机数
 	// 这一摊是谁的货(普通 / 官方 / 内置)。公开 —— 买家要能看出哪个是官方出品,
 	// 那正是这个字段存在的意义;藏起来等于白设。
 	Kind          *MarketListingKind `protobuf:"varint,12,opt,name=kind,proto3,enum=hi.club.MarketListingKind,oneof" json:"kind,omitempty"`
@@ -954,7 +959,7 @@ type MarketRenewBrief struct {
 	Payee         *string `protobuf:"bytes,3,opt,name=payee,proto3,oneof" json:"payee,omitempty"`
 	Amount        *string `protobuf:"bytes,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 人类可读金额
 	Coin          *string `protobuf:"bytes,5,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
-	ExpireAt      *int64  `protobuf:"varint,6,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`    // 到期时刻(秒)
+	ExpireAt      *int64  `protobuf:"varint,6,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`    // 到期时刻(秒);**不传 = 永不过期**
 	AutoRenew     *bool   `protobuf:"varint,7,opt,name=auto_renew,json=autoRenew,proto3,oneof" json:"auto_renew,omitempty"` // 用户开没开自动续费
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1070,7 +1075,7 @@ type MarketGrantView struct {
 	Coin       *string      `protobuf:"bytes,10,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
 	// ⚠️ 没有 follow_latest:见 hi.ai.PluginView.follow_latest —— 归使用行,不归授权。
 	Version     *string `protobuf:"bytes,12,opt,name=version,proto3,oneof" json:"version,omitempty"`                      // 当前引用的版本
-	ExpireAt    *int64  `protobuf:"varint,13,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`   // installed_at + duration;0 = 永久
+	ExpireAt    *int64  `protobuf:"varint,13,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`   // installed_at + duration;**不传 = 永不过期**(理由同 duration)
 	ActionUrl   *string `protobuf:"bytes,14,opt,name=action_url,json=actionUrl,proto3,oneof" json:"action_url,omitempty"` // 外部流程给的"去付款/去填资料"地址(可不传)
 	Reason      *string `protobuf:"bytes,15,opt,name=reason,proto3,oneof" json:"reason,omitempty"`                        // 拒绝/撤销原因
 	CreatedAt   *int64  `protobuf:"varint,16,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
@@ -1645,7 +1650,7 @@ type CreateListingReq struct {
 	SettleMode *SettleMode            `protobuf:"varint,3,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"` // **建后不可改**
 	Price      *string                `protobuf:"bytes,4,opt,name=price,proto3,oneof" json:"price,omitempty"`
 	Coin       *string                `protobuf:"bytes,5,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
-	Duration   *int64                 `protobuf:"varint,6,opt,name=duration,proto3,oneof" json:"duration,omitempty"` // 秒;0 = 永久
+	Duration   *int64                 `protobuf:"varint,6,opt,name=duration,proto3,oneof" json:"duration,omitempty"` // 秒;**不传 = 永久**(0 秒 = 买了立刻过期,是合法但没人要的值)
 	// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
 	//
 	// 那三个是插件**自己就有**的东西(`hi.ai.PluginShell.name`、激活版的 `logo`/`summary`),
@@ -1790,7 +1795,8 @@ type EditListingReq struct {
 	Uuid     *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	Price    *string                `protobuf:"bytes,2,opt,name=price,proto3,oneof" json:"price,omitempty"`
 	Coin     *string                `protobuf:"bytes,3,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
-	Duration *int64                 `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
+	Duration *int64                 `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"` // 秒;不传=不改。要改成永久没有办法用这个字段表达,
+	// 那是"换商品规格",走下架重挂
 	// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
 	Tags          []string `protobuf:"bytes,8,rep,name=tags,proto3" json:"tags,omitempty"`
 	PayeeToMaster *bool    `protobuf:"varint,11,opt,name=payee_to_master,json=payeeToMaster,proto3,oneof" json:"payee_to_master,omitempty"` // 见 CreateListingReq:软件机器人没得选
@@ -3685,8 +3691,8 @@ type MarketPendingGrant struct {
 	SettleMode    *SettleMode      `protobuf:"varint,7,opt,name=settle_mode,json=settleMode,proto3,enum=hi.club.SettleMode,oneof" json:"settle_mode,omitempty"`
 	Price         *string          `protobuf:"bytes,8,opt,name=price,proto3,oneof" json:"price,omitempty"`
 	Coin          *string          `protobuf:"bytes,9,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
-	Duration      *int64           `protobuf:"varint,10,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
-	Params        *structpb.Struct `protobuf:"bytes,11,opt,name=params,proto3" json:"params,omitempty"` // 申请方填的额外参数
+	Duration      *int64           `protobuf:"varint,10,opt,name=duration,proto3,oneof" json:"duration,omitempty"` // 秒;不传=永久(成交时快照)
+	Params        *structpb.Struct `protobuf:"bytes,11,opt,name=params,proto3" json:"params,omitempty"`            // 申请方填的额外参数
 	CreatedAt     *int64           `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
