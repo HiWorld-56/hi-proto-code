@@ -1027,6 +1027,8 @@ pub struct DownloadScriptResp {
 pub struct ListPluginsReq {
     #[prost(string, optional, tag = "1")]
     pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListVersionsReq {
@@ -1034,6 +1036,8 @@ pub struct ListVersionsReq {
     pub agent: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub pagination: ::core::option::Option<super::Pagination>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPluginsResp {

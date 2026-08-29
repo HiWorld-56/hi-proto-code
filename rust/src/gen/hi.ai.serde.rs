@@ -7333,9 +7333,15 @@ impl serde::Serialize for ListPluginsReq {
         if self.agent.is_some() {
             len += 1;
         }
+        if self.pagination.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListPluginsReq", len)?;
         if let Some(v) = self.agent.as_ref() {
             struct_ser.serialize_field("agent", v)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
         }
         struct_ser.end()
     }
@@ -7348,11 +7354,13 @@ impl<'de> serde::Deserialize<'de> for ListPluginsReq {
     {
         const FIELDS: &[&str] = &[
             "agent",
+            "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
+            Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7375,6 +7383,7 @@ impl<'de> serde::Deserialize<'de> for ListPluginsReq {
                     {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
+                            "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7395,6 +7404,7 @@ impl<'de> serde::Deserialize<'de> for ListPluginsReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut agent__ = None;
+                let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -7403,10 +7413,17 @@ impl<'de> serde::Deserialize<'de> for ListPluginsReq {
                             }
                             agent__ = map_.next_value()?;
                         }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ListPluginsReq {
                     agent: agent__,
+                    pagination: pagination__,
                 })
             }
         }
@@ -7645,12 +7662,18 @@ impl serde::Serialize for ListVersionsReq {
         if self.uuid.is_some() {
             len += 1;
         }
+        if self.pagination.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ListVersionsReq", len)?;
         if let Some(v) = self.agent.as_ref() {
             struct_ser.serialize_field("agent", v)?;
         }
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
         }
         struct_ser.end()
     }
@@ -7664,12 +7687,14 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
         const FIELDS: &[&str] = &[
             "agent",
             "uuid",
+            "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
             Uuid,
+            Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7693,6 +7718,7 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
                             "uuid" => Ok(GeneratedField::Uuid),
+                            "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7714,6 +7740,7 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
             {
                 let mut agent__ = None;
                 let mut uuid__ = None;
+                let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -7728,11 +7755,18 @@ impl<'de> serde::Deserialize<'de> for ListVersionsReq {
                             }
                             uuid__ = map_.next_value()?;
                         }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ListVersionsReq {
                     agent: agent__,
                     uuid: uuid__,
+                    pagination: pagination__,
                 })
             }
         }
