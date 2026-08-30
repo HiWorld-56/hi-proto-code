@@ -15,37 +15,39 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use pluginRuntimeDescriptor instead')
-const PluginRuntime$json = {
-  '1': 'PluginRuntime',
+@$core.Deprecated('Use pluginLangDescriptor instead')
+const PluginLang$json = {
+  '1': 'PluginLang',
   '2': [
-    {'1': 'PLUGIN_RUNTIME_PYTHON', '2': 0},
-    {'1': 'PLUGIN_RUNTIME_NATIVE', '2': 1},
-    {'1': 'PLUGIN_RUNTIME_UNDETERMINED', '2': 2},
+    {'1': 'PLUGIN_LANG_PYTHON', '2': 0},
+    {'1': 'PLUGIN_LANG_RUST', '2': 1},
+    {'1': 'PLUGIN_LANG_UNDETERMINED', '2': 2},
+    {'1': 'PLUGIN_LANG_LUA', '2': 3},
   ],
 };
 
-/// Descriptor for `PluginRuntime`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List pluginRuntimeDescriptor = $convert.base64Decode(
-    'Cg1QbHVnaW5SdW50aW1lEhkKFVBMVUdJTl9SVU5USU1FX1BZVEhPThAAEhkKFVBMVUdJTl9SVU'
-    '5USU1FX05BVElWRRABEh8KG1BMVUdJTl9SVU5USU1FX1VOREVURVJNSU5FRBAC');
+/// Descriptor for `PluginLang`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List pluginLangDescriptor = $convert.base64Decode(
+    'CgpQbHVnaW5MYW5nEhYKElBMVUdJTl9MQU5HX1BZVEhPThAAEhQKEFBMVUdJTl9MQU5HX1JVU1'
+    'QQARIcChhQTFVHSU5fTEFOR19VTkRFVEVSTUlORUQQAhITCg9QTFVHSU5fTEFOR19MVUEQAw==');
 
-@$core.Deprecated('Use pluginBuildStatusDescriptor instead')
-const PluginBuildStatus$json = {
-  '1': 'PluginBuildStatus',
+@$core.Deprecated('Use pluginArtifactStatusDescriptor instead')
+const PluginArtifactStatus$json = {
+  '1': 'PluginArtifactStatus',
   '2': [
-    {'1': 'PLUGIN_BUILD_STATUS_PENDING', '2': 0},
-    {'1': 'PLUGIN_BUILD_STATUS_BUILDING', '2': 1},
-    {'1': 'PLUGIN_BUILD_STATUS_SUCCEEDED', '2': 2},
-    {'1': 'PLUGIN_BUILD_STATUS_FAILED', '2': 3},
+    {'1': 'PLUGIN_ARTIFACT_STATUS_PENDING', '2': 0},
+    {'1': 'PLUGIN_ARTIFACT_STATUS_BUILDING', '2': 1},
+    {'1': 'PLUGIN_ARTIFACT_STATUS_SUCCEEDED', '2': 2},
+    {'1': 'PLUGIN_ARTIFACT_STATUS_FAILED', '2': 3},
   ],
 };
 
-/// Descriptor for `PluginBuildStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List pluginBuildStatusDescriptor = $convert.base64Decode(
-    'ChFQbHVnaW5CdWlsZFN0YXR1cxIfChtQTFVHSU5fQlVJTERfU1RBVFVTX1BFTkRJTkcQABIgCh'
-    'xQTFVHSU5fQlVJTERfU1RBVFVTX0JVSUxESU5HEAESIQodUExVR0lOX0JVSUxEX1NUQVRVU19T'
-    'VUNDRUVERUQQAhIeChpQTFVHSU5fQlVJTERfU1RBVFVTX0ZBSUxFRBAD');
+/// Descriptor for `PluginArtifactStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List pluginArtifactStatusDescriptor = $convert.base64Decode(
+    'ChRQbHVnaW5BcnRpZmFjdFN0YXR1cxIiCh5QTFVHSU5fQVJUSUZBQ1RfU1RBVFVTX1BFTkRJTk'
+    'cQABIjCh9QTFVHSU5fQVJUSUZBQ1RfU1RBVFVTX0JVSUxESU5HEAESJAogUExVR0lOX0FSVElG'
+    'QUNUX1NUQVRVU19TVUNDRUVERUQQAhIhCh1QTFVHSU5fQVJUSUZBQ1RfU1RBVFVTX0ZBSUxFRB'
+    'AD');
 
 @$core.Deprecated('Use pluginSourceDescriptor instead')
 const PluginSource$json = {
@@ -86,14 +88,14 @@ const PluginShell$json = {
       '17': true
     },
     {
-      '1': 'runtime',
+      '1': 'lang',
       '3': 3,
       '4': 1,
       '5': 14,
-      '6': '.hi.ai.PluginRuntime',
+      '6': '.hi.ai.PluginLang',
       '8': {},
       '9': 2,
-      '10': 'runtime',
+      '10': 'lang',
       '17': true
     },
   ],
@@ -101,16 +103,15 @@ const PluginShell$json = {
   '8': [
     {'1': '_uuid'},
     {'1': '_name'},
-    {'1': '_runtime'},
+    {'1': '_lang'},
   ],
 };
 
 /// Descriptor for `PluginShell`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginShellDescriptor = $convert.base64Decode(
     'CgtQbHVnaW5TaGVsbBIdCgR1dWlkGAEgASgJQgSQtRgDSABSBHV1aWSIAQESHQoEbmFtZRgCIA'
-    'EoCUIEkLUYAUgBUgRuYW1liAEBEjkKB3J1bnRpbWUYAyABKA4yFC5oaS5haS5QbHVnaW5SdW50'
-    'aW1lQgSQtRgDSAJSB3J1bnRpbWWIAQE6BJi1GANCBwoFX3V1aWRCBwoFX25hbWVCCgoIX3J1bn'
-    'RpbWU=');
+    'EoCUIEkLUYAUgBUgRuYW1liAEBEjAKBGxhbmcYAyABKA4yES5oaS5haS5QbHVnaW5MYW5nQgSQ'
+    'tRgDSAJSBGxhbmeIAQE6BJi1GANCBwoFX3V1aWRCBwoFX25hbWVCBwoFX2xhbmc=');
 
 @$core.Deprecated('Use pluginVersionDescriptor instead')
 const PluginVersion$json = {
@@ -197,9 +198,9 @@ final $typed_data.Uint8List pluginVersionDescriptor = $convert.base64Decode(
     'iAEBOgSYtRgDQgcKBV91dWlkQgoKCF92ZXJzaW9uQgcKBV9sb2dvQgoKCF9zdW1tYXJ5QgYKBF'
     '91cmxCDgoMX2Rlc2NyaXB0aW9u');
 
-@$core.Deprecated('Use pluginBuildDescriptor instead')
-const PluginBuild$json = {
-  '1': 'PluginBuild',
+@$core.Deprecated('Use pluginArtifactDescriptor instead')
+const PluginArtifact$json = {
+  '1': 'PluginArtifact',
   '2': [
     {
       '1': 'uuid',
@@ -222,13 +223,13 @@ const PluginBuild$json = {
       '17': true
     },
     {
-      '1': 'arch',
+      '1': 'target',
       '3': 11,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 2,
-      '10': 'arch',
+      '10': 'target',
       '17': true
     },
     {
@@ -236,7 +237,7 @@ const PluginBuild$json = {
       '3': 3,
       '4': 1,
       '5': 14,
-      '6': '.hi.ai.PluginBuildStatus',
+      '6': '.hi.ai.PluginArtifactStatus',
       '8': {},
       '9': 3,
       '10': 'status',
@@ -317,7 +318,7 @@ const PluginBuild$json = {
   '8': [
     {'1': '_uuid'},
     {'1': '_version'},
-    {'1': '_arch'},
+    {'1': '_target'},
     {'1': '_status'},
     {'1': '_artifact_url'},
     {'1': '_sha256'},
@@ -329,19 +330,19 @@ const PluginBuild$json = {
   ],
 };
 
-/// Descriptor for `PluginBuild`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pluginBuildDescriptor = $convert.base64Decode(
-    'CgtQbHVnaW5CdWlsZBIdCgR1dWlkGAEgASgJQgSQtRgDSABSBHV1aWSIAQESIwoHdmVyc2lvbh'
-    'gCIAEoCUIEkLUYA0gBUgd2ZXJzaW9uiAEBEh0KBGFyY2gYCyABKAlCBJC1GANIAlIEYXJjaIgB'
-    'ARI7CgZzdGF0dXMYAyABKA4yGC5oaS5haS5QbHVnaW5CdWlsZFN0YXR1c0IEkLUYA0gDUgZzdG'
-    'F0dXOIAQESLAoMYXJ0aWZhY3RfdXJsGAQgASgJQgSQtRgDSARSC2FydGlmYWN0VXJsiAEBEiEK'
-    'BnNoYTI1NhgFIAEoCUIEkLUYA0gFUgZzaGEyNTaIAQESKgoLYWJpX3ZlcnNpb24YBiABKA1CBJ'
-    'C1GANIBlIKYWJpVmVyc2lvbogBARIfCgVlcnJvchgHIAEoCUIEkLUYA0gHUgVlcnJvcogBARIb'
-    'CgNsb2cYCCABKAlCBJC1GANICFIDbG9niAEBEigKCnN0YXJ0ZWRfYXQYCSABKANCBJC1GANICV'
-    'IJc3RhcnRlZEF0iAEBEioKC2ZpbmlzaGVkX2F0GAogASgDQgSQtRgDSApSCmZpbmlzaGVkQXSI'
-    'AQE6BJi1GANCBwoFX3V1aWRCCgoIX3ZlcnNpb25CBwoFX2FyY2hCCQoHX3N0YXR1c0IPCg1fYX'
-    'J0aWZhY3RfdXJsQgkKB19zaGEyNTZCDgoMX2FiaV92ZXJzaW9uQggKBl9lcnJvckIGCgRfbG9n'
-    'Qg0KC19zdGFydGVkX2F0Qg4KDF9maW5pc2hlZF9hdA==');
+/// Descriptor for `PluginArtifact`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pluginArtifactDescriptor = $convert.base64Decode(
+    'Cg5QbHVnaW5BcnRpZmFjdBIdCgR1dWlkGAEgASgJQgSQtRgDSABSBHV1aWSIAQESIwoHdmVyc2'
+    'lvbhgCIAEoCUIEkLUYA0gBUgd2ZXJzaW9uiAEBEiEKBnRhcmdldBgLIAEoCUIEkLUYA0gCUgZ0'
+    'YXJnZXSIAQESPgoGc3RhdHVzGAMgASgOMhsuaGkuYWkuUGx1Z2luQXJ0aWZhY3RTdGF0dXNCBJ'
+    'C1GANIA1IGc3RhdHVziAEBEiwKDGFydGlmYWN0X3VybBgEIAEoCUIEkLUYA0gEUgthcnRpZmFj'
+    'dFVybIgBARIhCgZzaGEyNTYYBSABKAlCBJC1GANIBVIGc2hhMjU2iAEBEioKC2FiaV92ZXJzaW'
+    '9uGAYgASgNQgSQtRgDSAZSCmFiaVZlcnNpb26IAQESHwoFZXJyb3IYByABKAlCBJC1GANIB1IF'
+    'ZXJyb3KIAQESGwoDbG9nGAggASgJQgSQtRgDSAhSA2xvZ4gBARIoCgpzdGFydGVkX2F0GAkgAS'
+    'gDQgSQtRgDSAlSCXN0YXJ0ZWRBdIgBARIqCgtmaW5pc2hlZF9hdBgKIAEoA0IEkLUYA0gKUgpm'
+    'aW5pc2hlZEF0iAEBOgSYtRgDQgcKBV91dWlkQgoKCF92ZXJzaW9uQgkKB190YXJnZXRCCQoHX3'
+    'N0YXR1c0IPCg1fYXJ0aWZhY3RfdXJsQgkKB19zaGEyNTZCDgoMX2FiaV92ZXJzaW9uQggKBl9l'
+    'cnJvckIGCgRfbG9nQg0KC19zdGFydGVkX2F0Qg4KDF9maW5pc2hlZF9hdA==');
 
 @$core.Deprecated('Use pluginViewDescriptor instead')
 const PluginView$json = {
@@ -415,13 +416,13 @@ const PluginView$json = {
       '10': 'versionData'
     },
     {
-      '1': 'builds',
+      '1': 'artifacts',
       '3': 12,
       '4': 3,
       '5': 11,
-      '6': '.hi.ai.PluginBuild',
+      '6': '.hi.ai.PluginArtifact',
       '8': {},
-      '10': 'builds'
+      '10': 'artifacts'
     },
     {
       '1': 'follow_latest',
@@ -451,10 +452,10 @@ final $typed_data.Uint8List pluginViewDescriptor = $convert.base64Decode(
     'MuaGkuYWkuUGx1Z2luU291cmNlQgSQtRgDSAFSBnNvdXJjZYgBARImCglyZWZfY291bnQYBSAB'
     'KAVCBJC1GANIAlIIcmVmQ291bnSIAQESMQoEZGF0YRgGIAEoCzIXLmdvb2dsZS5wcm90b2J1Zi'
     '5TdHJ1Y3RCBJC1GANSBGRhdGESQAoMdmVyc2lvbl9kYXRhGAcgASgLMhcuZ29vZ2xlLnByb3Rv'
-    'YnVmLlN0cnVjdEIEkLUYA1ILdmVyc2lvbkRhdGESMAoGYnVpbGRzGAwgAygLMhIuaGkuYWkuUG'
-    'x1Z2luQnVpbGRCBJC1GANSBmJ1aWxkcxIuCg1mb2xsb3dfbGF0ZXN0GAkgASgIQgSQtRgDSANS'
-    'DGZvbGxvd0xhdGVzdIgBAToEmLUYA0IKCghfZW5hYmxlZEIJCgdfc291cmNlQgwKCl9yZWZfY2'
-    '91bnRCEAoOX2ZvbGxvd19sYXRlc3Q=');
+    'YnVmLlN0cnVjdEIEkLUYA1ILdmVyc2lvbkRhdGESOQoJYXJ0aWZhY3RzGAwgAygLMhUuaGkuYW'
+    'kuUGx1Z2luQXJ0aWZhY3RCBJC1GANSCWFydGlmYWN0cxIuCg1mb2xsb3dfbGF0ZXN0GAkgASgI'
+    'QgSQtRgDSANSDGZvbGxvd0xhdGVzdIgBAToEmLUYA0IKCghfZW5hYmxlZEIJCgdfc291cmNlQg'
+    'wKCl9yZWZfY291bnRCEAoOX2ZvbGxvd19sYXRlc3Q=');
 
 @$core.Deprecated('Use pluginVersionViewDescriptor instead')
 const PluginVersionView$json = {
@@ -489,13 +490,13 @@ const PluginVersionView$json = {
       '10': 'data'
     },
     {
-      '1': 'builds',
+      '1': 'artifacts',
       '3': 5,
       '4': 3,
       '5': 11,
-      '6': '.hi.ai.PluginBuild',
+      '6': '.hi.ai.PluginArtifact',
       '8': {},
-      '10': 'builds'
+      '10': 'artifacts'
     },
   ],
   '7': {},
@@ -508,9 +509,9 @@ const PluginVersionView$json = {
 final $typed_data.Uint8List pluginVersionViewDescriptor = $convert.base64Decode(
     'ChFQbHVnaW5WZXJzaW9uVmlldxI0Cgd2ZXJzaW9uGAEgASgLMhQuaGkuYWkuUGx1Z2luVmVyc2'
     'lvbkIEkLUYA1IHdmVyc2lvbhIhCgZhY3RpdmUYAiABKAhCBJC1GANIAFIGYWN0aXZliAEBEjEK'
-    'BGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0QgSQtRgDUgRkYXRhEjAKBmJ1aW'
-    'xkcxgFIAMoCzISLmhpLmFpLlBsdWdpbkJ1aWxkQgSQtRgDUgZidWlsZHM6BJi1GANCCQoHX2Fj'
-    'dGl2ZQ==');
+    'BGRhdGEYAyABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0QgSQtRgDUgRkYXRhEjkKCWFydG'
+    'lmYWN0cxgFIAMoCzIVLmhpLmFpLlBsdWdpbkFydGlmYWN0QgSQtRgDUglhcnRpZmFjdHM6BJi1'
+    'GANCCQoHX2FjdGl2ZQ==');
 
 @$core.Deprecated('Use pluginLoadedDescriptor instead')
 const PluginLoaded$json = {
@@ -1579,9 +1580,9 @@ final $typed_data.Uint8List publicBriefsRespDescriptor = $convert.base64Decode(
     'ChBQdWJsaWNCcmllZnNSZXNwEjYKBmJyaWVmcxgBIAMoCzIYLmhpLmFpLlBsdWdpblB1YmxpY0'
     'JyaWVmQgSQtRgBUgZicmllZnM6BJi1GAE=');
 
-@$core.Deprecated('Use nativePluginDescriptor instead')
-const NativePlugin$json = {
-  '1': 'NativePlugin',
+@$core.Deprecated('Use devicePluginDescriptor instead')
+const DevicePlugin$json = {
+  '1': 'DevicePlugin',
   '2': [
     {
       '1': 'uuid',
@@ -1654,13 +1655,24 @@ const NativePlugin$json = {
       '17': true
     },
     {
-      '1': 'arch',
+      '1': 'target',
       '3': 8,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 7,
-      '10': 'arch',
+      '10': 'target',
+      '17': true
+    },
+    {
+      '1': 'lang',
+      '3': 9,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.ai.PluginLang',
+      '8': {},
+      '9': 8,
+      '10': 'lang',
       '17': true
     },
   ],
@@ -1673,23 +1685,26 @@ const NativePlugin$json = {
     {'1': '_url'},
     {'1': '_sha256'},
     {'1': '_abi_version'},
-    {'1': '_arch'},
+    {'1': '_target'},
+    {'1': '_lang'},
   ],
 };
 
-/// Descriptor for `NativePlugin`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List nativePluginDescriptor = $convert.base64Decode(
-    'CgxOYXRpdmVQbHVnaW4SHQoEdXVpZBgBIAEoCUIEkLUYA0gAUgR1dWlkiAEBEh0KBG5hbWUYAi'
+/// Descriptor for `DevicePlugin`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List devicePluginDescriptor = $convert.base64Decode(
+    'CgxEZXZpY2VQbHVnaW4SHQoEdXVpZBgBIAEoCUIEkLUYA0gAUgR1dWlkiAEBEh0KBG5hbWUYAi'
     'ABKAlCBJC1GANIAVIEbmFtZYgBARIjCgd2ZXJzaW9uGAMgASgJQgSQtRgDSAJSB3ZlcnNpb26I'
     'AQESJgoJZm5fcHJlZml4GAQgASgJQgSQtRgDSANSCGZuUHJlZml4iAEBEhsKA3VybBgFIAEoCU'
     'IEkLUYA0gEUgN1cmyIAQESIQoGc2hhMjU2GAYgASgJQgSQtRgDSAVSBnNoYTI1NogBARIqCgth'
-    'YmlfdmVyc2lvbhgHIAEoDUIEkLUYA0gGUgphYmlWZXJzaW9uiAEBEh0KBGFyY2gYCCABKAlCBJ'
-    'C1GANIB1IEYXJjaIgBAToEmLUYA0IHCgVfdXVpZEIHCgVfbmFtZUIKCghfdmVyc2lvbkIMCgpf'
-    'Zm5fcHJlZml4QgYKBF91cmxCCQoHX3NoYTI1NkIOCgxfYWJpX3ZlcnNpb25CBwoFX2FyY2g=');
+    'YmlfdmVyc2lvbhgHIAEoDUIEkLUYA0gGUgphYmlWZXJzaW9uiAEBEiEKBnRhcmdldBgIIAEoCU'
+    'IEkLUYA0gHUgZ0YXJnZXSIAQESMAoEbGFuZxgJIAEoDjIRLmhpLmFpLlBsdWdpbkxhbmdCBJC1'
+    'GANICFIEbGFuZ4gBAToEmLUYA0IHCgVfdXVpZEIHCgVfbmFtZUIKCghfdmVyc2lvbkIMCgpfZm'
+    '5fcHJlZml4QgYKBF91cmxCCQoHX3NoYTI1NkIOCgxfYWJpX3ZlcnNpb25CCQoHX3RhcmdldEIH'
+    'CgVfbGFuZw==');
 
-@$core.Deprecated('Use listNativeReqDescriptor instead')
-const ListNativeReq$json = {
-  '1': 'ListNativeReq',
+@$core.Deprecated('Use listOnDeviceReqDescriptor instead')
+const ListOnDeviceReq$json = {
+  '1': 'ListOnDeviceReq',
   '2': [
     {
       '1': 'agent',
@@ -1709,21 +1724,21 @@ const ListNativeReq$json = {
   ],
 };
 
-/// Descriptor for `ListNativeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listNativeReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0TmF0aXZlUmVxEioKBWFnZW50GAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIFYWdlbn'
-    'SIAQESFwoEYXJjaBgCIAEoCUgBUgRhcmNoiAEBQggKBl9hZ2VudEIHCgVfYXJjaA==');
+/// Descriptor for `ListOnDeviceReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listOnDeviceReqDescriptor = $convert.base64Decode(
+    'Cg9MaXN0T25EZXZpY2VSZXESKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUgVhZ2'
+    'VudIgBARIXCgRhcmNoGAIgASgJSAFSBGFyY2iIAQFCCAoGX2FnZW50QgcKBV9hcmNo');
 
-@$core.Deprecated('Use listNativeRespDescriptor instead')
-const ListNativeResp$json = {
-  '1': 'ListNativeResp',
+@$core.Deprecated('Use listOnDeviceRespDescriptor instead')
+const ListOnDeviceResp$json = {
+  '1': 'ListOnDeviceResp',
   '2': [
     {
       '1': 'list',
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.hi.ai.NativePlugin',
+      '6': '.hi.ai.DevicePlugin',
       '8': {},
       '10': 'list'
     },
@@ -1731,10 +1746,10 @@ const ListNativeResp$json = {
   '7': {},
 };
 
-/// Descriptor for `ListNativeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listNativeRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0TmF0aXZlUmVzcBItCgRsaXN0GAEgAygLMhMuaGkuYWkuTmF0aXZlUGx1Z2luQgSQtR'
-    'gDUgRsaXN0OgSYtRgD');
+/// Descriptor for `ListOnDeviceResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listOnDeviceRespDescriptor = $convert.base64Decode(
+    'ChBMaXN0T25EZXZpY2VSZXNwEi0KBGxpc3QYASADKAsyEy5oaS5haS5EZXZpY2VQbHVnaW5CBJ'
+    'C1GANSBGxpc3Q6BJi1GAM=');
 
 @$core.Deprecated('Use retryBuildReqDescriptor instead')
 const RetryBuildReq$json = {

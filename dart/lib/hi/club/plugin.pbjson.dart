@@ -15,9 +15,9 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use listNativeReqDescriptor instead')
-const ListNativeReq$json = {
-  '1': 'ListNativeReq',
+@$core.Deprecated('Use listOnDeviceReqDescriptor instead')
+const ListOnDeviceReq$json = {
+  '1': 'ListOnDeviceReq',
   '2': [
     {'1': 'arch', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'arch', '17': true},
   ],
@@ -26,9 +26,9 @@ const ListNativeReq$json = {
   ],
 };
 
-/// Descriptor for `ListNativeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listNativeReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0TmF0aXZlUmVxEhcKBGFyY2gYASABKAlIAFIEYXJjaIgBAUIHCgVfYXJjaA==');
+/// Descriptor for `ListOnDeviceReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listOnDeviceReqDescriptor = $convert.base64Decode(
+    'Cg9MaXN0T25EZXZpY2VSZXESFwoEYXJjaBgBIAEoCUgAUgRhcmNoiAEBQgcKBV9hcmNo');
 
 @$core.Deprecated('Use reloadApiKeyReqDescriptor instead')
 const ReloadApiKeyReq$json = {

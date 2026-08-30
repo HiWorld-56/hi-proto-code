@@ -190,19 +190,24 @@ var Runner_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Builder_Build_FullMethodName = "/hi.ai.plugin.Builder/Build"
+	Builder_Build_FullMethodName     = "/hi.ai.plugin.Builder/Build"
+	Builder_VerifyLua_FullMethodName = "/hi.ai.plugin.Builder/VerifyLua"
 )
 
 // BuilderClient is the client API for Builder service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
+// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
 //
-// ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
-// 危险程度只高不低。必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
+// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
+// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
 type BuilderClient interface {
 	Build(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildResp, error)
+	// 验一个 lua 包:语法能不能 load、manifest 是什么、契约号多少、有没有碰禁用项。
+	// 毫秒级,hi-ai 在发版流程里同步等。
+	VerifyLua(ctx context.Context, in *VerifyLuaReq, opts ...grpc.CallOption) (*VerifyLuaResp, error)
 }
 
 type builderClient struct {
@@ -223,16 +228,30 @@ func (c *builderClient) Build(ctx context.Context, in *BuildReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *builderClient) VerifyLua(ctx context.Context, in *VerifyLuaReq, opts ...grpc.CallOption) (*VerifyLuaResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyLuaResp)
+	err := c.cc.Invoke(ctx, Builder_VerifyLua_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BuilderServer is the server API for Builder service.
 // All implementations should embed UnimplementedBuilderServer
 // for forward compatibility.
 //
-// NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
+// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
 //
-// ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
-// 危险程度只高不低。必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
+// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
+// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
 type BuilderServer interface {
 	Build(context.Context, *BuildReq) (*BuildResp, error)
+	// 验一个 lua 包:语法能不能 load、manifest 是什么、契约号多少、有没有碰禁用项。
+	// 毫秒级,hi-ai 在发版流程里同步等。
+	VerifyLua(context.Context, *VerifyLuaReq) (*VerifyLuaResp, error)
 }
 
 // UnimplementedBuilderServer should be embedded to have
@@ -244,6 +263,9 @@ type UnimplementedBuilderServer struct{}
 
 func (UnimplementedBuilderServer) Build(context.Context, *BuildReq) (*BuildResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Build not implemented")
+}
+func (UnimplementedBuilderServer) VerifyLua(context.Context, *VerifyLuaReq) (*VerifyLuaResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method VerifyLua not implemented")
 }
 func (UnimplementedBuilderServer) testEmbeddedByValue() {}
 
@@ -283,6 +305,24 @@ func _Builder_Build_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Builder_VerifyLua_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyLuaReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BuilderServer).VerifyLua(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Builder_VerifyLua_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BuilderServer).VerifyLua(ctx, req.(*VerifyLuaReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Builder_ServiceDesc is the grpc.ServiceDesc for Builder service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -293,6 +333,10 @@ var Builder_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Build",
 			Handler:    _Builder_Build_Handler,
+		},
+		{
+			MethodName: "VerifyLua",
+			Handler:    _Builder_VerifyLua_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

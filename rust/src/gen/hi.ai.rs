@@ -740,9 +740,12 @@ pub struct PluginShell {
     /// 插件名。**市场标题直接用它**,不另填
     #[prost(string, optional, tag = "2")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// 跑在哪儿。首版由包结构自动判定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
-    #[prost(enumeration = "PluginRuntime", optional, tag = "3")]
-    pub runtime: ::core::option::Option<i32>,
+    /// 用什么语言写的。首版由包结构自动判定,之后冻结 —— 换语言等于换个插件。
+    ///
+    /// ⚠️ 它**只是语言**。"跑在服务端还是设备端""要不要编译"都是从它**派生**的判据,
+    /// 不是它的含义,更不该另存一列(派生值存两份就会漂)。见 PluginLang 的说明。
+    #[prost(enumeration = "PluginLang", optional, tag = "3")]
+    pub lang: ::core::option::Option<i32>,
 }
 /// b:按 (uuid,version) 冻结
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -788,33 +791,41 @@ pub struct PluginVersion {
     #[prost(string, optional, tag = "6")]
     pub description: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 一次构建的结果。**发版接口不返回它** —— 发版是立即返回的,构建在后台跑,
-/// 结果经 Get/ListVersions 回显给发版的人看(编译中 / 失败+日志 / 成功)。
+/// 一个版本在某个 target 上的制品。**发版接口不返回它** —— 发版是立即返回的,
+/// RUST 的构建在后台跑,结果经 Get/ListVersions 回显给发版的人看。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PluginBuild {
+pub struct PluginArtifact {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub version: ::core::option::Option<::prost::alloc::string::String>,
-    /// 这一行是哪个架构的构建。**一版有多行**(aarch64 / x86_64 各一),
-    /// 状态、产物、错误、日志都各记各的 —— 合并显示会互相掩盖("有一个成了"看着像全成了)。
+    /// 这一份制品是给谁的。**一版可以有多行**,状态/产物/错误/日志各记各的 ——
+    /// 合并显示会互相掩盖("有一个成了"看着像全成了)。
+    ///
+    /// RUST         —— `aarch64` / `x86_64`(与 rust 的 std::env::consts::ARCH 同名)
+    /// PYTHON / LUA —— `any`,一版只有一行
+    ///
+    /// ⛔ `any` 是一个**真实的值**,不是"空的 arch"。别写成空串 —— 空不表示为空串。
     #[prost(string, optional, tag = "11")]
-    pub arch: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "PluginBuildStatus", optional, tag = "3")]
+    pub target: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "PluginArtifactStatus", optional, tag = "3")]
     pub status: ::core::option::Option<i32>,
-    /// 编好的 .so(私有桶;下发时现签 presigned)
+    /// 可下发的产物。RUST 是编出来的 `.so`,PYTHON / LUA 就是上传的那个包。
+    /// 都在私有桶,下发时现签 presigned。
     #[prost(string, optional, tag = "4")]
     pub artifact_url: ::core::option::Option<::prost::alloc::string::String>,
     /// 产物摘要,机器人下完照此核对
     #[prost(string, optional, tag = "5")]
     pub sha256: ::core::option::Option<::prost::alloc::string::String>,
-    /// 从 .so 里真读出来的(见 hi.ai.plugin.BuildResp)
+    /// 设备端插件的契约号。RUST 是从 `.so` 里真读出来的 C ABI 号(hinj_plugin_abi),
+    /// LUA 是脚本里声明的 contract。**两者各涨各的,不共用计数器** ——
+    /// 共用的话撞一次 C ABI 就逼所有 lua 插件重发,而它们根本不受影响。
     #[prost(uint32, optional, tag = "6")]
     pub abi_version: ::core::option::Option<u32>,
     /// 失败原因(一句话)
     #[prost(string, optional, tag = "7")]
     pub error: ::core::option::Option<::prost::alloc::string::String>,
-    /// 编译日志尾部
+    /// 编译/校验日志尾部
     #[prost(string, optional, tag = "8")]
     pub log: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int64, optional, tag = "9")]
@@ -846,14 +857,16 @@ pub struct PluginView {
     /// 激活版本的 d.data:版本级扩展数据
     #[prost(message, optional, tag = "7")]
     pub version_data: ::core::option::Option<::pbjson_types::Struct>,
-    /// 激活版本的构建态,**每个架构一条**(aarch64 / x86_64)。NATIVE 才有,PYTHON 恒空。
-    /// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
+    /// 激活版本的制品,**每个 target 一条**。RUST 是 aarch64 / x86_64 两条且要等编译;
+    /// PYTHON / LUA 是 `any` 一条、发版当场就 SUCCEEDED。
+    ///
+    /// 一级页要它是因为:RUST 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
     /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
     ///
-    /// ⚠️ 8 号那个单数 `build` 已删:一版多架构,单个字段只能显示其中一个,
-    /// 另一个编失败就看不见 —— 页面"绿了"而实际半残。
+    /// ⚠️ 8 号那个单数 `build` 已删:一版多 target,单个字段只能显示其中一个,
+    /// 另一个失败就看不见 —— 页面"绿了"而实际半残。
     #[prost(message, repeated, tag = "12")]
-    pub builds: ::prost::alloc::vec::Vec<PluginBuild>,
+    pub artifacts: ::prost::alloc::vec::Vec<PluginArtifact>,
     /// c.follow_latest:这台机器人要不要自动切到作者发的新版。
     ///
     /// ⭐ **这是使用方自己的事,归在使用行(c)上,不在挂牌上。**
@@ -863,7 +876,7 @@ pub struct PluginView {
     /// (内置插件是注册时自动建的引用,根本没有 grant 行),挂在 grant 上就漏掉一大片。
     ///
     /// 关掉 = 停在当前激活版,作者发新版也不动;打开 = 新版**构建成功后**自动切过去
-    /// (NATIVE 要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
+    /// (needsBuild 的语言要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
     #[prost(bool, optional, tag = "9")]
     pub follow_latest: ::core::option::Option<bool>,
 }
@@ -877,13 +890,13 @@ pub struct PluginVersionView {
     /// d.data
     #[prost(message, optional, tag = "3")]
     pub data: ::core::option::Option<::pbjson_types::Struct>,
-    /// ⚠️ **单数那个 `build` 已删** —— 一版有**多个架构**各自的构建态(aarch64 / x86_64),
-    /// 塞进一个字段就只能显示其中一个:另一个编失败也看不见,页面上"绿了"而实际半残。
-    /// 前端要把每个架构一行地列出来。
+    /// ⚠️ **单数那个 `build` 已删** —— 一版有**多个 target** 各自的制品态,
+    /// 塞进一个字段就只能显示其中一个:另一个失败也看不见,页面上"绿了"而实际半残。
+    /// 前端要把每个 target 一行地列出来。
     ///
-    /// 该版本各架构的构建态(NATIVE 才有)
+    /// 该版本各 target 的制品态
     #[prost(message, repeated, tag = "5")]
-    pub builds: ::prost::alloc::vec::Vec<PluginBuild>,
+    pub artifacts: ::prost::alloc::vec::Vec<PluginArtifact>,
 }
 /// 插件加载完成通知(公开摘要,不带私产)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -898,10 +911,10 @@ pub struct PluginLoaded {
     pub enabled: ::core::option::Option<bool>,
 }
 /// 建空壳:插 a{uuid,name,runtime=UNDETERMINED} + owner 的 c{source=original, enabled=false}。
-/// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
+/// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginLang:首版的包说了算)。
 /// data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
 ///
-/// ⚠️ **没有 runtime 字段,不要再加回来。**
+/// ⚠️ **没有 lang 字段,不要再加回来。**
 /// 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateShellReq {
@@ -961,7 +974,7 @@ pub struct SetEnabledReq {
     pub enabled: ::core::option::Option<bool>,
 }
 /// SetFollowLatestReq 改 c.follow_latest —— **在"机器人 → 插件"那一行上操作**。
-/// 打开之后,作者每发一版(NATIVE 是编成功之后)这台机器人就自动切过去;
+/// 打开之后,作者每发一版(needsBuild 的语言是编成功之后)这台机器人就自动切过去;
 /// 关掉就停在当前激活版,由主人自己在版本管理里选。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetFollowLatestReq {
@@ -1204,17 +1217,23 @@ pub struct PublicBriefsResp {
     #[prost(message, repeated, tag = "1")]
     pub briefs: ::prost::alloc::vec::Vec<PluginPublicBrief>,
 }
-/// ── 下发面:机器人问「我该装哪些 NATIVE 插件」───────────────────────────────
+/// ── 下发面:机器人问「我该装哪些设备端插件」──────────────────────────────────
 ///
-/// 只回**该装的**:c.enabled ∧ d.active ∧ 壳是 NATIVE ∧ 该版本构建成功。
+/// 只回**该装的**:c.enabled ∧ d.active ∧ runsOnDevice(壳的 lang) ∧ 该版本的制品可用。
 /// 任一不成立就不该出现在清单里 —— 机器人拿到就会装,而装了就会喂给模型。
+///
+/// ⚠️ **筛的是「跑在设备端」,不是「是 RUST」。** 这条 rpc 原来叫 `ListNative`、
+/// 筛 `runtime = NATIVE` —— 于是 2026-08-30 加 LUA 时它把 lua 插件整个筛掉了,
+/// 而且**零报错**(清单为空对机器人的含义是"这插件我不该有",它会把本地那份删掉)。
+/// 判据换成派生的 `runsOnDevice(lang)` 之后,再加语言这里一个字都不用动。
 ///
 /// ⚠️ **清单是全量,不是增量。** 机器人按它对账:多的删、少的下、sha256 不同的换。
 /// 增量(只告诉"新增了什么")没法表达撤权与到期 —— 而那两件事恰恰必须传达到:
-/// 市场 revoke 删的是服务端的引用行,机器人本地那个 `.so` 不会自己消失。
+/// 市场 revoke 删的是服务端的引用行,机器人本地那个文件不会自己消失。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct NativePlugin {
-    /// 壳 uuid。**落地文件名就是它**(`plugins/<uuid>.so`)
+pub struct DevicePlugin {
+    /// 壳 uuid。**落地文件名就是它**:`plugins/<uuid>@<version>.<ext>`,
+    /// 扩展名由下面的 `lang` 决定。
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳名,只用于机器人日志
@@ -1226,43 +1245,54 @@ pub struct NativePlugin {
     /// 分发时切第一个 `_` 切掉。
     ///
     /// ⚠️ 这个字段原本是 hiai 的内部实现细节(见 PluginVersion.description 那段注释),
-    /// 现在必须过线 —— 因为 `.so` 里编进去的 manifest 是**原始名**,
-    /// 而 py 插件那侧的改名是在发版预读时做掉的,`.so` 没有对应的时机。
+    /// 现在必须过线 —— 因为产物里编进去的 manifest 是**原始名**,
+    /// 而 py 插件那侧的改名是在发版预读时做掉的,设备端产物没有对应的时机。
     /// 不给机器人前缀的话,两个厂商各卖一个提供 `search` 的插件,买家两个都买 →
     /// 机器人本地撞名 → 整个插件拒绝加载,而失败原因只在机器人的本地日志里。
     #[prost(string, optional, tag = "4")]
     pub fn_prefix: ::core::option::Option<::prost::alloc::string::String>,
-    /// `.so` 的下载地址。私有桶,**每次拉清单现签**(限期),不存库。
+    /// 产物下载地址。私有桶,**每次拉清单现签**(限期),不存库。
     #[prost(string, optional, tag = "5")]
     pub url: ::core::option::Option<::prost::alloc::string::String>,
     /// 下完必须核对;对不上就是没下全或被改过
     #[prost(string, optional, tag = "6")]
     pub sha256: ::core::option::Option<::prost::alloc::string::String>,
-    /// 机器人可据此先筛掉对不上的,省一次下载
+    /// 契约号。RUST 是 `.so` 里的 C ABI 号,LUA 是脚本里声明的 contract。
+    /// 机器人可据此先筛掉对不上的,省一次下载。**两种语言各涨各的,不共用计数器。**
     #[prost(uint32, optional, tag = "7")]
     pub abi_version: ::core::option::Option<u32>,
-    /// 这份产物是给哪个架构的(`aarch64` / `x86_64`)。
+    /// 这份产物是给哪个 target 的。RUST 是 `aarch64` / `x86_64`;LUA 是 `any`。
     ///
-    /// ⚠️ **abi_version 挡不住架构不对**:两台机器的 abi 一样,指令集却不同 ——
+    /// ⚠️ **abi_version 挡不住 target 不对**:两台机器的 abi 一样,指令集却不同 ——
     /// 装上去要到 dlopen 才炸,而那个错看着像"插件本身有问题"。
     /// 机器人拿到清单先比这个,不符就跳过并说清楚。
     #[prost(string, optional, tag = "8")]
-    pub arch: ::core::option::Option<::prost::alloc::string::String>,
+    pub target: ::core::option::Option<::prost::alloc::string::String>,
+    /// ⭐ **这份产物是什么语言的** —— 机器人据此决定:落地成什么扩展名(`.so` / `.lua`)、
+    /// 用哪条装载路径(dlopen + 对 C ABI / 沙箱里 load + 对 contract)。
+    ///
+    /// 不给的话机器人只能猜(比如按 url 后缀),而猜错的表现是"下下来了、装不上",
+    /// 原因只在它自己的本地日志里。
+    #[prost(enumeration = "PluginLang", optional, tag = "9")]
+    pub lang: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListNativeReq {
+pub struct ListOnDeviceReq {
     #[prost(string, optional, tag = "1")]
     pub agent: ::core::option::Option<::prost::alloc::string::String>,
     /// 机器人自己的架构。**不传 = aarch64** —— 现网机器人全是 arm64,
     /// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
+    ///
+    /// ⚠️ 服务端按它筛的是 `target ∈ {这个值, "any"}` ——
+    /// LUA 的制品 target 是 `any`,与架构无关,任何机器人都拿得到。
     /// ⛔ 空串不是合法值:要么不传,要么给真架构名。
     #[prost(string, optional, tag = "2")]
     pub arch: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListNativeResp {
+pub struct ListOnDeviceResp {
     #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<NativePlugin>,
+    pub list: ::prost::alloc::vec::Vec<DevicePlugin>,
 }
 /// 重编一版。编译失败(网络抖、依赖源挂了)后不必删版本重发一遍 ——
 /// 版本本体是冻结的,重编的是**产物**,不是版本。
@@ -1275,122 +1305,172 @@ pub struct RetryBuildReq {
     #[prost(string, optional, tag = "3")]
     pub version: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 插件跑在哪儿 —— **壳的属性**(同一个包不会一半 py 一半 rust),发版后不该再改。
+/// ── 插件用什么语言写 —— **壳的属性**(同一个包不会一半 py 一半 rust),发版后冻结 ──
 ///
-/// 这不只是个标签,它决定**谁执行**,而"谁执行"决定了一堆判据该由谁把关:
+/// 语言本身只决定两件事:怎么认出这个包、怎么校验它。
+/// 但从语言可以**派生**出两个判据,而那两个才是整个系统真正在问的:
 ///
-/// PYTHON —— 脚本包(main.py/requirements.txt/description.json),**hiai 服务端执行**。
-/// NATIVE —— rust 源码包(Cargo.toml/src/description.json),云端交叉编译成 .so
-/// **下发到机器人本地执行**,能碰摄像头、屏幕、GPIO、钱包。
+/// runsOnDevice(lang)  这个插件在服务端跑还是在设备端跑
+/// needsBuild(lang)    上传的包本身就是可执行物,还是要先编出来
 ///
-/// ⚠️ **NATIVE 绝不能进服务端的「执行名单」** —— hiai 这个运行时物理上跑不了 .so,
-/// 进了名单,按名字分流时会被判成"我自己跑",然后拿到一个假的成功。
+/// 目前三种语言的取值:
+///
+/// PYTHON —— 脚本包(main.py / requirements.txt / description.json)
+/// runsOnDevice=false  needsBuild=false   → **hiai 服务端执行**
+/// RUST   —— 源码包(Cargo.toml / src/ / description.json)
+/// runsOnDevice=true   needsBuild=true    → 云端交叉编译成 .so 再下发
+/// LUA    —— 脚本包(main.lua / description.json)
+/// runsOnDevice=true   needsBuild=false   → **上传即可下发**
+///
+/// 设备端执行的能碰摄像头、屏幕、GPIO、钱包;服务端执行的碰不到。
+///
+/// 🔴 **判据一律用这两个函数,别写 `lang == RUST`。** 后者是 2026-08-30 之前的写法,
+/// 代价是每加一种语言都要把所有"其实在问 runsOnDevice/needsBuild"的地方找一遍 ——
+/// 而漏掉的那处**不报错**,只是那个插件永远下发不下去 / 模型永远看不见它。
+///
+/// ⚠️ **设备端插件绝不能进服务端的「执行名单」** —— hiai 这个运行时物理上跑不了
+/// `.so`,也不该去跑 lua。进了名单,按名字分流时会被判成"我自己跑",
+/// 然后拿到一个假的成功。
 ///
 /// ```text
 /// 但**可以、而且应该进「喂给模型的 tools 数组」**:那两个是分开的两个数组
-/// (chat.go 里的 allTools 与 internal)。模型点了 NATIVE 方法,分流时落到 outside,
+/// (chat.go 里的 allTools 与 internal)。模型点了设备端方法,分流时落到 outside,
 /// 原样交回机器人执行 —— 那正是要的。
 ///
-/// ⚠️ 这里原来写的是"服务端装配只收 PYTHON,NATIVE 由机器人自己上报"。**那是错的**,
+/// ⚠️ 这里原来写的是"服务端装配只收 PYTHON,设备端的由机器人自己上报"。**那是错的**,
 /// 代价是**启停控制没了**:后台把 enabled 关掉,服务端确实不再下发它,
 /// 但机器人内存里那份 .so **卸不掉**(Rust 没有安全的 dlclose),它照样上报、
 /// 模型照样点得到。描述由服务端出之后,关掉的那一行不进数组,模型当场看不见 ——
-/// 即使 .so 还装着。撤权同理。**控制点必须在后台,不能在机器人手里。**
+/// 即使产物还装着。撤权同理。**控制点必须在后台,不能在机器人手里。**
+///
+/// (LUA 没有"卸不掉"这个问题 —— 它每次调用新建解释器状态。但控制点仍然在后台,
+/// 两种语言一视同仁,不为其中一种开特例。)
 ///
 /// 机器人只保留一件事:知道自己能调哪些名字,收到 tool_call 时切回原名分发。
 /// 描述文件对它没用 —— 那是给模型看的,而模型在服务端那头。
-/// **内置插件是例外**(跟着固件走、后台没有它的记录),仍由机器人上报。
 /// ```
 ///
-/// 由此,NATIVE 插件挂在一个**软件**机器人上是完全合法的 —— 那台机器人当"柜台":
+/// 由此,设备端插件挂在一个**软件**机器人上是完全合法的 —— 那台机器人当"柜台":
 /// 只展示和存储、供人选购与下发,自己一个也跑不了。这样公共插件就不必挂在某台
 /// 硬件机器人上,免得那台机器一下线整个货架跟着消失。
-/// ⭐ **runtime 是自动判定的,不让用户声明。**
+/// ⭐ **lang 是自动判定的,不让用户声明。**
 ///
 /// 建壳时**根本没有包**,谈不上语言 —— 所以空壳一律 UNDETERMINED;
 /// 首版上传时后端解开 zip 按**包结构**认:
 ///
-/// Cargo.toml → NATIVE      main.py → PYTHON      两个都有 / 都没有 → 报错,不猜
+/// Cargo.toml → RUST    main.py → PYTHON    main.lua → LUA
+/// **恰好命中一个**才放行;零个或多个都报错,不猜。
 ///
 /// 判定的材料早就在手上:`CreateVersion` 本来就要下载解压这个包去预读
-/// description.json(specFromPackage),顺手看一眼根目录有什么,零额外成本。
+/// description.json,顺手看一眼根目录有什么,零额外成本。
 ///
 /// 让用户在表单里选一次"这是 rust 还是 py",等于要他把包里已经写死的事实再抄一遍 ——
 /// 抄错了还没人拦得住(选了 PYTHON 传 rust 包:不会编译、当脚本跑、报一个看不懂的语法错)。
 ///
-/// 首版定下之后**壳的 runtime 冻结**:后续版本的包类型必须与壳一致,否则拒。
+/// 首版定下之后**壳的 lang 冻结**:后续版本的包类型必须与壳一致,否则拒。
 /// 换语言等于换了个东西 —— uuid / fn_prefix / 已经装了它的那些机器人,一样都不能沿用。
+///
+/// ── ⛔ 这个枚举只管**语言**,别再往里塞别的轴 ────────────────────────────────
+///
+/// 它原来叫 `PluginRuntime`,值是 `PYTHON / NATIVE / UNDETERMINED` ——
+/// 而 `NATIVE`(= 本地跑)与 `PYTHON`(= 一种语言)**根本不在同一个轴上**。
+/// 三件不同的事被压成了一个值:
+///
+/// ① 语言          —— 包里是 Cargo.toml / main.py / main.lua  ← **只有这一件留在本枚举**
+/// ② 在哪执行       —— 服务端 vs 设备端                        → 派生:runsOnDevice(lang)
+/// ③ 有几份可执行物 —— 包本身就是 vs 要编出 N 份                → 派生:needsBuild(lang)
+///
+/// 代价是每加一种语言,所有"其实在问 ②③"的地方都被迫跟着改 ——
+/// 而其中两处是**零报错的静默失效**(下发清单筛空、模型看不见方法)。
+/// 2026-08-30 加 LUA 时把三个轴拆开:②③ 改成从 lang **派生**的判据函数,
+/// **不落库、不进任何查询**。加第四种语言从此只动 detect + 两个判据 + 验收。
+///
+/// 🔴 所以:**新增语言只在这里加一个值**。任何"这个语言跑在哪 / 要不要编"的问题,
+/// 答案都在派生判据里,不在这个枚举里。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum PluginRuntime {
+pub enum PluginLang {
     /// 服务端跑的 py 脚本包(历史插件全是这个,故占 0)
     Python = 0,
-    /// 机器人本地跑的 rust 插件(源码上传,云端编译后下发)
-    Native = 1,
+    /// 设备端跑的 rust 插件(源码上传,云端交叉编译成 .so 后下发)
+    Rust = 1,
     /// 空壳:还没有任何版本,包没上传过,语言未知
     Undetermined = 2,
+    /// 设备端跑的 lua 脚本(**不编译**,上传即可下发)
+    Lua = 3,
 }
-impl PluginRuntime {
+impl PluginLang {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Python => "PLUGIN_RUNTIME_PYTHON",
-            Self::Native => "PLUGIN_RUNTIME_NATIVE",
-            Self::Undetermined => "PLUGIN_RUNTIME_UNDETERMINED",
+            Self::Python => "PLUGIN_LANG_PYTHON",
+            Self::Rust => "PLUGIN_LANG_RUST",
+            Self::Undetermined => "PLUGIN_LANG_UNDETERMINED",
+            Self::Lua => "PLUGIN_LANG_LUA",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "PLUGIN_RUNTIME_PYTHON" => Some(Self::Python),
-            "PLUGIN_RUNTIME_NATIVE" => Some(Self::Native),
-            "PLUGIN_RUNTIME_UNDETERMINED" => Some(Self::Undetermined),
+            "PLUGIN_LANG_PYTHON" => Some(Self::Python),
+            "PLUGIN_LANG_RUST" => Some(Self::Rust),
+            "PLUGIN_LANG_UNDETERMINED" => Some(Self::Undetermined),
+            "PLUGIN_LANG_LUA" => Some(Self::Lua),
             _ => None,
         }
     }
 }
-/// ── NATIVE 的构建态 ────────────────────────────────────────────────────────
+/// ── 制品(artifact)—— 一个版本的「可执行物」────────────────────────────────
 ///
-/// **只有 NATIVE 有这一段。** PYTHON 的包传上来就能跑,不存在"编不编得出来";
-/// NATIVE 传上来的是 rust 源码,要交叉编译成 arm64 `.so` 才谈得上下发。
+/// ⭐ **每个版本都有制品行,不分语言。** 这是 2026-08-30 补上的那个缺失概念:
+///
+/// PYTHON / LUA —— 1 行,`target = "any"`,**发版当场就是 SUCCEEDED**,
+/// `artifact_url` 就是上传的那个包本身(不存在"编不编得出来")。
+/// RUST         —— N 行(aarch64 / x86_64 各一),要等交叉编译回填。
+///
+/// 原来这张表叫 `PluginBuild` 且**只有 NATIVE 有行**,于是「这台机器人该拿到什么」
+/// 这一个概念被迫分裂成两条互不相干的查询(PYTHON 直接读版本包 url、NATIVE 走构建表)。
+/// 后果有二:① 同一个判据写了两遍,2026-08-20 因此让全网装了内置插件的机器人
+/// 一句话都答不上来;② **「设备端执行 + 不需要编译」这个组合在模型里根本不存在** ——
+/// 正是 LUA 落不了地的根因。
 ///
 /// 单独一张表、不并进 b(PluginVersion):b 是**发版即冻结**的本体,
-/// 而构建结果是几分钟后才回填的、还可能重试 —— 两种寿命塞进一行迟早打架。
+/// 而制品是之后才回填的、还可能重试 —— 两种寿命塞进一行迟早打架。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum PluginBuildStatus {
-    /// 已排队,还没开始(发版当场就是这个)
+pub enum PluginArtifactStatus {
+    /// 已排队,还没开始(RUST 发版当场就是这个)
     Pending = 0,
-    /// 正在编
+    /// 正在编(只有 RUST 会经过)
     Building = 1,
-    /// 编出来了、校验过了、产物已上传
+    /// 可下发了。**PYTHON / LUA 发版当场就是它**
     Succeeded = 2,
     /// 编不出来 / 校验没过。error+log 里有原因
     Failed = 3,
 }
-impl PluginBuildStatus {
+impl PluginArtifactStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Pending => "PLUGIN_BUILD_STATUS_PENDING",
-            Self::Building => "PLUGIN_BUILD_STATUS_BUILDING",
-            Self::Succeeded => "PLUGIN_BUILD_STATUS_SUCCEEDED",
-            Self::Failed => "PLUGIN_BUILD_STATUS_FAILED",
+            Self::Pending => "PLUGIN_ARTIFACT_STATUS_PENDING",
+            Self::Building => "PLUGIN_ARTIFACT_STATUS_BUILDING",
+            Self::Succeeded => "PLUGIN_ARTIFACT_STATUS_SUCCEEDED",
+            Self::Failed => "PLUGIN_ARTIFACT_STATUS_FAILED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "PLUGIN_BUILD_STATUS_PENDING" => Some(Self::Pending),
-            "PLUGIN_BUILD_STATUS_BUILDING" => Some(Self::Building),
-            "PLUGIN_BUILD_STATUS_SUCCEEDED" => Some(Self::Succeeded),
-            "PLUGIN_BUILD_STATUS_FAILED" => Some(Self::Failed),
+            "PLUGIN_ARTIFACT_STATUS_PENDING" => Some(Self::Pending),
+            "PLUGIN_ARTIFACT_STATUS_BUILDING" => Some(Self::Building),
+            "PLUGIN_ARTIFACT_STATUS_SUCCEEDED" => Some(Self::Succeeded),
+            "PLUGIN_ARTIFACT_STATUS_FAILED" => Some(Self::Failed),
             _ => None,
         }
     }
@@ -1858,10 +1938,13 @@ pub mod plugin_client {
                 .insert(GrpcMethod::new("hi.ai.Plugin", "SetFollowLatest"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_native(
+        pub async fn list_on_device(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListNativeReq>,
-        ) -> std::result::Result<tonic::Response<super::ListNativeResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::ListOnDeviceReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListOnDeviceResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1871,9 +1954,11 @@ pub mod plugin_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/ListNative");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/ListOnDevice",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "ListNative"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "ListOnDevice"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn retry_build(

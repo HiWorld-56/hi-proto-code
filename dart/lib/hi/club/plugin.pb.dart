@@ -22,14 +22,15 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
 /// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
 ///
-/// ListNativeReq —— 见下面 ListNative:**没有 agent 字段**,主体只能从凭证里取。
-/// 只带机器人自己的架构:同一版插件两个架构各有一份产物,给错了要到 dlopen 才炸。
+/// ListOnDeviceReq —— 见下面 ListOnDevice:**没有 agent 字段**,主体只能从凭证里取。
+/// 只带机器人自己的架构:RUST 插件一版两个架构各有一份产物,给错了要到 dlopen 才炸。
+/// (LUA 的制品 target 是 `any`,与架构无关 —— 服务端按 `target ∈ {这个值, "any"}` 筛。)
 ///
 /// ⚠️ **不传 = aarch64**。老 brain 发的是 `Empty`(根本不带这个字段),optional 之后就是
 ///    "没有值" —— 于是它照旧拿到 arm64 那份,零改动继续跑。这条兼容是有意的。
 ///    ⛔ **空串不再是合法值**(2026-08-28 起禁止用空串表示"没有"):要么不传,要么给真架构名。
-class ListNativeReq extends $pb.GeneratedMessage {
-  factory ListNativeReq({
+class ListOnDeviceReq extends $pb.GeneratedMessage {
+  factory ListOnDeviceReq({
     $core.String? arch,
   }) {
     final result = create();
@@ -37,40 +38,40 @@ class ListNativeReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListNativeReq._();
+  ListOnDeviceReq._();
 
-  factory ListNativeReq.fromBuffer($core.List<$core.int> data,
+  factory ListOnDeviceReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListNativeReq.fromJson($core.String json,
+  factory ListOnDeviceReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListNativeReq',
+      _omitMessageNames ? '' : 'ListOnDeviceReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'arch')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListNativeReq clone() => deepCopy();
+  ListOnDeviceReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListNativeReq copyWith(void Function(ListNativeReq) updates) =>
-      super.copyWith((message) => updates(message as ListNativeReq))
-          as ListNativeReq;
+  ListOnDeviceReq copyWith(void Function(ListOnDeviceReq) updates) =>
+      super.copyWith((message) => updates(message as ListOnDeviceReq))
+          as ListOnDeviceReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListNativeReq create() => ListNativeReq._();
+  static ListOnDeviceReq create() => ListOnDeviceReq._();
   @$core.override
-  ListNativeReq createEmptyInstance() => create();
+  ListOnDeviceReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListNativeReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListNativeReq>(create);
-  static ListNativeReq? _defaultInstance;
+  static ListOnDeviceReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListOnDeviceReq>(create);
+  static ListOnDeviceReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get arch => $_getSZ(0);

@@ -312,9 +312,9 @@ func (x *CleanupReq) GetCodeArchiveUrl() string {
 	return ""
 }
 
-// ── NATIVE 构建契约(独立构建服务实现,hiai 只作调用方)────────────────────────
+// ── RUST 构建契约(独立构建服务实现,hiai 只作调用方)──────────────────────────
 //
-// NATIVE 插件(`PluginRuntime.PLUGIN_RUNTIME_NATIVE`)传上来的是 **rust 源码**,
+// RUST 插件(`PluginLang.PLUGIN_LANG_RUST`)传上来的是 **rust 源码**,
 // 要先交叉编译成 arm64 的 `.so` 才谈得上下发。这条契约就是那一步。
 //
 // ## 它是**无状态纯函数**:给源码,还产物
@@ -512,6 +512,164 @@ func (x *BuildResp) GetLog() string {
 	return ""
 }
 
+// ── LUA 验收契约 ────────────────────────────────────────────────────────────
+//
+// LUA 插件**不需要编译**(上传的脚本就是产物),但**绝不能因此跳过验收**。
+// 不验的话,一个语法错的脚本会直接铺到全网机器人,而失败只存在于每台机器人的
+// 本地日志里 —— 那正是我们反复踩过的「失败原因只在机器人本地」。
+//
+// 为什么这一步在构建服务而不是 hi-ai 里做:**hi-ai 里没有 lua 解释器**,
+// 而验收要真的把脚本 load 一遍、读出它的 manifest。塞一个 lua 运行时进业务服务,
+// 等于让每次发版都多背一个 C 依赖;构建服务本来就是"跑三方代码的那个容器"。
+//
+// 与 Build 的区别:**这是毫秒级的同步调用**,所以 hi-ai 在 CreateVersion 里直接等它,
+// 验不过就拒绝这一版 —— 而不是像 RUST 那样先落库再后台编。
+// 一个语法错的脚本压根不该进库。
+type VerifyLuaReq struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	CodeArchiveUrl *string                `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3,oneof" json:"code_archive_url,omitempty"` // lua 脚本包 zip(= 这一版的 b.url)
+	Uuid           *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                                             // 壳 uuid(日志用)
+	Version        *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`                                       // 版本号
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *VerifyLuaReq) Reset() {
+	*x = VerifyLuaReq{}
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyLuaReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyLuaReq) ProtoMessage() {}
+
+func (x *VerifyLuaReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyLuaReq.ProtoReflect.Descriptor instead.
+func (*VerifyLuaReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *VerifyLuaReq) GetCodeArchiveUrl() string {
+	if x != nil && x.CodeArchiveUrl != nil {
+		return *x.CodeArchiveUrl
+	}
+	return ""
+}
+
+func (x *VerifyLuaReq) GetUuid() string {
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
+	}
+	return ""
+}
+
+func (x *VerifyLuaReq) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
+type VerifyLuaResp struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 验过了没有。**false 时 rpc 本身仍是成功的** —— 同 BuildResp,
+	// 「脚本层面的错不是 rpc 错误」,要把原因原样交给发版的人看。
+	Ok *bool `protobuf:"varint,1,opt,name=ok,proto3,oneof" json:"ok,omitempty"`
+	// 脚本里声明的契约号(`contract`)。**机器人加载前拿它比对,不匹配拒载。**
+	//
+	// 🔴 它与 RUST 的 C ABI 号**各涨各的,不共用计数器** —— 共用的话撞一次 C ABI
+	// 就逼所有 lua 插件重发,而它们根本不受影响。
+	Contract *uint32 `protobuf:"varint,2,opt,name=contract,proto3,oneof" json:"contract,omitempty"`
+	// 从**脚本里真跑出来的** manifest(OpenAI tools 数组,原始名、不带壳前缀)。
+	// hi-ai 拿它跟包里的 description.json 比对 —— 不一致说明作者改了 json 却没改代码
+	// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
+	Manifest      *string `protobuf:"bytes,3,opt,name=manifest,proto3,oneof" json:"manifest,omitempty"`
+	Error         *string `protobuf:"bytes,4,opt,name=error,proto3,oneof" json:"error,omitempty"` // 失败原因(给发版的人看的一句话)
+	Log           *string `protobuf:"bytes,5,opt,name=log,proto3,oneof" json:"log,omitempty"`     // 细节(语法错的行号、命中的禁用项)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyLuaResp) Reset() {
+	*x = VerifyLuaResp{}
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyLuaResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyLuaResp) ProtoMessage() {}
+
+func (x *VerifyLuaResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyLuaResp.ProtoReflect.Descriptor instead.
+func (*VerifyLuaResp) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *VerifyLuaResp) GetOk() bool {
+	if x != nil && x.Ok != nil {
+		return *x.Ok
+	}
+	return false
+}
+
+func (x *VerifyLuaResp) GetContract() uint32 {
+	if x != nil && x.Contract != nil {
+		return *x.Contract
+	}
+	return 0
+}
+
+func (x *VerifyLuaResp) GetManifest() string {
+	if x != nil && x.Manifest != nil {
+		return *x.Manifest
+	}
+	return ""
+}
+
+func (x *VerifyLuaResp) GetError() string {
+	if x != nil && x.Error != nil {
+		return *x.Error
+	}
+	return ""
+}
+
+func (x *VerifyLuaResp) GetLog() string {
+	if x != nil && x.Log != nil {
+		return *x.Log
+	}
+	return ""
+}
+
 var File_hi_ai_plugin_base_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_base_proto_rawDesc = "" +
@@ -566,12 +724,32 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\f_abi_versionB\v\n" +
 	"\t_manifestB\b\n" +
 	"\x06_errorB\x06\n" +
+	"\x04_log\"\x9f\x01\n" +
+	"\fVerifyLuaReq\x12-\n" +
+	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01\x12\x17\n" +
+	"\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01B\x13\n" +
+	"\x11_code_archive_urlB\a\n" +
+	"\x05_uuidB\n" +
+	"\n" +
+	"\b_version\"\xef\x01\n" +
+	"\rVerifyLuaResp\x12\x19\n" +
+	"\x02ok\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x02ok\x88\x01\x01\x12%\n" +
+	"\bcontract\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x01R\bcontract\x88\x01\x01\x12%\n" +
+	"\bmanifest\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\bmanifest\x88\x01\x01\x12\x1f\n" +
+	"\x05error\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05error\x88\x01\x01\x12\x1b\n" +
+	"\x03log\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x03log\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_okB\v\n" +
+	"\t_contractB\v\n" +
+	"\t_manifestB\b\n" +
+	"\x06_errorB\x06\n" +
 	"\x04_log2\x87\x01\n" +
 	"\x06Runner\x129\n" +
 	"\x03Run\x12\x14.hi.ai.plugin.RunReq\x1a\x15.hi.ai.plugin.RunResp\"\x05\x8a\xb5\x18\x01\x06\x12B\n" +
-	"\aCleanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x062J\n" +
+	"\aCleanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x062\x97\x01\n" +
 	"\aBuilder\x12?\n" +
-	"\x05Build\x12\x16.hi.ai.plugin.BuildReq\x1a\x17.hi.ai.plugin.BuildResp\"\x05\x8a\xb5\x18\x01\x06B\x9f\x01\n" +
+	"\x05Build\x12\x16.hi.ai.plugin.BuildReq\x1a\x17.hi.ai.plugin.BuildResp\"\x05\x8a\xb5\x18\x01\x06\x12K\n" +
+	"\tVerifyLua\x12\x1a.hi.ai.plugin.VerifyLuaReq\x1a\x1b.hi.ai.plugin.VerifyLuaResp\"\x05\x8a\xb5\x18\x01\x06B\x9f\x01\n" +
 	"\x10com.hi.ai.pluginB\tBaseProtoP\x01Z.github.com/HiWorld-56/hi-proto/go/hi/ai/plugin\xa2\x02\x03HAP\xaa\x02\fHi.Ai.Plugin\xca\x02\fHi\\Ai\\Plugin\xe2\x02\x18Hi\\Ai\\Plugin\\GPBMetadata\xea\x02\x0eHi::Ai::Pluginb\x06proto3"
 
 var (
@@ -586,7 +764,7 @@ func file_hi_ai_plugin_base_proto_rawDescGZIP() []byte {
 	return file_hi_ai_plugin_base_proto_rawDescData
 }
 
-var file_hi_ai_plugin_base_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_hi_ai_plugin_base_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_hi_ai_plugin_base_proto_goTypes = []any{
 	(*PluginAnnex)(nil),     // 0: hi.ai.plugin.PluginAnnex
 	(*RunReq)(nil),          // 1: hi.ai.plugin.RunReq
@@ -594,25 +772,29 @@ var file_hi_ai_plugin_base_proto_goTypes = []any{
 	(*CleanupReq)(nil),      // 3: hi.ai.plugin.CleanupReq
 	(*BuildReq)(nil),        // 4: hi.ai.plugin.BuildReq
 	(*BuildResp)(nil),       // 5: hi.ai.plugin.BuildResp
-	(*structpb.Struct)(nil), // 6: google.protobuf.Struct
-	(*ai.Content)(nil),      // 7: hi.ai.Content
-	(*emptypb.Empty)(nil),   // 8: google.protobuf.Empty
+	(*VerifyLuaReq)(nil),    // 6: hi.ai.plugin.VerifyLuaReq
+	(*VerifyLuaResp)(nil),   // 7: hi.ai.plugin.VerifyLuaResp
+	(*structpb.Struct)(nil), // 8: google.protobuf.Struct
+	(*ai.Content)(nil),      // 9: hi.ai.Content
+	(*emptypb.Empty)(nil),   // 10: google.protobuf.Empty
 }
 var file_hi_ai_plugin_base_proto_depIdxs = []int32{
-	6, // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
-	0, // 1: hi.ai.plugin.RunReq.annex:type_name -> hi.ai.plugin.PluginAnnex
-	7, // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
-	1, // 3: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
-	3, // 4: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
-	4, // 5: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
-	2, // 6: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
-	8, // 7: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
-	5, // 8: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	8,  // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
+	0,  // 1: hi.ai.plugin.RunReq.annex:type_name -> hi.ai.plugin.PluginAnnex
+	9,  // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
+	1,  // 3: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
+	3,  // 4: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
+	4,  // 5: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
+	6,  // 6: hi.ai.plugin.Builder.VerifyLua:input_type -> hi.ai.plugin.VerifyLuaReq
+	2,  // 7: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
+	10, // 8: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
+	5,  // 9: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
+	7,  // 10: hi.ai.plugin.Builder.VerifyLua:output_type -> hi.ai.plugin.VerifyLuaResp
+	7,  // [7:11] is the sub-list for method output_type
+	3,  // [3:7] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_base_proto_init() }
@@ -624,13 +806,15 @@ func file_hi_ai_plugin_base_proto_init() {
 	file_hi_ai_plugin_base_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_ai_plugin_base_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_ai_plugin_base_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_plugin_base_proto_rawDesc), len(file_hi_ai_plugin_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

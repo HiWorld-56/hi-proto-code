@@ -4172,6 +4172,239 @@ impl<'de> serde::Deserialize<'de> for DeleteVersionsReq {
         deserializer.deserialize_struct("hi.ai.DeleteVersionsReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for DevicePlugin {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.uuid.is_some() {
+            len += 1;
+        }
+        if self.name.is_some() {
+            len += 1;
+        }
+        if self.version.is_some() {
+            len += 1;
+        }
+        if self.fn_prefix.is_some() {
+            len += 1;
+        }
+        if self.url.is_some() {
+            len += 1;
+        }
+        if self.sha256.is_some() {
+            len += 1;
+        }
+        if self.abi_version.is_some() {
+            len += 1;
+        }
+        if self.target.is_some() {
+            len += 1;
+        }
+        if self.lang.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.DevicePlugin", len)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
+        }
+        if let Some(v) = self.fn_prefix.as_ref() {
+            struct_ser.serialize_field("fnPrefix", v)?;
+        }
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
+        }
+        if let Some(v) = self.sha256.as_ref() {
+            struct_ser.serialize_field("sha256", v)?;
+        }
+        if let Some(v) = self.abi_version.as_ref() {
+            struct_ser.serialize_field("abiVersion", v)?;
+        }
+        if let Some(v) = self.target.as_ref() {
+            struct_ser.serialize_field("target", v)?;
+        }
+        if let Some(v) = self.lang.as_ref() {
+            let v = PluginLang::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("lang", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DevicePlugin {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "uuid",
+            "name",
+            "version",
+            "fn_prefix",
+            "fnPrefix",
+            "url",
+            "sha256",
+            "abi_version",
+            "abiVersion",
+            "target",
+            "lang",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Uuid,
+            Name,
+            Version,
+            FnPrefix,
+            Url,
+            Sha256,
+            AbiVersion,
+            Target,
+            Lang,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "name" => Ok(GeneratedField::Name),
+                            "version" => Ok(GeneratedField::Version),
+                            "fnPrefix" | "fn_prefix" => Ok(GeneratedField::FnPrefix),
+                            "url" => Ok(GeneratedField::Url),
+                            "sha256" => Ok(GeneratedField::Sha256),
+                            "abiVersion" | "abi_version" => Ok(GeneratedField::AbiVersion),
+                            "target" => Ok(GeneratedField::Target),
+                            "lang" => Ok(GeneratedField::Lang),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DevicePlugin;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.DevicePlugin")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DevicePlugin, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                let mut name__ = None;
+                let mut version__ = None;
+                let mut fn_prefix__ = None;
+                let mut url__ = None;
+                let mut sha256__ = None;
+                let mut abi_version__ = None;
+                let mut target__ = None;
+                let mut lang__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = map_.next_value()?;
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = map_.next_value()?;
+                        }
+                        GeneratedField::FnPrefix => {
+                            if fn_prefix__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fnPrefix"));
+                            }
+                            fn_prefix__ = map_.next_value()?;
+                        }
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = map_.next_value()?;
+                        }
+                        GeneratedField::Sha256 => {
+                            if sha256__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sha256"));
+                            }
+                            sha256__ = map_.next_value()?;
+                        }
+                        GeneratedField::AbiVersion => {
+                            if abi_version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("abiVersion"));
+                            }
+                            abi_version__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Target => {
+                            if target__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("target"));
+                            }
+                            target__ = map_.next_value()?;
+                        }
+                        GeneratedField::Lang => {
+                            if lang__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lang"));
+                            }
+                            lang__ = map_.next_value::<::std::option::Option<PluginLang>>()?.map(|x| x as i32);
+                        }
+                    }
+                }
+                Ok(DevicePlugin {
+                    uuid: uuid__,
+                    name: name__,
+                    version: version__,
+                    fn_prefix: fn_prefix__,
+                    url: url__,
+                    sha256: sha256__,
+                    abi_version: abi_version__,
+                    target: target__,
+                    lang: lang__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.DevicePlugin", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for DownloadFileReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -7123,7 +7356,7 @@ impl<'de> serde::Deserialize<'de> for ListFilesResp {
         deserializer.deserialize_struct("hi.ai.ListFilesResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListNativeReq {
+impl serde::Serialize for ListOnDeviceReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -7137,7 +7370,7 @@ impl serde::Serialize for ListNativeReq {
         if self.arch.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListNativeReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListOnDeviceReq", len)?;
         if let Some(v) = self.agent.as_ref() {
             struct_ser.serialize_field("agent", v)?;
         }
@@ -7147,7 +7380,7 @@ impl serde::Serialize for ListNativeReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListNativeReq {
+impl<'de> serde::Deserialize<'de> for ListOnDeviceReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -7194,13 +7427,13 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListNativeReq;
+            type Value = ListOnDeviceReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListNativeReq")
+                formatter.write_str("struct hi.ai.ListOnDeviceReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListNativeReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListOnDeviceReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -7222,16 +7455,16 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
                         }
                     }
                 }
-                Ok(ListNativeReq {
+                Ok(ListOnDeviceReq {
                     agent: agent__,
                     arch: arch__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListNativeReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListOnDeviceReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListNativeResp {
+impl serde::Serialize for ListOnDeviceResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -7242,14 +7475,14 @@ impl serde::Serialize for ListNativeResp {
         if !self.list.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ListNativeResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.ListOnDeviceResp", len)?;
         if !self.list.is_empty() {
             struct_ser.serialize_field("list", &self.list)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListNativeResp {
+impl<'de> serde::Deserialize<'de> for ListOnDeviceResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -7293,13 +7526,13 @@ impl<'de> serde::Deserialize<'de> for ListNativeResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListNativeResp;
+            type Value = ListOnDeviceResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ListNativeResp")
+                formatter.write_str("struct hi.ai.ListOnDeviceResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListNativeResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListOnDeviceResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -7314,12 +7547,12 @@ impl<'de> serde::Deserialize<'de> for ListNativeResp {
                         }
                     }
                 }
-                Ok(ListNativeResp {
+                Ok(ListOnDeviceResp {
                     list: list__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.ListNativeResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.ListOnDeviceResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListPluginsReq {
@@ -8590,220 +8823,6 @@ impl<'de> serde::Deserialize<'de> for ModelSet {
         deserializer.deserialize_struct("hi.ai.ModelSet", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for NativePlugin {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.uuid.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
-            len += 1;
-        }
-        if self.version.is_some() {
-            len += 1;
-        }
-        if self.fn_prefix.is_some() {
-            len += 1;
-        }
-        if self.url.is_some() {
-            len += 1;
-        }
-        if self.sha256.is_some() {
-            len += 1;
-        }
-        if self.abi_version.is_some() {
-            len += 1;
-        }
-        if self.arch.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.NativePlugin", len)?;
-        if let Some(v) = self.uuid.as_ref() {
-            struct_ser.serialize_field("uuid", v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
-        }
-        if let Some(v) = self.version.as_ref() {
-            struct_ser.serialize_field("version", v)?;
-        }
-        if let Some(v) = self.fn_prefix.as_ref() {
-            struct_ser.serialize_field("fnPrefix", v)?;
-        }
-        if let Some(v) = self.url.as_ref() {
-            struct_ser.serialize_field("url", v)?;
-        }
-        if let Some(v) = self.sha256.as_ref() {
-            struct_ser.serialize_field("sha256", v)?;
-        }
-        if let Some(v) = self.abi_version.as_ref() {
-            struct_ser.serialize_field("abiVersion", v)?;
-        }
-        if let Some(v) = self.arch.as_ref() {
-            struct_ser.serialize_field("arch", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for NativePlugin {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "uuid",
-            "name",
-            "version",
-            "fn_prefix",
-            "fnPrefix",
-            "url",
-            "sha256",
-            "abi_version",
-            "abiVersion",
-            "arch",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Uuid,
-            Name,
-            Version,
-            FnPrefix,
-            Url,
-            Sha256,
-            AbiVersion,
-            Arch,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "uuid" => Ok(GeneratedField::Uuid),
-                            "name" => Ok(GeneratedField::Name),
-                            "version" => Ok(GeneratedField::Version),
-                            "fnPrefix" | "fn_prefix" => Ok(GeneratedField::FnPrefix),
-                            "url" => Ok(GeneratedField::Url),
-                            "sha256" => Ok(GeneratedField::Sha256),
-                            "abiVersion" | "abi_version" => Ok(GeneratedField::AbiVersion),
-                            "arch" => Ok(GeneratedField::Arch),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = NativePlugin;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.NativePlugin")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<NativePlugin, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut uuid__ = None;
-                let mut name__ = None;
-                let mut version__ = None;
-                let mut fn_prefix__ = None;
-                let mut url__ = None;
-                let mut sha256__ = None;
-                let mut abi_version__ = None;
-                let mut arch__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Uuid => {
-                            if uuid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("uuid"));
-                            }
-                            uuid__ = map_.next_value()?;
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
-                        }
-                        GeneratedField::Version => {
-                            if version__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("version"));
-                            }
-                            version__ = map_.next_value()?;
-                        }
-                        GeneratedField::FnPrefix => {
-                            if fn_prefix__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("fnPrefix"));
-                            }
-                            fn_prefix__ = map_.next_value()?;
-                        }
-                        GeneratedField::Url => {
-                            if url__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("url"));
-                            }
-                            url__ = map_.next_value()?;
-                        }
-                        GeneratedField::Sha256 => {
-                            if sha256__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sha256"));
-                            }
-                            sha256__ = map_.next_value()?;
-                        }
-                        GeneratedField::AbiVersion => {
-                            if abi_version__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("abiVersion"));
-                            }
-                            abi_version__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::Arch => {
-                            if arch__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("arch"));
-                            }
-                            arch__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(NativePlugin {
-                    uuid: uuid__,
-                    name: name__,
-                    version: version__,
-                    fn_prefix: fn_prefix__,
-                    url: url__,
-                    sha256: sha256__,
-                    abi_version: abi_version__,
-                    arch: arch__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.NativePlugin", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for NewSessionResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -9669,7 +9688,7 @@ impl<'de> serde::Deserialize<'de> for PermissionType {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
-impl serde::Serialize for PluginBuild {
+impl serde::Serialize for PluginArtifact {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -9683,7 +9702,7 @@ impl serde::Serialize for PluginBuild {
         if self.version.is_some() {
             len += 1;
         }
-        if self.arch.is_some() {
+        if self.target.is_some() {
             len += 1;
         }
         if self.status.is_some() {
@@ -9710,18 +9729,18 @@ impl serde::Serialize for PluginBuild {
         if self.finished_at.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.PluginBuild", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ai.PluginArtifact", len)?;
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
         }
         if let Some(v) = self.version.as_ref() {
             struct_ser.serialize_field("version", v)?;
         }
-        if let Some(v) = self.arch.as_ref() {
-            struct_ser.serialize_field("arch", v)?;
+        if let Some(v) = self.target.as_ref() {
+            struct_ser.serialize_field("target", v)?;
         }
         if let Some(v) = self.status.as_ref() {
-            let v = PluginBuildStatus::try_from(*v)
+            let v = PluginArtifactStatus::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("status", &v)?;
         }
@@ -9753,7 +9772,7 @@ impl serde::Serialize for PluginBuild {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for PluginBuild {
+impl<'de> serde::Deserialize<'de> for PluginArtifact {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -9762,7 +9781,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
         const FIELDS: &[&str] = &[
             "uuid",
             "version",
-            "arch",
+            "target",
             "status",
             "artifact_url",
             "artifactUrl",
@@ -9781,7 +9800,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
         enum GeneratedField {
             Uuid,
             Version,
-            Arch,
+            Target,
             Status,
             ArtifactUrl,
             Sha256,
@@ -9813,7 +9832,7 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "version" => Ok(GeneratedField::Version),
-                            "arch" => Ok(GeneratedField::Arch),
+                            "target" => Ok(GeneratedField::Target),
                             "status" => Ok(GeneratedField::Status),
                             "artifactUrl" | "artifact_url" => Ok(GeneratedField::ArtifactUrl),
                             "sha256" => Ok(GeneratedField::Sha256),
@@ -9831,19 +9850,19 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = PluginBuild;
+            type Value = PluginArtifact;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.PluginBuild")
+                formatter.write_str("struct hi.ai.PluginArtifact")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginBuild, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginArtifact, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut uuid__ = None;
                 let mut version__ = None;
-                let mut arch__ = None;
+                let mut target__ = None;
                 let mut status__ = None;
                 let mut artifact_url__ = None;
                 let mut sha256__ = None;
@@ -9866,17 +9885,17 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
                             }
                             version__ = map_.next_value()?;
                         }
-                        GeneratedField::Arch => {
-                            if arch__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("arch"));
+                        GeneratedField::Target => {
+                            if target__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("target"));
                             }
-                            arch__ = map_.next_value()?;
+                            target__ = map_.next_value()?;
                         }
                         GeneratedField::Status => {
                             if status__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("status"));
                             }
-                            status__ = map_.next_value::<::std::option::Option<PluginBuildStatus>>()?.map(|x| x as i32);
+                            status__ = map_.next_value::<::std::option::Option<PluginArtifactStatus>>()?.map(|x| x as i32);
                         }
                         GeneratedField::ArtifactUrl => {
                             if artifact_url__.is_some() {
@@ -9928,10 +9947,10 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
                         }
                     }
                 }
-                Ok(PluginBuild {
+                Ok(PluginArtifact {
                     uuid: uuid__,
                     version: version__,
-                    arch: arch__,
+                    target: target__,
                     status: status__,
                     artifact_url: artifact_url__,
                     sha256: sha256__,
@@ -9943,41 +9962,41 @@ impl<'de> serde::Deserialize<'de> for PluginBuild {
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ai.PluginBuild", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ai.PluginArtifact", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for PluginBuildStatus {
+impl serde::Serialize for PluginArtifactStatus {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::Pending => "PLUGIN_BUILD_STATUS_PENDING",
-            Self::Building => "PLUGIN_BUILD_STATUS_BUILDING",
-            Self::Succeeded => "PLUGIN_BUILD_STATUS_SUCCEEDED",
-            Self::Failed => "PLUGIN_BUILD_STATUS_FAILED",
+            Self::Pending => "PLUGIN_ARTIFACT_STATUS_PENDING",
+            Self::Building => "PLUGIN_ARTIFACT_STATUS_BUILDING",
+            Self::Succeeded => "PLUGIN_ARTIFACT_STATUS_SUCCEEDED",
+            Self::Failed => "PLUGIN_ARTIFACT_STATUS_FAILED",
         };
         serializer.serialize_str(variant)
     }
 }
-impl<'de> serde::Deserialize<'de> for PluginBuildStatus {
+impl<'de> serde::Deserialize<'de> for PluginArtifactStatus {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "PLUGIN_BUILD_STATUS_PENDING",
-            "PLUGIN_BUILD_STATUS_BUILDING",
-            "PLUGIN_BUILD_STATUS_SUCCEEDED",
-            "PLUGIN_BUILD_STATUS_FAILED",
+            "PLUGIN_ARTIFACT_STATUS_PENDING",
+            "PLUGIN_ARTIFACT_STATUS_BUILDING",
+            "PLUGIN_ARTIFACT_STATUS_SUCCEEDED",
+            "PLUGIN_ARTIFACT_STATUS_FAILED",
         ];
 
         struct GeneratedVisitor;
 
         impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = PluginBuildStatus;
+            type Value = PluginArtifactStatus;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(formatter, "expected one of: {:?}", &FIELDS)
@@ -10012,10 +10031,87 @@ impl<'de> serde::Deserialize<'de> for PluginBuildStatus {
                 E: serde::de::Error,
             {
                 match value {
-                    "PLUGIN_BUILD_STATUS_PENDING" => Ok(PluginBuildStatus::Pending),
-                    "PLUGIN_BUILD_STATUS_BUILDING" => Ok(PluginBuildStatus::Building),
-                    "PLUGIN_BUILD_STATUS_SUCCEEDED" => Ok(PluginBuildStatus::Succeeded),
-                    "PLUGIN_BUILD_STATUS_FAILED" => Ok(PluginBuildStatus::Failed),
+                    "PLUGIN_ARTIFACT_STATUS_PENDING" => Ok(PluginArtifactStatus::Pending),
+                    "PLUGIN_ARTIFACT_STATUS_BUILDING" => Ok(PluginArtifactStatus::Building),
+                    "PLUGIN_ARTIFACT_STATUS_SUCCEEDED" => Ok(PluginArtifactStatus::Succeeded),
+                    "PLUGIN_ARTIFACT_STATUS_FAILED" => Ok(PluginArtifactStatus::Failed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PluginLang {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Python => "PLUGIN_LANG_PYTHON",
+            Self::Rust => "PLUGIN_LANG_RUST",
+            Self::Undetermined => "PLUGIN_LANG_UNDETERMINED",
+            Self::Lua => "PLUGIN_LANG_LUA",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for PluginLang {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "PLUGIN_LANG_PYTHON",
+            "PLUGIN_LANG_RUST",
+            "PLUGIN_LANG_UNDETERMINED",
+            "PLUGIN_LANG_LUA",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = PluginLang;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PLUGIN_LANG_PYTHON" => Ok(PluginLang::Python),
+                    "PLUGIN_LANG_RUST" => Ok(PluginLang::Rust),
+                    "PLUGIN_LANG_UNDETERMINED" => Ok(PluginLang::Undetermined),
+                    "PLUGIN_LANG_LUA" => Ok(PluginLang::Lua),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -10449,80 +10545,6 @@ impl<'de> serde::Deserialize<'de> for PluginRef {
         deserializer.deserialize_struct("hi.ai.PluginRef", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for PluginRuntime {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Python => "PLUGIN_RUNTIME_PYTHON",
-            Self::Native => "PLUGIN_RUNTIME_NATIVE",
-            Self::Undetermined => "PLUGIN_RUNTIME_UNDETERMINED",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for PluginRuntime {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "PLUGIN_RUNTIME_PYTHON",
-            "PLUGIN_RUNTIME_NATIVE",
-            "PLUGIN_RUNTIME_UNDETERMINED",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = PluginRuntime;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "PLUGIN_RUNTIME_PYTHON" => Ok(PluginRuntime::Python),
-                    "PLUGIN_RUNTIME_NATIVE" => Ok(PluginRuntime::Native),
-                    "PLUGIN_RUNTIME_UNDETERMINED" => Ok(PluginRuntime::Undetermined),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
 impl serde::Serialize for PluginShell {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -10537,7 +10559,7 @@ impl serde::Serialize for PluginShell {
         if self.name.is_some() {
             len += 1;
         }
-        if self.runtime.is_some() {
+        if self.lang.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginShell", len)?;
@@ -10547,10 +10569,10 @@ impl serde::Serialize for PluginShell {
         if let Some(v) = self.name.as_ref() {
             struct_ser.serialize_field("name", v)?;
         }
-        if let Some(v) = self.runtime.as_ref() {
-            let v = PluginRuntime::try_from(*v)
+        if let Some(v) = self.lang.as_ref() {
+            let v = PluginLang::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("runtime", &v)?;
+            struct_ser.serialize_field("lang", &v)?;
         }
         struct_ser.end()
     }
@@ -10564,14 +10586,14 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
         const FIELDS: &[&str] = &[
             "uuid",
             "name",
-            "runtime",
+            "lang",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Uuid,
             Name,
-            Runtime,
+            Lang,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10595,7 +10617,7 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "name" => Ok(GeneratedField::Name),
-                            "runtime" => Ok(GeneratedField::Runtime),
+                            "lang" => Ok(GeneratedField::Lang),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10617,7 +10639,7 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
             {
                 let mut uuid__ = None;
                 let mut name__ = None;
-                let mut runtime__ = None;
+                let mut lang__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -10632,18 +10654,18 @@ impl<'de> serde::Deserialize<'de> for PluginShell {
                             }
                             name__ = map_.next_value()?;
                         }
-                        GeneratedField::Runtime => {
-                            if runtime__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("runtime"));
+                        GeneratedField::Lang => {
+                            if lang__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lang"));
                             }
-                            runtime__ = map_.next_value::<::std::option::Option<PluginRuntime>>()?.map(|x| x as i32);
+                            lang__ = map_.next_value::<::std::option::Option<PluginLang>>()?.map(|x| x as i32);
                         }
                     }
                 }
                 Ok(PluginShell {
                     uuid: uuid__,
                     name: name__,
-                    runtime: runtime__,
+                    lang: lang__,
                 })
             }
         }
@@ -10914,7 +10936,7 @@ impl serde::Serialize for PluginVersionView {
         if self.data.is_some() {
             len += 1;
         }
-        if !self.builds.is_empty() {
+        if !self.artifacts.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.PluginVersionView", len)?;
@@ -10927,8 +10949,8 @@ impl serde::Serialize for PluginVersionView {
         if let Some(v) = self.data.as_ref() {
             struct_ser.serialize_field("data", v)?;
         }
-        if !self.builds.is_empty() {
-            struct_ser.serialize_field("builds", &self.builds)?;
+        if !self.artifacts.is_empty() {
+            struct_ser.serialize_field("artifacts", &self.artifacts)?;
         }
         struct_ser.end()
     }
@@ -10943,7 +10965,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
             "version",
             "active",
             "data",
-            "builds",
+            "artifacts",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -10951,7 +10973,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
             Version,
             Active,
             Data,
-            Builds,
+            Artifacts,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10976,7 +10998,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                             "version" => Ok(GeneratedField::Version),
                             "active" => Ok(GeneratedField::Active),
                             "data" => Ok(GeneratedField::Data),
-                            "builds" => Ok(GeneratedField::Builds),
+                            "artifacts" => Ok(GeneratedField::Artifacts),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10999,7 +11021,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                 let mut version__ = None;
                 let mut active__ = None;
                 let mut data__ = None;
-                let mut builds__ = None;
+                let mut artifacts__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Version => {
@@ -11020,11 +11042,11 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                             }
                             data__ = map_.next_value()?;
                         }
-                        GeneratedField::Builds => {
-                            if builds__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("builds"));
+                        GeneratedField::Artifacts => {
+                            if artifacts__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("artifacts"));
                             }
-                            builds__ = Some(map_.next_value()?);
+                            artifacts__ = Some(map_.next_value()?);
                         }
                     }
                 }
@@ -11032,7 +11054,7 @@ impl<'de> serde::Deserialize<'de> for PluginVersionView {
                     version: version__,
                     active: active__,
                     data: data__,
-                    builds: builds__.unwrap_or_default(),
+                    artifacts: artifacts__.unwrap_or_default(),
                 })
             }
         }
@@ -11068,7 +11090,7 @@ impl serde::Serialize for PluginView {
         if self.version_data.is_some() {
             len += 1;
         }
-        if !self.builds.is_empty() {
+        if !self.artifacts.is_empty() {
             len += 1;
         }
         if self.follow_latest.is_some() {
@@ -11098,8 +11120,8 @@ impl serde::Serialize for PluginView {
         if let Some(v) = self.version_data.as_ref() {
             struct_ser.serialize_field("versionData", v)?;
         }
-        if !self.builds.is_empty() {
-            struct_ser.serialize_field("builds", &self.builds)?;
+        if !self.artifacts.is_empty() {
+            struct_ser.serialize_field("artifacts", &self.artifacts)?;
         }
         if let Some(v) = self.follow_latest.as_ref() {
             struct_ser.serialize_field("followLatest", v)?;
@@ -11123,7 +11145,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             "data",
             "version_data",
             "versionData",
-            "builds",
+            "artifacts",
             "follow_latest",
             "followLatest",
         ];
@@ -11137,7 +11159,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
             RefCount,
             Data,
             VersionData,
-            Builds,
+            Artifacts,
             FollowLatest,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -11167,7 +11189,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                             "refCount" | "ref_count" => Ok(GeneratedField::RefCount),
                             "data" => Ok(GeneratedField::Data),
                             "versionData" | "version_data" => Ok(GeneratedField::VersionData),
-                            "builds" => Ok(GeneratedField::Builds),
+                            "artifacts" => Ok(GeneratedField::Artifacts),
                             "followLatest" | "follow_latest" => Ok(GeneratedField::FollowLatest),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -11195,7 +11217,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                 let mut ref_count__ = None;
                 let mut data__ = None;
                 let mut version_data__ = None;
-                let mut builds__ = None;
+                let mut artifacts__ = None;
                 let mut follow_latest__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -11243,11 +11265,11 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                             }
                             version_data__ = map_.next_value()?;
                         }
-                        GeneratedField::Builds => {
-                            if builds__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("builds"));
+                        GeneratedField::Artifacts => {
+                            if artifacts__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("artifacts"));
                             }
-                            builds__ = Some(map_.next_value()?);
+                            artifacts__ = Some(map_.next_value()?);
                         }
                         GeneratedField::FollowLatest => {
                             if follow_latest__.is_some() {
@@ -11265,7 +11287,7 @@ impl<'de> serde::Deserialize<'de> for PluginView {
                     ref_count: ref_count__,
                     data: data__,
                     version_data: version_data__,
-                    builds: builds__.unwrap_or_default(),
+                    artifacts: artifacts__.unwrap_or_default(),
                     follow_latest: follow_latest__,
                 })
             }

@@ -281,3 +281,113 @@ final $typed_data.Uint8List buildRespDescriptor = $convert.base64Decode(
     'A0gFUgVlcnJvcogBARIbCgNsb2cYByABKAlCBJC1GANIBlIDbG9niAEBOgSYtRgDQgUKA19va0'
     'IPCg1fYXJ0aWZhY3RfdXJsQgkKB19zaGEyNTZCDgoMX2FiaV92ZXJzaW9uQgsKCV9tYW5pZmVz'
     'dEIICgZfZXJyb3JCBgoEX2xvZw==');
+
+@$core.Deprecated('Use verifyLuaReqDescriptor instead')
+const VerifyLuaReq$json = {
+  '1': 'VerifyLuaReq',
+  '2': [
+    {
+      '1': 'code_archive_url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'codeArchiveUrl',
+      '17': true
+    },
+    {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
+    {
+      '1': 'version',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'version',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_code_archive_url'},
+    {'1': '_uuid'},
+    {'1': '_version'},
+  ],
+};
+
+/// Descriptor for `VerifyLuaReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List verifyLuaReqDescriptor = $convert.base64Decode(
+    'CgxWZXJpZnlMdWFSZXESLQoQY29kZV9hcmNoaXZlX3VybBgBIAEoCUgAUg5jb2RlQXJjaGl2ZV'
+    'VybIgBARIXCgR1dWlkGAIgASgJSAFSBHV1aWSIAQESHQoHdmVyc2lvbhgDIAEoCUgCUgd2ZXJz'
+    'aW9uiAEBQhMKEV9jb2RlX2FyY2hpdmVfdXJsQgcKBV91dWlkQgoKCF92ZXJzaW9u');
+
+@$core.Deprecated('Use verifyLuaRespDescriptor instead')
+const VerifyLuaResp$json = {
+  '1': 'VerifyLuaResp',
+  '2': [
+    {
+      '1': 'ok',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'ok',
+      '17': true
+    },
+    {
+      '1': 'contract',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 1,
+      '10': 'contract',
+      '17': true
+    },
+    {
+      '1': 'manifest',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'manifest',
+      '17': true
+    },
+    {
+      '1': 'error',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'error',
+      '17': true
+    },
+    {
+      '1': 'log',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'log',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_ok'},
+    {'1': '_contract'},
+    {'1': '_manifest'},
+    {'1': '_error'},
+    {'1': '_log'},
+  ],
+};
+
+/// Descriptor for `VerifyLuaResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List verifyLuaRespDescriptor = $convert.base64Decode(
+    'Cg1WZXJpZnlMdWFSZXNwEhkKAm9rGAEgASgIQgSQtRgDSABSAm9riAEBEiUKCGNvbnRyYWN0GA'
+    'IgASgNQgSQtRgDSAFSCGNvbnRyYWN0iAEBEiUKCG1hbmlmZXN0GAMgASgJQgSQtRgDSAJSCG1h'
+    'bmlmZXN0iAEBEh8KBWVycm9yGAQgASgJQgSQtRgDSANSBWVycm9yiAEBEhsKA2xvZxgFIAEoCU'
+    'IEkLUYA0gEUgNsb2eIAQE6BJi1GANCBQoDX29rQgsKCV9jb250cmFjdEILCglfbWFuaWZlc3RC'
+    'CAoGX2Vycm9yQgYKBF9sb2c=');

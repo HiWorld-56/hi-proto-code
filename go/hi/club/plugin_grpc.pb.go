@@ -46,7 +46,7 @@ const (
 // 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 //
 // 插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
-// runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
+// lang 由后端从首版的包结构自动判定(见 hi.ai.PluginLang),用户不声明、也无从声明。
 //
 // ⚠️ club 侧的实际代码活(不只是改名):
 //  1. **c.data 是 club 的私有区,不给用户填。** hi.ai 眼里它只是一袋不透明 JSON
@@ -260,7 +260,7 @@ func (c *pluginClient) RetryBuild(ctx context.Context, in *ai.RetryBuildReq, opt
 // 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 //
 // 插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
-// runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
+// lang 由后端从首版的包结构自动判定(见 hi.ai.PluginLang),用户不声明、也无从声明。
 //
 // ⚠️ club 侧的实际代码活(不只是改名):
 //  1. **c.data 是 club 的私有区,不给用户填。** hi.ai 眼里它只是一袋不透明 JSON
@@ -739,23 +739,27 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	AgentPlugin_ListNative_FullMethodName = "/hi.club.AgentPlugin/ListNative"
+	AgentPlugin_ListOnDevice_FullMethodName = "/hi.club.AgentPlugin/ListOnDevice"
 )
 
 // AgentPluginClient is the client API for AgentPlugin service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+// 所以 `ListOnDevice` **没有 agent 参数**,主体只能从凭证里取。
 // 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 //
 // 为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
 // core 的 `call` 网关只有 hiclub 一条(见 deps.md 坑②),够不着 hi.ai。club 穿透转发。
 type AgentPluginClient interface {
-	// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+	// 我该装哪些**设备端**插件(RUST 的 `.so` 与 LUA 的脚本,同一份清单)。
+	// **全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
 	// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
-	// 机器人本地那个 `.so` 不会自己消失。
-	ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ai.ListNativeResp, error)
+	// 机器人本地那个文件不会自己消失。
+	//
+	// ⚠️ 原名 `ListNative`,筛的是"壳是 NATIVE"。改名不只是改名:判据从
+	// "是某种语言"换成了派生的 `runsOnDevice(lang)` —— 否则 lua 插件会被静默筛掉。
+	ListOnDevice(ctx context.Context, in *ListOnDeviceReq, opts ...grpc.CallOption) (*ai.ListOnDeviceResp, error)
 }
 
 type agentPluginClient struct {
@@ -766,10 +770,10 @@ func NewAgentPluginClient(cc grpc.ClientConnInterface) AgentPluginClient {
 	return &agentPluginClient{cc}
 }
 
-func (c *agentPluginClient) ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ai.ListNativeResp, error) {
+func (c *agentPluginClient) ListOnDevice(ctx context.Context, in *ListOnDeviceReq, opts ...grpc.CallOption) (*ai.ListOnDeviceResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListNativeResp)
-	err := c.cc.Invoke(ctx, AgentPlugin_ListNative_FullMethodName, in, out, cOpts...)
+	out := new(ai.ListOnDeviceResp)
+	err := c.cc.Invoke(ctx, AgentPlugin_ListOnDevice_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -780,16 +784,20 @@ func (c *agentPluginClient) ListNative(ctx context.Context, in *ListNativeReq, o
 // All implementations should embed UnimplementedAgentPluginServer
 // for forward compatibility.
 //
-// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+// 所以 `ListOnDevice` **没有 agent 参数**,主体只能从凭证里取。
 // 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 //
 // 为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
 // core 的 `call` 网关只有 hiclub 一条(见 deps.md 坑②),够不着 hi.ai。club 穿透转发。
 type AgentPluginServer interface {
-	// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+	// 我该装哪些**设备端**插件(RUST 的 `.so` 与 LUA 的脚本,同一份清单)。
+	// **全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
 	// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
-	// 机器人本地那个 `.so` 不会自己消失。
-	ListNative(context.Context, *ListNativeReq) (*ai.ListNativeResp, error)
+	// 机器人本地那个文件不会自己消失。
+	//
+	// ⚠️ 原名 `ListNative`,筛的是"壳是 NATIVE"。改名不只是改名:判据从
+	// "是某种语言"换成了派生的 `runsOnDevice(lang)` —— 否则 lua 插件会被静默筛掉。
+	ListOnDevice(context.Context, *ListOnDeviceReq) (*ai.ListOnDeviceResp, error)
 }
 
 // UnimplementedAgentPluginServer should be embedded to have
@@ -799,8 +807,8 @@ type AgentPluginServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentPluginServer struct{}
 
-func (UnimplementedAgentPluginServer) ListNative(context.Context, *ListNativeReq) (*ai.ListNativeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListNative not implemented")
+func (UnimplementedAgentPluginServer) ListOnDevice(context.Context, *ListOnDeviceReq) (*ai.ListOnDeviceResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListOnDevice not implemented")
 }
 func (UnimplementedAgentPluginServer) testEmbeddedByValue() {}
 
@@ -822,20 +830,20 @@ func RegisterAgentPluginServer(s grpc.ServiceRegistrar, srv AgentPluginServer) {
 	s.RegisterService(&AgentPlugin_ServiceDesc, srv)
 }
 
-func _AgentPlugin_ListNative_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListNativeReq)
+func _AgentPlugin_ListOnDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOnDeviceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentPluginServer).ListNative(ctx, in)
+		return srv.(AgentPluginServer).ListOnDevice(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AgentPlugin_ListNative_FullMethodName,
+		FullMethod: AgentPlugin_ListOnDevice_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentPluginServer).ListNative(ctx, req.(*ListNativeReq))
+		return srv.(AgentPluginServer).ListOnDevice(ctx, req.(*ListOnDeviceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -848,8 +856,8 @@ var AgentPlugin_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AgentPluginServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListNative",
-			Handler:    _AgentPlugin_ListNative_Handler,
+			MethodName: "ListOnDevice",
+			Handler:    _AgentPlugin_ListOnDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

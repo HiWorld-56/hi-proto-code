@@ -25,7 +25,7 @@ export 'plugin.pb.dart';
 /// 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 ///
 /// 插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
-/// runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
+/// lang 由后端从首版的包结构自动判定(见 hi.ai.PluginLang),用户不声明、也无从声明。
 ///
 /// ⚠️ club 侧的实际代码活(不只是改名):
 ///   1. **c.data 是 club 的私有区,不给用户填。** hi.ai 眼里它只是一袋不透明 JSON
@@ -495,7 +495,7 @@ abstract class PluginServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.RetryBuildReq request);
 }
 
-/// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+/// 所以 `ListOnDevice` **没有 agent 参数**,主体只能从凭证里取。
 /// 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 ///
 /// 为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
@@ -512,23 +512,27 @@ class AgentPluginClient extends $grpc.Client {
 
   AgentPluginClient(super.channel, {super.options, super.interceptors});
 
-  /// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+  /// 我该装哪些**设备端**插件(RUST 的 `.so` 与 LUA 的脚本,同一份清单)。
+  /// **全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
   /// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
-  /// 机器人本地那个 `.so` 不会自己消失。
-  $grpc.ResponseFuture<$0.ListNativeResp> listNative(
-    $2.ListNativeReq request, {
+  /// 机器人本地那个文件不会自己消失。
+  ///
+  /// ⚠️ 原名 `ListNative`,筛的是"壳是 NATIVE"。改名不只是改名:判据从
+  /// "是某种语言"换成了派生的 `runsOnDevice(lang)` —— 否则 lua 插件会被静默筛掉。
+  $grpc.ResponseFuture<$0.ListOnDeviceResp> listOnDevice(
+    $2.ListOnDeviceReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listNative, request, options: options);
+    return $createUnaryCall(_$listOnDevice, request, options: options);
   }
 
   // method descriptors
 
-  static final _$listNative =
-      $grpc.ClientMethod<$2.ListNativeReq, $0.ListNativeResp>(
-          '/hi.club.AgentPlugin/ListNative',
-          ($2.ListNativeReq value) => value.writeToBuffer(),
-          $0.ListNativeResp.fromBuffer);
+  static final _$listOnDevice =
+      $grpc.ClientMethod<$2.ListOnDeviceReq, $0.ListOnDeviceResp>(
+          '/hi.club.AgentPlugin/ListOnDevice',
+          ($2.ListOnDeviceReq value) => value.writeToBuffer(),
+          $0.ListOnDeviceResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.AgentPlugin')
@@ -536,20 +540,20 @@ abstract class AgentPluginServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.AgentPlugin';
 
   AgentPluginServiceBase() {
-    $addMethod($grpc.ServiceMethod<$2.ListNativeReq, $0.ListNativeResp>(
-        'ListNative',
-        listNative_Pre,
+    $addMethod($grpc.ServiceMethod<$2.ListOnDeviceReq, $0.ListOnDeviceResp>(
+        'ListOnDevice',
+        listOnDevice_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.ListNativeReq.fromBuffer(value),
-        ($0.ListNativeResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $2.ListOnDeviceReq.fromBuffer(value),
+        ($0.ListOnDeviceResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ListNativeResp> listNative_Pre(
-      $grpc.ServiceCall $call, $async.Future<$2.ListNativeReq> $request) async {
-    return listNative($call, await $request);
+  $async.Future<$0.ListOnDeviceResp> listOnDevice_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ListOnDeviceReq> $request) async {
+    return listOnDevice($call, await $request);
   }
 
-  $async.Future<$0.ListNativeResp> listNative(
-      $grpc.ServiceCall call, $2.ListNativeReq request);
+  $async.Future<$0.ListOnDeviceResp> listOnDevice(
+      $grpc.ServiceCall call, $2.ListOnDeviceReq request);
 }

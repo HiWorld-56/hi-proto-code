@@ -340,9 +340,9 @@ class CleanupReq extends $pb.GeneratedMessage {
   void clearCodeArchiveUrl() => $_clearField(1);
 }
 
-/// ── NATIVE 构建契约(独立构建服务实现,hiai 只作调用方)────────────────────────
+/// ── RUST 构建契约(独立构建服务实现,hiai 只作调用方)──────────────────────────
 ///
-/// NATIVE 插件(`PluginRuntime.PLUGIN_RUNTIME_NATIVE`)传上来的是 **rust 源码**,
+/// RUST 插件(`PluginLang.PLUGIN_LANG_RUST`)传上来的是 **rust 源码**,
 /// 要先交叉编译成 arm64 的 `.so` 才谈得上下发。这条契约就是那一步。
 ///
 /// ## 它是**无状态纯函数**:给源码,还产物
@@ -592,6 +592,208 @@ class BuildResp extends $pb.GeneratedMessage {
   $core.bool hasLog() => $_has(6);
   @$pb.TagNumber(7)
   void clearLog() => $_clearField(7);
+}
+
+/// ── LUA 验收契约 ────────────────────────────────────────────────────────────
+///
+/// LUA 插件**不需要编译**(上传的脚本就是产物),但**绝不能因此跳过验收**。
+/// 不验的话,一个语法错的脚本会直接铺到全网机器人,而失败只存在于每台机器人的
+/// 本地日志里 —— 那正是我们反复踩过的「失败原因只在机器人本地」。
+///
+/// 为什么这一步在构建服务而不是 hi-ai 里做:**hi-ai 里没有 lua 解释器**,
+/// 而验收要真的把脚本 load 一遍、读出它的 manifest。塞一个 lua 运行时进业务服务,
+/// 等于让每次发版都多背一个 C 依赖;构建服务本来就是"跑三方代码的那个容器"。
+///
+/// 与 Build 的区别:**这是毫秒级的同步调用**,所以 hi-ai 在 CreateVersion 里直接等它,
+/// 验不过就拒绝这一版 —— 而不是像 RUST 那样先落库再后台编。
+/// 一个语法错的脚本压根不该进库。
+class VerifyLuaReq extends $pb.GeneratedMessage {
+  factory VerifyLuaReq({
+    $core.String? codeArchiveUrl,
+    $core.String? uuid,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (codeArchiveUrl != null) result.codeArchiveUrl = codeArchiveUrl;
+    if (uuid != null) result.uuid = uuid;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  VerifyLuaReq._();
+
+  factory VerifyLuaReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VerifyLuaReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VerifyLuaReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'codeArchiveUrl')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyLuaReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyLuaReq copyWith(void Function(VerifyLuaReq) updates) =>
+      super.copyWith((message) => updates(message as VerifyLuaReq))
+          as VerifyLuaReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VerifyLuaReq create() => VerifyLuaReq._();
+  @$core.override
+  VerifyLuaReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VerifyLuaReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VerifyLuaReq>(create);
+  static VerifyLuaReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get codeArchiveUrl => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set codeArchiveUrl($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCodeArchiveUrl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCodeArchiveUrl() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+}
+
+class VerifyLuaResp extends $pb.GeneratedMessage {
+  factory VerifyLuaResp({
+    $core.bool? ok,
+    $core.int? contract,
+    $core.String? manifest,
+    $core.String? error,
+    $core.String? log,
+  }) {
+    final result = create();
+    if (ok != null) result.ok = ok;
+    if (contract != null) result.contract = contract;
+    if (manifest != null) result.manifest = manifest;
+    if (error != null) result.error = error;
+    if (log != null) result.log = log;
+    return result;
+  }
+
+  VerifyLuaResp._();
+
+  factory VerifyLuaResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VerifyLuaResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VerifyLuaResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'ok')
+    ..aI(2, _omitFieldNames ? '' : 'contract', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(3, _omitFieldNames ? '' : 'manifest')
+    ..aOS(4, _omitFieldNames ? '' : 'error')
+    ..aOS(5, _omitFieldNames ? '' : 'log')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyLuaResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VerifyLuaResp copyWith(void Function(VerifyLuaResp) updates) =>
+      super.copyWith((message) => updates(message as VerifyLuaResp))
+          as VerifyLuaResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VerifyLuaResp create() => VerifyLuaResp._();
+  @$core.override
+  VerifyLuaResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VerifyLuaResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VerifyLuaResp>(create);
+  static VerifyLuaResp? _defaultInstance;
+
+  /// 验过了没有。**false 时 rpc 本身仍是成功的** —— 同 BuildResp,
+  /// 「脚本层面的错不是 rpc 错误」,要把原因原样交给发版的人看。
+  @$pb.TagNumber(1)
+  $core.bool get ok => $_getBF(0);
+  @$pb.TagNumber(1)
+  set ok($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOk() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOk() => $_clearField(1);
+
+  /// 脚本里声明的契约号(`contract`)。**机器人加载前拿它比对,不匹配拒载。**
+  ///
+  /// 🔴 它与 RUST 的 C ABI 号**各涨各的,不共用计数器** —— 共用的话撞一次 C ABI
+  /// 就逼所有 lua 插件重发,而它们根本不受影响。
+  @$pb.TagNumber(2)
+  $core.int get contract => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set contract($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasContract() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearContract() => $_clearField(2);
+
+  /// 从**脚本里真跑出来的** manifest(OpenAI tools 数组,原始名、不带壳前缀)。
+  /// hi-ai 拿它跟包里的 description.json 比对 —— 不一致说明作者改了 json 却没改代码
+  /// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
+  @$pb.TagNumber(3)
+  $core.String get manifest => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set manifest($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasManifest() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearManifest() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get error => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set error($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasError() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearError() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get log => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set log($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasLog() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLog() => $_clearField(5);
 }
 
 const $core.bool _omitFieldNames =

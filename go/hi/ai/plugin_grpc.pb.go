@@ -37,7 +37,7 @@ const (
 	Plugin_SetActiveAll_FullMethodName      = "/hi.ai.Plugin/SetActiveAll"
 	Plugin_SetEnabled_FullMethodName        = "/hi.ai.Plugin/SetEnabled"
 	Plugin_SetFollowLatest_FullMethodName   = "/hi.ai.Plugin/SetFollowLatest"
-	Plugin_ListNative_FullMethodName        = "/hi.ai.Plugin/ListNative"
+	Plugin_ListOnDevice_FullMethodName      = "/hi.ai.Plugin/ListOnDevice"
 	Plugin_RetryBuild_FullMethodName        = "/hi.ai.Plugin/RetryBuild"
 	Plugin_PublicBriefs_FullMethodName      = "/hi.ai.Plugin/PublicBriefs"
 )
@@ -65,7 +65,7 @@ type PluginClient interface {
 	SetActiveAll(ctx context.Context, in *SetActiveAllReq, opts ...grpc.CallOption) (*SetActiveAllResp, error)
 	SetEnabled(ctx context.Context, in *SetEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetFollowLatest(ctx context.Context, in *SetFollowLatestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error)
+	ListOnDevice(ctx context.Context, in *ListOnDeviceReq, opts ...grpc.CallOption) (*ListOnDeviceResp, error)
 	RetryBuild(ctx context.Context, in *RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PublicBriefs(ctx context.Context, in *PublicBriefsReq, opts ...grpc.CallOption) (*PublicBriefsResp, error)
 }
@@ -248,10 +248,10 @@ func (c *pluginClient) SetFollowLatest(ctx context.Context, in *SetFollowLatestR
 	return out, nil
 }
 
-func (c *pluginClient) ListNative(ctx context.Context, in *ListNativeReq, opts ...grpc.CallOption) (*ListNativeResp, error) {
+func (c *pluginClient) ListOnDevice(ctx context.Context, in *ListOnDeviceReq, opts ...grpc.CallOption) (*ListOnDeviceResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListNativeResp)
-	err := c.cc.Invoke(ctx, Plugin_ListNative_FullMethodName, in, out, cOpts...)
+	out := new(ListOnDeviceResp)
+	err := c.cc.Invoke(ctx, Plugin_ListOnDevice_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -301,7 +301,7 @@ type PluginServer interface {
 	SetActiveAll(context.Context, *SetActiveAllReq) (*SetActiveAllResp, error)
 	SetEnabled(context.Context, *SetEnabledReq) (*emptypb.Empty, error)
 	SetFollowLatest(context.Context, *SetFollowLatestReq) (*emptypb.Empty, error)
-	ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error)
+	ListOnDevice(context.Context, *ListOnDeviceReq) (*ListOnDeviceResp, error)
 	RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error)
 	PublicBriefs(context.Context, *PublicBriefsReq) (*PublicBriefsResp, error)
 }
@@ -364,8 +364,8 @@ func (UnimplementedPluginServer) SetEnabled(context.Context, *SetEnabledReq) (*e
 func (UnimplementedPluginServer) SetFollowLatest(context.Context, *SetFollowLatestReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetFollowLatest not implemented")
 }
-func (UnimplementedPluginServer) ListNative(context.Context, *ListNativeReq) (*ListNativeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListNative not implemented")
+func (UnimplementedPluginServer) ListOnDevice(context.Context, *ListOnDeviceReq) (*ListOnDeviceResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListOnDevice not implemented")
 }
 func (UnimplementedPluginServer) RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method RetryBuild not implemented")
@@ -699,20 +699,20 @@ func _Plugin_SetFollowLatest_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Plugin_ListNative_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListNativeReq)
+func _Plugin_ListOnDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOnDeviceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServer).ListNative(ctx, in)
+		return srv.(PluginServer).ListOnDevice(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Plugin_ListNative_FullMethodName,
+		FullMethod: Plugin_ListOnDevice_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServer).ListNative(ctx, req.(*ListNativeReq))
+		return srv.(PluginServer).ListOnDevice(ctx, req.(*ListOnDeviceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -829,8 +829,8 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Plugin_SetFollowLatest_Handler,
 		},
 		{
-			MethodName: "ListNative",
-			Handler:    _Plugin_ListNative_Handler,
+			MethodName: "ListOnDevice",
+			Handler:    _Plugin_ListOnDevice_Handler,
 		},
 		{
 			MethodName: "RetryBuild",

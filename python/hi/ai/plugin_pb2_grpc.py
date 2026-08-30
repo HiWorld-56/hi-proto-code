@@ -101,10 +101,10 @@ class PluginStub(object):
                 request_serializer=hi_dot_ai_dot_plugin__pb2.SetFollowLatestReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
-        self.ListNative = channel.unary_unary(
-                '/hi.ai.Plugin/ListNative',
-                request_serializer=hi_dot_ai_dot_plugin__pb2.ListNativeReq.SerializeToString,
-                response_deserializer=hi_dot_ai_dot_plugin__pb2.ListNativeResp.FromString,
+        self.ListOnDevice = channel.unary_unary(
+                '/hi.ai.Plugin/ListOnDevice',
+                request_serializer=hi_dot_ai_dot_plugin__pb2.ListOnDeviceReq.SerializeToString,
+                response_deserializer=hi_dot_ai_dot_plugin__pb2.ListOnDeviceResp.FromString,
                 _registered_method=True)
         self.RetryBuild = channel.unary_unary(
                 '/hi.ai.Plugin/RetryBuild',
@@ -224,7 +224,7 @@ class PluginServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ListNative(self, request, context):
+    def ListOnDevice(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -330,10 +330,10 @@ def add_PluginServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_ai_dot_plugin__pb2.SetFollowLatestReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
-            'ListNative': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListNative,
-                    request_deserializer=hi_dot_ai_dot_plugin__pb2.ListNativeReq.FromString,
-                    response_serializer=hi_dot_ai_dot_plugin__pb2.ListNativeResp.SerializeToString,
+            'ListOnDevice': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListOnDevice,
+                    request_deserializer=hi_dot_ai_dot_plugin__pb2.ListOnDeviceReq.FromString,
+                    response_serializer=hi_dot_ai_dot_plugin__pb2.ListOnDeviceResp.SerializeToString,
             ),
             'RetryBuild': grpc.unary_unary_rpc_method_handler(
                     servicer.RetryBuild,
@@ -817,7 +817,7 @@ class Plugin(object):
             _registered_method=True)
 
     @staticmethod
-    def ListNative(request,
+    def ListOnDevice(request,
             target,
             options=(),
             channel_credentials=None,
@@ -830,9 +830,9 @@ class Plugin(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.ai.Plugin/ListNative',
-            hi_dot_ai_dot_plugin__pb2.ListNativeReq.SerializeToString,
-            hi_dot_ai_dot_plugin__pb2.ListNativeResp.FromString,
+            '/hi.ai.Plugin/ListOnDevice',
+            hi_dot_ai_dot_plugin__pb2.ListOnDeviceReq.SerializeToString,
+            hi_dot_ai_dot_plugin__pb2.ListOnDeviceResp.FromString,
             options,
             channel_credentials,
             insecure,

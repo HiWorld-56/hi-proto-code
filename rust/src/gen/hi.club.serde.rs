@@ -8115,7 +8115,7 @@ impl<'de> serde::Deserialize<'de> for ListMyListingsResp {
         deserializer.deserialize_struct("hi.club.ListMyListingsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListNativeReq {
+impl serde::Serialize for ListOnDeviceReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -8126,14 +8126,14 @@ impl serde::Serialize for ListNativeReq {
         if self.arch.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.club.ListNativeReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListOnDeviceReq", len)?;
         if let Some(v) = self.arch.as_ref() {
             struct_ser.serialize_field("arch", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListNativeReq {
+impl<'de> serde::Deserialize<'de> for ListOnDeviceReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -8177,13 +8177,13 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListNativeReq;
+            type Value = ListOnDeviceReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ListNativeReq")
+                formatter.write_str("struct hi.club.ListOnDeviceReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListNativeReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListOnDeviceReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -8198,12 +8198,12 @@ impl<'de> serde::Deserialize<'de> for ListNativeReq {
                         }
                     }
                 }
-                Ok(ListNativeReq {
+                Ok(ListOnDeviceReq {
                     arch: arch__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ListNativeReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ListOnDeviceReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListOnlineReq {

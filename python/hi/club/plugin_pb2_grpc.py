@@ -11,7 +11,7 @@ class PluginStub(object):
     """插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
-    runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
+    lang 由后端从首版的包结构自动判定(见 hi.ai.PluginLang),用户不声明、也无从声明。
 
     ⚠️ club 侧的实际代码活(不只是改名):
     1. **c.data 是 club 的私有区,不给用户填。** hi.ai 眼里它只是一袋不透明 JSON
@@ -122,7 +122,7 @@ class PluginServicer(object):
     """插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
-    runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
+    lang 由后端从首版的包结构自动判定(见 hi.ai.PluginLang),用户不声明、也无从声明。
 
     ⚠️ club 侧的实际代码活(不只是改名):
     1. **c.data 是 club 的私有区,不给用户填。** hi.ai 眼里它只是一袋不透明 JSON
@@ -334,7 +334,7 @@ class Plugin(object):
     """插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
 
     插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
-    runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
+    lang 由后端从首版的包结构自动判定(见 hi.ai.PluginLang),用户不声明、也无从声明。
 
     ⚠️ club 侧的实际代码活(不只是改名):
     1. **c.data 是 club 的私有区,不给用户填。** hi.ai 眼里它只是一袋不透明 JSON
@@ -787,7 +787,7 @@ class Plugin(object):
 
 
 class AgentPluginStub(object):
-    """所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+    """所以 `ListOnDevice` **没有 agent 参数**,主体只能从凭证里取。
     照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 
     为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
@@ -800,25 +800,29 @@ class AgentPluginStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ListNative = channel.unary_unary(
-                '/hi.club.AgentPlugin/ListNative',
-                request_serializer=hi_dot_club_dot_plugin__pb2.ListNativeReq.SerializeToString,
-                response_deserializer=hi_dot_ai_dot_plugin__pb2.ListNativeResp.FromString,
+        self.ListOnDevice = channel.unary_unary(
+                '/hi.club.AgentPlugin/ListOnDevice',
+                request_serializer=hi_dot_club_dot_plugin__pb2.ListOnDeviceReq.SerializeToString,
+                response_deserializer=hi_dot_ai_dot_plugin__pb2.ListOnDeviceResp.FromString,
                 _registered_method=True)
 
 
 class AgentPluginServicer(object):
-    """所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+    """所以 `ListOnDevice` **没有 agent 参数**,主体只能从凭证里取。
     照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 
     为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
     core 的 `call` 网关只有 hiclub 一条(见 deps.md 坑②),够不着 hi.ai。club 穿透转发。
     """
 
-    def ListNative(self, request, context):
-        """我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+    def ListOnDevice(self, request, context):
+        """我该装哪些**设备端**插件(RUST 的 `.so` 与 LUA 的脚本,同一份清单)。
+        **全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
         增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
-        机器人本地那个 `.so` 不会自己消失。
+        机器人本地那个文件不会自己消失。
+
+        ⚠️ 原名 `ListNative`,筛的是"壳是 NATIVE"。改名不只是改名:判据从
+        "是某种语言"换成了派生的 `runsOnDevice(lang)` —— 否则 lua 插件会被静默筛掉。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -827,10 +831,10 @@ class AgentPluginServicer(object):
 
 def add_AgentPluginServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ListNative': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListNative,
-                    request_deserializer=hi_dot_club_dot_plugin__pb2.ListNativeReq.FromString,
-                    response_serializer=hi_dot_ai_dot_plugin__pb2.ListNativeResp.SerializeToString,
+            'ListOnDevice': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListOnDevice,
+                    request_deserializer=hi_dot_club_dot_plugin__pb2.ListOnDeviceReq.FromString,
+                    response_serializer=hi_dot_ai_dot_plugin__pb2.ListOnDeviceResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -841,7 +845,7 @@ def add_AgentPluginServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AgentPlugin(object):
-    """所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+    """所以 `ListOnDevice` **没有 agent 参数**,主体只能从凭证里取。
     照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
 
     为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
@@ -849,7 +853,7 @@ class AgentPlugin(object):
     """
 
     @staticmethod
-    def ListNative(request,
+    def ListOnDevice(request,
             target,
             options=(),
             channel_credentials=None,
@@ -862,9 +866,9 @@ class AgentPlugin(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.AgentPlugin/ListNative',
-            hi_dot_club_dot_plugin__pb2.ListNativeReq.SerializeToString,
-            hi_dot_ai_dot_plugin__pb2.ListNativeResp.FromString,
+            '/hi.club.AgentPlugin/ListOnDevice',
+            hi_dot_club_dot_plugin__pb2.ListOnDeviceReq.SerializeToString,
+            hi_dot_ai_dot_plugin__pb2.ListOnDeviceResp.FromString,
             options,
             channel_credentials,
             insecure,

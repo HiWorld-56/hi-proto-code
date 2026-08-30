@@ -34,12 +34,12 @@ class PluginShell extends $pb.GeneratedMessage {
   factory PluginShell({
     $core.String? uuid,
     $core.String? name,
-    PluginRuntime? runtime,
+    PluginLang? lang,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
     if (name != null) result.name = name;
-    if (runtime != null) result.runtime = runtime;
+    if (lang != null) result.lang = lang;
     return result;
   }
 
@@ -58,8 +58,8 @@ class PluginShell extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..aE<PluginRuntime>(3, _omitFieldNames ? '' : 'runtime',
-        enumValues: PluginRuntime.values)
+    ..aE<PluginLang>(3, _omitFieldNames ? '' : 'lang',
+        enumValues: PluginLang.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -99,15 +99,18 @@ class PluginShell extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearName() => $_clearField(2);
 
-  /// 跑在哪儿。首版由包结构自动判定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
+  /// 用什么语言写的。首版由包结构自动判定,之后冻结 —— 换语言等于换个插件。
+  ///
+  /// ⚠️ 它**只是语言**。"跑在服务端还是设备端""要不要编译"都是从它**派生**的判据,
+  /// 不是它的含义,更不该另存一列(派生值存两份就会漂)。见 PluginLang 的说明。
   @$pb.TagNumber(3)
-  PluginRuntime get runtime => $_getN(2);
+  PluginLang get lang => $_getN(2);
   @$pb.TagNumber(3)
-  set runtime(PluginRuntime value) => $_setField(3, value);
+  set lang(PluginLang value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasRuntime() => $_has(2);
+  $core.bool hasLang() => $_has(2);
   @$pb.TagNumber(3)
-  void clearRuntime() => $_clearField(3);
+  void clearLang() => $_clearField(3);
 }
 
 class PluginVersion extends $pb.GeneratedMessage {
@@ -249,13 +252,13 @@ class PluginVersion extends $pb.GeneratedMessage {
   void clearDescription() => $_clearField(6);
 }
 
-/// 一次构建的结果。**发版接口不返回它** —— 发版是立即返回的,构建在后台跑,
-/// 结果经 Get/ListVersions 回显给发版的人看(编译中 / 失败+日志 / 成功)。
-class PluginBuild extends $pb.GeneratedMessage {
-  factory PluginBuild({
+/// 一个版本在某个 target 上的制品。**发版接口不返回它** —— 发版是立即返回的,
+/// RUST 的构建在后台跑,结果经 Get/ListVersions 回显给发版的人看。
+class PluginArtifact extends $pb.GeneratedMessage {
+  factory PluginArtifact({
     $core.String? uuid,
     $core.String? version,
-    PluginBuildStatus? status,
+    PluginArtifactStatus? status,
     $core.String? artifactUrl,
     $core.String? sha256,
     $core.int? abiVersion,
@@ -263,7 +266,7 @@ class PluginBuild extends $pb.GeneratedMessage {
     $core.String? log,
     $fixnum.Int64? startedAt,
     $fixnum.Int64? finishedAt,
-    $core.String? arch,
+    $core.String? target,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -276,27 +279,27 @@ class PluginBuild extends $pb.GeneratedMessage {
     if (log != null) result.log = log;
     if (startedAt != null) result.startedAt = startedAt;
     if (finishedAt != null) result.finishedAt = finishedAt;
-    if (arch != null) result.arch = arch;
+    if (target != null) result.target = target;
     return result;
   }
 
-  PluginBuild._();
+  PluginArtifact._();
 
-  factory PluginBuild.fromBuffer($core.List<$core.int> data,
+  factory PluginArtifact.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory PluginBuild.fromJson($core.String json,
+  factory PluginArtifact.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PluginBuild',
+      _omitMessageNames ? '' : 'PluginArtifact',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'version')
-    ..aE<PluginBuildStatus>(3, _omitFieldNames ? '' : 'status',
-        enumValues: PluginBuildStatus.values)
+    ..aE<PluginArtifactStatus>(3, _omitFieldNames ? '' : 'status',
+        enumValues: PluginArtifactStatus.values)
     ..aOS(4, _omitFieldNames ? '' : 'artifactUrl')
     ..aOS(5, _omitFieldNames ? '' : 'sha256')
     ..aI(6, _omitFieldNames ? '' : 'abiVersion', fieldType: $pb.PbFieldType.OU3)
@@ -304,27 +307,27 @@ class PluginBuild extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'log')
     ..aInt64(9, _omitFieldNames ? '' : 'startedAt')
     ..aInt64(10, _omitFieldNames ? '' : 'finishedAt')
-    ..aOS(11, _omitFieldNames ? '' : 'arch')
+    ..aOS(11, _omitFieldNames ? '' : 'target')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginBuild clone() => deepCopy();
+  PluginArtifact clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginBuild copyWith(void Function(PluginBuild) updates) =>
-      super.copyWith((message) => updates(message as PluginBuild))
-          as PluginBuild;
+  PluginArtifact copyWith(void Function(PluginArtifact) updates) =>
+      super.copyWith((message) => updates(message as PluginArtifact))
+          as PluginArtifact;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static PluginBuild create() => PluginBuild._();
+  static PluginArtifact create() => PluginArtifact._();
   @$core.override
-  PluginBuild createEmptyInstance() => create();
+  PluginArtifact createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static PluginBuild getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PluginBuild>(create);
-  static PluginBuild? _defaultInstance;
+  static PluginArtifact getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginArtifact>(create);
+  static PluginArtifact? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get uuid => $_getSZ(0);
@@ -345,14 +348,16 @@ class PluginBuild extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  PluginBuildStatus get status => $_getN(2);
+  PluginArtifactStatus get status => $_getN(2);
   @$pb.TagNumber(3)
-  set status(PluginBuildStatus value) => $_setField(3, value);
+  set status(PluginArtifactStatus value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasStatus() => $_has(2);
   @$pb.TagNumber(3)
   void clearStatus() => $_clearField(3);
 
+  /// 可下发的产物。RUST 是编出来的 `.so`,PYTHON / LUA 就是上传的那个包。
+  /// 都在私有桶,下发时现签 presigned。
   @$pb.TagNumber(4)
   $core.String get artifactUrl => $_getSZ(3);
   @$pb.TagNumber(4)
@@ -371,6 +376,9 @@ class PluginBuild extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearSha256() => $_clearField(5);
 
+  /// 设备端插件的契约号。RUST 是从 `.so` 里真读出来的 C ABI 号(hinj_plugin_abi),
+  /// LUA 是脚本里声明的 contract。**两者各涨各的,不共用计数器** ——
+  /// 共用的话撞一次 C ABI 就逼所有 lua 插件重发,而它们根本不受影响。
   @$pb.TagNumber(6)
   $core.int get abiVersion => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -416,16 +424,21 @@ class PluginBuild extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   void clearFinishedAt() => $_clearField(10);
 
-  /// 这一行是哪个架构的构建。**一版有多行**(aarch64 / x86_64 各一),
-  /// 状态、产物、错误、日志都各记各的 —— 合并显示会互相掩盖("有一个成了"看着像全成了)。
+  /// 这一份制品是给谁的。**一版可以有多行**,状态/产物/错误/日志各记各的 ——
+  /// 合并显示会互相掩盖("有一个成了"看着像全成了)。
+  ///
+  ///   RUST         —— `aarch64` / `x86_64`(与 rust 的 std::env::consts::ARCH 同名)
+  ///   PYTHON / LUA —— `any`,一版只有一行
+  ///
+  /// ⛔ `any` 是一个**真实的值**,不是"空的 arch"。别写成空串 —— 空不表示为空串。
   @$pb.TagNumber(11)
-  $core.String get arch => $_getSZ(10);
+  $core.String get target => $_getSZ(10);
   @$pb.TagNumber(11)
-  set arch($core.String value) => $_setString(10, value);
+  set target($core.String value) => $_setString(10, value);
   @$pb.TagNumber(11)
-  $core.bool hasArch() => $_has(10);
+  $core.bool hasTarget() => $_has(10);
   @$pb.TagNumber(11)
-  void clearArch() => $_clearField(11);
+  void clearTarget() => $_clearField(11);
 }
 
 /// 某 agent 视角的一个插件:壳 + 激活版本内容 + 壳级使用(enabled/source/data)+ 激活版本的版本级 data + 引用计数。
@@ -440,7 +453,7 @@ class PluginView extends $pb.GeneratedMessage {
     $2.Struct? data,
     $2.Struct? versionData,
     $core.bool? followLatest,
-    $core.Iterable<PluginBuild>? builds,
+    $core.Iterable<PluginArtifact>? artifacts,
   }) {
     final result = create();
     if (shell != null) result.shell = shell;
@@ -451,7 +464,7 @@ class PluginView extends $pb.GeneratedMessage {
     if (data != null) result.data = data;
     if (versionData != null) result.versionData = versionData;
     if (followLatest != null) result.followLatest = followLatest;
-    if (builds != null) result.builds.addAll(builds);
+    if (artifacts != null) result.artifacts.addAll(artifacts);
     return result;
   }
 
@@ -481,8 +494,8 @@ class PluginView extends $pb.GeneratedMessage {
     ..aOM<$2.Struct>(7, _omitFieldNames ? '' : 'versionData',
         subBuilder: $2.Struct.create)
     ..aOB(9, _omitFieldNames ? '' : 'followLatest')
-    ..pPM<PluginBuild>(12, _omitFieldNames ? '' : 'builds',
-        subBuilder: PluginBuild.create)
+    ..pPM<PluginArtifact>(12, _omitFieldNames ? '' : 'artifacts',
+        subBuilder: PluginArtifact.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -583,7 +596,7 @@ class PluginView extends $pb.GeneratedMessage {
   /// (内置插件是注册时自动建的引用,根本没有 grant 行),挂在 grant 上就漏掉一大片。
   ///
   /// 关掉 = 停在当前激活版,作者发新版也不动;打开 = 新版**构建成功后**自动切过去
-  /// (NATIVE 要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
+  /// (needsBuild 的语言要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
   @$pb.TagNumber(9)
   $core.bool get followLatest => $_getBF(7);
   @$pb.TagNumber(9)
@@ -593,14 +606,16 @@ class PluginView extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   void clearFollowLatest() => $_clearField(9);
 
-  /// 激活版本的构建态,**每个架构一条**(aarch64 / x86_64)。NATIVE 才有,PYTHON 恒空。
-  /// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
+  /// 激活版本的制品,**每个 target 一条**。RUST 是 aarch64 / x86_64 两条且要等编译;
+  /// PYTHON / LUA 是 `any` 一条、发版当场就 SUCCEEDED。
+  ///
+  /// 一级页要它是因为:RUST 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
   /// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
   ///
-  /// ⚠️ 8 号那个单数 `build` 已删:一版多架构,单个字段只能显示其中一个,
-  ///    另一个编失败就看不见 —— 页面"绿了"而实际半残。
+  /// ⚠️ 8 号那个单数 `build` 已删:一版多 target,单个字段只能显示其中一个,
+  ///    另一个失败就看不见 —— 页面"绿了"而实际半残。
   @$pb.TagNumber(12)
-  $pb.PbList<PluginBuild> get builds => $_getList(8);
+  $pb.PbList<PluginArtifact> get artifacts => $_getList(8);
 }
 
 /// 二级页一行:某版本内容 + 该 agent 是否激活它 + 该 agent 对该版本的版本级数据。
@@ -609,13 +624,13 @@ class PluginVersionView extends $pb.GeneratedMessage {
     PluginVersion? version,
     $core.bool? active,
     $2.Struct? data,
-    $core.Iterable<PluginBuild>? builds,
+    $core.Iterable<PluginArtifact>? artifacts,
   }) {
     final result = create();
     if (version != null) result.version = version;
     if (active != null) result.active = active;
     if (data != null) result.data = data;
-    if (builds != null) result.builds.addAll(builds);
+    if (artifacts != null) result.artifacts.addAll(artifacts);
     return result;
   }
 
@@ -637,8 +652,8 @@ class PluginVersionView extends $pb.GeneratedMessage {
     ..aOB(2, _omitFieldNames ? '' : 'active')
     ..aOM<$2.Struct>(3, _omitFieldNames ? '' : 'data',
         subBuilder: $2.Struct.create)
-    ..pPM<PluginBuild>(5, _omitFieldNames ? '' : 'builds',
-        subBuilder: PluginBuild.create)
+    ..pPM<PluginArtifact>(5, _omitFieldNames ? '' : 'artifacts',
+        subBuilder: PluginArtifact.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -691,11 +706,11 @@ class PluginVersionView extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $2.Struct ensureData() => $_ensure(2);
 
-  /// ⚠️ **单数那个 `build` 已删** —— 一版有**多个架构**各自的构建态(aarch64 / x86_64),
-  /// 塞进一个字段就只能显示其中一个:另一个编失败也看不见,页面上"绿了"而实际半残。
-  /// 前端要把每个架构一行地列出来。
+  /// ⚠️ **单数那个 `build` 已删** —— 一版有**多个 target** 各自的制品态,
+  /// 塞进一个字段就只能显示其中一个:另一个失败也看不见,页面上"绿了"而实际半残。
+  /// 前端要把每个 target 一行地列出来。
   @$pb.TagNumber(5)
-  $pb.PbList<PluginBuild> get builds => $_getList(3);
+  $pb.PbList<PluginArtifact> get artifacts => $_getList(3);
 }
 
 /// 插件加载完成通知(公开摘要,不带私产)。
@@ -790,10 +805,10 @@ class PluginLoaded extends $pb.GeneratedMessage {
 }
 
 /// 建空壳:插 a{uuid,name,runtime=UNDETERMINED} + owner 的 c{source=original, enabled=false}。
-/// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
+/// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginLang:首版的包说了算)。
 /// data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
 ///
-/// ⚠️ **没有 runtime 字段,不要再加回来。**
+/// ⚠️ **没有 lang 字段,不要再加回来。**
 /// 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 class CreateShellReq extends $pb.GeneratedMessage {
   factory CreateShellReq({
@@ -1207,7 +1222,7 @@ class SetEnabledReq extends $pb.GeneratedMessage {
 }
 
 /// SetFollowLatestReq 改 c.follow_latest —— **在"机器人 → 插件"那一行上操作**。
-/// 打开之后,作者每发一版(NATIVE 是编成功之后)这台机器人就自动切过去;
+/// 打开之后,作者每发一版(needsBuild 的语言是编成功之后)这台机器人就自动切过去;
 /// 关掉就停在当前激活版,由主人自己在版本管理里选。
 class SetFollowLatestReq extends $pb.GeneratedMessage {
   factory SetFollowLatestReq({
@@ -2871,16 +2886,21 @@ class PublicBriefsResp extends $pb.GeneratedMessage {
   $pb.PbList<PluginPublicBrief> get briefs => $_getList(0);
 }
 
-/// ── 下发面:机器人问「我该装哪些 NATIVE 插件」───────────────────────────────
+/// ── 下发面:机器人问「我该装哪些设备端插件」──────────────────────────────────
 ///
-/// 只回**该装的**:c.enabled ∧ d.active ∧ 壳是 NATIVE ∧ 该版本构建成功。
+/// 只回**该装的**:c.enabled ∧ d.active ∧ runsOnDevice(壳的 lang) ∧ 该版本的制品可用。
 /// 任一不成立就不该出现在清单里 —— 机器人拿到就会装,而装了就会喂给模型。
+///
+/// ⚠️ **筛的是「跑在设备端」,不是「是 RUST」。** 这条 rpc 原来叫 `ListNative`、
+/// 筛 `runtime = NATIVE` —— 于是 2026-08-30 加 LUA 时它把 lua 插件整个筛掉了,
+/// 而且**零报错**(清单为空对机器人的含义是"这插件我不该有",它会把本地那份删掉)。
+/// 判据换成派生的 `runsOnDevice(lang)` 之后,再加语言这里一个字都不用动。
 ///
 /// ⚠️ **清单是全量,不是增量。** 机器人按它对账:多的删、少的下、sha256 不同的换。
 /// 增量(只告诉"新增了什么")没法表达撤权与到期 —— 而那两件事恰恰必须传达到:
-/// 市场 revoke 删的是服务端的引用行,机器人本地那个 `.so` 不会自己消失。
-class NativePlugin extends $pb.GeneratedMessage {
-  factory NativePlugin({
+/// 市场 revoke 删的是服务端的引用行,机器人本地那个文件不会自己消失。
+class DevicePlugin extends $pb.GeneratedMessage {
+  factory DevicePlugin({
     $core.String? uuid,
     $core.String? name,
     $core.String? version,
@@ -2888,7 +2908,8 @@ class NativePlugin extends $pb.GeneratedMessage {
     $core.String? url,
     $core.String? sha256,
     $core.int? abiVersion,
-    $core.String? arch,
+    $core.String? target,
+    PluginLang? lang,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -2898,21 +2919,22 @@ class NativePlugin extends $pb.GeneratedMessage {
     if (url != null) result.url = url;
     if (sha256 != null) result.sha256 = sha256;
     if (abiVersion != null) result.abiVersion = abiVersion;
-    if (arch != null) result.arch = arch;
+    if (target != null) result.target = target;
+    if (lang != null) result.lang = lang;
     return result;
   }
 
-  NativePlugin._();
+  DevicePlugin._();
 
-  factory NativePlugin.fromBuffer($core.List<$core.int> data,
+  factory DevicePlugin.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory NativePlugin.fromJson($core.String json,
+  factory DevicePlugin.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'NativePlugin',
+      _omitMessageNames ? '' : 'DevicePlugin',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
@@ -2922,28 +2944,32 @@ class NativePlugin extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'url')
     ..aOS(6, _omitFieldNames ? '' : 'sha256')
     ..aI(7, _omitFieldNames ? '' : 'abiVersion', fieldType: $pb.PbFieldType.OU3)
-    ..aOS(8, _omitFieldNames ? '' : 'arch')
+    ..aOS(8, _omitFieldNames ? '' : 'target')
+    ..aE<PluginLang>(9, _omitFieldNames ? '' : 'lang',
+        enumValues: PluginLang.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  NativePlugin clone() => deepCopy();
+  DevicePlugin clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  NativePlugin copyWith(void Function(NativePlugin) updates) =>
-      super.copyWith((message) => updates(message as NativePlugin))
-          as NativePlugin;
+  DevicePlugin copyWith(void Function(DevicePlugin) updates) =>
+      super.copyWith((message) => updates(message as DevicePlugin))
+          as DevicePlugin;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static NativePlugin create() => NativePlugin._();
+  static DevicePlugin create() => DevicePlugin._();
   @$core.override
-  NativePlugin createEmptyInstance() => create();
+  DevicePlugin createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static NativePlugin getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<NativePlugin>(create);
-  static NativePlugin? _defaultInstance;
+  static DevicePlugin getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DevicePlugin>(create);
+  static DevicePlugin? _defaultInstance;
 
+  /// 壳 uuid。**落地文件名就是它**:`plugins/<uuid>@<version>.<ext>`,
+  /// 扩展名由下面的 `lang` 决定。
   @$pb.TagNumber(1)
   $core.String get uuid => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -2975,8 +3001,8 @@ class NativePlugin extends $pb.GeneratedMessage {
   /// 分发时切第一个 `_` 切掉。
   ///
   /// ⚠️ 这个字段原本是 hiai 的内部实现细节(见 PluginVersion.description 那段注释),
-  /// 现在必须过线 —— 因为 `.so` 里编进去的 manifest 是**原始名**,
-  /// 而 py 插件那侧的改名是在发版预读时做掉的,`.so` 没有对应的时机。
+  /// 现在必须过线 —— 因为产物里编进去的 manifest 是**原始名**,
+  /// 而 py 插件那侧的改名是在发版预读时做掉的,设备端产物没有对应的时机。
   /// 不给机器人前缀的话,两个厂商各卖一个提供 `search` 的插件,买家两个都买 →
   /// 机器人本地撞名 → 整个插件拒绝加载,而失败原因只在机器人的本地日志里。
   @$pb.TagNumber(4)
@@ -2988,7 +3014,7 @@ class NativePlugin extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearFnPrefix() => $_clearField(4);
 
-  /// `.so` 的下载地址。私有桶,**每次拉清单现签**(限期),不存库。
+  /// 产物下载地址。私有桶,**每次拉清单现签**(限期),不存库。
   @$pb.TagNumber(5)
   $core.String get url => $_getSZ(4);
   @$pb.TagNumber(5)
@@ -3007,6 +3033,8 @@ class NativePlugin extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearSha256() => $_clearField(6);
 
+  /// 契约号。RUST 是 `.so` 里的 C ABI 号,LUA 是脚本里声明的 contract。
+  /// 机器人可据此先筛掉对不上的,省一次下载。**两种语言各涨各的,不共用计数器。**
   @$pb.TagNumber(7)
   $core.int get abiVersion => $_getIZ(6);
   @$pb.TagNumber(7)
@@ -3016,23 +3044,37 @@ class NativePlugin extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearAbiVersion() => $_clearField(7);
 
-  /// 这份产物是给哪个架构的(`aarch64` / `x86_64`)。
+  /// 这份产物是给哪个 target 的。RUST 是 `aarch64` / `x86_64`;LUA 是 `any`。
   ///
-  /// ⚠️ **abi_version 挡不住架构不对**:两台机器的 abi 一样,指令集却不同 ——
+  /// ⚠️ **abi_version 挡不住 target 不对**:两台机器的 abi 一样,指令集却不同 ——
   ///    装上去要到 dlopen 才炸,而那个错看着像"插件本身有问题"。
   ///    机器人拿到清单先比这个,不符就跳过并说清楚。
   @$pb.TagNumber(8)
-  $core.String get arch => $_getSZ(7);
+  $core.String get target => $_getSZ(7);
   @$pb.TagNumber(8)
-  set arch($core.String value) => $_setString(7, value);
+  set target($core.String value) => $_setString(7, value);
   @$pb.TagNumber(8)
-  $core.bool hasArch() => $_has(7);
+  $core.bool hasTarget() => $_has(7);
   @$pb.TagNumber(8)
-  void clearArch() => $_clearField(8);
+  void clearTarget() => $_clearField(8);
+
+  /// ⭐ **这份产物是什么语言的** —— 机器人据此决定:落地成什么扩展名(`.so` / `.lua`)、
+  /// 用哪条装载路径(dlopen + 对 C ABI / 沙箱里 load + 对 contract)。
+  ///
+  /// 不给的话机器人只能猜(比如按 url 后缀),而猜错的表现是"下下来了、装不上",
+  /// 原因只在它自己的本地日志里。
+  @$pb.TagNumber(9)
+  PluginLang get lang => $_getN(8);
+  @$pb.TagNumber(9)
+  set lang(PluginLang value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasLang() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearLang() => $_clearField(9);
 }
 
-class ListNativeReq extends $pb.GeneratedMessage {
-  factory ListNativeReq({
+class ListOnDeviceReq extends $pb.GeneratedMessage {
+  factory ListOnDeviceReq({
     $core.String? agent,
     $core.String? arch,
   }) {
@@ -3042,17 +3084,17 @@ class ListNativeReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListNativeReq._();
+  ListOnDeviceReq._();
 
-  factory ListNativeReq.fromBuffer($core.List<$core.int> data,
+  factory ListOnDeviceReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListNativeReq.fromJson($core.String json,
+  factory ListOnDeviceReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListNativeReq',
+      _omitMessageNames ? '' : 'ListOnDeviceReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
@@ -3060,23 +3102,23 @@ class ListNativeReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListNativeReq clone() => deepCopy();
+  ListOnDeviceReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListNativeReq copyWith(void Function(ListNativeReq) updates) =>
-      super.copyWith((message) => updates(message as ListNativeReq))
-          as ListNativeReq;
+  ListOnDeviceReq copyWith(void Function(ListOnDeviceReq) updates) =>
+      super.copyWith((message) => updates(message as ListOnDeviceReq))
+          as ListOnDeviceReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListNativeReq create() => ListNativeReq._();
+  static ListOnDeviceReq create() => ListOnDeviceReq._();
   @$core.override
-  ListNativeReq createEmptyInstance() => create();
+  ListOnDeviceReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListNativeReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListNativeReq>(create);
-  static ListNativeReq? _defaultInstance;
+  static ListOnDeviceReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListOnDeviceReq>(create);
+  static ListOnDeviceReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get agent => $_getSZ(0);
@@ -3089,6 +3131,9 @@ class ListNativeReq extends $pb.GeneratedMessage {
 
   /// 机器人自己的架构。**不传 = aarch64** —— 现网机器人全是 arm64,
   /// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
+  ///
+  /// ⚠️ 服务端按它筛的是 `target ∈ {这个值, "any"}` ——
+  /// LUA 的制品 target 是 `any`,与架构无关,任何机器人都拿得到。
   /// ⛔ 空串不是合法值:要么不传,要么给真架构名。
   @$pb.TagNumber(2)
   $core.String get arch => $_getSZ(1);
@@ -3100,53 +3145,53 @@ class ListNativeReq extends $pb.GeneratedMessage {
   void clearArch() => $_clearField(2);
 }
 
-class ListNativeResp extends $pb.GeneratedMessage {
-  factory ListNativeResp({
-    $core.Iterable<NativePlugin>? list,
+class ListOnDeviceResp extends $pb.GeneratedMessage {
+  factory ListOnDeviceResp({
+    $core.Iterable<DevicePlugin>? list,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
     return result;
   }
 
-  ListNativeResp._();
+  ListOnDeviceResp._();
 
-  factory ListNativeResp.fromBuffer($core.List<$core.int> data,
+  factory ListOnDeviceResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListNativeResp.fromJson($core.String json,
+  factory ListOnDeviceResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListNativeResp',
+      _omitMessageNames ? '' : 'ListOnDeviceResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
-    ..pPM<NativePlugin>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: NativePlugin.create)
+    ..pPM<DevicePlugin>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: DevicePlugin.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListNativeResp clone() => deepCopy();
+  ListOnDeviceResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListNativeResp copyWith(void Function(ListNativeResp) updates) =>
-      super.copyWith((message) => updates(message as ListNativeResp))
-          as ListNativeResp;
+  ListOnDeviceResp copyWith(void Function(ListOnDeviceResp) updates) =>
+      super.copyWith((message) => updates(message as ListOnDeviceResp))
+          as ListOnDeviceResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListNativeResp create() => ListNativeResp._();
+  static ListOnDeviceResp create() => ListOnDeviceResp._();
   @$core.override
-  ListNativeResp createEmptyInstance() => create();
+  ListOnDeviceResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListNativeResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListNativeResp>(create);
-  static ListNativeResp? _defaultInstance;
+  static ListOnDeviceResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListOnDeviceResp>(create);
+  static ListOnDeviceResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<NativePlugin> get list => $_getList(0);
+  $pb.PbList<DevicePlugin> get list => $_getList(0);
 }
 
 /// 重编一版。编译失败(网络抖、依赖源挂了)后不必删版本重发一遍 ——

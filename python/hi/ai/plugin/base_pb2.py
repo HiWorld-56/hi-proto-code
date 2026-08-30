@@ -28,7 +28,7 @@ from hi.ai import chat_pb2 as hi_dot_ai_dot_chat__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hi/ai/plugin/base.proto\x12\x0chi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\":\n\x0bPluginAnnex\x12+\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x17.google.protobuf.StructR\x04\x64\x61ta\"\xe4\x02\n\x06RunReq\x12-\n\x10\x63ode_archive_url\x18\x01 \x01(\tH\x00R\x0e\x63odeArchiveUrl\x88\x01\x01\x12$\n\x0b\x63ode_params\x18\x02 \x01(\tH\x01R\ncodeParams\x88\x01\x01\x12\x17\n\x04uuid\x18\x03 \x01(\tH\x02R\x04uuid\x88\x01\x01\x12\x12\n\x04\x65nvs\x18\x04 \x03(\tR\x04\x65nvs\x12/\n\x05\x61nnex\x18\x05 \x01(\x0b\x32\x19.hi.ai.plugin.PluginAnnexR\x05\x61nnex\x12\x1f\n\x08\x66unction\x18\x06 \x01(\tH\x03R\x08\x66unction\x88\x01\x01\x12\x19\n\x05\x61sker\x18\x07 \x01(\tH\x04R\x05\x61sker\x88\x01\x01\x12\x1b\n\x06master\x18\x08 \x01(\tH\x05R\x06master\x88\x01\x01\x42\x13\n\x11_code_archive_urlB\x0e\n\x0c_code_paramsB\x07\n\x05_uuidB\x0b\n\t_functionB\x08\n\x06_askerB\t\n\x07_master\";\n\x07RunResp\x12*\n\x05\x63onts\x18\x01 \x03(\x0b\x32\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05\x63onts:\x04\x98\xb5\x18\x03\"P\n\nCleanupReq\x12-\n\x10\x63ode_archive_url\x18\x01 \x01(\tH\x00R\x0e\x63odeArchiveUrl\x88\x01\x01\x42\x13\n\x11_code_archive_url\"\xbd\x01\n\x08\x42uildReq\x12-\n\x10\x63ode_archive_url\x18\x01 \x01(\tH\x00R\x0e\x63odeArchiveUrl\x88\x01\x01\x12\x17\n\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n\x07version\x18\x03 \x01(\tH\x02R\x07version\x88\x01\x01\x12\x17\n\x04\x61rch\x18\x04 \x01(\tH\x03R\x04\x61rch\x88\x01\x01\x42\x13\n\x11_code_archive_urlB\x07\n\x05_uuidB\n\n\x08_versionB\x07\n\x05_arch\"\xe0\x02\n\tBuildResp\x12\x19\n\x02ok\x18\x01 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x00R\x02ok\x88\x01\x01\x12,\n\x0c\x61rtifact_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x0b\x61rtifactUrl\x88\x01\x01\x12!\n\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06sha256\x88\x01\x01\x12*\n\x0b\x61\x62i_version\x18\x04 \x01(\rB\x04\x90\xb5\x18\x03H\x03R\nabiVersion\x88\x01\x01\x12%\n\x08manifest\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x08manifest\x88\x01\x01\x12\x1f\n\x05\x65rror\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x05\x65rror\x88\x01\x01\x12\x1b\n\x03log\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x03log\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x05\n\x03_okB\x0f\n\r_artifact_urlB\t\n\x07_sha256B\x0e\n\x0c_abi_versionB\x0b\n\t_manifestB\x08\n\x06_errorB\x06\n\x04_log2\x87\x01\n\x06Runner\x12\x39\n\x03Run\x12\x14.hi.ai.plugin.RunReq\x1a\x15.hi.ai.plugin.RunResp\"\x05\x8a\xb5\x18\x01\x06\x12\x42\n\x07\x43leanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06\x32J\n\x07\x42uilder\x12?\n\x05\x42uild\x12\x16.hi.ai.plugin.BuildReq\x1a\x17.hi.ai.plugin.BuildResp\"\x05\x8a\xb5\x18\x01\x06\x42\x30Z.github.com/HiWorld-56/hi-proto/go/hi/ai/pluginb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hi/ai/plugin/base.proto\x12\x0chi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\":\n\x0bPluginAnnex\x12+\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x17.google.protobuf.StructR\x04\x64\x61ta\"\xe4\x02\n\x06RunReq\x12-\n\x10\x63ode_archive_url\x18\x01 \x01(\tH\x00R\x0e\x63odeArchiveUrl\x88\x01\x01\x12$\n\x0b\x63ode_params\x18\x02 \x01(\tH\x01R\ncodeParams\x88\x01\x01\x12\x17\n\x04uuid\x18\x03 \x01(\tH\x02R\x04uuid\x88\x01\x01\x12\x12\n\x04\x65nvs\x18\x04 \x03(\tR\x04\x65nvs\x12/\n\x05\x61nnex\x18\x05 \x01(\x0b\x32\x19.hi.ai.plugin.PluginAnnexR\x05\x61nnex\x12\x1f\n\x08\x66unction\x18\x06 \x01(\tH\x03R\x08\x66unction\x88\x01\x01\x12\x19\n\x05\x61sker\x18\x07 \x01(\tH\x04R\x05\x61sker\x88\x01\x01\x12\x1b\n\x06master\x18\x08 \x01(\tH\x05R\x06master\x88\x01\x01\x42\x13\n\x11_code_archive_urlB\x0e\n\x0c_code_paramsB\x07\n\x05_uuidB\x0b\n\t_functionB\x08\n\x06_askerB\t\n\x07_master\";\n\x07RunResp\x12*\n\x05\x63onts\x18\x01 \x03(\x0b\x32\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05\x63onts:\x04\x98\xb5\x18\x03\"P\n\nCleanupReq\x12-\n\x10\x63ode_archive_url\x18\x01 \x01(\tH\x00R\x0e\x63odeArchiveUrl\x88\x01\x01\x42\x13\n\x11_code_archive_url\"\xbd\x01\n\x08\x42uildReq\x12-\n\x10\x63ode_archive_url\x18\x01 \x01(\tH\x00R\x0e\x63odeArchiveUrl\x88\x01\x01\x12\x17\n\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n\x07version\x18\x03 \x01(\tH\x02R\x07version\x88\x01\x01\x12\x17\n\x04\x61rch\x18\x04 \x01(\tH\x03R\x04\x61rch\x88\x01\x01\x42\x13\n\x11_code_archive_urlB\x07\n\x05_uuidB\n\n\x08_versionB\x07\n\x05_arch\"\xe0\x02\n\tBuildResp\x12\x19\n\x02ok\x18\x01 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x00R\x02ok\x88\x01\x01\x12,\n\x0c\x61rtifact_url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x0b\x61rtifactUrl\x88\x01\x01\x12!\n\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06sha256\x88\x01\x01\x12*\n\x0b\x61\x62i_version\x18\x04 \x01(\rB\x04\x90\xb5\x18\x03H\x03R\nabiVersion\x88\x01\x01\x12%\n\x08manifest\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x08manifest\x88\x01\x01\x12\x1f\n\x05\x65rror\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x05\x65rror\x88\x01\x01\x12\x1b\n\x03log\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x03log\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x05\n\x03_okB\x0f\n\r_artifact_urlB\t\n\x07_sha256B\x0e\n\x0c_abi_versionB\x0b\n\t_manifestB\x08\n\x06_errorB\x06\n\x04_log\"\x9f\x01\n\x0cVerifyLuaReq\x12-\n\x10\x63ode_archive_url\x18\x01 \x01(\tH\x00R\x0e\x63odeArchiveUrl\x88\x01\x01\x12\x17\n\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n\x07version\x18\x03 \x01(\tH\x02R\x07version\x88\x01\x01\x42\x13\n\x11_code_archive_urlB\x07\n\x05_uuidB\n\n\x08_version\"\xef\x01\n\rVerifyLuaResp\x12\x19\n\x02ok\x18\x01 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x00R\x02ok\x88\x01\x01\x12%\n\x08\x63ontract\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x01R\x08\x63ontract\x88\x01\x01\x12%\n\x08manifest\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x08manifest\x88\x01\x01\x12\x1f\n\x05\x65rror\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05\x65rror\x88\x01\x01\x12\x1b\n\x03log\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x03log\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x05\n\x03_okB\x0b\n\t_contractB\x0b\n\t_manifestB\x08\n\x06_errorB\x06\n\x04_log2\x87\x01\n\x06Runner\x12\x39\n\x03Run\x12\x14.hi.ai.plugin.RunReq\x1a\x15.hi.ai.plugin.RunResp\"\x05\x8a\xb5\x18\x01\x06\x12\x42\n\x07\x43leanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x06\x32\x97\x01\n\x07\x42uilder\x12?\n\x05\x42uild\x12\x16.hi.ai.plugin.BuildReq\x1a\x17.hi.ai.plugin.BuildResp\"\x05\x8a\xb5\x18\x01\x06\x12K\n\tVerifyLua\x12\x1a.hi.ai.plugin.VerifyLuaReq\x1a\x1b.hi.ai.plugin.VerifyLuaResp\"\x05\x8a\xb5\x18\x01\x06\x42\x30Z.github.com/HiWorld-56/hi-proto/go/hi/ai/pluginb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -56,12 +56,26 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_BUILDRESP'].fields_by_name['log']._serialized_options = b'\220\265\030\003'
   _globals['_BUILDRESP']._loaded_options = None
   _globals['_BUILDRESP']._serialized_options = b'\230\265\030\003'
+  _globals['_VERIFYLUARESP'].fields_by_name['ok']._loaded_options = None
+  _globals['_VERIFYLUARESP'].fields_by_name['ok']._serialized_options = b'\220\265\030\003'
+  _globals['_VERIFYLUARESP'].fields_by_name['contract']._loaded_options = None
+  _globals['_VERIFYLUARESP'].fields_by_name['contract']._serialized_options = b'\220\265\030\003'
+  _globals['_VERIFYLUARESP'].fields_by_name['manifest']._loaded_options = None
+  _globals['_VERIFYLUARESP'].fields_by_name['manifest']._serialized_options = b'\220\265\030\003'
+  _globals['_VERIFYLUARESP'].fields_by_name['error']._loaded_options = None
+  _globals['_VERIFYLUARESP'].fields_by_name['error']._serialized_options = b'\220\265\030\003'
+  _globals['_VERIFYLUARESP'].fields_by_name['log']._loaded_options = None
+  _globals['_VERIFYLUARESP'].fields_by_name['log']._serialized_options = b'\220\265\030\003'
+  _globals['_VERIFYLUARESP']._loaded_options = None
+  _globals['_VERIFYLUARESP']._serialized_options = b'\230\265\030\003'
   _globals['_RUNNER'].methods_by_name['Run']._loaded_options = None
   _globals['_RUNNER'].methods_by_name['Run']._serialized_options = b'\212\265\030\001\006'
   _globals['_RUNNER'].methods_by_name['Cleanup']._loaded_options = None
   _globals['_RUNNER'].methods_by_name['Cleanup']._serialized_options = b'\212\265\030\001\006'
   _globals['_BUILDER'].methods_by_name['Build']._loaded_options = None
   _globals['_BUILDER'].methods_by_name['Build']._serialized_options = b'\212\265\030\001\006'
+  _globals['_BUILDER'].methods_by_name['VerifyLua']._loaded_options = None
+  _globals['_BUILDER'].methods_by_name['VerifyLua']._serialized_options = b'\212\265\030\001\006'
   _globals['_PLUGINANNEX']._serialized_start=136
   _globals['_PLUGINANNEX']._serialized_end=194
   _globals['_RUNREQ']._serialized_start=197
@@ -74,8 +88,12 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_BUILDREQ']._serialized_end=888
   _globals['_BUILDRESP']._serialized_start=891
   _globals['_BUILDRESP']._serialized_end=1243
-  _globals['_RUNNER']._serialized_start=1246
-  _globals['_RUNNER']._serialized_end=1381
-  _globals['_BUILDER']._serialized_start=1383
-  _globals['_BUILDER']._serialized_end=1457
+  _globals['_VERIFYLUAREQ']._serialized_start=1246
+  _globals['_VERIFYLUAREQ']._serialized_end=1405
+  _globals['_VERIFYLUARESP']._serialized_start=1408
+  _globals['_VERIFYLUARESP']._serialized_end=1647
+  _globals['_RUNNER']._serialized_start=1650
+  _globals['_RUNNER']._serialized_end=1785
+  _globals['_BUILDER']._serialized_start=1788
+  _globals['_BUILDER']._serialized_end=1939
 # @@protoc_insertion_point(module_scope)

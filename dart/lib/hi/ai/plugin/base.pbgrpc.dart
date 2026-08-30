@@ -98,10 +98,11 @@ abstract class RunnerServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.CleanupReq request);
 }
 
-/// NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
+/// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
 ///
-/// ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
-/// 危险程度只高不低。必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+/// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
+/// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
+/// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
 @$pb.GrpcServiceName('hi.ai.plugin.Builder')
 class BuilderClient extends $grpc.Client {
   /// The hostname for this service.
@@ -121,12 +122,26 @@ class BuilderClient extends $grpc.Client {
     return $createUnaryCall(_$build, request, options: options);
   }
 
+  /// 验一个 lua 包:语法能不能 load、manifest 是什么、契约号多少、有没有碰禁用项。
+  /// 毫秒级,hi-ai 在发版流程里同步等。
+  $grpc.ResponseFuture<$0.VerifyLuaResp> verifyLua(
+    $0.VerifyLuaReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$verifyLua, request, options: options);
+  }
+
   // method descriptors
 
   static final _$build = $grpc.ClientMethod<$0.BuildReq, $0.BuildResp>(
       '/hi.ai.plugin.Builder/Build',
       ($0.BuildReq value) => value.writeToBuffer(),
       $0.BuildResp.fromBuffer);
+  static final _$verifyLua =
+      $grpc.ClientMethod<$0.VerifyLuaReq, $0.VerifyLuaResp>(
+          '/hi.ai.plugin.Builder/VerifyLua',
+          ($0.VerifyLuaReq value) => value.writeToBuffer(),
+          $0.VerifyLuaResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.plugin.Builder')
@@ -141,6 +156,13 @@ abstract class BuilderServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.BuildReq.fromBuffer(value),
         ($0.BuildResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.VerifyLuaReq, $0.VerifyLuaResp>(
+        'VerifyLua',
+        verifyLua_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.VerifyLuaReq.fromBuffer(value),
+        ($0.VerifyLuaResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.BuildResp> build_Pre(
@@ -150,4 +172,12 @@ abstract class BuilderServiceBase extends $grpc.Service {
 
   $async.Future<$0.BuildResp> build(
       $grpc.ServiceCall call, $0.BuildReq request);
+
+  $async.Future<$0.VerifyLuaResp> verifyLua_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.VerifyLuaReq> $request) async {
+    return verifyLua($call, await $request);
+  }
+
+  $async.Future<$0.VerifyLuaResp> verifyLua(
+      $grpc.ServiceCall call, $0.VerifyLuaReq request);
 }

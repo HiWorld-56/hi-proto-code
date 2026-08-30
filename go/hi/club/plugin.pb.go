@@ -30,34 +30,35 @@ const (
 // 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
 // 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
 //
-// ListNativeReq —— 见下面 ListNative:**没有 agent 字段**,主体只能从凭证里取。
-// 只带机器人自己的架构:同一版插件两个架构各有一份产物,给错了要到 dlopen 才炸。
+// ListOnDeviceReq —— 见下面 ListOnDevice:**没有 agent 字段**,主体只能从凭证里取。
+// 只带机器人自己的架构:RUST 插件一版两个架构各有一份产物,给错了要到 dlopen 才炸。
+// (LUA 的制品 target 是 `any`,与架构无关 —— 服务端按 `target ∈ {这个值, "any"}` 筛。)
 //
 // ⚠️ **不传 = aarch64**。老 brain 发的是 `Empty`(根本不带这个字段),optional 之后就是
 //
 //	"没有值" —— 于是它照旧拿到 arm64 那份,零改动继续跑。这条兼容是有意的。
 //	⛔ **空串不再是合法值**(2026-08-28 起禁止用空串表示"没有"):要么不传,要么给真架构名。
-type ListNativeReq struct {
+type ListOnDeviceReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Arch          *string                `protobuf:"bytes,1,opt,name=arch,proto3,oneof" json:"arch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListNativeReq) Reset() {
-	*x = ListNativeReq{}
+func (x *ListOnDeviceReq) Reset() {
+	*x = ListOnDeviceReq{}
 	mi := &file_hi_club_plugin_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListNativeReq) String() string {
+func (x *ListOnDeviceReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListNativeReq) ProtoMessage() {}
+func (*ListOnDeviceReq) ProtoMessage() {}
 
-func (x *ListNativeReq) ProtoReflect() protoreflect.Message {
+func (x *ListOnDeviceReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_plugin_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -69,12 +70,12 @@ func (x *ListNativeReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListNativeReq.ProtoReflect.Descriptor instead.
-func (*ListNativeReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListOnDeviceReq.ProtoReflect.Descriptor instead.
+func (*ListOnDeviceReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_plugin_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListNativeReq) GetArch() string {
+func (x *ListOnDeviceReq) GetArch() string {
 	if x != nil && x.Arch != nil {
 		return *x.Arch
 	}
@@ -186,8 +187,8 @@ var File_hi_club_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_club_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"1\n" +
-	"\rListNativeReq\x12\x17\n" +
+	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"3\n" +
+	"\x0fListOnDeviceReq\x12\x17\n" +
 	"\x04arch\x18\x01 \x01(\tH\x00R\x04arch\x88\x01\x01B\a\n" +
 	"\x05_arch\"X\n" +
 	"\x0fReloadApiKeyReq\x12\x19\n" +
@@ -217,10 +218,9 @@ const file_hi_club_plugin_proto_rawDesc = "" +
 	"\x0fSetFollowLatest\x12\x19.hi.ai.SetFollowLatestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12J\n" +
 	"\fReloadApiKey\x12\x18.hi.club.ReloadApiKeyReq\x1a\x19.hi.club.ReloadApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
 	"\n" +
-	"RetryBuild\x12\x14.hi.ai.RetryBuildReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022Q\n" +
-	"\vAgentPlugin\x12B\n" +
-	"\n" +
-	"ListNative\x12\x16.hi.club.ListNativeReq\x1a\x15.hi.ai.ListNativeResp\"\x05\x8a\xb5\x18\x01\x02B\x82\x01\n" +
+	"RetryBuild\x12\x14.hi.ai.RetryBuildReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022W\n" +
+	"\vAgentPlugin\x12H\n" +
+	"\fListOnDevice\x12\x18.hi.club.ListOnDeviceReq\x1a\x17.hi.ai.ListOnDeviceResp\"\x05\x8a\xb5\x18\x01\x02B\x82\x01\n" +
 	"\vcom.hi.clubB\vPluginProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -237,7 +237,7 @@ func file_hi_club_plugin_proto_rawDescGZIP() []byte {
 
 var file_hi_club_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_hi_club_plugin_proto_goTypes = []any{
-	(*ListNativeReq)(nil),           // 0: hi.club.ListNativeReq
+	(*ListOnDeviceReq)(nil),         // 0: hi.club.ListOnDeviceReq
 	(*ReloadApiKeyReq)(nil),         // 1: hi.club.ReloadApiKeyReq
 	(*ReloadApiKeyResp)(nil),        // 2: hi.club.ReloadApiKeyResp
 	(*ai.CreateShellReq)(nil),       // 3: hi.ai.CreateShellReq
@@ -260,7 +260,7 @@ var file_hi_club_plugin_proto_goTypes = []any{
 	(*ai.GetPluginResp)(nil),        // 20: hi.ai.GetPluginResp
 	(*ai.ListPluginsResp)(nil),      // 21: hi.ai.ListPluginsResp
 	(*ai.ListVersionsResp)(nil),     // 22: hi.ai.ListVersionsResp
-	(*ai.ListNativeResp)(nil),       // 23: hi.ai.ListNativeResp
+	(*ai.ListOnDeviceResp)(nil),     // 23: hi.ai.ListOnDeviceResp
 }
 var file_hi_club_plugin_proto_depIdxs = []int32{
 	3,  // 0: hi.club.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
@@ -279,7 +279,7 @@ var file_hi_club_plugin_proto_depIdxs = []int32{
 	16, // 13: hi.club.Plugin.SetFollowLatest:input_type -> hi.ai.SetFollowLatestReq
 	1,  // 14: hi.club.Plugin.ReloadApiKey:input_type -> hi.club.ReloadApiKeyReq
 	17, // 15: hi.club.Plugin.RetryBuild:input_type -> hi.ai.RetryBuildReq
-	0,  // 16: hi.club.AgentPlugin.ListNative:input_type -> hi.club.ListNativeReq
+	0,  // 16: hi.club.AgentPlugin.ListOnDevice:input_type -> hi.club.ListOnDeviceReq
 	18, // 17: hi.club.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
 	19, // 18: hi.club.Plugin.CreateVersion:output_type -> google.protobuf.Empty
 	19, // 19: hi.club.Plugin.Edit:output_type -> google.protobuf.Empty
@@ -296,7 +296,7 @@ var file_hi_club_plugin_proto_depIdxs = []int32{
 	19, // 30: hi.club.Plugin.SetFollowLatest:output_type -> google.protobuf.Empty
 	2,  // 31: hi.club.Plugin.ReloadApiKey:output_type -> hi.club.ReloadApiKeyResp
 	19, // 32: hi.club.Plugin.RetryBuild:output_type -> google.protobuf.Empty
-	23, // 33: hi.club.AgentPlugin.ListNative:output_type -> hi.ai.ListNativeResp
+	23, // 33: hi.club.AgentPlugin.ListOnDevice:output_type -> hi.ai.ListOnDeviceResp
 	17, // [17:34] is the sub-list for method output_type
 	0,  // [0:17] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name

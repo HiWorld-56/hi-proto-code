@@ -3357,14 +3357,15 @@ pub mod push_manager_client {
 /// 这里的主体是**机器人自己**(问"我该装什么")—— 两种主体混在一个 service 里,
 /// 迟早有人给这里的方法加个 `agent` 参数,那就成了任填 did 的越权入口。
 ///
-/// ListNativeReq —— 见下面 ListNative:**没有 agent 字段**,主体只能从凭证里取。
-/// 只带机器人自己的架构:同一版插件两个架构各有一份产物,给错了要到 dlopen 才炸。
+/// ListOnDeviceReq —— 见下面 ListOnDevice:**没有 agent 字段**,主体只能从凭证里取。
+/// 只带机器人自己的架构:RUST 插件一版两个架构各有一份产物,给错了要到 dlopen 才炸。
+/// (LUA 的制品 target 是 `any`,与架构无关 —— 服务端按 `target ∈ {这个值, "any"}` 筛。)
 ///
 /// ⚠️ **不传 = aarch64**。老 brain 发的是 `Empty`(根本不带这个字段),optional 之后就是
 /// "没有值" —— 于是它照旧拿到 arm64 那份,零改动继续跑。这条兼容是有意的。
 /// ⛔ **空串不再是合法值**(2026-08-28 起禁止用空串表示"没有"):要么不传,要么给真架构名。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListNativeReq {
+pub struct ListOnDeviceReq {
     #[prost(string, optional, tag = "1")]
     pub arch: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -3402,7 +3403,7 @@ pub mod plugin_client {
     /// 插件管理(主体=插件)。**hi.ai.Plugin 的门面**,纯透传 → 类型直接复用 hi.ai(有意为之)。
     ///
     /// 插件有 py / rust 两种,**建壳→建版本是同一条路**,club 这边一个分支都没有 ——
-    /// runtime 由后端从首版的包结构自动判定(见 hi.ai.PluginRuntime),用户不声明、也无从声明。
+    /// lang 由后端从首版的包结构自动判定(见 hi.ai.PluginLang),用户不声明、也无从声明。
     ///
     /// ⚠️ club 侧的实际代码活(不只是改名):
     ///
@@ -3849,7 +3850,7 @@ pub mod agent_plugin_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 所以 `ListNative` **没有 agent 参数**,主体只能从凭证里取。
+    /// 所以 `ListOnDevice` **没有 agent 参数**,主体只能从凭证里取。
     /// 照 `MarketApplyReq` 删掉申请人字段那次的教训:能传的主体就是能越权的主体。
     ///
     /// 为什么在 `hi.club` 而不是直接调 `hi.ai`:机器人经 core 的已认证 hiclub 通道说话,
@@ -3934,14 +3935,18 @@ pub mod agent_plugin_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 我该装哪些 NATIVE 插件。**全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
+        /// 我该装哪些**设备端**插件(RUST 的 `.so` 与 LUA 的脚本,同一份清单)。
+        /// **全量清单**,机器人按它对账(多的删、少的下、摘要不同的换)。
         /// 增量表达不了撤权与到期 —— 而那两件事必须传达到:服务端删掉引用行,
-        /// 机器人本地那个 `.so` 不会自己消失。
-        pub async fn list_native(
+        /// 机器人本地那个文件不会自己消失。
+        ///
+        /// ⚠️ 原名 `ListNative`,筛的是"壳是 NATIVE"。改名不只是改名:判据从
+        /// "是某种语言"换成了派生的 `runsOnDevice(lang)` —— 否则 lua 插件会被静默筛掉。
+        pub async fn list_on_device(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListNativeReq>,
+            request: impl tonic::IntoRequest<super::ListOnDeviceReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ListNativeResp>,
+            tonic::Response<super::super::ai::ListOnDeviceResp>,
             tonic::Status,
         > {
             self.inner
@@ -3954,11 +3959,11 @@ pub mod agent_plugin_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.AgentPlugin/ListNative",
+                "/hi.club.AgentPlugin/ListOnDevice",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.AgentPlugin", "ListNative"));
+                .insert(GrpcMethod::new("hi.club.AgentPlugin", "ListOnDevice"));
             self.inner.unary(req, path, codec).await
         }
     }

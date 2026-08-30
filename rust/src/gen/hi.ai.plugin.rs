@@ -70,9 +70,9 @@ pub struct CleanupReq {
     #[prost(string, optional, tag = "1")]
     pub code_archive_url: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// ── NATIVE 构建契约(独立构建服务实现,hiai 只作调用方)────────────────────────
+/// ── RUST 构建契约(独立构建服务实现,hiai 只作调用方)──────────────────────────
 ///
-/// NATIVE 插件(`PluginRuntime.PLUGIN_RUNTIME_NATIVE`)传上来的是 **rust 源码**,
+/// RUST 插件(`PluginLang.PLUGIN_LANG_RUST`)传上来的是 **rust 源码**,
 /// 要先交叉编译成 arm64 的 `.so` 才谈得上下发。这条契约就是那一步。
 ///
 /// ## 它是**无状态纯函数**:给源码,还产物
@@ -143,6 +143,55 @@ pub struct BuildResp {
     pub error: ::core::option::Option<::prost::alloc::string::String>,
     /// 编译日志尾部(失败时才有意义)
     #[prost(string, optional, tag = "7")]
+    pub log: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// ── LUA 验收契约 ────────────────────────────────────────────────────────────
+///
+/// LUA 插件**不需要编译**(上传的脚本就是产物),但**绝不能因此跳过验收**。
+/// 不验的话,一个语法错的脚本会直接铺到全网机器人,而失败只存在于每台机器人的
+/// 本地日志里 —— 那正是我们反复踩过的「失败原因只在机器人本地」。
+///
+/// 为什么这一步在构建服务而不是 hi-ai 里做:**hi-ai 里没有 lua 解释器**,
+/// 而验收要真的把脚本 load 一遍、读出它的 manifest。塞一个 lua 运行时进业务服务,
+/// 等于让每次发版都多背一个 C 依赖;构建服务本来就是"跑三方代码的那个容器"。
+///
+/// 与 Build 的区别:**这是毫秒级的同步调用**,所以 hi-ai 在 CreateVersion 里直接等它,
+/// 验不过就拒绝这一版 —— 而不是像 RUST 那样先落库再后台编。
+/// 一个语法错的脚本压根不该进库。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VerifyLuaReq {
+    /// lua 脚本包 zip(= 这一版的 b.url)
+    #[prost(string, optional, tag = "1")]
+    pub code_archive_url: ::core::option::Option<::prost::alloc::string::String>,
+    /// 壳 uuid(日志用)
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 版本号
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VerifyLuaResp {
+    /// 验过了没有。**false 时 rpc 本身仍是成功的** —— 同 BuildResp,
+    /// 「脚本层面的错不是 rpc 错误」,要把原因原样交给发版的人看。
+    #[prost(bool, optional, tag = "1")]
+    pub ok: ::core::option::Option<bool>,
+    /// 脚本里声明的契约号(`contract`)。**机器人加载前拿它比对,不匹配拒载。**
+    ///
+    /// 🔴 它与 RUST 的 C ABI 号**各涨各的,不共用计数器** —— 共用的话撞一次 C ABI
+    /// 就逼所有 lua 插件重发,而它们根本不受影响。
+    #[prost(uint32, optional, tag = "2")]
+    pub contract: ::core::option::Option<u32>,
+    /// 从**脚本里真跑出来的** manifest(OpenAI tools 数组,原始名、不带壳前缀)。
+    /// hi-ai 拿它跟包里的 description.json 比对 —— 不一致说明作者改了 json 却没改代码
+    /// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
+    #[prost(string, optional, tag = "3")]
+    pub manifest: ::core::option::Option<::prost::alloc::string::String>,
+    /// 失败原因(给发版的人看的一句话)
+    #[prost(string, optional, tag = "4")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    /// 细节(语法错的行号、命中的禁用项)
+    #[prost(string, optional, tag = "5")]
     pub log: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
@@ -290,10 +339,11 @@ pub mod builder_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// NATIVE 插件构建器(内部面)。只由父服务 ai 经 grpc 转发调用。
+    /// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
     ///
-    /// ⚠️ **它执行的是三方的 `build.rs` 与三方依赖的构建脚本** —— 比 Runner 跑 py 脚本
-    /// 危险程度只高不低。必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+    /// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
+    /// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
+    /// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
     #[derive(Debug, Clone)]
     pub struct BuilderClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -393,6 +443,29 @@ pub mod builder_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.plugin.Builder", "Build"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 验一个 lua 包:语法能不能 load、manifest 是什么、契约号多少、有没有碰禁用项。
+        /// 毫秒级,hi-ai 在发版流程里同步等。
+        pub async fn verify_lua(
+            &mut self,
+            request: impl tonic::IntoRequest<super::VerifyLuaReq>,
+        ) -> std::result::Result<tonic::Response<super::VerifyLuaResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.plugin.Builder/VerifyLua",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.plugin.Builder", "VerifyLua"));
             self.inner.unary(req, path, codec).await
         }
     }

@@ -25,155 +25,206 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 插件跑在哪儿 —— **壳的属性**(同一个包不会一半 py 一半 rust),发版后不该再改。
+// ── 插件用什么语言写 —— **壳的属性**(同一个包不会一半 py 一半 rust),发版后冻结 ──
 //
-// 这不只是个标签,它决定**谁执行**,而"谁执行"决定了一堆判据该由谁把关:
+// 语言本身只决定两件事:怎么认出这个包、怎么校验它。
+// 但从语言可以**派生**出两个判据,而那两个才是整个系统真正在问的:
 //
-//	PYTHON —— 脚本包(main.py/requirements.txt/description.json),**hiai 服务端执行**。
-//	NATIVE —— rust 源码包(Cargo.toml/src/description.json),云端交叉编译成 .so
-//	          **下发到机器人本地执行**,能碰摄像头、屏幕、GPIO、钱包。
+//	runsOnDevice(lang)  这个插件在服务端跑还是在设备端跑
+//	needsBuild(lang)    上传的包本身就是可执行物,还是要先编出来
 //
-// ⚠️ **NATIVE 绝不能进服务端的「执行名单」** —— hiai 这个运行时物理上跑不了 .so,
+// 目前三种语言的取值:
 //
-//	进了名单,按名字分流时会被判成"我自己跑",然后拿到一个假的成功。
+//	PYTHON —— 脚本包(main.py / requirements.txt / description.json)
+//	          runsOnDevice=false  needsBuild=false   → **hiai 服务端执行**
+//	RUST   —— 源码包(Cargo.toml / src/ / description.json)
+//	          runsOnDevice=true   needsBuild=true    → 云端交叉编译成 .so 再下发
+//	LUA    —— 脚本包(main.lua / description.json)
+//	          runsOnDevice=true   needsBuild=false   → **上传即可下发**
+//
+// 设备端执行的能碰摄像头、屏幕、GPIO、钱包;服务端执行的碰不到。
+//
+// 🔴 **判据一律用这两个函数,别写 `lang == RUST`。** 后者是 2026-08-30 之前的写法,
+//
+//	代价是每加一种语言都要把所有"其实在问 runsOnDevice/needsBuild"的地方找一遍 ——
+//	而漏掉的那处**不报错**,只是那个插件永远下发不下去 / 模型永远看不见它。
+//
+// ⚠️ **设备端插件绝不能进服务端的「执行名单」** —— hiai 这个运行时物理上跑不了
+//
+//	`.so`,也不该去跑 lua。进了名单,按名字分流时会被判成"我自己跑",
+//	然后拿到一个假的成功。
 //
 //	但**可以、而且应该进「喂给模型的 tools 数组」**:那两个是分开的两个数组
-//	(chat.go 里的 allTools 与 internal)。模型点了 NATIVE 方法,分流时落到 outside,
+//	(chat.go 里的 allTools 与 internal)。模型点了设备端方法,分流时落到 outside,
 //	原样交回机器人执行 —— 那正是要的。
 //
-//	⚠️ 这里原来写的是"服务端装配只收 PYTHON,NATIVE 由机器人自己上报"。**那是错的**,
+//	⚠️ 这里原来写的是"服务端装配只收 PYTHON,设备端的由机器人自己上报"。**那是错的**,
 //	代价是**启停控制没了**:后台把 enabled 关掉,服务端确实不再下发它,
 //	但机器人内存里那份 .so **卸不掉**(Rust 没有安全的 dlclose),它照样上报、
 //	模型照样点得到。描述由服务端出之后,关掉的那一行不进数组,模型当场看不见 ——
-//	即使 .so 还装着。撤权同理。**控制点必须在后台,不能在机器人手里。**
+//	即使产物还装着。撤权同理。**控制点必须在后台,不能在机器人手里。**
+//
+//	(LUA 没有"卸不掉"这个问题 —— 它每次调用新建解释器状态。但控制点仍然在后台,
+//	 两种语言一视同仁,不为其中一种开特例。)
 //
 //	机器人只保留一件事:知道自己能调哪些名字,收到 tool_call 时切回原名分发。
 //	描述文件对它没用 —— 那是给模型看的,而模型在服务端那头。
-//	**内置插件是例外**(跟着固件走、后台没有它的记录),仍由机器人上报。
 //
-// 由此,NATIVE 插件挂在一个**软件**机器人上是完全合法的 —— 那台机器人当"柜台":
+// 由此,设备端插件挂在一个**软件**机器人上是完全合法的 —— 那台机器人当"柜台":
 // 只展示和存储、供人选购与下发,自己一个也跑不了。这样公共插件就不必挂在某台
 // 硬件机器人上,免得那台机器一下线整个货架跟着消失。
-// ⭐ **runtime 是自动判定的,不让用户声明。**
+// ⭐ **lang 是自动判定的,不让用户声明。**
 //
 // 建壳时**根本没有包**,谈不上语言 —— 所以空壳一律 UNDETERMINED;
 // 首版上传时后端解开 zip 按**包结构**认:
 //
-//	Cargo.toml → NATIVE      main.py → PYTHON      两个都有 / 都没有 → 报错,不猜
+//	Cargo.toml → RUST    main.py → PYTHON    main.lua → LUA
+//	**恰好命中一个**才放行;零个或多个都报错,不猜。
 //
 // 判定的材料早就在手上:`CreateVersion` 本来就要下载解压这个包去预读
-// description.json(specFromPackage),顺手看一眼根目录有什么,零额外成本。
+// description.json,顺手看一眼根目录有什么,零额外成本。
 //
 // 让用户在表单里选一次"这是 rust 还是 py",等于要他把包里已经写死的事实再抄一遍 ——
 // 抄错了还没人拦得住(选了 PYTHON 传 rust 包:不会编译、当脚本跑、报一个看不懂的语法错)。
 //
-// 首版定下之后**壳的 runtime 冻结**:后续版本的包类型必须与壳一致,否则拒。
+// 首版定下之后**壳的 lang 冻结**:后续版本的包类型必须与壳一致,否则拒。
 // 换语言等于换了个东西 —— uuid / fn_prefix / 已经装了它的那些机器人,一样都不能沿用。
-type PluginRuntime int32
+//
+// ── ⛔ 这个枚举只管**语言**,别再往里塞别的轴 ────────────────────────────────
+//
+// 它原来叫 `PluginRuntime`,值是 `PYTHON / NATIVE / UNDETERMINED` ——
+// 而 `NATIVE`(= 本地跑)与 `PYTHON`(= 一种语言)**根本不在同一个轴上**。
+// 三件不同的事被压成了一个值:
+//
+//	① 语言          —— 包里是 Cargo.toml / main.py / main.lua  ← **只有这一件留在本枚举**
+//	② 在哪执行       —— 服务端 vs 设备端                        → 派生:runsOnDevice(lang)
+//	③ 有几份可执行物 —— 包本身就是 vs 要编出 N 份                → 派生:needsBuild(lang)
+//
+// 代价是每加一种语言,所有"其实在问 ②③"的地方都被迫跟着改 ——
+// 而其中两处是**零报错的静默失效**(下发清单筛空、模型看不见方法)。
+// 2026-08-30 加 LUA 时把三个轴拆开:②③ 改成从 lang **派生**的判据函数,
+// **不落库、不进任何查询**。加第四种语言从此只动 detect + 两个判据 + 验收。
+//
+// 🔴 所以:**新增语言只在这里加一个值**。任何"这个语言跑在哪 / 要不要编"的问题,
+//
+//	答案都在派生判据里,不在这个枚举里。
+type PluginLang int32
 
 const (
-	PluginRuntime_PLUGIN_RUNTIME_PYTHON       PluginRuntime = 0 // 服务端跑的 py 脚本包(历史插件全是这个,故占 0)
-	PluginRuntime_PLUGIN_RUNTIME_NATIVE       PluginRuntime = 1 // 机器人本地跑的 rust 插件(源码上传,云端编译后下发)
-	PluginRuntime_PLUGIN_RUNTIME_UNDETERMINED PluginRuntime = 2 // 空壳:还没有任何版本,包没上传过,语言未知
+	PluginLang_PLUGIN_LANG_PYTHON       PluginLang = 0 // 服务端跑的 py 脚本包(历史插件全是这个,故占 0)
+	PluginLang_PLUGIN_LANG_RUST         PluginLang = 1 // 设备端跑的 rust 插件(源码上传,云端交叉编译成 .so 后下发)
+	PluginLang_PLUGIN_LANG_UNDETERMINED PluginLang = 2 // 空壳:还没有任何版本,包没上传过,语言未知
+	PluginLang_PLUGIN_LANG_LUA          PluginLang = 3 // 设备端跑的 lua 脚本(**不编译**,上传即可下发)
 )
 
-// Enum value maps for PluginRuntime.
+// Enum value maps for PluginLang.
 var (
-	PluginRuntime_name = map[int32]string{
-		0: "PLUGIN_RUNTIME_PYTHON",
-		1: "PLUGIN_RUNTIME_NATIVE",
-		2: "PLUGIN_RUNTIME_UNDETERMINED",
+	PluginLang_name = map[int32]string{
+		0: "PLUGIN_LANG_PYTHON",
+		1: "PLUGIN_LANG_RUST",
+		2: "PLUGIN_LANG_UNDETERMINED",
+		3: "PLUGIN_LANG_LUA",
 	}
-	PluginRuntime_value = map[string]int32{
-		"PLUGIN_RUNTIME_PYTHON":       0,
-		"PLUGIN_RUNTIME_NATIVE":       1,
-		"PLUGIN_RUNTIME_UNDETERMINED": 2,
+	PluginLang_value = map[string]int32{
+		"PLUGIN_LANG_PYTHON":       0,
+		"PLUGIN_LANG_RUST":         1,
+		"PLUGIN_LANG_UNDETERMINED": 2,
+		"PLUGIN_LANG_LUA":          3,
 	}
 )
 
-func (x PluginRuntime) Enum() *PluginRuntime {
-	p := new(PluginRuntime)
+func (x PluginLang) Enum() *PluginLang {
+	p := new(PluginLang)
 	*p = x
 	return p
 }
 
-func (x PluginRuntime) String() string {
+func (x PluginLang) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (PluginRuntime) Descriptor() protoreflect.EnumDescriptor {
+func (PluginLang) Descriptor() protoreflect.EnumDescriptor {
 	return file_hi_ai_plugin_proto_enumTypes[0].Descriptor()
 }
 
-func (PluginRuntime) Type() protoreflect.EnumType {
+func (PluginLang) Type() protoreflect.EnumType {
 	return &file_hi_ai_plugin_proto_enumTypes[0]
 }
 
-func (x PluginRuntime) Number() protoreflect.EnumNumber {
+func (x PluginLang) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use PluginRuntime.Descriptor instead.
-func (PluginRuntime) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use PluginLang.Descriptor instead.
+func (PluginLang) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{0}
 }
 
-// ── NATIVE 的构建态 ────────────────────────────────────────────────────────
+// ── 制品(artifact)—— 一个版本的「可执行物」────────────────────────────────
 //
-// **只有 NATIVE 有这一段。** PYTHON 的包传上来就能跑,不存在"编不编得出来";
-// NATIVE 传上来的是 rust 源码,要交叉编译成 arm64 `.so` 才谈得上下发。
+// ⭐ **每个版本都有制品行,不分语言。** 这是 2026-08-30 补上的那个缺失概念:
+//
+//	PYTHON / LUA —— 1 行,`target = "any"`,**发版当场就是 SUCCEEDED**,
+//	                `artifact_url` 就是上传的那个包本身(不存在"编不编得出来")。
+//	RUST         —— N 行(aarch64 / x86_64 各一),要等交叉编译回填。
+//
+// 原来这张表叫 `PluginBuild` 且**只有 NATIVE 有行**,于是「这台机器人该拿到什么」
+// 这一个概念被迫分裂成两条互不相干的查询(PYTHON 直接读版本包 url、NATIVE 走构建表)。
+// 后果有二:① 同一个判据写了两遍,2026-08-20 因此让全网装了内置插件的机器人
+// 一句话都答不上来;② **「设备端执行 + 不需要编译」这个组合在模型里根本不存在** ——
+// 正是 LUA 落不了地的根因。
 //
 // 单独一张表、不并进 b(PluginVersion):b 是**发版即冻结**的本体,
-// 而构建结果是几分钟后才回填的、还可能重试 —— 两种寿命塞进一行迟早打架。
-type PluginBuildStatus int32
+// 而制品是之后才回填的、还可能重试 —— 两种寿命塞进一行迟早打架。
+type PluginArtifactStatus int32
 
 const (
-	PluginBuildStatus_PLUGIN_BUILD_STATUS_PENDING   PluginBuildStatus = 0 // 已排队,还没开始(发版当场就是这个)
-	PluginBuildStatus_PLUGIN_BUILD_STATUS_BUILDING  PluginBuildStatus = 1 // 正在编
-	PluginBuildStatus_PLUGIN_BUILD_STATUS_SUCCEEDED PluginBuildStatus = 2 // 编出来了、校验过了、产物已上传
-	PluginBuildStatus_PLUGIN_BUILD_STATUS_FAILED    PluginBuildStatus = 3 // 编不出来 / 校验没过。error+log 里有原因
+	PluginArtifactStatus_PLUGIN_ARTIFACT_STATUS_PENDING   PluginArtifactStatus = 0 // 已排队,还没开始(RUST 发版当场就是这个)
+	PluginArtifactStatus_PLUGIN_ARTIFACT_STATUS_BUILDING  PluginArtifactStatus = 1 // 正在编(只有 RUST 会经过)
+	PluginArtifactStatus_PLUGIN_ARTIFACT_STATUS_SUCCEEDED PluginArtifactStatus = 2 // 可下发了。**PYTHON / LUA 发版当场就是它**
+	PluginArtifactStatus_PLUGIN_ARTIFACT_STATUS_FAILED    PluginArtifactStatus = 3 // 编不出来 / 校验没过。error+log 里有原因
 )
 
-// Enum value maps for PluginBuildStatus.
+// Enum value maps for PluginArtifactStatus.
 var (
-	PluginBuildStatus_name = map[int32]string{
-		0: "PLUGIN_BUILD_STATUS_PENDING",
-		1: "PLUGIN_BUILD_STATUS_BUILDING",
-		2: "PLUGIN_BUILD_STATUS_SUCCEEDED",
-		3: "PLUGIN_BUILD_STATUS_FAILED",
+	PluginArtifactStatus_name = map[int32]string{
+		0: "PLUGIN_ARTIFACT_STATUS_PENDING",
+		1: "PLUGIN_ARTIFACT_STATUS_BUILDING",
+		2: "PLUGIN_ARTIFACT_STATUS_SUCCEEDED",
+		3: "PLUGIN_ARTIFACT_STATUS_FAILED",
 	}
-	PluginBuildStatus_value = map[string]int32{
-		"PLUGIN_BUILD_STATUS_PENDING":   0,
-		"PLUGIN_BUILD_STATUS_BUILDING":  1,
-		"PLUGIN_BUILD_STATUS_SUCCEEDED": 2,
-		"PLUGIN_BUILD_STATUS_FAILED":    3,
+	PluginArtifactStatus_value = map[string]int32{
+		"PLUGIN_ARTIFACT_STATUS_PENDING":   0,
+		"PLUGIN_ARTIFACT_STATUS_BUILDING":  1,
+		"PLUGIN_ARTIFACT_STATUS_SUCCEEDED": 2,
+		"PLUGIN_ARTIFACT_STATUS_FAILED":    3,
 	}
 )
 
-func (x PluginBuildStatus) Enum() *PluginBuildStatus {
-	p := new(PluginBuildStatus)
+func (x PluginArtifactStatus) Enum() *PluginArtifactStatus {
+	p := new(PluginArtifactStatus)
 	*p = x
 	return p
 }
 
-func (x PluginBuildStatus) String() string {
+func (x PluginArtifactStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (PluginBuildStatus) Descriptor() protoreflect.EnumDescriptor {
+func (PluginArtifactStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_hi_ai_plugin_proto_enumTypes[1].Descriptor()
 }
 
-func (PluginBuildStatus) Type() protoreflect.EnumType {
+func (PluginArtifactStatus) Type() protoreflect.EnumType {
 	return &file_hi_ai_plugin_proto_enumTypes[1]
 }
 
-func (x PluginBuildStatus) Number() protoreflect.EnumNumber {
+func (x PluginArtifactStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use PluginBuildStatus.Descriptor instead.
-func (PluginBuildStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use PluginArtifactStatus.Descriptor instead.
+func (PluginArtifactStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{1}
 }
 
@@ -235,8 +286,11 @@ type PluginShell struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Uuid  *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"` // 插件 id,后台分配(单一 id)
 	Name  *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"` // 插件名。**市场标题直接用它**,不另填
-	// 跑在哪儿。首版由包结构自动判定,之后不变 —— 它决定包的格式与执行方,换了等于换个插件。
-	Runtime       *PluginRuntime `protobuf:"varint,3,opt,name=runtime,proto3,enum=hi.ai.PluginRuntime,oneof" json:"runtime,omitempty"`
+	// 用什么语言写的。首版由包结构自动判定,之后冻结 —— 换语言等于换个插件。
+	//
+	// ⚠️ 它**只是语言**。"跑在服务端还是设备端""要不要编译"都是从它**派生**的判据,
+	// 不是它的含义,更不该另存一列(派生值存两份就会漂)。见 PluginLang 的说明。
+	Lang          *PluginLang `protobuf:"varint,3,opt,name=lang,proto3,enum=hi.ai.PluginLang,oneof" json:"lang,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -285,11 +339,11 @@ func (x *PluginShell) GetName() string {
 	return ""
 }
 
-func (x *PluginShell) GetRuntime() PluginRuntime {
-	if x != nil && x.Runtime != nil {
-		return *x.Runtime
+func (x *PluginShell) GetLang() PluginLang {
+	if x != nil && x.Lang != nil {
+		return *x.Lang
 	}
-	return PluginRuntime_PLUGIN_RUNTIME_PYTHON
+	return PluginLang_PLUGIN_LANG_PYTHON
 }
 
 type PluginVersion struct {
@@ -401,41 +455,51 @@ func (x *PluginVersion) GetDescription() string {
 	return ""
 }
 
-// 一次构建的结果。**发版接口不返回它** —— 发版是立即返回的,构建在后台跑,
-// 结果经 Get/ListVersions 回显给发版的人看(编译中 / 失败+日志 / 成功)。
-type PluginBuild struct {
+// 一个版本在某个 target 上的制品。**发版接口不返回它** —— 发版是立即返回的,
+// RUST 的构建在后台跑,结果经 Get/ListVersions 回显给发版的人看。
+type PluginArtifact struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	Uuid    *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	Version *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"`
-	// 这一行是哪个架构的构建。**一版有多行**(aarch64 / x86_64 各一),
-	// 状态、产物、错误、日志都各记各的 —— 合并显示会互相掩盖("有一个成了"看着像全成了)。
-	Arch          *string            `protobuf:"bytes,11,opt,name=arch,proto3,oneof" json:"arch,omitempty"`
-	Status        *PluginBuildStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.ai.PluginBuildStatus,oneof" json:"status,omitempty"`
-	ArtifactUrl   *string            `protobuf:"bytes,4,opt,name=artifact_url,json=artifactUrl,proto3,oneof" json:"artifact_url,omitempty"` // 编好的 .so(私有桶;下发时现签 presigned)
-	Sha256        *string            `protobuf:"bytes,5,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`                              // 产物摘要,机器人下完照此核对
-	AbiVersion    *uint32            `protobuf:"varint,6,opt,name=abi_version,json=abiVersion,proto3,oneof" json:"abi_version,omitempty"`   // 从 .so 里真读出来的(见 hi.ai.plugin.BuildResp)
-	Error         *string            `protobuf:"bytes,7,opt,name=error,proto3,oneof" json:"error,omitempty"`                                // 失败原因(一句话)
-	Log           *string            `protobuf:"bytes,8,opt,name=log,proto3,oneof" json:"log,omitempty"`                                    // 编译日志尾部
-	StartedAt     *int64             `protobuf:"varint,9,opt,name=started_at,json=startedAt,proto3,oneof" json:"started_at,omitempty"`
-	FinishedAt    *int64             `protobuf:"varint,10,opt,name=finished_at,json=finishedAt,proto3,oneof" json:"finished_at,omitempty"`
+	// 这一份制品是给谁的。**一版可以有多行**,状态/产物/错误/日志各记各的 ——
+	// 合并显示会互相掩盖("有一个成了"看着像全成了)。
+	//
+	//	RUST         —— `aarch64` / `x86_64`(与 rust 的 std::env::consts::ARCH 同名)
+	//	PYTHON / LUA —— `any`,一版只有一行
+	//
+	// ⛔ `any` 是一个**真实的值**,不是"空的 arch"。别写成空串 —— 空不表示为空串。
+	Target *string               `protobuf:"bytes,11,opt,name=target,proto3,oneof" json:"target,omitempty"`
+	Status *PluginArtifactStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.ai.PluginArtifactStatus,oneof" json:"status,omitempty"`
+	// 可下发的产物。RUST 是编出来的 `.so`,PYTHON / LUA 就是上传的那个包。
+	// 都在私有桶,下发时现签 presigned。
+	ArtifactUrl *string `protobuf:"bytes,4,opt,name=artifact_url,json=artifactUrl,proto3,oneof" json:"artifact_url,omitempty"`
+	Sha256      *string `protobuf:"bytes,5,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"` // 产物摘要,机器人下完照此核对
+	// 设备端插件的契约号。RUST 是从 `.so` 里真读出来的 C ABI 号(hinj_plugin_abi),
+	// LUA 是脚本里声明的 contract。**两者各涨各的,不共用计数器** ——
+	// 共用的话撞一次 C ABI 就逼所有 lua 插件重发,而它们根本不受影响。
+	AbiVersion    *uint32 `protobuf:"varint,6,opt,name=abi_version,json=abiVersion,proto3,oneof" json:"abi_version,omitempty"`
+	Error         *string `protobuf:"bytes,7,opt,name=error,proto3,oneof" json:"error,omitempty"` // 失败原因(一句话)
+	Log           *string `protobuf:"bytes,8,opt,name=log,proto3,oneof" json:"log,omitempty"`     // 编译/校验日志尾部
+	StartedAt     *int64  `protobuf:"varint,9,opt,name=started_at,json=startedAt,proto3,oneof" json:"started_at,omitempty"`
+	FinishedAt    *int64  `protobuf:"varint,10,opt,name=finished_at,json=finishedAt,proto3,oneof" json:"finished_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PluginBuild) Reset() {
-	*x = PluginBuild{}
+func (x *PluginArtifact) Reset() {
+	*x = PluginArtifact{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PluginBuild) String() string {
+func (x *PluginArtifact) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PluginBuild) ProtoMessage() {}
+func (*PluginArtifact) ProtoMessage() {}
 
-func (x *PluginBuild) ProtoReflect() protoreflect.Message {
+func (x *PluginArtifact) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -447,82 +511,82 @@ func (x *PluginBuild) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PluginBuild.ProtoReflect.Descriptor instead.
-func (*PluginBuild) Descriptor() ([]byte, []int) {
+// Deprecated: Use PluginArtifact.ProtoReflect.Descriptor instead.
+func (*PluginArtifact) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *PluginBuild) GetUuid() string {
+func (x *PluginArtifact) GetUuid() string {
 	if x != nil && x.Uuid != nil {
 		return *x.Uuid
 	}
 	return ""
 }
 
-func (x *PluginBuild) GetVersion() string {
+func (x *PluginArtifact) GetVersion() string {
 	if x != nil && x.Version != nil {
 		return *x.Version
 	}
 	return ""
 }
 
-func (x *PluginBuild) GetArch() string {
-	if x != nil && x.Arch != nil {
-		return *x.Arch
+func (x *PluginArtifact) GetTarget() string {
+	if x != nil && x.Target != nil {
+		return *x.Target
 	}
 	return ""
 }
 
-func (x *PluginBuild) GetStatus() PluginBuildStatus {
+func (x *PluginArtifact) GetStatus() PluginArtifactStatus {
 	if x != nil && x.Status != nil {
 		return *x.Status
 	}
-	return PluginBuildStatus_PLUGIN_BUILD_STATUS_PENDING
+	return PluginArtifactStatus_PLUGIN_ARTIFACT_STATUS_PENDING
 }
 
-func (x *PluginBuild) GetArtifactUrl() string {
+func (x *PluginArtifact) GetArtifactUrl() string {
 	if x != nil && x.ArtifactUrl != nil {
 		return *x.ArtifactUrl
 	}
 	return ""
 }
 
-func (x *PluginBuild) GetSha256() string {
+func (x *PluginArtifact) GetSha256() string {
 	if x != nil && x.Sha256 != nil {
 		return *x.Sha256
 	}
 	return ""
 }
 
-func (x *PluginBuild) GetAbiVersion() uint32 {
+func (x *PluginArtifact) GetAbiVersion() uint32 {
 	if x != nil && x.AbiVersion != nil {
 		return *x.AbiVersion
 	}
 	return 0
 }
 
-func (x *PluginBuild) GetError() string {
+func (x *PluginArtifact) GetError() string {
 	if x != nil && x.Error != nil {
 		return *x.Error
 	}
 	return ""
 }
 
-func (x *PluginBuild) GetLog() string {
+func (x *PluginArtifact) GetLog() string {
 	if x != nil && x.Log != nil {
 		return *x.Log
 	}
 	return ""
 }
 
-func (x *PluginBuild) GetStartedAt() int64 {
+func (x *PluginArtifact) GetStartedAt() int64 {
 	if x != nil && x.StartedAt != nil {
 		return *x.StartedAt
 	}
 	return 0
 }
 
-func (x *PluginBuild) GetFinishedAt() int64 {
+func (x *PluginArtifact) GetFinishedAt() int64 {
 	if x != nil && x.FinishedAt != nil {
 		return *x.FinishedAt
 	}
@@ -540,14 +604,16 @@ type PluginView struct {
 	RefCount    *int32                 `protobuf:"varint,5,opt,name=ref_count,json=refCount,proto3,oneof" json:"ref_count,omitempty"`     // 被多少机器人引用(实时 COUNT)
 	Data        *structpb.Struct       `protobuf:"bytes,6,opt,name=data,proto3" json:"data,omitempty"`                                    // c.data:插件级扩展数据(含 api_key)
 	VersionData *structpb.Struct       `protobuf:"bytes,7,opt,name=version_data,json=versionData,proto3" json:"version_data,omitempty"`   // 激活版本的 d.data:版本级扩展数据
-	// 激活版本的构建态,**每个架构一条**(aarch64 / x86_64)。NATIVE 才有,PYTHON 恒空。
-	// 一级页要它是因为:NATIVE 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
+	// 激活版本的制品,**每个 target 一条**。RUST 是 aarch64 / x86_64 两条且要等编译;
+	// PYTHON / LUA 是 `any` 一条、发版当场就 SUCCEEDED。
+	//
+	// 一级页要它是因为:RUST 插件"挂上了"不等于"能用了" —— 中间隔着一次交叉编译。
 	// 不回显的话,用户看到插件已启用、机器人却始终没装上,查不出是编失败了。
 	//
-	// ⚠️ 8 号那个单数 `build` 已删:一版多架构,单个字段只能显示其中一个,
+	// ⚠️ 8 号那个单数 `build` 已删:一版多 target,单个字段只能显示其中一个,
 	//
-	//	另一个编失败就看不见 —— 页面"绿了"而实际半残。
-	Builds []*PluginBuild `protobuf:"bytes,12,rep,name=builds,proto3" json:"builds,omitempty"`
+	//	另一个失败就看不见 —— 页面"绿了"而实际半残。
+	Artifacts []*PluginArtifact `protobuf:"bytes,12,rep,name=artifacts,proto3" json:"artifacts,omitempty"`
 	// c.follow_latest:这台机器人要不要自动切到作者发的新版。
 	//
 	// ⭐ **这是使用方自己的事,归在使用行(c)上,不在挂牌上。**
@@ -557,7 +623,7 @@ type PluginView struct {
 	// (内置插件是注册时自动建的引用,根本没有 grant 行),挂在 grant 上就漏掉一大片。
 	//
 	// 关掉 = 停在当前激活版,作者发新版也不动;打开 = 新版**构建成功后**自动切过去
-	// (NATIVE 要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
+	// (needsBuild 的语言要等编出来,切到一个还没编好的版本会让机器人拉到空清单)。
 	FollowLatest  *bool `protobuf:"varint,9,opt,name=follow_latest,json=followLatest,proto3,oneof" json:"follow_latest,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -642,9 +708,9 @@ func (x *PluginView) GetVersionData() *structpb.Struct {
 	return nil
 }
 
-func (x *PluginView) GetBuilds() []*PluginBuild {
+func (x *PluginView) GetArtifacts() []*PluginArtifact {
 	if x != nil {
-		return x.Builds
+		return x.Artifacts
 	}
 	return nil
 }
@@ -662,10 +728,10 @@ type PluginVersionView struct {
 	Version *PluginVersion         `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"`
 	Active  *bool                  `protobuf:"varint,2,opt,name=active,proto3,oneof" json:"active,omitempty"`
 	Data    *structpb.Struct       `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"` // d.data
-	// ⚠️ **单数那个 `build` 已删** —— 一版有**多个架构**各自的构建态(aarch64 / x86_64),
-	// 塞进一个字段就只能显示其中一个:另一个编失败也看不见,页面上"绿了"而实际半残。
-	// 前端要把每个架构一行地列出来。
-	Builds        []*PluginBuild `protobuf:"bytes,5,rep,name=builds,proto3" json:"builds,omitempty"` // 该版本各架构的构建态(NATIVE 才有)
+	// ⚠️ **单数那个 `build` 已删** —— 一版有**多个 target** 各自的制品态,
+	// 塞进一个字段就只能显示其中一个:另一个失败也看不见,页面上"绿了"而实际半残。
+	// 前端要把每个 target 一行地列出来。
+	Artifacts     []*PluginArtifact `protobuf:"bytes,5,rep,name=artifacts,proto3" json:"artifacts,omitempty"` // 该版本各 target 的制品态
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -721,9 +787,9 @@ func (x *PluginVersionView) GetData() *structpb.Struct {
 	return nil
 }
 
-func (x *PluginVersionView) GetBuilds() []*PluginBuild {
+func (x *PluginVersionView) GetArtifacts() []*PluginArtifact {
 	if x != nil {
-		return x.Builds
+		return x.Artifacts
 	}
 	return nil
 }
@@ -798,10 +864,10 @@ func (x *PluginLoaded) GetEnabled() bool {
 }
 
 // 建空壳:插 a{uuid,name,runtime=UNDETERMINED} + owner 的 c{source=original, enabled=false}。
-// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginRuntime:首版的包说了算)。
+// uuid 后台分配返回;此时无版本、无激活、**语言未知**(见 PluginLang:首版的包说了算)。
 // data=插件级扩展数据(hiclub 放该机器人 api_key;hiai 直连则空)。
 //
-// ⚠️ **没有 runtime 字段,不要再加回来。**
+// ⚠️ **没有 lang 字段,不要再加回来。**
 // 建壳时还没有包,语言这件事在这一刻**不存在**;它由首版上传的包结构自动判定。
 type CreateShellReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1110,7 +1176,7 @@ func (x *SetEnabledReq) GetEnabled() bool {
 }
 
 // SetFollowLatestReq 改 c.follow_latest —— **在"机器人 → 插件"那一行上操作**。
-// 打开之后,作者每发一版(NATIVE 是编成功之后)这台机器人就自动切过去;
+// 打开之后,作者每发一版(needsBuild 的语言是编成功之后)这台机器人就自动切过去;
 // 关掉就停在当前激活版,由主人自己在版本管理里选。
 type SetFollowLatestReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -2437,57 +2503,72 @@ func (x *PublicBriefsResp) GetBriefs() []*PluginPublicBrief {
 	return nil
 }
 
-// ── 下发面:机器人问「我该装哪些 NATIVE 插件」───────────────────────────────
+// ── 下发面:机器人问「我该装哪些设备端插件」──────────────────────────────────
 //
-// 只回**该装的**:c.enabled ∧ d.active ∧ 壳是 NATIVE ∧ 该版本构建成功。
+// 只回**该装的**:c.enabled ∧ d.active ∧ runsOnDevice(壳的 lang) ∧ 该版本的制品可用。
 // 任一不成立就不该出现在清单里 —— 机器人拿到就会装,而装了就会喂给模型。
+//
+// ⚠️ **筛的是「跑在设备端」,不是「是 RUST」。** 这条 rpc 原来叫 `ListNative`、
+// 筛 `runtime = NATIVE` —— 于是 2026-08-30 加 LUA 时它把 lua 插件整个筛掉了,
+// 而且**零报错**(清单为空对机器人的含义是"这插件我不该有",它会把本地那份删掉)。
+// 判据换成派生的 `runsOnDevice(lang)` 之后,再加语言这里一个字都不用动。
 //
 // ⚠️ **清单是全量,不是增量。** 机器人按它对账:多的删、少的下、sha256 不同的换。
 // 增量(只告诉"新增了什么")没法表达撤权与到期 —— 而那两件事恰恰必须传达到:
-// 市场 revoke 删的是服务端的引用行,机器人本地那个 `.so` 不会自己消失。
-type NativePlugin struct {
-	state   protoimpl.MessageState `protogen:"open.v1"`
-	Uuid    *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"` // 壳 uuid。**落地文件名就是它**(`plugins/<uuid>.so`)
-	Name    *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"` // 壳名,只用于机器人日志
-	Version *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`
+// 市场 revoke 删的是服务端的引用行,机器人本地那个文件不会自己消失。
+type DevicePlugin struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 壳 uuid。**落地文件名就是它**:`plugins/<uuid>@<version>.<ext>`,
+	// 扩展名由下面的 `lang` 决定。
+	Uuid    *string `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Name    *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"` // 壳名,只用于机器人日志
+	Version *string `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`
 	// 壳前缀。机器人**上报 tools 时要拼在方法名前**(`<fn_prefix>_<原名>`),
 	// 分发时切第一个 `_` 切掉。
 	//
 	// ⚠️ 这个字段原本是 hiai 的内部实现细节(见 PluginVersion.description 那段注释),
-	// 现在必须过线 —— 因为 `.so` 里编进去的 manifest 是**原始名**,
-	// 而 py 插件那侧的改名是在发版预读时做掉的,`.so` 没有对应的时机。
+	// 现在必须过线 —— 因为产物里编进去的 manifest 是**原始名**,
+	// 而 py 插件那侧的改名是在发版预读时做掉的,设备端产物没有对应的时机。
 	// 不给机器人前缀的话,两个厂商各卖一个提供 `search` 的插件,买家两个都买 →
 	// 机器人本地撞名 → 整个插件拒绝加载,而失败原因只在机器人的本地日志里。
 	FnPrefix *string `protobuf:"bytes,4,opt,name=fn_prefix,json=fnPrefix,proto3,oneof" json:"fn_prefix,omitempty"`
-	// `.so` 的下载地址。私有桶,**每次拉清单现签**(限期),不存库。
-	Url        *string `protobuf:"bytes,5,opt,name=url,proto3,oneof" json:"url,omitempty"`
-	Sha256     *string `protobuf:"bytes,6,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`                            // 下完必须核对;对不上就是没下全或被改过
-	AbiVersion *uint32 `protobuf:"varint,7,opt,name=abi_version,json=abiVersion,proto3,oneof" json:"abi_version,omitempty"` // 机器人可据此先筛掉对不上的,省一次下载
-	// 这份产物是给哪个架构的(`aarch64` / `x86_64`)。
+	// 产物下载地址。私有桶,**每次拉清单现签**(限期),不存库。
+	Url    *string `protobuf:"bytes,5,opt,name=url,proto3,oneof" json:"url,omitempty"`
+	Sha256 *string `protobuf:"bytes,6,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"` // 下完必须核对;对不上就是没下全或被改过
+	// 契约号。RUST 是 `.so` 里的 C ABI 号,LUA 是脚本里声明的 contract。
+	// 机器人可据此先筛掉对不上的,省一次下载。**两种语言各涨各的,不共用计数器。**
+	AbiVersion *uint32 `protobuf:"varint,7,opt,name=abi_version,json=abiVersion,proto3,oneof" json:"abi_version,omitempty"`
+	// 这份产物是给哪个 target 的。RUST 是 `aarch64` / `x86_64`;LUA 是 `any`。
 	//
-	// ⚠️ **abi_version 挡不住架构不对**:两台机器的 abi 一样,指令集却不同 ——
+	// ⚠️ **abi_version 挡不住 target 不对**:两台机器的 abi 一样,指令集却不同 ——
 	//
 	//	装上去要到 dlopen 才炸,而那个错看着像"插件本身有问题"。
 	//	机器人拿到清单先比这个,不符就跳过并说清楚。
-	Arch          *string `protobuf:"bytes,8,opt,name=arch,proto3,oneof" json:"arch,omitempty"`
+	Target *string `protobuf:"bytes,8,opt,name=target,proto3,oneof" json:"target,omitempty"`
+	// ⭐ **这份产物是什么语言的** —— 机器人据此决定:落地成什么扩展名(`.so` / `.lua`)、
+	// 用哪条装载路径(dlopen + 对 C ABI / 沙箱里 load + 对 contract)。
+	//
+	// 不给的话机器人只能猜(比如按 url 后缀),而猜错的表现是"下下来了、装不上",
+	// 原因只在它自己的本地日志里。
+	Lang          *PluginLang `protobuf:"varint,9,opt,name=lang,proto3,enum=hi.ai.PluginLang,oneof" json:"lang,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *NativePlugin) Reset() {
-	*x = NativePlugin{}
+func (x *DevicePlugin) Reset() {
+	*x = DevicePlugin{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *NativePlugin) String() string {
+func (x *DevicePlugin) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NativePlugin) ProtoMessage() {}
+func (*DevicePlugin) ProtoMessage() {}
 
-func (x *NativePlugin) ProtoReflect() protoreflect.Message {
+func (x *DevicePlugin) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2499,92 +2580,102 @@ func (x *NativePlugin) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NativePlugin.ProtoReflect.Descriptor instead.
-func (*NativePlugin) Descriptor() ([]byte, []int) {
+// Deprecated: Use DevicePlugin.ProtoReflect.Descriptor instead.
+func (*DevicePlugin) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{34}
 }
 
-func (x *NativePlugin) GetUuid() string {
+func (x *DevicePlugin) GetUuid() string {
 	if x != nil && x.Uuid != nil {
 		return *x.Uuid
 	}
 	return ""
 }
 
-func (x *NativePlugin) GetName() string {
+func (x *DevicePlugin) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
 	}
 	return ""
 }
 
-func (x *NativePlugin) GetVersion() string {
+func (x *DevicePlugin) GetVersion() string {
 	if x != nil && x.Version != nil {
 		return *x.Version
 	}
 	return ""
 }
 
-func (x *NativePlugin) GetFnPrefix() string {
+func (x *DevicePlugin) GetFnPrefix() string {
 	if x != nil && x.FnPrefix != nil {
 		return *x.FnPrefix
 	}
 	return ""
 }
 
-func (x *NativePlugin) GetUrl() string {
+func (x *DevicePlugin) GetUrl() string {
 	if x != nil && x.Url != nil {
 		return *x.Url
 	}
 	return ""
 }
 
-func (x *NativePlugin) GetSha256() string {
+func (x *DevicePlugin) GetSha256() string {
 	if x != nil && x.Sha256 != nil {
 		return *x.Sha256
 	}
 	return ""
 }
 
-func (x *NativePlugin) GetAbiVersion() uint32 {
+func (x *DevicePlugin) GetAbiVersion() uint32 {
 	if x != nil && x.AbiVersion != nil {
 		return *x.AbiVersion
 	}
 	return 0
 }
 
-func (x *NativePlugin) GetArch() string {
-	if x != nil && x.Arch != nil {
-		return *x.Arch
+func (x *DevicePlugin) GetTarget() string {
+	if x != nil && x.Target != nil {
+		return *x.Target
 	}
 	return ""
 }
 
-type ListNativeReq struct {
+func (x *DevicePlugin) GetLang() PluginLang {
+	if x != nil && x.Lang != nil {
+		return *x.Lang
+	}
+	return PluginLang_PLUGIN_LANG_PYTHON
+}
+
+type ListOnDeviceReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Agent *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
 	// 机器人自己的架构。**不传 = aarch64** —— 现网机器人全是 arm64,
 	// 老 brain 发不带这个字段的请求,照旧拿到 arm64 那份,零改动继续跑。
+	//
+	// ⚠️ 服务端按它筛的是 `target ∈ {这个值, "any"}` ——
+	// LUA 的制品 target 是 `any`,与架构无关,任何机器人都拿得到。
 	// ⛔ 空串不是合法值:要么不传,要么给真架构名。
 	Arch          *string `protobuf:"bytes,2,opt,name=arch,proto3,oneof" json:"arch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListNativeReq) Reset() {
-	*x = ListNativeReq{}
+func (x *ListOnDeviceReq) Reset() {
+	*x = ListOnDeviceReq{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListNativeReq) String() string {
+func (x *ListOnDeviceReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListNativeReq) ProtoMessage() {}
+func (*ListOnDeviceReq) ProtoMessage() {}
 
-func (x *ListNativeReq) ProtoReflect() protoreflect.Message {
+func (x *ListOnDeviceReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2596,46 +2687,46 @@ func (x *ListNativeReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListNativeReq.ProtoReflect.Descriptor instead.
-func (*ListNativeReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListOnDeviceReq.ProtoReflect.Descriptor instead.
+func (*ListOnDeviceReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{35}
 }
 
-func (x *ListNativeReq) GetAgent() string {
+func (x *ListOnDeviceReq) GetAgent() string {
 	if x != nil && x.Agent != nil {
 		return *x.Agent
 	}
 	return ""
 }
 
-func (x *ListNativeReq) GetArch() string {
+func (x *ListOnDeviceReq) GetArch() string {
 	if x != nil && x.Arch != nil {
 		return *x.Arch
 	}
 	return ""
 }
 
-type ListNativeResp struct {
+type ListOnDeviceResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*NativePlugin        `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	List          []*DevicePlugin        `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListNativeResp) Reset() {
-	*x = ListNativeResp{}
+func (x *ListOnDeviceResp) Reset() {
+	*x = ListOnDeviceResp{}
 	mi := &file_hi_ai_plugin_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListNativeResp) String() string {
+func (x *ListOnDeviceResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListNativeResp) ProtoMessage() {}
+func (*ListOnDeviceResp) ProtoMessage() {}
 
-func (x *ListNativeResp) ProtoReflect() protoreflect.Message {
+func (x *ListOnDeviceResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_ai_plugin_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2647,12 +2738,12 @@ func (x *ListNativeResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListNativeResp.ProtoReflect.Descriptor instead.
-func (*ListNativeResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListOnDeviceResp.ProtoReflect.Descriptor instead.
+func (*ListOnDeviceResp) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{36}
 }
 
-func (x *ListNativeResp) GetList() []*NativePlugin {
+func (x *ListOnDeviceResp) GetList() []*DevicePlugin {
 	if x != nil {
 		return x.List
 	}
@@ -2725,15 +2816,14 @@ var File_hi_ai_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xaa\x01\n" +
+	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\x9e\x01\n" +
 	"\vPluginShell\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x129\n" +
-	"\aruntime\x18\x03 \x01(\x0e2\x14.hi.ai.PluginRuntimeB\x04\x90\xb5\x18\x03H\x02R\aruntime\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x120\n" +
+	"\x04lang\x18\x03 \x01(\x0e2\x11.hi.ai.PluginLangB\x04\x90\xb5\x18\x03H\x02R\x04lang\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_uuidB\a\n" +
-	"\x05_nameB\n" +
-	"\n" +
-	"\b_runtime\"\xa9\x02\n" +
+	"\x05_nameB\a\n" +
+	"\x05_lang\"\xa9\x02\n" +
 	"\rPluginVersion\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12#\n" +
 	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\aversion\x88\x01\x01\x12\x1d\n" +
@@ -2748,12 +2838,12 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
 	"\b_summaryB\x06\n" +
 	"\x04_urlB\x0e\n" +
-	"\f_description\"\xca\x04\n" +
-	"\vPluginBuild\x12\x1d\n" +
+	"\f_description\"\xd6\x04\n" +
+	"\x0ePluginArtifact\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12#\n" +
-	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aversion\x88\x01\x01\x12\x1d\n" +
-	"\x04arch\x18\v \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04arch\x88\x01\x01\x12;\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x18.hi.ai.PluginBuildStatusB\x04\x90\xb5\x18\x03H\x03R\x06status\x88\x01\x01\x12,\n" +
+	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aversion\x88\x01\x01\x12!\n" +
+	"\x06target\x18\v \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06target\x88\x01\x01\x12>\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1b.hi.ai.PluginArtifactStatusB\x04\x90\xb5\x18\x03H\x03R\x06status\x88\x01\x01\x12,\n" +
 	"\fartifact_url\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\vartifactUrl\x88\x01\x01\x12!\n" +
 	"\x06sha256\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x06sha256\x88\x01\x01\x12*\n" +
 	"\vabi_version\x18\x06 \x01(\rB\x04\x90\xb5\x18\x03H\x06R\n" +
@@ -2768,8 +2858,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"finishedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
-	"\b_versionB\a\n" +
-	"\x05_archB\t\n" +
+	"\b_versionB\t\n" +
+	"\a_targetB\t\n" +
 	"\a_statusB\x0f\n" +
 	"\r_artifact_urlB\t\n" +
 	"\a_sha256B\x0e\n" +
@@ -2777,7 +2867,7 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x06_errorB\x06\n" +
 	"\x04_logB\r\n" +
 	"\v_started_atB\x0e\n" +
-	"\f_finished_at\"\x89\x04\n" +
+	"\f_finished_at\"\x92\x04\n" +
 	"\n" +
 	"PluginView\x12.\n" +
 	"\x05shell\x18\x01 \x01(\v2\x12.hi.ai.PluginShellB\x04\x90\xb5\x18\x03R\x05shell\x122\n" +
@@ -2786,20 +2876,20 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x06source\x18\x04 \x01(\x0e2\x13.hi.ai.PluginSourceB\x04\x90\xb5\x18\x03H\x01R\x06source\x88\x01\x01\x12&\n" +
 	"\tref_count\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x03H\x02R\brefCount\x88\x01\x01\x121\n" +
 	"\x04data\x18\x06 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data\x12@\n" +
-	"\fversion_data\x18\a \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\vversionData\x120\n" +
-	"\x06builds\x18\f \x03(\v2\x12.hi.ai.PluginBuildB\x04\x90\xb5\x18\x03R\x06builds\x12.\n" +
+	"\fversion_data\x18\a \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\vversionData\x129\n" +
+	"\tartifacts\x18\f \x03(\v2\x15.hi.ai.PluginArtifactB\x04\x90\xb5\x18\x03R\tartifacts\x12.\n" +
 	"\rfollow_latest\x18\t \x01(\bB\x04\x90\xb5\x18\x03H\x03R\ffollowLatest\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
 	"\b_enabledB\t\n" +
 	"\a_sourceB\f\n" +
 	"\n" +
 	"_ref_countB\x10\n" +
-	"\x0e_follow_latest\"\xe2\x01\n" +
+	"\x0e_follow_latest\"\xeb\x01\n" +
 	"\x11PluginVersionView\x124\n" +
 	"\aversion\x18\x01 \x01(\v2\x14.hi.ai.PluginVersionB\x04\x90\xb5\x18\x03R\aversion\x12!\n" +
 	"\x06active\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x06active\x88\x01\x01\x121\n" +
-	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data\x120\n" +
-	"\x06builds\x18\x05 \x03(\v2\x12.hi.ai.PluginBuildB\x04\x90\xb5\x18\x03R\x06builds:\x04\x98\xb5\x18\x03B\t\n" +
+	"\x04data\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x04\x90\xb5\x18\x03R\x04data\x129\n" +
+	"\tartifacts\x18\x05 \x03(\v2\x15.hi.ai.PluginArtifactB\x04\x90\xb5\x18\x03R\tartifacts:\x04\x98\xb5\x18\x03B\t\n" +
 	"\a_active\"\xc6\x01\n" +
 	"\fPluginLoaded\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
@@ -2983,8 +3073,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
 	"\b_summary\"P\n" +
 	"\x10PublicBriefsResp\x126\n" +
-	"\x06briefs\x18\x01 \x03(\v2\x18.hi.ai.PluginPublicBriefB\x04\x90\xb5\x18\x01R\x06briefs:\x04\x98\xb5\x18\x01\"\x82\x03\n" +
-	"\fNativePlugin\x12\x1d\n" +
+	"\x06briefs\x18\x01 \x03(\v2\x18.hi.ai.PluginPublicBriefB\x04\x90\xb5\x18\x01R\x06briefs:\x04\x98\xb5\x18\x01\"\xc3\x03\n" +
+	"\fDevicePlugin\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04name\x88\x01\x01\x12#\n" +
 	"\aversion\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\aversion\x88\x01\x01\x12&\n" +
@@ -2992,8 +3082,9 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x03url\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x03url\x88\x01\x01\x12!\n" +
 	"\x06sha256\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x06sha256\x88\x01\x01\x12*\n" +
 	"\vabi_version\x18\a \x01(\rB\x04\x90\xb5\x18\x03H\x06R\n" +
-	"abiVersion\x88\x01\x01\x12\x1d\n" +
-	"\x04arch\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\x04arch\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"abiVersion\x88\x01\x01\x12!\n" +
+	"\x06target\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\x06target\x88\x01\x01\x120\n" +
+	"\x04lang\x18\t \x01(\x0e2\x11.hi.ai.PluginLangB\x04\x90\xb5\x18\x03H\bR\x04lang\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_uuidB\a\n" +
 	"\x05_nameB\n" +
 	"\n" +
@@ -3002,15 +3093,16 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"_fn_prefixB\x06\n" +
 	"\x04_urlB\t\n" +
 	"\a_sha256B\x0e\n" +
-	"\f_abi_versionB\a\n" +
-	"\x05_arch\"g\n" +
-	"\rListNativeReq\x12*\n" +
+	"\f_abi_versionB\t\n" +
+	"\a_targetB\a\n" +
+	"\x05_lang\"i\n" +
+	"\x0fListOnDeviceReq\x12*\n" +
 	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12\x17\n" +
 	"\x04arch\x18\x02 \x01(\tH\x01R\x04arch\x88\x01\x01B\b\n" +
 	"\x06_agentB\a\n" +
-	"\x05_arch\"E\n" +
-	"\x0eListNativeResp\x12-\n" +
-	"\x04list\x18\x01 \x03(\v2\x13.hi.ai.NativePluginB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xb4\x01\n" +
+	"\x05_arch\"G\n" +
+	"\x10ListOnDeviceResp\x12-\n" +
+	"\x04list\x18\x01 \x03(\v2\x13.hi.ai.DevicePluginB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xb4\x01\n" +
 	"\rRetryBuildReq\x12*\n" +
 	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12(\n" +
 	"\x04uuid\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x04uuid\x88\x01\x01\x12.\n" +
@@ -3018,19 +3110,21 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x06_agentB\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
-	"\b_version*f\n" +
-	"\rPluginRuntime\x12\x19\n" +
-	"\x15PLUGIN_RUNTIME_PYTHON\x10\x00\x12\x19\n" +
-	"\x15PLUGIN_RUNTIME_NATIVE\x10\x01\x12\x1f\n" +
-	"\x1bPLUGIN_RUNTIME_UNDETERMINED\x10\x02*\x99\x01\n" +
-	"\x11PluginBuildStatus\x12\x1f\n" +
-	"\x1bPLUGIN_BUILD_STATUS_PENDING\x10\x00\x12 \n" +
-	"\x1cPLUGIN_BUILD_STATUS_BUILDING\x10\x01\x12!\n" +
-	"\x1dPLUGIN_BUILD_STATUS_SUCCEEDED\x10\x02\x12\x1e\n" +
-	"\x1aPLUGIN_BUILD_STATUS_FAILED\x10\x03*G\n" +
+	"\b_version*m\n" +
+	"\n" +
+	"PluginLang\x12\x16\n" +
+	"\x12PLUGIN_LANG_PYTHON\x10\x00\x12\x14\n" +
+	"\x10PLUGIN_LANG_RUST\x10\x01\x12\x1c\n" +
+	"\x18PLUGIN_LANG_UNDETERMINED\x10\x02\x12\x13\n" +
+	"\x0fPLUGIN_LANG_LUA\x10\x03*\xa8\x01\n" +
+	"\x14PluginArtifactStatus\x12\"\n" +
+	"\x1ePLUGIN_ARTIFACT_STATUS_PENDING\x10\x00\x12#\n" +
+	"\x1fPLUGIN_ARTIFACT_STATUS_BUILDING\x10\x01\x12$\n" +
+	" PLUGIN_ARTIFACT_STATUS_SUCCEEDED\x10\x02\x12!\n" +
+	"\x1dPLUGIN_ARTIFACT_STATUS_FAILED\x10\x03*G\n" +
 	"\fPluginSource\x12\x1a\n" +
 	"\x16PLUGIN_SOURCE_ORIGINAL\x10\x00\x12\x1b\n" +
-	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\x80\v\n" +
+	"\x17PLUGIN_SOURCE_REFERENCE\x10\x012\x86\v\n" +
 	"\x06Plugin\x12C\n" +
 	"\vCreateShell\x12\x15.hi.ai.CreateShellReq\x1a\x16.hi.ai.CreateShellResp\"\x05\x8a\xb5\x18\x01\x03\x12G\n" +
 	"\rCreateVersion\x12\x17.hi.ai.CreateVersionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12;\n" +
@@ -3049,9 +3143,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\fSetActiveAll\x12\x16.hi.ai.SetActiveAllReq\x1a\x17.hi.ai.SetActiveAllResp\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
 	"\n" +
 	"SetEnabled\x12\x14.hi.ai.SetEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12K\n" +
-	"\x0fSetFollowLatest\x12\x19.hi.ai.SetFollowLatestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
-	"\n" +
-	"ListNative\x12\x14.hi.ai.ListNativeReq\x1a\x15.hi.ai.ListNativeResp\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
+	"\x0fSetFollowLatest\x12\x19.hi.ai.SetFollowLatestReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12F\n" +
+	"\fListOnDevice\x12\x16.hi.ai.ListOnDeviceReq\x1a\x17.hi.ai.ListOnDeviceResp\"\x05\x8a\xb5\x18\x01\x03\x12A\n" +
 	"\n" +
 	"RetryBuild\x12\x14.hi.ai.RetryBuildReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x12F\n" +
 	"\fPublicBriefs\x12\x16.hi.ai.PublicBriefsReq\x1a\x17.hi.ai.PublicBriefsResp\"\x05\x8a\xb5\x18\x01\x03Bv\n" +
@@ -3072,12 +3165,12 @@ func file_hi_ai_plugin_proto_rawDescGZIP() []byte {
 var file_hi_ai_plugin_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_hi_ai_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 38)
 var file_hi_ai_plugin_proto_goTypes = []any{
-	(PluginRuntime)(0),              // 0: hi.ai.PluginRuntime
-	(PluginBuildStatus)(0),          // 1: hi.ai.PluginBuildStatus
+	(PluginLang)(0),                 // 0: hi.ai.PluginLang
+	(PluginArtifactStatus)(0),       // 1: hi.ai.PluginArtifactStatus
 	(PluginSource)(0),               // 2: hi.ai.PluginSource
 	(*PluginShell)(nil),             // 3: hi.ai.PluginShell
 	(*PluginVersion)(nil),           // 4: hi.ai.PluginVersion
-	(*PluginBuild)(nil),             // 5: hi.ai.PluginBuild
+	(*PluginArtifact)(nil),          // 5: hi.ai.PluginArtifact
 	(*PluginView)(nil),              // 6: hi.ai.PluginView
 	(*PluginVersionView)(nil),       // 7: hi.ai.PluginVersionView
 	(*PluginLoaded)(nil),            // 8: hi.ai.PluginLoaded
@@ -3109,26 +3202,26 @@ var file_hi_ai_plugin_proto_goTypes = []any{
 	(*PublicBriefsReq)(nil),         // 34: hi.ai.PublicBriefsReq
 	(*PluginPublicBrief)(nil),       // 35: hi.ai.PluginPublicBrief
 	(*PublicBriefsResp)(nil),        // 36: hi.ai.PublicBriefsResp
-	(*NativePlugin)(nil),            // 37: hi.ai.NativePlugin
-	(*ListNativeReq)(nil),           // 38: hi.ai.ListNativeReq
-	(*ListNativeResp)(nil),          // 39: hi.ai.ListNativeResp
+	(*DevicePlugin)(nil),            // 37: hi.ai.DevicePlugin
+	(*ListOnDeviceReq)(nil),         // 38: hi.ai.ListOnDeviceReq
+	(*ListOnDeviceResp)(nil),        // 39: hi.ai.ListOnDeviceResp
 	(*RetryBuildReq)(nil),           // 40: hi.ai.RetryBuildReq
 	(*structpb.Struct)(nil),         // 41: google.protobuf.Struct
 	(*hi.Pagination)(nil),           // 42: hi.Pagination
 	(*emptypb.Empty)(nil),           // 43: google.protobuf.Empty
 }
 var file_hi_ai_plugin_proto_depIdxs = []int32{
-	0,  // 0: hi.ai.PluginShell.runtime:type_name -> hi.ai.PluginRuntime
-	1,  // 1: hi.ai.PluginBuild.status:type_name -> hi.ai.PluginBuildStatus
+	0,  // 0: hi.ai.PluginShell.lang:type_name -> hi.ai.PluginLang
+	1,  // 1: hi.ai.PluginArtifact.status:type_name -> hi.ai.PluginArtifactStatus
 	3,  // 2: hi.ai.PluginView.shell:type_name -> hi.ai.PluginShell
 	4,  // 3: hi.ai.PluginView.active:type_name -> hi.ai.PluginVersion
 	2,  // 4: hi.ai.PluginView.source:type_name -> hi.ai.PluginSource
 	41, // 5: hi.ai.PluginView.data:type_name -> google.protobuf.Struct
 	41, // 6: hi.ai.PluginView.version_data:type_name -> google.protobuf.Struct
-	5,  // 7: hi.ai.PluginView.builds:type_name -> hi.ai.PluginBuild
+	5,  // 7: hi.ai.PluginView.artifacts:type_name -> hi.ai.PluginArtifact
 	4,  // 8: hi.ai.PluginVersionView.version:type_name -> hi.ai.PluginVersion
 	41, // 9: hi.ai.PluginVersionView.data:type_name -> google.protobuf.Struct
-	5,  // 10: hi.ai.PluginVersionView.builds:type_name -> hi.ai.PluginBuild
+	5,  // 10: hi.ai.PluginVersionView.artifacts:type_name -> hi.ai.PluginArtifact
 	41, // 11: hi.ai.CreateShellReq.data:type_name -> google.protobuf.Struct
 	4,  // 12: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
 	41, // 13: hi.ai.CreateVersionReq.data:type_name -> google.protobuf.Struct
@@ -3143,52 +3236,53 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	41, // 22: hi.ai.CreateReferenceReq.version_data:type_name -> google.protobuf.Struct
 	33, // 23: hi.ai.PublicBriefsReq.refs:type_name -> hi.ai.PluginRef
 	35, // 24: hi.ai.PublicBriefsResp.briefs:type_name -> hi.ai.PluginPublicBrief
-	37, // 25: hi.ai.ListNativeResp.list:type_name -> hi.ai.NativePlugin
-	9,  // 26: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
-	11, // 27: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
-	12, // 28: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	24, // 29: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	20, // 30: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
-	21, // 31: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
-	26, // 32: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
-	27, // 33: hi.ai.Plugin.DeleteVersions:input_type -> hi.ai.DeleteVersionsReq
-	28, // 34: hi.ai.Plugin.DeleteVersionList:input_type -> hi.ai.DeleteVersionListReq
-	29, // 35: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
-	30, // 36: hi.ai.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
-	32, // 37: hi.ai.Plugin.CreateReference:input_type -> hi.ai.CreateReferenceReq
-	31, // 38: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	15, // 39: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
-	16, // 40: hi.ai.Plugin.SetActiveAll:input_type -> hi.ai.SetActiveAllReq
-	13, // 41: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
-	14, // 42: hi.ai.Plugin.SetFollowLatest:input_type -> hi.ai.SetFollowLatestReq
-	38, // 43: hi.ai.Plugin.ListNative:input_type -> hi.ai.ListNativeReq
-	40, // 44: hi.ai.Plugin.RetryBuild:input_type -> hi.ai.RetryBuildReq
-	34, // 45: hi.ai.Plugin.PublicBriefs:input_type -> hi.ai.PublicBriefsReq
-	10, // 46: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
-	43, // 47: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
-	43, // 48: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	25, // 49: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	22, // 50: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
-	23, // 51: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
-	43, // 52: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	43, // 53: hi.ai.Plugin.DeleteVersions:output_type -> google.protobuf.Empty
-	43, // 54: hi.ai.Plugin.DeleteVersionList:output_type -> google.protobuf.Empty
-	43, // 55: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
-	43, // 56: hi.ai.Plugin.DeleteShells:output_type -> google.protobuf.Empty
-	43, // 57: hi.ai.Plugin.CreateReference:output_type -> google.protobuf.Empty
-	43, // 58: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	43, // 59: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
-	17, // 60: hi.ai.Plugin.SetActiveAll:output_type -> hi.ai.SetActiveAllResp
-	43, // 61: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
-	43, // 62: hi.ai.Plugin.SetFollowLatest:output_type -> google.protobuf.Empty
-	39, // 63: hi.ai.Plugin.ListNative:output_type -> hi.ai.ListNativeResp
-	43, // 64: hi.ai.Plugin.RetryBuild:output_type -> google.protobuf.Empty
-	36, // 65: hi.ai.Plugin.PublicBriefs:output_type -> hi.ai.PublicBriefsResp
-	46, // [46:66] is the sub-list for method output_type
-	26, // [26:46] is the sub-list for method input_type
-	26, // [26:26] is the sub-list for extension type_name
-	26, // [26:26] is the sub-list for extension extendee
-	0,  // [0:26] is the sub-list for field type_name
+	0,  // 25: hi.ai.DevicePlugin.lang:type_name -> hi.ai.PluginLang
+	37, // 26: hi.ai.ListOnDeviceResp.list:type_name -> hi.ai.DevicePlugin
+	9,  // 27: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
+	11, // 28: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
+	12, // 29: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	24, // 30: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
+	20, // 31: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
+	21, // 32: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
+	26, // 33: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
+	27, // 34: hi.ai.Plugin.DeleteVersions:input_type -> hi.ai.DeleteVersionsReq
+	28, // 35: hi.ai.Plugin.DeleteVersionList:input_type -> hi.ai.DeleteVersionListReq
+	29, // 36: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
+	30, // 37: hi.ai.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
+	32, // 38: hi.ai.Plugin.CreateReference:input_type -> hi.ai.CreateReferenceReq
+	31, // 39: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
+	15, // 40: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
+	16, // 41: hi.ai.Plugin.SetActiveAll:input_type -> hi.ai.SetActiveAllReq
+	13, // 42: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	14, // 43: hi.ai.Plugin.SetFollowLatest:input_type -> hi.ai.SetFollowLatestReq
+	38, // 44: hi.ai.Plugin.ListOnDevice:input_type -> hi.ai.ListOnDeviceReq
+	40, // 45: hi.ai.Plugin.RetryBuild:input_type -> hi.ai.RetryBuildReq
+	34, // 46: hi.ai.Plugin.PublicBriefs:input_type -> hi.ai.PublicBriefsReq
+	10, // 47: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
+	43, // 48: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
+	43, // 49: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	25, // 50: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	22, // 51: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
+	23, // 52: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
+	43, // 53: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	43, // 54: hi.ai.Plugin.DeleteVersions:output_type -> google.protobuf.Empty
+	43, // 55: hi.ai.Plugin.DeleteVersionList:output_type -> google.protobuf.Empty
+	43, // 56: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
+	43, // 57: hi.ai.Plugin.DeleteShells:output_type -> google.protobuf.Empty
+	43, // 58: hi.ai.Plugin.CreateReference:output_type -> google.protobuf.Empty
+	43, // 59: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
+	43, // 60: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
+	17, // 61: hi.ai.Plugin.SetActiveAll:output_type -> hi.ai.SetActiveAllResp
+	43, // 62: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	43, // 63: hi.ai.Plugin.SetFollowLatest:output_type -> google.protobuf.Empty
+	39, // 64: hi.ai.Plugin.ListOnDevice:output_type -> hi.ai.ListOnDeviceResp
+	43, // 65: hi.ai.Plugin.RetryBuild:output_type -> google.protobuf.Empty
+	36, // 66: hi.ai.Plugin.PublicBriefs:output_type -> hi.ai.PublicBriefsResp
+	47, // [47:67] is the sub-list for method output_type
+	27, // [27:47] is the sub-list for method input_type
+	27, // [27:27] is the sub-list for extension type_name
+	27, // [27:27] is the sub-list for extension extendee
+	0,  // [0:27] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_proto_init() }
