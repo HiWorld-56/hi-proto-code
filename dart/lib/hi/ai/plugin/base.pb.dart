@@ -609,12 +609,12 @@ class BuildResp extends $pb.GeneratedMessage {
 /// 一个语法错的脚本压根不该进库。
 class VerifyLuaReq extends $pb.GeneratedMessage {
   factory VerifyLuaReq({
-    $core.String? codeArchiveUrl,
+    $core.String? script,
     $core.String? uuid,
     $core.String? version,
   }) {
     final result = create();
-    if (codeArchiveUrl != null) result.codeArchiveUrl = codeArchiveUrl;
+    if (script != null) result.script = script;
     if (uuid != null) result.uuid = uuid;
     if (version != null) result.version = version;
     return result;
@@ -633,7 +633,7 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'VerifyLuaReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'codeArchiveUrl')
+    ..aOS(1, _omitFieldNames ? '' : 'script')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
     ..aOS(3, _omitFieldNames ? '' : 'version')
     ..hasRequiredFields = false;
@@ -657,14 +657,22 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<VerifyLuaReq>(create);
   static VerifyLuaReq? _defaultInstance;
 
+  /// 🔴 **要验的是合并之后的那份脚本正文,不是那个 zip。**
+  ///
+  /// 包里可以有任意多个 `.lua`(正常工程本来就要拆文件),hi-ai 在发版时把它们
+  /// 合成**一个**脚本 —— 那才是下发到机器人的产物。验收必须验**正好是**将要下发的
+  /// 那串字节:验 zip 里的 main.lua 而下发合并版,两者之间就多了一段没人验过的代码。
+  ///
+  /// 原来这里传的是 zip url,于是解包这件事**两边各做一遍**(构建服务解一遍去验、
+  /// hi-ai 解一遍去当产物)—— 同一份规则两处实现,迟早对不上,而对不上是静默的。
   @$pb.TagNumber(1)
-  $core.String get codeArchiveUrl => $_getSZ(0);
+  $core.String get script => $_getSZ(0);
   @$pb.TagNumber(1)
-  set codeArchiveUrl($core.String value) => $_setString(0, value);
+  set script($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasCodeArchiveUrl() => $_has(0);
+  $core.bool hasScript() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCodeArchiveUrl() => $_clearField(1);
+  void clearScript() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get uuid => $_getSZ(1);

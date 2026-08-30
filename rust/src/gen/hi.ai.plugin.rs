@@ -160,9 +160,16 @@ pub struct BuildResp {
 /// 一个语法错的脚本压根不该进库。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VerifyLuaReq {
-    /// lua 脚本包 zip(= 这一版的 b.url)
+    /// 🔴 **要验的是合并之后的那份脚本正文,不是那个 zip。**
+    ///
+    /// 包里可以有任意多个 `.lua`(正常工程本来就要拆文件),hi-ai 在发版时把它们
+    /// 合成**一个**脚本 —— 那才是下发到机器人的产物。验收必须验**正好是**将要下发的
+    /// 那串字节:验 zip 里的 main.lua 而下发合并版,两者之间就多了一段没人验过的代码。
+    ///
+    /// 原来这里传的是 zip url,于是解包这件事**两边各做一遍**(构建服务解一遍去验、
+    /// hi-ai 解一遍去当产物)—— 同一份规则两处实现,迟早对不上,而对不上是静默的。
     #[prost(string, optional, tag = "1")]
-    pub code_archive_url: ::core::option::Option<::prost::alloc::string::String>,
+    pub script: ::core::option::Option<::prost::alloc::string::String>,
     /// 壳 uuid(日志用)
     #[prost(string, optional, tag = "2")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,

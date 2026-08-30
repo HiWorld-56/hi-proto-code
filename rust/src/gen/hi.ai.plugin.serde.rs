@@ -832,7 +832,7 @@ impl serde::Serialize for VerifyLuaReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.code_archive_url.is_some() {
+        if self.script.is_some() {
             len += 1;
         }
         if self.uuid.is_some() {
@@ -842,8 +842,8 @@ impl serde::Serialize for VerifyLuaReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.VerifyLuaReq", len)?;
-        if let Some(v) = self.code_archive_url.as_ref() {
-            struct_ser.serialize_field("codeArchiveUrl", v)?;
+        if let Some(v) = self.script.as_ref() {
+            struct_ser.serialize_field("script", v)?;
         }
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
@@ -861,15 +861,14 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "code_archive_url",
-            "codeArchiveUrl",
+            "script",
             "uuid",
             "version",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            CodeArchiveUrl,
+            Script,
             Uuid,
             Version,
         }
@@ -893,7 +892,7 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "codeArchiveUrl" | "code_archive_url" => Ok(GeneratedField::CodeArchiveUrl),
+                            "script" => Ok(GeneratedField::Script),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "version" => Ok(GeneratedField::Version),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -915,16 +914,16 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut code_archive_url__ = None;
+                let mut script__ = None;
                 let mut uuid__ = None;
                 let mut version__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::CodeArchiveUrl => {
-                            if code_archive_url__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("codeArchiveUrl"));
+                        GeneratedField::Script => {
+                            if script__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("script"));
                             }
-                            code_archive_url__ = map_.next_value()?;
+                            script__ = map_.next_value()?;
                         }
                         GeneratedField::Uuid => {
                             if uuid__.is_some() {
@@ -941,7 +940,7 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
                     }
                 }
                 Ok(VerifyLuaReq {
-                    code_archive_url: code_archive_url__,
+                    script: script__,
                     uuid: uuid__,
                     version: version__,
                 })

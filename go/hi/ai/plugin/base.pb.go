@@ -526,12 +526,20 @@ func (x *BuildResp) GetLog() string {
 // 验不过就拒绝这一版 —— 而不是像 RUST 那样先落库再后台编。
 // 一个语法错的脚本压根不该进库。
 type VerifyLuaReq struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	CodeArchiveUrl *string                `protobuf:"bytes,1,opt,name=code_archive_url,json=codeArchiveUrl,proto3,oneof" json:"code_archive_url,omitempty"` // lua 脚本包 zip(= 这一版的 b.url)
-	Uuid           *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                                             // 壳 uuid(日志用)
-	Version        *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`                                       // 版本号
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 🔴 **要验的是合并之后的那份脚本正文,不是那个 zip。**
+	//
+	// 包里可以有任意多个 `.lua`(正常工程本来就要拆文件),hi-ai 在发版时把它们
+	// 合成**一个**脚本 —— 那才是下发到机器人的产物。验收必须验**正好是**将要下发的
+	// 那串字节:验 zip 里的 main.lua 而下发合并版,两者之间就多了一段没人验过的代码。
+	//
+	// 原来这里传的是 zip url,于是解包这件事**两边各做一遍**(构建服务解一遍去验、
+	// hi-ai 解一遍去当产物)—— 同一份规则两处实现,迟早对不上,而对不上是静默的。
+	Script        *string `protobuf:"bytes,1,opt,name=script,proto3,oneof" json:"script,omitempty"`
+	Uuid          *string `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`       // 壳 uuid(日志用)
+	Version       *string `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"` // 版本号
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *VerifyLuaReq) Reset() {
@@ -564,9 +572,9 @@ func (*VerifyLuaReq) Descriptor() ([]byte, []int) {
 	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *VerifyLuaReq) GetCodeArchiveUrl() string {
-	if x != nil && x.CodeArchiveUrl != nil {
-		return *x.CodeArchiveUrl
+func (x *VerifyLuaReq) GetScript() string {
+	if x != nil && x.Script != nil {
+		return *x.Script
 	}
 	return ""
 }
@@ -724,12 +732,12 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\f_abi_versionB\v\n" +
 	"\t_manifestB\b\n" +
 	"\x06_errorB\x06\n" +
-	"\x04_log\"\x9f\x01\n" +
-	"\fVerifyLuaReq\x12-\n" +
-	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01\x12\x17\n" +
+	"\x04_log\"\x83\x01\n" +
+	"\fVerifyLuaReq\x12\x1b\n" +
+	"\x06script\x18\x01 \x01(\tH\x00R\x06script\x88\x01\x01\x12\x17\n" +
 	"\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
-	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01B\x13\n" +
-	"\x11_code_archive_urlB\a\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01B\t\n" +
+	"\a_scriptB\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
 	"\b_version\"\xef\x01\n" +

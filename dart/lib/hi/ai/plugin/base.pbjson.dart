@@ -286,15 +286,7 @@ final $typed_data.Uint8List buildRespDescriptor = $convert.base64Decode(
 const VerifyLuaReq$json = {
   '1': 'VerifyLuaReq',
   '2': [
-    {
-      '1': 'code_archive_url',
-      '3': 1,
-      '4': 1,
-      '5': 9,
-      '9': 0,
-      '10': 'codeArchiveUrl',
-      '17': true
-    },
+    {'1': 'script', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'script', '17': true},
     {'1': 'uuid', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'uuid', '17': true},
     {
       '1': 'version',
@@ -307,7 +299,7 @@ const VerifyLuaReq$json = {
     },
   ],
   '8': [
-    {'1': '_code_archive_url'},
+    {'1': '_script'},
     {'1': '_uuid'},
     {'1': '_version'},
   ],
@@ -315,9 +307,9 @@ const VerifyLuaReq$json = {
 
 /// Descriptor for `VerifyLuaReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List verifyLuaReqDescriptor = $convert.base64Decode(
-    'CgxWZXJpZnlMdWFSZXESLQoQY29kZV9hcmNoaXZlX3VybBgBIAEoCUgAUg5jb2RlQXJjaGl2ZV'
-    'VybIgBARIXCgR1dWlkGAIgASgJSAFSBHV1aWSIAQESHQoHdmVyc2lvbhgDIAEoCUgCUgd2ZXJz'
-    'aW9uiAEBQhMKEV9jb2RlX2FyY2hpdmVfdXJsQgcKBV91dWlkQgoKCF92ZXJzaW9u');
+    'CgxWZXJpZnlMdWFSZXESGwoGc2NyaXB0GAEgASgJSABSBnNjcmlwdIgBARIXCgR1dWlkGAIgAS'
+    'gJSAFSBHV1aWSIAQESHQoHdmVyc2lvbhgDIAEoCUgCUgd2ZXJzaW9uiAEBQgkKB19zY3JpcHRC'
+    'BwoFX3V1aWRCCgoIX3ZlcnNpb24=');
 
 @$core.Deprecated('Use verifyLuaRespDescriptor instead')
 const VerifyLuaResp$json = {
