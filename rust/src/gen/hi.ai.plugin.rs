@@ -201,6 +201,72 @@ pub struct VerifyLuaResp {
     #[prost(string, optional, tag = "5")]
     pub log: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
+///
+/// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
+/// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
+/// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+/// ── C 模块的构建契约 ────────────────────────────────────────────────────────
+///
+/// lua 插件可以依赖 luarocks 上带 `.so` 的包。**编译只在构建服务发生,绝不在机器人上**
+/// —— 生产机器人是 Pi5 的 1GB 版本,CPU/内存/IO 都不适合编译,而"每台设备各装一套
+/// 构建环境"是运行期才炸的事。
+///
+/// ## 只收白名单里的 rock
+///
+/// luarocks.org 没有签名也没有审核,谁都能发包,而我们要把编出来的 `.so` 签进产物、
+/// 推到客户的机器人上。**"来自 luarocks"不是信任凭据** —— 白名单 + 钉版本 + 钉源码
+/// 摘要才是。白名单同时把构建矩阵框住:依赖树一展开,要交叉编译的东西是不封口的。
+///
+/// 配方在镜像里(`/opt/hinj/luarecipes/<rock>/<版本>/build.sh`),产出分两半:
+///
+/// so_files  —— 进**集合**,按 `<rock>/<版本>/<path>` 下发到机器人
+/// lua_files —— 发版时**内联进插件那一个脚本**,不下发
+///
+/// lua 那半内联而不下发,是为了让机器人那侧只需要管 `.so` 一种东西。
+///
+/// ## 编不出来不是 rpc 错误
+///
+/// 同 Build:那是**业务结果**,要连日志尾部一起交给发版的人看。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BuildLuaDepReq {
+    /// luarocks 上的包名,如 `lua-cjson`
+    #[prost(string, optional, tag = "1")]
+    pub rock: ::core::option::Option<::prost::alloc::string::String>,
+    /// 钉死的版本,不给范围 —— 给范围就要解算器
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 目标架构:`aarch64` / `x86_64`。**每个架构各建一次**,建好就不可变、全平台复用。
+    #[prost(string, optional, tag = "3")]
+    pub target: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BuildLuaDepResp {
+    #[prost(bool, optional, tag = "1")]
+    pub ok: ::core::option::Option<bool>,
+    #[prost(message, repeated, tag = "2")]
+    pub so_files: ::prost::alloc::vec::Vec<LuaDepBuiltFile>,
+    #[prost(message, repeated, tag = "3")]
+    pub lua_files: ::prost::alloc::vec::Vec<LuaDepBuiltFile>,
+    #[prost(string, optional, tag = "4")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub log: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaDepBuiltFile {
+    /// 相对 `<rock>/<版本>/` 的路径。`.so` 的点号与目录对应是 lua 的老规矩:
+    /// `require("socket.core")` 找 `socket/core.so`,入口符号 `luaopen_socket_core`。
+    #[prost(string, optional, tag = "1")]
+    pub path: ::core::option::Option<::prost::alloc::string::String>,
+    /// `.so` 传 url(构建服务已经传进私有桶);`.lua` 传内容(要内联,不落桶)。
+    #[prost(string, optional, tag = "2")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    #[prost(string, optional, tag = "4")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// Generated client implementations.
 pub mod runner_client {
     #![allow(
@@ -346,11 +412,6 @@ pub mod builder_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
-    ///
-    /// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
-    /// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
-    /// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
     #[derive(Debug, Clone)]
     pub struct BuilderClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -450,6 +511,32 @@ pub mod builder_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.plugin.Builder", "Build"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——
+        /// 编译成本因此不随插件数量增长。
+        pub async fn build_lua_dep(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BuildLuaDepReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::BuildLuaDepResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.plugin.Builder/BuildLuaDep",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.plugin.Builder", "BuildLuaDep"));
             self.inner.unary(req, path, codec).await
         }
         /// 验一个 lua 包:语法能不能 load、manifest 是什么、契约号多少、有没有碰禁用项。

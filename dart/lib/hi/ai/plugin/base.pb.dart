@@ -804,6 +804,298 @@ class VerifyLuaResp extends $pb.GeneratedMessage {
   void clearLog() => $_clearField(5);
 }
 
+/// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
+///
+/// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
+/// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
+/// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
+/// ── C 模块的构建契约 ────────────────────────────────────────────────────────
+///
+/// lua 插件可以依赖 luarocks 上带 `.so` 的包。**编译只在构建服务发生,绝不在机器人上**
+/// —— 生产机器人是 Pi5 的 1GB 版本,CPU/内存/IO 都不适合编译,而"每台设备各装一套
+/// 构建环境"是运行期才炸的事。
+///
+/// ## 只收白名单里的 rock
+///
+/// luarocks.org 没有签名也没有审核,谁都能发包,而我们要把编出来的 `.so` 签进产物、
+/// 推到客户的机器人上。**"来自 luarocks"不是信任凭据** —— 白名单 + 钉版本 + 钉源码
+/// 摘要才是。白名单同时把构建矩阵框住:依赖树一展开,要交叉编译的东西是不封口的。
+///
+/// 配方在镜像里(`/opt/hinj/luarecipes/<rock>/<版本>/build.sh`),产出分两半:
+///
+///   so_files  —— 进**集合**,按 `<rock>/<版本>/<path>` 下发到机器人
+///   lua_files —— 发版时**内联进插件那一个脚本**,不下发
+///
+/// lua 那半内联而不下发,是为了让机器人那侧只需要管 `.so` 一种东西。
+///
+/// ## 编不出来不是 rpc 错误
+///
+/// 同 Build:那是**业务结果**,要连日志尾部一起交给发版的人看。
+class BuildLuaDepReq extends $pb.GeneratedMessage {
+  factory BuildLuaDepReq({
+    $core.String? rock,
+    $core.String? version,
+    $core.String? target,
+  }) {
+    final result = create();
+    if (rock != null) result.rock = rock;
+    if (version != null) result.version = version;
+    if (target != null) result.target = target;
+    return result;
+  }
+
+  BuildLuaDepReq._();
+
+  factory BuildLuaDepReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BuildLuaDepReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildLuaDepReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'rock')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..aOS(3, _omitFieldNames ? '' : 'target')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildLuaDepReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildLuaDepReq copyWith(void Function(BuildLuaDepReq) updates) =>
+      super.copyWith((message) => updates(message as BuildLuaDepReq))
+          as BuildLuaDepReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BuildLuaDepReq create() => BuildLuaDepReq._();
+  @$core.override
+  BuildLuaDepReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BuildLuaDepReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BuildLuaDepReq>(create);
+  static BuildLuaDepReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get rock => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set rock($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRock() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRock() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+
+  /// 目标架构:`aarch64` / `x86_64`。**每个架构各建一次**,建好就不可变、全平台复用。
+  @$pb.TagNumber(3)
+  $core.String get target => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set target($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTarget() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTarget() => $_clearField(3);
+}
+
+class BuildLuaDepResp extends $pb.GeneratedMessage {
+  factory BuildLuaDepResp({
+    $core.bool? ok,
+    $core.Iterable<LuaDepBuiltFile>? soFiles,
+    $core.Iterable<LuaDepBuiltFile>? luaFiles,
+    $core.String? error,
+    $core.String? log,
+  }) {
+    final result = create();
+    if (ok != null) result.ok = ok;
+    if (soFiles != null) result.soFiles.addAll(soFiles);
+    if (luaFiles != null) result.luaFiles.addAll(luaFiles);
+    if (error != null) result.error = error;
+    if (log != null) result.log = log;
+    return result;
+  }
+
+  BuildLuaDepResp._();
+
+  factory BuildLuaDepResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BuildLuaDepResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildLuaDepResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'ok')
+    ..pPM<LuaDepBuiltFile>(2, _omitFieldNames ? '' : 'soFiles',
+        subBuilder: LuaDepBuiltFile.create)
+    ..pPM<LuaDepBuiltFile>(3, _omitFieldNames ? '' : 'luaFiles',
+        subBuilder: LuaDepBuiltFile.create)
+    ..aOS(4, _omitFieldNames ? '' : 'error')
+    ..aOS(5, _omitFieldNames ? '' : 'log')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildLuaDepResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildLuaDepResp copyWith(void Function(BuildLuaDepResp) updates) =>
+      super.copyWith((message) => updates(message as BuildLuaDepResp))
+          as BuildLuaDepResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BuildLuaDepResp create() => BuildLuaDepResp._();
+  @$core.override
+  BuildLuaDepResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BuildLuaDepResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BuildLuaDepResp>(create);
+  static BuildLuaDepResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get ok => $_getBF(0);
+  @$pb.TagNumber(1)
+  set ok($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOk() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOk() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<LuaDepBuiltFile> get soFiles => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<LuaDepBuiltFile> get luaFiles => $_getList(2);
+
+  @$pb.TagNumber(4)
+  $core.String get error => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set error($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasError() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearError() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get log => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set log($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasLog() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLog() => $_clearField(5);
+}
+
+class LuaDepBuiltFile extends $pb.GeneratedMessage {
+  factory LuaDepBuiltFile({
+    $core.String? path,
+    $core.String? url,
+    $core.List<$core.int>? content,
+    $core.String? sha256,
+  }) {
+    final result = create();
+    if (path != null) result.path = path;
+    if (url != null) result.url = url;
+    if (content != null) result.content = content;
+    if (sha256 != null) result.sha256 = sha256;
+    return result;
+  }
+
+  LuaDepBuiltFile._();
+
+  factory LuaDepBuiltFile.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaDepBuiltFile.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaDepBuiltFile',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'path')
+    ..aOS(2, _omitFieldNames ? '' : 'url')
+    ..a<$core.List<$core.int>>(
+        3, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
+    ..aOS(4, _omitFieldNames ? '' : 'sha256')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepBuiltFile clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepBuiltFile copyWith(void Function(LuaDepBuiltFile) updates) =>
+      super.copyWith((message) => updates(message as LuaDepBuiltFile))
+          as LuaDepBuiltFile;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaDepBuiltFile create() => LuaDepBuiltFile._();
+  @$core.override
+  LuaDepBuiltFile createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaDepBuiltFile getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LuaDepBuiltFile>(create);
+  static LuaDepBuiltFile? _defaultInstance;
+
+  /// 相对 `<rock>/<版本>/` 的路径。`.so` 的点号与目录对应是 lua 的老规矩:
+  /// `require("socket.core")` 找 `socket/core.so`,入口符号 `luaopen_socket_core`。
+  @$pb.TagNumber(1)
+  $core.String get path => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set path($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPath() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPath() => $_clearField(1);
+
+  /// `.so` 传 url(构建服务已经传进私有桶);`.lua` 传内容(要内联,不落桶)。
+  @$pb.TagNumber(2)
+  $core.String get url => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set url($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUrl() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.int> get content => $_getN(2);
+  @$pb.TagNumber(3)
+  set content($core.List<$core.int> value) => $_setBytes(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasContent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearContent() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get sha256 => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set sha256($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSha256() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSha256() => $_clearField(4);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

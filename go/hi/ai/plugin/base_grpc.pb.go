@@ -190,21 +190,19 @@ var Runner_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Builder_Build_FullMethodName     = "/hi.ai.plugin.Builder/Build"
-	Builder_VerifyLua_FullMethodName = "/hi.ai.plugin.Builder/VerifyLua"
+	Builder_Build_FullMethodName       = "/hi.ai.plugin.Builder/Build"
+	Builder_BuildLuaDep_FullMethodName = "/hi.ai.plugin.Builder/BuildLuaDep"
+	Builder_VerifyLua_FullMethodName   = "/hi.ai.plugin.Builder/VerifyLua"
 )
 
 // BuilderClient is the client API for Builder service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
-//
-// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
-// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
-// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
 type BuilderClient interface {
 	Build(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildResp, error)
+	// 建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——
+	// 编译成本因此不随插件数量增长。
+	BuildLuaDep(ctx context.Context, in *BuildLuaDepReq, opts ...grpc.CallOption) (*BuildLuaDepResp, error)
 	// 验一个 lua 包:语法能不能 load、manifest 是什么、契约号多少、有没有碰禁用项。
 	// 毫秒级,hi-ai 在发版流程里同步等。
 	VerifyLua(ctx context.Context, in *VerifyLuaReq, opts ...grpc.CallOption) (*VerifyLuaResp, error)
@@ -228,6 +226,16 @@ func (c *builderClient) Build(ctx context.Context, in *BuildReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *builderClient) BuildLuaDep(ctx context.Context, in *BuildLuaDepReq, opts ...grpc.CallOption) (*BuildLuaDepResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BuildLuaDepResp)
+	err := c.cc.Invoke(ctx, Builder_BuildLuaDep_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *builderClient) VerifyLua(ctx context.Context, in *VerifyLuaReq, opts ...grpc.CallOption) (*VerifyLuaResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(VerifyLuaResp)
@@ -241,14 +249,11 @@ func (c *builderClient) VerifyLua(ctx context.Context, in *VerifyLuaReq, opts ..
 // BuilderServer is the server API for Builder service.
 // All implementations should embed UnimplementedBuilderServer
 // for forward compatibility.
-//
-// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
-//
-// ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
-// `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
-// 必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
 type BuilderServer interface {
 	Build(context.Context, *BuildReq) (*BuildResp, error)
+	// 建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——
+	// 编译成本因此不随插件数量增长。
+	BuildLuaDep(context.Context, *BuildLuaDepReq) (*BuildLuaDepResp, error)
 	// 验一个 lua 包:语法能不能 load、manifest 是什么、契约号多少、有没有碰禁用项。
 	// 毫秒级,hi-ai 在发版流程里同步等。
 	VerifyLua(context.Context, *VerifyLuaReq) (*VerifyLuaResp, error)
@@ -263,6 +268,9 @@ type UnimplementedBuilderServer struct{}
 
 func (UnimplementedBuilderServer) Build(context.Context, *BuildReq) (*BuildResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Build not implemented")
+}
+func (UnimplementedBuilderServer) BuildLuaDep(context.Context, *BuildLuaDepReq) (*BuildLuaDepResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BuildLuaDep not implemented")
 }
 func (UnimplementedBuilderServer) VerifyLua(context.Context, *VerifyLuaReq) (*VerifyLuaResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyLua not implemented")
@@ -305,6 +313,24 @@ func _Builder_Build_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Builder_BuildLuaDep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BuildLuaDepReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BuilderServer).BuildLuaDep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Builder_BuildLuaDep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BuilderServer).BuildLuaDep(ctx, req.(*BuildLuaDepReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Builder_VerifyLua_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(VerifyLuaReq)
 	if err := dec(in); err != nil {
@@ -333,6 +359,10 @@ var Builder_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Build",
 			Handler:    _Builder_Build_Handler,
+		},
+		{
+			MethodName: "BuildLuaDep",
+			Handler:    _Builder_BuildLuaDep_Handler,
 		},
 		{
 			MethodName: "VerifyLua",

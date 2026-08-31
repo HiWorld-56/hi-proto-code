@@ -128,12 +128,7 @@ class Runner(object):
 
 
 class BuilderStub(object):
-    """设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
-
-    ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
-    `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
-    必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -146,6 +141,11 @@ class BuilderStub(object):
                 request_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildReq.SerializeToString,
                 response_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildResp.FromString,
                 _registered_method=True)
+        self.BuildLuaDep = channel.unary_unary(
+                '/hi.ai.plugin.Builder/BuildLuaDep',
+                request_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildLuaDepReq.SerializeToString,
+                response_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildLuaDepResp.FromString,
+                _registered_method=True)
         self.VerifyLua = channel.unary_unary(
                 '/hi.ai.plugin.Builder/VerifyLua',
                 request_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.VerifyLuaReq.SerializeToString,
@@ -154,15 +154,18 @@ class BuilderStub(object):
 
 
 class BuilderServicer(object):
-    """设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
-
-    ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
-    `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
-    必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def Build(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BuildLuaDep(self, request, context):
+        """建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——
+        编译成本因此不随插件数量增长。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -183,6 +186,11 @@ def add_BuilderServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildReq.FromString,
                     response_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildResp.SerializeToString,
             ),
+            'BuildLuaDep': grpc.unary_unary_rpc_method_handler(
+                    servicer.BuildLuaDep,
+                    request_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildLuaDepReq.FromString,
+                    response_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildLuaDepResp.SerializeToString,
+            ),
             'VerifyLua': grpc.unary_unary_rpc_method_handler(
                     servicer.VerifyLua,
                     request_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.VerifyLuaReq.FromString,
@@ -197,12 +205,7 @@ def add_BuilderServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Builder(object):
-    """设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
-
-    ⚠️ **它执行的是三方代码** —— `Build` 跑三方的 `build.rs` 与依赖的构建脚本,
-    `VerifyLua` 把三方脚本真 load 一遍。比 Runner 跑 py 脚本危险程度只高不低。
-    必须在容器里跑,且容器内不得挂载任何宿主凭证(ssh key / gitea token)。
-    """
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def Build(request,
@@ -221,6 +224,33 @@ class Builder(object):
             '/hi.ai.plugin.Builder/Build',
             hi_dot_ai_dot_plugin_dot_base__pb2.BuildReq.SerializeToString,
             hi_dot_ai_dot_plugin_dot_base__pb2.BuildResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BuildLuaDep(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.ai.plugin.Builder/BuildLuaDep',
+            hi_dot_ai_dot_plugin_dot_base__pb2.BuildLuaDepReq.SerializeToString,
+            hi_dot_ai_dot_plugin_dot_base__pb2.BuildLuaDepResp.FromString,
             options,
             channel_credentials,
             insecure,

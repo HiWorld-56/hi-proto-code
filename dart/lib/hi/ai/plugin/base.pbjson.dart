@@ -383,3 +383,162 @@ final $typed_data.Uint8List verifyLuaRespDescriptor = $convert.base64Decode(
     'bmlmZXN0iAEBEh8KBWVycm9yGAQgASgJQgSQtRgDSANSBWVycm9yiAEBEhsKA2xvZxgFIAEoCU'
     'IEkLUYA0gEUgNsb2eIAQE6BJi1GANCBQoDX29rQgsKCV9jb250cmFjdEILCglfbWFuaWZlc3RC'
     'CAoGX2Vycm9yQgYKBF9sb2c=');
+
+@$core.Deprecated('Use buildLuaDepReqDescriptor instead')
+const BuildLuaDepReq$json = {
+  '1': 'BuildLuaDepReq',
+  '2': [
+    {'1': 'rock', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'rock', '17': true},
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'version',
+      '17': true
+    },
+    {'1': 'target', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'target', '17': true},
+  ],
+  '8': [
+    {'1': '_rock'},
+    {'1': '_version'},
+    {'1': '_target'},
+  ],
+};
+
+/// Descriptor for `BuildLuaDepReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List buildLuaDepReqDescriptor = $convert.base64Decode(
+    'Cg5CdWlsZEx1YURlcFJlcRIXCgRyb2NrGAEgASgJSABSBHJvY2uIAQESHQoHdmVyc2lvbhgCIA'
+    'EoCUgBUgd2ZXJzaW9uiAEBEhsKBnRhcmdldBgDIAEoCUgCUgZ0YXJnZXSIAQFCBwoFX3JvY2tC'
+    'CgoIX3ZlcnNpb25CCQoHX3RhcmdldA==');
+
+@$core.Deprecated('Use buildLuaDepRespDescriptor instead')
+const BuildLuaDepResp$json = {
+  '1': 'BuildLuaDepResp',
+  '2': [
+    {
+      '1': 'ok',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'ok',
+      '17': true
+    },
+    {
+      '1': 'so_files',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.plugin.LuaDepBuiltFile',
+      '8': {},
+      '10': 'soFiles'
+    },
+    {
+      '1': 'lua_files',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.plugin.LuaDepBuiltFile',
+      '8': {},
+      '10': 'luaFiles'
+    },
+    {
+      '1': 'error',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'error',
+      '17': true
+    },
+    {
+      '1': 'log',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'log',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_ok'},
+    {'1': '_error'},
+    {'1': '_log'},
+  ],
+};
+
+/// Descriptor for `BuildLuaDepResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List buildLuaDepRespDescriptor = $convert.base64Decode(
+    'Cg9CdWlsZEx1YURlcFJlc3ASGQoCb2sYASABKAhCBJC1GANIAFICb2uIAQESPgoIc29fZmlsZX'
+    'MYAiADKAsyHS5oaS5haS5wbHVnaW4uTHVhRGVwQnVpbHRGaWxlQgSQtRgDUgdzb0ZpbGVzEkAK'
+    'CWx1YV9maWxlcxgDIAMoCzIdLmhpLmFpLnBsdWdpbi5MdWFEZXBCdWlsdEZpbGVCBJC1GANSCG'
+    'x1YUZpbGVzEh8KBWVycm9yGAQgASgJQgSQtRgDSAFSBWVycm9yiAEBEhsKA2xvZxgFIAEoCUIE'
+    'kLUYA0gCUgNsb2eIAQE6BJi1GANCBQoDX29rQggKBl9lcnJvckIGCgRfbG9n');
+
+@$core.Deprecated('Use luaDepBuiltFileDescriptor instead')
+const LuaDepBuiltFile$json = {
+  '1': 'LuaDepBuiltFile',
+  '2': [
+    {
+      '1': 'path',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'path',
+      '17': true
+    },
+    {
+      '1': 'url',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'url',
+      '17': true
+    },
+    {
+      '1': 'content',
+      '3': 3,
+      '4': 1,
+      '5': 12,
+      '8': {},
+      '9': 2,
+      '10': 'content',
+      '17': true
+    },
+    {
+      '1': 'sha256',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'sha256',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_path'},
+    {'1': '_url'},
+    {'1': '_content'},
+    {'1': '_sha256'},
+  ],
+};
+
+/// Descriptor for `LuaDepBuiltFile`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List luaDepBuiltFileDescriptor = $convert.base64Decode(
+    'Cg9MdWFEZXBCdWlsdEZpbGUSHQoEcGF0aBgBIAEoCUIEkLUYA0gAUgRwYXRoiAEBEhsKA3VybB'
+    'gCIAEoCUIEkLUYA0gBUgN1cmyIAQESIwoHY29udGVudBgDIAEoDEIEkLUYA0gCUgdjb250ZW50'
+    'iAEBEiEKBnNoYTI1NhgEIAEoCUIEkLUYA0gDUgZzaGEyNTaIAQE6BJi1GANCBwoFX3BhdGhCBg'
+    'oEX3VybEIKCghfY29udGVudEIJCgdfc2hhMjU2');

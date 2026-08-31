@@ -1,3 +1,289 @@
+impl serde::Serialize for BuildLuaDepReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.rock.is_some() {
+            len += 1;
+        }
+        if self.version.is_some() {
+            len += 1;
+        }
+        if self.target.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.BuildLuaDepReq", len)?;
+        if let Some(v) = self.rock.as_ref() {
+            struct_ser.serialize_field("rock", v)?;
+        }
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
+        }
+        if let Some(v) = self.target.as_ref() {
+            struct_ser.serialize_field("target", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BuildLuaDepReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "rock",
+            "version",
+            "target",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Rock,
+            Version,
+            Target,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "rock" => Ok(GeneratedField::Rock),
+                            "version" => Ok(GeneratedField::Version),
+                            "target" => Ok(GeneratedField::Target),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BuildLuaDepReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.plugin.BuildLuaDepReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BuildLuaDepReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut rock__ = None;
+                let mut version__ = None;
+                let mut target__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Rock => {
+                            if rock__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("rock"));
+                            }
+                            rock__ = map_.next_value()?;
+                        }
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = map_.next_value()?;
+                        }
+                        GeneratedField::Target => {
+                            if target__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("target"));
+                            }
+                            target__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(BuildLuaDepReq {
+                    rock: rock__,
+                    version: version__,
+                    target: target__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.plugin.BuildLuaDepReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BuildLuaDepResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.ok.is_some() {
+            len += 1;
+        }
+        if !self.so_files.is_empty() {
+            len += 1;
+        }
+        if !self.lua_files.is_empty() {
+            len += 1;
+        }
+        if self.error.is_some() {
+            len += 1;
+        }
+        if self.log.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.BuildLuaDepResp", len)?;
+        if let Some(v) = self.ok.as_ref() {
+            struct_ser.serialize_field("ok", v)?;
+        }
+        if !self.so_files.is_empty() {
+            struct_ser.serialize_field("soFiles", &self.so_files)?;
+        }
+        if !self.lua_files.is_empty() {
+            struct_ser.serialize_field("luaFiles", &self.lua_files)?;
+        }
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
+        }
+        if let Some(v) = self.log.as_ref() {
+            struct_ser.serialize_field("log", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BuildLuaDepResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "ok",
+            "so_files",
+            "soFiles",
+            "lua_files",
+            "luaFiles",
+            "error",
+            "log",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Ok,
+            SoFiles,
+            LuaFiles,
+            Error,
+            Log,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "ok" => Ok(GeneratedField::Ok),
+                            "soFiles" | "so_files" => Ok(GeneratedField::SoFiles),
+                            "luaFiles" | "lua_files" => Ok(GeneratedField::LuaFiles),
+                            "error" => Ok(GeneratedField::Error),
+                            "log" => Ok(GeneratedField::Log),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BuildLuaDepResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.plugin.BuildLuaDepResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BuildLuaDepResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut ok__ = None;
+                let mut so_files__ = None;
+                let mut lua_files__ = None;
+                let mut error__ = None;
+                let mut log__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Ok => {
+                            if ok__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ok"));
+                            }
+                            ok__ = map_.next_value()?;
+                        }
+                        GeneratedField::SoFiles => {
+                            if so_files__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("soFiles"));
+                            }
+                            so_files__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::LuaFiles => {
+                            if lua_files__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("luaFiles"));
+                            }
+                            lua_files__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = map_.next_value()?;
+                        }
+                        GeneratedField::Log => {
+                            if log__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("log"));
+                            }
+                            log__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(BuildLuaDepResp {
+                    ok: ok__,
+                    so_files: so_files__.unwrap_or_default(),
+                    lua_files: lua_files__.unwrap_or_default(),
+                    error: error__,
+                    log: log__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.plugin.BuildLuaDepResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for BuildReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -428,6 +714,152 @@ impl<'de> serde::Deserialize<'de> for CleanupReq {
             }
         }
         deserializer.deserialize_struct("hi.ai.plugin.CleanupReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for LuaDepBuiltFile {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.path.is_some() {
+            len += 1;
+        }
+        if self.url.is_some() {
+            len += 1;
+        }
+        if self.content.is_some() {
+            len += 1;
+        }
+        if self.sha256.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.LuaDepBuiltFile", len)?;
+        if let Some(v) = self.path.as_ref() {
+            struct_ser.serialize_field("path", v)?;
+        }
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
+        }
+        if let Some(v) = self.content.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("content", pbjson::private::base64::encode(&v).as_str())?;
+        }
+        if let Some(v) = self.sha256.as_ref() {
+            struct_ser.serialize_field("sha256", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for LuaDepBuiltFile {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "path",
+            "url",
+            "content",
+            "sha256",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Path,
+            Url,
+            Content,
+            Sha256,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "path" => Ok(GeneratedField::Path),
+                            "url" => Ok(GeneratedField::Url),
+                            "content" => Ok(GeneratedField::Content),
+                            "sha256" => Ok(GeneratedField::Sha256),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = LuaDepBuiltFile;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.plugin.LuaDepBuiltFile")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<LuaDepBuiltFile, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut path__ = None;
+                let mut url__ = None;
+                let mut content__ = None;
+                let mut sha256__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Path => {
+                            if path__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("path"));
+                            }
+                            path__ = map_.next_value()?;
+                        }
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = map_.next_value()?;
+                        }
+                        GeneratedField::Content => {
+                            if content__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("content"));
+                            }
+                            content__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Sha256 => {
+                            if sha256__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sha256"));
+                            }
+                            sha256__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(LuaDepBuiltFile {
+                    path: path__,
+                    url: url__,
+                    content: content__,
+                    sha256: sha256__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.plugin.LuaDepBuiltFile", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for PluginAnnex {
