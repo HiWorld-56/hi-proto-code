@@ -276,6 +276,10 @@ pub struct LuaDepBuiltFile {
     pub content: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
     #[prost(string, optional, tag = "4")]
     pub sha256: ::core::option::Option<::prost::alloc::string::String>,
+    /// 字节数。**没有它的话集合里的 size 列恒为 0** —— 从前 `.lua` 走 content
+    /// 还能按内容长度算，2026-09-01 起两种 kind 都走 url，内容不再经过服务端。
+    #[prost(int64, optional, tag = "5")]
+    pub size: ::core::option::Option<i64>,
 }
 /// 问一个 rock 还要哪些别的 rock。**只读配方,不编译。**
 ///

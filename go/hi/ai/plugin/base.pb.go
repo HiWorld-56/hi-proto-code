@@ -864,9 +864,12 @@ type LuaDepBuiltFile struct {
 	// `require("socket.core")` 找 `socket/core.so`,入口符号 `luaopen_socket_core`。
 	Path *string `protobuf:"bytes,1,opt,name=path,proto3,oneof" json:"path,omitempty"`
 	// `.so` 传 url(构建服务已经传进私有桶);`.lua` 传内容(要内联,不落桶)。
-	Url           *string `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`
-	Content       []byte  `protobuf:"bytes,3,opt,name=content,proto3,oneof" json:"content,omitempty"`
-	Sha256        *string `protobuf:"bytes,4,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`
+	Url     *string `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`
+	Content []byte  `protobuf:"bytes,3,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	Sha256  *string `protobuf:"bytes,4,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"`
+	// 字节数。**没有它的话集合里的 size 列恒为 0** —— 从前 `.lua` 走 content
+	// 还能按内容长度算，2026-09-01 起两种 kind 都走 url，内容不再经过服务端。
+	Size          *int64 `protobuf:"varint,5,opt,name=size,proto3,oneof" json:"size,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -927,6 +930,13 @@ func (x *LuaDepBuiltFile) GetSha256() string {
 		return *x.Sha256
 	}
 	return ""
+}
+
+func (x *LuaDepBuiltFile) GetSize() int64 {
+	if x != nil && x.Size != nil {
+		return *x.Size
+	}
+	return 0
 }
 
 // 问一个 rock 还要哪些别的 rock。**只读配方,不编译。**
@@ -1195,17 +1205,19 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x03log\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x03log\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_okB\b\n" +
 	"\x06_errorB\x06\n" +
-	"\x04_log\"\xc3\x01\n" +
+	"\x04_log\"\xeb\x01\n" +
 	"\x0fLuaDepBuiltFile\x12\x1d\n" +
 	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04path\x88\x01\x01\x12\x1b\n" +
 	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x03url\x88\x01\x01\x12#\n" +
 	"\acontent\x18\x03 \x01(\fB\x04\x90\xb5\x18\x03H\x02R\acontent\x88\x01\x01\x12!\n" +
-	"\x06sha256\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x06sha256\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x06sha256\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x06sha256\x88\x01\x01\x12\x1d\n" +
+	"\x04size\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x03H\x04R\x04size\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_pathB\x06\n" +
 	"\x04_urlB\n" +
 	"\n" +
 	"\b_contentB\t\n" +
-	"\a_sha256\"`\n" +
+	"\a_sha256B\a\n" +
+	"\x05_size\"`\n" +
 	"\x11LuaDepRequiresReq\x12\x17\n" +
 	"\x04rock\x18\x01 \x01(\tH\x00R\x04rock\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01B\a\n" +

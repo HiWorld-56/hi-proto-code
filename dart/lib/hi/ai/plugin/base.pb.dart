@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
@@ -1024,12 +1025,14 @@ class LuaDepBuiltFile extends $pb.GeneratedMessage {
     $core.String? url,
     $core.List<$core.int>? content,
     $core.String? sha256,
+    $fixnum.Int64? size,
   }) {
     final result = create();
     if (path != null) result.path = path;
     if (url != null) result.url = url;
     if (content != null) result.content = content;
     if (sha256 != null) result.sha256 = sha256;
+    if (size != null) result.size = size;
     return result;
   }
 
@@ -1051,6 +1054,7 @@ class LuaDepBuiltFile extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(
         3, _omitFieldNames ? '' : 'content', $pb.PbFieldType.OY)
     ..aOS(4, _omitFieldNames ? '' : 'sha256')
+    ..aInt64(5, _omitFieldNames ? '' : 'size')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1110,6 +1114,17 @@ class LuaDepBuiltFile extends $pb.GeneratedMessage {
   $core.bool hasSha256() => $_has(3);
   @$pb.TagNumber(4)
   void clearSha256() => $_clearField(4);
+
+  /// 字节数。**没有它的话集合里的 size 列恒为 0** —— 从前 `.lua` 走 content
+  /// 还能按内容长度算，2026-09-01 起两种 kind 都走 url，内容不再经过服务端。
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get size => $_getI64(4);
+  @$pb.TagNumber(5)
+  set size($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSize() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSize() => $_clearField(5);
 }
 
 /// 问一个 rock 还要哪些别的 rock。**只读配方,不编译。**

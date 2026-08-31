@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/ninja/ipc.proto.
+// Generated from hi/ninja/ui.proto.
 
 // @dart = 3.3
 
@@ -21,11 +21,11 @@ import '../club/group.pb.dart' as $1;
 import '../club/messaging.pb.dart' as $2;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $5;
-import 'ipc.pbenum.dart';
+import 'ui.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-export 'ipc.pbenum.dart';
+export 'ui.pbenum.dart';
 
 /// 机器人初始化：自身身份 + 当前所有者
 /// master 缺省表示尚未绑定所有者

@@ -736,6 +736,9 @@ impl serde::Serialize for LuaDepBuiltFile {
         if self.sha256.is_some() {
             len += 1;
         }
+        if self.size.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.LuaDepBuiltFile", len)?;
         if let Some(v) = self.path.as_ref() {
             struct_ser.serialize_field("path", v)?;
@@ -751,6 +754,11 @@ impl serde::Serialize for LuaDepBuiltFile {
         if let Some(v) = self.sha256.as_ref() {
             struct_ser.serialize_field("sha256", v)?;
         }
+        if let Some(v) = self.size.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("size", ToString::to_string(&v).as_str())?;
+        }
         struct_ser.end()
     }
 }
@@ -765,6 +773,7 @@ impl<'de> serde::Deserialize<'de> for LuaDepBuiltFile {
             "url",
             "content",
             "sha256",
+            "size",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -773,6 +782,7 @@ impl<'de> serde::Deserialize<'de> for LuaDepBuiltFile {
             Url,
             Content,
             Sha256,
+            Size,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -798,6 +808,7 @@ impl<'de> serde::Deserialize<'de> for LuaDepBuiltFile {
                             "url" => Ok(GeneratedField::Url),
                             "content" => Ok(GeneratedField::Content),
                             "sha256" => Ok(GeneratedField::Sha256),
+                            "size" => Ok(GeneratedField::Size),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -821,6 +832,7 @@ impl<'de> serde::Deserialize<'de> for LuaDepBuiltFile {
                 let mut url__ = None;
                 let mut content__ = None;
                 let mut sha256__ = None;
+                let mut size__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Path => {
@@ -849,6 +861,14 @@ impl<'de> serde::Deserialize<'de> for LuaDepBuiltFile {
                             }
                             sha256__ = map_.next_value()?;
                         }
+                        GeneratedField::Size => {
+                            if size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("size"));
+                            }
+                            size__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(LuaDepBuiltFile {
@@ -856,6 +876,7 @@ impl<'de> serde::Deserialize<'de> for LuaDepBuiltFile {
                     url: url__,
                     content: content__,
                     sha256: sha256__,
+                    size: size__,
                 })
             }
         }

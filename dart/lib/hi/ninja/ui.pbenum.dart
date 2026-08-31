@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/ninja/ipc.proto.
+// Generated from hi/ninja/ui.proto.
 
 // @dart = 3.3
 

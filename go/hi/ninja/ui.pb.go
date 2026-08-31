@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        (unknown)
-// source: hi/ninja/ipc.proto
+// source: hi/ninja/ui.proto
 
 package ninja
 
@@ -60,11 +60,11 @@ func (x StateToggle) String() string {
 }
 
 func (StateToggle) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ipc_proto_enumTypes[0].Descriptor()
+	return file_hi_ninja_ui_proto_enumTypes[0].Descriptor()
 }
 
 func (StateToggle) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ipc_proto_enumTypes[0]
+	return &file_hi_ninja_ui_proto_enumTypes[0]
 }
 
 func (x StateToggle) Number() protoreflect.EnumNumber {
@@ -73,7 +73,7 @@ func (x StateToggle) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StateToggle.Descriptor instead.
 func (StateToggle) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{0}
 }
 
 // 机器人情绪表达
@@ -113,11 +113,11 @@ func (x Emotion) String() string {
 }
 
 func (Emotion) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ipc_proto_enumTypes[1].Descriptor()
+	return file_hi_ninja_ui_proto_enumTypes[1].Descriptor()
 }
 
 func (Emotion) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ipc_proto_enumTypes[1]
+	return &file_hi_ninja_ui_proto_enumTypes[1]
 }
 
 func (x Emotion) Number() protoreflect.EnumNumber {
@@ -126,7 +126,7 @@ func (x Emotion) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Emotion.Descriptor instead.
 func (Emotion) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{1}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{1}
 }
 
 type PluginProgress_State int32
@@ -168,11 +168,11 @@ func (x PluginProgress_State) String() string {
 }
 
 func (PluginProgress_State) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ipc_proto_enumTypes[2].Descriptor()
+	return file_hi_ninja_ui_proto_enumTypes[2].Descriptor()
 }
 
 func (PluginProgress_State) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ipc_proto_enumTypes[2]
+	return &file_hi_ninja_ui_proto_enumTypes[2]
 }
 
 func (x PluginProgress_State) Number() protoreflect.EnumNumber {
@@ -181,7 +181,7 @@ func (x PluginProgress_State) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PluginProgress_State.Descriptor instead.
 func (PluginProgress_State) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{12, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{12, 0}
 }
 
 type UpdateAction_Action int32
@@ -220,11 +220,11 @@ func (x UpdateAction_Action) String() string {
 }
 
 func (UpdateAction_Action) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ipc_proto_enumTypes[3].Descriptor()
+	return file_hi_ninja_ui_proto_enumTypes[3].Descriptor()
 }
 
 func (UpdateAction_Action) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ipc_proto_enumTypes[3]
+	return &file_hi_ninja_ui_proto_enumTypes[3]
 }
 
 func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
@@ -233,7 +233,7 @@ func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UpdateAction_Action.Descriptor instead.
 func (UpdateAction_Action) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{13, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{13, 0}
 }
 
 // 机器人初始化：自身身份 + 当前所有者
@@ -248,7 +248,7 @@ type RobotInit struct {
 
 func (x *RobotInit) Reset() {
 	*x = RobotInit{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[0]
+	mi := &file_hi_ninja_ui_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -260,7 +260,7 @@ func (x *RobotInit) String() string {
 func (*RobotInit) ProtoMessage() {}
 
 func (x *RobotInit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[0]
+	mi := &file_hi_ninja_ui_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -273,7 +273,7 @@ func (x *RobotInit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RobotInit.ProtoReflect.Descriptor instead.
 func (*RobotInit) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *RobotInit) GetRobot() *hi.Entity {
@@ -300,7 +300,7 @@ type FriendList struct {
 
 func (x *FriendList) Reset() {
 	*x = FriendList{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[1]
+	mi := &file_hi_ninja_ui_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -312,7 +312,7 @@ func (x *FriendList) String() string {
 func (*FriendList) ProtoMessage() {}
 
 func (x *FriendList) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[1]
+	mi := &file_hi_ninja_ui_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -325,7 +325,7 @@ func (x *FriendList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FriendList.ProtoReflect.Descriptor instead.
 func (*FriendList) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{1}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *FriendList) GetList() []*hi.Entity {
@@ -345,7 +345,7 @@ type GroupInfoList struct {
 
 func (x *GroupInfoList) Reset() {
 	*x = GroupInfoList{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[2]
+	mi := &file_hi_ninja_ui_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -357,7 +357,7 @@ func (x *GroupInfoList) String() string {
 func (*GroupInfoList) ProtoMessage() {}
 
 func (x *GroupInfoList) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[2]
+	mi := &file_hi_ninja_ui_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -370,7 +370,7 @@ func (x *GroupInfoList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GroupInfoList.ProtoReflect.Descriptor instead.
 func (*GroupInfoList) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{2}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GroupInfoList) GetList() []*club.GroupInfo {
@@ -399,7 +399,7 @@ type MasterEvent struct {
 
 func (x *MasterEvent) Reset() {
 	*x = MasterEvent{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[3]
+	mi := &file_hi_ninja_ui_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -411,7 +411,7 @@ func (x *MasterEvent) String() string {
 func (*MasterEvent) ProtoMessage() {}
 
 func (x *MasterEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[3]
+	mi := &file_hi_ninja_ui_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -424,7 +424,7 @@ func (x *MasterEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MasterEvent.ProtoReflect.Descriptor instead.
 func (*MasterEvent) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{3}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *MasterEvent) GetMaster() *hi.Entity {
@@ -455,7 +455,7 @@ type TextReply struct {
 
 func (x *TextReply) Reset() {
 	*x = TextReply{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[4]
+	mi := &file_hi_ninja_ui_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +467,7 @@ func (x *TextReply) String() string {
 func (*TextReply) ProtoMessage() {}
 
 func (x *TextReply) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[4]
+	mi := &file_hi_ninja_ui_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -480,7 +480,7 @@ func (x *TextReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TextReply.ProtoReflect.Descriptor instead.
 func (*TextReply) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{4}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *TextReply) GetUuid() string {
@@ -509,7 +509,7 @@ type AudioPlay struct {
 
 func (x *AudioPlay) Reset() {
 	*x = AudioPlay{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[5]
+	mi := &file_hi_ninja_ui_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -521,7 +521,7 @@ func (x *AudioPlay) String() string {
 func (*AudioPlay) ProtoMessage() {}
 
 func (x *AudioPlay) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[5]
+	mi := &file_hi_ninja_ui_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -534,7 +534,7 @@ func (x *AudioPlay) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AudioPlay.ProtoReflect.Descriptor instead.
 func (*AudioPlay) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{5}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *AudioPlay) GetUuid() string {
@@ -564,7 +564,7 @@ type BinanceSettings struct {
 
 func (x *BinanceSettings) Reset() {
 	*x = BinanceSettings{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[6]
+	mi := &file_hi_ninja_ui_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -576,7 +576,7 @@ func (x *BinanceSettings) String() string {
 func (*BinanceSettings) ProtoMessage() {}
 
 func (x *BinanceSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[6]
+	mi := &file_hi_ninja_ui_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -589,7 +589,7 @@ func (x *BinanceSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceSettings.ProtoReflect.Descriptor instead.
 func (*BinanceSettings) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{6}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *BinanceSettings) GetCredentials() *BinanceCredentials {
@@ -618,7 +618,7 @@ type BinanceCredentials struct {
 
 func (x *BinanceCredentials) Reset() {
 	*x = BinanceCredentials{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[7]
+	mi := &file_hi_ninja_ui_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -630,7 +630,7 @@ func (x *BinanceCredentials) String() string {
 func (*BinanceCredentials) ProtoMessage() {}
 
 func (x *BinanceCredentials) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[7]
+	mi := &file_hi_ninja_ui_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -643,7 +643,7 @@ func (x *BinanceCredentials) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceCredentials.ProtoReflect.Descriptor instead.
 func (*BinanceCredentials) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{7}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *BinanceCredentials) GetApiKey() string {
@@ -693,7 +693,7 @@ type BrainToFace struct {
 
 func (x *BrainToFace) Reset() {
 	*x = BrainToFace{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[8]
+	mi := &file_hi_ninja_ui_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -705,7 +705,7 @@ func (x *BrainToFace) String() string {
 func (*BrainToFace) ProtoMessage() {}
 
 func (x *BrainToFace) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[8]
+	mi := &file_hi_ninja_ui_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -718,7 +718,7 @@ func (x *BrainToFace) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BrainToFace.ProtoReflect.Descriptor instead.
 func (*BrainToFace) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{8}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BrainToFace) GetCmd() isBrainToFace_Cmd {
@@ -1071,7 +1071,7 @@ type StatusEvent struct {
 
 func (x *StatusEvent) Reset() {
 	*x = StatusEvent{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[9]
+	mi := &file_hi_ninja_ui_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1083,7 +1083,7 @@ func (x *StatusEvent) String() string {
 func (*StatusEvent) ProtoMessage() {}
 
 func (x *StatusEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[9]
+	mi := &file_hi_ninja_ui_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1096,7 +1096,7 @@ func (x *StatusEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusEvent.ProtoReflect.Descriptor instead.
 func (*StatusEvent) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{9}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *StatusEvent) GetNtp() bool {
@@ -1151,7 +1151,7 @@ type UpdateInfo struct {
 
 func (x *UpdateInfo) Reset() {
 	*x = UpdateInfo{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[10]
+	mi := &file_hi_ninja_ui_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1163,7 +1163,7 @@ func (x *UpdateInfo) String() string {
 func (*UpdateInfo) ProtoMessage() {}
 
 func (x *UpdateInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[10]
+	mi := &file_hi_ninja_ui_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1176,7 +1176,7 @@ func (x *UpdateInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateInfo.ProtoReflect.Descriptor instead.
 func (*UpdateInfo) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{10}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateInfo) GetState() string {
@@ -1271,7 +1271,7 @@ type FaceToBrain struct {
 
 func (x *FaceToBrain) Reset() {
 	*x = FaceToBrain{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[11]
+	mi := &file_hi_ninja_ui_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1283,7 +1283,7 @@ func (x *FaceToBrain) String() string {
 func (*FaceToBrain) ProtoMessage() {}
 
 func (x *FaceToBrain) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[11]
+	mi := &file_hi_ninja_ui_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1296,7 +1296,7 @@ func (x *FaceToBrain) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FaceToBrain.ProtoReflect.Descriptor instead.
 func (*FaceToBrain) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{11}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *FaceToBrain) GetCmd() isFaceToBrain_Cmd {
@@ -1381,7 +1381,7 @@ type PluginProgress struct {
 
 func (x *PluginProgress) Reset() {
 	*x = PluginProgress{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[12]
+	mi := &file_hi_ninja_ui_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1393,7 +1393,7 @@ func (x *PluginProgress) String() string {
 func (*PluginProgress) ProtoMessage() {}
 
 func (x *PluginProgress) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[12]
+	mi := &file_hi_ninja_ui_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1406,7 +1406,7 @@ func (x *PluginProgress) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginProgress.ProtoReflect.Descriptor instead.
 func (*PluginProgress) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{12}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PluginProgress) GetUuid() string {
@@ -1468,7 +1468,7 @@ type UpdateAction struct {
 
 func (x *UpdateAction) Reset() {
 	*x = UpdateAction{}
-	mi := &file_hi_ninja_ipc_proto_msgTypes[13]
+	mi := &file_hi_ninja_ui_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1480,7 +1480,7 @@ func (x *UpdateAction) String() string {
 func (*UpdateAction) ProtoMessage() {}
 
 func (x *UpdateAction) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ipc_proto_msgTypes[13]
+	mi := &file_hi_ninja_ui_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1493,7 +1493,7 @@ func (x *UpdateAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAction.ProtoReflect.Descriptor instead.
 func (*UpdateAction) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ipc_proto_rawDescGZIP(), []int{13}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *UpdateAction) GetAction() UpdateAction_Action {
@@ -1503,11 +1503,11 @@ func (x *UpdateAction) GetAction() UpdateAction_Action {
 	return UpdateAction_ACTION_UNKNOWN
 }
 
-var File_hi_ninja_ipc_proto protoreflect.FileDescriptor
+var File_hi_ninja_ui_proto protoreflect.FileDescriptor
 
-const file_hi_ninja_ipc_proto_rawDesc = "" +
+const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/ipc.proto\x12\bhi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x15hi/did/transfer.proto\"Q\n" +
+	"\x11hi/ninja/ui.proto\x12\bhi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x15hi/did/transfer.proto\"Q\n" +
 	"\tRobotInit\x12 \n" +
 	"\x05robot\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05robot\x12\"\n" +
@@ -1660,24 +1660,24 @@ const file_hi_ninja_ipc_proto_rawDesc = "" +
 	"\x0fEMOTION_UNKNOWN\x10\x00\x12\x11\n" +
 	"\rEMOTION_ANGER\x10\x01\x12\x11\n" +
 	"\rEMOTION_LAUGH\x10\x02\x12\x15\n" +
-	"\x11EMOTION_FRUSTRATE\x10\x03B\x85\x01\n" +
-	"\fcom.hi.ninjaB\bIpcProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
+	"\x11EMOTION_FRUSTRATE\x10\x03B\x84\x01\n" +
+	"\fcom.hi.ninjaB\aUiProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
 
 var (
-	file_hi_ninja_ipc_proto_rawDescOnce sync.Once
-	file_hi_ninja_ipc_proto_rawDescData []byte
+	file_hi_ninja_ui_proto_rawDescOnce sync.Once
+	file_hi_ninja_ui_proto_rawDescData []byte
 )
 
-func file_hi_ninja_ipc_proto_rawDescGZIP() []byte {
-	file_hi_ninja_ipc_proto_rawDescOnce.Do(func() {
-		file_hi_ninja_ipc_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_hi_ninja_ipc_proto_rawDesc), len(file_hi_ninja_ipc_proto_rawDesc)))
+func file_hi_ninja_ui_proto_rawDescGZIP() []byte {
+	file_hi_ninja_ui_proto_rawDescOnce.Do(func() {
+		file_hi_ninja_ui_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_hi_ninja_ui_proto_rawDesc), len(file_hi_ninja_ui_proto_rawDesc)))
 	})
-	return file_hi_ninja_ipc_proto_rawDescData
+	return file_hi_ninja_ui_proto_rawDescData
 }
 
-var file_hi_ninja_ipc_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_ninja_ipc_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
-var file_hi_ninja_ipc_proto_goTypes = []any{
+var file_hi_ninja_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_hi_ninja_ui_proto_goTypes = []any{
 	(StateToggle)(0),           // 0: hi.ninja.StateToggle
 	(Emotion)(0),               // 1: hi.ninja.Emotion
 	(PluginProgress_State)(0),  // 2: hi.ninja.PluginProgress.State
@@ -1703,7 +1703,7 @@ var file_hi_ninja_ipc_proto_goTypes = []any{
 	(*ai.PluginView)(nil),      // 22: hi.ai.PluginView
 	(*did.Transaction)(nil),    // 23: hi.did.Transaction
 }
-var file_hi_ninja_ipc_proto_depIdxs = []int32{
+var file_hi_ninja_ui_proto_depIdxs = []int32{
 	18, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
 	18, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
 	18, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
@@ -1743,17 +1743,17 @@ var file_hi_ninja_ipc_proto_depIdxs = []int32{
 	0,  // [0:32] is the sub-list for field type_name
 }
 
-func init() { file_hi_ninja_ipc_proto_init() }
-func file_hi_ninja_ipc_proto_init() {
-	if File_hi_ninja_ipc_proto != nil {
+func init() { file_hi_ninja_ui_proto_init() }
+func file_hi_ninja_ui_proto_init() {
+	if File_hi_ninja_ui_proto != nil {
 		return
 	}
-	file_hi_ninja_ipc_proto_msgTypes[3].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[4].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[5].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[6].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[7].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[8].OneofWrappers = []any{
+	file_hi_ninja_ui_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[8].OneofWrappers = []any{
 		(*BrainToFace_InitRobot)(nil),
 		(*BrainToFace_ShowListen)(nil),
 		(*BrainToFace_ShowEmotion)(nil),
@@ -1776,31 +1776,31 @@ func file_hi_ninja_ipc_proto_init() {
 		(*BrainToFace_EventUpdate)(nil),
 		(*BrainToFace_EventBinanceSettings)(nil),
 	}
-	file_hi_ninja_ipc_proto_msgTypes[9].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[10].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[11].OneofWrappers = []any{
+	file_hi_ninja_ui_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[11].OneofWrappers = []any{
 		(*FaceToBrain_VoiceState)(nil),
 		(*FaceToBrain_UpdateAction)(nil),
 		(*FaceToBrain_GetBinanceSettings)(nil),
 	}
-	file_hi_ninja_ipc_proto_msgTypes[12].OneofWrappers = []any{}
-	file_hi_ninja_ipc_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ipc_proto_rawDesc), len(file_hi_ninja_ipc_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ui_proto_rawDesc), len(file_hi_ninja_ui_proto_rawDesc)),
 			NumEnums:      4,
 			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_hi_ninja_ipc_proto_goTypes,
-		DependencyIndexes: file_hi_ninja_ipc_proto_depIdxs,
-		EnumInfos:         file_hi_ninja_ipc_proto_enumTypes,
-		MessageInfos:      file_hi_ninja_ipc_proto_msgTypes,
+		GoTypes:           file_hi_ninja_ui_proto_goTypes,
+		DependencyIndexes: file_hi_ninja_ui_proto_depIdxs,
+		EnumInfos:         file_hi_ninja_ui_proto_enumTypes,
+		MessageInfos:      file_hi_ninja_ui_proto_msgTypes,
 	}.Build()
-	File_hi_ninja_ipc_proto = out.File
-	file_hi_ninja_ipc_proto_goTypes = nil
-	file_hi_ninja_ipc_proto_depIdxs = nil
+	File_hi_ninja_ui_proto = out.File
+	file_hi_ninja_ui_proto_goTypes = nil
+	file_hi_ninja_ui_proto_depIdxs = nil
 }

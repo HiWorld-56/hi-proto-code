@@ -528,6 +528,16 @@ const LuaDepBuiltFile$json = {
       '10': 'sha256',
       '17': true
     },
+    {
+      '1': 'size',
+      '3': 5,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 4,
+      '10': 'size',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -535,6 +545,7 @@ const LuaDepBuiltFile$json = {
     {'1': '_url'},
     {'1': '_content'},
     {'1': '_sha256'},
+    {'1': '_size'},
   ],
 };
 
@@ -542,8 +553,9 @@ const LuaDepBuiltFile$json = {
 final $typed_data.Uint8List luaDepBuiltFileDescriptor = $convert.base64Decode(
     'Cg9MdWFEZXBCdWlsdEZpbGUSHQoEcGF0aBgBIAEoCUIEkLUYA0gAUgRwYXRoiAEBEhsKA3VybB'
     'gCIAEoCUIEkLUYA0gBUgN1cmyIAQESIwoHY29udGVudBgDIAEoDEIEkLUYA0gCUgdjb250ZW50'
-    'iAEBEiEKBnNoYTI1NhgEIAEoCUIEkLUYA0gDUgZzaGEyNTaIAQE6BJi1GANCBwoFX3BhdGhCBg'
-    'oEX3VybEIKCghfY29udGVudEIJCgdfc2hhMjU2');
+    'iAEBEiEKBnNoYTI1NhgEIAEoCUIEkLUYA0gDUgZzaGEyNTaIAQESHQoEc2l6ZRgFIAEoA0IEkL'
+    'UYA0gEUgRzaXpliAEBOgSYtRgDQgcKBV9wYXRoQgYKBF91cmxCCgoIX2NvbnRlbnRCCQoHX3No'
+    'YTI1NkIHCgVfc2l6ZQ==');
 
 @$core.Deprecated('Use luaDepRequiresReqDescriptor instead')
 const LuaDepRequiresReq$json = {
