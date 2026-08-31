@@ -1112,6 +1112,221 @@ class LuaDepBuiltFile extends $pb.GeneratedMessage {
   void clearSha256() => $_clearField(4);
 }
 
+/// 问一个 rock 还要哪些别的 rock。**只读配方,不编译。**
+///
+/// 🔴 **传递依赖由后台求闭包,不让作者写。** lua-http 压着 cqueues / luaossl /
+/// lpeg / lpeg_patterns / basexx / fifo / binaryheap 七个 —— 让作者把它们逐个抄进
+/// dependencies.txt,等于把"这个库依赖什么"这件**配方里已经写死的事实**要他再抄一遍,
+/// 抄错了还没人拦得住(少一个的表现是运行期 require 不到,而错只在机器人本地日志里)。
+///
+/// 为什么单独一个 rpc 而不是从 BuildLuaDep 顺带回:**集合里已经建过的不会再走构建**,
+/// 那条路上问不到它的依赖。而依赖关系是配方里的事实,读一下就有,不必编译。
+class LuaDepRequiresReq extends $pb.GeneratedMessage {
+  factory LuaDepRequiresReq({
+    $core.String? rock,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (rock != null) result.rock = rock;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  LuaDepRequiresReq._();
+
+  factory LuaDepRequiresReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaDepRequiresReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaDepRequiresReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'rock')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepRequiresReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepRequiresReq copyWith(void Function(LuaDepRequiresReq) updates) =>
+      super.copyWith((message) => updates(message as LuaDepRequiresReq))
+          as LuaDepRequiresReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaDepRequiresReq create() => LuaDepRequiresReq._();
+  @$core.override
+  LuaDepRequiresReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaDepRequiresReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LuaDepRequiresReq>(create);
+  static LuaDepRequiresReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get rock => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set rock($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRock() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRock() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+}
+
+class LuaDepRequiresResp extends $pb.GeneratedMessage {
+  factory LuaDepRequiresResp({
+    $core.bool? ok,
+    $core.Iterable<LuaDepRef>? requires,
+    $core.String? error,
+  }) {
+    final result = create();
+    if (ok != null) result.ok = ok;
+    if (requires != null) result.requires.addAll(requires);
+    if (error != null) result.error = error;
+    return result;
+  }
+
+  LuaDepRequiresResp._();
+
+  factory LuaDepRequiresResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaDepRequiresResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaDepRequiresResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'ok')
+    ..pPM<LuaDepRef>(2, _omitFieldNames ? '' : 'requires',
+        subBuilder: LuaDepRef.create)
+    ..aOS(3, _omitFieldNames ? '' : 'error')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepRequiresResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepRequiresResp copyWith(void Function(LuaDepRequiresResp) updates) =>
+      super.copyWith((message) => updates(message as LuaDepRequiresResp))
+          as LuaDepRequiresResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaDepRequiresResp create() => LuaDepRequiresResp._();
+  @$core.override
+  LuaDepRequiresResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaDepRequiresResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LuaDepRequiresResp>(create);
+  static LuaDepRequiresResp? _defaultInstance;
+
+  /// 配方在不在(= 在不在白名单里)。**不在时不是错误** —— 调用方要据此报
+  /// "它不在白名单里",而不是报一个 rpc 失败。
+  @$pb.TagNumber(1)
+  $core.bool get ok => $_getBF(0);
+  @$pb.TagNumber(1)
+  set ok($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOk() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOk() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<LuaDepRef> get requires => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $core.String get error => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set error($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasError() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearError() => $_clearField(3);
+}
+
+class LuaDepRef extends $pb.GeneratedMessage {
+  factory LuaDepRef({
+    $core.String? rock,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (rock != null) result.rock = rock;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  LuaDepRef._();
+
+  factory LuaDepRef.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaDepRef.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaDepRef',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'rock')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepRef clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepRef copyWith(void Function(LuaDepRef) updates) =>
+      super.copyWith((message) => updates(message as LuaDepRef)) as LuaDepRef;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaDepRef create() => LuaDepRef._();
+  @$core.override
+  LuaDepRef createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaDepRef getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LuaDepRef>(create);
+  static LuaDepRef? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get rock => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set rock($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRock() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRock() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

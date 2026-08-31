@@ -141,6 +141,11 @@ class BuilderStub(object):
                 request_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildReq.SerializeToString,
                 response_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildResp.FromString,
                 _registered_method=True)
+        self.LuaDepRequires = channel.unary_unary(
+                '/hi.ai.plugin.Builder/LuaDepRequires',
+                request_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.LuaDepRequiresReq.SerializeToString,
+                response_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.LuaDepRequiresResp.FromString,
+                _registered_method=True)
         self.BuildLuaDep = channel.unary_unary(
                 '/hi.ai.plugin.Builder/BuildLuaDep',
                 request_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildLuaDepReq.SerializeToString,
@@ -158,6 +163,13 @@ class BuilderServicer(object):
 
     def Build(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LuaDepRequires(self, request, context):
+        """读配方问依赖,不编译。见 LuaDepRequiresReq。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -185,6 +197,11 @@ def add_BuilderServicer_to_server(servicer, server):
                     servicer.Build,
                     request_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildReq.FromString,
                     response_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.BuildResp.SerializeToString,
+            ),
+            'LuaDepRequires': grpc.unary_unary_rpc_method_handler(
+                    servicer.LuaDepRequires,
+                    request_deserializer=hi_dot_ai_dot_plugin_dot_base__pb2.LuaDepRequiresReq.FromString,
+                    response_serializer=hi_dot_ai_dot_plugin_dot_base__pb2.LuaDepRequiresResp.SerializeToString,
             ),
             'BuildLuaDep': grpc.unary_unary_rpc_method_handler(
                     servicer.BuildLuaDep,
@@ -224,6 +241,33 @@ class Builder(object):
             '/hi.ai.plugin.Builder/Build',
             hi_dot_ai_dot_plugin_dot_base__pb2.BuildReq.SerializeToString,
             hi_dot_ai_dot_plugin_dot_base__pb2.BuildResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LuaDepRequires(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.ai.plugin.Builder/LuaDepRequires',
+            hi_dot_ai_dot_plugin_dot_base__pb2.LuaDepRequiresReq.SerializeToString,
+            hi_dot_ai_dot_plugin_dot_base__pb2.LuaDepRequiresResp.FromString,
             options,
             channel_credentials,
             insecure,

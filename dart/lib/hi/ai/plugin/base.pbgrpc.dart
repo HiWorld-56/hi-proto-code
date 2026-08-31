@@ -117,6 +117,14 @@ class BuilderClient extends $grpc.Client {
     return $createUnaryCall(_$build, request, options: options);
   }
 
+  /// 读配方问依赖,不编译。见 LuaDepRequiresReq。
+  $grpc.ResponseFuture<$0.LuaDepRequiresResp> luaDepRequires(
+    $0.LuaDepRequiresReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$luaDepRequires, request, options: options);
+  }
+
   /// 建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——
   /// 编译成本因此不随插件数量增长。
   $grpc.ResponseFuture<$0.BuildLuaDepResp> buildLuaDep(
@@ -141,6 +149,11 @@ class BuilderClient extends $grpc.Client {
       '/hi.ai.plugin.Builder/Build',
       ($0.BuildReq value) => value.writeToBuffer(),
       $0.BuildResp.fromBuffer);
+  static final _$luaDepRequires =
+      $grpc.ClientMethod<$0.LuaDepRequiresReq, $0.LuaDepRequiresResp>(
+          '/hi.ai.plugin.Builder/LuaDepRequires',
+          ($0.LuaDepRequiresReq value) => value.writeToBuffer(),
+          $0.LuaDepRequiresResp.fromBuffer);
   static final _$buildLuaDep =
       $grpc.ClientMethod<$0.BuildLuaDepReq, $0.BuildLuaDepResp>(
           '/hi.ai.plugin.Builder/BuildLuaDep',
@@ -165,6 +178,13 @@ abstract class BuilderServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.BuildReq.fromBuffer(value),
         ($0.BuildResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.LuaDepRequiresReq, $0.LuaDepRequiresResp>(
+        'LuaDepRequires',
+        luaDepRequires_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.LuaDepRequiresReq.fromBuffer(value),
+        ($0.LuaDepRequiresResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.BuildLuaDepReq, $0.BuildLuaDepResp>(
         'BuildLuaDep',
         buildLuaDep_Pre,
@@ -188,6 +208,15 @@ abstract class BuilderServiceBase extends $grpc.Service {
 
   $async.Future<$0.BuildResp> build(
       $grpc.ServiceCall call, $0.BuildReq request);
+
+  $async.Future<$0.LuaDepRequiresResp> luaDepRequires_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.LuaDepRequiresReq> $request) async {
+    return luaDepRequires($call, await $request);
+  }
+
+  $async.Future<$0.LuaDepRequiresResp> luaDepRequires(
+      $grpc.ServiceCall call, $0.LuaDepRequiresReq request);
 
   $async.Future<$0.BuildLuaDepResp> buildLuaDep_Pre($grpc.ServiceCall $call,
       $async.Future<$0.BuildLuaDepReq> $request) async {

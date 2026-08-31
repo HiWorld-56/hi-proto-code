@@ -929,6 +929,181 @@ func (x *LuaDepBuiltFile) GetSha256() string {
 	return ""
 }
 
+// 问一个 rock 还要哪些别的 rock。**只读配方,不编译。**
+//
+// 🔴 **传递依赖由后台求闭包,不让作者写。** lua-http 压着 cqueues / luaossl /
+// lpeg / lpeg_patterns / basexx / fifo / binaryheap 七个 —— 让作者把它们逐个抄进
+// dependencies.txt,等于把"这个库依赖什么"这件**配方里已经写死的事实**要他再抄一遍,
+// 抄错了还没人拦得住(少一个的表现是运行期 require 不到,而错只在机器人本地日志里)。
+//
+// 为什么单独一个 rpc 而不是从 BuildLuaDep 顺带回:**集合里已经建过的不会再走构建**,
+// 那条路上问不到它的依赖。而依赖关系是配方里的事实,读一下就有,不必编译。
+type LuaDepRequiresReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rock          *string                `protobuf:"bytes,1,opt,name=rock,proto3,oneof" json:"rock,omitempty"`
+	Version       *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LuaDepRequiresReq) Reset() {
+	*x = LuaDepRequiresReq{}
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LuaDepRequiresReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LuaDepRequiresReq) ProtoMessage() {}
+
+func (x *LuaDepRequiresReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LuaDepRequiresReq.ProtoReflect.Descriptor instead.
+func (*LuaDepRequiresReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *LuaDepRequiresReq) GetRock() string {
+	if x != nil && x.Rock != nil {
+		return *x.Rock
+	}
+	return ""
+}
+
+func (x *LuaDepRequiresReq) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
+type LuaDepRequiresResp struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 配方在不在(= 在不在白名单里)。**不在时不是错误** —— 调用方要据此报
+	// "它不在白名单里",而不是报一个 rpc 失败。
+	Ok            *bool        `protobuf:"varint,1,opt,name=ok,proto3,oneof" json:"ok,omitempty"`
+	Requires      []*LuaDepRef `protobuf:"bytes,2,rep,name=requires,proto3" json:"requires,omitempty"`
+	Error         *string      `protobuf:"bytes,3,opt,name=error,proto3,oneof" json:"error,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LuaDepRequiresResp) Reset() {
+	*x = LuaDepRequiresResp{}
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LuaDepRequiresResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LuaDepRequiresResp) ProtoMessage() {}
+
+func (x *LuaDepRequiresResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LuaDepRequiresResp.ProtoReflect.Descriptor instead.
+func (*LuaDepRequiresResp) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *LuaDepRequiresResp) GetOk() bool {
+	if x != nil && x.Ok != nil {
+		return *x.Ok
+	}
+	return false
+}
+
+func (x *LuaDepRequiresResp) GetRequires() []*LuaDepRef {
+	if x != nil {
+		return x.Requires
+	}
+	return nil
+}
+
+func (x *LuaDepRequiresResp) GetError() string {
+	if x != nil && x.Error != nil {
+		return *x.Error
+	}
+	return ""
+}
+
+type LuaDepRef struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rock          *string                `protobuf:"bytes,1,opt,name=rock,proto3,oneof" json:"rock,omitempty"`
+	Version       *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"` // 钉死,不给范围
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LuaDepRef) Reset() {
+	*x = LuaDepRef{}
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LuaDepRef) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LuaDepRef) ProtoMessage() {}
+
+func (x *LuaDepRef) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_base_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LuaDepRef.ProtoReflect.Descriptor instead.
+func (*LuaDepRef) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_base_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *LuaDepRef) GetRock() string {
+	if x != nil && x.Rock != nil {
+		return *x.Rock
+	}
+	return ""
+}
+
+func (x *LuaDepRef) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
 var File_hi_ai_plugin_base_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_base_proto_rawDesc = "" +
@@ -1030,12 +1205,31 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x04_urlB\n" +
 	"\n" +
 	"\b_contentB\t\n" +
-	"\a_sha2562\x87\x01\n" +
+	"\a_sha256\"`\n" +
+	"\x11LuaDepRequiresReq\x12\x17\n" +
+	"\x04rock\x18\x01 \x01(\tH\x00R\x04rock\x88\x01\x01\x12\x1d\n" +
+	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01B\a\n" +
+	"\x05_rockB\n" +
+	"\n" +
+	"\b_version\"\xa2\x01\n" +
+	"\x12LuaDepRequiresResp\x12\x19\n" +
+	"\x02ok\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x02ok\x88\x01\x01\x129\n" +
+	"\brequires\x18\x02 \x03(\v2\x17.hi.ai.plugin.LuaDepRefB\x04\x90\xb5\x18\x03R\brequires\x12\x1f\n" +
+	"\x05error\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05error\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_okB\b\n" +
+	"\x06_error\"j\n" +
+	"\tLuaDepRef\x12\x1d\n" +
+	"\x04rock\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04rock\x88\x01\x01\x12#\n" +
+	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aversion\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_rockB\n" +
+	"\n" +
+	"\b_version2\x87\x01\n" +
 	"\x06Runner\x129\n" +
 	"\x03Run\x12\x14.hi.ai.plugin.RunReq\x1a\x15.hi.ai.plugin.RunResp\"\x05\x8a\xb5\x18\x01\x06\x12B\n" +
-	"\aCleanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x062\xea\x01\n" +
+	"\aCleanup\x12\x18.hi.ai.plugin.CleanupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x062\xc6\x02\n" +
 	"\aBuilder\x12?\n" +
-	"\x05Build\x12\x16.hi.ai.plugin.BuildReq\x1a\x17.hi.ai.plugin.BuildResp\"\x05\x8a\xb5\x18\x01\x06\x12Q\n" +
+	"\x05Build\x12\x16.hi.ai.plugin.BuildReq\x1a\x17.hi.ai.plugin.BuildResp\"\x05\x8a\xb5\x18\x01\x06\x12Z\n" +
+	"\x0eLuaDepRequires\x12\x1f.hi.ai.plugin.LuaDepRequiresReq\x1a .hi.ai.plugin.LuaDepRequiresResp\"\x05\x8a\xb5\x18\x01\x06\x12Q\n" +
 	"\vBuildLuaDep\x12\x1c.hi.ai.plugin.BuildLuaDepReq\x1a\x1d.hi.ai.plugin.BuildLuaDepResp\"\x05\x8a\xb5\x18\x01\x06\x12K\n" +
 	"\tVerifyLua\x12\x1a.hi.ai.plugin.VerifyLuaReq\x1a\x1b.hi.ai.plugin.VerifyLuaResp\"\x05\x8a\xb5\x18\x01\x06B\x9f\x01\n" +
 	"\x10com.hi.ai.pluginB\tBaseProtoP\x01Z.github.com/HiWorld-56/hi-proto/go/hi/ai/plugin\xa2\x02\x03HAP\xaa\x02\fHi.Ai.Plugin\xca\x02\fHi\\Ai\\Plugin\xe2\x02\x18Hi\\Ai\\Plugin\\GPBMetadata\xea\x02\x0eHi::Ai::Pluginb\x06proto3"
@@ -1052,46 +1246,52 @@ func file_hi_ai_plugin_base_proto_rawDescGZIP() []byte {
 	return file_hi_ai_plugin_base_proto_rawDescData
 }
 
-var file_hi_ai_plugin_base_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_ai_plugin_base_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_hi_ai_plugin_base_proto_goTypes = []any{
-	(*PluginAnnex)(nil),     // 0: hi.ai.plugin.PluginAnnex
-	(*RunReq)(nil),          // 1: hi.ai.plugin.RunReq
-	(*RunResp)(nil),         // 2: hi.ai.plugin.RunResp
-	(*CleanupReq)(nil),      // 3: hi.ai.plugin.CleanupReq
-	(*BuildReq)(nil),        // 4: hi.ai.plugin.BuildReq
-	(*BuildResp)(nil),       // 5: hi.ai.plugin.BuildResp
-	(*VerifyLuaReq)(nil),    // 6: hi.ai.plugin.VerifyLuaReq
-	(*VerifyLuaResp)(nil),   // 7: hi.ai.plugin.VerifyLuaResp
-	(*BuildLuaDepReq)(nil),  // 8: hi.ai.plugin.BuildLuaDepReq
-	(*BuildLuaDepResp)(nil), // 9: hi.ai.plugin.BuildLuaDepResp
-	(*LuaDepBuiltFile)(nil), // 10: hi.ai.plugin.LuaDepBuiltFile
-	(*structpb.Struct)(nil), // 11: google.protobuf.Struct
-	(*ai.Content)(nil),      // 12: hi.ai.Content
-	(*ai.LuaDep)(nil),       // 13: hi.ai.LuaDep
-	(*emptypb.Empty)(nil),   // 14: google.protobuf.Empty
+	(*PluginAnnex)(nil),        // 0: hi.ai.plugin.PluginAnnex
+	(*RunReq)(nil),             // 1: hi.ai.plugin.RunReq
+	(*RunResp)(nil),            // 2: hi.ai.plugin.RunResp
+	(*CleanupReq)(nil),         // 3: hi.ai.plugin.CleanupReq
+	(*BuildReq)(nil),           // 4: hi.ai.plugin.BuildReq
+	(*BuildResp)(nil),          // 5: hi.ai.plugin.BuildResp
+	(*VerifyLuaReq)(nil),       // 6: hi.ai.plugin.VerifyLuaReq
+	(*VerifyLuaResp)(nil),      // 7: hi.ai.plugin.VerifyLuaResp
+	(*BuildLuaDepReq)(nil),     // 8: hi.ai.plugin.BuildLuaDepReq
+	(*BuildLuaDepResp)(nil),    // 9: hi.ai.plugin.BuildLuaDepResp
+	(*LuaDepBuiltFile)(nil),    // 10: hi.ai.plugin.LuaDepBuiltFile
+	(*LuaDepRequiresReq)(nil),  // 11: hi.ai.plugin.LuaDepRequiresReq
+	(*LuaDepRequiresResp)(nil), // 12: hi.ai.plugin.LuaDepRequiresResp
+	(*LuaDepRef)(nil),          // 13: hi.ai.plugin.LuaDepRef
+	(*structpb.Struct)(nil),    // 14: google.protobuf.Struct
+	(*ai.Content)(nil),         // 15: hi.ai.Content
+	(*ai.LuaDep)(nil),          // 16: hi.ai.LuaDep
+	(*emptypb.Empty)(nil),      // 17: google.protobuf.Empty
 }
 var file_hi_ai_plugin_base_proto_depIdxs = []int32{
-	11, // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
+	14, // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
 	0,  // 1: hi.ai.plugin.RunReq.annex:type_name -> hi.ai.plugin.PluginAnnex
-	12, // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
-	13, // 3: hi.ai.plugin.VerifyLuaReq.deps:type_name -> hi.ai.LuaDep
+	15, // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
+	16, // 3: hi.ai.plugin.VerifyLuaReq.deps:type_name -> hi.ai.LuaDep
 	10, // 4: hi.ai.plugin.BuildLuaDepResp.so_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
 	10, // 5: hi.ai.plugin.BuildLuaDepResp.lua_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
-	1,  // 6: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
-	3,  // 7: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
-	4,  // 8: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
-	8,  // 9: hi.ai.plugin.Builder.BuildLuaDep:input_type -> hi.ai.plugin.BuildLuaDepReq
-	6,  // 10: hi.ai.plugin.Builder.VerifyLua:input_type -> hi.ai.plugin.VerifyLuaReq
-	2,  // 11: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
-	14, // 12: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
-	5,  // 13: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
-	9,  // 14: hi.ai.plugin.Builder.BuildLuaDep:output_type -> hi.ai.plugin.BuildLuaDepResp
-	7,  // 15: hi.ai.plugin.Builder.VerifyLua:output_type -> hi.ai.plugin.VerifyLuaResp
-	11, // [11:16] is the sub-list for method output_type
-	6,  // [6:11] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	13, // 6: hi.ai.plugin.LuaDepRequiresResp.requires:type_name -> hi.ai.plugin.LuaDepRef
+	1,  // 7: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
+	3,  // 8: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
+	4,  // 9: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
+	11, // 10: hi.ai.plugin.Builder.LuaDepRequires:input_type -> hi.ai.plugin.LuaDepRequiresReq
+	8,  // 11: hi.ai.plugin.Builder.BuildLuaDep:input_type -> hi.ai.plugin.BuildLuaDepReq
+	6,  // 12: hi.ai.plugin.Builder.VerifyLua:input_type -> hi.ai.plugin.VerifyLuaReq
+	2,  // 13: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
+	17, // 14: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
+	5,  // 15: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
+	12, // 16: hi.ai.plugin.Builder.LuaDepRequires:output_type -> hi.ai.plugin.LuaDepRequiresResp
+	9,  // 17: hi.ai.plugin.Builder.BuildLuaDep:output_type -> hi.ai.plugin.BuildLuaDepResp
+	7,  // 18: hi.ai.plugin.Builder.VerifyLua:output_type -> hi.ai.plugin.VerifyLuaResp
+	13, // [13:19] is the sub-list for method output_type
+	7,  // [7:13] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_base_proto_init() }
@@ -1108,13 +1308,16 @@ func file_hi_ai_plugin_base_proto_init() {
 	file_hi_ai_plugin_base_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_ai_plugin_base_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_ai_plugin_base_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ai_plugin_base_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_plugin_base_proto_rawDesc), len(file_hi_ai_plugin_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

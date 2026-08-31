@@ -277,6 +277,41 @@ pub struct LuaDepBuiltFile {
     #[prost(string, optional, tag = "4")]
     pub sha256: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 问一个 rock 还要哪些别的 rock。**只读配方,不编译。**
+///
+/// 🔴 **传递依赖由后台求闭包,不让作者写。** lua-http 压着 cqueues / luaossl /
+/// lpeg / lpeg_patterns / basexx / fifo / binaryheap 七个 —— 让作者把它们逐个抄进
+/// dependencies.txt,等于把"这个库依赖什么"这件**配方里已经写死的事实**要他再抄一遍,
+/// 抄错了还没人拦得住(少一个的表现是运行期 require 不到,而错只在机器人本地日志里)。
+///
+/// 为什么单独一个 rpc 而不是从 BuildLuaDep 顺带回:**集合里已经建过的不会再走构建**,
+/// 那条路上问不到它的依赖。而依赖关系是配方里的事实,读一下就有,不必编译。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaDepRequiresReq {
+    #[prost(string, optional, tag = "1")]
+    pub rock: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LuaDepRequiresResp {
+    /// 配方在不在(= 在不在白名单里)。**不在时不是错误** —— 调用方要据此报
+    /// "它不在白名单里",而不是报一个 rpc 失败。
+    #[prost(bool, optional, tag = "1")]
+    pub ok: ::core::option::Option<bool>,
+    #[prost(message, repeated, tag = "2")]
+    pub requires: ::prost::alloc::vec::Vec<LuaDepRef>,
+    #[prost(string, optional, tag = "3")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaDepRef {
+    #[prost(string, optional, tag = "1")]
+    pub rock: ::core::option::Option<::prost::alloc::string::String>,
+    /// 钉死,不给范围
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// Generated client implementations.
 pub mod runner_client {
     #![allow(
@@ -521,6 +556,31 @@ pub mod builder_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.ai.plugin.Builder", "Build"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 读配方问依赖,不编译。见 LuaDepRequiresReq。
+        pub async fn lua_dep_requires(
+            &mut self,
+            request: impl tonic::IntoRequest<super::LuaDepRequiresReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::LuaDepRequiresResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.plugin.Builder/LuaDepRequires",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.plugin.Builder", "LuaDepRequires"));
             self.inner.unary(req, path, codec).await
         }
         /// 建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——

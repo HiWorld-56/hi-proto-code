@@ -190,9 +190,10 @@ var Runner_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Builder_Build_FullMethodName       = "/hi.ai.plugin.Builder/Build"
-	Builder_BuildLuaDep_FullMethodName = "/hi.ai.plugin.Builder/BuildLuaDep"
-	Builder_VerifyLua_FullMethodName   = "/hi.ai.plugin.Builder/VerifyLua"
+	Builder_Build_FullMethodName          = "/hi.ai.plugin.Builder/Build"
+	Builder_LuaDepRequires_FullMethodName = "/hi.ai.plugin.Builder/LuaDepRequires"
+	Builder_BuildLuaDep_FullMethodName    = "/hi.ai.plugin.Builder/BuildLuaDep"
+	Builder_VerifyLua_FullMethodName      = "/hi.ai.plugin.Builder/VerifyLua"
 )
 
 // BuilderClient is the client API for Builder service.
@@ -200,6 +201,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BuilderClient interface {
 	Build(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildResp, error)
+	// 读配方问依赖,不编译。见 LuaDepRequiresReq。
+	LuaDepRequires(ctx context.Context, in *LuaDepRequiresReq, opts ...grpc.CallOption) (*LuaDepRequiresResp, error)
 	// 建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——
 	// 编译成本因此不随插件数量增长。
 	BuildLuaDep(ctx context.Context, in *BuildLuaDepReq, opts ...grpc.CallOption) (*BuildLuaDepResp, error)
@@ -220,6 +223,16 @@ func (c *builderClient) Build(ctx context.Context, in *BuildReq, opts ...grpc.Ca
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BuildResp)
 	err := c.cc.Invoke(ctx, Builder_Build_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *builderClient) LuaDepRequires(ctx context.Context, in *LuaDepRequiresReq, opts ...grpc.CallOption) (*LuaDepRequiresResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LuaDepRequiresResp)
+	err := c.cc.Invoke(ctx, Builder_LuaDepRequires_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -251,6 +264,8 @@ func (c *builderClient) VerifyLua(ctx context.Context, in *VerifyLuaReq, opts ..
 // for forward compatibility.
 type BuilderServer interface {
 	Build(context.Context, *BuildReq) (*BuildResp, error)
+	// 读配方问依赖,不编译。见 LuaDepRequiresReq。
+	LuaDepRequires(context.Context, *LuaDepRequiresReq) (*LuaDepRequiresResp, error)
 	// 建一个 C 模块依赖。**同一个 (rock, 版本, target) 只建一次**,之后所有插件复用 ——
 	// 编译成本因此不随插件数量增长。
 	BuildLuaDep(context.Context, *BuildLuaDepReq) (*BuildLuaDepResp, error)
@@ -268,6 +283,9 @@ type UnimplementedBuilderServer struct{}
 
 func (UnimplementedBuilderServer) Build(context.Context, *BuildReq) (*BuildResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Build not implemented")
+}
+func (UnimplementedBuilderServer) LuaDepRequires(context.Context, *LuaDepRequiresReq) (*LuaDepRequiresResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method LuaDepRequires not implemented")
 }
 func (UnimplementedBuilderServer) BuildLuaDep(context.Context, *BuildLuaDepReq) (*BuildLuaDepResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method BuildLuaDep not implemented")
@@ -309,6 +327,24 @@ func _Builder_Build_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BuilderServer).Build(ctx, req.(*BuildReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Builder_LuaDepRequires_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LuaDepRequiresReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BuilderServer).LuaDepRequires(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Builder_LuaDepRequires_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BuilderServer).LuaDepRequires(ctx, req.(*LuaDepRequiresReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -359,6 +395,10 @@ var Builder_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Build",
 			Handler:    _Builder_Build_Handler,
+		},
+		{
+			MethodName: "LuaDepRequires",
+			Handler:    _Builder_LuaDepRequires_Handler,
 		},
 		{
 			MethodName: "BuildLuaDep",
