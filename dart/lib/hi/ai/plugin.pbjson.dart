@@ -1675,6 +1675,15 @@ const DevicePlugin$json = {
       '10': 'lang',
       '17': true
     },
+    {
+      '1': 'deps',
+      '3': 10,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.LuaDep',
+      '8': {},
+      '10': 'deps'
+    },
   ],
   '7': {},
   '8': [
@@ -1698,9 +1707,105 @@ final $typed_data.Uint8List devicePluginDescriptor = $convert.base64Decode(
     'IEkLUYA0gEUgN1cmyIAQESIQoGc2hhMjU2GAYgASgJQgSQtRgDSAVSBnNoYTI1NogBARIqCgth'
     'YmlfdmVyc2lvbhgHIAEoDUIEkLUYA0gGUgphYmlWZXJzaW9uiAEBEiEKBnRhcmdldBgIIAEoCU'
     'IEkLUYA0gHUgZ0YXJnZXSIAQESMAoEbGFuZxgJIAEoDjIRLmhpLmFpLlBsdWdpbkxhbmdCBJC1'
-    'GANICFIEbGFuZ4gBAToEmLUYA0IHCgVfdXVpZEIHCgVfbmFtZUIKCghfdmVyc2lvbkIMCgpfZm'
-    '5fcHJlZml4QgYKBF91cmxCCQoHX3NoYTI1NkIOCgxfYWJpX3ZlcnNpb25CCQoHX3RhcmdldEIH'
-    'CgVfbGFuZw==');
+    'GANICFIEbGFuZ4gBARInCgRkZXBzGAogAygLMg0uaGkuYWkuTHVhRGVwQgSQtRgDUgRkZXBzOg'
+    'SYtRgDQgcKBV91dWlkQgcKBV9uYW1lQgoKCF92ZXJzaW9uQgwKCl9mbl9wcmVmaXhCBgoEX3Vy'
+    'bEIJCgdfc2hhMjU2Qg4KDF9hYmlfdmVyc2lvbkIJCgdfdGFyZ2V0QgcKBV9sYW5n');
+
+@$core.Deprecated('Use luaDepDescriptor instead')
+const LuaDep$json = {
+  '1': 'LuaDep',
+  '2': [
+    {
+      '1': 'rock',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'rock',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'files',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.LuaDepFile',
+      '8': {},
+      '10': 'files'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_rock'},
+    {'1': '_version'},
+  ],
+};
+
+/// Descriptor for `LuaDep`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List luaDepDescriptor = $convert.base64Decode(
+    'CgZMdWFEZXASHQoEcm9jaxgBIAEoCUIEkLUYA0gAUgRyb2NriAEBEiMKB3ZlcnNpb24YAiABKA'
+    'lCBJC1GANIAVIHdmVyc2lvbogBARItCgVmaWxlcxgDIAMoCzIRLmhpLmFpLkx1YURlcEZpbGVC'
+    'BJC1GANSBWZpbGVzOgSYtRgDQgcKBV9yb2NrQgoKCF92ZXJzaW9u');
+
+@$core.Deprecated('Use luaDepFileDescriptor instead')
+const LuaDepFile$json = {
+  '1': 'LuaDepFile',
+  '2': [
+    {
+      '1': 'path',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'path',
+      '17': true
+    },
+    {
+      '1': 'url',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'url',
+      '17': true
+    },
+    {
+      '1': 'sha256',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'sha256',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_path'},
+    {'1': '_url'},
+    {'1': '_sha256'},
+  ],
+};
+
+/// Descriptor for `LuaDepFile`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List luaDepFileDescriptor = $convert.base64Decode(
+    'CgpMdWFEZXBGaWxlEh0KBHBhdGgYASABKAlCBJC1GANIAFIEcGF0aIgBARIbCgN1cmwYAiABKA'
+    'lCBJC1GANIAVIDdXJsiAEBEiEKBnNoYTI1NhgDIAEoCUIEkLUYA0gCUgZzaGEyNTaIAQE6BJi1'
+    'GANCBwoFX3BhdGhCBgoEX3VybEIJCgdfc2hhMjU2');
 
 @$core.Deprecated('Use listOnDeviceReqDescriptor instead')
 const ListOnDeviceReq$json = {

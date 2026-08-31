@@ -1230,7 +1230,7 @@ pub struct PublicBriefsResp {
 /// ⚠️ **清单是全量,不是增量。** 机器人按它对账:多的删、少的下、sha256 不同的换。
 /// 增量(只告诉"新增了什么")没法表达撤权与到期 —— 而那两件事恰恰必须传达到:
 /// 市场 revoke 删的是服务端的引用行,机器人本地那个文件不会自己消失。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DevicePlugin {
     /// 壳 uuid。**落地文件名就是它**:`plugins/<uuid>@<version>.<ext>`,
     /// 扩展名由下面的 `lang` 决定。
@@ -1275,6 +1275,56 @@ pub struct DevicePlugin {
     /// 原因只在它自己的本地日志里。
     #[prost(enumeration = "PluginLang", optional, tag = "9")]
     pub lang: ::core::option::Option<i32>,
+    /// 这个插件要用到的 **C 模块**(lua 插件才有,见 LuaDep)。
+    ///
+    /// ⚠️ **纯 lua 的依赖不在这里** —— 它们在发版时就被合进那一个脚本里了。
+    /// 到机器人这儿的只有带 C 的,因为 dlopen 只认磁盘上的真文件。
+    #[prost(message, repeated, tag = "10")]
+    pub deps: ::prost::alloc::vec::Vec<LuaDep>,
+}
+/// lua 插件依赖的一个 **C 模块**(luarocks 上那种带 `.so` 的包)。
+///
+/// ## 为什么是"集合"而不是"每插件一份"
+///
+/// 同一个 `lzmq` 被五个插件用到,每插件带一份就是五份 —— 生产机器人是 Pi5 的
+/// 1GB 版本,扛不住。所以后台维护一份**共用集合**:条目按 `(rock, 版本, target)`
+/// 建一次、全平台复用;下发时按这台机器人**实际需要的并集**给。
+///
+/// ## 落地布局与回收
+///
+/// 机器人上落在 `<luadeps 根>/<rock>/<版本>/<path>`。**版本进路径**是有意的:
+/// 插件 A 要 0.4.3、插件 B 要 0.4.4 时两份能共存,各自的 loader 指各自那份
+/// (我们的 loader 不走 `package.cpath` 全局搜索,而是按绝对路径开)。
+///
+/// 🔴 **回收按引用计数,不按"这个插件的清单"** —— 服务端下发的是全机并集,
+/// 机器人只做"清单里有的下、没有的删"。按单个插件的清单删会误伤别的插件还在用的条目
+/// (好友与主从共用 ACL 那次就是这么踩的)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LuaDep {
+    /// luarocks 上的包名,如 `lua-cjson`
+    #[prost(string, optional, tag = "1")]
+    pub rock: ::core::option::Option<::prost::alloc::string::String>,
+    /// 钉死的版本,不给范围
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "3")]
+    pub files: ::prost::alloc::vec::Vec<LuaDepFile>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaDepFile {
+    /// 相对 `<rock>/<版本>/` 的路径,如 `cjson.so`、`socket/core.so`。
+    ///
+    /// ⚠️ 点号与目录的对应是 lua 的老规矩:`require("socket.core")` 找的是
+    /// `socket/core.so`,入口符号是 `luaopen_socket_core`。三者必须一致,
+    /// 对不上的表现是"装上了、require 不到",而错只在机器人本地日志里。
+    #[prost(string, optional, tag = "1")]
+    pub path: ::core::option::Option<::prost::alloc::string::String>,
+    /// 私有桶,每次拉清单现签
+    #[prost(string, optional, tag = "2")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    /// 下完必须核对
+    #[prost(string, optional, tag = "3")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListOnDeviceReq {

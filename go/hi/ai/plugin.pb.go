@@ -2550,7 +2550,12 @@ type DevicePlugin struct {
 	//
 	// 不给的话机器人只能猜(比如按 url 后缀),而猜错的表现是"下下来了、装不上",
 	// 原因只在它自己的本地日志里。
-	Lang          *PluginLang `protobuf:"varint,9,opt,name=lang,proto3,enum=hi.ai.PluginLang,oneof" json:"lang,omitempty"`
+	Lang *PluginLang `protobuf:"varint,9,opt,name=lang,proto3,enum=hi.ai.PluginLang,oneof" json:"lang,omitempty"`
+	// 这个插件要用到的 **C 模块**(lua 插件才有,见 LuaDep)。
+	//
+	// ⚠️ **纯 lua 的依赖不在这里** —— 它们在发版时就被合进那一个脚本里了。
+	// 到机器人这儿的只有带 C 的,因为 dlopen 只认磁盘上的真文件。
+	Deps          []*LuaDep `protobuf:"bytes,10,rep,name=deps,proto3" json:"deps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2648,6 +2653,155 @@ func (x *DevicePlugin) GetLang() PluginLang {
 	return PluginLang_PLUGIN_LANG_PYTHON
 }
 
+func (x *DevicePlugin) GetDeps() []*LuaDep {
+	if x != nil {
+		return x.Deps
+	}
+	return nil
+}
+
+// lua 插件依赖的一个 **C 模块**(luarocks 上那种带 `.so` 的包)。
+//
+// ## 为什么是"集合"而不是"每插件一份"
+//
+// 同一个 `lzmq` 被五个插件用到,每插件带一份就是五份 —— 生产机器人是 Pi5 的
+// 1GB 版本,扛不住。所以后台维护一份**共用集合**:条目按 `(rock, 版本, target)`
+// 建一次、全平台复用;下发时按这台机器人**实际需要的并集**给。
+//
+// ## 落地布局与回收
+//
+// 机器人上落在 `<luadeps 根>/<rock>/<版本>/<path>`。**版本进路径**是有意的:
+// 插件 A 要 0.4.3、插件 B 要 0.4.4 时两份能共存,各自的 loader 指各自那份
+// (我们的 loader 不走 `package.cpath` 全局搜索,而是按绝对路径开)。
+//
+// 🔴 **回收按引用计数,不按"这个插件的清单"** —— 服务端下发的是全机并集,
+// 机器人只做"清单里有的下、没有的删"。按单个插件的清单删会误伤别的插件还在用的条目
+// (好友与主从共用 ACL 那次就是这么踩的)。
+type LuaDep struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rock          *string                `protobuf:"bytes,1,opt,name=rock,proto3,oneof" json:"rock,omitempty"`       // luarocks 上的包名,如 `lua-cjson`
+	Version       *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"` // 钉死的版本,不给范围
+	Files         []*LuaDepFile          `protobuf:"bytes,3,rep,name=files,proto3" json:"files,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LuaDep) Reset() {
+	*x = LuaDep{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LuaDep) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LuaDep) ProtoMessage() {}
+
+func (x *LuaDep) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LuaDep.ProtoReflect.Descriptor instead.
+func (*LuaDep) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *LuaDep) GetRock() string {
+	if x != nil && x.Rock != nil {
+		return *x.Rock
+	}
+	return ""
+}
+
+func (x *LuaDep) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
+func (x *LuaDep) GetFiles() []*LuaDepFile {
+	if x != nil {
+		return x.Files
+	}
+	return nil
+}
+
+type LuaDepFile struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 相对 `<rock>/<版本>/` 的路径,如 `cjson.so`、`socket/core.so`。
+	//
+	// ⚠️ 点号与目录的对应是 lua 的老规矩:`require("socket.core")` 找的是
+	// `socket/core.so`,入口符号是 `luaopen_socket_core`。三者必须一致,
+	// 对不上的表现是"装上了、require 不到",而错只在机器人本地日志里。
+	Path          *string `protobuf:"bytes,1,opt,name=path,proto3,oneof" json:"path,omitempty"`
+	Url           *string `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`       // 私有桶,每次拉清单现签
+	Sha256        *string `protobuf:"bytes,3,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"` // 下完必须核对
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LuaDepFile) Reset() {
+	*x = LuaDepFile{}
+	mi := &file_hi_ai_plugin_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LuaDepFile) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LuaDepFile) ProtoMessage() {}
+
+func (x *LuaDepFile) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_plugin_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LuaDepFile.ProtoReflect.Descriptor instead.
+func (*LuaDepFile) Descriptor() ([]byte, []int) {
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *LuaDepFile) GetPath() string {
+	if x != nil && x.Path != nil {
+		return *x.Path
+	}
+	return ""
+}
+
+func (x *LuaDepFile) GetUrl() string {
+	if x != nil && x.Url != nil {
+		return *x.Url
+	}
+	return ""
+}
+
+func (x *LuaDepFile) GetSha256() string {
+	if x != nil && x.Sha256 != nil {
+		return *x.Sha256
+	}
+	return ""
+}
+
 type ListOnDeviceReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Agent *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
@@ -2664,7 +2818,7 @@ type ListOnDeviceReq struct {
 
 func (x *ListOnDeviceReq) Reset() {
 	*x = ListOnDeviceReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[35]
+	mi := &file_hi_ai_plugin_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2676,7 +2830,7 @@ func (x *ListOnDeviceReq) String() string {
 func (*ListOnDeviceReq) ProtoMessage() {}
 
 func (x *ListOnDeviceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[35]
+	mi := &file_hi_ai_plugin_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2689,7 +2843,7 @@ func (x *ListOnDeviceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOnDeviceReq.ProtoReflect.Descriptor instead.
 func (*ListOnDeviceReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{35}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *ListOnDeviceReq) GetAgent() string {
@@ -2715,7 +2869,7 @@ type ListOnDeviceResp struct {
 
 func (x *ListOnDeviceResp) Reset() {
 	*x = ListOnDeviceResp{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[36]
+	mi := &file_hi_ai_plugin_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2727,7 +2881,7 @@ func (x *ListOnDeviceResp) String() string {
 func (*ListOnDeviceResp) ProtoMessage() {}
 
 func (x *ListOnDeviceResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[36]
+	mi := &file_hi_ai_plugin_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2740,7 +2894,7 @@ func (x *ListOnDeviceResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOnDeviceResp.ProtoReflect.Descriptor instead.
 func (*ListOnDeviceResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{36}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListOnDeviceResp) GetList() []*DevicePlugin {
@@ -2763,7 +2917,7 @@ type RetryBuildReq struct {
 
 func (x *RetryBuildReq) Reset() {
 	*x = RetryBuildReq{}
-	mi := &file_hi_ai_plugin_proto_msgTypes[37]
+	mi := &file_hi_ai_plugin_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2775,7 +2929,7 @@ func (x *RetryBuildReq) String() string {
 func (*RetryBuildReq) ProtoMessage() {}
 
 func (x *RetryBuildReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_plugin_proto_msgTypes[37]
+	mi := &file_hi_ai_plugin_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2788,7 +2942,7 @@ func (x *RetryBuildReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RetryBuildReq.ProtoReflect.Descriptor instead.
 func (*RetryBuildReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{37}
+	return file_hi_ai_plugin_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *RetryBuildReq) GetAgent() string {
@@ -3073,7 +3227,7 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
 	"\b_summary\"P\n" +
 	"\x10PublicBriefsResp\x126\n" +
-	"\x06briefs\x18\x01 \x03(\v2\x18.hi.ai.PluginPublicBriefB\x04\x90\xb5\x18\x01R\x06briefs:\x04\x98\xb5\x18\x01\"\xc3\x03\n" +
+	"\x06briefs\x18\x01 \x03(\v2\x18.hi.ai.PluginPublicBriefB\x04\x90\xb5\x18\x01R\x06briefs:\x04\x98\xb5\x18\x01\"\xec\x03\n" +
 	"\fDevicePlugin\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04name\x88\x01\x01\x12#\n" +
@@ -3084,7 +3238,9 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\vabi_version\x18\a \x01(\rB\x04\x90\xb5\x18\x03H\x06R\n" +
 	"abiVersion\x88\x01\x01\x12!\n" +
 	"\x06target\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\x06target\x88\x01\x01\x120\n" +
-	"\x04lang\x18\t \x01(\x0e2\x11.hi.ai.PluginLangB\x04\x90\xb5\x18\x03H\bR\x04lang\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x04lang\x18\t \x01(\x0e2\x11.hi.ai.PluginLangB\x04\x90\xb5\x18\x03H\bR\x04lang\x88\x01\x01\x12'\n" +
+	"\x04deps\x18\n" +
+	" \x03(\v2\r.hi.ai.LuaDepB\x04\x90\xb5\x18\x03R\x04deps:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_uuidB\a\n" +
 	"\x05_nameB\n" +
 	"\n" +
@@ -3095,7 +3251,22 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\a_sha256B\x0e\n" +
 	"\f_abi_versionB\t\n" +
 	"\a_targetB\a\n" +
-	"\x05_lang\"i\n" +
+	"\x05_lang\"\x96\x01\n" +
+	"\x06LuaDep\x12\x1d\n" +
+	"\x04rock\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04rock\x88\x01\x01\x12#\n" +
+	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aversion\x88\x01\x01\x12-\n" +
+	"\x05files\x18\x03 \x03(\v2\x11.hi.ai.LuaDepFileB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_rockB\n" +
+	"\n" +
+	"\b_version\"\x8d\x01\n" +
+	"\n" +
+	"LuaDepFile\x12\x1d\n" +
+	"\x04path\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04path\x88\x01\x01\x12\x1b\n" +
+	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x03url\x88\x01\x01\x12!\n" +
+	"\x06sha256\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06sha256\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_pathB\x06\n" +
+	"\x04_urlB\t\n" +
+	"\a_sha256\"i\n" +
 	"\x0fListOnDeviceReq\x12*\n" +
 	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12\x17\n" +
 	"\x04arch\x18\x02 \x01(\tH\x01R\x04arch\x88\x01\x01B\b\n" +
@@ -3163,7 +3334,7 @@ func file_hi_ai_plugin_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_ai_plugin_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_hi_ai_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 38)
+var file_hi_ai_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 40)
 var file_hi_ai_plugin_proto_goTypes = []any{
 	(PluginLang)(0),                 // 0: hi.ai.PluginLang
 	(PluginArtifactStatus)(0),       // 1: hi.ai.PluginArtifactStatus
@@ -3203,12 +3374,14 @@ var file_hi_ai_plugin_proto_goTypes = []any{
 	(*PluginPublicBrief)(nil),       // 35: hi.ai.PluginPublicBrief
 	(*PublicBriefsResp)(nil),        // 36: hi.ai.PublicBriefsResp
 	(*DevicePlugin)(nil),            // 37: hi.ai.DevicePlugin
-	(*ListOnDeviceReq)(nil),         // 38: hi.ai.ListOnDeviceReq
-	(*ListOnDeviceResp)(nil),        // 39: hi.ai.ListOnDeviceResp
-	(*RetryBuildReq)(nil),           // 40: hi.ai.RetryBuildReq
-	(*structpb.Struct)(nil),         // 41: google.protobuf.Struct
-	(*hi.Pagination)(nil),           // 42: hi.Pagination
-	(*emptypb.Empty)(nil),           // 43: google.protobuf.Empty
+	(*LuaDep)(nil),                  // 38: hi.ai.LuaDep
+	(*LuaDepFile)(nil),              // 39: hi.ai.LuaDepFile
+	(*ListOnDeviceReq)(nil),         // 40: hi.ai.ListOnDeviceReq
+	(*ListOnDeviceResp)(nil),        // 41: hi.ai.ListOnDeviceResp
+	(*RetryBuildReq)(nil),           // 42: hi.ai.RetryBuildReq
+	(*structpb.Struct)(nil),         // 43: google.protobuf.Struct
+	(*hi.Pagination)(nil),           // 44: hi.Pagination
+	(*emptypb.Empty)(nil),           // 45: google.protobuf.Empty
 }
 var file_hi_ai_plugin_proto_depIdxs = []int32{
 	0,  // 0: hi.ai.PluginShell.lang:type_name -> hi.ai.PluginLang
@@ -3216,73 +3389,75 @@ var file_hi_ai_plugin_proto_depIdxs = []int32{
 	3,  // 2: hi.ai.PluginView.shell:type_name -> hi.ai.PluginShell
 	4,  // 3: hi.ai.PluginView.active:type_name -> hi.ai.PluginVersion
 	2,  // 4: hi.ai.PluginView.source:type_name -> hi.ai.PluginSource
-	41, // 5: hi.ai.PluginView.data:type_name -> google.protobuf.Struct
-	41, // 6: hi.ai.PluginView.version_data:type_name -> google.protobuf.Struct
+	43, // 5: hi.ai.PluginView.data:type_name -> google.protobuf.Struct
+	43, // 6: hi.ai.PluginView.version_data:type_name -> google.protobuf.Struct
 	5,  // 7: hi.ai.PluginView.artifacts:type_name -> hi.ai.PluginArtifact
 	4,  // 8: hi.ai.PluginVersionView.version:type_name -> hi.ai.PluginVersion
-	41, // 9: hi.ai.PluginVersionView.data:type_name -> google.protobuf.Struct
+	43, // 9: hi.ai.PluginVersionView.data:type_name -> google.protobuf.Struct
 	5,  // 10: hi.ai.PluginVersionView.artifacts:type_name -> hi.ai.PluginArtifact
-	41, // 11: hi.ai.CreateShellReq.data:type_name -> google.protobuf.Struct
+	43, // 11: hi.ai.CreateShellReq.data:type_name -> google.protobuf.Struct
 	4,  // 12: hi.ai.CreateVersionReq.version:type_name -> hi.ai.PluginVersion
-	41, // 13: hi.ai.CreateVersionReq.data:type_name -> google.protobuf.Struct
-	41, // 14: hi.ai.EditPluginReq.data:type_name -> google.protobuf.Struct
-	41, // 15: hi.ai.EditPluginReq.version_data:type_name -> google.protobuf.Struct
-	42, // 16: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
-	42, // 17: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
+	43, // 13: hi.ai.CreateVersionReq.data:type_name -> google.protobuf.Struct
+	43, // 14: hi.ai.EditPluginReq.data:type_name -> google.protobuf.Struct
+	43, // 15: hi.ai.EditPluginReq.version_data:type_name -> google.protobuf.Struct
+	44, // 16: hi.ai.ListPluginsReq.pagination:type_name -> hi.Pagination
+	44, // 17: hi.ai.ListVersionsReq.pagination:type_name -> hi.Pagination
 	6,  // 18: hi.ai.ListPluginsResp.list:type_name -> hi.ai.PluginView
 	7,  // 19: hi.ai.ListVersionsResp.list:type_name -> hi.ai.PluginVersionView
 	6,  // 20: hi.ai.GetPluginResp.view:type_name -> hi.ai.PluginView
-	41, // 21: hi.ai.CreateReferenceReq.data:type_name -> google.protobuf.Struct
-	41, // 22: hi.ai.CreateReferenceReq.version_data:type_name -> google.protobuf.Struct
+	43, // 21: hi.ai.CreateReferenceReq.data:type_name -> google.protobuf.Struct
+	43, // 22: hi.ai.CreateReferenceReq.version_data:type_name -> google.protobuf.Struct
 	33, // 23: hi.ai.PublicBriefsReq.refs:type_name -> hi.ai.PluginRef
 	35, // 24: hi.ai.PublicBriefsResp.briefs:type_name -> hi.ai.PluginPublicBrief
 	0,  // 25: hi.ai.DevicePlugin.lang:type_name -> hi.ai.PluginLang
-	37, // 26: hi.ai.ListOnDeviceResp.list:type_name -> hi.ai.DevicePlugin
-	9,  // 27: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
-	11, // 28: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
-	12, // 29: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
-	24, // 30: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
-	20, // 31: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
-	21, // 32: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
-	26, // 33: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
-	27, // 34: hi.ai.Plugin.DeleteVersions:input_type -> hi.ai.DeleteVersionsReq
-	28, // 35: hi.ai.Plugin.DeleteVersionList:input_type -> hi.ai.DeleteVersionListReq
-	29, // 36: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
-	30, // 37: hi.ai.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
-	32, // 38: hi.ai.Plugin.CreateReference:input_type -> hi.ai.CreateReferenceReq
-	31, // 39: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
-	15, // 40: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
-	16, // 41: hi.ai.Plugin.SetActiveAll:input_type -> hi.ai.SetActiveAllReq
-	13, // 42: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
-	14, // 43: hi.ai.Plugin.SetFollowLatest:input_type -> hi.ai.SetFollowLatestReq
-	38, // 44: hi.ai.Plugin.ListOnDevice:input_type -> hi.ai.ListOnDeviceReq
-	40, // 45: hi.ai.Plugin.RetryBuild:input_type -> hi.ai.RetryBuildReq
-	34, // 46: hi.ai.Plugin.PublicBriefs:input_type -> hi.ai.PublicBriefsReq
-	10, // 47: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
-	43, // 48: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
-	43, // 49: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
-	25, // 50: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
-	22, // 51: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
-	23, // 52: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
-	43, // 53: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
-	43, // 54: hi.ai.Plugin.DeleteVersions:output_type -> google.protobuf.Empty
-	43, // 55: hi.ai.Plugin.DeleteVersionList:output_type -> google.protobuf.Empty
-	43, // 56: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
-	43, // 57: hi.ai.Plugin.DeleteShells:output_type -> google.protobuf.Empty
-	43, // 58: hi.ai.Plugin.CreateReference:output_type -> google.protobuf.Empty
-	43, // 59: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
-	43, // 60: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
-	17, // 61: hi.ai.Plugin.SetActiveAll:output_type -> hi.ai.SetActiveAllResp
-	43, // 62: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
-	43, // 63: hi.ai.Plugin.SetFollowLatest:output_type -> google.protobuf.Empty
-	39, // 64: hi.ai.Plugin.ListOnDevice:output_type -> hi.ai.ListOnDeviceResp
-	43, // 65: hi.ai.Plugin.RetryBuild:output_type -> google.protobuf.Empty
-	36, // 66: hi.ai.Plugin.PublicBriefs:output_type -> hi.ai.PublicBriefsResp
-	47, // [47:67] is the sub-list for method output_type
-	27, // [27:47] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	38, // 26: hi.ai.DevicePlugin.deps:type_name -> hi.ai.LuaDep
+	39, // 27: hi.ai.LuaDep.files:type_name -> hi.ai.LuaDepFile
+	37, // 28: hi.ai.ListOnDeviceResp.list:type_name -> hi.ai.DevicePlugin
+	9,  // 29: hi.ai.Plugin.CreateShell:input_type -> hi.ai.CreateShellReq
+	11, // 30: hi.ai.Plugin.CreateVersion:input_type -> hi.ai.CreateVersionReq
+	12, // 31: hi.ai.Plugin.Edit:input_type -> hi.ai.EditPluginReq
+	24, // 32: hi.ai.Plugin.Get:input_type -> hi.ai.GetPluginReq
+	20, // 33: hi.ai.Plugin.List:input_type -> hi.ai.ListPluginsReq
+	21, // 34: hi.ai.Plugin.ListVersions:input_type -> hi.ai.ListVersionsReq
+	26, // 35: hi.ai.Plugin.Delete:input_type -> hi.ai.DeleteVersionReq
+	27, // 36: hi.ai.Plugin.DeleteVersions:input_type -> hi.ai.DeleteVersionsReq
+	28, // 37: hi.ai.Plugin.DeleteVersionList:input_type -> hi.ai.DeleteVersionListReq
+	29, // 38: hi.ai.Plugin.DeleteShell:input_type -> hi.ai.DeleteShellReq
+	30, // 39: hi.ai.Plugin.DeleteShells:input_type -> hi.ai.DeleteShellsReq
+	32, // 40: hi.ai.Plugin.CreateReference:input_type -> hi.ai.CreateReferenceReq
+	31, // 41: hi.ai.Plugin.DeleteByAgents:input_type -> hi.ai.DeletePluginByAgentsReq
+	15, // 42: hi.ai.Plugin.SetActive:input_type -> hi.ai.SetActiveReq
+	16, // 43: hi.ai.Plugin.SetActiveAll:input_type -> hi.ai.SetActiveAllReq
+	13, // 44: hi.ai.Plugin.SetEnabled:input_type -> hi.ai.SetEnabledReq
+	14, // 45: hi.ai.Plugin.SetFollowLatest:input_type -> hi.ai.SetFollowLatestReq
+	40, // 46: hi.ai.Plugin.ListOnDevice:input_type -> hi.ai.ListOnDeviceReq
+	42, // 47: hi.ai.Plugin.RetryBuild:input_type -> hi.ai.RetryBuildReq
+	34, // 48: hi.ai.Plugin.PublicBriefs:input_type -> hi.ai.PublicBriefsReq
+	10, // 49: hi.ai.Plugin.CreateShell:output_type -> hi.ai.CreateShellResp
+	45, // 50: hi.ai.Plugin.CreateVersion:output_type -> google.protobuf.Empty
+	45, // 51: hi.ai.Plugin.Edit:output_type -> google.protobuf.Empty
+	25, // 52: hi.ai.Plugin.Get:output_type -> hi.ai.GetPluginResp
+	22, // 53: hi.ai.Plugin.List:output_type -> hi.ai.ListPluginsResp
+	23, // 54: hi.ai.Plugin.ListVersions:output_type -> hi.ai.ListVersionsResp
+	45, // 55: hi.ai.Plugin.Delete:output_type -> google.protobuf.Empty
+	45, // 56: hi.ai.Plugin.DeleteVersions:output_type -> google.protobuf.Empty
+	45, // 57: hi.ai.Plugin.DeleteVersionList:output_type -> google.protobuf.Empty
+	45, // 58: hi.ai.Plugin.DeleteShell:output_type -> google.protobuf.Empty
+	45, // 59: hi.ai.Plugin.DeleteShells:output_type -> google.protobuf.Empty
+	45, // 60: hi.ai.Plugin.CreateReference:output_type -> google.protobuf.Empty
+	45, // 61: hi.ai.Plugin.DeleteByAgents:output_type -> google.protobuf.Empty
+	45, // 62: hi.ai.Plugin.SetActive:output_type -> google.protobuf.Empty
+	17, // 63: hi.ai.Plugin.SetActiveAll:output_type -> hi.ai.SetActiveAllResp
+	45, // 64: hi.ai.Plugin.SetEnabled:output_type -> google.protobuf.Empty
+	45, // 65: hi.ai.Plugin.SetFollowLatest:output_type -> google.protobuf.Empty
+	41, // 66: hi.ai.Plugin.ListOnDevice:output_type -> hi.ai.ListOnDeviceResp
+	45, // 67: hi.ai.Plugin.RetryBuild:output_type -> google.protobuf.Empty
+	36, // 68: hi.ai.Plugin.PublicBriefs:output_type -> hi.ai.PublicBriefsResp
+	49, // [49:69] is the sub-list for method output_type
+	29, // [29:49] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_proto_init() }
@@ -3323,14 +3498,16 @@ func file_hi_ai_plugin_proto_init() {
 	file_hi_ai_plugin_proto_msgTypes[32].OneofWrappers = []any{}
 	file_hi_ai_plugin_proto_msgTypes[34].OneofWrappers = []any{}
 	file_hi_ai_plugin_proto_msgTypes[35].OneofWrappers = []any{}
+	file_hi_ai_plugin_proto_msgTypes[36].OneofWrappers = []any{}
 	file_hi_ai_plugin_proto_msgTypes[37].OneofWrappers = []any{}
+	file_hi_ai_plugin_proto_msgTypes[39].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_plugin_proto_rawDesc), len(file_hi_ai_plugin_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   38,
+			NumMessages:   40,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

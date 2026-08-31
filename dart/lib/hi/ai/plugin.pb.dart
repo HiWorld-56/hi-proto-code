@@ -2910,6 +2910,7 @@ class DevicePlugin extends $pb.GeneratedMessage {
     $core.int? abiVersion,
     $core.String? target,
     PluginLang? lang,
+    $core.Iterable<LuaDep>? deps,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -2921,6 +2922,7 @@ class DevicePlugin extends $pb.GeneratedMessage {
     if (abiVersion != null) result.abiVersion = abiVersion;
     if (target != null) result.target = target;
     if (lang != null) result.lang = lang;
+    if (deps != null) result.deps.addAll(deps);
     return result;
   }
 
@@ -2947,6 +2949,7 @@ class DevicePlugin extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'target')
     ..aE<PluginLang>(9, _omitFieldNames ? '' : 'lang',
         enumValues: PluginLang.values)
+    ..pPM<LuaDep>(10, _omitFieldNames ? '' : 'deps', subBuilder: LuaDep.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3071,6 +3074,184 @@ class DevicePlugin extends $pb.GeneratedMessage {
   $core.bool hasLang() => $_has(8);
   @$pb.TagNumber(9)
   void clearLang() => $_clearField(9);
+
+  /// 这个插件要用到的 **C 模块**(lua 插件才有,见 LuaDep)。
+  ///
+  /// ⚠️ **纯 lua 的依赖不在这里** —— 它们在发版时就被合进那一个脚本里了。
+  /// 到机器人这儿的只有带 C 的,因为 dlopen 只认磁盘上的真文件。
+  @$pb.TagNumber(10)
+  $pb.PbList<LuaDep> get deps => $_getList(9);
+}
+
+/// lua 插件依赖的一个 **C 模块**(luarocks 上那种带 `.so` 的包)。
+///
+/// ## 为什么是"集合"而不是"每插件一份"
+///
+/// 同一个 `lzmq` 被五个插件用到,每插件带一份就是五份 —— 生产机器人是 Pi5 的
+/// 1GB 版本,扛不住。所以后台维护一份**共用集合**:条目按 `(rock, 版本, target)`
+/// 建一次、全平台复用;下发时按这台机器人**实际需要的并集**给。
+///
+/// ## 落地布局与回收
+///
+/// 机器人上落在 `<luadeps 根>/<rock>/<版本>/<path>`。**版本进路径**是有意的:
+/// 插件 A 要 0.4.3、插件 B 要 0.4.4 时两份能共存,各自的 loader 指各自那份
+/// (我们的 loader 不走 `package.cpath` 全局搜索,而是按绝对路径开)。
+///
+/// 🔴 **回收按引用计数,不按"这个插件的清单"** —— 服务端下发的是全机并集,
+/// 机器人只做"清单里有的下、没有的删"。按单个插件的清单删会误伤别的插件还在用的条目
+/// (好友与主从共用 ACL 那次就是这么踩的)。
+class LuaDep extends $pb.GeneratedMessage {
+  factory LuaDep({
+    $core.String? rock,
+    $core.String? version,
+    $core.Iterable<LuaDepFile>? files,
+  }) {
+    final result = create();
+    if (rock != null) result.rock = rock;
+    if (version != null) result.version = version;
+    if (files != null) result.files.addAll(files);
+    return result;
+  }
+
+  LuaDep._();
+
+  factory LuaDep.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaDep.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaDep',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'rock')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..pPM<LuaDepFile>(3, _omitFieldNames ? '' : 'files',
+        subBuilder: LuaDepFile.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDep clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDep copyWith(void Function(LuaDep) updates) =>
+      super.copyWith((message) => updates(message as LuaDep)) as LuaDep;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaDep create() => LuaDep._();
+  @$core.override
+  LuaDep createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaDep getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LuaDep>(create);
+  static LuaDep? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get rock => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set rock($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRock() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRock() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<LuaDepFile> get files => $_getList(2);
+}
+
+class LuaDepFile extends $pb.GeneratedMessage {
+  factory LuaDepFile({
+    $core.String? path,
+    $core.String? url,
+    $core.String? sha256,
+  }) {
+    final result = create();
+    if (path != null) result.path = path;
+    if (url != null) result.url = url;
+    if (sha256 != null) result.sha256 = sha256;
+    return result;
+  }
+
+  LuaDepFile._();
+
+  factory LuaDepFile.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaDepFile.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaDepFile',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'path')
+    ..aOS(2, _omitFieldNames ? '' : 'url')
+    ..aOS(3, _omitFieldNames ? '' : 'sha256')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepFile clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaDepFile copyWith(void Function(LuaDepFile) updates) =>
+      super.copyWith((message) => updates(message as LuaDepFile)) as LuaDepFile;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaDepFile create() => LuaDepFile._();
+  @$core.override
+  LuaDepFile createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaDepFile getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LuaDepFile>(create);
+  static LuaDepFile? _defaultInstance;
+
+  /// 相对 `<rock>/<版本>/` 的路径,如 `cjson.so`、`socket/core.so`。
+  ///
+  /// ⚠️ 点号与目录的对应是 lua 的老规矩:`require("socket.core")` 找的是
+  /// `socket/core.so`,入口符号是 `luaopen_socket_core`。三者必须一致,
+  /// 对不上的表现是"装上了、require 不到",而错只在机器人本地日志里。
+  @$pb.TagNumber(1)
+  $core.String get path => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set path($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPath() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPath() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get url => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set url($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUrl() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get sha256 => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set sha256($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSha256() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSha256() => $_clearField(3);
 }
 
 class ListOnDeviceReq extends $pb.GeneratedMessage {
