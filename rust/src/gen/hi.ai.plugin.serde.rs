@@ -1273,6 +1273,9 @@ impl serde::Serialize for VerifyLuaReq {
         if self.version.is_some() {
             len += 1;
         }
+        if !self.deps.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.VerifyLuaReq", len)?;
         if let Some(v) = self.script.as_ref() {
             struct_ser.serialize_field("script", v)?;
@@ -1282,6 +1285,9 @@ impl serde::Serialize for VerifyLuaReq {
         }
         if let Some(v) = self.version.as_ref() {
             struct_ser.serialize_field("version", v)?;
+        }
+        if !self.deps.is_empty() {
+            struct_ser.serialize_field("deps", &self.deps)?;
         }
         struct_ser.end()
     }
@@ -1296,6 +1302,7 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
             "script",
             "uuid",
             "version",
+            "deps",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1303,6 +1310,7 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
             Script,
             Uuid,
             Version,
+            Deps,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1327,6 +1335,7 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
                             "script" => Ok(GeneratedField::Script),
                             "uuid" => Ok(GeneratedField::Uuid),
                             "version" => Ok(GeneratedField::Version),
+                            "deps" => Ok(GeneratedField::Deps),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1349,6 +1358,7 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
                 let mut script__ = None;
                 let mut uuid__ = None;
                 let mut version__ = None;
+                let mut deps__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Script => {
@@ -1369,12 +1379,19 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaReq {
                             }
                             version__ = map_.next_value()?;
                         }
+                        GeneratedField::Deps => {
+                            if deps__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("deps"));
+                            }
+                            deps__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(VerifyLuaReq {
                     script: script__,
                     uuid: uuid__,
                     version: version__,
+                    deps: deps__.unwrap_or_default(),
                 })
             }
         }

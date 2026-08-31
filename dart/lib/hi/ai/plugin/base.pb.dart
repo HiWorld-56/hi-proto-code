@@ -16,6 +16,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
 import '../chat.pb.dart' as $3;
+import '../plugin.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -612,11 +613,13 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
     $core.String? script,
     $core.String? uuid,
     $core.String? version,
+    $core.Iterable<$4.LuaDep>? deps,
   }) {
     final result = create();
     if (script != null) result.script = script;
     if (uuid != null) result.uuid = uuid;
     if (version != null) result.version = version;
+    if (deps != null) result.deps.addAll(deps);
     return result;
   }
 
@@ -636,6 +639,8 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'script')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
     ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..pPM<$4.LuaDep>(4, _omitFieldNames ? '' : 'deps',
+        subBuilder: $4.LuaDep.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -691,6 +696,17 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
   $core.bool hasVersion() => $_has(2);
   @$pb.TagNumber(3)
   void clearVersion() => $_clearField(3);
+
+  /// 这个脚本要用到的 C 模块。**校验器要真把它们装上再 load 脚本** ——
+  ///
+  /// 合并出来的 loader 在**顶层**就 `require` 依赖(`local cjson = require("cjson")`),
+  /// 校验器没有它们的话,连"脚本能不能装进来"都验不了(报的是
+  /// `attempt to call a nil value (global '__native')`,而那跟作者的代码毫无关系)。
+  ///
+  /// 🔴 更要紧的是**验的必须是发的**:装着依赖 load 一遍,才等于机器人上会发生的事。
+  /// 给个空壳 `__native` 也能让验收变绿,但那种绿是假的。
+  @$pb.TagNumber(4)
+  $pb.PbList<$4.LuaDep> get deps => $_getList(3);
 }
 
 class VerifyLuaResp extends $pb.GeneratedMessage {

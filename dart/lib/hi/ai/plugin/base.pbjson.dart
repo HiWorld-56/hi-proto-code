@@ -297,6 +297,7 @@ const VerifyLuaReq$json = {
       '10': 'version',
       '17': true
     },
+    {'1': 'deps', '3': 4, '4': 3, '5': 11, '6': '.hi.ai.LuaDep', '10': 'deps'},
   ],
   '8': [
     {'1': '_script'},
@@ -308,8 +309,9 @@ const VerifyLuaReq$json = {
 /// Descriptor for `VerifyLuaReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List verifyLuaReqDescriptor = $convert.base64Decode(
     'CgxWZXJpZnlMdWFSZXESGwoGc2NyaXB0GAEgASgJSABSBnNjcmlwdIgBARIXCgR1dWlkGAIgAS'
-    'gJSAFSBHV1aWSIAQESHQoHdmVyc2lvbhgDIAEoCUgCUgd2ZXJzaW9uiAEBQgkKB19zY3JpcHRC'
-    'BwoFX3V1aWRCCgoIX3ZlcnNpb24=');
+    'gJSAFSBHV1aWSIAQESHQoHdmVyc2lvbhgDIAEoCUgCUgd2ZXJzaW9uiAEBEiEKBGRlcHMYBCAD'
+    'KAsyDS5oaS5haS5MdWFEZXBSBGRlcHNCCQoHX3NjcmlwdEIHCgVfdXVpZEIKCghfdmVyc2lvbg'
+    '==');
 
 @$core.Deprecated('Use verifyLuaRespDescriptor instead')
 const VerifyLuaResp$json = {

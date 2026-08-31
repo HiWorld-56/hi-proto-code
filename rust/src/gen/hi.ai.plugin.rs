@@ -158,7 +158,7 @@ pub struct BuildResp {
 /// 与 Build 的区别:**这是毫秒级的同步调用**,所以 hi-ai 在 CreateVersion 里直接等它,
 /// 验不过就拒绝这一版 —— 而不是像 RUST 那样先落库再后台编。
 /// 一个语法错的脚本压根不该进库。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VerifyLuaReq {
     /// 🔴 **要验的是合并之后的那份脚本正文,不是那个 zip。**
     ///
@@ -176,6 +176,16 @@ pub struct VerifyLuaReq {
     /// 版本号
     #[prost(string, optional, tag = "3")]
     pub version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这个脚本要用到的 C 模块。**校验器要真把它们装上再 load 脚本** ——
+    ///
+    /// 合并出来的 loader 在**顶层**就 `require` 依赖(`local cjson = require("cjson")`),
+    /// 校验器没有它们的话,连"脚本能不能装进来"都验不了(报的是
+    /// `attempt to call a nil value (global '__native')`,而那跟作者的代码毫无关系)。
+    ///
+    /// 🔴 更要紧的是**验的必须是发的**:装着依赖 load 一遍,才等于机器人上会发生的事。
+    /// 给个空壳 `__native` 也能让验收变绿,但那种绿是假的。
+    #[prost(message, repeated, tag = "4")]
+    pub deps: ::prost::alloc::vec::Vec<super::LuaDep>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VerifyLuaResp {

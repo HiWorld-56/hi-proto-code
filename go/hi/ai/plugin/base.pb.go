@@ -535,9 +535,18 @@ type VerifyLuaReq struct {
 	//
 	// 原来这里传的是 zip url,于是解包这件事**两边各做一遍**(构建服务解一遍去验、
 	// hi-ai 解一遍去当产物)—— 同一份规则两处实现,迟早对不上,而对不上是静默的。
-	Script        *string `protobuf:"bytes,1,opt,name=script,proto3,oneof" json:"script,omitempty"`
-	Uuid          *string `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`       // 壳 uuid(日志用)
-	Version       *string `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"` // 版本号
+	Script  *string `protobuf:"bytes,1,opt,name=script,proto3,oneof" json:"script,omitempty"`
+	Uuid    *string `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`       // 壳 uuid(日志用)
+	Version *string `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"` // 版本号
+	// 这个脚本要用到的 C 模块。**校验器要真把它们装上再 load 脚本** ——
+	//
+	// 合并出来的 loader 在**顶层**就 `require` 依赖(`local cjson = require("cjson")`),
+	// 校验器没有它们的话,连"脚本能不能装进来"都验不了(报的是
+	// `attempt to call a nil value (global '__native')`,而那跟作者的代码毫无关系)。
+	//
+	// 🔴 更要紧的是**验的必须是发的**:装着依赖 load 一遍,才等于机器人上会发生的事。
+	// 给个空壳 `__native` 也能让验收变绿,但那种绿是假的。
+	Deps          []*ai.LuaDep `protobuf:"bytes,4,rep,name=deps,proto3" json:"deps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -591,6 +600,13 @@ func (x *VerifyLuaReq) GetVersion() string {
 		return *x.Version
 	}
 	return ""
+}
+
+func (x *VerifyLuaReq) GetDeps() []*ai.LuaDep {
+	if x != nil {
+		return x.Deps
+	}
+	return nil
 }
 
 type VerifyLuaResp struct {
@@ -917,7 +933,7 @@ var File_hi_ai_plugin_base_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x10hi/options.proto\":\n" +
+	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\":\n" +
 	"\vPluginAnnex\x12+\n" +
 	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xe4\x02\n" +
 	"\x06RunReq\x12-\n" +
@@ -967,11 +983,12 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\f_abi_versionB\v\n" +
 	"\t_manifestB\b\n" +
 	"\x06_errorB\x06\n" +
-	"\x04_log\"\x83\x01\n" +
+	"\x04_log\"\xa6\x01\n" +
 	"\fVerifyLuaReq\x12\x1b\n" +
 	"\x06script\x18\x01 \x01(\tH\x00R\x06script\x88\x01\x01\x12\x17\n" +
 	"\x04uuid\x18\x02 \x01(\tH\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
-	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01B\t\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01\x12!\n" +
+	"\x04deps\x18\x04 \x03(\v2\r.hi.ai.LuaDepR\x04depsB\t\n" +
 	"\a_scriptB\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
@@ -1050,29 +1067,31 @@ var file_hi_ai_plugin_base_proto_goTypes = []any{
 	(*LuaDepBuiltFile)(nil), // 10: hi.ai.plugin.LuaDepBuiltFile
 	(*structpb.Struct)(nil), // 11: google.protobuf.Struct
 	(*ai.Content)(nil),      // 12: hi.ai.Content
-	(*emptypb.Empty)(nil),   // 13: google.protobuf.Empty
+	(*ai.LuaDep)(nil),       // 13: hi.ai.LuaDep
+	(*emptypb.Empty)(nil),   // 14: google.protobuf.Empty
 }
 var file_hi_ai_plugin_base_proto_depIdxs = []int32{
 	11, // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
 	0,  // 1: hi.ai.plugin.RunReq.annex:type_name -> hi.ai.plugin.PluginAnnex
 	12, // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
-	10, // 3: hi.ai.plugin.BuildLuaDepResp.so_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
-	10, // 4: hi.ai.plugin.BuildLuaDepResp.lua_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
-	1,  // 5: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
-	3,  // 6: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
-	4,  // 7: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
-	8,  // 8: hi.ai.plugin.Builder.BuildLuaDep:input_type -> hi.ai.plugin.BuildLuaDepReq
-	6,  // 9: hi.ai.plugin.Builder.VerifyLua:input_type -> hi.ai.plugin.VerifyLuaReq
-	2,  // 10: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
-	13, // 11: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
-	5,  // 12: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
-	9,  // 13: hi.ai.plugin.Builder.BuildLuaDep:output_type -> hi.ai.plugin.BuildLuaDepResp
-	7,  // 14: hi.ai.plugin.Builder.VerifyLua:output_type -> hi.ai.plugin.VerifyLuaResp
-	10, // [10:15] is the sub-list for method output_type
-	5,  // [5:10] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	13, // 3: hi.ai.plugin.VerifyLuaReq.deps:type_name -> hi.ai.LuaDep
+	10, // 4: hi.ai.plugin.BuildLuaDepResp.so_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
+	10, // 5: hi.ai.plugin.BuildLuaDepResp.lua_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
+	1,  // 6: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
+	3,  // 7: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
+	4,  // 8: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
+	8,  // 9: hi.ai.plugin.Builder.BuildLuaDep:input_type -> hi.ai.plugin.BuildLuaDepReq
+	6,  // 10: hi.ai.plugin.Builder.VerifyLua:input_type -> hi.ai.plugin.VerifyLuaReq
+	2,  // 11: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
+	14, // 12: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
+	5,  // 13: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
+	9,  // 14: hi.ai.plugin.Builder.BuildLuaDep:output_type -> hi.ai.plugin.BuildLuaDepResp
+	7,  // 15: hi.ai.plugin.Builder.VerifyLua:output_type -> hi.ai.plugin.VerifyLuaResp
+	11, // [11:16] is the sub-list for method output_type
+	6,  // [6:11] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_base_proto_init() }
