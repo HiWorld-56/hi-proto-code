@@ -3254,14 +3254,110 @@ class LuaDepFile extends $pb.GeneratedMessage {
   void clearSha256() => $_clearField(3);
 }
 
+/// HaveDep 机器人本地**已经有的**一个依赖文件。
+///
+/// 🔴 粒度到**文件 + 摘要**,不能只报 `<rock>/<版本>` —— 只报版本的话,某个文件损坏
+/// 或下了一半服务端看不出来,会以为齐了。一台机器人几个 rock、每个十几个文件,
+/// 报文也就几百条,很小。
+class HaveDep extends $pb.GeneratedMessage {
+  factory HaveDep({
+    $core.String? rock,
+    $core.String? version,
+    $core.String? path,
+    $core.String? sha256,
+  }) {
+    final result = create();
+    if (rock != null) result.rock = rock;
+    if (version != null) result.version = version;
+    if (path != null) result.path = path;
+    if (sha256 != null) result.sha256 = sha256;
+    return result;
+  }
+
+  HaveDep._();
+
+  factory HaveDep.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HaveDep.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HaveDep',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'rock')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..aOS(3, _omitFieldNames ? '' : 'path')
+    ..aOS(4, _omitFieldNames ? '' : 'sha256')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HaveDep clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HaveDep copyWith(void Function(HaveDep) updates) =>
+      super.copyWith((message) => updates(message as HaveDep)) as HaveDep;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HaveDep create() => HaveDep._();
+  @$core.override
+  HaveDep createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static HaveDep getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<HaveDep>(create);
+  static HaveDep? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get rock => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set rock($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRock() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRock() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get path => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set path($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPath() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPath() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get sha256 => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set sha256($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSha256() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSha256() => $_clearField(4);
+}
+
 class ListOnDeviceReq extends $pb.GeneratedMessage {
   factory ListOnDeviceReq({
     $core.String? agent,
     $core.String? arch,
+    $core.Iterable<HaveDep>? have,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (arch != null) result.arch = arch;
+    if (have != null) result.have.addAll(have);
     return result;
   }
 
@@ -3280,6 +3376,7 @@ class ListOnDeviceReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'arch')
+    ..pPM<HaveDep>(3, _omitFieldNames ? '' : 'have', subBuilder: HaveDep.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3324,6 +3421,17 @@ class ListOnDeviceReq extends $pb.GeneratedMessage {
   $core.bool hasArch() => $_has(1);
   @$pb.TagNumber(2)
   void clearArch() => $_clearField(2);
+
+  /// 机器人**已经有的依赖文件**。服务端据此**只给缺的那些现签 URL** ——
+  /// 已经有的那些仍然在清单里(撤权与回收要靠全量清单表达),只是 `url` 为空。
+  ///
+  /// 🔴 **它是这次请求的参数,不是服务端的一张表。** 每轮机器人现扫磁盘现报,
+  /// 服务端拿这一次的报文算差额 —— 权威始终在机器人那边,没有漂移的余地。
+  /// 存下来当"最后一次报了什么"展示可以;**永远不要不重新问就拿它算差额**。
+  ///
+  /// ⚠️ 不传 = 什么都没有 → 服务端给全量 URL。老 brain 因此零改动继续跑。
+  @$pb.TagNumber(3)
+  $pb.PbList<HaveDep> get have => $_getList(2);
 }
 
 class ListOnDeviceResp extends $pb.GeneratedMessage {

@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../ai/plugin.pb.dart' as $0;
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// ── 机器人自用面 ──────────────────────────────────────────────────────────
@@ -32,9 +34,11 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 class ListOnDeviceReq extends $pb.GeneratedMessage {
   factory ListOnDeviceReq({
     $core.String? arch,
+    $core.Iterable<$0.HaveDep>? have,
   }) {
     final result = create();
     if (arch != null) result.arch = arch;
+    if (have != null) result.have.addAll(have);
     return result;
   }
 
@@ -52,6 +56,8 @@ class ListOnDeviceReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'arch')
+    ..pPM<$0.HaveDep>(2, _omitFieldNames ? '' : 'have',
+        subBuilder: $0.HaveDep.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -81,6 +87,12 @@ class ListOnDeviceReq extends $pb.GeneratedMessage {
   $core.bool hasArch() => $_has(0);
   @$pb.TagNumber(1)
   void clearArch() => $_clearField(1);
+
+  /// 机器人已经有的依赖文件,club 原样穿透给 hi.ai。
+  /// 语义见 `hi.ai.HaveDep` 与 `hi.ai.ListOnDeviceReq.have` —— **它是请求的参数,
+  /// 不是服务端的一张表**。
+  @$pb.TagNumber(2)
+  $pb.PbList<$0.HaveDep> get have => $_getList(1);
 }
 
 /// ReloadApiKey —— club 专属(hi.ai 无 api_key 概念)。

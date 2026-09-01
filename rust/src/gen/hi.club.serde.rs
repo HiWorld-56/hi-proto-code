@@ -8126,9 +8126,15 @@ impl serde::Serialize for ListOnDeviceReq {
         if self.arch.is_some() {
             len += 1;
         }
+        if !self.have.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ListOnDeviceReq", len)?;
         if let Some(v) = self.arch.as_ref() {
             struct_ser.serialize_field("arch", v)?;
+        }
+        if !self.have.is_empty() {
+            struct_ser.serialize_field("have", &self.have)?;
         }
         struct_ser.end()
     }
@@ -8141,11 +8147,13 @@ impl<'de> serde::Deserialize<'de> for ListOnDeviceReq {
     {
         const FIELDS: &[&str] = &[
             "arch",
+            "have",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Arch,
+            Have,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8168,6 +8176,7 @@ impl<'de> serde::Deserialize<'de> for ListOnDeviceReq {
                     {
                         match value {
                             "arch" => Ok(GeneratedField::Arch),
+                            "have" => Ok(GeneratedField::Have),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8188,6 +8197,7 @@ impl<'de> serde::Deserialize<'de> for ListOnDeviceReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut arch__ = None;
+                let mut have__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Arch => {
@@ -8196,10 +8206,17 @@ impl<'de> serde::Deserialize<'de> for ListOnDeviceReq {
                             }
                             arch__ = map_.next_value()?;
                         }
+                        GeneratedField::Have => {
+                            if have__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("have"));
+                            }
+                            have__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(ListOnDeviceReq {
                     arch: arch__,
+                    have: have__.unwrap_or_default(),
                 })
             }
         }

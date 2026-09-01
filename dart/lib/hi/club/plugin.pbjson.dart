@@ -20,6 +20,7 @@ const ListOnDeviceReq$json = {
   '1': 'ListOnDeviceReq',
   '2': [
     {'1': 'arch', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'arch', '17': true},
+    {'1': 'have', '3': 2, '4': 3, '5': 11, '6': '.hi.ai.HaveDep', '10': 'have'},
   ],
   '8': [
     {'1': '_arch'},
@@ -28,7 +29,8 @@ const ListOnDeviceReq$json = {
 
 /// Descriptor for `ListOnDeviceReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listOnDeviceReqDescriptor = $convert.base64Decode(
-    'Cg9MaXN0T25EZXZpY2VSZXESFwoEYXJjaBgBIAEoCUgAUgRhcmNoiAEBQgcKBV9hcmNo');
+    'Cg9MaXN0T25EZXZpY2VSZXESFwoEYXJjaBgBIAEoCUgAUgRhcmNoiAEBEiIKBGhhdmUYAiADKA'
+    'syDi5oaS5haS5IYXZlRGVwUgRoYXZlQgcKBV9hcmNo');
 
 @$core.Deprecated('Use reloadApiKeyReqDescriptor instead')
 const ReloadApiKeyReq$json = {

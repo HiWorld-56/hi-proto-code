@@ -1807,6 +1807,67 @@ final $typed_data.Uint8List luaDepFileDescriptor = $convert.base64Decode(
     'lCBJC1GANIAVIDdXJsiAEBEiEKBnNoYTI1NhgDIAEoCUIEkLUYA0gCUgZzaGEyNTaIAQE6BJi1'
     'GANCBwoFX3BhdGhCBgoEX3VybEIJCgdfc2hhMjU2');
 
+@$core.Deprecated('Use haveDepDescriptor instead')
+const HaveDep$json = {
+  '1': 'HaveDep',
+  '2': [
+    {
+      '1': 'rock',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'rock',
+      '17': true
+    },
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'path',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'path',
+      '17': true
+    },
+    {
+      '1': 'sha256',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'sha256',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_rock'},
+    {'1': '_version'},
+    {'1': '_path'},
+    {'1': '_sha256'},
+  ],
+};
+
+/// Descriptor for `HaveDep`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List haveDepDescriptor = $convert.base64Decode(
+    'CgdIYXZlRGVwEh0KBHJvY2sYASABKAlCBJC1GANIAFIEcm9ja4gBARIjCgd2ZXJzaW9uGAIgAS'
+    'gJQgSQtRgDSAFSB3ZlcnNpb26IAQESHQoEcGF0aBgDIAEoCUIEkLUYA0gCUgRwYXRoiAEBEiEK'
+    'BnNoYTI1NhgEIAEoCUIEkLUYA0gDUgZzaGEyNTaIAQE6BJi1GANCBwoFX3JvY2tCCgoIX3Zlcn'
+    'Npb25CBwoFX3BhdGhCCQoHX3NoYTI1Ng==');
+
 @$core.Deprecated('Use listOnDeviceReqDescriptor instead')
 const ListOnDeviceReq$json = {
   '1': 'ListOnDeviceReq',
@@ -1822,6 +1883,7 @@ const ListOnDeviceReq$json = {
       '17': true
     },
     {'1': 'arch', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'arch', '17': true},
+    {'1': 'have', '3': 3, '4': 3, '5': 11, '6': '.hi.ai.HaveDep', '10': 'have'},
   ],
   '8': [
     {'1': '_agent'},
@@ -1832,7 +1894,8 @@ const ListOnDeviceReq$json = {
 /// Descriptor for `ListOnDeviceReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listOnDeviceReqDescriptor = $convert.base64Decode(
     'Cg9MaXN0T25EZXZpY2VSZXESKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUgVhZ2'
-    'VudIgBARIXCgRhcmNoGAIgASgJSAFSBGFyY2iIAQFCCAoGX2FnZW50QgcKBV9hcmNo');
+    'VudIgBARIXCgRhcmNoGAIgASgJSAFSBGFyY2iIAQESIgoEaGF2ZRgDIAMoCzIOLmhpLmFpLkhh'
+    'dmVEZXBSBGhhdmVCCAoGX2FnZW50QgcKBV9hcmNo');
 
 @$core.Deprecated('Use listOnDeviceRespDescriptor instead')
 const ListOnDeviceResp$json = {

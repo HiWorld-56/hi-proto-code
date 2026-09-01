@@ -3364,10 +3364,15 @@ pub mod push_manager_client {
 /// ⚠️ **不传 = aarch64**。老 brain 发的是 `Empty`(根本不带这个字段),optional 之后就是
 /// "没有值" —— 于是它照旧拿到 arm64 那份,零改动继续跑。这条兼容是有意的。
 /// ⛔ **空串不再是合法值**(2026-08-28 起禁止用空串表示"没有"):要么不传,要么给真架构名。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOnDeviceReq {
     #[prost(string, optional, tag = "1")]
     pub arch: ::core::option::Option<::prost::alloc::string::String>,
+    /// 机器人已经有的依赖文件,club 原样穿透给 hi.ai。
+    /// 语义见 `hi.ai.HaveDep` 与 `hi.ai.ListOnDeviceReq.have` —— **它是请求的参数,
+    /// 不是服务端的一张表**。
+    #[prost(message, repeated, tag = "2")]
+    pub have: ::prost::alloc::vec::Vec<super::ai::HaveDep>,
 }
 /// ReloadApiKey —— club 专属(hi.ai 无 api_key 概念)。
 /// api_key 存在 c.data(该机器人自己的),用户可在别处删掉某个 apikey,导致插件里存的那个失效;

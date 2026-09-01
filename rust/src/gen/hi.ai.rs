@@ -1326,7 +1326,24 @@ pub struct LuaDepFile {
     #[prost(string, optional, tag = "3")]
     pub sha256: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// HaveDep 机器人本地**已经有的**一个依赖文件。
+///
+/// 🔴 粒度到**文件 + 摘要**,不能只报 `<rock>/<版本>` —— 只报版本的话,某个文件损坏
+/// 或下了一半服务端看不出来,会以为齐了。一台机器人几个 rock、每个十几个文件,
+/// 报文也就几百条,很小。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct HaveDep {
+    #[prost(string, optional, tag = "1")]
+    pub rock: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 相对 `<rock>/<版本>/`
+    #[prost(string, optional, tag = "3")]
+    pub path: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOnDeviceReq {
     #[prost(string, optional, tag = "1")]
     pub agent: ::core::option::Option<::prost::alloc::string::String>,
@@ -1338,6 +1355,16 @@ pub struct ListOnDeviceReq {
     /// ⛔ 空串不是合法值:要么不传,要么给真架构名。
     #[prost(string, optional, tag = "2")]
     pub arch: ::core::option::Option<::prost::alloc::string::String>,
+    /// 机器人**已经有的依赖文件**。服务端据此**只给缺的那些现签 URL** ——
+    /// 已经有的那些仍然在清单里(撤权与回收要靠全量清单表达),只是 `url` 为空。
+    ///
+    /// 🔴 **它是这次请求的参数,不是服务端的一张表。** 每轮机器人现扫磁盘现报,
+    /// 服务端拿这一次的报文算差额 —— 权威始终在机器人那边,没有漂移的余地。
+    /// 存下来当"最后一次报了什么"展示可以;**永远不要不重新问就拿它算差额**。
+    ///
+    /// ⚠️ 不传 = 什么都没有 → 服务端给全量 URL。老 brain 因此零改动继续跑。
+    #[prost(message, repeated, tag = "3")]
+    pub have: ::prost::alloc::vec::Vec<HaveDep>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOnDeviceResp {
