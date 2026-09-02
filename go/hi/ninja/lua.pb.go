@@ -92,10 +92,27 @@ func (x *LuaCtx) GetAsker() string {
 // 够不着那个目录（它只需要 `/opt/hinj/luadeps/`）。现在制品是 KB 量级
 // （依赖不再内联），传字节比共享一个目录干净。
 type OpenReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
-	Version       *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"`
-	Script        []byte                 `protobuf:"bytes,3,opt,name=script,proto3,oneof" json:"script,omitempty"` // main.lua 合并后的那一个文件
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Uuid    *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Version *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"`
+	Script  []byte                 `protobuf:"bytes,3,opt,name=script,proto3,oneof" json:"script,omitempty"` // main.lua 合并后的那一个文件
+	// deps **这一版声明了哪些 rock** —— 执行器据此决定 `__native` / `__luasrc`
+	// 允许装哪些 C 模块与依赖自带的 lua 源码。
+	//
+	// 🔴 **它是一道权限闸，不是一份提示。**
+	//
+	// `/opt/hinj/luadeps/` 是**全机共用的集合**（同一个 rock 被五个插件用到只存一份），
+	// 而 `__native(rock, 版本, 模块)` 的三个分量是插件自己写的字符串。没有这份清单的话，
+	// 一个**依赖一个都没声明**的插件可以直接去 dlopen 别的插件装上去的 `.so` ——
+	// 2026-09-02 在 `.66` 上实测：拿到了 `luafilesystem` 与 `luasocket`，
+	// 列出了 `/opt/hinj`、建出了 TCP socket。**文件系统与网络，都在沙箱之外。**
+	//
+	// 而这条路**验收侧结构上看不见**：verify-lua 的集合是按本插件的依赖现搭的，
+	// 别人的 rock 不在那台机器上，同一段代码在验收里必然报"没装上"，只有到设备上才成立。
+	//
+	// ⚠️ **空 = 一个都不许，不是"不限制"。** 别为了兼容老 sidecar 把空当成放行 ——
+	// 那等于把闸门拆了，而且零报错。
+	Deps          []*LuaRock `protobuf:"bytes,4,rep,name=deps,proto3" json:"deps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -151,6 +168,67 @@ func (x *OpenReq) GetScript() []byte {
 	return nil
 }
 
+func (x *OpenReq) GetDeps() []*LuaRock {
+	if x != nil {
+		return x.Deps
+	}
+	return nil
+}
+
+// LuaRock 一个依赖的坐标。**版本是键的一部分** —— 集合按
+// `<rock>/<版本>/` 落盘，只对 rock 名不对版本等于放行同名的另一个版本。
+type LuaRock struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rock          *string                `protobuf:"bytes,1,opt,name=rock,proto3,oneof" json:"rock,omitempty"`
+	Version       *string                `protobuf:"bytes,2,opt,name=version,proto3,oneof" json:"version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LuaRock) Reset() {
+	*x = LuaRock{}
+	mi := &file_hi_ninja_lua_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LuaRock) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LuaRock) ProtoMessage() {}
+
+func (x *LuaRock) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_lua_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LuaRock.ProtoReflect.Descriptor instead.
+func (*LuaRock) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *LuaRock) GetRock() string {
+	if x != nil && x.Rock != nil {
+		return *x.Rock
+	}
+	return ""
+}
+
+func (x *LuaRock) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
 type OpenResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Ok            *bool                  `protobuf:"varint,1,opt,name=ok,proto3,oneof" json:"ok,omitempty"`
@@ -163,7 +241,7 @@ type OpenResp struct {
 
 func (x *OpenResp) Reset() {
 	*x = OpenResp{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[2]
+	mi := &file_hi_ninja_lua_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -175,7 +253,7 @@ func (x *OpenResp) String() string {
 func (*OpenResp) ProtoMessage() {}
 
 func (x *OpenResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[2]
+	mi := &file_hi_ninja_lua_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -188,7 +266,7 @@ func (x *OpenResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OpenResp.ProtoReflect.Descriptor instead.
 func (*OpenResp) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{2}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *OpenResp) GetOk() bool {
@@ -234,7 +312,7 @@ type InvokeReq struct {
 
 func (x *InvokeReq) Reset() {
 	*x = InvokeReq{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[3]
+	mi := &file_hi_ninja_lua_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -246,7 +324,7 @@ func (x *InvokeReq) String() string {
 func (*InvokeReq) ProtoMessage() {}
 
 func (x *InvokeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[3]
+	mi := &file_hi_ninja_lua_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -259,7 +337,7 @@ func (x *InvokeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeReq.ProtoReflect.Descriptor instead.
 func (*InvokeReq) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{3}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *InvokeReq) GetUuid() string {
@@ -319,7 +397,7 @@ type InvokeResp struct {
 
 func (x *InvokeResp) Reset() {
 	*x = InvokeResp{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[4]
+	mi := &file_hi_ninja_lua_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -331,7 +409,7 @@ func (x *InvokeResp) String() string {
 func (*InvokeResp) ProtoMessage() {}
 
 func (x *InvokeResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[4]
+	mi := &file_hi_ninja_lua_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -344,7 +422,7 @@ func (x *InvokeResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeResp.ProtoReflect.Descriptor instead.
 func (*InvokeResp) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{4}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *InvokeResp) GetOk() bool {
@@ -379,7 +457,7 @@ type CloseReq struct {
 
 func (x *CloseReq) Reset() {
 	*x = CloseReq{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[5]
+	mi := &file_hi_ninja_lua_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -391,7 +469,7 @@ func (x *CloseReq) String() string {
 func (*CloseReq) ProtoMessage() {}
 
 func (x *CloseReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[5]
+	mi := &file_hi_ninja_lua_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -404,7 +482,7 @@ func (x *CloseReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseReq.ProtoReflect.Descriptor instead.
 func (*CloseReq) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{5}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CloseReq) GetUuid() string {
@@ -436,7 +514,7 @@ type HostCallReq struct {
 
 func (x *HostCallReq) Reset() {
 	*x = HostCallReq{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[6]
+	mi := &file_hi_ninja_lua_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -448,7 +526,7 @@ func (x *HostCallReq) String() string {
 func (*HostCallReq) ProtoMessage() {}
 
 func (x *HostCallReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[6]
+	mi := &file_hi_ninja_lua_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -461,7 +539,7 @@ func (x *HostCallReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostCallReq.ProtoReflect.Descriptor instead.
 func (*HostCallReq) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{6}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *HostCallReq) GetName() string {
@@ -498,7 +576,7 @@ type HostCallResp struct {
 
 func (x *HostCallResp) Reset() {
 	*x = HostCallResp{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[7]
+	mi := &file_hi_ninja_lua_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -510,7 +588,7 @@ func (x *HostCallResp) String() string {
 func (*HostCallResp) ProtoMessage() {}
 
 func (x *HostCallResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[7]
+	mi := &file_hi_ninja_lua_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -523,7 +601,7 @@ func (x *HostCallResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostCallResp.ProtoReflect.Descriptor instead.
 func (*HostCallResp) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{7}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *HostCallResp) GetJson() string {
@@ -573,7 +651,7 @@ type BrainToLua struct {
 
 func (x *BrainToLua) Reset() {
 	*x = BrainToLua{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[8]
+	mi := &file_hi_ninja_lua_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -585,7 +663,7 @@ func (x *BrainToLua) String() string {
 func (*BrainToLua) ProtoMessage() {}
 
 func (x *BrainToLua) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[8]
+	mi := &file_hi_ninja_lua_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -598,7 +676,7 @@ func (x *BrainToLua) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BrainToLua.ProtoReflect.Descriptor instead.
 func (*BrainToLua) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{8}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *BrainToLua) GetReqId() uint64 {
@@ -695,7 +773,7 @@ type LuaToBrain struct {
 
 func (x *LuaToBrain) Reset() {
 	*x = LuaToBrain{}
-	mi := &file_hi_ninja_lua_proto_msgTypes[9]
+	mi := &file_hi_ninja_lua_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -707,7 +785,7 @@ func (x *LuaToBrain) String() string {
 func (*LuaToBrain) ProtoMessage() {}
 
 func (x *LuaToBrain) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_lua_proto_msgTypes[9]
+	mi := &file_hi_ninja_lua_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -720,7 +798,7 @@ func (x *LuaToBrain) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LuaToBrain.ProtoReflect.Descriptor instead.
 func (*LuaToBrain) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{9}
+	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *LuaToBrain) GetReqId() uint64 {
@@ -797,15 +875,22 @@ const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\x05asker\x18\x03 \x01(\tH\x02R\x05asker\x88\x01\x01B\x05\n" +
 	"\x03_meB\t\n" +
 	"\a_masterB\b\n" +
-	"\x06_asker\"~\n" +
+	"\x06_asker\"\xa5\x01\n" +
 	"\aOpenReq\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01\x12\x1b\n" +
-	"\x06script\x18\x03 \x01(\fH\x02R\x06script\x88\x01\x01B\a\n" +
+	"\x06script\x18\x03 \x01(\fH\x02R\x06script\x88\x01\x01\x12%\n" +
+	"\x04deps\x18\x04 \x03(\v2\x11.hi.ninja.LuaRockR\x04depsB\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
 	"\b_versionB\t\n" +
-	"\a_script\"\xa7\x01\n" +
+	"\a_script\"V\n" +
+	"\aLuaRock\x12\x17\n" +
+	"\x04rock\x18\x01 \x01(\tH\x00R\x04rock\x88\x01\x01\x12\x1d\n" +
+	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01B\a\n" +
+	"\x05_rockB\n" +
+	"\n" +
+	"\b_version\"\xa7\x01\n" +
 	"\bOpenResp\x12\x13\n" +
 	"\x02ok\x18\x01 \x01(\bH\x00R\x02ok\x88\x01\x01\x12\x1f\n" +
 	"\bcontract\x18\x02 \x01(\rH\x01R\bcontract\x88\x01\x01\x12\x1f\n" +
@@ -894,33 +979,35 @@ func file_hi_ninja_lua_proto_rawDescGZIP() []byte {
 	return file_hi_ninja_lua_proto_rawDescData
 }
 
-var file_hi_ninja_lua_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_hi_ninja_lua_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_hi_ninja_lua_proto_goTypes = []any{
 	(*LuaCtx)(nil),       // 0: hi.ninja.LuaCtx
 	(*OpenReq)(nil),      // 1: hi.ninja.OpenReq
-	(*OpenResp)(nil),     // 2: hi.ninja.OpenResp
-	(*InvokeReq)(nil),    // 3: hi.ninja.InvokeReq
-	(*InvokeResp)(nil),   // 4: hi.ninja.InvokeResp
-	(*CloseReq)(nil),     // 5: hi.ninja.CloseReq
-	(*HostCallReq)(nil),  // 6: hi.ninja.HostCallReq
-	(*HostCallResp)(nil), // 7: hi.ninja.HostCallResp
-	(*BrainToLua)(nil),   // 8: hi.ninja.BrainToLua
-	(*LuaToBrain)(nil),   // 9: hi.ninja.LuaToBrain
+	(*LuaRock)(nil),      // 2: hi.ninja.LuaRock
+	(*OpenResp)(nil),     // 3: hi.ninja.OpenResp
+	(*InvokeReq)(nil),    // 4: hi.ninja.InvokeReq
+	(*InvokeResp)(nil),   // 5: hi.ninja.InvokeResp
+	(*CloseReq)(nil),     // 6: hi.ninja.CloseReq
+	(*HostCallReq)(nil),  // 7: hi.ninja.HostCallReq
+	(*HostCallResp)(nil), // 8: hi.ninja.HostCallResp
+	(*BrainToLua)(nil),   // 9: hi.ninja.BrainToLua
+	(*LuaToBrain)(nil),   // 10: hi.ninja.LuaToBrain
 }
 var file_hi_ninja_lua_proto_depIdxs = []int32{
-	0, // 0: hi.ninja.InvokeReq.ctx:type_name -> hi.ninja.LuaCtx
-	1, // 1: hi.ninja.BrainToLua.open:type_name -> hi.ninja.OpenReq
-	3, // 2: hi.ninja.BrainToLua.invoke:type_name -> hi.ninja.InvokeReq
-	5, // 3: hi.ninja.BrainToLua.close:type_name -> hi.ninja.CloseReq
-	7, // 4: hi.ninja.BrainToLua.host_resp:type_name -> hi.ninja.HostCallResp
-	2, // 5: hi.ninja.LuaToBrain.open:type_name -> hi.ninja.OpenResp
-	4, // 6: hi.ninja.LuaToBrain.invoke:type_name -> hi.ninja.InvokeResp
-	6, // 7: hi.ninja.LuaToBrain.host_call:type_name -> hi.ninja.HostCallReq
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	2, // 0: hi.ninja.OpenReq.deps:type_name -> hi.ninja.LuaRock
+	0, // 1: hi.ninja.InvokeReq.ctx:type_name -> hi.ninja.LuaCtx
+	1, // 2: hi.ninja.BrainToLua.open:type_name -> hi.ninja.OpenReq
+	4, // 3: hi.ninja.BrainToLua.invoke:type_name -> hi.ninja.InvokeReq
+	6, // 4: hi.ninja.BrainToLua.close:type_name -> hi.ninja.CloseReq
+	8, // 5: hi.ninja.BrainToLua.host_resp:type_name -> hi.ninja.HostCallResp
+	3, // 6: hi.ninja.LuaToBrain.open:type_name -> hi.ninja.OpenResp
+	5, // 7: hi.ninja.LuaToBrain.invoke:type_name -> hi.ninja.InvokeResp
+	7, // 8: hi.ninja.LuaToBrain.host_call:type_name -> hi.ninja.HostCallReq
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_lua_proto_init() }
@@ -936,13 +1023,14 @@ func file_hi_ninja_lua_proto_init() {
 	file_hi_ninja_lua_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_ninja_lua_proto_msgTypes[6].OneofWrappers = []any{}
 	file_hi_ninja_lua_proto_msgTypes[7].OneofWrappers = []any{}
-	file_hi_ninja_lua_proto_msgTypes[8].OneofWrappers = []any{
+	file_hi_ninja_lua_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_ninja_lua_proto_msgTypes[9].OneofWrappers = []any{
 		(*BrainToLua_Open)(nil),
 		(*BrainToLua_Invoke)(nil),
 		(*BrainToLua_Close)(nil),
 		(*BrainToLua_HostResp)(nil),
 	}
-	file_hi_ninja_lua_proto_msgTypes[9].OneofWrappers = []any{
+	file_hi_ninja_lua_proto_msgTypes[10].OneofWrappers = []any{
 		(*LuaToBrain_Open)(nil),
 		(*LuaToBrain_Invoke)(nil),
 		(*LuaToBrain_HostCall)(nil),
@@ -953,7 +1041,7 @@ func file_hi_ninja_lua_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_lua_proto_rawDesc), len(file_hi_ninja_lua_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

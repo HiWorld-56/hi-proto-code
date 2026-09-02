@@ -21,7 +21,7 @@ pub struct LuaCtx {
 /// **脚本按字节传，不传路径。** 插件产物是 brain 下载并校验过的，执行器不该也
 /// 够不着那个目录（它只需要 `/opt/hinj/luadeps/`）。现在制品是 KB 量级
 /// （依赖不再内联），传字节比共享一个目录干净。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OpenReq {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
@@ -30,6 +30,33 @@ pub struct OpenReq {
     /// main.lua 合并后的那一个文件
     #[prost(bytes = "vec", optional, tag = "3")]
     pub script: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// deps **这一版声明了哪些 rock** —— 执行器据此决定 `__native` / `__luasrc`
+    /// 允许装哪些 C 模块与依赖自带的 lua 源码。
+    ///
+    /// 🔴 **它是一道权限闸，不是一份提示。**
+    ///
+    /// `/opt/hinj/luadeps/` 是**全机共用的集合**（同一个 rock 被五个插件用到只存一份），
+    /// 而 `__native(rock, 版本, 模块)` 的三个分量是插件自己写的字符串。没有这份清单的话，
+    /// 一个**依赖一个都没声明**的插件可以直接去 dlopen 别的插件装上去的 `.so` ——
+    /// 2026-09-02 在 `.66` 上实测：拿到了 `luafilesystem` 与 `luasocket`，
+    /// 列出了 `/opt/hinj`、建出了 TCP socket。**文件系统与网络，都在沙箱之外。**
+    ///
+    /// 而这条路**验收侧结构上看不见**：verify-lua 的集合是按本插件的依赖现搭的，
+    /// 别人的 rock 不在那台机器上，同一段代码在验收里必然报"没装上"，只有到设备上才成立。
+    ///
+    /// ⚠️ **空 = 一个都不许，不是"不限制"。** 别为了兼容老 sidecar 把空当成放行 ——
+    /// 那等于把闸门拆了，而且零报错。
+    #[prost(message, repeated, tag = "4")]
+    pub deps: ::prost::alloc::vec::Vec<LuaRock>,
+}
+/// LuaRock 一个依赖的坐标。**版本是键的一部分** —— 集合按
+/// `<rock>/<版本>/` 落盘，只对 rock 名不对版本等于放行同名的另一个版本。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaRock {
+    #[prost(string, optional, tag = "1")]
+    pub rock: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OpenResp {
@@ -113,7 +140,7 @@ pub struct HostCallResp {
     pub code: ::core::option::Option<u32>,
 }
 /// BrainToLua brain 发给执行器的。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToLua {
     /// req_id 与回复配对。**两个方向各有一套编号**，互不相干 ——
     /// 回复的类型就说明了该去哪张表里找。
@@ -124,7 +151,7 @@ pub struct BrainToLua {
 }
 /// Nested message and enum types in `BrainToLua`.
 pub mod brain_to_lua {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
         #[prost(message, tag = "2")]
         Open(super::OpenReq),

@@ -59,6 +59,14 @@ const OpenReq$json = {
       '10': 'script',
       '17': true
     },
+    {
+      '1': 'deps',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ninja.LuaRock',
+      '10': 'deps'
+    },
   ],
   '8': [
     {'1': '_uuid'},
@@ -70,8 +78,34 @@ const OpenReq$json = {
 /// Descriptor for `OpenReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List openReqDescriptor = $convert.base64Decode(
     'CgdPcGVuUmVxEhcKBHV1aWQYASABKAlIAFIEdXVpZIgBARIdCgd2ZXJzaW9uGAIgASgJSAFSB3'
-    'ZlcnNpb26IAQESGwoGc2NyaXB0GAMgASgMSAJSBnNjcmlwdIgBAUIHCgVfdXVpZEIKCghfdmVy'
-    'c2lvbkIJCgdfc2NyaXB0');
+    'ZlcnNpb26IAQESGwoGc2NyaXB0GAMgASgMSAJSBnNjcmlwdIgBARIlCgRkZXBzGAQgAygLMhEu'
+    'aGkubmluamEuTHVhUm9ja1IEZGVwc0IHCgVfdXVpZEIKCghfdmVyc2lvbkIJCgdfc2NyaXB0');
+
+@$core.Deprecated('Use luaRockDescriptor instead')
+const LuaRock$json = {
+  '1': 'LuaRock',
+  '2': [
+    {'1': 'rock', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'rock', '17': true},
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'version',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_rock'},
+    {'1': '_version'},
+  ],
+};
+
+/// Descriptor for `LuaRock`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List luaRockDescriptor = $convert.base64Decode(
+    'CgdMdWFSb2NrEhcKBHJvY2sYASABKAlIAFIEcm9ja4gBARIdCgd2ZXJzaW9uGAIgASgJSAFSB3'
+    'ZlcnNpb26IAQFCBwoFX3JvY2tCCgoIX3ZlcnNpb24=');
 
 @$core.Deprecated('Use openRespDescriptor instead')
 const OpenResp$json = {

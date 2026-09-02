@@ -1253,8 +1253,16 @@ class LuaDepRequiresResp extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<LuaDepRequiresResp>(create);
   static LuaDepRequiresResp? _defaultInstance;
 
-  /// 配方在不在(= 在不在白名单里)。**不在时不是错误** —— 调用方要据此报
-  /// "它不在白名单里",而不是报一个 rpc 失败。
+  /// 这个 rock 的依赖问得出来没有。**问不出来不是错误** —— 调用方要据此报
+  /// 一句人话，而不是报一个 rpc 失败。
+  ///
+  /// ⚠️ 原来这里写的是「配方在不在(= 在不在白名单里)」—— **白名单 2026-09-01 已经取消**
+  ///    （任意 luarocks 包都能装，见 backend-hi-ai-plugin 的 `去掉白名单` 那次提交）。
+  ///    注释不是凭据，留着一句已经不成立的话只会误导下一个人。
+  ///
+  /// 🔴 **`optional` 是有意义的：不给 = "没表态"，与 `false` = "明说不行"是两回事。**
+  ///    读它一律判 presence（`resp.Ok == nil`），别用 `GetOk()` —— 那个函数正是把
+  ///    "没传"摊成 false 的那一个，摊完两种成因就再也分不开了。
   @$pb.TagNumber(1)
   $core.bool get ok => $_getBF(0);
   @$pb.TagNumber(1)

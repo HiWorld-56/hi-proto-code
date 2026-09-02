@@ -109,11 +109,13 @@ class OpenReq extends $pb.GeneratedMessage {
     $core.String? uuid,
     $core.String? version,
     $core.List<$core.int>? script,
+    $core.Iterable<LuaRock>? deps,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
     if (version != null) result.version = version;
     if (script != null) result.script = script;
+    if (deps != null) result.deps.addAll(deps);
     return result;
   }
 
@@ -134,6 +136,7 @@ class OpenReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'version')
     ..a<$core.List<$core.int>>(
         3, _omitFieldNames ? '' : 'script', $pb.PbFieldType.OY)
+    ..pPM<LuaRock>(4, _omitFieldNames ? '' : 'deps', subBuilder: LuaRock.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -180,6 +183,92 @@ class OpenReq extends $pb.GeneratedMessage {
   $core.bool hasScript() => $_has(2);
   @$pb.TagNumber(3)
   void clearScript() => $_clearField(3);
+
+  /// deps **这一版声明了哪些 rock** —— 执行器据此决定 `__native` / `__luasrc`
+  /// 允许装哪些 C 模块与依赖自带的 lua 源码。
+  ///
+  /// 🔴 **它是一道权限闸，不是一份提示。**
+  ///
+  /// `/opt/hinj/luadeps/` 是**全机共用的集合**（同一个 rock 被五个插件用到只存一份），
+  /// 而 `__native(rock, 版本, 模块)` 的三个分量是插件自己写的字符串。没有这份清单的话，
+  /// 一个**依赖一个都没声明**的插件可以直接去 dlopen 别的插件装上去的 `.so` ——
+  /// 2026-09-02 在 `.66` 上实测：拿到了 `luafilesystem` 与 `luasocket`，
+  /// 列出了 `/opt/hinj`、建出了 TCP socket。**文件系统与网络，都在沙箱之外。**
+  ///
+  /// 而这条路**验收侧结构上看不见**：verify-lua 的集合是按本插件的依赖现搭的，
+  /// 别人的 rock 不在那台机器上，同一段代码在验收里必然报"没装上"，只有到设备上才成立。
+  ///
+  /// ⚠️ **空 = 一个都不许，不是"不限制"。** 别为了兼容老 sidecar 把空当成放行 ——
+  /// 那等于把闸门拆了，而且零报错。
+  @$pb.TagNumber(4)
+  $pb.PbList<LuaRock> get deps => $_getList(3);
+}
+
+/// LuaRock 一个依赖的坐标。**版本是键的一部分** —— 集合按
+/// `<rock>/<版本>/` 落盘，只对 rock 名不对版本等于放行同名的另一个版本。
+class LuaRock extends $pb.GeneratedMessage {
+  factory LuaRock({
+    $core.String? rock,
+    $core.String? version,
+  }) {
+    final result = create();
+    if (rock != null) result.rock = rock;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  LuaRock._();
+
+  factory LuaRock.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaRock.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaRock',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'rock')
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaRock clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaRock copyWith(void Function(LuaRock) updates) =>
+      super.copyWith((message) => updates(message as LuaRock)) as LuaRock;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaRock create() => LuaRock._();
+  @$core.override
+  LuaRock createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaRock getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LuaRock>(create);
+  static LuaRock? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get rock => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set rock($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRock() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRock() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
 }
 
 class OpenResp extends $pb.GeneratedMessage {
