@@ -1264,6 +1264,7 @@ type FaceToBrain struct {
 	//	*FaceToBrain_VoiceState
 	//	*FaceToBrain_UpdateAction
 	//	*FaceToBrain_GetBinanceSettings
+	//	*FaceToBrain_RequestInit
 	Cmd           isFaceToBrain_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1333,6 +1334,15 @@ func (x *FaceToBrain) GetGetBinanceSettings() *emptypb.Empty {
 	return nil
 }
 
+func (x *FaceToBrain) GetRequestInit() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*FaceToBrain_RequestInit); ok {
+			return x.RequestInit
+		}
+	}
+	return nil
+}
+
 type isFaceToBrain_Cmd interface {
 	isFaceToBrain_Cmd()
 }
@@ -1350,11 +1360,26 @@ type FaceToBrain_GetBinanceSettings struct {
 	GetBinanceSettings *emptypb.Empty `protobuf:"bytes,3,opt,name=get_binance_settings,json=getBinanceSettings,proto3,oneof"`
 }
 
+type FaceToBrain_RequestInit struct {
+	// 🔴 **模块就绪了，请把初始化数据推给我。** brain 收到才推 RobotInit + 全量关系列表。
+	//
+	// 为什么由模块主动要，而不是 brain 在「看到它上线」时自己推：
+	// **brain 不知道模块准备好了没有。** 上线只说明它的连接建起来了；
+	// 而模块可能还在起自己的界面/缓存，这时候推过去的数据它接不住，
+	// 而 brain 那侧一切正常 —— 又是一次零报错的丢数据。
+	//
+	// ⚠️ 这条也是**重连后的恢复口**：brain 重启过、或模块自己重启过，
+	// 都由模块在准备好之后再要一次，不必让 brain 去猜「这次是新上来的还是一直都在」。
+	RequestInit *emptypb.Empty `protobuf:"bytes,4,opt,name=request_init,json=requestInit,proto3,oneof"`
+}
+
 func (*FaceToBrain_VoiceState) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_UpdateAction) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_GetBinanceSettings) isFaceToBrain_Cmd() {}
+
+func (*FaceToBrain_RequestInit) isFaceToBrain_Cmd() {}
 
 // 插件下载/安装进度。
 //
@@ -1613,12 +1638,13 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\b_triggerB\r\n" +
 	"\v_updated_atB\x13\n" +
 	"\x11_downloaded_bytesB\x0e\n" +
-	"\f_total_bytes\"\xd9\x01\n" +
+	"\f_total_bytes\"\x96\x02\n" +
 	"\vFaceToBrain\x128\n" +
 	"\vvoice_state\x18\x01 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"voiceState\x12=\n" +
 	"\rupdate_action\x18\x02 \x01(\v2\x16.hi.ninja.UpdateActionH\x00R\fupdateAction\x12J\n" +
-	"\x14get_binance_settings\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettingsB\x05\n" +
+	"\x14get_binance_settings\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettings\x12;\n" +
+	"\frequest_init\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\vrequestInitB\x05\n" +
 	"\x03cmd\"\xdb\x03\n" +
 	"\x0ePluginProgress\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
@@ -1734,13 +1760,14 @@ var file_hi_ninja_ui_proto_depIdxs = []int32{
 	0,  // 27: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
 	17, // 28: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
 	21, // 29: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	2,  // 30: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
-	3,  // 31: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	32, // [32:32] is the sub-list for method output_type
-	32, // [32:32] is the sub-list for method input_type
-	32, // [32:32] is the sub-list for extension type_name
-	32, // [32:32] is the sub-list for extension extendee
-	0,  // [0:32] is the sub-list for field type_name
+	21, // 30: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	2,  // 31: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	3,  // 32: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	33, // [33:33] is the sub-list for method output_type
+	33, // [33:33] is the sub-list for method input_type
+	33, // [33:33] is the sub-list for extension type_name
+	33, // [33:33] is the sub-list for extension extendee
+	0,  // [0:33] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -1782,6 +1809,7 @@ func file_hi_ninja_ui_proto_init() {
 		(*FaceToBrain_VoiceState)(nil),
 		(*FaceToBrain_UpdateAction)(nil),
 		(*FaceToBrain_GetBinanceSettings)(nil),
+		(*FaceToBrain_RequestInit)(nil),
 	}
 	file_hi_ninja_ui_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[13].OneofWrappers = []any{}

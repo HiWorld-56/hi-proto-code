@@ -605,6 +605,15 @@ const FaceToBrain$json = {
       '9': 0,
       '10': 'getBinanceSettings'
     },
+    {
+      '1': 'request_init',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Empty',
+      '9': 0,
+      '10': 'requestInit'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -616,7 +625,9 @@ final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     'CgtGYWNlVG9CcmFpbhI4Cgt2b2ljZV9zdGF0ZRgBIAEoDjIVLmhpLm5pbmphLlN0YXRlVG9nZ2'
     'xlSABSCnZvaWNlU3RhdGUSPQoNdXBkYXRlX2FjdGlvbhgCIAEoCzIWLmhpLm5pbmphLlVwZGF0'
     'ZUFjdGlvbkgAUgx1cGRhdGVBY3Rpb24SSgoUZ2V0X2JpbmFuY2Vfc2V0dGluZ3MYAyABKAsyFi'
-    '5nb29nbGUucHJvdG9idWYuRW1wdHlIAFISZ2V0QmluYW5jZVNldHRpbmdzQgUKA2NtZA==');
+    '5nb29nbGUucHJvdG9idWYuRW1wdHlIAFISZ2V0QmluYW5jZVNldHRpbmdzEjsKDHJlcXVlc3Rf'
+    'aW5pdBgEIAEoCzIWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eUgAUgtyZXF1ZXN0SW5pdEIFCgNjbW'
+    'Q=');
 
 @$core.Deprecated('Use pluginProgressDescriptor instead')
 const PluginProgress$json = {

@@ -1301,7 +1301,13 @@ class UpdateInfo extends $pb.GeneratedMessage {
   void clearTotalBytes() => $_clearField(11);
 }
 
-enum FaceToBrain_Cmd { voiceState, updateAction, getBinanceSettings, notSet }
+enum FaceToBrain_Cmd {
+  voiceState,
+  updateAction,
+  getBinanceSettings,
+  requestInit,
+  notSet
+}
 
 /// face -> brain
 class FaceToBrain extends $pb.GeneratedMessage {
@@ -1309,12 +1315,14 @@ class FaceToBrain extends $pb.GeneratedMessage {
     StateToggle? voiceState,
     UpdateAction? updateAction,
     $3.Empty? getBinanceSettings,
+    $3.Empty? requestInit,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
     if (updateAction != null) result.updateAction = updateAction;
     if (getBinanceSettings != null)
       result.getBinanceSettings = getBinanceSettings;
+    if (requestInit != null) result.requestInit = requestInit;
     return result;
   }
 
@@ -1331,18 +1339,21 @@ class FaceToBrain extends $pb.GeneratedMessage {
     1: FaceToBrain_Cmd.voiceState,
     2: FaceToBrain_Cmd.updateAction,
     3: FaceToBrain_Cmd.getBinanceSettings,
+    4: FaceToBrain_Cmd.requestInit,
     0: FaceToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3])
+    ..oo(0, [1, 2, 3, 4])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
         subBuilder: UpdateAction.create)
     ..aOM<$3.Empty>(3, _omitFieldNames ? '' : 'getBinanceSettings',
+        subBuilder: $3.Empty.create)
+    ..aOM<$3.Empty>(4, _omitFieldNames ? '' : 'requestInit',
         subBuilder: $3.Empty.create)
     ..hasRequiredFields = false;
 
@@ -1368,10 +1379,12 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1405,6 +1418,26 @@ class FaceToBrain extends $pb.GeneratedMessage {
   void clearGetBinanceSettings() => $_clearField(3);
   @$pb.TagNumber(3)
   $3.Empty ensureGetBinanceSettings() => $_ensure(2);
+
+  /// 🔴 **模块就绪了，请把初始化数据推给我。** brain 收到才推 RobotInit + 全量关系列表。
+  ///
+  /// 为什么由模块主动要，而不是 brain 在「看到它上线」时自己推：
+  /// **brain 不知道模块准备好了没有。** 上线只说明它的连接建起来了；
+  /// 而模块可能还在起自己的界面/缓存，这时候推过去的数据它接不住，
+  /// 而 brain 那侧一切正常 —— 又是一次零报错的丢数据。
+  ///
+  /// ⚠️ 这条也是**重连后的恢复口**：brain 重启过、或模块自己重启过，
+  /// 都由模块在准备好之后再要一次，不必让 brain 去猜「这次是新上来的还是一直都在」。
+  @$pb.TagNumber(4)
+  $3.Empty get requestInit => $_getN(3);
+  @$pb.TagNumber(4)
+  set requestInit($3.Empty value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRequestInit() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRequestInit() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $3.Empty ensureRequestInit() => $_ensure(3);
 }
 
 /// 插件下载/安装进度。

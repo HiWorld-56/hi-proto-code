@@ -1076,6 +1076,9 @@ impl serde::Serialize for FaceToBrain {
                 face_to_brain::Cmd::GetBinanceSettings(v) => {
                     struct_ser.serialize_field("getBinanceSettings", v)?;
                 }
+                face_to_brain::Cmd::RequestInit(v) => {
+                    struct_ser.serialize_field("requestInit", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -1094,6 +1097,8 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
             "updateAction",
             "get_binance_settings",
             "getBinanceSettings",
+            "request_init",
+            "requestInit",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1101,6 +1106,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
             VoiceState,
             UpdateAction,
             GetBinanceSettings,
+            RequestInit,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1125,6 +1131,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                             "voiceState" | "voice_state" => Ok(GeneratedField::VoiceState),
                             "updateAction" | "update_action" => Ok(GeneratedField::UpdateAction),
                             "getBinanceSettings" | "get_binance_settings" => Ok(GeneratedField::GetBinanceSettings),
+                            "requestInit" | "request_init" => Ok(GeneratedField::RequestInit),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1165,6 +1172,13 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("getBinanceSettings"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::GetBinanceSettings)
+;
+                        }
+                        GeneratedField::RequestInit => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestInit"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::RequestInit)
 ;
                         }
                     }

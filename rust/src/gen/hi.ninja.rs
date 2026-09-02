@@ -374,7 +374,7 @@ pub struct UpdateInfo {
 /// face -> brain
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
@@ -390,6 +390,17 @@ pub mod face_to_brain {
         /// face 重启后内存缓存是空的，用它主动要一次（本文件里空请求一律用 Empty，见 show_qr_code）
         #[prost(message, tag = "3")]
         GetBinanceSettings(::pbjson_types::Empty),
+        /// 🔴 **模块就绪了，请把初始化数据推给我。** brain 收到才推 RobotInit + 全量关系列表。
+        ///
+        /// 为什么由模块主动要，而不是 brain 在「看到它上线」时自己推：
+        /// **brain 不知道模块准备好了没有。** 上线只说明它的连接建起来了；
+        /// 而模块可能还在起自己的界面/缓存，这时候推过去的数据它接不住，
+        /// 而 brain 那侧一切正常 —— 又是一次零报错的丢数据。
+        ///
+        /// ⚠️ 这条也是**重连后的恢复口**：brain 重启过、或模块自己重启过，
+        /// 都由模块在准备好之后再要一次，不必让 brain 去猜「这次是新上来的还是一直都在」。
+        #[prost(message, tag = "4")]
+        RequestInit(::pbjson_types::Empty),
     }
 }
 /// 插件下载/安装进度。
