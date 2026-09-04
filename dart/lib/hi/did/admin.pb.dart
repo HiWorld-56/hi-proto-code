@@ -443,10 +443,12 @@ class MerchantManageListReq extends $pb.GeneratedMessage {
   factory MerchantManageListReq({
     $core.String? name,
     $2.Pagination? pagination,
+    $core.String? did,
   }) {
     final result = create();
     if (name != null) result.name = name;
     if (pagination != null) result.pagination = pagination;
+    if (did != null) result.did = did;
     return result;
   }
 
@@ -466,6 +468,7 @@ class MerchantManageListReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $2.Pagination.create)
+    ..aOS(3, _omitFieldNames ? '' : 'did')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -507,6 +510,15 @@ class MerchantManageListReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
   $2.Pagination ensurePagination() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.String get did => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set did($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDid() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDid() => $_clearField(3);
 }
 
 class MerchantManageListResp_Unit extends $pb.GeneratedMessage {

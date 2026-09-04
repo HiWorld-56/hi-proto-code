@@ -29,7 +29,7 @@ from hi.did import merchant_pb2 as hi_dot_did_dot_merchant__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/did/admin.proto\x12\x06hi.did\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"z\n\x14InviteCodeCreateResp\x12\x1d\n\x04\x63ode\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04\x63ode\x88\x01\x01\x12&\n\tis_active\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x01R\x08isActive\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_codeB\x0c\n\n_is_active\"W\n\x11InviteCodeEditReq\x12\x17\n\x04\x63ode\x18\x01 \x01(\tH\x00R\x04\x63ode\x88\x01\x01\x12\x17\n\x04note\x18\x02 \x01(\tH\x01R\x04note\x88\x01\x01\x42\x07\n\x05_codeB\x07\n\x05_note\"\xd0\x02\n\x12InviteCodeListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12;\n\x05infos\x18\x02 \x03(\x0b\x32\x1f.hi.did.InviteCodeListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1a\xcb\x01\n\x04Unit\x12\x1d\n\x04\x63ode\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04\x63ode\x88\x01\x01\x12&\n\tis_active\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x01R\x08isActive\x88\x01\x01\x12\x1d\n\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04note\x88\x01\x01\x12(\n\ncreated_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_codeB\x0c\n\n_is_activeB\x07\n\x05_noteB\r\n\x0b_created_at:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"7\n\x13InviteCodeDeleteReq\x12\x17\n\x04\x63ode\x18\x01 \x01(\tH\x00R\x04\x63ode\x88\x01\x01\x42\x07\n\x05_code\"e\n\x13InviteCodeVerifyReq\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n\x04\x63ode\x18\x02 \x01(\tH\x01R\x04\x63ode\x88\x01\x01\x12\x10\n\x03\x64id\x18\x03 \x01(\tR\x03\x64idB\x05\n\x03_idB\x07\n\x05_code\"i\n\x15MerchantManageListReq\x12\x17\n\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x07\n\x05_name\"\xbc\x02\n\x16MerchantManageListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n\x04list\x18\x02 \x03(\x0b\x32#.hi.did.MerchantManageListResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a\xb1\x01\n\x04Unit\x12.\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04\x62\x61se\x12#\n\x07\x63omment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x63omment\x88\x01\x01\x12\x42\n\x0bpermissions\x18\x03 \x03(\x0e\x32\x1a.hi.did.MerchantPermissionB\x04\x90\xb5\x18\x03R\x0bpermissions:\x04\x98\xb5\x18\x03\x42\n\n\x08_comment:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"T\n\x15MerchantManageEditReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x1d\n\x07\x63omment\x18\x02 \x01(\tH\x00R\x07\x63omment\x88\x01\x01\x42\n\n\x08_comment\"\xa3\x01\n\x18MerchantSetPermissionReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x03\x64id\x12\x33\n\x04perm\x18\x02 \x01(\x0e\x32\x1a.hi.did.MerchantPermissionH\x00R\x04perm\x88\x01\x01\x12\x1d\n\x07granted\x18\x03 \x01(\x08H\x01R\x07granted\x88\x01\x01\x42\x07\n\x05_permB\n\n\x08_granted\"6\n\x15\x42roadcastAppUpdateReq\x12\x15\n\x03\x61pp\x18\x01 \x01(\tH\x00R\x03\x61pp\x88\x01\x01\x42\x06\n\x04_app\"P\n\x18\x42roadcastPluginUpdateReq\x12$\n\x0bplugin_uuid\x18\x01 \x01(\tH\x00R\npluginUuid\x88\x01\x01\x42\x0e\n\x0c_plugin_uuid*K\n\x12MerchantPermission\x12\x1d\n\x19MERCHANT_PERM_UNSPECIFIED\x10\x00\x12\x16\n\x12MERCHANT_PERM_MQTT\x10\x01\x32\x96\x02\n\nInviteCode\x12\x45\n\x06\x43reate\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\"\x05\x8a\xb5\x18\x01\x04\x12@\n\x04\x45\x64it\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x39\n\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x05\x8a\xb5\x18\x01\x04\x12\x44\n\x06\x44\x65lete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x32G\n\x08Register\x12;\n\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x32\xa8\x02\n\x0eMerchantManage\x12L\n\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x05\x8a\xb5\x18\x01\x04\x12\x30\n\x06\x44\x65lete\x12\x07.hi.DID\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x44\n\x04\x45\x64it\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12P\n\rSetPermission\x12 .hi.did.MerchantSetPermissionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x32\x64\n\x11\x42roadcastInternal\x12O\n\x0cPluginUpdate\x12 .hi.did.BroadcastPluginUpdateReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x32V\n\tBroadcast\x12I\n\tAppUpdate\x12\x1d.hi.did.BroadcastAppUpdateReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/did/admin.proto\x12\x06hi.did\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"z\n\x14InviteCodeCreateResp\x12\x1d\n\x04\x63ode\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04\x63ode\x88\x01\x01\x12&\n\tis_active\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x01R\x08isActive\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_codeB\x0c\n\n_is_active\"W\n\x11InviteCodeEditReq\x12\x17\n\x04\x63ode\x18\x01 \x01(\tH\x00R\x04\x63ode\x88\x01\x01\x12\x17\n\x04note\x18\x02 \x01(\tH\x01R\x04note\x88\x01\x01\x42\x07\n\x05_codeB\x07\n\x05_note\"\xd0\x02\n\x12InviteCodeListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12;\n\x05infos\x18\x02 \x03(\x0b\x32\x1f.hi.did.InviteCodeListResp.UnitB\x04\x90\xb5\x18\x03R\x05infos\x1a\xcb\x01\n\x04Unit\x12\x1d\n\x04\x63ode\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04\x63ode\x88\x01\x01\x12&\n\tis_active\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x01R\x08isActive\x88\x01\x01\x12\x1d\n\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04note\x88\x01\x01\x12(\n\ncreated_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_codeB\x0c\n\n_is_activeB\x07\n\x05_noteB\r\n\x0b_created_at:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"7\n\x13InviteCodeDeleteReq\x12\x17\n\x04\x63ode\x18\x01 \x01(\tH\x00R\x04\x63ode\x88\x01\x01\x42\x07\n\x05_code\"e\n\x13InviteCodeVerifyReq\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n\x04\x63ode\x18\x02 \x01(\tH\x01R\x04\x63ode\x88\x01\x01\x12\x10\n\x03\x64id\x18\x03 \x01(\tR\x03\x64idB\x05\n\x03_idB\x07\n\x05_code\"\x96\x01\n\x15MerchantManageListReq\x12\x17\n\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\x12#\n\x03\x64id\x18\x03 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$H\x01R\x03\x64id\x88\x01\x01\x42\x07\n\x05_nameB\x06\n\x04_did\"\xbc\x02\n\x16MerchantManageListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n\x04list\x18\x02 \x03(\x0b\x32#.hi.did.MerchantManageListResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a\xb1\x01\n\x04Unit\x12.\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\x14.hi.did.MerchantInfoB\x04\x90\xb5\x18\x02R\x04\x62\x61se\x12#\n\x07\x63omment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x63omment\x88\x01\x01\x12\x42\n\x0bpermissions\x18\x03 \x03(\x0e\x32\x1a.hi.did.MerchantPermissionB\x04\x90\xb5\x18\x03R\x0bpermissions:\x04\x98\xb5\x18\x03\x42\n\n\x08_comment:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"T\n\x15MerchantManageEditReq\x12\x10\n\x03\x64id\x18\x01 \x01(\tR\x03\x64id\x12\x1d\n\x07\x63omment\x18\x02 \x01(\tH\x00R\x07\x63omment\x88\x01\x01\x42\n\n\x08_comment\"\xa3\x01\n\x18MerchantSetPermissionReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x03\x64id\x12\x33\n\x04perm\x18\x02 \x01(\x0e\x32\x1a.hi.did.MerchantPermissionH\x00R\x04perm\x88\x01\x01\x12\x1d\n\x07granted\x18\x03 \x01(\x08H\x01R\x07granted\x88\x01\x01\x42\x07\n\x05_permB\n\n\x08_granted\"6\n\x15\x42roadcastAppUpdateReq\x12\x15\n\x03\x61pp\x18\x01 \x01(\tH\x00R\x03\x61pp\x88\x01\x01\x42\x06\n\x04_app\"P\n\x18\x42roadcastPluginUpdateReq\x12$\n\x0bplugin_uuid\x18\x01 \x01(\tH\x00R\npluginUuid\x88\x01\x01\x42\x0e\n\x0c_plugin_uuid*K\n\x12MerchantPermission\x12\x1d\n\x19MERCHANT_PERM_UNSPECIFIED\x10\x00\x12\x16\n\x12MERCHANT_PERM_MQTT\x10\x01\x32\x96\x02\n\nInviteCode\x12\x45\n\x06\x43reate\x12\x16.google.protobuf.Empty\x1a\x1c.hi.did.InviteCodeCreateResp\"\x05\x8a\xb5\x18\x01\x04\x12@\n\x04\x45\x64it\x12\x19.hi.did.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x39\n\x04List\x12\x0e.hi.Pagination\x1a\x1a.hi.did.InviteCodeListResp\"\x05\x8a\xb5\x18\x01\x04\x12\x44\n\x06\x44\x65lete\x12\x1b.hi.did.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x32G\n\x08Register\x12;\n\x06Verify\x12\x1b.hi.did.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x32\xa8\x02\n\x0eMerchantManage\x12L\n\x04List\x12\x1d.hi.did.MerchantManageListReq\x1a\x1e.hi.did.MerchantManageListResp\"\x05\x8a\xb5\x18\x01\x04\x12\x30\n\x06\x44\x65lete\x12\x07.hi.DID\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x44\n\x04\x45\x64it\x12\x1d.hi.did.MerchantManageEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12P\n\rSetPermission\x12 .hi.did.MerchantSetPermissionReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x32\x64\n\x11\x42roadcastInternal\x12O\n\x0cPluginUpdate\x12 .hi.did.BroadcastPluginUpdateReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x03\x32V\n\tBroadcast\x12I\n\tAppUpdate\x12\x1d.hi.did.BroadcastAppUpdateReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -59,6 +59,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_INVITECODELISTRESP'].fields_by_name['infos']._serialized_options = b'\220\265\030\003'
   _globals['_INVITECODELISTRESP']._loaded_options = None
   _globals['_INVITECODELISTRESP']._serialized_options = b'\230\265\030\003'
+  _globals['_MERCHANTMANAGELISTREQ'].fields_by_name['did']._loaded_options = None
+  _globals['_MERCHANTMANAGELISTREQ'].fields_by_name['did']._serialized_options = b'\272H\tr\0072\005^\\S+$'
   _globals['_MERCHANTMANAGELISTRESP_UNIT'].fields_by_name['base']._loaded_options = None
   _globals['_MERCHANTMANAGELISTRESP_UNIT'].fields_by_name['base']._serialized_options = b'\220\265\030\002'
   _globals['_MERCHANTMANAGELISTRESP_UNIT'].fields_by_name['comment']._loaded_options = None
@@ -97,8 +99,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_BROADCASTINTERNAL'].methods_by_name['PluginUpdate']._serialized_options = b'\212\265\030\001\003'
   _globals['_BROADCAST'].methods_by_name['AppUpdate']._loaded_options = None
   _globals['_BROADCAST'].methods_by_name['AppUpdate']._serialized_options = b'\212\265\030\001\004'
-  _globals['_MERCHANTPERMISSION']._serialized_start=1674
-  _globals['_MERCHANTPERMISSION']._serialized_end=1749
+  _globals['_MERCHANTPERMISSION']._serialized_start=1720
+  _globals['_MERCHANTPERMISSION']._serialized_end=1795
   _globals['_INVITECODECREATERESP']._serialized_start=146
   _globals['_INVITECODECREATERESP']._serialized_end=268
   _globals['_INVITECODEEDITREQ']._serialized_start=270
@@ -111,28 +113,28 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_INVITECODEDELETEREQ']._serialized_end=753
   _globals['_INVITECODEVERIFYREQ']._serialized_start=755
   _globals['_INVITECODEVERIFYREQ']._serialized_end=856
-  _globals['_MERCHANTMANAGELISTREQ']._serialized_start=858
-  _globals['_MERCHANTMANAGELISTREQ']._serialized_end=963
-  _globals['_MERCHANTMANAGELISTRESP']._serialized_start=966
-  _globals['_MERCHANTMANAGELISTRESP']._serialized_end=1282
-  _globals['_MERCHANTMANAGELISTRESP_UNIT']._serialized_start=1089
-  _globals['_MERCHANTMANAGELISTRESP_UNIT']._serialized_end=1266
-  _globals['_MERCHANTMANAGEEDITREQ']._serialized_start=1284
-  _globals['_MERCHANTMANAGEEDITREQ']._serialized_end=1368
-  _globals['_MERCHANTSETPERMISSIONREQ']._serialized_start=1371
-  _globals['_MERCHANTSETPERMISSIONREQ']._serialized_end=1534
-  _globals['_BROADCASTAPPUPDATEREQ']._serialized_start=1536
-  _globals['_BROADCASTAPPUPDATEREQ']._serialized_end=1590
-  _globals['_BROADCASTPLUGINUPDATEREQ']._serialized_start=1592
-  _globals['_BROADCASTPLUGINUPDATEREQ']._serialized_end=1672
-  _globals['_INVITECODE']._serialized_start=1752
-  _globals['_INVITECODE']._serialized_end=2030
-  _globals['_REGISTER']._serialized_start=2032
-  _globals['_REGISTER']._serialized_end=2103
-  _globals['_MERCHANTMANAGE']._serialized_start=2106
-  _globals['_MERCHANTMANAGE']._serialized_end=2402
-  _globals['_BROADCASTINTERNAL']._serialized_start=2404
-  _globals['_BROADCASTINTERNAL']._serialized_end=2504
-  _globals['_BROADCAST']._serialized_start=2506
-  _globals['_BROADCAST']._serialized_end=2592
+  _globals['_MERCHANTMANAGELISTREQ']._serialized_start=859
+  _globals['_MERCHANTMANAGELISTREQ']._serialized_end=1009
+  _globals['_MERCHANTMANAGELISTRESP']._serialized_start=1012
+  _globals['_MERCHANTMANAGELISTRESP']._serialized_end=1328
+  _globals['_MERCHANTMANAGELISTRESP_UNIT']._serialized_start=1135
+  _globals['_MERCHANTMANAGELISTRESP_UNIT']._serialized_end=1312
+  _globals['_MERCHANTMANAGEEDITREQ']._serialized_start=1330
+  _globals['_MERCHANTMANAGEEDITREQ']._serialized_end=1414
+  _globals['_MERCHANTSETPERMISSIONREQ']._serialized_start=1417
+  _globals['_MERCHANTSETPERMISSIONREQ']._serialized_end=1580
+  _globals['_BROADCASTAPPUPDATEREQ']._serialized_start=1582
+  _globals['_BROADCASTAPPUPDATEREQ']._serialized_end=1636
+  _globals['_BROADCASTPLUGINUPDATEREQ']._serialized_start=1638
+  _globals['_BROADCASTPLUGINUPDATEREQ']._serialized_end=1718
+  _globals['_INVITECODE']._serialized_start=1798
+  _globals['_INVITECODE']._serialized_end=2076
+  _globals['_REGISTER']._serialized_start=2078
+  _globals['_REGISTER']._serialized_end=2149
+  _globals['_MERCHANTMANAGE']._serialized_start=2152
+  _globals['_MERCHANTMANAGE']._serialized_end=2448
+  _globals['_BROADCASTINTERNAL']._serialized_start=2450
+  _globals['_BROADCASTINTERNAL']._serialized_end=2550
+  _globals['_BROADCAST']._serialized_start=2552
+  _globals['_BROADCAST']._serialized_end=2638
 # @@protoc_insertion_point(module_scope)

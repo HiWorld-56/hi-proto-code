@@ -228,16 +228,28 @@ const MerchantManageListReq$json = {
       '6': '.hi.Pagination',
       '10': 'pagination'
     },
+    {
+      '1': 'did',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'did',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_name'},
+    {'1': '_did'},
   ],
 };
 
 /// Descriptor for `MerchantManageListReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantManageListReqDescriptor = $convert.base64Decode(
     'ChVNZXJjaGFudE1hbmFnZUxpc3RSZXESFwoEbmFtZRgBIAEoCUgAUgRuYW1liAEBEi4KCnBhZ2'
-    'luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9uQgcKBV9uYW1l');
+    'luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9uEiMKA2RpZBgDIAEoCUIM'
+    'ukgJcgcyBV5cUyskSAFSA2RpZIgBAUIHCgVfbmFtZUIGCgRfZGlk');
 
 @$core.Deprecated('Use merchantManageListRespDescriptor instead')
 const MerchantManageListResp$json = {

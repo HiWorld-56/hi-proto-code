@@ -337,8 +337,9 @@ func (x *InviteCodeVerifyReq) GetDid() string {
 
 type MerchantManageListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"` // 按商户名称精确查询;不传=不筛
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Did           *string                `protobuf:"bytes,3,opt,name=did,proto3,oneof" json:"did,omitempty"` // 按商户 DID 精确查询;不传=不筛
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -385,6 +386,13 @@ func (x *MerchantManageListReq) GetPagination() *hi.Pagination {
 		return x.Pagination
 	}
 	return nil
+}
+
+func (x *MerchantManageListReq) GetDid() string {
+	if x != nil && x.Did != nil {
+		return *x.Did
+	}
+	return ""
 }
 
 type MerchantManageListResp struct {
@@ -836,13 +844,15 @@ const file_hi_did_admin_proto_rawDesc = "" +
 	"\x04code\x18\x02 \x01(\tH\x01R\x04code\x88\x01\x01\x12\x10\n" +
 	"\x03did\x18\x03 \x01(\tR\x03didB\x05\n" +
 	"\x03_idB\a\n" +
-	"\x05_code\"i\n" +
+	"\x05_code\"\x96\x01\n" +
 	"\x15MerchantManageListReq\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"paginationB\a\n" +
-	"\x05_name\"\xbc\x02\n" +
+	"pagination\x12#\n" +
+	"\x03did\x18\x03 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$H\x01R\x03did\x88\x01\x01B\a\n" +
+	"\x05_nameB\x06\n" +
+	"\x04_did\"\xbc\x02\n" +
 	"\x16MerchantManageListResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n" +
 	"\x04list\x18\x02 \x03(\v2#.hi.did.MerchantManageListResp.UnitB\x04\x90\xb5\x18\x03R\x04list\x1a\xb1\x01\n" +
