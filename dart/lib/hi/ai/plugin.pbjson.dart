@@ -1400,11 +1400,21 @@ const CreateReferenceReq$json = {
       '6': '.google.protobuf.Struct',
       '10': 'versionData'
     },
+    {
+      '1': 'follow_latest',
+      '3': 6,
+      '4': 1,
+      '5': 8,
+      '9': 3,
+      '10': 'followLatest',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_agent'},
     {'1': '_uuid'},
     {'1': '_version'},
+    {'1': '_follow_latest'},
   ],
 };
 
@@ -1414,7 +1424,8 @@ final $typed_data.Uint8List createReferenceReqDescriptor = $convert.base64Decode
     'VhZ2VudIgBARIoCgR1dWlkGAIgASgJQg+6SAzIAQFyBzIFXlxTKyRIAVIEdXVpZIgBARIdCgd2'
     'ZXJzaW9uGAMgASgJSAJSB3ZlcnNpb26IAQESKwoEZGF0YRgEIAEoCzIXLmdvb2dsZS5wcm90b2'
     'J1Zi5TdHJ1Y3RSBGRhdGESOgoMdmVyc2lvbl9kYXRhGAUgASgLMhcuZ29vZ2xlLnByb3RvYnVm'
-    'LlN0cnVjdFILdmVyc2lvbkRhdGFCCAoGX2FnZW50QgcKBV91dWlkQgoKCF92ZXJzaW9u');
+    'LlN0cnVjdFILdmVyc2lvbkRhdGESKAoNZm9sbG93X2xhdGVzdBgGIAEoCEgDUgxmb2xsb3dMYX'
+    'Rlc3SIAQFCCAoGX2FnZW50QgcKBV91dWlkQgoKCF92ZXJzaW9uQhAKDl9mb2xsb3dfbGF0ZXN0');
 
 @$core.Deprecated('Use pluginRefDescriptor instead')
 const PluginRef$json = {

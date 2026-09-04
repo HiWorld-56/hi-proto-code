@@ -6911,6 +6911,14 @@ pub struct ApplyResp {
     /// 认领必须用 order_id。
     #[prost(message, optional, tag = "5")]
     pub order: ::core::option::Option<MarketOrder>,
+    /// 给人看的一句话。**与 OfferResp.reason 同一个位置、同一种用法** ——
+    /// "已经装过了 / 这笔申请早就在了"不是错误,是一个正常的回答:
+    /// 前端要能直接把它显示成「已安装过该插件,请勿重复购买」,而不是靠匹配错误串。
+    ///
+    /// 🔴 重复申请**不再报错**:报错的形状让前端只能猜(gRPC Internal + 一句中文),
+    /// 而且把"你已经有这个插件了"和"服务器出错了"混成同一类。
+    #[prost(string, optional, tag = "6")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DecideGrantReq {

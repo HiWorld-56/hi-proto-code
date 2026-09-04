@@ -3068,6 +3068,7 @@ class ApplyResp extends $pb.GeneratedMessage {
     $core.String? actionUrl,
     MarketPayInfo? pay,
     MarketOrder? order,
+    $core.String? reason,
   }) {
     final result = create();
     if (grantUuid != null) result.grantUuid = grantUuid;
@@ -3075,6 +3076,7 @@ class ApplyResp extends $pb.GeneratedMessage {
     if (actionUrl != null) result.actionUrl = actionUrl;
     if (pay != null) result.pay = pay;
     if (order != null) result.order = order;
+    if (reason != null) result.reason = reason;
     return result;
   }
 
@@ -3099,6 +3101,7 @@ class ApplyResp extends $pb.GeneratedMessage {
         subBuilder: MarketPayInfo.create)
     ..aOM<MarketOrder>(5, _omitFieldNames ? '' : 'order',
         subBuilder: MarketOrder.create)
+    ..aOS(6, _omitFieldNames ? '' : 'reason')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3170,6 +3173,21 @@ class ApplyResp extends $pb.GeneratedMessage {
   void clearOrder() => $_clearField(5);
   @$pb.TagNumber(5)
   MarketOrder ensureOrder() => $_ensure(4);
+
+  /// 给人看的一句话。**与 OfferResp.reason 同一个位置、同一种用法** ——
+  /// "已经装过了 / 这笔申请早就在了"不是错误,是一个正常的回答:
+  /// 前端要能直接把它显示成「已安装过该插件,请勿重复购买」,而不是靠匹配错误串。
+  ///
+  /// 🔴 重复申请**不再报错**:报错的形状让前端只能猜(gRPC Internal + 一句中文),
+  ///    而且把"你已经有这个插件了"和"服务器出错了"混成同一类。
+  @$pb.TagNumber(6)
+  $core.String get reason => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set reason($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasReason() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearReason() => $_clearField(6);
 }
 
 class DecideGrantReq extends $pb.GeneratedMessage {

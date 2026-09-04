@@ -678,6 +678,9 @@ impl serde::Serialize for ApplyResp {
         if self.order.is_some() {
             len += 1;
         }
+        if self.reason.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ApplyResp", len)?;
         if let Some(v) = self.grant_uuid.as_ref() {
             struct_ser.serialize_field("grantUuid", v)?;
@@ -696,6 +699,9 @@ impl serde::Serialize for ApplyResp {
         if let Some(v) = self.order.as_ref() {
             struct_ser.serialize_field("order", v)?;
         }
+        if let Some(v) = self.reason.as_ref() {
+            struct_ser.serialize_field("reason", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -713,6 +719,7 @@ impl<'de> serde::Deserialize<'de> for ApplyResp {
             "actionUrl",
             "pay",
             "order",
+            "reason",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -722,6 +729,7 @@ impl<'de> serde::Deserialize<'de> for ApplyResp {
             ActionUrl,
             Pay,
             Order,
+            Reason,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -748,6 +756,7 @@ impl<'de> serde::Deserialize<'de> for ApplyResp {
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
                             "pay" => Ok(GeneratedField::Pay),
                             "order" => Ok(GeneratedField::Order),
+                            "reason" => Ok(GeneratedField::Reason),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -772,6 +781,7 @@ impl<'de> serde::Deserialize<'de> for ApplyResp {
                 let mut action_url__ = None;
                 let mut pay__ = None;
                 let mut order__ = None;
+                let mut reason__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::GrantUuid => {
@@ -804,6 +814,12 @@ impl<'de> serde::Deserialize<'de> for ApplyResp {
                             }
                             order__ = map_.next_value()?;
                         }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ApplyResp {
@@ -812,6 +828,7 @@ impl<'de> serde::Deserialize<'de> for ApplyResp {
                     action_url: action_url__,
                     pay: pay__,
                     order: order__,
+                    reason: reason__,
                 })
             }
         }

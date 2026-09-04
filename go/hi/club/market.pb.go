@@ -2956,7 +2956,15 @@ type ApplyResp struct {
 	// 付费购买时顺带开出的账单。付款方拿它去付,再用 Market.ReportPayment 认领。
 	// **pay 是它的摘要**(收款方/金额/币种),留着是因为前端唤起 hidid app 只要这三样;
 	// 认领必须用 order_id。
-	Order         *MarketOrder `protobuf:"bytes,5,opt,name=order,proto3" json:"order,omitempty"`
+	Order *MarketOrder `protobuf:"bytes,5,opt,name=order,proto3" json:"order,omitempty"`
+	// 给人看的一句话。**与 OfferResp.reason 同一个位置、同一种用法** ——
+	// "已经装过了 / 这笔申请早就在了"不是错误,是一个正常的回答:
+	// 前端要能直接把它显示成「已安装过该插件,请勿重复购买」,而不是靠匹配错误串。
+	//
+	// 🔴 重复申请**不再报错**:报错的形状让前端只能猜(gRPC Internal + 一句中文),
+	//
+	//	而且把"你已经有这个插件了"和"服务器出错了"混成同一类。
+	Reason        *string `protobuf:"bytes,6,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3024,6 +3032,13 @@ func (x *ApplyResp) GetOrder() *MarketOrder {
 		return x.Order
 	}
 	return nil
+}
+
+func (x *ApplyResp) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
 }
 
 type DecideGrantReq struct {
@@ -4280,7 +4295,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\a_amountB\a\n" +
 	"\x05_coinB\x10\n" +
 	"\x0e_payee_accountB\x0e\n" +
-	"\f_payee_owner\"\xa9\x02\n" +
+	"\f_payee_owner\"\xd7\x02\n" +
 	"\tApplyResp\x12(\n" +
 	"\n" +
 	"grant_uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\tgrantUuid\x88\x01\x01\x127\n" +
@@ -4288,10 +4303,12 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\n" +
 	"action_url\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\tactionUrl\x88\x01\x01\x12.\n" +
 	"\x03pay\x18\x04 \x01(\v2\x16.hi.club.MarketPayInfoB\x04\x90\xb5\x18\x03R\x03pay\x120\n" +
-	"\x05order\x18\x05 \x01(\v2\x14.hi.club.MarketOrderB\x04\x90\xb5\x18\x03R\x05order:\x04\x98\xb5\x18\x03B\r\n" +
+	"\x05order\x18\x05 \x01(\v2\x14.hi.club.MarketOrderB\x04\x90\xb5\x18\x03R\x05order\x12!\n" +
+	"\x06reason\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x06reason\x88\x01\x01:\x04\x98\xb5\x18\x03B\r\n" +
 	"\v_grant_uuidB\t\n" +
 	"\a_statusB\r\n" +
-	"\v_action_url\"|\n" +
+	"\v_action_urlB\t\n" +
+	"\a_reason\"|\n" +
 	"\x0eDecideGrantReq\x123\n" +
 	"\n" +
 	"grant_uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\tgrantUuid\x88\x01\x01\x12\x1b\n" +

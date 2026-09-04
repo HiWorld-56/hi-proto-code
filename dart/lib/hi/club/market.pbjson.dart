@@ -2019,12 +2019,23 @@ const ApplyResp$json = {
       '8': {},
       '10': 'order'
     },
+    {
+      '1': 'reason',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'reason',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_grant_uuid'},
     {'1': '_status'},
     {'1': '_action_url'},
+    {'1': '_reason'},
   ],
 };
 
@@ -2034,8 +2045,9 @@ final $typed_data.Uint8List applyRespDescriptor = $convert.base64Decode(
     'oGc3RhdHVzGAIgASgOMhQuaGkuY2x1Yi5HcmFudFN0YXR1c0IEkLUYA0gBUgZzdGF0dXOIAQES'
     'KAoKYWN0aW9uX3VybBgDIAEoCUIEkLUYA0gCUglhY3Rpb25VcmyIAQESLgoDcGF5GAQgASgLMh'
     'YuaGkuY2x1Yi5NYXJrZXRQYXlJbmZvQgSQtRgDUgNwYXkSMAoFb3JkZXIYBSABKAsyFC5oaS5j'
-    'bHViLk1hcmtldE9yZGVyQgSQtRgDUgVvcmRlcjoEmLUYA0INCgtfZ3JhbnRfdXVpZEIJCgdfc3'
-    'RhdHVzQg0KC19hY3Rpb25fdXJs');
+    'bHViLk1hcmtldE9yZGVyQgSQtRgDUgVvcmRlchIhCgZyZWFzb24YBiABKAlCBJC1GANIA1IGcm'
+    'Vhc29uiAEBOgSYtRgDQg0KC19ncmFudF91dWlkQgkKB19zdGF0dXNCDQoLX2FjdGlvbl91cmxC'
+    'CQoHX3JlYXNvbg==');
 
 @$core.Deprecated('Use decideGrantReqDescriptor instead')
 const DecideGrantReq$json = {

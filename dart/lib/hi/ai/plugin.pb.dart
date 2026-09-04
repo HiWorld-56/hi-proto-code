@@ -2497,6 +2497,7 @@ class CreateReferenceReq extends $pb.GeneratedMessage {
     $core.String? version,
     $2.Struct? data,
     $2.Struct? versionData,
+    $core.bool? followLatest,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -2504,6 +2505,7 @@ class CreateReferenceReq extends $pb.GeneratedMessage {
     if (version != null) result.version = version;
     if (data != null) result.data = data;
     if (versionData != null) result.versionData = versionData;
+    if (followLatest != null) result.followLatest = followLatest;
     return result;
   }
 
@@ -2527,6 +2529,7 @@ class CreateReferenceReq extends $pb.GeneratedMessage {
         subBuilder: $2.Struct.create)
     ..aOM<$2.Struct>(5, _omitFieldNames ? '' : 'versionData',
         subBuilder: $2.Struct.create)
+    ..aOB(6, _omitFieldNames ? '' : 'followLatest')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2596,6 +2599,22 @@ class CreateReferenceReq extends $pb.GeneratedMessage {
   void clearVersionData() => $_clearField(5);
   @$pb.TagNumber(5)
   $2.Struct ensureVersionData() => $_ensure(4);
+
+  /// c.follow_latest 的初值。**不传 = 按 hi.ai 的默认(false)**,不是"传了个 false"。
+  ///
+  /// 为什么要能传:新硬件机器人注册时 club 自动给它引用内置插件(那是内置**唯一**的特殊之处),
+  /// 而内置插件之后就是个普通插件 —— 作者发新版靠 `propagateToFollowers` 按这个开关推。
+  /// 建引用时不置 true 的话,那批机器人**一台都不跟版**,而且零报错:
+  /// 库里默认 0,新版发出去谁也不动,只有人工去比 d.active 才看得出来。
+  /// (2026-09-05 前是 club 用 `SetActiveAll` 无视这个开关全网强推的,已删。)
+  @$pb.TagNumber(6)
+  $core.bool get followLatest => $_getBF(5);
+  @$pb.TagNumber(6)
+  set followLatest($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasFollowLatest() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearFollowLatest() => $_clearField(6);
 }
 
 /// ── 展示面:市场要拿插件自己的名字/图/简介 ──────────────────────────────────

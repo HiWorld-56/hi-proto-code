@@ -2193,12 +2193,20 @@ func (x *DeletePluginByAgentsReq) GetAgents() []string {
 //	**绝不能把出让方的 c.data 拷过来** —— 那等于把出让方的凭据连同脚本一起交出去了。
 //	c/d 本来就是「每机器人各不相同的使用态」,这正是当初拆表的意义。
 type CreateReferenceReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`                          // 受让方机器人
-	Uuid          *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                            // 壳 uuid(别人的)
-	Version       *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`                      // 不传 = 取出让方当前激活版
-	Data          *structpb.Struct       `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`                                  // c.data(club 注入受让方自己的 api_key)
-	VersionData   *structpb.Struct       `protobuf:"bytes,5,opt,name=version_data,json=versionData,proto3" json:"version_data,omitempty"` // d.data
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Agent       *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`                          // 受让方机器人
+	Uuid        *string                `protobuf:"bytes,2,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                            // 壳 uuid(别人的)
+	Version     *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`                      // 不传 = 取出让方当前激活版
+	Data        *structpb.Struct       `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`                                  // c.data(club 注入受让方自己的 api_key)
+	VersionData *structpb.Struct       `protobuf:"bytes,5,opt,name=version_data,json=versionData,proto3" json:"version_data,omitempty"` // d.data
+	// c.follow_latest 的初值。**不传 = 按 hi.ai 的默认(false)**,不是"传了个 false"。
+	//
+	// 为什么要能传:新硬件机器人注册时 club 自动给它引用内置插件(那是内置**唯一**的特殊之处),
+	// 而内置插件之后就是个普通插件 —— 作者发新版靠 `propagateToFollowers` 按这个开关推。
+	// 建引用时不置 true 的话,那批机器人**一台都不跟版**,而且零报错:
+	// 库里默认 0,新版发出去谁也不动,只有人工去比 d.active 才看得出来。
+	// (2026-09-05 前是 club 用 `SetActiveAll` 无视这个开关全网强推的,已删。)
+	FollowLatest  *bool `protobuf:"varint,6,opt,name=follow_latest,json=followLatest,proto3,oneof" json:"follow_latest,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2266,6 +2274,13 @@ func (x *CreateReferenceReq) GetVersionData() *structpb.Struct {
 		return x.VersionData
 	}
 	return nil
+}
+
+func (x *CreateReferenceReq) GetFollowLatest() bool {
+	if x != nil && x.FollowLatest != nil {
+		return *x.FollowLatest
+	}
+	return false
 }
 
 // ── 展示面:市场要拿插件自己的名字/图/简介 ──────────────────────────────────
@@ -3282,17 +3297,19 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x05uuids\x18\x02 \x03(\tR\x05uuidsB\b\n" +
 	"\x06_agent\"1\n" +
 	"\x17DeletePluginByAgentsReq\x12\x16\n" +
-	"\x06agents\x18\x01 \x03(\tR\x06agents\"\x91\x02\n" +
+	"\x06agents\x18\x01 \x03(\tR\x06agents\"\xcd\x02\n" +
 	"\x12CreateReferenceReq\x12*\n" +
 	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12(\n" +
 	"\x04uuid\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01\x12+\n" +
 	"\x04data\x18\x04 \x01(\v2\x17.google.protobuf.StructR\x04data\x12:\n" +
-	"\fversion_data\x18\x05 \x01(\v2\x17.google.protobuf.StructR\vversionDataB\b\n" +
+	"\fversion_data\x18\x05 \x01(\v2\x17.google.protobuf.StructR\vversionData\x12(\n" +
+	"\rfollow_latest\x18\x06 \x01(\bH\x03R\ffollowLatest\x88\x01\x01B\b\n" +
 	"\x06_agentB\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
-	"\b_version\"t\n" +
+	"\b_versionB\x10\n" +
+	"\x0e_follow_latest\"t\n" +
 	"\tPluginRef\x12*\n" +
 	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12(\n" +
 	"\x04uuid\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\x04uuid\x88\x01\x01B\b\n" +

@@ -2520,6 +2520,9 @@ impl serde::Serialize for CreateReferenceReq {
         if self.version_data.is_some() {
             len += 1;
         }
+        if self.follow_latest.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.CreateReferenceReq", len)?;
         if let Some(v) = self.agent.as_ref() {
             struct_ser.serialize_field("agent", v)?;
@@ -2535,6 +2538,9 @@ impl serde::Serialize for CreateReferenceReq {
         }
         if let Some(v) = self.version_data.as_ref() {
             struct_ser.serialize_field("versionData", v)?;
+        }
+        if let Some(v) = self.follow_latest.as_ref() {
+            struct_ser.serialize_field("followLatest", v)?;
         }
         struct_ser.end()
     }
@@ -2552,6 +2558,8 @@ impl<'de> serde::Deserialize<'de> for CreateReferenceReq {
             "data",
             "version_data",
             "versionData",
+            "follow_latest",
+            "followLatest",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2561,6 +2569,7 @@ impl<'de> serde::Deserialize<'de> for CreateReferenceReq {
             Version,
             Data,
             VersionData,
+            FollowLatest,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2587,6 +2596,7 @@ impl<'de> serde::Deserialize<'de> for CreateReferenceReq {
                             "version" => Ok(GeneratedField::Version),
                             "data" => Ok(GeneratedField::Data),
                             "versionData" | "version_data" => Ok(GeneratedField::VersionData),
+                            "followLatest" | "follow_latest" => Ok(GeneratedField::FollowLatest),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2611,6 +2621,7 @@ impl<'de> serde::Deserialize<'de> for CreateReferenceReq {
                 let mut version__ = None;
                 let mut data__ = None;
                 let mut version_data__ = None;
+                let mut follow_latest__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -2643,6 +2654,12 @@ impl<'de> serde::Deserialize<'de> for CreateReferenceReq {
                             }
                             version_data__ = map_.next_value()?;
                         }
+                        GeneratedField::FollowLatest => {
+                            if follow_latest__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("followLatest"));
+                            }
+                            follow_latest__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(CreateReferenceReq {
@@ -2651,6 +2668,7 @@ impl<'de> serde::Deserialize<'de> for CreateReferenceReq {
                     version: version__,
                     data: data__,
                     version_data: version_data__,
+                    follow_latest: follow_latest__,
                 })
             }
         }
